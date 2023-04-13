@@ -2,9 +2,9 @@ name: Security_Tests
 
 on:
  push:
-   branches: [develop]
+   branches: [main]
  pull_request:
-   branches: [develop]
+   branches: [main]
 
 jobs:
   e2e-tests:
