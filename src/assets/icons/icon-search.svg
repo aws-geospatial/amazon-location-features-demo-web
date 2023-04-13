@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="UI-Kit" stroke="none" stroke-width="1" fill-rule="evenodd">
+        <g id="Icons" transform="translate(-40.000000, -208.000000)">
+            <g id="Row-3" transform="translate(40.000000, 208.000000)">
+                <g id="Icon/search" transform="translate(3.000000, 3.000000)">
+                    <path d="M2,8 C2,4.691 4.691,2 8,2 C11.309,2 14,4.691 14,8 C14,11.309 11.309,14 8,14 C4.691,14 2,11.309 2,8 M17.707,16.293 L14.312,12.897 C15.365,11.543 16,9.846 16,8 C16,3.589 12.411,0 8,0 C3.589,0 0,3.589 0,8 C0,12.411 3.589,16 8,16 C9.846,16 11.543,15.365 12.897,14.312 L16.293,17.707 C16.488,17.902 16.744,18 17,18 C17.256,18 17.512,17.902 17.707,17.707 C18.098,17.316 18.098,16.684 17.707,16.293" id="🎨-Icon-Сolor"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

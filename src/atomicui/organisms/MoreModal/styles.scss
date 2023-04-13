@@ -1,0 +1,87 @@
+/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
+/* SPDX-License-Identifier: MIT-0 */
+
+.more-modal {
+	max-width: 45.69rem;
+	max-height: 49.23rem;
+
+	.more-modal-content {
+		gap: 0;
+		height: 100%;
+		max-height: 49.23rem;
+
+		.options-container {
+			gap: 0;
+			width: 33.67%;
+			flex-direction: column;
+
+			.option-item {
+				gap: 0;
+				align-items: center;
+				padding: 0.77rem 0rem 0.77rem 1.23rem;
+				height: 4.31rem;
+				cursor: pointer;
+				border-left-width: 2px;
+				border-left-style: solid;
+				border-left-color: var(--white-color);
+
+				&:hover {
+					background-color: rgba(0, 130, 150, 0.08);
+				}
+
+				&.selected {
+					border-left-color: var(--primary-color);
+					background-color: rgba(0, 130, 150, 0.08);
+				}
+			}
+		}
+
+		.amplify-divider.amplify-divider--vertical.col-divider {
+			border-left-width: 1px;
+			border-color: var(--light-color-2);
+		}
+
+		.option-details-container {
+			gap: 0;
+			width: 66.33%;
+			flex-direction: column;
+
+			.amplify-button.amplify-field-group__control.amplify-button--primary.learn-more-button {
+				background-color: var(--secondary-button-bg-color);
+				border: 1px solid var(--primary-color);
+				color: var(--primary-color);
+				font-size: 1.23rem;
+				font-family: "AmazonEmber-Bold";
+			}
+
+			.powered-by-aws-1-icon {
+				margin-top: 1.15rem;
+				align-self: center;
+			}
+
+			.amplify-text.more-secondary-text {
+                font-family: "AmazonEmber-Regular";
+                font-size: 1rem;
+                line-height: 1.38rem;
+                color: var(--grey-color);
+                margin-top: 0.31rem;
+                a {
+                    font-family: "AmazonEmber-Regular";
+                    color: var(--primary-color);
+                    cursor: pointer;
+                    text-decoration: none;
+                }
+			}
+		}
+
+		.amplify-divider.amplify-divider--horizontal.title-divider {
+			border-bottom-width: 1px;
+			border-color: var(--light-color-2);
+		}
+	}
+
+	@media screen and (max-width: 960px) {
+		width: 90% !important;
+		height: 90% !important;
+	}
+}

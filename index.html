@@ -1,0 +1,46 @@
+<!-- Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. -->
+<!-- SPDX-License-Identifier: MIT-0 -->
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+		<link rel="manifest" href="/site.webmanifest" crossorigin="use-credentials" />
+		<link rel="preload" href="/AmazonEmber-Bold.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href="/AmazonEmber-Medium.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href="/AmazonEmber-Regular.woff2" as="font" type="font/woff2" crossorigin />
+		<style>
+			/* Font face to avoid FOIT */
+			@font-face {
+				font-family: "AmazonEmber-Regular";
+				src: local("AmazonEmber-Regular"), url("/AmazonEmber-Regular.woff2") format("woff2");
+				font-display: swap;
+			}
+			@font-face {
+				font-family: "AmazonEmber-Medium";
+				src: local("AmazonEmber-Medium"), url("/AmazonEmber-Medium.woff2") format("woff2");
+				font-display: swap;
+			}
+			@font-face {
+				font-family: "AmazonEmber-Bold";
+				src: local("AmazonEmber-Bold"), url("/AmazonEmber-Bold.woff2") format("woff2");
+				font-display: swap;
+			}
+		</style>
+		<title>Amazon Location</title>
+	</head>
+	<body>
+		<!-- Fix for https://github.com/aws/aws-sdk-js/issues/2141 -->
+		<script>
+			const global = globalThis;
+		</script>
+
+		<!-- Rest of the app -->
+		<div id="root"></div>
+		<script type="module" src="/src/main.tsx"></script>
+	</body>
+</html>

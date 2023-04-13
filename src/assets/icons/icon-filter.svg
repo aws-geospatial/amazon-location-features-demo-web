@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <path d="M15.0019112,0 C15.8497488,0 16.3129049,0.988857477 15.7701324,1.6401844 L11.0019112,7.36204994 L11.0019112,12 C11.0019112,12.3787721 10.7879088,12.7250352 10.4491247,12.8944272 L6.44912475,14.8944272 C5.78422365,15.2268777 5.00191115,14.743382 5.00191115,14 L5.00191115,7.36204994 L0.233689873,1.6401844 C-0.309082563,0.988857477 0.154073504,0 1.00191115,0 L15.0019112,0 Z M12.7299168,2 L3,2 L6.63317967,6.3598156 C6.78294217,6.5395306 6.86495839,6.76606349 6.86495839,7 L6.86495839,12.381966 L8.86495839,11.381966 L8.86495839,7 C8.86495839,6.76606349 8.94697461,6.5395306 9.09673711,6.3598156 L12.7299168,2 Z" id="icon-filter-path-1"></path>
+    </defs>
+    <g id="UI-kit" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icons" transform="translate(-376.000000, -265.000000)">
+            <g id="Group" transform="translate(40.000000, 265.000000)">
+                <g id="Icon/Symbol/Filter" transform="translate(340.000000, 4.000000)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#icon-filter-path-1"></use>
+                    </mask>
+                    <use id="Icon" fill="#707070" xlink:href="#icon-filter-path-1"></use>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

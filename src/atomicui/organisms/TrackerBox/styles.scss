@@ -1,0 +1,129 @@
+/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
+/* SPDX-License-Identifier: MIT-0 */
+
+.amplify-card.tracking-card {
+	width: 27.69rem;
+	position: absolute;
+	top: 1.62rem;
+	overflow: hidden;
+	z-index: 4;
+
+	@media only screen and (max-width: 480px) {
+		width: 75%;
+	}
+
+	.tracking-card-header {
+		gap: 0;
+		padding: 0.77rem 0.77rem 0.77rem 1.23rem;
+		justify-content: space-between;
+		align-items: center;
+		border-bottom: 1px solid var(--grey-color-3);
+
+		.tracking-card-close {
+			gap: 0;
+			padding-left: 0.77rem;
+			border-left: 1px solid var(--grey-color-3);
+			cursor: pointer;
+		}
+
+		.tracking-card-close > svg {
+			fill: var(--grey-color);
+			width: 1.54rem;
+			height: 1.54rem;
+		}
+
+		.tracking-card-close > svg:hover {
+			fill: var(--primary-color);
+		}
+	}
+
+	.icon-plus-rounded {
+		min-width: 1.54rem;
+		min-height: 1.54rem;
+		fill: var(--primary-color);
+	}
+
+	.marker-container {
+		gap: 0;
+		padding: 1.23rem;
+		align-items: center;
+		border-top: 1px solid var(--grey-color-3);
+		border-bottom: 1px solid var(--grey-color-3);
+		position: relative;
+
+		.icon-container {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 2.46rem;
+			height: 2.46rem;
+			border-radius: 8px;
+			cursor: pointer;
+
+			svg {
+				fill: var(--grey-color);
+			}
+
+			&.selected {
+				background-color: rgba(0, 130, 150, 0.08);
+
+				svg {
+					fill: var(--primary-color);
+				}
+			}
+
+			&.disabled {
+				cursor: not-allowed;
+
+				svg {
+					fill: var(--grey-color-1);
+				}
+			}
+		}
+
+		.buttons-container {
+			gap: 0;
+			justify-content: space-between;
+			position: absolute;
+			right: 1.23rem;
+
+			.button {
+				cursor: pointer;
+			}
+
+			.edit-button {
+				background-color: var(--secondary-button-bg-color);
+				border: 1px solid var(--primary-color);
+				color: var(--primary-color);
+				font-size: 0.92rem;
+				font-family: "AmazonEmber-Bold";
+			}
+		}
+	}
+
+	.tracker-point-list-item {
+		gap: 0;
+		align-items: center;
+		padding: 1.23rem;
+
+		.icon-container {
+			gap: 0;
+			flex-direction: column;
+			overflow: visible;
+			position: relative;
+
+			svg {
+				fill: var(--primary-color);
+			}
+
+			.dotted-line {
+				display: flex;
+				align-self: center;
+				position: absolute;
+				height: 2.46rem;
+				top: 1.62rem;
+				border-left: 4px dotted var(--grey-color-3);
+			}
+		}
+	}
+}

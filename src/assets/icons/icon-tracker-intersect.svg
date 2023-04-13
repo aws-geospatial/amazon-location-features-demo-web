@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <rect id="path-1" x="3.52081528" y="3.52081528" width="17" height="17" rx="3.5"></rect>
+        <filter x="-88.2%" y="-88.2%" width="276.5%" height="276.5%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.202633304 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="UI-Kit" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Map-markers" transform="translate(-376.000000, -152.000000)">
+            <g id="Map/Blip/Geofence-Multicolor" transform="translate(384.000000, 160.000000)">
+                <g id="Shadow" transform="translate(12.020815, 12.020815) rotate(-45.000000) translate(-12.020815, -12.020815) " fill="black" fill-opacity="1">
+                    <use filter="url(#filter-2)" xlink:href="#path-1"></use>
+                </g>
+                <path d="M23.5260191,10.7760191 L23.5260191,15.2760191 C23.5260191,17.4851581 21.7351581,19.2760191 19.5260191,19.2760191 L10.5260191,19.2760191 C8.3168801,19.2760191 6.5260191,17.4851581 6.5260191,15.2760191 L6.5260191,10.7760191 L6.5260191,10.7760191 L23.5260191,10.7760191 Z" id="Border-2" fill="#DB7A00" transform="translate(15.026019, 15.026019) rotate(-45.000000) translate(-15.026019, -15.026019) "></path>
+                <path d="M4.51561146,4.76561146 L13.5156115,4.76561146 C15.7247505,4.76561146 17.5156115,6.55647246 17.5156115,8.76561146 L17.5156115,13.2656115 L17.5156115,13.2656115 L0.51561146,13.2656115 L0.51561146,8.76561146 C0.51561146,6.55647246 2.30647246,4.76561146 4.51561146,4.76561146 Z" id="Border-1" fill="#006581" transform="translate(9.015611, 9.015611) rotate(-45.000000) translate(-9.015611, -9.015611) "></path>
+                <path d="M22.1532521,10.9032521 L22.1532521,15.4032521 C22.1532521,17.0601064 20.8101064,18.4032521 19.1532521,18.4032521 L10.1532521,18.4032521 C8.4963979,18.4032521 7.15325215,17.0601064 7.15325215,15.4032521 L7.15325215,10.9032521 L7.15325215,10.9032521 L22.1532521,10.9032521 Z" id="Fill-2" fill="#FF9900" transform="translate(14.653252, 14.653252) rotate(-45.000000) translate(-14.653252, -14.653252) "></path>
+                <path d="M4.84995129,5.59995129 L13.8499513,5.59995129 C15.5068055,5.59995129 16.8499513,6.94309704 16.8499513,8.59995129 L16.8499513,13.0999513 L16.8499513,13.0999513 L1.84995129,13.0999513 L1.84995129,8.59995129 C1.84995129,6.94309704 3.19309704,5.59995129 4.84995129,5.59995129 Z" id="Fill-1" fill="#008296" transform="translate(9.349951, 9.349951) rotate(-45.000000) translate(-9.349951, -9.349951) "></path>
+                <circle id="Middle" fill="#FFFFFF" cx="12" cy="12" r="4"></circle>
+            </g>
+        </g>
+    </g>
+</svg>

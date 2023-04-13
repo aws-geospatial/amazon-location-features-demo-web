@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="44px" height="70px" viewBox="0 0 44 70" version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#008296" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#008296" stop-opacity="0.506364729" offset="100%"></stop>
+        </linearGradient>
+        <circle id="path-2" cx="12" cy="12" r="12"></circle>
+        <filter x="-62.5%" y="-62.5%" width="225.0%" height="225.0%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.202633304 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="UI-Kit" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Map-markers" transform="translate(-158.000000, -100.000000)">
+            <g id="Map/Blip/User" transform="translate(160.000000, 100.000000)">
+                <polygon id="Rectangle" fill="url(#linearGradient-1)" points="6.10622664e-15 -1.72670835e-14 40 -1.72670835e-14 32 48 8 48"></polygon>
+                <g id="Group-3" transform="translate(8.000000, 36.000000)">
+                    <g id="Oval">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+                        <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-2"></use>
+                    </g>
+                    <circle id="Oval" fill="#008296" cx="12" cy="12" r="8"></circle>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

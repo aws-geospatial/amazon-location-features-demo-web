@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="401px" height="168px" viewBox="0 0 401 168" version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <rect id="path-1" x="0" y="0" width="401" height="168" rx="8"></rect>
+        <circle id="path-3" cx="12" cy="12" r="12"></circle>
+        <filter x="-62.5%" y="-62.5%" width="225.0%" height="225.0%" filterUnits="objectBoundingBox" id="filter-4">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.202633304 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <circle id="path-5" cx="12" cy="12" r="12"></circle>
+        <filter x="-62.5%" y="-62.5%" width="225.0%" height="225.0%" filterUnits="objectBoundingBox" id="filter-6">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.202633304 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <circle id="path-7" cx="12" cy="12" r="12"></circle>
+        <filter x="-62.5%" y="-62.5%" width="225.0%" height="225.0%" filterUnits="objectBoundingBox" id="filter-8">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.202633304 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="UI-kit" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Graphics" transform="translate(-403.000000, -3359.000000)">
+            <g id="Group-2" transform="translate(403.000000, 3359.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="Mask"></g>
+                <g mask="url(#mask-2)">
+                    <g transform="translate(0.067259, -648.155914)">
+                        <g id="Group-10">
+                            <line x1="233.778008" y1="1223.15591" x2="0" y2="226.380676" id="Path" stroke="#656E78" stroke-width="7.9191031"></line>
+                            <polyline id="Path" stroke="#656E78" stroke-width="15.8382062" points="400.72763 1037.46399 250.159584 208.708292 267.06347 37.7873196 270.92378 -0.00482294347"></polyline>
+                            <polyline id="Path" stroke="#656E78" stroke-width="6.86392614" points="150.060507 866.194849 278.422418 837.264892 278.422418 806.667928 269.442888 788.204243 250.423377 783.456438 214.494704 796.117251 196.002781 779.236167 192.837259 747.584135 178.571307 691.138011 159.551797 681.114868 109.020572 691.217141"></polyline>
+                            <polyline id="Path" stroke="#656E78" stroke-width="6.86392614" points="178.571307 691.138011 213.43953 681.114868 230.343417 663.70625 227.394206 637.413963"></polyline>
+                            <polyline id="Path" stroke="#656E78" stroke-width="6.86392614" points="211.355562 681.716257 230.343417 691.138011 334.431051 672.547718"></polyline>
+                        </g>
+                        <g id="Map/Blip/Regular-Copy-3" transform="translate(193.932741, 695.155914)">
+                            <g id="Oval">
+                                <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                                <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-3"></use>
+                            </g>
+                            <circle id="Oval" fill="#232F3E" cx="12" cy="12" r="4"></circle>
+                        </g>
+                        <g id="Map/Blip/Regular-Copy-5" transform="translate(333.932741, 804.155914)">
+                            <g id="Oval">
+                                <use fill="black" fill-opacity="1" filter="url(#filter-6)" xlink:href="#path-5"></use>
+                                <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-5"></use>
+                            </g>
+                            <circle id="Oval" fill="#232F3E" cx="12" cy="12" r="4"></circle>
+                        </g>
+                        <g id="Map/Blip/Regular-Copy-4" transform="translate(70.932741, 765.155914)">
+                            <g id="Oval">
+                                <use fill="black" fill-opacity="1" filter="url(#filter-8)" xlink:href="#path-7"></use>
+                                <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-7"></use>
+                            </g>
+                            <circle id="Oval" fill="#232F3E" cx="12" cy="12" r="4"></circle>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

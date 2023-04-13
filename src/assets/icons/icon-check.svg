@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <path d="M5.86338199,11.9998686 C5.58738199,11.9998686 5.32338199,11.8858686 5.13438199,11.6848686 L0.271381991,6.50586862 C-0.107618009,6.10386862 -0.0866180087,5.47086862 0.315381991,5.09286862 C0.718381991,4.71486862 1.35138199,4.73486862 1.72838199,5.13686862 L5.85338199,9.52786862 L14.261382,0.325868618 C14.635382,-0.0831313817 15.267382,-0.110131382 15.675382,0.261868618 C16.082382,0.633868618 16.110382,1.26686862 15.738382,1.67386862 L6.60138199,11.6738686 C6.41438199,11.8798686 6.14838199,11.9978686 5.87038199,11.9998686 L5.86338199,11.9998686 Z" id="icon-check-path-1"></path>
+    </defs>
+    <g id="UI-kit" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icons" transform="translate(-184.000000, -313.000000)">
+            <g id="Group-2" transform="translate(40.000000, 313.000000)">
+                <g id="Icon/checkmark" transform="translate(147.999918, 6.000131)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#icon-check-path-1"></use>
+                    </mask>
+                    <use id="🎨-Icon-Сolor" fill="#232F3E" xlink:href="#icon-check-path-1"></use>
+                </g>
+            </g>icon-check.svg
+        </g>
+    </g>
+</svg>

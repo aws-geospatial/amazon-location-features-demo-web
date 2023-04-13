@@ -1,0 +1,40 @@
+/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
+/* SPDX-License-Identifier: MIT-0 */
+
+/* https://mycolor.space/gradient?ori=to+right+top&hex=%23005276&hex2=%2338EF7D&sub=1 */
+.action-gradient-button {
+	background-image: linear-gradient(to right top, #005276, #007a9e, #00a3ad, #00cba1, #38ef7d);
+}
+/* https://mycolor.space/gradient3?ori=to+right+top&hex=%23005276&hex2=%23007A9E&hex3=%2338EF7D&submit=submit */
+.action-gradient-button:hover {
+	background-image: linear-gradient(
+		to right top,
+		#005276,
+		#00597e,
+		#006185,
+		#00688d,
+		#007094,
+		#007da0,
+		#008bab,
+		#0099b5,
+		#00b1bf,
+		#00c8b9,
+		#00dda2,
+		#38ef7d
+	);
+}
+
+body:has(.disable-body-scroll) {
+	overflow: hidden;
+}
+
+.react-tooltip {
+	border-radius: 8px !important;
+	max-width: 300px !important;
+	opacity: 1 !important;
+	font-size: 14px !important;
+
+	@media only screen and (max-width: 980px) {
+		display: none !important;
+	}
+}

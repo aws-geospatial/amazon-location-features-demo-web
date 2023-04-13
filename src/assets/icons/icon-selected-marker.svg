@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="52px" height="52px" viewBox="0 0 52 52" version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <circle id="path-selected" cx="16" cy="16" r="16"></circle>
+        <filter x="-46.9%" y="-46.9%" width="193.8%" height="193.8%" filterUnits="objectBoundingBox" id="filter-selected">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.202633304 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="UI-Kit" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Map-markers" transform="translate(-158.000000, -122.000000)">
+            <g id="Map/Blip/Selected" transform="translate(168.000000, 132.000000)">
+                <g id="Oval">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-selected)" xlink:href="#path-selected"></use>
+                    <use fill="#FF9900" fill-rule="evenodd" xlink:href="#path-selected"></use>
+                </g>
+                <circle id="Oval" fill="#FFFFFF" cx="16" cy="16" r="7"></circle>
+            </g>
+        </g>
+    </g>
+</svg>

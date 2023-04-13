@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="UI-Kit" stroke="none" stroke-width="1" fill-rule="evenodd">
+        <g id="Icons" transform="translate(-280.000000, -160.000000)">
+            <g id="Row-2" transform="translate(40.000000, 160.000000)">
+                <g id="Icon/info" transform="translate(242.000000, 2.000000)">
+                    <path d="M10,0 C15.522,0 20,4.477 20,10 C20,15.523 15.522,20 10,20 C4.477,20 0,15.523 0,10 C0,4.477 4.477,0 10,0 Z M10,2 C5.589,2 2,5.589 2,10 C2,14.411 5.589,18 10,18 C14.411,18 18,14.411 18,10 C18,5.589 14.411,2 10,2 Z M10,8 C10.552,8 11,8.448 11,9 L11,14 C11,14.552 10.552,15 10,15 C9.448,15 9,14.552 9,14 L9,9 C9,8.448 9.448,8 10,8 Z M10,5 C10.552,5 11,5.448 11,6 C11,6.552 10.552,7 10,7 C9.448,7 9,6.552 9,6 C9,5.448 9.448,5 10,5 Z" id="🎨-Icon-Сolor"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,15 @@
+*.svg
+*.png
+*.jpg
+*.ttf
+
+
+
+sample-projects
+node_modules
+extra
+dist
+dist-ssr
+*.local
+build
+coverage

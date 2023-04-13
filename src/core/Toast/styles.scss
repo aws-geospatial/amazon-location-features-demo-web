@@ -1,0 +1,37 @@
+/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
+/* SPDX-License-Identifier: MIT-0 */
+
+.Toastify__toast {
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 20px;
+	padding-right: 20px;
+	border-radius: 30px;
+	font-size: 0.9em;
+	margin-bottom: 12px;
+}
+.Toastify__toast-body > div:last-child {
+	margin-right: 5px;
+	margin-left: 5px;
+}
+
+.Toastify__close-button {
+	align-self: center;
+}
+
+.Toastify__close-button svg {
+	vertical-align: middle;
+}
+
+.Toastify__toast-icon {
+	height: 15px;
+	width: 15px;
+}
+
+.Toastify__toast-icon svg {
+	fill: white;
+}
+
+.Toastify__toast-container {
+	min-width: 300px;
+}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 24 24" version="1.1"
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink">
+	<g id="UI-Kit" fill="#008296" fill-rule="evenodd">
+		<g id="Icons" transform="translate(-136.000000, -160.000000)" fill="#008296">
+			<g id="Row-2" transform="translate(40.000000, 160.000000)">
+				<g id="Icon/minus" transform="translate(100.000000, 11.000000)">
+					<path d="M15,2 L1,2 C0.448,2 0,1.553 0,1 C0,0.447 0.448,0 1,0 L15,0 C15.553,0 16,0.447 16,1 C16,1.553 15.553,2 15,2" id="🎨-Icon-Сolor"></path>
+				</g>
+			</g>
+		</g>
+	</g>
+</svg>
+

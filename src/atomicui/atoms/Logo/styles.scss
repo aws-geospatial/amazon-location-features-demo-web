@@ -1,0 +1,23 @@
+/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
+/* SPDX-License-Identifier: MIT-0 */
+
+.site-logo__container {
+	width: fit-content;
+
+	.is__logo {
+		path {
+			transform: scale(0.85);
+			transform-origin: center;
+		}
+	}
+
+	.heading {
+		font-family: "AmazonEmber-Bold";
+		font-size: 15px;
+		color: var(--tertiary-color);
+
+		@media only screen and (max-width: 500px) {
+			display: none;
+		}
+	}
+}

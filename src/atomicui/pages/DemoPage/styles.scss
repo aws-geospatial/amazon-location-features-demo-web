@@ -1,0 +1,160 @@
+/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
+/* SPDX-License-Identifier: MIT-0 */
+
+.maplibregl-canvas-container.mapboxgl-canvas-container {
+	position: relative;
+	z-index: 0;
+}
+
+.amplify-flex.location-disabled {
+	gap: 0;
+	justify-content: center;
+	align-items: center;
+	width: 2.46rem;
+	height: 2.46rem;
+	position: absolute;
+	bottom: 9.85rem;
+	right: 2rem;
+	background-color: var(--white-color);
+	opacity: 0.8;
+	border-radius: 4px;
+	box-shadow: 0px 0px 10px rgb(0 0 0 / 20%);
+	cursor: pointer;
+}
+
+.maplibregl-ctrl.maplibregl-ctrl-group.mapboxgl-ctrl.mapboxgl-ctrl-group {
+	box-shadow: 0px 0px 10px rgb(0 0 0 / 20%);
+}
+
+.mapboxgl-ctrl-bottom-right,
+.maplibregl-ctrl-bottom-right {
+	display: flex;
+	flex-direction: column-reverse;
+	bottom: 1.23rem;
+	right: 1.23rem;
+	z-index: 3;
+}
+
+.mapboxgl-ctrl-group button,
+.maplibregl-ctrl-group button {
+	width: 2.46rem;
+	height: 2.46rem;
+}
+
+.mapboxgl-ctrl button.mapboxgl-ctrl-geolocate .mapboxgl-ctrl-icon,
+.maplibregl-ctrl button.maplibregl-ctrl-geolocate .maplibregl-ctrl-icon {
+	background-image: url("@demo/assets/icons/icon-locate-me.svg");
+
+	&:hover {
+		background-image: url("@demo/assets/icons/icon-locate-me-filled.svg");
+	}
+}
+
+.mapboxgl-ctrl button:not(:disabled):hover,
+.maplibregl-ctrl button:not(:disabled):hover {
+	background-color: var(--ghost-white);
+	box-shadow: none;
+	border-radius: 0.62rem;
+}
+
+.mapboxgl-ctrl button:disabled,
+.maplibregl-ctrl button:disabled {
+	cursor: pointer !important;
+	opacity: 1;
+}
+
+.mapboxgl-ctrl-group:not(:empty),
+.maplibregl-ctrl-group:not(:empty) {
+	box-shadow: 0px 0px 10px rgb(0 0 0 / 20%);
+}
+
+.mapboxgl-ctrl button.mapboxgl-ctrl-zoom-in .mapboxgl-ctrl-icon,
+.maplibregl-ctrl button.maplibregl-ctrl-zoom-in .maplibregl-ctrl-icon {
+	background-image: url("@demo/assets/icons/icon-zoom-plus.svg");
+
+	&:hover {
+		background-image: url("@demo/assets/icons/icon-zoom-plus-filled.svg");
+	}
+}
+
+.mapboxgl-ctrl button.mapboxgl-ctrl-zoom-out,.maplibregl-ctrl button.maplibregl-ctrl-zoom-out{
+	&:hover {
+		border-radius: 0px ;
+	}
+}
+
+.mapboxgl-ctrl button.mapboxgl-ctrl-zoom-out .mapboxgl-ctrl-icon,
+.maplibregl-ctrl button.maplibregl-ctrl-zoom-out .maplibregl-ctrl-icon {
+	background-image: url("@demo/assets/icons/icon-minus.svg");
+
+	&:hover {
+		background-image: url("@demo/assets/icons/icon-minus-filled.svg");
+	}
+}
+
+.mapboxgl-ctrl.mapboxgl-ctrl-attrib,
+.maplibregl-ctrl.maplibregl-ctrl-attrib {
+	background-color: transparent;
+}
+
+.logo-stroke-container {
+	gap: 0;
+	position: absolute;
+	bottom: 1.54rem;
+	left: 1.54rem;
+	width: 11.54rem;
+	height: 2.08rem;
+	z-index: 3;
+
+	img {
+		width: 100%;
+		height: 100%;
+	}
+}
+
+.mapboxgl-user-location-dot:before,
+.maplibregl-user-location-dot:before {
+	background-color: #a9c6c2 !important;
+}
+
+.mapboxgl-user-location-dot,
+.maplibregl-user-location-dot {
+	background-color: #008296 !important;
+}
+
+.route-distance-marker {
+	width: 7.69rem;
+	height: 1.85rem;
+	background-color: #008296;
+	border-radius: 0.62rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.route-distance-marker > p {
+	opacity: 1 !important;
+	color: rgba(255, 255, 255, 1) !important;
+	font-family: "AmazonEmber-Medium" !important;
+	font-size: 0.92rem !important;
+	font-style: normal !important;
+	text-align: center !important;
+	line-height: 1.23rem !important;
+}
+
+.loader-container {
+	width: 100%;
+	height: 100%;
+	background-image: url("@demo/assets/pngs/Loading.png");
+}
+
+@media only screen and (max-width: 640px) {
+	.maplibregl-ctrl-attrib-inner.mapboxgl-ctrl-attrib-inner {
+		margin-top: -20px;
+	}
+}
+@media only screen and (max-width: 624px) {
+	.maplibregl-ctrl-attrib-inner.mapboxgl-ctrl-attrib-inner {
+		margin-top: -50px;
+	}
+}

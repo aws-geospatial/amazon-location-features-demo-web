@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="UI-Kit" stroke="none" stroke-width="1" fill-rule="evenodd">
+        <g id="Map-markers" transform="translate(-112.000000, -256.000000)">
+            <g id="Map/Blip/Segment" transform="translate(112.000000, 256.000000)">
+                <circle id="Border" fill="#006581" cx="8" cy="8" r="8"></circle>
+                <circle id="Color" fill="#008296" cx="8" cy="8" r="7.5"></circle>
+                <circle id="Middle" fill="#FFFFFF" cx="8" cy="8" r="4"></circle>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,207 @@
+/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
+/* SPDX-License-Identifier: MIT-0 */
+
+.settings-modal {
+	max-width: 45.69rem;
+	max-height: 49.23rem;
+
+	.settings-modal-content {
+		gap: 0;
+		height: 100%;
+		max-height: 49.23rem;
+
+		.options-container {
+			gap: 0;
+			width: 33.67%;
+			flex-direction: column;
+
+			.option-item {
+				gap: 0;
+				align-items: center;
+				padding: 0.77rem 0rem 0.77rem 1.23rem;
+				height: 4.31rem;
+				cursor: pointer;
+				border-left-width: 2px;
+				border-left-style: solid;
+				border-left-color: var(--white-color);
+
+				svg {
+					fill: var(--grey-light-color);
+					width: 1.23rem;
+					height: 1.23rem;
+					min-width: 1.23rem;
+					min-height: 1.23rem;
+					margin-right: 1.23rem;
+				}
+
+				&:hover {
+					background-color: rgba(0, 130, 150, 0.08);
+
+					svg {
+						fill: var(--primary-color);
+					}
+				}
+
+				&.selected {
+					border-left-color: var(--primary-color);
+					background-color: rgba(0, 130, 150, 0.08);
+
+					svg {
+						fill: var(--primary-color);
+					}
+				}
+			}
+		}
+
+		.amplify-divider.amplify-divider--vertical.col-divider {
+			border-left-width: 1px;
+			border-color: var(--light-color-2);
+		}
+
+		.option-details-container {
+			gap: 0;
+			width: 66.33%;
+			flex-direction: column;
+
+			.amplify-divider.amplify-divider--horizontal.styles-divider {
+				border-bottom-width: 1px;
+				border-color: var(--grey-color-3);
+			}
+
+			.amplify-flex.sm-styles-container {
+				gap: 1;
+				margin-top: 0.62rem;
+				flex-wrap: wrap;
+
+				.amplify-flex.sm-style {
+					gap: 0;
+					flex-direction: column;
+					justify-content: center;
+					align-items: center;
+					cursor: pointer;
+					width: 8rem;
+
+					img {
+						border-radius: 8px;
+						width: 100%;
+						height: 6.15rem;
+					}
+
+					&.selected {
+						img {
+							border: 1px solid var(--primary-color);
+						}
+
+						p {
+							color: var(--primary-color);
+						}
+					}
+				}
+
+				@media screen and (max-width: 460px) {
+					justify-content: space-evenly;
+				}
+			}
+
+			.amplify-flex.amplify-field.amplify-checkboxfield.sm-checkbox {
+				padding: 1.08rem 0rem;
+
+				.amplify-flex.amplify-checkbox {
+					gap: 0;
+				}
+
+				.amplify-text.amplify-checkbox__label {
+					font-family: "AmazonEmber-Regular";
+					font-size: 1rem;
+					line-height: 1.38rem;
+					color: var(--heading-text-color);
+					margin-left: 1.23rem;
+				}
+
+				.amplify-flex.amplify-checkbox__button {
+					width: 1.54rem;
+					height: 1.54rem;
+				}
+
+				.amplify-flex.amplify-checkbox__button > span {
+					width: 1.54rem !important;
+					height: 1.54rem !important;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+				}
+
+				.amplify-flex.amplify-checkbox__button > span > svg {
+					stroke-width: 4px;
+					stroke-linejoin: bevel;
+					stroke: var(--white-color);
+					width: 8px;
+					height: 8px;
+				}
+			}
+
+			.sm-aws-cloudformation-container {
+				gap: 0;
+				flex-direction: column;
+				overflow-x: hidden;
+				overflow-y: scroll;
+
+				.sm-aws-cloudformation-form {
+					gap: 0;
+					flex-direction: column;
+					align-items: center;
+					padding: 1.23rem;
+
+					.step-number {
+						min-width: 24px;
+						width: 100%;
+						max-width: 24px;
+						height: 24px;
+						border-radius: 4px;
+						background-color: var(--border-separator-color);
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						margin-right: 16px;
+					}
+
+					.hyperlink {
+						cursor: pointer !important;
+						color: var(--primary-color) !important;
+					}
+
+					.amplify-text.step-two-description {
+						font-family: "AmazonEmber-Regular";
+						font-size: 1rem;
+						line-height: 1.38rem;
+						color: var(--grey-color);
+						margin-top: 0.31rem;
+
+						a {
+							font-family: "AmazonEmber-Bold";
+							color: var(--primary-color);
+							cursor: pointer;
+							text-decoration: none;
+						}
+					}
+
+					.icon-check-mark-circle {
+						fill: var(--success);
+						width: 88px;
+						height: 88px;
+					}
+				}
+			}
+		}
+
+		.amplify-divider.amplify-divider--horizontal.title-divider {
+			border-bottom-width: 1px;
+			border-color: var(--light-color-2);
+		}
+	}
+
+	@media screen and (max-width: 960px) {
+		width: 90% !important;
+		height: 90% !important;
+	}
+}

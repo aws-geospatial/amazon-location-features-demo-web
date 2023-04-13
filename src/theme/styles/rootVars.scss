@@ -1,0 +1,80 @@
+/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
+/* SPDX-License-Identifier: MIT-0 */
+
+:root {
+	/* Colors */
+	--primary-color: #008296;
+	--primary-light-color: #30b8c0;
+	--primary-contrast-color: #006581;
+
+	--secondary-color: #ff9900;
+	--secondary-light-color: #ffba3f;
+	--secondary-contrast-color: #db7a00;
+
+	--tertiary-color: #232f3e;
+	--tertiary-light-color: #5d738b;
+	--tertiary-contrast-color: #192435;
+
+	--grey-color: #8e8e93;
+	--grey-light-color: #aeaeb2;
+	--grey-ultra-light-color: #ededed;
+	--grey-contrast-color: #636366;
+	--grey-color-1: #d1d1d6;
+	--grey-color-2: #c7c7cc;
+	--grey-color-3: #e5e5ea;
+	--grey-color-4: #f7f9fc;
+	--grey-color-5: #e6e6ea;
+	--grey-color-6: #d5dbdb;
+	--grey-color-7: #6c7778;
+	--light-color-2: #f2f2f7;
+
+	--black-color: #000;
+	--white-color: #ffffff;
+	--red-color: #ff382c;
+	--green-color: #00b016;
+	--blue-color: #2eafe7;
+	--ghost-white: #f6f6f7;
+
+	--success: #00af1c;
+	--active-menu: #008398;
+
+	/* Fonts */
+	--regular-font-family: "AmazonEmber-Regular";
+	--med-font-family: "AmazonEmber-Medium";
+	--bold-font-family: "AmazonEmber-Bold";
+	--primary-text-size: 13px;
+	--primary-line-height: 18px;
+	--primary-text-color: var(--white-color);
+	--heading-text-color: var(--tertiary-color);
+	--secondary-text-color: var(--grey-color);
+	--error-text-color: var(--red-color);
+	--warning-text-color: var(--secondary-color);
+	--success-text-color: var(--green-color);
+	--info-text-color: var(--blue-color);
+
+	/* Border */
+	--border-radius: 8px;
+	--border-separator-color: var(--light-color-2);
+
+	/* Button */
+	--secondary-button-bg-color: #ebf5f7;
+
+	/* Card */
+	--card-backgound-color: white;
+
+	/* Menu */
+	--hovered-menu-backround-color: rgba(142, 142, 147, 0.08);
+
+	/* Modal */
+	--background-blur-color: rgba(28, 28, 30, 0.45);
+
+	/* TextField */
+	--border-color-textfield: var(--grey-color-1);
+
+	/* Toastify */
+	--toastify-toast-width: auto;
+	--toastify-toast-min-height: 30px;
+
+	/* Scrollbar */
+	--scrollbar-color: #c0c0c0;
+}

@@ -1,0 +1,27 @@
+/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
+/* SPDX-License-Identifier: MIT-0 */
+
+.not-found-card {
+	text-align: center;
+	background-color: var(--white-color);
+	border-radius: 0px 0px 8px 8px;
+	padding: 30px 0px 20px 0px;
+
+	.nfc-search-icon {
+		fill: var(--grey-light-color);
+		height: 40px;
+		width: 40px;
+	}
+
+	.nfc-title {
+		font-family: "AmazonEmber-Bold" !important;
+		font-size: 1.4em;
+		white-space: pre-line;
+		padding-top: 30px;
+	}
+
+	.nfc-text {
+		margin: 12px 0px 30px 0px;
+		padding: 0px 50px 0px 50px;
+	}
+}

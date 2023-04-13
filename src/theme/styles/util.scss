@@ -1,0 +1,73 @@
+/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
+/* SPDX-License-Identifier: MIT-0 */
+
+.verticle-list {
+	font-size: var(--primary-text-size);
+	font-family: "AmazonEmber-Regular";
+	width: 100%;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.verticle-list li {
+	padding: 3px 0;
+}
+
+.verticle-list li:hover {
+	background: var(--hovered-menu-backround-color);
+}
+
+.verticle-list a {
+	cursor: pointer;
+	color: currentColor;
+}
+
+.border-none {
+	border: none;
+}
+
+.color-w {
+	color: #fff;
+}
+
+.w-100 {
+	width: 100%;
+}
+
+.h-100 {
+	height: 100%;
+}
+
+.bold {
+	font-family: "AmazonEmber-Bold";
+}
+
+.secondary-text {
+	color: var(--secondary-text-color);
+}
+
+.x-large-text {
+	// 36px
+	font-size: 2.79rem;
+}
+
+.large-text {
+	// 32px
+	font-size: 2.48rem;
+}
+
+.medium-text {
+	// 20px
+	font-size: 1.55rem;
+}
+
+.regular-text {
+	// 16px
+	font-size: 1.24rem;
+}
+
+.small-text {
+	// 13px
+	font-size: 1.0075rem;
+}
