@@ -547,7 +547,10 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 									name="Avoid tolls"
 									value="Avoid tolls"
 									checked={routeOptions.avoidTolls}
-									onChange={e => setRouteOptions({ ...routeOptions, avoidTolls: e.target.checked })}
+									onChange={e => {
+										setRouteOptions({ ...routeOptions, avoidTolls: e.target.checked });
+										setRouteData(undefined);
+									}}
 								/>
 								<CheckboxField
 									className="option-item"
@@ -555,7 +558,10 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 									name="Avoid ferries"
 									value="Avoid ferries"
 									checked={routeOptions.avoidFerries}
-									onChange={e => setRouteOptions({ ...routeOptions, avoidFerries: e.target.checked })}
+									onChange={e => {
+										setRouteOptions({ ...routeOptions, avoidFerries: e.target.checked });
+										setRouteData(undefined);
+									}}
 								/>
 							</View>
 						)}
