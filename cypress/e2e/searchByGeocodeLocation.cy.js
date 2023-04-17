@@ -8,25 +8,25 @@
 // 3-Verify User can search any location by geocode
 
 describe("Verify that user can search by geocode location", () => {
-	it("authentication", { scrollBehavior: false }, () => {
-		cy.visit(Cypress.env("URL"), {
-			auth: {
-				username: Cypress.env("USERNAME"),
-				password: Cypress.env("PASSWORD")
-			}
-		});
-		cy.wait(25000);
-		cy.get('[placeholder="Search"]')
-			.click()
-			.type("-31.9627092,115.9248736")
-			.wait(5000)
-			.type("{downArrow}")
-			.type("{enter}");
-		cy.wait(10000);
-		cy.get('[class="amplify-text amplify-text--tertiary"]').should(
-			"have.text",
-			"Rivervale, Perth, Western Australia, 6103, AUS"
-		);
-		cy.wait(2000);
-	});
+  it("authentication", { scrollBehavior: false }, () => {
+    cy.visit(Cypress.env("URL"), {
+      auth: {
+        username: Cypress.env("USERNAME"),
+        password: Cypress.env("PASSWORD")
+      }
+    });
+    cy.wait(20000);
+    cy.get('[placeholder="Search"]')
+      .click()
+      .type("-31.9627092,115.9248736")
+      .wait(5000)
+      .type("{downArrow}")
+      .type("{enter}");
+    cy.wait(10000);
+    cy.get('[class="amplify-text amplify-text--tertiary"]').should(
+      "have.text",
+      "Rivervale, Perth, Western Australia, 6103, AUS"
+    );
+    cy.wait(2000);
+  });
 });

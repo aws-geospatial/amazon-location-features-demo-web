@@ -14,39 +14,39 @@
 // 7-Verify User is able to switch between map styles from the right side menu
 
 describe("switch between map styles from settings", () => {
-	it("authentication", { scrollBehavior: false }, () => {
-		cy.visit(Cypress.env("URL"), {
-			auth: {
-				username: Cypress.env("USERNAME"),
-				password: Cypress.env("PASSWORD")
-			}
-		});
-		cy.wait(25000);
-		cy.get('[id="Icon"]').click();
-		cy.wait(2000);
-		cy.contains("Settings").click();
-		cy.wait(2000);
-		cy.contains("Map style").click();
-		cy.wait(2000);
-		cy.contains("Streets").click();
-		cy.wait(5000);
-		cy.contains("Navigation").click();
-		cy.wait(5000);
-		cy.contains("Dark Gray").click();
-		cy.wait(5000);
-		cy.contains("Light Gray").click();
-		cy.wait(5000);
-		cy.contains("Imagery").click();
-		cy.wait(5000);
-		cy.contains("Explore").click();
-		cy.wait(5000);
-		cy.contains("Contrast").click();
-		cy.wait(5000);
-		cy.contains("Explore Truck").click();
-		cy.wait(5000);
-		cy.contains("Hybrid").click();
-		cy.wait(5000);
-		cy.contains("Imagery").click();
-		cy.wait(5000);
-	});
+    it("authentication", { scrollBehavior: false }, () => {
+        cy.visit(Cypress.env("URL"), {
+            auth: {
+                username: Cypress.env("USERNAME"),
+                password: Cypress.env("PASSWORD")
+            }
+        });
+        cy.wait(20000);
+        cy.get('[id="Icon"]').click();
+        cy.wait(2000);
+        cy.contains("Settings").click();
+        cy.wait(2000);
+        cy.contains("Map style").click();
+        cy.wait(2000);
+        cy.contains("Streets").click();
+        cy.wait(5000);
+        cy.contains("Navigation").click();
+        cy.wait(5000);
+        cy.contains("Dark Gray").click();
+        cy.wait(5000);
+        cy.contains("Light Gray").click();
+        cy.wait(5000);
+        cy.contains("Imagery").click();
+        cy.wait(5000);
+        cy.contains("Explore").click();
+        cy.wait(5000);
+        cy.contains("Contrast").click();
+        cy.wait(5000);
+        cy.contains("Explore Truck").click();
+        cy.wait(5000);
+        cy.contains("Hybrid").click();
+        cy.wait(5000);
+        cy.contains("Imagery").click();
+        cy.wait(5000);
+    });
 });

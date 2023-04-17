@@ -16,8 +16,8 @@ VITE_GOOGLE_PLAY_STORE_LINK=<VITE_GOOGLE_PLAY_STORE_LINK><br />
 
 ## Configure
 
-> git clone https://github.com/aws-geospatial/amazon-location-features-demo-web.git<br />
-cd amazon-location-features-demo-web/<br />
+> git clone https://github.com/makeen-project/amazon-location-web-demo.git<br />
+cd amazon-location-web-demo/<br />
 yarn install<br />
 yarn vite
 
@@ -79,6 +79,11 @@ Runs Cypress tests to completion in a browser which can be specified in the `opt
 > Trackers (Name)
 
 - location.aws.com.demo.trackers.Tracker
+
+## Contribute
+
+- Have a bug to report? [Open an issue](https://github.com/makeen-project/amazon-location-web-demo/issues). If possible, include details about your development environment, and an example that shows the issue.
+- Have a feature enhancement? [Open a PR](https://github.com/makeen-project/amazon-location-web-demo/pulls). Tell us what the PR accomplishes and describe it to the best of your knowledge.
 
 ## Licensing
 
