@@ -20,16 +20,6 @@ const emailPass = Cypress.env("EMAIL_PASS");
 const originWeb = Cypress.env("ORIGIN_WEB");
 const getWeb = Cypress.env("GET_WEB");
 
-console.log(identityPoolId);
-console.log(userDomain);
-console.log(userPoolClientId);
-console.log(userPoolId);
-console.log(webSocketUrl);
-console.log(email);
-console.log(emailPass);
-console.log(originWeb);
-console.log(getWeb);
-
 describe("Add Geofence", () => {
 	it("authentication", () => {
 		cy.visit(Cypress.env("URL"), {

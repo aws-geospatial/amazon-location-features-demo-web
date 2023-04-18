@@ -9,25 +9,19 @@
 // 4-Verify user searches by categories
 
 describe("Verify that user can search by categories ", () => {
-    it("authentication", { scrollBehavior: false }, () => {
-        cy.visit(Cypress.env("URL"), {
-            auth: {
-                username: Cypress.env("USERNAME"),
-                password: Cypress.env("PASSWORD")
-            }
-        });
-        cy.wait(20000);
-        cy.get('[placeholder="Search"]').click().type("School").wait(5000).type("{enter}");
-        cy.wait(5000);
-        cy.get('[class="mapboxgl-marker mapboxgl-marker-anchor-center"]').eq(1).should("be.visible");
-        cy.wait(500);
-        cy.get('[class="mapboxgl-marker mapboxgl-marker-anchor-center"]').eq(2).should("be.visible");
-        cy.wait(500);
-        cy.get('[class="mapboxgl-marker mapboxgl-marker-anchor-center"]').eq(3).should("be.visible");
-        cy.wait(500);
-        cy.get('[class="mapboxgl-marker mapboxgl-marker-anchor-center"]').eq(4).should("be.visible");
-        cy.wait(500);
-        cy.get('[class="mapboxgl-marker mapboxgl-marker-anchor-center"]').eq(5).should("be.visible");
-        cy.wait(500);
-    });
+	it("should authenticate with credentials and search for schools", () => {
+		cy.visit(Cypress.env("URL"), {
+			auth: {
+				username: Cypress.env("USERNAME"),
+				password: Cypress.env("PASSWORD")
+			}
+		});
+		cy.wait(20000);
+		cy.get('[placeholder="Search"]').click().type("School").wait(5000).type("{enter}");
+		cy.wait(5000);
+		for (let i = 1; i <= 5; i++) {
+			cy.get('[class="mapboxgl-marker mapboxgl-marker-anchor-center"]').eq(i).should("be.visible");
+			cy.wait(500);
+		}
+	});
 });

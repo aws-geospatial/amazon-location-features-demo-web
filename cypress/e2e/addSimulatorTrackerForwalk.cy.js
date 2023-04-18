@@ -23,16 +23,6 @@ const emailPass = Cypress.env("EMAIL_PASS");
 const originWeb = Cypress.env("ORIGIN_WEB");
 const getWeb = Cypress.env("GET_WEB");
 
-console.log(identityPoolId);
-console.log(userDomain);
-console.log(userPoolClientId);
-console.log(userPoolId);
-console.log(webSocketUrl);
-console.log(email);
-console.log(emailPass);
-console.log(originWeb);
-console.log(getWeb);
-
 context("Add Simulator Tracker for walk", () => {
 	it("authentication", () => {
 		cy.visit(Cypress.env("URL"), {
@@ -68,8 +58,8 @@ context("Add Simulator Tracker for walk", () => {
 			cy.get(Cypress.env("GET_WEB")).then(els => {
 				[...els].forEach(el => {
 					cy.wrap(el).get('[placeholder="Username"]').eq(1).type(Cypress.env("EMAIL"));
-                    cy.wrap(el).get('[placeholder="Password"]').eq(1).type(Cypress.env("EMAIL_PASS"));
-                    cy.wrap(el).get('[name="signInSubmitButton"]').eq(1).click();
+					cy.wrap(el).get('[placeholder="Password"]').eq(1).type(Cypress.env("EMAIL_PASS"));
+					cy.wrap(el).get('[name="signInSubmitButton"]').eq(1).click();
 				});
 			});
 		});
