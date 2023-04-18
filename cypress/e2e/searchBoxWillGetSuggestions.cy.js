@@ -9,25 +9,25 @@
 // 4-Verify user sees 5 suggestions
 
 describe("Verify that once you start typing a text inside search box you will get five suggestions", () => {
-  it("authentication", { scrollBehavior: false }, () => {
-    cy.visit(Cypress.env("URL"), {
-      auth: {
-        username: Cypress.env("USERNAME"),
-        password: Cypress.env("PASSWORD")
-      }
-    });
-    cy.wait(20000);
-    cy.get('[placeholder="Search"]').click().type("Rio Tinto");
-    cy.wait(5000);
-    cy.get("div").should("contain", "Rio Tinto");
-    cy.wait(2000);
-    cy.get("div").should("contain", "Rio Tinto");
-    cy.wait(2000);
-    cy.get("div").should("contain", "Rio Tinto");
-    cy.wait(2000);
-    cy.get("div").should("contain", "Rio Tinto");
-    cy.wait(2000);
-    cy.get("div").should("contain", "Rio Tinto");
-    cy.wait(2000);
-  });
+	it("authentication", { scrollBehavior: false }, () => {
+		cy.visit(Cypress.env("URL"), {
+			auth: {
+				username: Cypress.env("USERNAME"),
+				password: Cypress.env("PASSWORD")
+			}
+		});
+		cy.wait(25000);
+		cy.get('[placeholder="Search"]').click().type("Rio Tinto");
+		cy.wait(5000);
+		cy.get("div").should("contain", "Rio Tinto");
+		cy.wait(2000);
+		cy.get("div").should("contain", "Rio Tinto");
+		cy.wait(2000);
+		cy.get("div").should("contain", "Rio Tinto");
+		cy.wait(2000);
+		cy.get("div").should("contain", "Rio Tinto");
+		cy.wait(2000);
+		cy.get("div").should("contain", "Rio Tinto");
+		cy.wait(2000);
+	});
 });

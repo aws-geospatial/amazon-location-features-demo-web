@@ -12,19 +12,19 @@
 // 7-Verify User is able to switch between data providers from settings
 
 describe("Switch between data providers from Settings", () => {
-    it("authentication", { scrollBehavior: false }, () => {
-        cy.visit(Cypress.env("URL"), {
-            auth: {
-                username: Cypress.env("USERNAME"),
-                password: Cypress.env("PASSWORD")
-            }
-        });
-        cy.wait(20000);
-        cy.get('[id="Icon"]').click();
-        cy.wait(2000);
-        cy.contains("Settings").click();
-        cy.wait(2000);
-        cy.get('[class="amplify-flex amplify-radio__button"]').eq(1).click();
-        cy.wait(6000);
-    });
+	it("authentication", { scrollBehavior: false }, () => {
+		cy.visit(Cypress.env("URL"), {
+			auth: {
+				username: Cypress.env("USERNAME"),
+				password: Cypress.env("PASSWORD")
+			}
+		});
+		cy.wait(25000);
+		cy.get('[id="Icon"]').click();
+		cy.wait(2000);
+		cy.contains("Settings").click();
+		cy.wait(2000);
+		cy.get('[class="amplify-flex amplify-radio__button"]').eq(1).click();
+		cy.wait(6000);
+	});
 });

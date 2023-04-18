@@ -11,24 +11,24 @@
 // 6-Verify User sees the travel time with directions button in a card
 
 describe("Verify that when user searches exact match with the address it must display the travel time with directions button in the POI card", () => {
-  it("authentication", { scrollBehavior: false }, () => {
-    cy.visit(Cypress.env("URL"), {
-      auth: {
-        username: Cypress.env("USERNAME"),
-        password: Cypress.env("PASSWORD")
-      }
-    });
-    cy.wait(20000);
-    cy.get('[placeholder="Search"]').click().type("Rio Tinto Perth Western Australia");
-    cy.wait(10000);
-    cy.get("div").should("contain", "Rio Tinto Operations Centre");
-    cy.wait(2000);
-    cy.get('[placeholder="Search"]').click().type("{downArrow}{downArrow}{enter}");
-    cy.wait(5000);
-    cy.get('[class="amplify-text amplify-text--tertiary"]').should(
-      "have.text",
-      "11 George Wiencke Dr, Perth Airport, Perth, Western Australia, 6105, AUS"
-    );
-    cy.wait(3000);
-  });
+	it("authentication", { scrollBehavior: false }, () => {
+		cy.visit(Cypress.env("URL"), {
+			auth: {
+				username: Cypress.env("USERNAME"),
+				password: Cypress.env("PASSWORD")
+			}
+		});
+		cy.wait(25000);
+		cy.get('[placeholder="Search"]').click().type("Rio Tinto Perth Western Australia");
+		cy.wait(10000);
+		cy.get("div").should("contain", "Rio Tinto Operations Centre");
+		cy.wait(2000);
+		cy.get('[placeholder="Search"]').click().type("{downArrow}{downArrow}{enter}");
+		cy.wait(5000);
+		cy.get('[class="amplify-text amplify-text--tertiary"]').should(
+			"have.text",
+			"11 George Wiencke Dr, Perth Airport, Perth, Western Australia, 6105, AUS"
+		);
+		cy.wait(3000);
+	});
 });

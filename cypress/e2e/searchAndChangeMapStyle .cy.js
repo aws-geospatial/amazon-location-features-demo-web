@@ -11,41 +11,41 @@
 // 6-Verify User can change map styles without any need to connect to AWS
 
 describe("Verify that user can navigate on map or search or do routing or change map style without any need to connect to AWs", () => {
-  it("authentication", { scrollBehavior: false }, () => {
-    cy.visit(Cypress.env("URL"), {
-      auth: {
-        username: Cypress.env("USERNAME"),
-        password: Cypress.env("PASSWORD")
-      }
-    });
-    cy.wait(20000);
-    cy.get('[placeholder="Search"]').click().type("Coffee").wait(5000).type("{enter}");
-    cy.wait(10000);
-    cy.get(".map-styles-button > svg").click();
-    cy.wait(3000);
-    cy.contains("Streets").click();
-    cy.wait(5000);
-    cy.contains("Navigation").click();
-    cy.wait(5000);
-    cy.contains("Dark Gray").click();
-    cy.wait(5000);
-    cy.contains("Light Gray").click();
-    cy.wait(5000);
-    cy.contains("Imagery").click();
-    cy.wait(5000);
-    cy.get('[type="radio"]').check({ force: true });
-    cy.wait(2000);
-    cy.get(".map-styles-button > svg").click();
-    cy.wait(3000);
-    cy.contains("Explore").click();
-    cy.wait(3000);
-    cy.contains("Contrast").click();
-    cy.wait(5000);
-    cy.contains("Explore Truck").click();
-    cy.wait(5000);
-    cy.contains("Hybrid").click();
-    cy.wait(5000);
-    cy.contains("Imagery").click();
-    cy.wait(5000);
-  });
+	it("authentication", { scrollBehavior: false }, () => {
+		cy.visit(Cypress.env("URL"), {
+			auth: {
+				username: Cypress.env("USERNAME"),
+				password: Cypress.env("PASSWORD")
+			}
+		});
+		cy.wait(25000);
+		cy.get('[placeholder="Search"]').click().type("Coffee").wait(5000).type("{enter}");
+		cy.wait(10000);
+		cy.get(".map-styles-button > svg").click();
+		cy.wait(3000);
+		cy.contains("Streets").click();
+		cy.wait(5000);
+		cy.contains("Navigation").click();
+		cy.wait(5000);
+		cy.contains("Dark Gray").click();
+		cy.wait(5000);
+		cy.contains("Light Gray").click();
+		cy.wait(5000);
+		cy.contains("Imagery").click();
+		cy.wait(5000);
+		cy.get('[type="radio"]').check({ force: true });
+		cy.wait(2000);
+		cy.get(".map-styles-button > svg").click();
+		cy.wait(3000);
+		cy.contains("Explore").click();
+		cy.wait(3000);
+		cy.contains("Contrast").click();
+		cy.wait(5000);
+		cy.contains("Explore Truck").click();
+		cy.wait(5000);
+		cy.contains("Hybrid").click();
+		cy.wait(5000);
+		cy.contains("Imagery").click();
+		cy.wait(5000);
+	});
 });

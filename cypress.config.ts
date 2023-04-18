@@ -1,7 +1,5 @@
 import { defineConfig } from "cypress";
 import { cypressBrowserPermissionsPlugin } from 'cypress-browser-permissions'
-import allureWriter from "@shelex/cypress-allure-plugin/writer"
-
 
 export default defineConfig({
 	viewportWidth: 1280,
@@ -16,7 +14,6 @@ export default defineConfig({
 	e2e: {
 		setupNodeEvents(on, config) {
 			config = cypressBrowserPermissionsPlugin(on, config)
-			allureWriter(on, config);
 			return config
 		},
 

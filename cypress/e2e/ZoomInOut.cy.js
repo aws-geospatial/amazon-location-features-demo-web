@@ -10,13 +10,13 @@
 
 describe("Verify that User can Zoom in/out", () => {
 	it("authentication", { scrollBehavior: false }, () => {
-		cy.visit(Cypress.env("URL"), {
+		cy.visit(Cypress.env("url"), {
 			auth: {
 				username: Cypress.env("USERNAME"),
 				password: Cypress.env("PASSWORD")
 			}
 		});
-		cy.wait(20000);
+		cy.wait(15000);
 		for (let i = 0; i < 3; i++) {
 			cy.get('[title="Zoom in"]').click();
 			cy.wait(2000);
