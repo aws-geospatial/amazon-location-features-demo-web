@@ -10,19 +10,19 @@
 // 5-Verify User can select default route options from settings
 
 describe("Select default route options from settings", () => {
-	it("authentication", { scrollBehavior: false }, () => {
-		cy.visit(Cypress.env("URL"), {
-			auth: {
-				username: Cypress.env("USERNAME"),
-				password: Cypress.env("PASSWORD")
-			}
-		});
-		cy.wait(25000);
-		cy.get('[id="Icon"]').click();
-		cy.wait(2000);
-		cy.contains("Settings").click();
-		cy.wait(2000);
-		cy.contains("Default route options").click();
-		cy.wait(6000);
-	});
+    it("authentication", { scrollBehavior: false }, () => {
+        cy.visit(Cypress.env("URL"), {
+            auth: {
+                username: Cypress.env("USERNAME"),
+                password: Cypress.env("PASSWORD")
+            }
+        });
+        cy.wait(20000);
+        cy.get('[id="Icon"]').click();
+        cy.wait(2000);
+        cy.contains("Settings").click();
+        cy.wait(2000);
+        cy.contains("Default route options").click();
+        cy.wait(6000);
+    });
 });

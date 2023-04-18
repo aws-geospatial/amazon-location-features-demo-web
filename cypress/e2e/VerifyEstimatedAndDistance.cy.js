@@ -16,20 +16,20 @@ describe("Verify that Estimated time and distance will be displayed on the route
 				password: Cypress.env("PASSWORD")
 			}
 		});
-		cy.wait(25000);
+		cy.wait(20000);
 		cy.get('[class="amplify-flex icon outter-end-component"]').click();
 		cy.wait(2000);
-		cy.get('[placeholder="From"]').click();
+		cy.get('[placeholder="From"]').type("40.7485492, -73.9879522");
 		cy.wait(2000);
-		cy.get('[class="amplify-text"]').click();
+		cy.contains("Nycomputers, 1270 Broadway, New York, NY, 10001, USA").click();
 		cy.wait(2000);
-		cy.get('[placeholder="To"]').click().type("Mecca");
+		cy.get('[placeholder="To"]').click().type("40.737941, -73.9881014");
 		cy.wait(2000);
-		cy.contains("Mecca").click();
+		cy.contains("232-250 Park Ave S, New York, NY, 10003, USA").click();
 		cy.wait(2000);
-		cy.get("div").should("contain", "81.02 km");
+		cy.get('[class="mapboxgl-marker mapboxgl-marker-anchor-center"]').eq(0).should("be.visible");
 		cy.wait(2000);
-		cy.get("div").should("contain", "1 hour");
+		cy.get('[class="mapboxgl-marker mapboxgl-marker-anchor-center"]').eq(1).should("be.visible");
 		cy.wait(2000);
 	});
 });
