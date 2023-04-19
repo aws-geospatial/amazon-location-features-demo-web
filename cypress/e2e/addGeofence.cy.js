@@ -46,8 +46,8 @@ describe("Add Geofence", () => {
 			cy.get(Cypress.env("GET_WEB")).then(els => {
 				[...els].forEach(el => {
 					cy.wait(5000);
-					cy.wrap(el).get('[placeholder="Username"]').eq(1).invoke("val", Cypress.env("EMAIL"));
-					cy.wrap(el).get('[placeholder="Password"]').eq(1).invoke("val", Cypress.env("EMAIL_PASS"));
+					// cy.wrap(el).get('[placeholder="Username"]').eq(1).invoke("val", Cypress.env("EMAIL"));
+					// cy.wrap(el).get('[placeholder="Password"]').eq(1).invoke("val", Cypress.env("EMAIL_PASS"));
 					cy.wrap(el).get('[name="signInSubmitButton"]').eq(1).click();
 				});
 			});
