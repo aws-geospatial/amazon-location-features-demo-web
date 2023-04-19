@@ -24,42 +24,39 @@ jobs:
       - name: Setup Cypress
         run: yarn add cypress --dev
       
-      - name: Setup JQ if not present
-        run: jq --version ; sudo apt update ; sudo apt install -y jq
-      
-      - name: Update Cypress env
-        run: |
-          echo '{}' > cypress.env.json
-          jq -n \
-          --arg EMAIL "${{ secrets.EMAIL }}" \
-          --arg EMAIL_PASS "${{ secrets.EMAILPASS }}" \
-          --arg IDENTITY_POOL_ID "${{ secrets.IDENTITYPOOLID }}" \
-          --arg USER_DOMAIN "${{ secrets.USERDOMAIN }}" \
-          --arg USER_POOL_CLIENT_ID "${{ secrets.USERPOOLCLIENTID }}" \
-          --arg USER_POOL_ID "${{ secrets.USERPOOLID }}" \
-          --arg WEBSOCKET_URL "${{ secrets.WEBSOCKETURL }}" \
-          --arg USERNAME "${{ secrets.USERNAME }}" \
-          --arg PASSWORD "${{ secrets.PASSWORD }}" \
-          --arg URL "${{ secrets.URL }}" \
-          --arg ORIGIN_WEB "${{ secrets.ORIGINWEB }}" \
-          --arg GET_WEB "${{ secrets.GETWEB }}" \
-            '. + {EMAIL: $EMAIL, EMAIL_PASS: $EMAIL_PASS, IDENTITY_POOL_ID: $IDENTITY_POOL_ID, USER_DOMAIN: $USER_DOMAIN, USER_POOL_CLIENT_ID: $USER_POOL_CLIENT_ID, USER_POOL_ID: $USER_POOL_ID, WEBSOCKET_URL: $WEBSOCKET_URL, USERNAME: $USERNAME, PASSWORD: $PASSWORD, URL: $URL, ORIGIN_WEB: $ORIGIN_WEB, GET_WEB: $GET_WEB }' \
-            cypress.env.json > env.json.tmp
-          mv env.json.tmp cypress.env.json
-          cat cypress.env.json
+#       - name: Update Cypress env
+#         run: |
+#           echo '{}' > cypress.env.json
+#           jq -n \
+#           --arg EMAIL "${{ secrets.EMAIL }}" \
+#           --arg EMAIL_PASS "${{ secrets.EMAILPASS }}" \
+#           --arg IDENTITY_POOL_ID "${{ secrets.IDENTITYPOOLID }}" \
+#           --arg USER_DOMAIN "${{ secrets.USERDOMAIN }}" \
+#           --arg USER_POOL_CLIENT_ID "${{ secrets.USERPOOLCLIENTID }}" \
+#           --arg USER_POOL_ID "${{ secrets.USERPOOLID }}" \
+#           --arg WEBSOCKET_URL "${{ secrets.WEBSOCKETURL }}" \
+#           --arg USERNAME "${{ secrets.USERNAME }}" \
+#           --arg PASSWORD "${{ secrets.PASSWORD }}" \
+#           --arg URL "${{ secrets.URL }}" \
+#           --arg ORIGIN_WEB "${{ secrets.ORIGINWEB }}" \
+#           --arg GET_WEB "${{ secrets.GETWEB }}" \
+#             '. + {EMAIL: $EMAIL, EMAIL_PASS: $EMAIL_PASS, IDENTITY_POOL_ID: $IDENTITY_POOL_ID, USER_DOMAIN: $USER_DOMAIN, USER_POOL_CLIENT_ID: $USER_POOL_CLIENT_ID, USER_POOL_ID: $USER_POOL_ID, WEBSOCKET_URL: $WEBSOCKET_URL, USERNAME: $USERNAME, PASSWORD: $PASSWORD, URL: $URL, ORIGIN_WEB: $ORIGIN_WEB, GET_WEB: $GET_WEB }' \
+#             cypress.env.json > env.json.tmp
+#           mv env.json.tmp cypress.env.json
+#           cat cypress.env.json
 
       - name: Run Cypress test
-#         env: 
-#           CYPRESS_EMAIL:  ${{ secrets.EMAIL }}
-#           CYPRESS_EMAIL_PASS:  ${{ secrets.EMAILPASS }} 
-#           CYPRESS_IDENTITY_POOL_ID:  ${{ secrets.IDENTITYPOOLID }} 
-#           CYPRESS_USER_DOMAIN:  ${{ secrets.USERDOMAIN }}
-#           CYPRESS_USER_POOL_CLIENT_ID:  ${{ secrets.USERPOOLCLIENTID }} 
-#           CYPRESS_USER_POOL_ID:  ${{ secrets.USERPOOLID }}
-#           CYPRESS_WEBSOCKET_URL:  ${{ secrets.WEBSOCKETURL }}
-#           CYPRESS_USERNAME:  ${{ secrets.USERNAME }}
-#           CYPRESS_PASSWORD:  ${{ secrets.PASSWORD }}
-#           CYPRESS_URL:  ${{ secrets.URL }}
-#           CYPRESS_ORIGIN_WEB:  ${{ secrets.ORIGINWEB }} 
-#           CYPRESS_GET_WEB:  ${{ secrets.GETWEB }}        
+        env: 
+          CYPRESS_EMAIL:  ${{ secrets.EMAIL }}
+          CYPRESS_EMAIL_PASS:  ${{ secrets.EMAILPASS }} 
+          CYPRESS_IDENTITY_POOL_ID:  ${{ secrets.IDENTITYPOOLID }} 
+          CYPRESS_USER_DOMAIN:  ${{ secrets.USERDOMAIN }}
+          CYPRESS_USER_POOL_CLIENT_ID:  ${{ secrets.USERPOOLCLIENTID }} 
+          CYPRESS_USER_POOL_ID:  ${{ secrets.USERPOOLID }}
+          CYPRESS_WEBSOCKET_URL:  ${{ secrets.WEBSOCKETURL }}
+          CYPRESS_USERNAME:  ${{ secrets.USERNAME }}
+          CYPRESS_PASSWORD:  ${{ secrets.PASSWORD }}
+          CYPRESS_URL:  ${{ secrets.URL }}
+          CYPRESS_ORIGIN_WEB:  ${{ secrets.ORIGINWEB }} 
+          CYPRESS_GET_WEB:  ${{ secrets.GETWEB }}        
         run: yarn cypress run
