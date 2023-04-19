@@ -58,23 +58,7 @@ jobs:
           CYPRESS_PASSWORD:  ${{ secrets.PASSWORD }}
           CYPRESS_URL:  ${{ secrets.URL }}
           CYPRESS_ORIGIN_WEB:  ${{ secrets.ORIGINWEB }} 
-          CYPRESS_GET_WEB:  ${{ secrets.GETWEB }}        
-        run: |
-          echo $CYPRESS_EMAIL >> secrets.txt
-          echo $CYPRESS_EMAIL_PASS >> secrets.txt
-          echo $CYPRESS_IDENTITY_POOL_ID >> secrets.txt
-          echo $CYPRESS_USER_DOMAIN >> secrets.txt
-          echo $CYPRESS_USER_POOL_CLIENT_ID >> secrets.txt
-          echo $CYPRESS_USER_POOL_ID >> secrets.txt
-          echo $CYPRESS_WEBSOCKET_URL >> secrets.txt
-          echo $CYPRESS_USERNAME >> secrets.txt
-          echo $CYPRESS_PASSWORD >> secrets.txt
-          echo $CYPRESS_URL >> secrets.txt
-          echo $CYPRESS_ORIGIN_WEB >> secrets.txt
-          echo $CYPRESS_GET_WEB >> secrets.txt
-#         run: yarn cypress run
-
-      - name: Run tmate
-        uses: mxschmitt/action-tmate@v2 
+          CYPRESS_GET_WEB:  ${{ secrets.GETWEB }}
+        run: yarn cypress run
 
 
