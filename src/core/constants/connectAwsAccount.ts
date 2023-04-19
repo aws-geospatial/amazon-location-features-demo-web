@@ -4,12 +4,12 @@
 const connectAwsAccount = {
 	TITLE: "Connect AWS Account",
 	TITLE_DESC:
-		"Connect your AWS account to enable Geofences and Trackers. This will ensure your tracking and geofencing data is only stored in your account. After you log in, all features of the Demo App will run using resources you deploy in your AWS account. Log out if you wish to continue running the Demo App using resources in AWS’s demo app account.",
+		"Connect your AWS account to enable Geofences and Trackers. This will ensure your tracking and geofencing data is only stored in your account. After you log in, all features of the Showcase App will run using resources you deploy in your AWS account. Log out if you wish to continue running the Showcase App using resources in AWS’s showcase app account.",
 	HOW_TO: "How to connect:",
 	STEP1: " to run a CloudFormation template to securely create required resources.",
 	STEP1_DESC:
 		"You can delete these resources through the stack deletion option or ‘Manage resources’ pages in the menu on the left.",
-	STEP2: "Connect the demo app with the recently created AWS resources by copying in input fields.",
+	STEP2: "Connect the showcase app with the recently created AWS resources by copying in input fields.",
 	STEP2_DESC:
 		"From your CloudFormation output section copy the corresponding named values as reflected in the right section form (IdentityPoolId etc.). ",
 	STEP3: "Log in using the generated user credentials.",

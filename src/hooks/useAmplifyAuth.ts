@@ -127,8 +127,8 @@ const useAmplifyAuth = () => {
 								oauth: {
 									domain,
 									scope: ["email", "openid", "profile"],
-									redirectSignIn: `${window.location.origin}${appConfig.ROUTES.DEMO}`,
-									redirectSignOut: `${window.location.origin}${appConfig.ROUTES.DEMO}`,
+									redirectSignIn: `${window.location.origin}${appConfig.ROUTES.SHOWCASE}`,
+									redirectSignOut: `${window.location.origin}${appConfig.ROUTES.SHOWCASE}`,
 									responseType: "token"
 								}
 							},

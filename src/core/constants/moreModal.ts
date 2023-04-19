@@ -9,7 +9,7 @@ const moreModal = {
 		COPYRIGHT: `© ${new Date().getFullYear()}, Amazon Web Services, Inc. or its affiliates. All rights reserved.`
 	},
 	TERMS: {
-		TERMS_PREFIX: "By downloading, installing, or using the Amazon Location Demo App, you agree to the App's ",
+		TERMS_PREFIX: "By downloading, installing, or using the Amazon Location Showcase App, you agree to the App's ",
 		TERMS_LINK_LABEL: "Terms & Conditions",
 		TERMS_SUFFIX: " for use. "
 	},
