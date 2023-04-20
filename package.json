@@ -12,7 +12,7 @@
 		"cypress open": "cypress open",
 		"ui-regression-allure": "rm -r allure-results/ allure-report cypress/screenshots || cypress run --browser chrome --spec cypress/e2e/**.js --env allure=true",
 		"allure:report": "allure generate allure-results --clean -o allure-report",
-		"cypress": "cypress run --browser chrome --spec cypress/e2e/addSimulatorTrackerForDrone.cy.js"
+		"cypress": "cypress run --browser chrome --spec cypress/e2e/addGeofence.cy.js"
 	},
 	"dependencies": {
 		"@aws-amplify/ui-react": "^3.5.11",
