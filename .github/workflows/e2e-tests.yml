@@ -23,6 +23,8 @@ jobs:
 
       - name: Setup Cypress
         run: yarn add cypress --dev
+        run: |
+          echo '${{ secrets.CYPRESS_ENV }}' > cypress.env.json
 
       - name: Run Cypress test
         env: 
