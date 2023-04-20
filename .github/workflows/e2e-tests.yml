@@ -18,31 +18,24 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
 
-        - name: Write the cypress.env.json file
-        run: |
-        echo '${{ secrets.CYPRESS_ENV }}' > cypress.env.json
-
       - name: Install Dependencies
         run: yarn install           
 
       - name: Setup Cypress
         run: yarn add cypress --dev
 
-
-
-      # - name: Run Cypress test
-        # env: 
-        #   CYPRESS_EMAIL:  ${{ secrets.EMAIL }}
-        #   CYPRESS_EMAIL_PASS:  ${{ secrets.EMAILPASS }} 
-        #   CYPRESS_IDENTITY_POOL_ID:  ${{ secrets.IDENTITYPOOLID }} 
-        #   CYPRESS_USER_DOMAIN:  ${{ secrets.USERDOMAIN }}
-        #   CYPRESS_USER_POOL_CLIENT_ID:  ${{ secrets.USERPOOLCLIENTID }} 
-        #   CYPRESS_USER_POOL_ID:  ${{ secrets.USERPOOLID }}
-        #   CYPRESS_WEBSOCKET_URL:  ${{ secrets.WEBSOCKETURL }}
-        #   CYPRESS_USERNAME:  ${{ secrets.USERNAME }}
-        #   CYPRESS_PASSWORD:  ${{ secrets.PASSWORD }}
-        #   CYPRESS_URL:  ${{ secrets.URL }}
-        #   CYPRESS_ORIGIN_WEB:  ${{ secrets.ORIGINWEB }} 
-        #   CYPRESS_GET_WEB:  ${{ secrets.GETWEB }}        
-        
-        # run: yarn cypress run
+      - name: Run Cypress test
+        env: 
+          CYPRESS_EMAIL:  ${{ secrets.EMAIL }}
+          CYPRESS_EMAIL_PASS:  ${{ secrets.EMAILPASS }} 
+          CYPRESS_IDENTITY_POOL_ID:  ${{ secrets.IDENTITYPOOLID }} 
+          CYPRESS_USER_DOMAIN:  ${{ secrets.USERDOMAIN }}
+          CYPRESS_USER_POOL_CLIENT_ID:  ${{ secrets.USERPOOLCLIENTID }} 
+          CYPRESS_USER_POOL_ID:  ${{ secrets.USERPOOLID }}
+          CYPRESS_WEBSOCKET_URL:  ${{ secrets.WEBSOCKETURL }}
+          CYPRESS_USERNAME:  ${{ secrets.USERNAME }}
+          CYPRESS_PASSWORD:  ${{ secrets.PASSWORD }}
+          CYPRESS_URL:  ${{ secrets.URL }}
+          CYPRESS_ORIGIN_WEB:  ${{ secrets.ORIGINWEB }} 
+          CYPRESS_GET_WEB:  ${{ secrets.GETWEB }}        
+        run: yarn cypress run
