@@ -13,7 +13,12 @@
 // 8- I click on Simulate
 // 9- Verify I see a toast message while entering “Entered {geofence name} geofence
 // 10- Verify I see a toast message while exiting “Exited {geofence name} geofence
-const identityPoolId = Cypress.env("IDENTITY_POOL_ID");
+
+
+
+describe("Add Simulator Tracker for drone", () => {
+	it("authentication", () => {
+    const identityPoolId = Cypress.env("IDENTITY_POOL_ID");
 const userDomain = Cypress.env("USER_DOMAIN");
 const userPoolClientId = Cypress.env("USER_POOL_CLIENT_ID");
 const userPoolId = Cypress.env("USER_POOL_ID");
@@ -31,10 +36,6 @@ console.log("userDomain", userDomain);
 console.log("userPoolClientId", userPoolClientId);
 console.log("userPoolId", userPoolId);
 console.log("webSocketUrl", webSocketUrl);
-
-
-// describe("Add Simulator Tracker for drone", () => {
-// 	it("authentication", () => {
 // 		cy.visit(Cypress.env("URL"), {
 // 			auth: {
 // 				username: Cypress.env("USERNAME"),
@@ -93,5 +94,5 @@ console.log("webSocketUrl", webSocketUrl);
 // 		cy.wait(20000);
 // 		cy.get("div").should("contain", "Pause");
 // 		cy.wait(2000);
-// 	});
-// });
+	});
+});
