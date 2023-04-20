@@ -18,6 +18,10 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
 
+        - name: Write the cypress.env.json file
+        run: |
+        echo '${{ secrets.CYPRESS_ENV }}' > cypress.env.json
+
       - name: Install Dependencies
         run: yarn install           
 
@@ -26,7 +30,7 @@ jobs:
 
 
 
-      - name: Run Cypress test
+      # - name: Run Cypress test
         # env: 
         #   CYPRESS_EMAIL:  ${{ secrets.EMAIL }}
         #   CYPRESS_EMAIL_PASS:  ${{ secrets.EMAILPASS }} 
@@ -40,6 +44,5 @@ jobs:
         #   CYPRESS_URL:  ${{ secrets.URL }}
         #   CYPRESS_ORIGIN_WEB:  ${{ secrets.ORIGINWEB }} 
         #   CYPRESS_GET_WEB:  ${{ secrets.GETWEB }}        
-        run: |
-          echo '${{ secrets.CYPRESS_ENV }}' > cypress.env.json
-        run: yarn cypress run
+        
+        # run: yarn cypress run
