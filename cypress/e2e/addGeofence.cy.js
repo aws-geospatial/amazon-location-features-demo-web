@@ -58,7 +58,9 @@ describe("Add Geofence", () => {
 		cy.wait(5000);
 		cy.get('[class="amplify-flex geofence-button"]').click();
 		cy.wait(2000);
-		cy.get('[class="mapboxgl-user-location-dot mapboxgl-marker mapboxgl-marker-anchor-center"]', { timeout: 10000 }).click();
+		cy.get('[placeholder="Enter address or coordinates"]').type("Rio Tinto Perth Western Australia");
+		cy.wait(4000);
+		cy.contains("Rio Tinto Operations Centre").click();
 		cy.wait(2000);
 		cy.get('[placeholder="Type unique Geofence Name"]').type("Geofence1");
 		cy.wait(2000);
