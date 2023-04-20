@@ -13,25 +13,6 @@
 // 8- I click on Simulate
 // 9- Verify I see a toast message while entering “Entered {geofence name} geofence
 // 10- Verify I see a toast message while exiting “Exited {geofence name} geofence
-const identityPoolId = Cypress.env("IDENTITY_POOL_ID");
-const userDomain = Cypress.env("USER_DOMAIN");
-const userPoolClientId = Cypress.env("USER_POOL_CLIENT_ID");
-const userPoolId = Cypress.env("USER_POOL_ID");
-const webSocketUrl = Cypress.env("WEB_SOCKET_URL");
-const email = Cypress.env("EMAIL");
-const emailPass = Cypress.env("EMAIL_PASS");
-const originWeb = Cypress.env("ORIGIN_WEB");
-const getWeb = Cypress.env("GET_WEB");
-console.log("email", email);
-console.log("emailPass", emailPass);
-console.log("originWeb", originWeb);
-console.log("getWeb", getWeb);
-console.log("identityPoolId", identityPoolId);
-console.log("userDomain", userDomain);
-console.log("userPoolClientId", userPoolClientId);
-console.log("userPoolId", userPoolId);
-console.log("webSocketUrl", webSocketUrl);
-
 
 describe("Add Simulator Tracker for car", () => {
 	it("authentication", () => {
@@ -48,15 +29,15 @@ describe("Add Simulator Tracker for car", () => {
 		cy.wait(2000);
 		cy.contains("Connect AWS Account").click();
 		cy.wait(2000);
-		cy.get('[placeholder="Enter IdentityPoolId"]').type(identityPoolId);
+		cy.get('[placeholder="Enter IdentityPoolId"]').type(Cypress.env("IDENTITY_POOL_ID"));
 		cy.wait(2000);
-		cy.get('[placeholder="Enter UserDomain"]').type(userDomain);
+		cy.get('[placeholder="Enter UserDomain"]').type(Cypress.env("USER_DOMAIN"));
 		cy.wait(2000);
-		cy.get('[placeholder="Enter UserPoolClientId"]').type(userPoolClientId);
+		cy.get('[placeholder="Enter UserPoolClientId"]').type(Cypress.env("USER_POOL_CLIENT_ID"));
 		cy.wait(2000);
-		cy.get('[placeholder="Enter UserPoolId"]').type(userPoolId);
+		cy.get('[placeholder="Enter UserPoolId"]').type(Cypress.env("USER_POOL_ID"));
 		cy.wait(2000);
-		cy.get('[placeholder="Enter WebSocketUrl"]').type(webSocketUrl);
+		cy.get('[placeholder="Enter WebSocketUrl"]').type(Cypress.env("WEB_SOCKET_URL"));
 		cy.wait(2000);
 		cy.get('[type="button"]').eq(3).click();
 		cy.wait(6000);

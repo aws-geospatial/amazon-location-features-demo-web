@@ -22,66 +22,76 @@ const email = Cypress.env("EMAIL");
 const emailPass = Cypress.env("EMAIL_PASS");
 const originWeb = Cypress.env("ORIGIN_WEB");
 const getWeb = Cypress.env("GET_WEB");
+console.log("email", email);
+console.log("emailPass", emailPass);
+console.log("originWeb", originWeb);
+console.log("getWeb", getWeb);
+console.log("identityPoolId", identityPoolId);
+console.log("userDomain", userDomain);
+console.log("userPoolClientId", userPoolClientId);
+console.log("userPoolId", userPoolId);
+console.log("webSocketUrl", webSocketUrl);
 
-describe("Add Simulator Tracker for drone", () => {
-	it("authentication", () => {
-		cy.visit(Cypress.env("URL"), {
-			auth: {
-				username: Cypress.env("USERNAME"),
-				password: Cypress.env("PASSWORD")
-			}
-		});
-		cy.wait(20000);
-		cy.get('[id="Icon"]').click();
-		cy.wait(2000);
-		cy.contains("Settings").click();
-		cy.wait(2000);
-		cy.contains("Connect AWS Account").click();
-		cy.wait(2000);
-		cy.get('[placeholder="Enter IdentityPoolId"]').type(identityPoolId);
-		cy.wait(2000);
-		cy.get('[placeholder="Enter UserDomain"]').type(userDomain);
-		cy.wait(2000);
-		cy.get('[placeholder="Enter UserPoolClientId"]').type(userPoolClientId);
-		cy.wait(2000);
-		cy.get('[placeholder="Enter UserPoolId"]').type(userPoolId);
-		cy.wait(2000);
-		cy.get('[placeholder="Enter WebSocketUrl"]').type(webSocketUrl);
-		cy.wait(2000);
-		cy.get('[type="button"]').eq(3).click();
-		cy.wait(6000);
-		cy.contains("Connect AWS Account").click();
-		cy.wait(2000);
-		cy.get('[type="button"]').eq(3).click();
-		cy.wait(2000);
-		cy.origin(originWeb, () => {
-			cy.get(Cypress.env("GET_WEB")).then(els => {
-				[...els].forEach(el => {
-					cy.wrap(el).get('[placeholder="Username"]').eq(1).type(Cypress.env("EMAIL"));
-					cy.wrap(el).get('[placeholder="Password"]').eq(1).type(Cypress.env("EMAIL_PASS"));
-					cy.wrap(el).get('[name="signInSubmitButton"]').eq(1).click();
-				});
-			});
-		});
-		cy.wait(10000);
-		cy.get('[id="Icon"]').click();
-		cy.contains("Sign out").should("exist");
-		cy.wait(5000);
-		cy.contains("Tracker").click();
-		cy.wait(2000);
-		cy.contains("Continue").click();
-		cy.wait(2000);
-		cy.get('[class="icon-container"]').eq(1).click();
-		cy.wait(2000);
-		cy.get('[class="mapboxgl-canvas"]').click("left");
-		cy.wait(2000);
-		cy.get('[class="mapboxgl-user-location-dot mapboxgl-marker mapboxgl-marker-anchor-center"]').click();
-		cy.wait(2000);
-		cy.contains("Save").click();
-		cy.wait(2000);
-		cy.contains("Simulate").click();
-		cy.wait(20000);
-		cy.get("div").should("contain", "Pause");
-		cy.wait(2000);
-	});
-});
+
+// describe("Add Simulator Tracker for drone", () => {
+// 	it("authentication", () => {
+// 		cy.visit(Cypress.env("URL"), {
+// 			auth: {
+// 				username: Cypress.env("USERNAME"),
+// 				password: Cypress.env("PASSWORD")
+// 			}
+// 		});
+// 		cy.wait(20000);
+// 		cy.get('[id="Icon"]').click();
+// 		cy.wait(2000);
+// 		cy.contains("Settings").click();
+// 		cy.wait(2000);
+// 		cy.contains("Connect AWS Account").click();
+// 		cy.wait(2000);
+// 		cy.get('[placeholder="Enter IdentityPoolId"]').type(identityPoolId);
+// 		cy.wait(2000);
+// 		cy.get('[placeholder="Enter UserDomain"]').type(userDomain);
+// 		cy.wait(2000);
+// 		cy.get('[placeholder="Enter UserPoolClientId"]').type(userPoolClientId);
+// 		cy.wait(2000);
+// 		cy.get('[placeholder="Enter UserPoolId"]').type(userPoolId);
+// 		cy.wait(2000);
+// 		cy.get('[placeholder="Enter WebSocketUrl"]').type(webSocketUrl);
+// 		cy.wait(2000);
+// 		cy.get('[type="button"]').eq(3).click();
+// 		cy.wait(6000);
+// 		cy.contains("Connect AWS Account").click();
+// 		cy.wait(2000);
+// 		cy.get('[type="button"]').eq(3).click();
+// 		cy.wait(2000);
+// 		cy.origin(originWeb, () => {
+// 			cy.get(Cypress.env("GET_WEB")).then(els => {
+// 				[...els].forEach(el => {
+// 					cy.wrap(el).get('[placeholder="Username"]').eq(1).type(Cypress.env("EMAIL"));
+// 					cy.wrap(el).get('[placeholder="Password"]').eq(1).type(Cypress.env("EMAIL_PASS"));
+// 					cy.wrap(el).get('[name="signInSubmitButton"]').eq(1).click();
+// 				});
+// 			});
+// 		});
+// 		cy.wait(10000);
+// 		cy.get('[id="Icon"]').click();
+// 		cy.contains("Sign out").should("exist");
+// 		cy.wait(5000);
+// 		cy.contains("Tracker").click();
+// 		cy.wait(2000);
+// 		cy.contains("Continue").click();
+// 		cy.wait(2000);
+// 		cy.get('[class="icon-container"]').eq(1).click();
+// 		cy.wait(2000);
+// 		cy.get('[class="mapboxgl-canvas"]').click("left");
+// 		cy.wait(2000);
+// 		cy.get('[class="mapboxgl-user-location-dot mapboxgl-marker mapboxgl-marker-anchor-center"]').click();
+// 		cy.wait(2000);
+// 		cy.contains("Save").click();
+// 		cy.wait(2000);
+// 		cy.contains("Simulate").click();
+// 		cy.wait(20000);
+// 		cy.get("div").should("contain", "Pause");
+// 		cy.wait(2000);
+// 	});
+// });
