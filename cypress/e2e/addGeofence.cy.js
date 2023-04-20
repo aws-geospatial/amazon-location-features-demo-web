@@ -26,15 +26,15 @@ describe("Add Geofence", () => {
 		cy.wait(2000);
 		cy.contains("Connect AWS Account").click();
 		cy.wait(2000);
-		cy.get('[placeholder="Enter IdentityPoolId"]').type('us-east-1:8bb6d55c-cbfd-41e8-9024-ca45f0bfe690');
+		cy.get('[placeholder="Enter IdentityPoolId"]').type(Cypress.env("IDENTITY_POOL_ID"));
 		cy.wait(2000);
-		cy.get('[placeholder="Enter UserDomain"]').type('https://179807038416.auth.us-east-1.amazoncognito.com/');
+		cy.get('[placeholder="Enter UserDomain"]').type(Cypress.env("USER_DOMAIN"));
 		cy.wait(2000);
-		cy.get('[placeholder="Enter UserPoolClientId"]').type('7pjjrkhvg8gm7oj3opdjnk4e1p');
+		cy.get('[placeholder="Enter UserPoolClientId"]').type(Cypress.env("USER_POOL_CLIENT_ID"));
 		cy.wait(2000);
-		cy.get('[placeholder="Enter UserPoolId"]').type('us-east-1_qxJGBCMyh');
+		cy.get('[placeholder="Enter UserPoolId"]').type(Cypress.env("USER_POOL_ID"));
 		cy.wait(2000);
-		cy.get('[placeholder="Enter WebSocketUrl"]').type('http://a28q0qgycwbp4k-ats.iot.us-east-1.amazonaws.com/');
+		cy.get('[placeholder="Enter WebSocketUrl"]').type(Cypress.env("WEB_SOCKET_URL"));
 		cy.wait(2000);
 		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 		cy.wait(6000);
@@ -46,8 +46,8 @@ describe("Add Geofence", () => {
 			cy.get(Cypress.env("GET_WEB")).then(els => {
 				[...els].forEach(el => {
 					cy.wait(5000);
-					cy.wrap(el).get('[placeholder="Username"]').eq(1).invoke("val", 'refat.mahmoud@makeen.io');
-					cy.wrap(el).get('[placeholder="Password"]').eq(1).invoke("val", 'Makeen2022!');
+					cy.wrap(el).get('[placeholder="Username"]').eq(1).type(Cypress.env("EMAIL"));
+					cy.wrap(el).get('[placeholder="Password"]').eq(1).type(Cypress.env("EMAIL_PASS"));
 					cy.wrap(el).get('[name="signInSubmitButton"]').eq(1).click();
 				});
 			});
