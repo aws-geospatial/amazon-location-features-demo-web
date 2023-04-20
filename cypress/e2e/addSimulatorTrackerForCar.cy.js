@@ -22,6 +22,16 @@ const email = Cypress.env("EMAIL");
 const emailPass = Cypress.env("EMAIL_PASS");
 const originWeb = Cypress.env("ORIGIN_WEB");
 const getWeb = Cypress.env("GET_WEB");
+console.log("email", email);
+console.log("emailPass", emailPass);
+console.log("originWeb", originWeb);
+console.log("getWeb", getWeb);
+console.log("identityPoolId", identityPoolId);
+console.log("userDomain", userDomain);
+console.log("userPoolClientId", userPoolClientId);
+console.log("userPoolId", userPoolId);
+console.log("webSocketUrl", webSocketUrl);
+
 
 describe("Add Simulator Tracker for car", () => {
 	it("authentication", () => {
