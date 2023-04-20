@@ -58,7 +58,7 @@ describe("Add Geofence", () => {
 		cy.wait(5000);
 		cy.get('[class="amplify-flex geofence-button"]').click();
 		cy.wait(2000);
-		cy.get('[class="mapboxgl-user-location-dot mapboxgl-marker mapboxgl-marker-anchor-center"]').should('be.visible').wait(2000).click()
+		cy.get('[class="mapboxgl-user-location-dot mapboxgl-marker mapboxgl-marker-anchor-center"]', { timeout: 10000 }).click();
 		cy.wait(2000);
 		cy.get('[placeholder="Type unique Geofence Name"]').type("Geofence1");
 		cy.wait(2000);
