@@ -32,8 +32,8 @@ describe("Add Geofence", () => {
 		cy.wait(2000);
 		cy.get('[placeholder="Enter UserPoolClientId"]').type(Cypress.env("USER_POOL_CLIENT_ID"));
 		cy.wait(2000);
-		// cy.get('[placeholder="Enter UserPoolId"]').type(Cypress.env("USER_POOL_ID"));
-		// cy.wait(2000);
+		cy.get('[placeholder="Enter UserPoolId"]').type(Cypress.env("USER_POOL_ID"));
+		cy.wait(2000);
 		// cy.get('[placeholder="Enter WebSocketUrl"]').type(Cypress.env("WEB_SOCKET_URL"));
 		// cy.wait(2000);
 		// cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
