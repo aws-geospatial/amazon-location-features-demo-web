@@ -82,10 +82,10 @@ export enum SettingOptionEnum {
 	AWS_CLOUD_FORMATION = "Connect AWS Account"
 }
 
-export enum MoreOptionEnum {
+export enum AboutOptionEnum {
 	ATTRIBUTION = "Attribution",
 	LEGAL_AND_PRIVACY = "Legal and Privacy",
-	ABOUT = "About",
+	VERSION = "Version",
 	TERMS_AND_CONDITIONS = "Terms and Conditions"
 }
 
