@@ -215,6 +215,9 @@ const useAmplifyAuth = () => {
 				methods.resetStore();
 				resetAwsStore();
 				window.location.reload();
+			},
+			setShowWelcomeModal: (showWelcomeModal: boolean) => {
+				setState({ showWelcomeModal });
 			}
 		}),
 		[setInitial, setState, fetchHostedUi, getCurrentUserCredentials, login, store.credentials, detachPolicy, logout]

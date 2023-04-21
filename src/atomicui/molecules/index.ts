@@ -17,3 +17,4 @@ export * from "./StepCard";
 export * from "./ConnectAwsAccountModal";
 export * from "./SignInModal";
 export * from "./ConfirmationModal";
+export * from "./WelcomeModal";
