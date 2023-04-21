@@ -26,8 +26,18 @@ describe("Add Geofence", () => {
 		cy.wait(2000);
 		cy.contains("Connect AWS Account").click();
 		cy.wait(2000);
-		cy.get('[placeholder="Enter IdentityPoolId"]').type(Cypress.env("IDENTITY_POOL_ID")).tab().type(Cypress.env("USER_DOMAIN")).tab().type(Cypress.env("USER_POOL_CLIENT_ID")).tab().type(Cypress.env("USER_POOL_ID"))
-		cy.wait(2000);
+// Type values into input fields and press the TAB key to move between them
+cy.get('[placeholder="Enter IdentityPoolId"]').type(Cypress.env("IDENTITY_POOL_ID")).wait(1000).tab()
+  .get('[placeholder="Enter UserDomain"]').type(Cypress.env("USER_DOMAIN")).wait(1000).tab()
+  .get('[placeholder="Enter UserPoolClientId"]').type(Cypress.env("USER_POOL_CLIENT_ID")).wait(1000).tab()
+  .get('[placeholder="Enter UserPoolId"]').type(Cypress.env("USER_POOL_ID")).wait(1000)
+  
+// Assert that the input fields have the expected values
+cy.get('[placeholder="Enter IdentityPoolId"]').should('have.value', Cypress.env("IDENTITY_POOL_ID"))
+cy.get('[placeholder="Enter UserDomain"]').should('have.value', Cypress.env("USER_DOMAIN"))
+cy.get('[placeholder="Enter UserPoolClientId"]').should('have.value', Cypress.env("USER_POOL_CLIENT_ID"))
+cy.get('[placeholder="Enter UserPoolId"]').should('have.value', Cypress.env("USER_POOL_ID"))		
+cy.wait(2000);
 		// cy.get('[placeholder="Enter UserDomain"]');
 		// cy.wait(2000);
 		// cy.get('[placeholder="Enter UserPoolClientId"]');
