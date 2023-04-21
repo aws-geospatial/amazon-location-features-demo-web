@@ -28,8 +28,8 @@ describe("Add Geofence", () => {
 		cy.wait(2000);
 		cy.get('[placeholder="Enter IdentityPoolId"]').type(Cypress.env("IDENTITY_POOL_ID"));
 		cy.wait(2000);
-		// cy.get('[placeholder="Enter UserDomain"]').type(Cypress.env("USER_DOMAIN"));
-		// cy.wait(2000);
+		cy.get('[placeholder="Enter UserDomain"]').type(Cypress.env("USER_DOMAIN"));
+		cy.wait(2000);
 		// cy.get('[placeholder="Enter UserPoolClientId"]').type(Cypress.env("USER_POOL_CLIENT_ID"));
 		// cy.wait(2000);
 		// cy.get('[placeholder="Enter UserPoolId"]').type(Cypress.env("USER_POOL_ID"));
