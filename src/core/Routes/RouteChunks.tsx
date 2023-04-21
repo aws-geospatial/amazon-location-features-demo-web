@@ -12,7 +12,6 @@ const DemoPage = lazy(() => import("@demo/atomicui/pages/DemoPage").then(res => 
 
 const RouteChunks: RouteObject[] = [
 	{
-		index: true,
 		path: DEFAULT,
 		element: <Navigate to={DEMO} />
 	},

@@ -9,10 +9,18 @@ import {
 	ConnectAwsAccountModal,
 	ConfirmationModal as InformationModal,
 	MapButtons,
-	SignInModal
+	SignInModal,
+	WelcomeModal
 } from "@demo/atomicui/molecules";
-import { GeofenceBox, RouteBox, SearchBox, SettingsModal, Sidebar, TrackingBox } from "@demo/atomicui/organisms";
-import { MoreModal } from "@demo/atomicui/organisms/MoreModal";
+import {
+	AboutModal,
+	GeofenceBox,
+	RouteBox,
+	SearchBox,
+	SettingsModal,
+	Sidebar,
+	TrackingBox
+} from "@demo/atomicui/organisms";
 import { showToast } from "@demo/core";
 import appConfig from "@demo/core/constants/appConfig";
 import {
@@ -61,7 +69,7 @@ const initShow = {
 	settings: false,
 	stylesCard: false,
 	trackingDisclaimerModal: false,
-	more: false
+	about: false
 };
 
 const DemoPage: React.FC = () => {
@@ -76,13 +84,22 @@ const DemoPage: React.FC = () => {
 		settings: boolean;
 		stylesCard: boolean;
 		trackingDisclaimerModal: boolean;
-		more: boolean;
+		about: boolean;
 	}>(initShow);
 	const [height, setHeight] = React.useState(window.innerHeight);
 	const mapViewRef = useRef<MapRef | null>(null);
 	const geolocateControlRef = useRef<GeolocateControlRef | null>(null);
-	const { credentials, getCurrentUserCredentials, clearCredentials, region, authTokens, setAuthTokens, onLogout } =
-		useAmplifyAuth();
+	const {
+		credentials,
+		getCurrentUserCredentials,
+		clearCredentials,
+		region,
+		authTokens,
+		setAuthTokens,
+		onLogout,
+		showWelcomeModal,
+		setShowWelcomeModal
+	} = useAmplifyAuth();
 	const { locationClient, createLocationClient, iotClient, createIotClient, resetStore: resetAwsStore } = useAws();
 	const { attachPolicy } = useAwsIot();
 	const { mapStyle, currentLocationData, setCurrentLocation } = useAmplifyMap();
@@ -376,7 +393,7 @@ const DemoPage: React.FC = () => {
 							onShowTrackingBox={() => setShow(s => ({ ...s, trackingBox: true }))}
 							onShowSettings={() => setShow(s => ({ ...s, settings: true }))}
 							onShowTrackingDisclaimerModal={() => setShow(s => ({ ...s, trackingDisclaimerModal: true }))}
-							onShowMoreModal={() => setShow(s => ({ ...s, more: true }))}
+							onShowAboutModal={() => setShow(s => ({ ...s, about: true }))}
 						/>
 					)}
 					{show.routeBox ? (
@@ -457,6 +474,7 @@ const DemoPage: React.FC = () => {
 					/>
 				</View>
 			</Map>
+			<WelcomeModal open={showWelcomeModal} onClose={() => setShowWelcomeModal(false)} />
 			<SignInModal open={show.signInModal} onClose={() => setShow(s => ({ ...s, signInModal: false }))} />
 			<ConnectAwsAccountModal
 				open={show.connectAwsAccount}
@@ -467,7 +485,7 @@ const DemoPage: React.FC = () => {
 				onClose={() => setShow(s => ({ ...s, settings: false }))}
 				resetAppState={resetAppState}
 			/>
-			<MoreModal open={show.more} onClose={() => setShow(s => ({ ...s, more: false }))} />
+			<AboutModal open={show.about} onClose={() => setShow(s => ({ ...s, about: false }))} />
 			<InformationModal
 				open={show.trackingDisclaimerModal}
 				onClose={() => setShow(s => ({ ...s, trackingDisclaimerModal: false }))}

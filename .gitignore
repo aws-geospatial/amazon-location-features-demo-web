@@ -16,7 +16,8 @@ build
 coverage
 cypress/screenshots
 cypress/videos
-cypress.env.json
+allure-report
+allure-results
 
 # Editor directories and files
 .vscode/*
@@ -29,3 +30,4 @@ cypress.env.json
 *.sln
 *.sw?
 .env
+cypress.env.json

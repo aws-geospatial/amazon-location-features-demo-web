@@ -6,12 +6,10 @@ import React, { useCallback, useMemo, useState } from "react";
 import { Button, Divider, Flex, Text } from "@aws-amplify/ui-react";
 import { IconPoweredByAws1 } from "@demo/assets";
 import { Modal } from "@demo/atomicui/molecules";
+import aboutModal from "@demo/core/constants/aboutModal";
 import appConfig from "@demo/core/constants/appConfig";
-
-import moreModal from "@demo/core/constants/moreModal";
-
 import { useAmplifyMap } from "@demo/hooks";
-import { MapProviderEnum, MoreOptionEnum } from "@demo/types/Enums";
+import { AboutOptionEnum, MapProviderEnum } from "@demo/types/Enums";
 
 import "./styles.scss";
 
@@ -24,15 +22,15 @@ const {
 	ABOUT: { VERSION, VERSION_VALUE, BUILD, COPYRIGHT },
 	TERMS: { TERMS_PREFIX, TERMS_LINK_LABEL, TERMS_SUFFIX },
 	ATTRIBUTIONS: { PARTNER_ATTRIBUTION_TITLE, SOFTWARE_ATTRIBUTION_TITLE, SOFTWARE_ATTRIBUTION_DESC }
-} = moreModal;
+} = aboutModal;
 
-interface MoreModalProps {
+interface AboutModalProps {
 	open: boolean;
 	onClose: () => void;
 }
 
-const MoreModal: React.FC<MoreModalProps> = ({ open, onClose }) => {
-	const [selectedOption, setSelectedOption] = useState<MoreOptionEnum>(MoreOptionEnum.ATTRIBUTION);
+const AboutModal: React.FC<AboutModalProps> = ({ open, onClose }) => {
+	const [selectedOption, setSelectedOption] = useState<AboutOptionEnum>(AboutOptionEnum.ATTRIBUTION);
 	const { attributionText, mapProvider } = useAmplifyMap();
 
 	const handlePartnerLearnMore = useCallback(() => {
@@ -44,8 +42,8 @@ const MoreModal: React.FC<MoreModalProps> = ({ open, onClose }) => {
 	const optionItems = useMemo(
 		() => [
 			{
-				id: MoreOptionEnum.ATTRIBUTION,
-				title: MoreOptionEnum.ATTRIBUTION,
+				id: AboutOptionEnum.ATTRIBUTION,
+				title: AboutOptionEnum.ATTRIBUTION,
 				detailsComponent: (
 					<Flex gap={0} direction="column" padding="0rem 1.15rem" alignItems="center">
 						<Text className="small-text" fontFamily="AmazonEmber-Bold" marginTop="1.15rem" alignSelf="flex-start">
@@ -82,8 +80,8 @@ const MoreModal: React.FC<MoreModalProps> = ({ open, onClose }) => {
 				)
 			},
 			{
-				id: MoreOptionEnum.ABOUT,
-				title: MoreOptionEnum.ABOUT,
+				id: AboutOptionEnum.VERSION,
+				title: AboutOptionEnum.VERSION,
 				detailsComponent: (
 					<Flex gap={0} direction="column" padding="0rem 1.15rem">
 						<Text className="more-secondary-text">
@@ -97,8 +95,8 @@ const MoreModal: React.FC<MoreModalProps> = ({ open, onClose }) => {
 				)
 			},
 			{
-				id: MoreOptionEnum.TERMS_AND_CONDITIONS,
-				title: MoreOptionEnum.TERMS_AND_CONDITIONS,
+				id: AboutOptionEnum.TERMS_AND_CONDITIONS,
+				title: AboutOptionEnum.TERMS_AND_CONDITIONS,
 				detailsComponent: (
 					<Flex gap={0} direction="column" padding="0rem 1.15rem" alignItems="center">
 						<Text className="more-secondary-text">
@@ -153,7 +151,7 @@ const MoreModal: React.FC<MoreModalProps> = ({ open, onClose }) => {
 				<Flex className="more-modal-content">
 					<Flex className="options-container">
 						<Text className="bold regular-text" padding={"1.23rem 0rem 1.23rem 1.23rem"}>
-							More
+							About
 						</Text>
 						{renderOptionItems}
 					</Flex>
@@ -165,4 +163,4 @@ const MoreModal: React.FC<MoreModalProps> = ({ open, onClose }) => {
 	);
 };
 
-export default MoreModal;
+export default AboutModal;

@@ -1,4 +1,4 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-export { default as MoreModal } from "./MoreModal";
+export { default as AboutModal } from "./AboutModal";
