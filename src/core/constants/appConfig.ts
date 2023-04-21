@@ -38,7 +38,7 @@ const appConfig = {
 		SAMPLE_DETAILS: "/sample/:sampleId",
 		HELP: "/demo/help",
 		TERMS: "/demo/terms",
-		SOFTWARE_ATTRIBUTIONS: "/demo/software-attributions",
+		SOFTWARE_ATTRIBUTIONS: "/showcase/software-attributions",
 		BLOG: "/blog",
 		NEW: "/new",
 		UNAUTHORIZED: "/401",

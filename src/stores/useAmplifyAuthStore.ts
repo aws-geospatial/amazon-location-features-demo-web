@@ -25,13 +25,15 @@ export interface AmplifyAuthStoreProps {
 	userPoolClientId?: string;
 	userPoolId?: string;
 	webSocketUrl?: string;
+	showWelcomeModal: boolean;
 }
 
 export const initialState: IStateProps<AmplifyAuthStoreProps> = {
 	isLoading: false,
 	isUserAwsAccountConnected: false,
 	identityPoolId: import.meta.env.VITE_AWS_COGNITO_IDENTITY_POOL_ID,
-	region: import.meta.env.VITE_AWS_REGION
+	region: import.meta.env.VITE_AWS_REGION,
+	showWelcomeModal: true
 };
 
 export default createStore<AmplifyAuthStoreProps>(initialState, true, localStorageKey);

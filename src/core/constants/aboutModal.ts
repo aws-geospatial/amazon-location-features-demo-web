@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-const moreModal = {
+const aboutModal = {
 	ABOUT: {
 		VERSION: "Version",
 		VERSION_VALUE: "1.0.0",
@@ -20,4 +20,4 @@ const moreModal = {
 	}
 };
 
-export default moreModal;
+export default aboutModal;

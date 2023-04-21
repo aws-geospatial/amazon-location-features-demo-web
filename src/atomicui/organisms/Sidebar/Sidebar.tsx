@@ -23,7 +23,7 @@ interface Props {
 	onShowTrackingBox: () => void;
 	onShowSettings: () => void;
 	onShowTrackingDisclaimerModal: () => void;
-	onShowMoreModal: () => void;
+	onShowAboutModal: () => void;
 }
 
 const {
@@ -38,7 +38,7 @@ const Sidebar: React.FC<Props> = ({
 	onShowTrackingBox,
 	onShowSettings,
 	onShowTrackingDisclaimerModal,
-	onShowMoreModal
+	onShowAboutModal
 }) => {
 	const { isUserAwsAccountConnected, credentials, onLogin, onDetachPolicyAndLogout, onDisconnectAwsAccount } =
 		useAmplifyAuth();
@@ -86,7 +86,7 @@ const Sidebar: React.FC<Props> = ({
 
 	const onClickMore = () => {
 		onCloseSidebar();
-		onShowMoreModal();
+		onShowAboutModal();
 	};
 
 	const _onLogout = async () => await onDetachPolicyAndLogout();
@@ -159,7 +159,7 @@ const Sidebar: React.FC<Props> = ({
 				</Flex>
 				<Flex className="link-item" onClick={onClickMore}>
 					<IconInfo className="menu-icon" />
-					<Text>More</Text>
+					<Text>About</Text>
 				</Flex>
 			</View>
 			<List listArray={sideBarMenuOptions} className="verticle-list side-bar__external-menu" hideIcons />
