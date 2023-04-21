@@ -13,15 +13,12 @@
 
 describe("Add Geofence", () => {
 	it("authentication", () => {
-		cy.visit(Cypress.env("URL"), {
+		cy.visit(Cypress.env("CYPRESS_URL"), {
 			auth: {
-				username: Cypress.env("USERNAME"),
-				password: Cypress.env("PASSWORD")
+				username: Cypress.env("CYPRESS_USERNAME"),
+				password: Cypress.env("CYPRESS_PASSWORD")
 			}
 		});
-		cy.log(Cypress.env("USERNAME"));
-		cy.log(Cypress.env("PASSWORD"));
-		cy.log(Cypress.env("URL"));
 		cy.wait(20000);
 		cy.get('[id="Icon"]').click();
 		cy.wait(2000);
@@ -29,20 +26,15 @@ describe("Add Geofence", () => {
 		cy.wait(2000);
 		cy.contains("Connect AWS Account").click();
 		cy.wait(2000);
-		cy.get('[placeholder="Enter IdentityPoolId"]').type(Cypress.env("IDENTITY_POOL_ID"));
-		cy.log(Cypress.env("IDENTITY_POOL_ID"));
+		cy.get('[placeholder="Enter IdentityPoolId"]').type(Cypress.env("CYPRESS_IDENTITY_POOL_ID"));
 		cy.wait(2000);
-		cy.get('[placeholder="Enter UserDomain"]').type(Cypress.env("USER_DOMAIN"));
-		cy.log(Cypress.env("USER_DOMAIN"));
+		cy.get('[placeholder="Enter UserDomain"]').type(Cypress.env("CYPRESS_USER_DOMAIN"));
 		cy.wait(2000);
-		cy.get('[placeholder="Enter UserPoolClientId"]').type(Cypress.env("USER_POOL_CLIENT_ID"));
-		cy.log(Cypress.env("USER_POOL_CLIENT_ID"));
+		cy.get('[placeholder="Enter UserPoolClientId"]').type(Cypress.env("CYPRESS_USER_POOL_CLIENT_ID"));
 		cy.wait(2000);
-		cy.get('[placeholder="Enter UserPoolId"]').type(Cypress.env("USER_POOL_ID"));
-		cy.log(Cypress.env("USER_POOL_ID"));
+		cy.get('[placeholder="Enter UserPoolId"]').type(Cypress.env("CYPRESS_USER_POOL_ID"));
 		cy.wait(2000);
-		cy.get('[placeholder="Enter WebSocketUrl"]').type(Cypress.env("WEB_SOCKET_URL"));
-		cy.log(Cypress.env("WEB_SOCKET_URL"));
+		cy.get('[placeholder="Enter WebSocketUrl"]').type(Cypress.env("CYPRESS_WEBSOCKET_URL"));
 		cy.wait(2000);
 		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 		cy.wait(6000);
@@ -50,14 +42,12 @@ describe("Add Geofence", () => {
 		cy.wait(2000);
 		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').eq(0).click();
 		cy.wait(2000);
-		cy.origin(Cypress.env("ORIGIN_WEB"), () => {
-			cy.get(Cypress.env("GET_WEB")).then(els => {
+		cy.origin(Cypress.env("CYPRESS_ORIGIN_WEB"), () => {
+			cy.get(Cypress.env("CYPRESS_GET_WEB")).then(els => {
 				[...els].forEach(el => {
 					cy.wait(5000);
-					cy.wrap(el).get('[placeholder="Username"]').eq(1).type(Cypress.env("EMAIL"));
-					cy.log(Cypress.env("EMAIL"));
-					cy.wrap(el).get('[placeholder="Password"]').eq(1).type(Cypress.env("EMAIL_PASS"));
-					cy.log(Cypress.env("EMAIL_PASS"));
+					cy.wrap(el).get('[placeholder="Username"]').eq(1).type(Cypress.env("CYPRESS_EMAIL"));
+					cy.wrap(el).get('[placeholder="Password"]').eq(1).type(Cypress.env("CYPRESS_EMAIL_PASS"));
 					cy.wrap(el).get('[name="signInSubmitButton"]').eq(1).click();
 				});
 			});
