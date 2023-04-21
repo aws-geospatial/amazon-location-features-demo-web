@@ -26,16 +26,16 @@ jobs:
 
       - name: Run Cypress test
         env:
-          CYPRESS_EMAIL: ${{ secrets.EMAIL }}
-          CYPRESS_EMAIL_PASS: ${{ secrets.EMAILPASS }}
-          CYPRESS_IDENTITY_POOL_ID: ${{ secrets.IDENTITYPOOLID }}
-          CYPRESS_USER_DOMAIN: ${{ secrets.USERDOMAIN }}
-          CYPRESS_USER_POOL_CLIENT_ID: ${{ secrets.USERPOOLCLIENTID }}
-          CYPRESS_USER_POOL_ID: ${{ secrets.USERPOOLID }}
-          CYPRESS_WEBSOCKET_URL: ${{ secrets.WEBSOCKETURL }}
-          CYPRESS_USERNAME: ${{ secrets.USERNAME }}
-          CYPRESS_PASSWORD: ${{ secrets.PASSWORD }}
-          CYPRESS_URL: ${{ secrets.URL }}
-          CYPRESS_ORIGIN_WEB: ${{ secrets.ORIGINWEB }}
-          CYPRESS_GET_WEB: ${{ secrets.GETWEB }}
+          EMAIL: ${{ secrets.EMAIL }}
+          EMAIL_PASS: ${{ secrets.EMAILPASS }}
+          IDENTITY_POOL_ID: ${{ secrets.IDENTITYPOOLID }}
+          USER_DOMAIN: ${{ secrets.USERDOMAIN }}
+          USER_POOL_CLIENT_ID: ${{ secrets.USERPOOLCLIENTID }}
+          USER_POOL_ID: ${{ secrets.USERPOOLID }}
+          WEBSOCKET_URL: ${{ secrets.WEBSOCKETURL }}
+          USERNAME: ${{ secrets.USERNAME }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          URL: ${{ secrets.URL }}
+          ORIGIN_WEB: ${{ secrets.ORIGINWEB }}
+          GET_WEB: ${{ secrets.GETWEB }}
         run: yarn cypress run
