@@ -38,4 +38,4 @@ jobs:
           CYPRESS_URL:  ${{ secrets.URL }}
           CYPRESS_ORIGIN_WEB:  ${{ secrets.ORIGINWEB }} 
           CYPRESS_GET_WEB:  ${{ secrets.GETWEB }}        
-        run: yarn cypress run
+        run: yarn cypress
