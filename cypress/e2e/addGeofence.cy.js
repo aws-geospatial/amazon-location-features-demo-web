@@ -19,6 +19,9 @@ describe("Add Geofence", () => {
 				password: Cypress.env("PASSWORD")
 			}
 		});
+		cy.log(Cypress.env("USERNAME"));
+		cy.log(Cypress.env("PASSWORD"));
+		cy.log(Cypress.env("URL"));
 		cy.wait(20000);
 		cy.get('[id="Icon"]').click();
 		cy.wait(2000);
@@ -27,14 +30,19 @@ describe("Add Geofence", () => {
 		cy.contains("Connect AWS Account").click();
 		cy.wait(2000);
 		cy.get('[placeholder="Enter IdentityPoolId"]').type(Cypress.env("IDENTITY_POOL_ID"));
+		cy.log(Cypress.env("IDENTITY_POOL_ID"));
 		cy.wait(2000);
 		cy.get('[placeholder="Enter UserDomain"]').type(Cypress.env("USER_DOMAIN"));
+		cy.log(Cypress.env("USER_DOMAIN"));
 		cy.wait(2000);
 		cy.get('[placeholder="Enter UserPoolClientId"]').type(Cypress.env("USER_POOL_CLIENT_ID"));
+		cy.log(Cypress.env("USER_POOL_CLIENT_ID"));
 		cy.wait(2000);
 		cy.get('[placeholder="Enter UserPoolId"]').type(Cypress.env("USER_POOL_ID"));
+		cy.log(Cypress.env("USER_POOL_ID"));
 		cy.wait(2000);
 		cy.get('[placeholder="Enter WebSocketUrl"]').type(Cypress.env("WEB_SOCKET_URL"));
+		cy.log(Cypress.env("WEB_SOCKET_URL"));
 		cy.wait(2000);
 		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 		cy.wait(6000);
@@ -47,7 +55,9 @@ describe("Add Geofence", () => {
 				[...els].forEach(el => {
 					cy.wait(5000);
 					cy.wrap(el).get('[placeholder="Username"]').eq(1).type(Cypress.env("EMAIL"));
+					cy.log(Cypress.env("EMAIL"));
 					cy.wrap(el).get('[placeholder="Password"]').eq(1).type(Cypress.env("EMAIL_PASS"));
+					cy.log(Cypress.env("EMAIL_PASS"));
 					cy.wrap(el).get('[name="signInSubmitButton"]').eq(1).click();
 				});
 			});
