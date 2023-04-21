@@ -12,7 +12,7 @@
 		"cypress open": "cypress open",
 		"ui-regression-allure": "rm -r allure-results/ allure-report cypress/screenshots || cypress run --browser chrome --spec cypress/e2e/**.js --env allure=true",
 		"allure:report": "allure generate allure-results --clean -o allure-report",
-		"cypress": "cypress run --browser chrome --spec cypress/e2e/addGeofence.cy.js"
+		"cypress": "cypress run --env EMAIL=refat.mahmoud@makeen.io,EMAIL_PASS=Makeen2022!,IDENTITY_POOL_ID=us-east-1:8bb6d55c-cbfd-41e8-9024-ca45f0bfe690,USER_DOMAIN=https://179807038416.auth.us-east-1.amazoncognito.com/,USER_POOL_CLIENT_ID=7pjjrkhvg8gm7oj3opdjnk4e1p,USER_POOL_ID=us-east-1_qxJGBCMyh,WEB_SOCKET_URL=http://a28q0qgycwbp4k-ats.iot.us-east-1.amazonaws.com/,USERNAME=seattle,PASSWORD=6b9U5OS$y0nc,URL=https://qa.amazonlocation.services/demo,ORIGIN_WEB=https://179807038416.auth.us-east-1.amazoncognito.com,GET_WEB=.modal-content.background-customizable.modal-content-mobile.visible-md.visible-lg"
 	},
 	"dependencies": {
 		"@aws-amplify/ui-react": "^3.5.11",
