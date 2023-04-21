@@ -26,14 +26,14 @@ describe("Add Geofence", () => {
 		cy.wait(2000);
 		cy.contains("Connect AWS Account").click();
 		cy.wait(2000);
-		cy.get('[placeholder="Enter IdentityPoolId"]').type(Cypress.env("IDENTITY_POOL_ID"));
+		cy.get('[placeholder="Enter IdentityPoolId"]').type(Cypress.env("IDENTITY_POOL_ID")).tab().type(Cypress.env("USER_DOMAIN")).tab().type(Cypress.env("USER_POOL_CLIENT_ID")).tab().type(Cypress.env("USER_POOL_ID"))
 		cy.wait(2000);
-		cy.get('[placeholder="Enter UserDomain"]').type(Cypress.env("USER_DOMAIN"));
-		cy.wait(2000);
-		cy.get('[placeholder="Enter UserPoolClientId"]').type(Cypress.env("USER_POOL_CLIENT_ID"));
-		cy.wait(2000);
-		cy.get('[placeholder="Enter UserPoolId"]').type(Cypress.env("USER_POOL_ID"));
-		cy.wait(2000);
+		// cy.get('[placeholder="Enter UserDomain"]');
+		// cy.wait(2000);
+		// cy.get('[placeholder="Enter UserPoolClientId"]');
+		// cy.wait(2000);
+		// cy.get('[placeholder="Enter UserPoolId"]');
+		// cy.wait(2000);
 		// cy.get('[placeholder="Enter WebSocketUrl"]').type(Cypress.env("WEB_SOCKET_URL"));
 		// cy.wait(2000);
 		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
