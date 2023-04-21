@@ -32,7 +32,7 @@ export const helpData = [
 			"Running a CloudFormation template via your own AWS account to configure a stack which creates all the necessary resources.",
 		content: [
 			{
-				text: "Open sidebar on showcase page and click on [click here] link to get redirected to AWS console.",
+				text: "Open sidebar on demo page and click on [click here] link to get redirected to AWS console.",
 				image: EmptyConnectModal
 			},
 			{

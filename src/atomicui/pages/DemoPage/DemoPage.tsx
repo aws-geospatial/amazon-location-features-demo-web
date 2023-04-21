@@ -48,7 +48,7 @@ import "./styles.scss";
 const {
 	PERSIST_STORAGE_KEYS: { GEO_LOCATION_ALLOWED },
 	AMAZON_LOCATION_TERMS_AND_CONDITIONS,
-	ROUTES: { SHOWCASE }
+	ROUTES: { DEMO }
 } = appConfig;
 const initShow = {
 	loader: true,
@@ -64,7 +64,7 @@ const initShow = {
 	more: false
 };
 
-const ShowcasePage: React.FC = () => {
+const DemoPage: React.FC = () => {
 	const [show, setShow] = React.useState<{
 		loader: boolean;
 		sidebar: boolean;
@@ -175,7 +175,7 @@ const ShowcasePage: React.FC = () => {
 		const { search } = location;
 
 		if (search && search === "?sign_out=true" && !!credentials?.authenticated) {
-			window.history.replaceState(undefined, "", SHOWCASE);
+			window.history.replaceState(undefined, "", DEMO);
 			_onLogout();
 		}
 	}, [location, credentials, _onLogout]);
@@ -502,4 +502,4 @@ const ShowcasePage: React.FC = () => {
 	) : null;
 };
 
-export default ShowcasePage;
+export default DemoPage;

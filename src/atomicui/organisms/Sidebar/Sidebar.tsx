@@ -27,7 +27,7 @@ interface Props {
 }
 
 const {
-	ROUTES: { SHOWCASE, OVERVIEW }
+	ROUTES: { DEMO, OVERVIEW }
 } = appConfig;
 
 const Sidebar: React.FC<Props> = ({
@@ -116,12 +116,12 @@ const Sidebar: React.FC<Props> = ({
 				<Flex
 					className="link-item"
 					onClick={() => {
-						navigate(SHOWCASE);
+						navigate(DEMO);
 						onCloseSidebar();
 					}}
 				>
 					<IconCompass className="menu-icon" />
-					<Text>Showcase</Text>
+					<Text>Demo</Text>
 				</Flex>
 				<Flex className="link-item" onClick={onClickGeofence}>
 					<IconGeofence className="menu-icon" />

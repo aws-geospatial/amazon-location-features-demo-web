@@ -14,7 +14,7 @@ import appConfig from "@demo/core/constants/appConfig";
 
 const {
 	ROUTES: {
-		SHOWCASE,
+		DEMO,
 		// PRODUCT,
 		OVERVIEW,
 		SAMPLES,
@@ -47,14 +47,14 @@ export const marketingMenuOptions = [
 	// 	iconContainerClass: "menu-item-icon"
 	// },
 	{
-		label: "Showcase",
-		link: SHOWCASE,
+		label: "Demo",
+		link: DEMO,
 		iconBeforeLink: IconPlayMenuIcon,
 		iconContainerClass: "menu-item-icon",
 		subMenu: [
 			{
 				label: "Web",
-				link: SHOWCASE
+				link: DEMO
 			},
 			{
 				label: "iOS",
@@ -74,7 +74,7 @@ export const marketingMenuOptions = [
 	}
 ];
 
-export const sideBarMenuOptions = marketingMenuOptions.filter(v => v.label !== "Showcase");
+export const sideBarMenuOptions = marketingMenuOptions.filter(v => v.label !== "Demo");
 
 export const footerOptions = {
 	menuGroupPrimary: [
@@ -195,11 +195,11 @@ export const footerOptions = {
 			]
 		},
 		{
-			label: "Showcase",
+			label: "Demo",
 			menu: [
 				{
 					label: "Web",
-					link: SHOWCASE
+					link: DEMO
 				},
 				{
 					label: "iOS",

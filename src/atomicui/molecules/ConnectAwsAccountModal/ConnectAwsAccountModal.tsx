@@ -206,7 +206,7 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({ open, o
 									</Button>
 								)}
 								<Button className="continue-to-explore" width="100%" height="3.08rem" onClick={_onClose}>
-									Continue to Showcase
+									Continue to Demo
 								</Button>
 							</>
 						) : (

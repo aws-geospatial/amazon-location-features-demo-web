@@ -6,24 +6,18 @@ import { lazy } from "react";
 import appConfig from "@demo/core/constants/appConfig";
 import { Navigate, RouteObject } from "react-router-dom";
 
-const { ERROR_BOUNDARY, DEFAULT, DEMO, SHOWCASE } = appConfig.ROUTES;
+const { ERROR_BOUNDARY, DEFAULT, DEMO } = appConfig.ROUTES;
 
-const ShowcasePage = lazy(() =>
-	import("@demo/atomicui/pages/ShowcasePage").then(res => ({ default: res.ShowcasePage }))
-);
+const DemoPage = lazy(() => import("@demo/atomicui/pages/DemoPage").then(res => ({ default: res.DemoPage })));
 
 const RouteChunks: RouteObject[] = [
 	{
 		path: DEFAULT,
-		element: <Navigate to={SHOWCASE} />
+		element: <Navigate to={DEMO} />
 	},
 	{
 		path: DEMO,
-		element: <Navigate to={SHOWCASE} />
-	},
-	{
-		path: SHOWCASE,
-		element: <ShowcasePage />,
+		element: <DemoPage />,
 		errorElement: <Navigate to={ERROR_BOUNDARY} />
 	}
 ];

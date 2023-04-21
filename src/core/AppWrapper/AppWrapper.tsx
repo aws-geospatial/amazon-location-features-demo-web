@@ -16,7 +16,7 @@ import "react-tooltip/dist/react-tooltip.css";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 const {
-	ROUTES: { SHOWCASE },
+	ROUTES: { DEMO },
 	MAP_ITEMS
 } = appConfig;
 
@@ -39,8 +39,8 @@ const AppWrapper: React.FC<AppWrapperProps> = ({ children }) => {
 							oauth: {
 								domain: userDomain,
 								scope: ["email", "openid", "profile"],
-								redirectSignIn: `${window.location.origin}${SHOWCASE}`,
-								redirectSignOut: `${window.location.origin}${SHOWCASE}?sign_out=true`,
+								redirectSignIn: `${window.location.origin}${DEMO}`,
+								redirectSignOut: `${window.location.origin}${DEMO}?sign_out=true`,
 								responseType: "token"
 							}
 					  }
