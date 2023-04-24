@@ -20,7 +20,7 @@ describe("Add Geofence", () => {
 			}
 		});
 		cy.wait(5000);
-		cy.task("clearCookies");
+		// cy.task("clearCookies");
 		cy.clearLocalStorage();
 		cy.clearAllSessionStorage();
 		cy.exec("rm -rf ~/Library/Application\\ Support/Google/Chrome");
