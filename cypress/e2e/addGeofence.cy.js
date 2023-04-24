@@ -19,7 +19,11 @@ describe("Add Geofence", () => {
 				password: Cypress.env("PASSWORD")
 			}
 		});
-		cy.wait(20000);
+		cy.wait(5000);
+		cy.task("clearCookies");
+		cy.clearLocalStorage();
+		cy.clearAllSessionStorage();
+		cy.exec("rm -rf ~/Library/Application\\ Support/Google/Chrome");
 		cy.get('[id="Icon"]').click();
 		cy.wait(2000);
 		cy.contains("Settings").click();
