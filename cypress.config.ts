@@ -14,14 +14,25 @@ export default defineConfig({
 	chromeWebSecurity: false,
 	e2e: {
 		setupNodeEvents(on, config) {
-			/* Logging */
-			// on("task", {
-			// 	log(message) {
-			// 		console.log(message);
+			on("task", {
+				/* Logging */
+				log(message) {
+					console.log(message);
 
-			// 		return null;
-			// 	}
-			// });
+					return null;
+				},
+				/* Clear Cookies */
+				clearCookies() {
+					cy.getCookies().then(cookies => {
+						cookies.forEach(cookie => {
+							cy.clearCookie(cookie.name, { domain: cookie.domain });
+						});
+					});
+
+					return null;
+				}
+			});
+
 			// eslint-disable-next-line no-param-reassign
 			config = cypressBrowserPermissionsPlugin(on, config);
 			allureWriter(on, config);
