@@ -29,7 +29,7 @@ describe("Add Simulator Tracker for drone", () => {
 		cy.wait(2000);
 		cy.contains("Connect AWS Account").click();
 		cy.wait(2000);
-		cy.get('[placeholder="Enter IdentityPoolId"]').type(`${Cypress.env("IDENTITYPOOLID")}`);
+		cy.get('[placeholder="Enter IdentityPoolId"]').type(`${Cypress.env("IDENTITY_POOL_ID")}`);
 		cy.wait(2000);
 		cy.get('[placeholder="Enter UserDomain"]').type(`${Cypress.env("USER_DOMAIN")}`);
 		cy.wait(2000);
