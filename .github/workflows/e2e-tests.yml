@@ -23,11 +23,11 @@ jobs:
 
       - name: Setup Cypress
         run: yarn add cypress --dev
-        
-#       - name: Access the Linux shell and Print Env
-#         run: |
-#           bash
-#           printenv
+
+      #       - name: Access the Linux shell and Print Env
+      #         run: |
+      #           bash
+      #           printenv
 
       - name: Run Cypress test
         env:
@@ -43,4 +43,4 @@ jobs:
           CYPRESS_URL: ${{ secrets.URL }}
           CYPRESS_ORIGIN_WEB: ${{ secrets.ORIGINWEB }}
           CYPRESS_GET_WEB: ${{ secrets.GETWEB }}
-        run: yarn cypress run
+        run: yarn cypress
