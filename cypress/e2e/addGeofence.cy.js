@@ -45,7 +45,7 @@ describe("Add Geofence", () => {
 		cy.origin(Cypress.env("ORIGIN_WEB"), () => {
 			cy.get(Cypress.env("GET_WEB")).then(els => {
 				[...els].forEach(el => {
-					cy.wait(5000);
+					cy.wait(2000);
 					cy.wrap(el)
 						.get('[placeholder="Username"]')
 						.eq(1)
