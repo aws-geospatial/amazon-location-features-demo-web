@@ -25,7 +25,7 @@ jobs:
         run: yarn add cypress --dev
 
       - name: Log Cypress env
-        run: echo $CYPRESS_ORIGIN_WEB
+        run: echo ${{ secrets.ORIGINWEB }}
 
       - name: Run Cypress test
         env:
