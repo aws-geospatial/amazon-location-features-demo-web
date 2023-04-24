@@ -9,23 +9,23 @@
 // 4-Verify User sees two route options( avoid tolls/ avoid ferries)
 
 describe("Verify that we have two route options( avoid tolls/ avoid ferries)", () => {
-    it("authentication", { scrollBehavior: false }, () => {
-        cy.visit(Cypress.env("URL"), {
-            auth: {
-                username: Cypress.env("USERNAME"),
-                password: Cypress.env("PASSWORD")
-            }
-        });
-        cy.wait(20000);
-        cy.get('[id="Icon"]').click();
-        cy.wait(2000);
-        cy.contains("Settings").click();
-        cy.wait(2000);
-        cy.contains("Default route options").click();
-        cy.wait(2000);
-        cy.get("div").should("contain", "Avoid tolls");
-        cy.wait(2000);
-        cy.get("div").should("contain", "Avoid ferries");
-        cy.wait(2000);
-    });
+	it("authentication", { scrollBehavior: false }, () => {
+		cy.visit(Cypress.env("URL"), {
+			auth: {
+				username: Cypress.env("USERNAME"),
+				password: Cypress.env("PASSWORD")
+			}
+		});
+		cy.wait(20000);
+		cy.get('[id="Icon"]').click();
+		cy.wait(2000);
+		cy.contains("Settings").click();
+		cy.wait(2000);
+		cy.contains("Default route options").click();
+		cy.wait(2000);
+		cy.get("div").should("contain", "Avoid tolls");
+		cy.wait(2000);
+		cy.get("div").should("contain", "Avoid ferries");
+		cy.wait(2000);
+	});
 });

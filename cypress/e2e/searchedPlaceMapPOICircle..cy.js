@@ -9,22 +9,21 @@
 // 4-Verify the searched place is displayed on the map as a POI circle
 
 describe("Verify that the searched place will be displayed on the map as a POI circle.", () => {
-  it("authentication", { scrollBehavior: false }, () => {
-    cy.visit(Cypress.env("URL"), {
-      auth: {
-        username: Cypress.env("USERNAME"),
-        password: Cypress.env("PASSWORD")
-      }
-    });
-    cy.wait(20000);
-    cy.get('[placeholder="Search"]').click().type("Rio tinto").type("{enter}");
-    cy.wait(10000);
-    cy.get("div").should("contain", "Rio Tinto");
-    cy.wait(2000);
-    for (let i=0; i<10; i++) {
-      cy.get("div").should("contain", "Rio Tinto");
-      cy.wait(2000);
-    }
-  });
+	it("authentication", { scrollBehavior: false }, () => {
+		cy.visit(Cypress.env("URL"), {
+			auth: {
+				username: Cypress.env("USERNAME"),
+				password: Cypress.env("PASSWORD")
+			}
+		});
+		cy.wait(20000);
+		cy.get('[placeholder="Search"]').click().type("Rio tinto").type("{enter}");
+		cy.wait(10000);
+		cy.get("div").should("contain", "Rio Tinto");
+		cy.wait(2000);
+		for (let i = 0; i < 10; i++) {
+			cy.get("div").should("contain", "Rio Tinto");
+			cy.wait(2000);
+		}
+	});
 });
-

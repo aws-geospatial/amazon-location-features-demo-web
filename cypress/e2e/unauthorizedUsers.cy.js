@@ -106,10 +106,7 @@ describe("Unauthorized users MUST only have access to predefined permissions and
 			.wait(1000)
 			.type("{enter}");
 		cy.wait(5000);
-		cy.get('[class="amplify-text amplify-text--tertiary"]').should(
-			"have.text",
-			"Leeton NSW 2705, Australia"
-		);
+		cy.get('[class="amplify-text amplify-text--tertiary"]').should("have.text", "Leeton NSW 2705, Australia");
 		cy.wait(2000);
 	});
 });
