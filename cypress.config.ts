@@ -20,16 +20,6 @@ export default defineConfig({
 					console.log(message);
 
 					return null;
-				},
-				/* Clear Cookies */
-				clearCookies() {
-					cy.getCookies().then(cookies => {
-						cookies.forEach(cookie => {
-							cy.clearCookie(cookie.name, { domain: cookie.domain });
-						});
-					});
-
-					return null;
 				}
 			});
 
