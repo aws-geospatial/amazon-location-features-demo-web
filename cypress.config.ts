@@ -27,10 +27,8 @@ export default defineConfig({
 			allureWriter(on, config);
 			return config;
 		},
-
-		baseUrl: "https://qa.amazonlocation.services",
 		specPattern: "./cypress/e2e/**/*.cy.{js,jsx,ts,tsx}",
-		// supportFile: false,
+		defaultCommandTimeout: 20000,
 		chromeWebSecurity: false,
 		env: {
 			browserPermissions: {
