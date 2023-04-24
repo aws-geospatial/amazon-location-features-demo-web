@@ -51,4 +51,4 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
           AWS_DEFAULT_REGION: "us-east-1"    
         with: 
-          args: s3 sync --delete --acl public-read ${{ github.workspace }}/cypress/videos/ s3://amazon-location-resources-setup/github-actions/
+          args: aws s3 sync --acl public-read ${{ github.workspace }}/cypress/videos/ s3://amazon-location-resources-setup/github-actions/
