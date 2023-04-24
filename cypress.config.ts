@@ -15,13 +15,13 @@ export default defineConfig({
 	e2e: {
 		setupNodeEvents(on, config) {
 			/* Logging */
-			// on("task", {
-			// 	log(message) {
-			// 		console.log(message);
+			on("task", {
+				log(message) {
+					console.log(message);
 
-			// 		return null;
-			// 	}
-			// });
+					return null;
+				}
+			});
 			// eslint-disable-next-line no-param-reassign
 			config = cypressBrowserPermissionsPlugin(on, config);
 			allureWriter(on, config);
