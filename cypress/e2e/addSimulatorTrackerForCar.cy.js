@@ -45,7 +45,7 @@ describe("Add Simulator Tracker for car", () => {
 		cy.wait(2000);
 		cy.get('[type="button"]').eq(3).click();
 		cy.wait(2000);
-		cy.origin(originWeb, () => {
+		cy.origin(Cypress.env("ORIGIN_WEB"), () => {
 			cy.get(Cypress.env("GET_WEB")).then(els => {
 				[...els].forEach(el => {
 					cy.wrap(el)
