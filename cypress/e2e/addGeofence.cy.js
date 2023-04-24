@@ -43,7 +43,7 @@ describe("Add Geofence", () => {
 		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').eq(0).click();
 		cy.wait(2000);
 		cy.origin(`${Cypress.env("ORIGIN_WEB")}`, () => {
-			cy.get(Cypress.env("GETWEB")).then(els => {
+			cy.get(Cypress.env("GET_WEB")).then(els => {
 				[...els].forEach(el => {
 					cy.wait(5000);
 					cy.wrap(el)
