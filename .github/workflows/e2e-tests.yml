@@ -32,7 +32,7 @@ jobs:
           CYPRESS_USER_DOMAIN:  ${{ secrets.USERDOMAIN }}
           CYPRESS_USER_POOL_CLIENT_ID:  ${{ secrets.USERPOOLCLIENTID }} 
           CYPRESS_USER_POOL_ID:  ${{ secrets.USERPOOLID }}
-          CYPRESS_WEBSOCKET_URL:  ${{ secrets.WEBSOCKETURL }}
+          CYPRESS_WEB_SOCKET_URL:  ${{ secrets.WEBSOCKETURL }}
           CYPRESS_USERNAME:  ${{ secrets.USERNAME }}
           CYPRESS_PASSWORD:  ${{ secrets.PASSWORD }}
           CYPRESS_URL:  ${{ secrets.URL }}
