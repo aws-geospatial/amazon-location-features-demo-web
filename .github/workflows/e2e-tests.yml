@@ -24,13 +24,10 @@ jobs:
       - name: Setup Cypress
         run: yarn add cypress --dev
         
-      - name: Print Env
-        run: |
-          # Access the Linux shell
-          bash
-          # Run some commands in the shell
-          echo "Hello, World!"
-          printenv
+#       - name: Access the Linux shell and Print Env
+#         run: |
+#           bash
+#           printenv
 
       - name: Run Cypress test
         env:
