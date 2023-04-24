@@ -42,3 +42,18 @@ jobs:
           CYPRESS_ORIGIN_WEB: ${{ secrets.ORIGINWEB }}
           CYPRESS_GET_WEB: ${{ secrets.GETWEB }}
         run: yarn cypress
+      
+      - name: Setup AWS Cli
+        run: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            apt update ; apt install unzip -y
+            unzip awscliv2.zip
+            ./aws/install
+            
+      - name: Export Test Videos on S3
+        if: always()
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+          AWS_DEFAULT_REGION: "us-east-1"    
+        run: aws s3 sync --acl public-read ${{ github.workspace }}/cypress/videos/ s3://amazon-location-resources-setup/github-actions/
