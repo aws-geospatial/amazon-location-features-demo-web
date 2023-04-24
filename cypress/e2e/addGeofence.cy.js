@@ -10,28 +10,17 @@
 // 5-I enter a unique name for the geofence
 // 6-I click on save
 // 7-Verify User is able add Geofence
-const identityPoolId = Cypress.env("IDENTITY_POOL_ID");
-const userDomain = Cypress.env("USER_DOMAIN");
-const userPoolClientId = Cypress.env("USER_POOL_CLIENT_ID");
-const userPoolId = Cypress.env("USER_POOL_ID");
-const webSocketUrl = Cypress.env("WEB_SOCKET_URL");
-const email = Cypress.env("EMAIL");
-const emailPass = Cypress.env("EMAIL_PASS");
-const originWeb = Cypress.env("ORIGIN_WEB");
-const getWeb = Cypress.env("GET_WEB");
-
-console.log(identityPoolId);
-console.log(userDomain);
-console.log(userPoolClientId);
-console.log(userPoolId);
-console.log(webSocketUrl);
-console.log(email);
-console.log(emailPass);
-console.log(originWeb);
-console.log(getWeb);
 
 describe("Add Geofence", () => {
 	it("authentication", () => {
+		cy.task("log", Cypress.env("URL"));
+		cy.task("log", Cypress.env("USERNAME"));
+		cy.task("log", Cypress.env("PASSWORD"));
+		cy.task("log", Cypress.env("IDENTITY_POOL_ID"));
+		cy.task("log", Cypress.env("USER_DOMAIN"));
+		cy.task("log", Cypress.env("USER_POOL_CLIENT_ID"));
+		cy.task("log", Cypress.env("USER_POOL_ID"));
+		cy.task("log", Cypress.env("WEB_SOCKET_URL"));
 		cy.visit(Cypress.env("URL"), {
 			auth: {
 				username: Cypress.env("USERNAME"),
@@ -45,28 +34,28 @@ describe("Add Geofence", () => {
 		cy.wait(2000);
 		cy.contains("Connect AWS Account").click();
 		cy.wait(2000);
-		cy.get('[placeholder="Enter IdentityPoolId"]').type(identityPoolId);
+		cy.get('[placeholder="Enter IdentityPoolId"]').type(Cypress.env("IDENTITYPOOLID"));
 		cy.wait(2000);
-		cy.get('[placeholder="Enter UserDomain"]').type(userDomain);
+		cy.get('[placeholder="Enter UserDomain"]').type(Cypress.env("USERDOMAIN"));
 		cy.wait(2000);
-		cy.get('[placeholder="Enter UserPoolClientId"]').type(userPoolClientId);
+		cy.get('[placeholder="Enter UserPoolClientId"]').type(Cypress.env("USERPOOLCLIENTID"));
 		cy.wait(2000);
-		cy.get('[placeholder="Enter UserPoolId"]').type(userPoolId);
+		cy.get('[placeholder="Enter UserPoolId"]').type(Cypress.env("USERPOOLID"));
 		cy.wait(2000);
-		cy.get('[placeholder="Enter WebSocketUrl"]').type(webSocketUrl);
+		cy.get('[placeholder="Enter WebSocketUrl"]').type(Cypress.env("WEBSOCKETURL"));
 		cy.wait(2000);
-		cy.get('[type="button"]').eq(3).click();
+		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 		cy.wait(6000);
 		cy.contains("Connect AWS Account").click();
 		cy.wait(2000);
-		cy.get('[type="button"]').eq(3).click();
+		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').eq(0).click();
 		cy.wait(2000);
-		cy.origin(originWeb, () => {
-			cy.get(Cypress.env("GET_WEB")).then(els => {
+		cy.origin(Cypress.env("ORIGINWEB"), () => {
+			cy.get(Cypress.env("GETWEB")).then(els => {
 				[...els].forEach(el => {
 					cy.wait(5000);
-					cy.wrap(el).get('[placeholder="Username"]').eq(1).invoke("val", "refat.mahmoud@makeen.io");
-					cy.wrap(el).get('[placeholder="Password"]').eq(1).invoke("val", "Makeen2022!");
+					cy.wrap(el).get('[placeholder="Username"]').eq(1).type(Cypress.env("EMAIL"));
+					cy.wrap(el).get('[placeholder="Password"]').eq(1).type(Cypress.env("EMAILPASS"));
 					cy.wrap(el).get('[name="signInSubmitButton"]').eq(1).click();
 				});
 			});
@@ -77,7 +66,9 @@ describe("Add Geofence", () => {
 		cy.wait(5000);
 		cy.get('[class="amplify-flex geofence-button"]').click();
 		cy.wait(2000);
-		cy.get('[class="mapboxgl-user-location-dot mapboxgl-marker mapboxgl-marker-anchor-center"]').click();
+		cy.get('[placeholder="Enter address or coordinates"]').type("Rio Tinto Perth Western Australia");
+		cy.wait(4000);
+		cy.contains("Rio Tinto Operations Centre").click();
 		cy.wait(2000);
 		cy.get('[placeholder="Type unique Geofence Name"]').type("Geofence1");
 		cy.wait(2000);

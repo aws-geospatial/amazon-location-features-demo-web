@@ -16,13 +16,9 @@ describe("Verify that we have three route options - Walk, Truck and Car", () => 
       }
     });
     cy.wait(20000);
-    cy.get('[class="amplify-flex icon outter-end-component"]').click();
-    cy.wait(3000);
+    cy.get('[class="amplify-flex icon outter-end-component"]').click().wait(3000);
     cy.get(".travel-mode").should("have.class", "selected");
-    cy.wait(2000);
-    cy.get(".travel-mode").should("exist");
-    cy.wait(2000);
-    cy.get(".travel-mode").should("exist");
-    cy.wait(2000);
+    cy.get(".travel-mode").should("exist").and("have.length", 3);
   });
 });
+

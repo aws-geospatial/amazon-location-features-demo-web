@@ -21,21 +21,10 @@ describe("Verify that the searched place will be displayed on the map as a POI c
     cy.wait(10000);
     cy.get("div").should("contain", "Rio Tinto");
     cy.wait(2000);
-    cy.get("div").should("contain", "Rio Tinto");
-    cy.wait(2000);
-    cy.get("div").should("contain", "Rio Tinto");
-    cy.wait(2000);
-    cy.get("div").should("contain", "Rio Tinto");
-    cy.wait(2000);
-    cy.get("div").should("contain", "Rio Tinto");
-    cy.wait(2000);
-    cy.get("div").should("contain", "Rio Tinto");
-    cy.wait(2000);
-    cy.get("div").should("contain", "Rio Tinto");
-    cy.wait(2000);
-    cy.get("div").should("contain", "Rio Tinto");
-    cy.wait(2000);
-    cy.get("div").should("contain", "Rio Tinto");
-    cy.wait(2000);
+    for (let i=0; i<10; i++) {
+      cy.get("div").should("contain", "Rio Tinto");
+      cy.wait(2000);
+    }
   });
 });
+
