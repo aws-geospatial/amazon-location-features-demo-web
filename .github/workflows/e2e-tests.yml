@@ -44,6 +44,7 @@ jobs:
         run: yarn cypress
       
       - name: Export Test Videos on S3
+        if: always()
         uses: ItsKarma/aws-cli@v1.70.0
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
