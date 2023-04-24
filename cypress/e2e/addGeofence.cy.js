@@ -53,7 +53,7 @@ describe("Add Geofence", () => {
 					cy.wrap(el)
 						.get('[placeholder="Password"]')
 						.eq(1)
-						.type(`${Cypress.env("EMAILPASS")}`);
+						.type(`${Cypress.env("EMAIL_PASS")}`);
 					cy.wrap(el).get('[name="signInSubmitButton"]').eq(1).click();
 				});
 			});
