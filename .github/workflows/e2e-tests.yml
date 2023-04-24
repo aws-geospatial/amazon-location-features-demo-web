@@ -10,7 +10,7 @@ jobs:
   e2e-tests:
     name: E2E-Testing
     runs-on: ubuntu-20.04
-  
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-node@v3
 
       - name: Install Dependencies
-        run: yarn install 
+        run: yarn install
 
       - name: Setup Cypress
         run: yarn add cypress --dev
@@ -37,5 +37,5 @@ jobs:
           CYPRESS_PASSWORD:  ${{ secrets.PASSWORD }}
           CYPRESS_URL:  ${{ secrets.URL }}
           CYPRESS_ORIGIN_WEB:  ${{ secrets.ORIGINWEB }}
-          CYPRESS_GET_WEB:  ${{ secrets.GETWEB }}  
-        run: yarn cypress
+          CYPRESS_GET_WEB:  ${{ secrets.GETWEB }}
+        run: yarn cypress run
