@@ -4,10 +4,9 @@
 import { ReactNode } from "react";
 
 import { Flex, Link, Text, View, ViewProps } from "@aws-amplify/ui-react";
+import { uuid } from "@demo/utils/uuid";
 import { omit } from "ramda";
 import { NavLink } from "react-router-dom";
-
-import { uuid } from "utils/uuid";
 
 interface ListArr {
 	label: string;

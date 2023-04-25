@@ -3,7 +3,7 @@
 
 import React, { useState } from "react";
 
-import { IconCopy, IconTickCircle } from "assets";
+import { IconCopy, IconTickCircle } from "@demo/assets";
 import "./styles.scss";
 
 interface CopyTextProps {

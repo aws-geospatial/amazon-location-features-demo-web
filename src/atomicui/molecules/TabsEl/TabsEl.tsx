@@ -4,7 +4,7 @@
 import React from "react";
 
 import { Flex, TabItem, Tabs, Text, View } from "@aws-amplify/ui-react";
-import { IconBook } from "assets";
+import { IconBook } from "@demo/assets";
 import "./styles.scss";
 
 interface TabsProps {

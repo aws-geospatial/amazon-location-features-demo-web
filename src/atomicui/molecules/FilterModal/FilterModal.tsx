@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import { Badge, Button, Flex, Text, View } from "@aws-amplify/ui-react";
 
 import "./styles.scss";
-import { IconCheck, IconClose } from "assets";
+import { IconCheck, IconClose } from "@demo/assets";
 
 import { Modal } from "../Modal";
 

@@ -2,7 +2,7 @@
 /* SPDX-License-Identifier: MIT-0 */
 
 import { Flex, View, ViewProps } from "@aws-amplify/ui-react";
-import { LogoSmall } from "assets";
+import { LogoSmall } from "@demo/assets";
 import "./styles.scss";
 
 interface LogoProps extends ViewProps {
