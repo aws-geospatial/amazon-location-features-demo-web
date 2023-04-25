@@ -22,32 +22,35 @@ yarn install<br />
 yarn vite
 
 #### `yarn install`
-
 Installs all the dependencies.
 
 #### `yarn vite`
-
 Runs the app in the **development mode**.<br />
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 #### `yarn run build && npx http-server ./build -p 8080`
-
 Builds the app for **development** to the `build` folder locally and starts the local server.
 
 ## E2E Tests
-
 #### `yarn cypress run`
-
 Runs Cypress tests to completion. By default, `cypress run` will run all tests headlessly. https://docs.cypress.io/guides/guides/command-line#cypress-run
 
 #### `yarn cypress open`
-
 Runs Cypress tests to completion in a browser which can be specified in the `options`. https://docs.cypress.io/guides/guides/command-line#cypress-open
 
+## Security Tests
+#### `yarn run-security-tests`
+Runs Security tests insuring policies match the expected values.
+
+## Unit Tests
+#### `yarn test`
+Run all the test cases for all the components within the repo.
+
+#### `yarn coverage`
+Run all the test cases for all the components within the repo and provides a coverage report.
+
 ## Resources
-
 ### Amazon Location Service
-
 > Maps (Name - Style)
 
 - location.aws.com.demo.maps.Esri.DarkGrayCanvas - VectorEsriDarkGrayCanvas
@@ -63,23 +66,18 @@ Runs Cypress tests to completion in a browser which can be specified in the `opt
 - location.aws.com.demo.maps.HERE.Imagery - RasterHereExploreSatellite
 
 > Place indexes (Name)
-
 - location.aws.com.demo.places.Esri.PlaceIndex
 - location.aws.com.demo.places.HERE.PlaceIndex
 
 > Route calculators (Name)
-
 - location.aws.com.demo.routes.Esri.RouteCalculator
 - location.aws.com.demo.routes.HERE.RouteCalculator
 
 > Geofence collections (Name)
-
 - location.aws.com.demo.geofences.GeofenceCollection
 
 > Trackers (Name)
-
 - location.aws.com.demo.trackers.Tracker
 
 ## Licensing
-
 - This project is licensed under the MIT-0 License. See [LICENSE](https://github.com/aws-samples/amazon-location-samples/blob/main/LICENSE).

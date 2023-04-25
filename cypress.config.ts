@@ -31,7 +31,7 @@ export default defineConfig({
 
 		baseUrl: "https://qa.amazonlocation.services",
 		specPattern: "./cypress/e2e/**/*.cy.{js,jsx,ts,tsx}",
-		// supportFile: false,
+		supportFile: false,
 		chromeWebSecurity: false,
 		env: {
 			browserPermissions: {

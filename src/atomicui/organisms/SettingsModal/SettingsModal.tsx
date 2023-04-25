@@ -166,14 +166,24 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 				defaultValue: currentMapProvider,
 				icon: <IconMapOutlined />,
 				detailsComponent: (
-					<Flex gap={0} direction="column" padding="0rem 1.15rem">
+					<Flex
+						data-testid={`${SettingOptionEnum.DATA_PROVIDER}-details-component`}
+						gap={0}
+						direction="column"
+						padding="0rem 1.15rem"
+					>
 						<Flex gap={0} padding="1.08rem 0rem">
 							<Radio value={ESRI} checked={currentMapProvider === ESRI} onChange={() => onMapProviderChange(ESRI)}>
 								<TextEl marginLeft="1.23rem" text={ESRI} />
 							</Radio>
 						</Flex>
 						<Flex gap={0} padding="1.08rem 0rem">
-							<Radio value={HERE} checked={currentMapProvider === HERE} onChange={() => onMapProviderChange(HERE)}>
+							<Radio
+								data-testid="data-provider-here-radio"
+								value={HERE}
+								checked={currentMapProvider === HERE}
+								onChange={() => onMapProviderChange(HERE)}
+							>
 								<TextEl marginLeft="1.23rem" text={HERE} />
 							</Radio>
 						</Flex>
@@ -186,7 +196,13 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 				defaultValue: selectedMapStyle,
 				icon: <IconPaintroller />,
 				detailsComponent: (
-					<Flex gap={0} direction="column" padding="0rem 1.15rem" overflow="scroll">
+					<Flex
+						data-testid={`${SettingOptionEnum.MAP_STYLE}-details-component`}
+						gap={0}
+						direction="column"
+						padding="0rem 1.15rem"
+						overflow="scroll"
+					>
 						<Flex gap={0} direction="column" padding="0.82rem 0rem 1.23rem 0rem">
 							<TextEl fontSize="1rem" lineHeight="1.38rem" variation="tertiary" text="Esri" />
 							<Flex className="sm-styles-container">
@@ -226,8 +242,14 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 				title: SettingOptionEnum.ROUTE_OPTIONS,
 				icon: <IconShuffle />,
 				detailsComponent: (
-					<Flex gap={0} direction="column" padding="0rem 1.15rem">
+					<Flex
+						data-testid={`${SettingOptionEnum.ROUTE_OPTIONS}-details-component`}
+						gap={0}
+						direction="column"
+						padding="0rem 1.15rem"
+					>
 						<CheckboxField
+							data-testid="avoid-tolls"
 							className="sm-checkbox"
 							label="Avoid tolls"
 							name="Avoid tolls"
@@ -236,6 +258,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 							onChange={e => setDefaultRouteOptions({ ...defaultRouteOptions, avoidTolls: e.target.checked })}
 						/>
 						<CheckboxField
+							data-testid="avoid-ferries"
 							className="sm-checkbox"
 							label="Avoid ferries"
 							name="Avoid ferries"
@@ -251,7 +274,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 				title: TITLE,
 				icon: <IconCloud />,
 				detailsComponent: (
-					<Flex className="sm-aws-cloudformation-container">
+					<Flex
+						data-testid={`${SettingOptionEnum.AWS_CLOUD_FORMATION}-details-component`}
+						className="sm-aws-cloudformation-container"
+					>
 						<Flex gap={0} padding="0rem 1.23rem 0rem 1.62rem" backgroundColor="var(--light-color-2)">
 							<IconAwsCloudFormation
 								style={{
@@ -396,6 +422,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 	const renderOptionItems = useMemo(() => {
 		return optionItems.map(({ id, title, defaultValue, icon }) => (
 			<Flex
+				data-testid={`option-item-${id}`}
 				key={id}
 				className={selectedOption === id ? "option-item selected" : "option-item"}
 				onClick={() => setSelectedOption(id)}
@@ -423,6 +450,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 
 	return (
 		<Modal
+			data-testid="settings-modal"
 			open={open}
 			onClose={onClose}
 			className="settings-modal"

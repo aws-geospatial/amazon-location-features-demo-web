@@ -144,6 +144,7 @@ const AboutModal: React.FC<AboutModalProps> = ({ open, onClose }) => {
 
 	return (
 		<Modal
+			data-testid="more-modal-container"
 			open={open}
 			onClose={onClose}
 			className="more-modal"

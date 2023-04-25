@@ -4,7 +4,7 @@
 import React from "react";
 
 import { Flex, TabItem, Tabs, Text, View } from "@aws-amplify/ui-react";
-import { IconBook } from "@demo/assets";
+import { IconBook } from "assets";
 import "./styles.scss";
 
 interface TabsProps {
@@ -16,9 +16,9 @@ interface TabsProps {
 }
 
 const TabsEl: React.FC<TabsProps> = ({ title, tabsConfig }) => (
-	<View className="tabs-container">
+	<View data-testid="tabs-container" className="tabs-container">
 		{!!title && (
-			<Flex className="title-container">
+			<Flex data-testid="tabs-title-container" className="title-container">
 				<IconBook />
 				<Text className="medium-text" color={"var(--primary-color)"}>
 					{title}

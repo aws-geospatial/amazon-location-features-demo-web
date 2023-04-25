@@ -17,9 +17,9 @@
 		"jsx": "react-jsx",
 		"baseUrl": "src",
 		"paths": {
-			"@demo/*": ["*"],
+			"@demo/*": ["*"]
 		}
 	},
 	"references": [{ "path": "./tsconfig.node.json" }],
-	"exclude": ["sample-projects"]
+	"exclude": ["cypress.config.ts"]
 }
