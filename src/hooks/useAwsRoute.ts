@@ -5,7 +5,7 @@ import { useMemo } from "react";
 
 import { useAwsRouteService } from "@demo/services";
 import { useAmplifyMapStore, useAwsRouteStore } from "@demo/stores";
-import { InputType, RouteDataType, RouteOptionsType, SuggestionType } from "@demo/types";
+import { InputType, RouteDataType, SuggestionType } from "@demo/types";
 
 import { errorHandler } from "@demo/utils/errorHandler";
 import { CalculateRouteRequest, Position } from "aws-sdk/clients/location";
@@ -41,9 +41,6 @@ const useAwsRoute = () => {
 			},
 			setDirections: (directions?: { info: SuggestionType; isEsriLimitation: boolean }) => {
 				setState({ directions });
-			},
-			setDefaultRouteOptions: (defaultRouteOptions: RouteOptionsType) => {
-				setState({ defaultRouteOptions });
 			},
 			resetStore: () => {
 				setState({ routePositions: undefined, routeData: undefined, directions: undefined });

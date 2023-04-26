@@ -9,7 +9,7 @@ import { TextEl } from "@demo/atomicui/atoms";
 import { InputField, Modal } from "@demo/atomicui/molecules";
 import appConfig from "@demo/core/constants/appConfig";
 import connectAwsAccount from "@demo/core/constants/connectAwsAccount";
-import { useAmplifyAuth, useAmplifyMap, useAws, useAwsRoute } from "@demo/hooks";
+import { useAmplifyAuth, useAmplifyMap, useAws, usePersistedData } from "@demo/hooks";
 import {
 	ConnectFormValuesType,
 	EsriMapEnum,
@@ -48,7 +48,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 		setMapStyle,
 		setAttributionText
 	} = useAmplifyMap();
-	const { defaultRouteOptions, setDefaultRouteOptions } = useAwsRoute();
+	const { defaultRouteOptions, setDefaultRouteOptions } = usePersistedData();
 	const [formValues, setFormValues] = useState<ConnectFormValuesType>({
 		IdentityPoolId: "",
 		UserDomain: "",

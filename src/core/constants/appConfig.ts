@@ -31,6 +31,7 @@ const appConfig = {
 	PERSIST_STORAGE_KEYS: {
 		AMPLIFY_AUTH_DATA: "AmplifyAuthData",
 		AMPLIFY_MAP_DATA: "AmplifyMapData",
+		PERSISTED_DATA: "PersistedData",
 		GEO_LOCATION_ALLOWED: "GeoLocationAllowed"
 	},
 	ROUTES: {

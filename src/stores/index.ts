@@ -8,3 +8,4 @@ export { default as useAwsPlaceStore } from "./useAwsPlaceStore";
 export { default as useAwsRouteStore } from "./useAwsRouteStore";
 export { default as useAwsGeofenceStore } from "./useAwsGeofenceStore";
 export { default as useAwsTrackerStore } from "./useAwsTrackerStore";
+export { default as usePersistedDataStore } from "./usePersistedDataStore";
