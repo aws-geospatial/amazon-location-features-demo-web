@@ -1,6 +1,6 @@
 import { SettingOptionEnum } from "@demo/types";
 import { faker } from "@faker-js/faker";
-import { RenderResult, act, render, screen } from "@testing-library/react";
+import { RenderResult, act, fireEvent, render, screen } from "@testing-library/react";
 
 import SettingsModal from "./SettingsModal";
 
@@ -55,10 +55,7 @@ describe("<SettingsModal />", () => {
 		act(() => optionItem.click());
 
 		const dataProviderHereRadio = screen.getByTestId("data-provider-here-radio");
-		await act(async () => {
-			dataProviderHereRadio.click();
-			jest.runAllTimers();
-		});
+		fireEvent.click(dataProviderHereRadio);
 		expect(resetAppState).toBeCalledTimes(1);
 	});
 

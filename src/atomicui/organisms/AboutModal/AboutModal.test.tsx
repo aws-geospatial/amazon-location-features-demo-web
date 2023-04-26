@@ -12,8 +12,8 @@ describe("<AboutModal />", () => {
 	});
 
 	it("should render fire Learn More button", () => {
-		const { getByText } = render(<AboutModal open={true} onClose={jest.fn()} />);
-		fireEvent.click(getByText("Learn More"));
+		const { getByTestId } = render(<AboutModal open={true} onClose={jest.fn()} />);
+		fireEvent.click(getByTestId("learn-more-button-partner-attribution"));
 		expect(windowOpen).toHaveBeenCalledTimes(1);
 	});
 

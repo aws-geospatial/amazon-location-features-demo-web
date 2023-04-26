@@ -53,6 +53,7 @@ const AboutModal: React.FC<AboutModalProps> = ({ open, onClose }) => {
 							{attributionText}
 						</Text>
 						<Button
+							data-testId="learn-more-button-partner-attribution"
 							className="learn-more-button"
 							variation="primary"
 							marginTop="1.15rem"
@@ -133,7 +134,7 @@ const AboutModal: React.FC<AboutModalProps> = ({ open, onClose }) => {
 
 		return (
 			<>
-				<Text className="small-text" padding={"1.46rem 0rem 1.46rem 1.15rem"}>
+				<Text data-testid="details-heading" className="small-text" padding={"1.46rem 0rem 1.46rem 1.15rem"}>
 					{optionItem.title}
 				</Text>
 				<Divider className="title-divider" />
@@ -144,7 +145,7 @@ const AboutModal: React.FC<AboutModalProps> = ({ open, onClose }) => {
 
 	return (
 		<Modal
-			data-testid="more-modal-container"
+			data-testid="about-modal-container"
 			open={open}
 			onClose={onClose}
 			className="more-modal"

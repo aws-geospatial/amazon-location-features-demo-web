@@ -4,7 +4,7 @@
 import { useMemo } from "react";
 
 import { AWSIoTProvider } from "@aws-amplify/pubsub";
-import { showToast } from "@demo/core";
+import { showToast } from "@demo/core/Toast";
 import { useAmplifyAuth } from "@demo/hooks";
 import { ToastType } from "@demo/types";
 import { Amplify, Hub, PubSub } from "aws-amplify";

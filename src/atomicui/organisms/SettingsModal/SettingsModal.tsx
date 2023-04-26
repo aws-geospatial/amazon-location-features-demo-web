@@ -208,6 +208,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 							<Flex className="sm-styles-container">
 								{ESRI_STYLES.map(({ id, image, name }) => (
 									<Flex
+										data-testid="esri-map-style"
 										key={id}
 										className={id === currentMapStyle ? "sm-style selected" : "sm-style"}
 										onClick={() => onMapStyleChange(id)}
@@ -224,6 +225,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 							<Flex className="sm-styles-container">
 								{HERE_STYLES.map(({ id, image, name }) => (
 									<Flex
+										data-testid="here-map-style"
 										key={id}
 										className={id === currentMapStyle ? "sm-style selected" : "sm-style"}
 										onClick={() => onMapStyleChange(id)}
