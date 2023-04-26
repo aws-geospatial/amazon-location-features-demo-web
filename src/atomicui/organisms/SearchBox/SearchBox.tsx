@@ -52,8 +52,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		clearPoiList,
 		setSelectedMarker,
 		setHoveredMarker,
-		setZoom,
-		zoom
+		setZoom
 	} = useAwsPlace();
 
 	useEffect(() => {
@@ -77,14 +76,16 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 
 	const selectSuggestion = async ({ text, label, placeId }: ComboBoxOption) => {
 		if (!placeId) {
+			console.log("selectSuggestion 1");
 			await handleSearch(text || label, true);
 		} else {
+			console.log("selectSuggestion 2");
 			const selectedMarker = suggestions?.find(
 				(i: SuggestionType) => i.PlaceId === placeId || i.Place?.Label === placeId
 			);
 
 			await setSelectedMarker(selectedMarker);
-			setZoom(zoom);
+			setZoom(15);
 		}
 	};
 
