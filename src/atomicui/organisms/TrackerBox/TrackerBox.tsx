@@ -260,7 +260,7 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 					{trackerTypes.map(({ type, icon }, idx) => (
 						<>
 							<View
-								key={type}
+								key={`${type}-${idx}`}
 								// className={
 								// 	selectedTrackerType === type
 								// 		? "icon-container selected"
