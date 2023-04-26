@@ -1,7 +1,6 @@
+import { TravelMode } from "@demo/types";
 import { faker } from "@faker-js/faker";
 import { RenderResult, render, screen } from "@testing-library/react";
-
-import { TravelMode } from "types";
 
 import StepCard from "./StepCard";
 
