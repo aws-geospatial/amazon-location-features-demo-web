@@ -105,6 +105,7 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({ open, o
 
 	return (
 		<Modal
+			data-testid="connect-aws-account-modal-container"
 			open={open}
 			onClose={_onClose}
 			className="connect-aws-account-modal"
@@ -211,9 +212,10 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({ open, o
 							</>
 						) : (
 							<>
-								{keyArr.map(key => {
+								{keyArr.map((key, idx) => {
 									return (
 										<InputField
+											dataTestId={`input-field-${idx}`}
 											key={key}
 											containerMargin="0rem 0rem 1.85rem 0rem"
 											label={key}
@@ -224,6 +226,7 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({ open, o
 									);
 								})}
 								<Button
+									data-testid="connect-button"
 									variation="primary"
 									width="100%"
 									height="3.08rem"

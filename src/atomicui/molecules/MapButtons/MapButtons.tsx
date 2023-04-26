@@ -122,8 +122,9 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 
 	return (
 		<>
-			<Flex className="map-styles-and-geofence-container">
+			<Flex data-testid="map-buttons-container" className="map-styles-and-geofence-container">
 				<Flex
+					data-testid="map-styles-button"
 					ref={stylesCardTogglerRef}
 					className={openStylesCard ? "map-styles-button active" : "map-styles-button"}
 					onClick={toggleMapStyles}
@@ -136,6 +137,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 				{!openStylesCard && <Tooltip id="map-styles-button" />}
 				<Divider className="button-divider" />
 				<Flex
+					data-testid="geofence-control-button"
 					className={isAddingGeofence ? "geofence-button active" : "geofence-button"}
 					onClick={onClickGeofence}
 					data-tooltip-id="geofence-control-button"
@@ -147,7 +149,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 				<Tooltip id="geofence-control-button" />
 			</Flex>
 			{openStylesCard && (
-				<Card ref={stylesCardRef} className="map-styles-card">
+				<Card data-testid="map-styles-card" ref={stylesCardRef} className="map-styles-card">
 					<View className="triangle-pointer" />
 					<Flex className="map-styles-header">
 						<TextEl margin="1.23rem 0rem" fontFamily="AmazonEmber-Bold" fontSize="1.23rem" text="Map style" />
@@ -166,13 +168,19 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 					<Flex gap={0} direction="column">
 						<Flex gap={0} padding="0.77rem 1.23rem" justifyContent="space-between" width="100%">
 							<TextEl fontSize="1.23rem" lineHeight="2.15rem" text="Esri" />
-							<Radio value={ESRI} checked={currentMapProvider === ESRI} onChange={() => onMapProviderChange(ESRI)} />
+							<Radio
+								data-testid="map-provider-radio-button-esri"
+								value={ESRI}
+								checked={currentMapProvider === ESRI}
+								onChange={() => onMapProviderChange(ESRI)}
+							/>
 						</Flex>
 						{currentMapProvider !== ESRI && <Divider className="mb-divider" />}
 						{currentMapProvider === ESRI && (
-							<Flex gap={0} padding="0rem 1.23rem 1.23rem 1.23rem" wrap="wrap">
+							<Flex data-testid="esri-map-styles" gap={0} padding="0rem 1.23rem 1.23rem 1.23rem" wrap="wrap">
 								{ESRI_STYLES.map(({ id, image, name }) => (
 									<Flex
+										data-testid="map-style-item"
 										key={id}
 										className={id === currentMapStyle ? "mb-style-container selected" : "mb-style-container"}
 										onClick={() => onChangeStyle(id)}
@@ -189,10 +197,15 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 						{currentMapProvider === ESRI && <Divider className="mb-divider" />}
 						<Flex gap={0} padding="0.77rem 1.23rem" justifyContent="space-between" width="100%">
 							<TextEl fontSize="1.23rem" lineHeight="2.15rem" text="HERE" />
-							<Radio value={HERE} checked={currentMapProvider === HERE} onChange={() => onMapProviderChange(HERE)} />
+							<Radio
+								data-testid="map-provider-radio-button-here"
+								value={HERE}
+								checked={currentMapProvider === HERE}
+								onChange={() => onMapProviderChange(HERE)}
+							/>
 						</Flex>
 						{currentMapProvider === HERE && (
-							<Flex gap={0} padding="0rem 1.23rem 1.23rem 1.23rem" wrap="wrap">
+							<Flex data-testid="here-map-styles" gap={0} padding="0rem 1.23rem 1.23rem 1.23rem" wrap="wrap">
 								{HERE_STYLES.map(({ id, image, name }) => (
 									<Flex
 										key={id}

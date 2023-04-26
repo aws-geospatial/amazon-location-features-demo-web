@@ -9,6 +9,7 @@ import { TextEl } from "@demo/atomicui/atoms";
 import "./styles.scss";
 
 interface InputFieldProps {
+	dataTestId?: string;
 	containerMargin?: string;
 	labelMargin?: string;
 	label?: string;
@@ -21,6 +22,7 @@ interface InputFieldProps {
 }
 
 const InputField: React.FC<InputFieldProps> = ({
+	dataTestId,
 	containerMargin,
 	labelMargin = "0px 0px 8px 0px",
 	label,
@@ -35,7 +37,14 @@ const InputField: React.FC<InputFieldProps> = ({
 		<Flex gap={0} direction="column" width="100%" margin={containerMargin}>
 			{label && <TextEl fontFamily="AmazonEmber-Bold" margin={labelMargin} text={label} />}
 			<Flex className={disabled ? "input-container disabled" : "input-container"} gap={0} alignContent="center">
-				<input placeholder={placeholder} value={value} onChange={onChange} type={type} disabled={disabled} />
+				<input
+					data-testid={dataTestId || "input-field"}
+					placeholder={placeholder}
+					value={value}
+					onChange={onChange}
+					type={type}
+					disabled={disabled}
+				/>
 				{innerEndComponent && innerEndComponent}
 			</Flex>
 		</Flex>

@@ -96,7 +96,7 @@ const Sidebar: React.FC<Props> = ({
 	const _onDisconnectAwsAccount = () => onDisconnectAwsAccount(resetAwsStore);
 
 	return (
-		<Card className="side-bar">
+		<Card data-testid="side-bar" className="side-bar">
 			<Flex className="title-bar">
 				<Logo
 					width="100%"
@@ -108,7 +108,7 @@ const Sidebar: React.FC<Props> = ({
 				/>
 
 				<View className="icon-container">
-					<IconClose onClick={onCloseSidebar} />
+					<IconClose data-testid="icon-close" onClick={onCloseSidebar} />
 				</View>
 			</Flex>
 

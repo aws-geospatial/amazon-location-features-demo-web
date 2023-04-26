@@ -30,6 +30,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 }) => {
 	return (
 		<Modal
+			data-testid="confirmation-modal-container"
 			open={open}
 			onClose={onClose}
 			className="confirmation-modal"
@@ -52,7 +53,13 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 					) : (
 						description
 					)}
-					<Button variation="primary" fontFamily="AmazonEmber-Bold" marginTop="2.46rem" onClick={onConfirm}>
+					<Button
+						data-testid="confirmation-button"
+						variation="primary"
+						fontFamily="AmazonEmber-Bold"
+						marginTop="2.46rem"
+						onClick={onConfirm}
+					>
 						{confirmationText}
 					</Button>
 					{!hideCancelButton && (

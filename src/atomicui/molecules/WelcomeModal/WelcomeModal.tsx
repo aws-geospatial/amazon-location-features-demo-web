@@ -21,6 +21,7 @@ interface WelcomeModalProps {
 const WelcomeModal: React.FC<WelcomeModalProps> = ({ open, onClose }) => {
 	return (
 		<Modal
+			data-testid="welcome-modal"
 			open={open}
 			onClose={onClose}
 			className="welcome-modal"

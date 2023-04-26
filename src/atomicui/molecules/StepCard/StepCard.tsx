@@ -38,10 +38,10 @@ const StepCard: React.FC<StepCardProps> = ({ step, isFirst, isLast, travelMode }
 	}, [placeData, isLast, step, fetchPlaceData]);
 
 	return placeData ? (
-		<View className={isLast ? "step-card bottom-border-radius" : "step-card"}>
+		<View data-testid="step-card-container" className={isLast ? "step-card bottom-border-radius" : "step-card"}>
 			{onlyOneEl ? (
 				<View className="step-card-icon-container">
-					<IconSegment className="icon-segment" />
+					<IconSegment data-testid="segment-icon" className="icon-segment" />
 				</View>
 			) : (
 				<View className="step-card-icon-container">
@@ -54,7 +54,11 @@ const StepCard: React.FC<StepCardProps> = ({ step, isFirst, isLast, travelMode }
 								[...Array(2)].map((_, index) => <View key={String(index)} className="circle" />)}
 						</View>
 					)}
-					{!isLast ? <IconSegment className={isFirst ? "icon-segment" : ""} /> : <IconDestination />}
+					{!isLast ? (
+						<IconSegment data-testid="segment-icon" className={isFirst ? "icon-segment" : ""} />
+					) : (
+						<IconDestination data-testid="destination-icon" />
+					)}
 					{!isLast && (
 						<View
 							style={{ borderRight: `4px ${travelMode === TravelMode.WALKING ? "none" : "solid"} #008296` }}
