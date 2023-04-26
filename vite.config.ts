@@ -1,12 +1,15 @@
 import path from "path";
 
 import react from "@vitejs/plugin-react";
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
+import EnvironmentPlugin from "vite-plugin-environment";
 import eslint from "vite-plugin-eslint";
 import svgr from "vite-plugin-svgr";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default defineConfig(({ mode }) => {
+	const env = loadEnv(mode, process.cwd(), "VITE_");
+
 	return {
 		plugins: [
 			react(),
@@ -14,7 +17,8 @@ export default defineConfig(({ mode }) => {
 			eslint({
 				fix: true,
 				failOnError: false
-			})
+			}),
+			EnvironmentPlugin(env)
 		],
 		resolve: {
 			alias: {
@@ -40,6 +44,9 @@ export default defineConfig(({ mode }) => {
 		},
 		optimizeDeps: {
 			disabled: false
+		},
+		define: {
+			"process.env": {}
 		}
 	};
 });
