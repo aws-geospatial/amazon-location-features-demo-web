@@ -30,14 +30,29 @@ const useWebSocketService = () => {
 			})
 		);
 
-		const subscription = PubSub.subscribe(`${credentials?.identityId}/tracker`).subscribe(data => {
-			console.info({ data });
-			if (data.value.source === "aws.geo") {
-				const msg = `${data.value.trackerEventType === "ENTER" ? "Entered" : "Exited"} ${
-					data.value.geofenceId
-				} geofence`;
-				showToast({ content: msg, type: ToastType.INFO });
-			}
+		// const subscription = PubSub.subscribe(`${credentials?.identityId}/tracker`).subscribe(data => {
+		// 	console.info({ data });
+		// 	if (data.value.source === "aws.geo") {
+		// 		const msg = `${data.value.trackerEventType === "ENTER" ? "Entered" : "Exited"} ${
+		// 			data.value.geofenceId
+		// 		} geofence`;
+		// 		showToast({ content: msg, type: ToastType.INFO });
+		// 	}
+		// });
+		const subscription = PubSub.subscribe(`${credentials?.identityId}/tracker`, {
+			provider: "AWSIoTProvider"
+		}).subscribe({
+			next: data => {
+				console.info({ data });
+				if (data.value.source === "aws.geo") {
+					const msg = `${data.value.trackerEventType === "ENTER" ? "Entered" : "Exited"} ${
+						data.value.geofenceId
+					} geofence`;
+					showToast({ content: msg, type: ToastType.INFO });
+				}
+			},
+			error: error => console.error({ error }),
+			complete: () => console.info("complete")
 		});
 
 		return subscription;
