@@ -40,9 +40,6 @@ export default defineConfig(({ mode }) => {
 		},
 		optimizeDeps: {
 			disabled: false
-		},
-		define: {
-			"process.env": {}
 		}
 	};
 });
