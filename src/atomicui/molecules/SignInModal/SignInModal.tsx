@@ -20,6 +20,7 @@ const SignInModal: React.FC<SignInModalProps> = ({ open, onClose }) => {
 
 	return (
 		<Modal
+			data-testid="sign-in-modal"
 			open={open}
 			onClose={onClose}
 			className="sign-in-modal"
@@ -48,11 +49,18 @@ const SignInModal: React.FC<SignInModalProps> = ({ open, onClose }) => {
 						whiteSpace="pre-line"
 						text={"Sign in to access Tracking and Geofence features or\nproceed to Explore the map"}
 					/>
-					<Button variation="primary" fontFamily="AmazonEmber-Bold" marginTop="32px" onClick={() => onLogin()}>
+					<Button
+						data-testid="sign-in-button"
+						variation="primary"
+						fontFamily="AmazonEmber-Bold"
+						marginTop="32px"
+						onClick={() => onLogin()}
+					>
 						Sign in
 					</Button>
 					<Flex className="maybe-later-button" onClick={onClose}>
 						<TextEl
+							data-testid="maybe-later-button"
 							fontFamily="AmazonEmber-Bold"
 							fontSize="14px"
 							lineHeight="16px"

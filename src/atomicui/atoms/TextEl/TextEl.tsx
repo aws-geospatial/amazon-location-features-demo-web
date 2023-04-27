@@ -25,6 +25,7 @@ const TextEl: React.FC<TextElProps> = ({
 }) => {
 	return (
 		<Text
+			data-testid="textEl"
 			{...rest}
 			fontFamily={fontFamily}
 			fontSize={fontSize}

@@ -16,7 +16,7 @@ describe("Verify that user will get a message if he entered a non existing locat
 				password: Cypress.env("PASSWORD")
 			}
 		});
-		cy.wait(25000);
+		cy.wait(20000);
 		cy.get('[placeholder="Search"]').click().type("{enter}");
 		cy.wait(5000);
 		cy.get("div").should("contain", "Failed to search place by text, 'Text' must have length at least 1");

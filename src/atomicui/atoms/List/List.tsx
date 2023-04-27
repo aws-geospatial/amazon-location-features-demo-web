@@ -41,6 +41,7 @@ const LinkWrapper: React.FC<LinkWrapperProps> = ({ isExternalLink = false, linkT
 			</Link>
 		);
 	}
+
 	return (
 		<NavLink
 			to={linkTo}
@@ -73,17 +74,18 @@ const List: React.FC<ListProps> = ({
 			link?.startsWith("https://") ||
 			link?.startsWith("http://") ||
 			link?.startsWith("#") ||
-			link?.startsWith("/demo")
+			link?.startsWith("/showcase")
 		);
 
 	return (
-		<View as="ul" className={ulClass} {...omit(["className"], props)}>
+		<View data-testid="list-container" as="ul" className={ulClass} {...omit(["className"], props)}>
 			{listArray.map(item => {
 				const isExternalLink = checkIfExternalLink(item?.link || "#");
+
 				return (
 					<li key={uuid.randomUUID()} className="list-item">
 						{hideIcons ? null : (
-							<Flex className={item.iconContainerClass}>
+							<Flex data-testid="list-item-icon-before-link" className={item.iconContainerClass}>
 								<img loading="lazy" src={item.iconBeforeLink} />
 							</Flex>
 						)}

@@ -31,7 +31,8 @@ import {
 	useAwsIot,
 	useAwsPlace,
 	useAwsRoute,
-	useAwsTracker
+	useAwsTracker,
+	usePersistedData
 } from "@demo/hooks";
 import { ToastType } from "@demo/types";
 import { errorHandler } from "@demo/utils/errorHandler";
@@ -89,17 +90,8 @@ const DemoPage: React.FC = () => {
 	const [height, setHeight] = React.useState(window.innerHeight);
 	const mapViewRef = useRef<MapRef | null>(null);
 	const geolocateControlRef = useRef<GeolocateControlRef | null>(null);
-	const {
-		credentials,
-		getCurrentUserCredentials,
-		clearCredentials,
-		region,
-		authTokens,
-		setAuthTokens,
-		onLogout,
-		showWelcomeModal,
-		setShowWelcomeModal
-	} = useAmplifyAuth();
+	const { credentials, getCurrentUserCredentials, clearCredentials, region, authTokens, setAuthTokens, onLogout } =
+		useAmplifyAuth();
 	const { locationClient, createLocationClient, iotClient, createIotClient, resetStore: resetAwsStore } = useAws();
 	const { attachPolicy } = useAwsIot();
 	const { mapStyle, currentLocationData, setCurrentLocation } = useAmplifyMap();
@@ -119,6 +111,7 @@ const DemoPage: React.FC = () => {
 	const { routeData, directions, resetStore: resetAwsRouteStore, setRouteData } = useAwsRoute();
 	const { resetStore: resetAwsGeofenceStore } = useAwsGeofence();
 	const { isEditingRoute, trackerPoints, setTrackerPoints, resetStore: resetAwsTrackingStore } = useAwsTracker();
+	const { showWelcomeModal, setShowWelcomeModal } = usePersistedData();
 	const location = useLocation();
 
 	const clearCredsAndLocationClient = useCallback(() => {

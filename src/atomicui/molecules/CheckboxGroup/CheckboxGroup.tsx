@@ -27,10 +27,11 @@ const CheckboxGroup: React.FC<CheckboxGroupProps> = ({ title, options, values: c
 	};
 
 	return (
-		<View className="checkbox-group">
+		<View data-testid="checkbox-group-container" className="checkbox-group">
 			<Text className="bold medium-text">{title}</Text>
 			{options.map(option => (
 				<CheckboxField
+					data-testid="checkbox-group-checkbox-field"
 					className="regular-text"
 					key={option.value}
 					name={option.label}

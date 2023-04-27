@@ -16,26 +16,12 @@ describe("Verify that search suggestions will be displayed on the map as well.",
 				password: Cypress.env("PASSWORD")
 			}
 		});
-		cy.wait(25000);
+		cy.wait(20000);
 		cy.get('[placeholder="Search"]').click().type("Rio tinto").type("{enter}");
 		cy.wait(10000);
-		cy.get("div").should("contain", "Rio Tinto");
-		cy.wait(2000);
-		cy.get("div").should("contain", "Rio Tinto");
-		cy.wait(2000);
-		cy.get("div").should("contain", "Rio Tinto");
-		cy.wait(2000);
-		cy.get("div").should("contain", "Rio Tinto");
-		cy.wait(2000);
-		cy.get("div").should("contain", "Rio Tinto");
-		cy.wait(2000);
-		cy.get("div").should("contain", "Rio Tinto");
-		cy.wait(2000);
-		cy.get("div").should("contain", "Rio Tinto");
-		cy.wait(2000);
-		cy.get("div").should("contain", "Rio Tinto");
-		cy.wait(2000);
-		cy.get("div").should("contain", "Rio Tinto");
-		cy.wait(2000);
+		for (let i = 0; i < 10; i++) {
+			cy.wait(2000);
+			cy.get("div").should("contain", "Rio Tinto");
+		}
 	});
 });

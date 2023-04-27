@@ -77,9 +77,10 @@
 	}
 }
 
-.mapboxgl-ctrl button.mapboxgl-ctrl-zoom-out,.maplibregl-ctrl button.maplibregl-ctrl-zoom-out{
+.mapboxgl-ctrl button.mapboxgl-ctrl-zoom-out,
+.maplibregl-ctrl button.maplibregl-ctrl-zoom-out {
 	&:hover {
-		border-radius: 0px ;
+		border-radius: 0px;
 	}
 }
 

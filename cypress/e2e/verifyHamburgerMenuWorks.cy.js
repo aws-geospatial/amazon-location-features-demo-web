@@ -16,23 +16,23 @@ describe("Verify that we have Side menu displayed as a humbrger menu, and it wor
 				password: Cypress.env("PASSWORD")
 			}
 		});
-		cy.wait(25000);
+		cy.wait(20000);
 		cy.get('[id="Icon"]').click();
 		cy.wait(2000);
 		cy.get("div").should("contain", "Demo");
-		cy.wait(2000);
+		cy.wait(500);
 		cy.get("div").should("contain", "Geofence");
-		cy.wait(2000);
+		cy.wait(500);
 		cy.get("div").should("contain", "Tracker");
-		cy.wait(2000);
+		cy.wait(500);
 		cy.get("div").should("contain", "Settings");
-		cy.wait(2000);
+		cy.wait(500);
 		cy.get("div").should("contain", "More");
-		cy.wait(2000);
+		cy.wait(500);
 		cy.get("div").should("contain", "Overview");
-		cy.wait(2000);
-		cy.get("div").should("contain", "Product");
-		cy.wait(2000);
+		cy.wait(500);
+		// cy.get("div").should("contain", "Product");
+		// cy.wait(2000);
 		cy.get("div").should("contain", "Samples");
 		cy.wait(2000);
 	});

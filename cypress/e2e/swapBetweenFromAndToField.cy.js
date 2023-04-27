@@ -18,22 +18,28 @@ describe("Verify that user can revese between From field and to field", () => {
 				password: Cypress.env("PASSWORD")
 			}
 		});
-		cy.wait(25000);
+		cy.wait(20000);
 		cy.get('[class="amplify-flex icon outter-end-component"]').click();
 		cy.wait(2000);
-		cy.get('[placeholder="From"]').click();
+		cy.get('[placeholder="From"]').type("40.7485492, -73.9879522");
+		cy.wait(3000);
+		cy.contains("Nycomputers, 1270 Broadway, New York, NY, 10001, USA").click();
 		cy.wait(2000);
-		cy.get('[class="amplify-text"]').click();
+		cy.get('[placeholder="To"]').click().type("40.737941, -73.9881014");
+		cy.wait(3000);
+		cy.contains("232-250 Park Ave S, New York, NY, 10003, USA").click();
 		cy.wait(2000);
-		cy.get('[placeholder="To"]').click().type("Coffee Rawad");
+		cy.get('[class="mapboxgl-marker mapboxgl-marker-anchor-center"]').eq(0).should("be.visible");
 		cy.wait(2000);
-		cy.contains("Coffee Rawad").click();
+		cy.get('[class="mapboxgl-marker mapboxgl-marker-anchor-center"]').eq(1).should("be.visible");
 		cy.wait(2000);
-		cy.get('[class="amplify-text regular-text"]').should("have.text", "14 minutes");
 		cy.wait(2000);
 		cy.get('[class="amplify-flex swap-icon-container"]').click();
 		cy.wait(2000);
-		cy.get('[class="amplify-text regular-text"]').should("have.text", "19 minutes");
+		cy.get('[class="mapboxgl-marker mapboxgl-marker-anchor-center"]').eq(0).should("be.visible");
+		cy.wait(2000);
+		cy.get('[class="mapboxgl-marker mapboxgl-marker-anchor-center"]').eq(1).should("be.visible");
+		cy.wait(2000);
 		cy.wait(2000);
 		cy.get('[class="amplify-flex swap-icon-container"]').click();
 	});

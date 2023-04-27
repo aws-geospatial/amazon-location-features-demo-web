@@ -9,3 +9,4 @@ export { default as useAwsRoute } from "./useAwsRoute";
 export { default as useAwsGeofence } from "./useAwsGeofence";
 export { default as useAwsTracker } from "./useAwsTracker";
 export { default as useAwsIot } from "./useAwsIot";
+export { default as usePersistedData } from "./usePersistedData";

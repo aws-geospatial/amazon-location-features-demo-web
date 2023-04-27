@@ -14,7 +14,7 @@ describe("Verify that search box is existing in the correct position", () => {
 				password: Cypress.env("PASSWORD")
 			}
 		});
-		cy.wait(25000);
+		cy.wait(20000);
 		cy.get('[placeholder="Search"]').should("be.visible");
 		cy.wait(2000);
 		cy.get('[class="amplify-label amplify-visually-hidden"]').should("have.text", "Search");

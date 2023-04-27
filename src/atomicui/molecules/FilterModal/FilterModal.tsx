@@ -82,6 +82,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ isOpen, title, options, value
 
 	return (
 		<Modal
+			data-testid="filter-modal-container"
 			open={isOpen}
 			onClose={onClose}
 			modalContainerClass="filter-modal-container"
@@ -114,11 +115,12 @@ const FilterModal: React.FC<FilterModalProps> = ({ isOpen, title, options, value
 						<View className="options-container">
 							{options
 								.find(category => category.key === selectedCategory)!
-								.options.map(sampleListFilter => {
+								.options.map((sampleListFilter, idx) => {
 									const isSelected = selectedValuesPerSelectedCategory.includes(sampleListFilter.value);
 
 									return (
 										<Flex
+											data-testid={`option-${idx}`}
 											key={sampleListFilter.value}
 											className="option"
 											onClick={handleOptionClick(selectedCategory, sampleListFilter.value, !isSelected)}
@@ -131,17 +133,22 @@ const FilterModal: React.FC<FilterModalProps> = ({ isOpen, title, options, value
 						</View>
 					) : (
 						<View className="category-container">
-							{options.map(sampleListFilter => {
+							{options.map((sampleListFilter, idx) => {
 								const selectedFiltersCount = (selectedValues?.[sampleListFilter.key] || [])?.length;
 
 								return (
 									<Flex
+										data-testid={`category-${idx}`}
 										key={sampleListFilter.key}
 										className="category"
 										onClick={() => handleCategorySelection(sampleListFilter.key)}
 									>
 										<Text>{sampleListFilter.title}</Text>
-										{!!selectedFiltersCount && <Badge className="counter-badge">{selectedFiltersCount}</Badge>}
+										{!!selectedFiltersCount && (
+											<Badge data-testid={`counter-badge-${idx}`} className="counter-badge">
+												{selectedFiltersCount}
+											</Badge>
+										)}
 									</Flex>
 								);
 							})}

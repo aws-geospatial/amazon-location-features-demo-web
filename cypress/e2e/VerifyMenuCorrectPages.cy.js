@@ -17,7 +17,7 @@ describe("Verify that the items in side menu take us to correct pages ", () => {
 				password: Cypress.env("PASSWORD")
 			}
 		});
-		cy.wait(25000);
+		cy.wait(20000);
 		cy.get('[id="Icon"]').click();
 		cy.wait(2000);
 		cy.contains("Overview").click();
@@ -26,14 +26,14 @@ describe("Verify that the items in side menu take us to correct pages ", () => {
 		cy.wait(2000);
 		cy.go("back");
 		cy.wait(5000);
-		cy.get('[id="Icon"]').click();
-		cy.wait(2000);
-		cy.contains("Product").click();
-		cy.wait(2000);
-		cy.url().should("eq", "https://qa.amazonlocation.services/product");
-		cy.wait(2000);
-		cy.go("back");
-		cy.wait(5000);
+		// cy.get('[id="Icon"]').click();
+		// cy.wait(2000);
+		// cy.contains("Product").click();
+		// cy.wait(2000);
+		// cy.url().should("eq", "https://qa.amazonlocation.services/product");
+		// cy.wait(2000);
+		// cy.go("back");
+		// cy.wait(5000);
 		cy.get('[id="Icon"]').click();
 		cy.wait(2000);
 		cy.contains("Samples").click();

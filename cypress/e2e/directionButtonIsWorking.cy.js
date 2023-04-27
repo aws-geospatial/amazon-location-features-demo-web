@@ -15,8 +15,11 @@ describe("Verify that direction button beside search bar is working fine", () =>
 				password: Cypress.env("PASSWORD")
 			}
 		});
-		cy.wait(25000);
-		cy.get('[class="mapboxgl-user-location-dot mapboxgl-marker mapboxgl-marker-anchor-center"]').click();
+		cy.wait(20000);
+		cy.get('[class="mapboxgl-user-location-dot mapboxgl-marker mapboxgl-marker-anchor-center"]')
+			.wait(5000)
+			.should("be.visible")
+			.click();
 		cy.wait(3000);
 		cy.get('[class="amplify-text amplify-text--primary bold"]').should("have.text", "Directions");
 		cy.wait(2000);

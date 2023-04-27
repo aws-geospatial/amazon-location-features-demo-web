@@ -19,22 +19,22 @@ describe("Edit Geofence", () => {
 				password: Cypress.env("PASSWORD")
 			}
 		});
-		cy.wait(15000);
+		cy.wait(20000);
 		cy.get('[id="Icon"]').click();
 		cy.wait(2000);
 		cy.contains("Settings").click();
 		cy.wait(2000);
 		cy.contains("Connect AWS Account").click();
 		cy.wait(2000);
-		cy.get('[placeholder="Enter IdentityPoolId"]').type(Cypress.env("IDENTITY_POOL_ID"));
+		cy.get('[placeholder="Enter IdentityPoolId"]').type(`${Cypress.env("IDENTITY_POOL_ID")}`);
 		cy.wait(2000);
-		cy.get('[placeholder="Enter UserDomain"]').type(Cypress.env("USER_DOMAIN"));
+		cy.get('[placeholder="Enter UserDomain"]').type(`${Cypress.env("USER_DOMAIN")}`);
 		cy.wait(2000);
-		cy.get('[placeholder="Enter UserPoolClientId"]').type(Cypress.env("USER_POOL_CLIENT_ID"));
+		cy.get('[placeholder="Enter UserPoolClientId"]').type(`${Cypress.env("USER_POOL_CLIENT_ID")}`);
 		cy.wait(2000);
-		cy.get('[placeholder="Enter UserPoolId"]').type(Cypress.env("USER_POOL_ID"));
+		cy.get('[placeholder="Enter UserPoolId"]').type(`${Cypress.env("USER_POOL_ID")}`);
 		cy.wait(2000);
-		cy.get('[placeholder="Enter WebSocketUrl"]').type(Cypress.env("WEB_SOCKET_URL"));
+		cy.get('[placeholder="Enter WebSocketUrl"]').type(`${Cypress.env("WEB_SOCKET_URL")}`);
 		cy.wait(2000);
 		cy.get('[type="button"]').eq(3).click();
 		cy.wait(6000);
@@ -43,11 +43,17 @@ describe("Edit Geofence", () => {
 		cy.get('[type="button"]').eq(3).click();
 		cy.wait(2000);
 		cy.origin(Cypress.env("ORIGIN_WEB"), () => {
-			cy.get(Cypress.env("GetWeb")).then(els => {
+			cy.get(Cypress.env("GET_WEB")).then(els => {
 				[...els].forEach(el => {
-					cy.wrap(el).find("#signInFormUsername").type(Cypress.env("EMAIL"));
-					cy.wrap(el).find("#signInFormPassword").type(Cypress.env("EMAIL_PASS"));
-					cy.wrap(el).find('[name="signInSubmitButton"]').click();
+					cy.wrap(el)
+						.get('[placeholder="Username"]')
+						.eq(1)
+						.type(`${Cypress.env("EMAIL")}`);
+					cy.wrap(el)
+						.get('[placeholder="Password"]')
+						.eq(1)
+						.type(`${Cypress.env("EMAIL_PASS")}`);
+					cy.wrap(el).get('[name="signInSubmitButton"]').eq(1).click();
 				});
 			});
 		});
@@ -57,7 +63,7 @@ describe("Edit Geofence", () => {
 		cy.wait(5000);
 		cy.get('[class="amplify-flex geofence-button"]').click();
 		cy.wait(2000);
-		cy.get('[class="mapboxgl-user-location-dot mapboxgl-marker mapboxgl-marker-anchor-center"]').click();
+		cy.get('[class="mapboxgl-user-location-dot mapboxgl-marker mapboxgl-marker-anchor-center"]').click({ force: true });
 		cy.wait(2000);
 		cy.get('[placeholder="Type unique Geofence Name"]').type("Geofence1");
 		cy.wait(2000);
@@ -67,8 +73,11 @@ describe("Edit Geofence", () => {
 		cy.wait(2000);
 		cy.contains("Geofence1").click();
 		cy.wait(2000);
-
-		cy.get('[id="Icon/trash"]').click({ force: true });
+		cy.get('[type="number"]').type("0");
+		cy.wait(2000);
+		cy.contains("Save").click();
+		cy.wait(2000);
+		cy.get('[id="Icon/trash"]').eq(0).click({ force: true });
 		cy.wait(2000);
 	});
 });

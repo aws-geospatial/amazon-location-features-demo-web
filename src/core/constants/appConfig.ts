@@ -16,6 +16,10 @@ import {
 } from "@demo/assets";
 import { EsriMapEnum, EsriMapStyleEnum, HereMapEnum, HereMapStyleEnum } from "@demo/types";
 
+const getEnv = (key: string) => {
+	return import.meta.env[key];
+};
+
 const appConfig = {
 	GLOBAL_CONSTANTS: {
 		LOCAL_STORAGE_PREFIX: "amazon-location-web-demo_",
@@ -27,6 +31,7 @@ const appConfig = {
 	PERSIST_STORAGE_KEYS: {
 		AMPLIFY_AUTH_DATA: "AmplifyAuthData",
 		AMPLIFY_MAP_DATA: "AmplifyMapData",
+		PERSISTED_DATA: "PersistedData",
 		GEO_LOCATION_ALLOWED: "GeoLocationAllowed"
 	},
 	ROUTES: {
@@ -105,9 +110,11 @@ const appConfig = {
 	GEOFENCE_COLLECTION: "location.aws.com.demo.geofences.GeofenceCollection",
 	DEVICE_ID_WEB: "web_browser_device",
 	TRACKER: "location.aws.com.demo.trackers.Tracker",
-	CF_TEMPLATE: import.meta.env.VITE_AWS_CF_TEMPLATE,
-	APPLE_APP_STORE_LINK: import.meta.env.VITE_APPLE_APP_STORE_LINK,
-	GOOGLE_PLAY_STORE_LINK: import.meta.env.VITE_GOOGLE_PLAY_STORE_LINK,
+	IDENTITY_POOL_ID: getEnv("VITE_AWS_COGNITO_IDENTITY_POOL_ID"),
+	REGION: getEnv("VITE_AWS_REGION"),
+	CF_TEMPLATE: getEnv("VITE_AWS_CF_TEMPLATE"),
+	APPLE_APP_STORE_LINK: getEnv("VITE_APPLE_APP_STORE_LINK"),
+	GOOGLE_PLAY_STORE_LINK: getEnv("VITE_GOOGLE_PLAY_STORE_LINK"),
 	ESRI_STYLES: [
 		{ id: EsriMapEnum.ESRI_LIGHT, image: EsriLight, name: "Light" },
 		{ id: EsriMapEnum.ESRI_STREET_MAP, image: EsriStreets, name: "Streets" },

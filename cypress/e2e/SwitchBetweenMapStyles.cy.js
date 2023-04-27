@@ -19,7 +19,7 @@ describe("Switch between map styles from right side menu", () => {
 				password: Cypress.env("PASSWORD")
 			}
 		});
-		cy.wait(25000);
+		cy.wait(20000);
 		cy.get(".map-styles-button > svg").click();
 		cy.wait(3000);
 		cy.contains("Streets").click();

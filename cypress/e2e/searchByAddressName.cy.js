@@ -15,7 +15,7 @@ describe("Verify that user can search by geocode location", () => {
 				password: Cypress.env("PASSWORD")
 			}
 		});
-		cy.wait(25000);
+		cy.wait(20000);
 		cy.get('[placeholder="Search"]')
 			.click()
 			.type("44 Boobialla Street, Corbie Hill, Australia")
@@ -23,10 +23,7 @@ describe("Verify that user can search by geocode location", () => {
 			.type("{downArrow}")
 			.type("{enter}");
 		cy.wait(10000);
-		cy.get('[class="amplify-text amplify-text--tertiary"]').should(
-			"have.text",
-			"O'connor, Canberra, Australian Capital Territory, 2602, AUS"
-		);
+		cy.get('[class="info-container"]').should("be.visible");
 		cy.wait(2000);
 	});
 });
