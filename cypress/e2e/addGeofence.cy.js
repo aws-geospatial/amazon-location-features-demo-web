@@ -19,35 +19,45 @@ describe("Add Geofence", () => {
 				password: Cypress.env("PASSWORD")
 			}
 		});
-		cy.wait(15000);
+		cy.wait(5000);
+		// cy.clearLocalStorage();
+		// cy.clearAllSessionStorage();
+		// cy.exec("rm -rf ~/Library/Application\\ Support/Google/Chrome");
 		cy.get('[id="Icon"]').click();
 		cy.wait(2000);
 		cy.contains("Settings").click();
 		cy.wait(2000);
 		cy.contains("Connect AWS Account").click();
 		cy.wait(2000);
-		cy.get('[placeholder="Enter IdentityPoolId"]').type(Cypress.env("IDENTITY_POOL_ID"));
+		cy.get('[placeholder="Enter IdentityPoolId"]').type(`${Cypress.env("IDENTITY_POOL_ID")}`);
 		cy.wait(2000);
-		cy.get('[placeholder="Enter UserDomain"]').type(Cypress.env("USER_DOMAIN"));
+		cy.get('[placeholder="Enter UserDomain"]').type(`${Cypress.env("USER_DOMAIN")}`);
 		cy.wait(2000);
-		cy.get('[placeholder="Enter UserPoolClientId"]').type(Cypress.env("USER_POOL_CLIENT_ID"));
+		cy.get('[placeholder="Enter UserPoolClientId"]').type(`${Cypress.env("USER_POOL_CLIENT_ID")}`);
 		cy.wait(2000);
-		cy.get('[placeholder="Enter UserPoolId"]').type(Cypress.env("USER_POOL_ID"));
+		cy.get('[placeholder="Enter UserPoolId"]').type(`${Cypress.env("USER_POOL_ID")}`);
 		cy.wait(2000);
-		cy.get('[placeholder="Enter WebSocketUrl"]').type(Cypress.env("WEB_SOCKET_URL"));
+		cy.get('[placeholder="Enter WebSocketUrl"]').type(`${Cypress.env("WEB_SOCKET_URL")}`);
 		cy.wait(2000);
-		cy.get('[type="button"]').eq(3).click();
+		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 		cy.wait(6000);
 		cy.contains("Connect AWS Account").click();
 		cy.wait(2000);
-		cy.get('[type="button"]').eq(3).click();
+		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').eq(0).click();
 		cy.wait(2000);
 		cy.origin(Cypress.env("ORIGIN_WEB"), () => {
 			cy.get(Cypress.env("GET_WEB")).then(els => {
 				[...els].forEach(el => {
-					cy.wrap(el).find("#signInFormUsername").type(Cypress.env("EMAIL"));
-					cy.wrap(el).find("#signInFormPassword").type(Cypress.env("EMAIL_PASS"));
-					cy.wrap(el).find('[name="signInSubmitButton"]').click();
+					cy.wait(2000);
+					cy.wrap(el)
+						.get('[placeholder="Username"]')
+						.eq(1)
+						.type(`${Cypress.env("EMAIL")}`);
+					cy.wrap(el)
+						.get('[placeholder="Password"]')
+						.eq(1)
+						.type(`${Cypress.env("EMAIL_PASS")}`);
+					cy.wrap(el).get('[name="signInSubmitButton"]').eq(1).click();
 				});
 			});
 		});
@@ -57,7 +67,9 @@ describe("Add Geofence", () => {
 		cy.wait(5000);
 		cy.get('[class="amplify-flex geofence-button"]').click();
 		cy.wait(2000);
-		cy.get('[class="mapboxgl-user-location-dot mapboxgl-marker mapboxgl-marker-anchor-center"]').click();
+		cy.get('[placeholder="Enter address or coordinates"]').type("Rio Tinto Perth Western Australia");
+		cy.wait(4000);
+		cy.contains("Rio Tinto Operations Centre").click();
 		cy.wait(2000);
 		cy.get('[placeholder="Type unique Geofence Name"]').type("Geofence1");
 		cy.wait(2000);
@@ -65,7 +77,7 @@ describe("Add Geofence", () => {
 		cy.wait(2000);
 		cy.get("div").should("contain", "Geofence1");
 		cy.wait(2000);
-		cy.get('[id="Icon/trash"]').click({ force: true });
+		cy.get('[id="Icon/trash"]').eq(0).click({ force: true });
 		cy.wait(2000);
 	});
 });

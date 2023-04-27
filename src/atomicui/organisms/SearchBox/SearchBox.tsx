@@ -52,8 +52,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		clearPoiList,
 		setSelectedMarker,
 		setHoveredMarker,
-		setZoom,
-		zoom
+		setZoom
 	} = useAwsPlace();
 
 	useEffect(() => {
@@ -84,7 +83,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 			);
 
 			await setSelectedMarker(selectedMarker);
-			setZoom(zoom);
+			setZoom(15);
 		}
 	};
 
@@ -223,6 +222,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	return (
 		<>
 			<Flex
+				data-testid="search-bar-container"
 				className="search-bar"
 				style={{
 					flexDirection: "column",

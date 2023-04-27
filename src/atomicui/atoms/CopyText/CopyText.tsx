@@ -26,11 +26,11 @@ const CopyText = React.forwardRef<HTMLSpanElement | null, CopyTextProps>(
 		};
 
 		return (
-			<span className="copy-text-container" ref={ref} onClick={handleClick}>
+			<span data-testid="copy-text-container" className="copy-text-container" ref={ref} onClick={handleClick}>
 				{isCopied ? (
-					<IconTickCircle width={iconSize} height={iconSize} fill={tickIconColor} />
+					<IconTickCircle data-testid="copied-icon" width={iconSize} height={iconSize} fill={tickIconColor} />
 				) : (
-					<IconCopy width={iconSize} height={iconSize} fill={copyIconColor} />
+					<IconCopy data-testid="copy-icon" width={iconSize} height={iconSize} fill={copyIconColor} />
 				)}
 			</span>
 		);

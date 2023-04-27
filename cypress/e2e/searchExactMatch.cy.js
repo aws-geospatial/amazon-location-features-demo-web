@@ -18,7 +18,7 @@ describe("Verify that when user searches exact match with the address it must di
 				password: Cypress.env("PASSWORD")
 			}
 		});
-		cy.wait(25000);
+		cy.wait(20000);
 		cy.get('[placeholder="Search"]').click().type("Rio Tinto Perth Western Australia");
 		cy.wait(10000);
 		cy.get("div").should("contain", "Rio Tinto Operations Centre");

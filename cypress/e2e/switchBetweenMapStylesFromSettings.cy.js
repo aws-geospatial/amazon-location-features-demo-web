@@ -21,7 +21,7 @@ describe("switch between map styles from settings", () => {
 				password: Cypress.env("PASSWORD")
 			}
 		});
-		cy.wait(25000);
+		cy.wait(20000);
 		cy.get('[id="Icon"]').click();
 		cy.wait(2000);
 		cy.contains("Settings").click();

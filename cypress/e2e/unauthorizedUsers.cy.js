@@ -26,12 +26,12 @@ describe("Unauthorized users MUST only have access to predefined permissions and
 				password: Cypress.env("PASSWORD")
 			}
 		});
-		cy.wait(25000);
+		cy.wait(20000);
 		cy.get('[id="Icon"]').click();
 		cy.wait(2000);
-		cy.get('id="Icon/lock-solid"').eq(0).should("be.visible");
+		cy.get('[class="amplify-flex locked-item"]').eq(0).should("be.visible");
 		cy.wait(2000);
-		cy.get('id="Icon/lock-solid"').eq(1).should("be.visible");
+		cy.get('[class="amplify-flex locked-item"]').eq(1).should("be.visible");
 		cy.wait(2000);
 		cy.get(".map-styles-button > svg").click();
 		cy.wait(3000);
@@ -64,8 +64,10 @@ describe("Unauthorized users MUST only have access to predefined permissions and
 		cy.get("div").should("contain", "Connect AWS Account");
 		cy.wait(2000);
 		cy.get('[class="amplify-flex modal-close"]').click();
-		cy.wait(2000);
-		cy.get('[class="mapboxgl-ctrl-icon"]').click();
+		cy.wait(3000);
+		// cy.get('[class="mapboxgl-user-location-accuracy-circle mapboxgl-marker mapboxgl-marker-anchor-center"]').click({
+		// 	force: true
+		// });
 		cy.wait(5000);
 		cy.get('[title="Zoom in"]').click();
 		cy.wait(2000);
@@ -79,7 +81,7 @@ describe("Unauthorized users MUST only have access to predefined permissions and
 		cy.wait(2000);
 		cy.get('[title="Zoom out"]').click();
 		cy.wait(2000);
-		cy.get('[id="Icon"]').click();
+		cy.get('[class="amplify-flex inner-start-component"]').click();
 		cy.wait(2000);
 		cy.contains("Geofence").click();
 		cy.wait(2000);
@@ -95,17 +97,16 @@ describe("Unauthorized users MUST only have access to predefined permissions and
 		cy.wait(2000);
 		cy.get('[class="amplify-flex modal-close"]').click();
 		cy.wait(2000);
-		cy.get('[placeholder="Search"]')
-			.click()
-			.type("44 Boobialla Street, Corbie Hill, Australia")
-			.wait(5000)
+		cy.get('[placeholder="Search"]').click();
+		cy.wait(2000);
+		cy.get('[inputmode="search"]')
+			.type("44 Boobialla Street, Corbie Hill, Australia", { delay: 50 })
+			.wait(3000)
 			.type("{downArrow}")
+			.wait(1000)
 			.type("{enter}");
-		cy.wait(10000);
-		cy.get('[class="amplify-text amplify-text--tertiary"]').should(
-			"have.text",
-			"O'connor, Canberra, Australian Capital Territory, 2602, AUS"
-		);
+		cy.wait(5000);
+		cy.get('[class="amplify-text amplify-text--tertiary"]').should("have.text", "Leeton NSW 2705, Australia");
 		cy.wait(2000);
 	});
 });

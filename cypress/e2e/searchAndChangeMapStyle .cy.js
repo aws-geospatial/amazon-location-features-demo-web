@@ -18,7 +18,7 @@ describe("Verify that user can navigate on map or search or do routing or change
 				password: Cypress.env("PASSWORD")
 			}
 		});
-		cy.wait(25000);
+		cy.wait(20000);
 		cy.get('[placeholder="Search"]').click().type("Coffee").wait(5000).type("{enter}");
 		cy.wait(10000);
 		cy.get(".map-styles-button > svg").click();

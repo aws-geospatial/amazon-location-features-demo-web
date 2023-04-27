@@ -18,20 +18,14 @@ describe("Verify that search in routing fields is working and giving the same re
 				password: Cypress.env("PASSWORD")
 			}
 		});
-		cy.wait(25000);
+		cy.wait(20000);
 		cy.get('[class="amplify-flex icon outter-end-component"]').click();
 		cy.wait(3000);
-		cy.get('[placeholder="From"]').click().type("Rio tinto").type("{enter}");
+		cy.get('[placeholder="From"]').click().type("Rio tinto{enter}");
 		cy.wait(5000);
-		cy.get("div").should("contain", "Rio Tinto");
-		cy.wait(2000);
-		cy.get("div").should("contain", "Rio Tinto");
-		cy.wait(2000);
-		cy.get("div").should("contain", "Rio Tinto");
-		cy.wait(2000);
-		cy.get("div").should("contain", "Rio Tinto");
-		cy.wait(2000);
-		cy.get("div").should("contain", "Rio Tinto");
-		cy.wait(2000);
+		for (let i = 0; i < 5; i++) {
+			cy.get("div").contains("Rio Tinto").should("exist");
+			cy.wait(2000);
+		}
 	});
 });

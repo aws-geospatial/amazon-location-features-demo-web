@@ -10,7 +10,9 @@ import createStore from "./createStore";
 
 const {
 	GLOBAL_CONSTANTS: { LOCAL_STORAGE_PREFIX },
-	PERSIST_STORAGE_KEYS: { AMPLIFY_AUTH_DATA }
+	PERSIST_STORAGE_KEYS: { AMPLIFY_AUTH_DATA },
+	IDENTITY_POOL_ID,
+	REGION
 } = appConfig;
 const localStorageKey = `${LOCAL_STORAGE_PREFIX}${AMPLIFY_AUTH_DATA}`;
 
@@ -25,15 +27,13 @@ export interface AmplifyAuthStoreProps {
 	userPoolClientId?: string;
 	userPoolId?: string;
 	webSocketUrl?: string;
-	showWelcomeModal: boolean;
 }
 
 export const initialState: IStateProps<AmplifyAuthStoreProps> = {
 	isLoading: false,
 	isUserAwsAccountConnected: false,
-	identityPoolId: import.meta.env.VITE_AWS_COGNITO_IDENTITY_POOL_ID,
-	region: import.meta.env.VITE_AWS_REGION,
-	showWelcomeModal: true
+	identityPoolId: IDENTITY_POOL_ID,
+	region: REGION
 };
 
 export default createStore<AmplifyAuthStoreProps>(initialState, true, localStorageKey);

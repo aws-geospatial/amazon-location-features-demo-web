@@ -1,10 +1,10 @@
 name: E2E_Tests
 
 on:
- push:
-   branches: [develop]
- pull_request:
-   branches: [develop]
+  push:
+    branches: [develop]
+  pull_request:
+    branches: [develop]
 
 jobs:
   e2e-tests:
@@ -23,22 +23,37 @@ jobs:
 
       - name: Setup Cypress
         run: yarn add cypress --dev
-        
-#       - name: Log Cypress env
-#         run: echo ${{ secrets.ORIGINWEB }}
+
+      #       - name: Log Cypress env
+      #         run: echo ${{ secrets.ORIGINWEB }}
 
       - name: Run Cypress test
         env:
-          CYPRESS_EMAIL:  ${{ secrets.EMAIL }}
-          CYPRESS_EMAIL_PASS:  ${{ secrets.EMAILPASS }}
-          CYPRESS_IDENTITY_POOL_ID:  ${{ secrets.IDENTITYPOOLID }}
-          CYPRESS_USER_DOMAIN:  ${{ secrets.USERDOMAIN }}
-          CYPRESS_USER_POOL_CLIENT_ID:  ${{ secrets.USERPOOLCLIENTID }}
-          CYPRESS_USER_POOL_ID:  ${{ secrets.USERPOOLID }}
-          CYPRESS_WEB_SOCKET_URL:  ${{ secrets.WEBSOCKETURL }}
-          CYPRESS_USERNAME:  ${{ secrets.USERNAME }}
-          CYPRESS_PASSWORD:  ${{ secrets.PASSWORD }}
-          CYPRESS_URL:  ${{ secrets.URL }}
-          CYPRESS_ORIGIN_WEB:  ${{ secrets.ORIGINWEB }}
-          CYPRESS_GET_WEB:  ${{ secrets.GETWEB }}
+          CYPRESS_EMAIL: ${{ secrets.EMAIL }}
+          CYPRESS_EMAIL_PASS: ${{ secrets.EMAILPASS }}
+          CYPRESS_IDENTITY_POOL_ID: ${{ secrets.IDENTITYPOOLID }}
+          CYPRESS_USER_DOMAIN: ${{ secrets.USERDOMAIN }}
+          CYPRESS_USER_POOL_CLIENT_ID: ${{ secrets.USERPOOLCLIENTID }}
+          CYPRESS_USER_POOL_ID: ${{ secrets.USERPOOLID }}
+          CYPRESS_WEB_SOCKET_URL: ${{ secrets.WEBSOCKETURL }}
+          CYPRESS_USERNAME: ${{ secrets.USERNAME }}
+          CYPRESS_PASSWORD: ${{ secrets.PASSWORD }}
+          CYPRESS_URL: ${{ secrets.URL }}
+          CYPRESS_ORIGIN_WEB: ${{ secrets.ORIGINWEB }}
+          CYPRESS_GET_WEB: ${{ secrets.GETWEB }}
         run: yarn cypress
+
+      # - name: Setup AWS Cli
+      #   run: |
+      #       curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      #       apt update ; apt install unzip -y
+      #       unzip awscliv2.zip
+      #       ./aws/install
+
+      # - name: Export Test Videos on S3
+      #   if: always()
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+      #     AWS_DEFAULT_REGION: "us-east-1"
+      #   run: aws s3 sync --acl public-read ${{ github.workspace }}/cypress/videos/ s3://amazon-location-resources-setup/github-actions/

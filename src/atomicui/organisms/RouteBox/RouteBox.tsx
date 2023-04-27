@@ -18,7 +18,7 @@ import {
 } from "@demo/assets";
 
 import { NotFoundCard, StepCard } from "@demo/atomicui/molecules";
-import { useAmplifyMap, useAwsPlace, useAwsRoute } from "@demo/hooks";
+import { useAmplifyMap, useAwsPlace, useAwsRoute, usePersistedData } from "@demo/hooks";
 import { DistanceUnit, InputType, RouteOptionsType, SuggestionType, TravelMode } from "@demo/types";
 
 import { humanReadableTime } from "@demo/utils/dateTimeUtils";
@@ -58,9 +58,9 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 		routePositions,
 		routeData,
 		directions,
-		setDirections,
-		defaultRouteOptions
+		setDirections
 	} = useAwsRoute();
+	const { defaultRouteOptions } = usePersistedData();
 	const [expandRouteOptions, setExpandRouteOptions] = useState(false);
 	const [routeOptions, setRouteOptions] = useState<RouteOptionsType>({ ...defaultRouteOptions });
 
@@ -308,6 +308,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 
 			return (
 				<View
+					data-testid={`${type}-suggestions`}
 					key={`${PlaceId}-${idx}`}
 					className="suggestion"
 					onClick={() => onSelectSuggestion({ PlaceId, Text, Place }, type)}
@@ -324,7 +325,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 	const renderSteps = useMemo(() => {
 		if (routeData) {
 			return (
-				<View className="steps-container">
+				<View data-testid="steps-container" className="steps-container">
 					{routeData.Legs[0].Steps.map((s, idx) => (
 						<StepCard
 							key={idx}
@@ -453,13 +454,13 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 			return (
 				<>
 					<Source type="geojson" data={startLineJson}>
-						<Layer {...startEndLayerProps} id="start-route-layer" />
+						<Layer data-testid="start-route-layer" {...startEndLayerProps} id="start-route-layer" />
 					</Source>
 					<Source type="geojson" data={mainLineJson}>
 						<Layer {...mainLayerProps} />
 					</Source>
 					<Source type="geojson" data={endLineJson}>
-						<Layer {...startEndLayerProps} id="end-route-layer" />
+						<Layer data-testid="end-route-layer" {...startEndLayerProps} id="end-route-layer" />
 					</Source>
 				</>
 			);
@@ -468,24 +469,27 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 
 	return (
 		<>
-			<Card className="route-card" left={isSideMenuExpanded ? 245 : 21}>
+			<Card data-testid="route-card" className="route-card" left={isSideMenuExpanded ? 245 : 21}>
 				<View className="route-card-close" onClick={onClose}>
 					<IconClose />
 				</View>
 				<Flex className="travel-mode-button-container" gap={0}>
 					<View
+						data-testid="travel-mode-car-icon-container"
 						className={travelMode === TravelMode.CAR ? "travel-mode selected" : "travel-mode"}
 						onClick={() => handleTravelModeChange(TravelMode.CAR)}
 					>
 						<IconCar />
 					</View>
 					<View
+						data-testid="travel-mode-walking-icon-container"
 						className={travelMode === TravelMode.WALKING ? "travel-mode selected" : "travel-mode"}
 						onClick={() => handleTravelModeChange(TravelMode.WALKING)}
 					>
 						<IconWalking />
 					</View>
 					<View
+						data-testid="travel-mode-truck-icon-container"
 						className={travelMode === TravelMode.TRUCK ? "travel-mode selected" : "travel-mode"}
 						onClick={() => handleTravelModeChange(TravelMode.TRUCK)}
 					>
@@ -502,6 +506,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 					</Flex>
 					<Flex className="inputs-container">
 						<input
+							data-testid="from-input"
 							placeholder="From"
 							onFocus={() => onFocus(InputType.FROM)}
 							value={value.from}
@@ -509,13 +514,14 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 						/>
 						<View className="divider" />
 						<input
+							data-testid="to-input"
 							placeholder="To"
 							onFocus={() => onFocus(InputType.TO)}
 							value={value.to}
 							onChange={e => onChangeValue(e, InputType.TO)}
 						/>
 					</Flex>
-					<Flex className="swap-icon-container" onClick={onSwap}>
+					<Flex data-testid="swap-icon-container" className="swap-icon-container" onClick={onSwap}>
 						<IconArrowDownUp />
 					</Flex>
 				</Flex>
@@ -597,7 +603,11 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 						  inputFocused.to && <NotFoundCard />}
 				</View>
 				{routeData && (
-					<View className="route-data-container bottom-border-radius" maxHeight={window.innerHeight - 260}>
+					<View
+						data-testid="route-data-container"
+						className="route-data-container bottom-border-radius"
+						maxHeight={window.innerHeight - 260}
+					>
 						<View className="route-info">
 							{travelMode === TravelMode.CAR ? (
 								<IconCar />

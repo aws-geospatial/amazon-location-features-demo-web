@@ -258,9 +258,8 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 				</Flex>
 				<Flex className="marker-container">
 					{trackerTypes.map(({ type, icon }, idx) => (
-						<>
+						<View key={`${type}-${idx}`}>
 							<View
-								key={type}
 								// className={
 								// 	selectedTrackerType === type
 								// 		? "icon-container selected"
@@ -284,7 +283,7 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 								{icon}
 							</View>
 							<Tooltip id={type} />
-						</>
+						</View>
 					))}
 					{!!trackerPoints?.length && (
 						<Flex className="buttons-container" width={isEditingRoute ? "6.14rem" : ""}>

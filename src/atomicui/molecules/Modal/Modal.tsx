@@ -30,6 +30,7 @@ const Modal: React.FC<ModalProps> = ({
 }) => {
 	return open ? (
 		<Flex
+			data-testid={"modal-container"}
 			className={`modal-container ${modalContainerClass} ${
 				open && disableBodyScrollWhenModalIsOpen ? "disable-body-scroll" : ""
 			}`}
@@ -41,7 +42,11 @@ const Modal: React.FC<ModalProps> = ({
 			onClick={onClose}
 		>
 			<Card {...rest} className={`modal-card ${className}`} onClick={e => e.stopPropagation()}>
-				<Flex className={hideCloseIcon ? "modal-close disabled" : "modal-close"} onClick={onClose}>
+				<Flex
+					data-testid="modal-close-icon-container"
+					className={hideCloseIcon ? "modal-close disabled" : "modal-close"}
+					onClick={onClose}
+				>
 					<IconClose />
 				</Flex>
 				{content}

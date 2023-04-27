@@ -3,7 +3,7 @@
 
 import { useMemo } from "react";
 
-import { showToast } from "@demo/core";
+import { showToast } from "@demo/core/Toast";
 import appConfig from "@demo/core/constants/appConfig";
 import { useAwsIot } from "@demo/hooks";
 import { useAmplifyAuthService } from "@demo/services";
@@ -215,9 +215,6 @@ const useAmplifyAuth = () => {
 				methods.resetStore();
 				resetAwsStore();
 				window.location.reload();
-			},
-			setShowWelcomeModal: (showWelcomeModal: boolean) => {
-				setState({ showWelcomeModal });
 			}
 		}),
 		[setInitial, setState, fetchHostedUi, getCurrentUserCredentials, login, store.credentials, detachPolicy, logout]

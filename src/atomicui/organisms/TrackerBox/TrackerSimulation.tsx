@@ -4,7 +4,7 @@
 import React, { useCallback, useEffect, useMemo } from "react";
 
 // import { IconTrackerIntersect } from "@demo/assets";
-import { useAwsGeofence, useAwsRoute, useAwsTracker } from "@demo/hooks";
+import { useAwsGeofence, useAwsRoute, useAwsTracker, usePersistedData } from "@demo/hooks";
 import { DistanceUnit, RouteDataType, TrackerType, TravelMode } from "@demo/types";
 import * as turf from "@turf/turf";
 import { CalculateRouteRequest, Position } from "aws-sdk/clients/location";
@@ -43,12 +43,13 @@ const TrackerSimulation: React.FC<TrackerSimulationProps> = ({
 	trackerPos,
 	setTrackerPos
 }) => {
-	const { getRoute, defaultRouteOptions } = useAwsRoute();
+	const { getRoute } = useAwsRoute();
 	const {
 		evaluateGeofence
 		// geofences
 	} = useAwsGeofence();
 	const { trackerPoints } = useAwsTracker();
+	const { defaultRouteOptions } = usePersistedData();
 
 	/* Route calculation for travel mode car or walk */
 	const calculateRoute = useCallback(async () => {

@@ -4,7 +4,7 @@
 import { Loader as AmplifyLoader, View } from "@aws-amplify/ui-react";
 
 const Loader = () => (
-	<View marginTop={300} marginBottom={300} width={"100%"} textAlign={"center"}>
+	<View data-testid="loader-container" marginTop={300} marginBottom={300} width={"100%"} textAlign={"center"}>
 		<AmplifyLoader width={100} />
 	</View>
 );

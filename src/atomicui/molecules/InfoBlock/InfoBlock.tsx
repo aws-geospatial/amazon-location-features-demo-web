@@ -15,7 +15,7 @@ interface InfoBlockProps extends ViewProps {
 
 const InfoBlock: React.FC<InfoBlockProps> = ({ title, body, className, ...rest }) => {
 	return (
-		<View className={`info-block regular-text ${className || ""}`} {...rest}>
+		<View data-testid="info-block-container" className={`info-block regular-text ${className || ""}`} {...rest}>
 			<View className="title-container">
 				<Text>{title}</Text>
 			</View>

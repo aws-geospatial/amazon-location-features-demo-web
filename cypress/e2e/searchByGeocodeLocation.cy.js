@@ -15,7 +15,7 @@ describe("Verify that user can search by geocode location", () => {
 				password: Cypress.env("PASSWORD")
 			}
 		});
-		cy.wait(25000);
+		cy.wait(20000);
 		cy.get('[placeholder="Search"]')
 			.click()
 			.type("-31.9627092,115.9248736")

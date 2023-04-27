@@ -75,7 +75,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 	const renderRouteInfo = useMemo(() => {
 		if (currentLocationData?.error) {
 			return (
-				<Flex gap={3} alignItems="center">
+				<Flex data-testid="permission-denied-error-container" gap={3} alignItems="center">
 					<TextEl variation="info" text="Location permission denied" />
 					<IconInfo
 						className="location-permission-denied-info-icon"
@@ -88,7 +88,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 			);
 		} else if (isEsriLimitation) {
 			return (
-				<Flex gap={0} direction={"column"}>
+				<Flex data-testid="esri-limitation-message-container" gap={0} direction={"column"}>
 					<TextEl variation="secondary" fontFamily="AmazonEmber-Bold" text={`${geodesicDistance} km`} />
 					<TextEl
 						style={{ marginTop: "0px" }}
@@ -99,7 +99,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 			);
 		} else if (currentMapProvider === MapProviderEnum.HERE && !routeData) {
 			return (
-				<Flex gap={0} direction={"column"}>
+				<Flex data-testid="here-message-container" gap={0} direction={"column"}>
 					<TextEl variation="secondary" fontFamily="AmazonEmber-Bold" text={`${geodesicDistance} km`} />
 					<TextEl style={{ marginTop: "0px" }} variation="info" text="Route not found" />
 				</Flex>
@@ -109,7 +109,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 			const timeInSeconds = routeData?.Summary.DurationSeconds || 0;
 
 			return (
-				<View className="route-info">
+				<View data-testid="route-info-container" className="route-info">
 					{!isFetchingRoute && distance ? (
 						<TextEl variation="secondary" fontFamily="AmazonEmber-Bold" text={`${distance} km`} />
 					) : (
@@ -143,6 +143,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 
 	return (
 		<PopupGl
+			data-testid="popup-container"
 			className="popup-container"
 			closeButton={false}
 			anchor="left"
@@ -170,12 +171,19 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 						<TextEl variation="tertiary" text={address} />
 					</View>
 					<IconCopyPages
+						data-testid="copy-icon"
 						className="copy-icon"
 						onClick={() => navigator.clipboard.writeText(`${info.Place?.Label?.split(",")[0]}` + ", " + address)}
 					/>
 				</View>
 				{renderRouteInfo}
-				<Button ref={r => r?.blur()} className="directions-button" variation="primary" onClick={onGetDirections}>
+				<Button
+					data-testid="directions-button"
+					ref={r => r?.blur()}
+					className="directions-button"
+					variation="primary"
+					onClick={onGetDirections}
+				>
 					<IconDirections />
 					<Text className="bold" variation="primary" fontSize={"0.92rem"}>
 						Directions
