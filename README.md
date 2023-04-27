@@ -42,13 +42,6 @@ Runs Cypress tests to completion in a browser which can be specified in the `opt
 #### `yarn run-security-tests`
 Runs Security tests insuring policies match the expected values.
 
-## Unit Tests
-#### `yarn test`
-Run all the test cases for all the components within the repo.
-
-#### `yarn coverage`
-Run all the test cases for all the components within the repo and provides a coverage report.
-
 ## Resources
 ### Amazon Location Service
 > Maps (Name - Style)

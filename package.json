@@ -13,9 +13,7 @@
 		"cypress open": "cypress open",
 		"ui-regression-allure": "rm -r allure-results/ allure-report cypress/screenshots || cypress run --browser chrome --spec cypress/e2e/**.js --env allure=true",
 		"allure:report": "allure generate allure-results --clean -o allure-report",
-		"run-security-tests": "cd security-tests && yarn install && node index.js && cd ../",
-		"test": "react-scripts test",
-		"coverage": "react-scripts test --coverage --watchAll"
+		"run-security-tests": "cd security-tests && yarn install && node index.js && cd ../"
 	},
 	"dependencies": {
 		"@aws-amplify/ui-react": "^3.5.11",
@@ -35,11 +33,7 @@
 		"zustand": "^4.1.4"
 	},
 	"devDependencies": {
-		"@faker-js/faker": "^7.6.0",
 		"@shelex/cypress-allure-plugin": "^2.38.3",
-		"@testing-library/jest-dom": "^5.16.5",
-		"@testing-library/react": "^13.4.0",
-		"@testing-library/user-event": "^13.5.0",
 		"@types/mapbox__mapbox-gl-draw": "^1.3.3",
 		"@types/ngeohash": "^0.6.4",
 		"@types/node": "^18.11.9",
@@ -61,7 +55,6 @@
 		"eslint-plugin-react": "^7.30.1",
 		"eslint-plugin-react-hooks": "^4.6.0",
 		"prettier": "^2.7.1",
-		"react-scripts": "5.0.1",
 		"sass": "^1.57.1",
 		"stylelint": "^14.15.0",
 		"stylelint-config-airbnb": "^0.0.0",
@@ -71,35 +64,10 @@
 		"stylelint-prettier": "^2.0.0",
 		"typescript": "^4.9.3",
 		"vite": "^3.1.0",
-		"vite-plugin-environment": "^1.1.3",
 		"vite-plugin-eslint": "^1.7.0",
 		"vite-plugin-svgr": "^2.2.1"
 	},
 	"engines": {
 		"node": ">=14.x.x"
-	},
-	"jest": {
-		"moduleNameMapper": {
-			"^@demo/(.*)$": "<rootDir>/src/$1"
-		},
-		"collectCoverageFrom": [
-			"**/*.{js,jsx,ts,tsx}",
-			"!**/node_modules/**",
-			"!**/src/**/index.ts",
-			"!**/src/assets/**",
-			"!**/src/atomicui/molecules/Marker/**",
-			"!**/src/atomicui/molecules/SuggestionMarker/**",
-			"!**/src/atomicui/pages/DemoPage/**",
-			"!**/src/core/**",
-			"!**/src/hooks/**",
-			"!**/src/services/**",
-			"!**/src/theme/**",
-			"!**/src/types/**",
-			"!**/src/utils/**",
-			"!**/src/App.tsx",
-			"!**/src/main.tsx",
-			"!**/src/setupTests.ts",
-			"!**/src/vite-env.d.ts"
-		]
 	}
 }
