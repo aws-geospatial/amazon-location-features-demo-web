@@ -5,8 +5,7 @@ import { defineConfig } from "vite";
 import eslint from "vite-plugin-eslint";
 import svgr from "vite-plugin-svgr";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default defineConfig(({ mode }) => {
+export default defineConfig(() => {
 	return {
 		plugins: [
 			react(),
