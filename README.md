@@ -32,6 +32,22 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 Builds the app for **development** to the `build` folder locally and starts the local server.
 
 ## E2E Tests
+#### Env keys required in `cypress.env.json` file, see `cypress.env.json.example` for reference. This is only needed to run the e2e tests locally.
+>EMAIL=< EMAIL><br />
+EMAIL_PASS=<EMAIL_PASS><br />
+IDENTITY_POOL_ID=<IDENTITY_POOL_ID><br />
+USER_DOMAIN=<USER_DOMAIN><br />
+USER_POOL_CLIENT_ID=<USER_POOL_CLIENT_ID><br />
+USER_POOL_ID=<USER_POOL_ID><br />
+WEB_SOCKET_URL=<WEB_SOCKET_URL><br />
+USERNAME=< USERNAME><br />
+PASSWORD=< PASSWORD><br />
+URL=< URL><br />
+ORIGIN_WEB=<ORIGIN_WEB><br />
+GET_WEB=<GET_WEB><br />
+
+#### If you are configuring Github actions fo the e2e tests, make sure to add these keys to the secrets section of the repo with a `CYPRESS_` prefix.
+
 #### `yarn cypress run`
 Runs Cypress tests to completion. By default, `cypress run` will run all tests headlessly. https://docs.cypress.io/guides/guides/command-line#cypress-run
 
@@ -41,6 +57,13 @@ Runs Cypress tests to completion in a browser which can be specified in the `opt
 ## Security Tests
 #### `yarn run-security-tests`
 Runs Security tests insuring policies match the expected values.
+
+## Unit Tests
+#### `yarn test`
+Run all the test cases for all the components within the repo.
+
+#### `yarn coverage`
+Run all the test cases for all the components within the repo and provides a coverage report.
 
 ## Resources
 ### Amazon Location Service
