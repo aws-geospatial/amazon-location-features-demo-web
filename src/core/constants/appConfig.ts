@@ -17,7 +17,7 @@ import {
 import { EsriMapEnum, EsriMapStyleEnum, HereMapEnum, HereMapStyleEnum } from "@demo/types";
 
 const getEnv = (key: string) => {
-	return process.env[key] || "";
+	return import.meta.env[key];
 };
 
 const appConfig = {
