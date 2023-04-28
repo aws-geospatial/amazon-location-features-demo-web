@@ -53,7 +53,7 @@ const AboutModal: React.FC<AboutModalProps> = ({ open, onClose }) => {
 							{attributionText}
 						</Text>
 						<Button
-							data-testId="learn-more-button-partner-attribution"
+							data-testid="learn-more-button-partner-attribution"
 							className="learn-more-button"
 							variation="primary"
 							marginTop="1.15rem"
