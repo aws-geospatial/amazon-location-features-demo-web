@@ -293,10 +293,17 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 				setValue({ ...value, to: pd.Place.Label || "" });
 				setSuggestions({ ...suggestions, to: undefined });
 			}
+
 			setInputFocused({ from: false, to: false });
 			pd.Place.Geometry.Point &&
 				setRoutePositions([pd?.Place.Geometry.Point[0] as number, pd?.Place.Geometry.Point[1] as number], type);
 		}
+
+		setTimeout(() => {
+			directions && setDirections(undefined);
+			stepsData.length && setStepsData([]);
+			routeData && clearRouteData();
+		}, 0);
 	};
 
 	const renderSuggestions = (arr: SuggestionType[], type: InputType) =>
