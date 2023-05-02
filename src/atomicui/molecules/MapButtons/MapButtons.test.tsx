@@ -11,8 +11,8 @@ describe("<MapButtons/>", () => {
 	let geofenceControlButton: HTMLElement;
 	let mapStylesCard: HTMLElement | null;
 	let mapStylesItems: HTMLElement[] | null;
-	let mapProviderRadioButtonHere: HTMLElement | null;
-	let mapProviderRadioButtonEsri: HTMLElement | null;
+	let mapProviderButtonEsri: HTMLElement | null;
+	let mapProviderButtonHere: HTMLElement | null;
 	let esriMapStyles: HTMLElement | null;
 	let hereMapStyles: HTMLElement | null;
 
@@ -55,8 +55,8 @@ describe("<MapButtons/>", () => {
 		geofenceControlButton = await screen.findByTestId("geofence-control-button");
 		mapStylesCard = screen.queryByTestId("map-styles-card");
 		mapStylesItems = screen.queryAllByTestId("map-style-item");
-		mapProviderRadioButtonEsri = screen.queryByTestId("map-provider-radio-button-esri");
-		mapProviderRadioButtonHere = screen.queryByTestId("map-provider-radio-button-here");
+		mapProviderButtonEsri = screen.queryByTestId("map-data-provider-esri");
+		mapProviderButtonHere = screen.queryByTestId("map-data-provider-here");
 		esriMapStyles = screen.queryByTestId("esri-map-styles");
 		hereMapStyles = screen.queryByTestId("here-map-styles");
 
@@ -92,7 +92,7 @@ describe("<MapButtons/>", () => {
 		expect(esriMapStyles).toBeInTheDocument();
 		expect(hereMapStyles).toBeNull();
 
-		fireEvent.click(mapProviderRadioButtonHere as HTMLElement);
+		fireEvent.click(mapProviderButtonHere as HTMLElement);
 		expect(resetAppState).toBeCalledTimes(1);
 		renderedComponent.unmount();
 
@@ -100,7 +100,7 @@ describe("<MapButtons/>", () => {
 		expect(esriMapStyles).toBeNull();
 		expect(hereMapStyles).toBeInTheDocument();
 
-		fireEvent.click(mapProviderRadioButtonEsri as HTMLElement);
+		fireEvent.click(mapProviderButtonEsri as HTMLElement);
 		expect(resetAppState).toBeCalledTimes(2);
 		renderedComponent.unmount();
 
