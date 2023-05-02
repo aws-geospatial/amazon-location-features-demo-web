@@ -15,7 +15,9 @@
 		"allure:report": "allure generate allure-results --clean -o allure-report",
 		"run-security-tests": "cd security-tests && yarn install && node index.js && cd ../",
 		"test": "react-scripts test",
-		"coverage": "react-scripts test --coverage --watchAll"
+		"coverage": "react-scripts test --coverage --watchAll",
+		"ci-test": "CI=true react-scripts test",
+		"prepare": "husky install"
 	},
 	"dependencies": {
 		"@aws-amplify/ui-react": "^3.5.11",
@@ -72,7 +74,8 @@
 		"typescript": "^4.9.3",
 		"vite": "^3.1.0",
 		"vite-plugin-eslint": "^1.7.0",
-		"vite-plugin-svgr": "^2.2.1"
+		"vite-plugin-svgr": "^2.2.1",
+		"husky": "^8.0.0"
 	},
 	"engines": {
 		"node": ">=14.x.x"
