@@ -20,6 +20,7 @@ html,
 body,
 #root,
 [data-amplify-theme="aws-location-theme"] {
+	min-height: 100%;
 	height: 100%;
 	width: 100%;
 }
