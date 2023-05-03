@@ -6,7 +6,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Button, Flex, Placeholder, Text, View } from "@aws-amplify/ui-react";
 import { IconCar, IconClose, IconCopyPages, IconDirections, IconInfo } from "@demo/assets";
 import { TextEl } from "@demo/atomicui/atoms";
-import { useAmplifyMap, useAwsPlace, useAwsRoute } from "@demo/hooks";
+import { useAmplifyMap, useAwsPlace, useAwsRoute, useMediaQuery } from "@demo/hooks";
 import { MapProviderEnum, SuggestionType } from "@demo/types";
 
 import { humanReadableTime } from "@demo/utils/dateTimeUtils";
@@ -28,6 +28,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 	const { clearPoiList } = useAwsPlace();
 	const { getRoute, setDirections, isFetchingRoute } = useAwsRoute();
 	const [longitude, latitude] = info.Place?.Geometry.Point as Position;
+	const isDesktop = useMediaQuery("(min-width: 1024px)");
 
 	const geodesicDistance = calculateGeodesicDistance(
 		[
@@ -146,18 +147,20 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 			data-testid="popup-container"
 			className="popup-container"
 			closeButton={false}
-			anchor="left"
+			anchor={isDesktop ? "left" : "bottom"}
 			offset={active ? 27 : 22}
-			maxWidth="28.62rem"
+			style={{ maxWidth: isDesktop ? "28.62rem" : "20rem", width: "100%" }}
 			longitude={longitude as number}
 			latitude={latitude as number}
 		>
 			<View className="popup-icon-close-container" onClick={onClose}>
 				<IconClose />
 			</View>
-			<View className="triangle-container">
-				<View />
-			</View>
+			{isDesktop && (
+				<View className="triangle-container">
+					<View />
+				</View>
+			)}
 			<View className="info-container">
 				<TextEl
 					variation="secondary"

@@ -9,16 +9,9 @@
 	border-radius: 0.62rem;
 	margin-left: 6px;
 
-	.location-permission-denied-info-icon {
-		width: 1.23rem;
-		height: 1.23rem;
-		fill: var(--grey-color);
-	}
-
 	.mapboxgl-popup-content {
 		border-radius: 0.62rem;
 		width: 100%;
-		max-width: 28.62rem;
 		padding: 0;
 
 		.popup-icon-close-container {
@@ -76,6 +69,12 @@
 				}
 			}
 
+			.location-permission-denied-info-icon {
+				width: 1.23rem;
+				height: 1.23rem;
+				fill: var(--grey-color);
+			}
+
 			.route-info {
 				display: flex;
 				align-items: center;
@@ -109,6 +108,10 @@
 					width: 1.15rem;
 					height: 1.15rem;
 					fill: var(--card-backgound-color);
+				}
+
+				@media only screen and (max-width: 960px) {
+					width: 100%;
 				}
 			}
 		}

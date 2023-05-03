@@ -32,7 +32,8 @@ jest.mock("hooks", () => ({
 	useAwsPlace: () => ({}),
 	useAwsRoute: () => ({
 		getRoute: () => {}
-	})
+	}),
+	useMediaQuery: () => true
 }));
 
 describe("<Popup/>", () => {
