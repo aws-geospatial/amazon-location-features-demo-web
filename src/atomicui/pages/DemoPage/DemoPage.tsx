@@ -327,7 +327,7 @@ const DemoPage: React.FC = () => {
 		resetAwsRouteStore();
 		resetAwsGeofenceStore();
 		resetAwsTrackingStore();
-		setShow(initShow);
+		setShow(s => ({ ...initShow, stylesCard: s.stylesCard, settings: s.settings }));
 	};
 
 	const transformRequest = useCallback(

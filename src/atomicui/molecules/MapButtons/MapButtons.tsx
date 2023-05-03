@@ -166,13 +166,23 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 						/>
 					</Flex>
 					<Flex gap={0} direction="column">
-						<Flex gap={0} padding="0.77rem 1.23rem" justifyContent="space-between" width="100%">
+						<Flex
+							data-testid="map-data-provider-esri"
+							className={
+								currentMapProvider === ESRI ? "map-data-provider selected-map-data-provider" : "map-data-provider"
+							}
+							onClick={() => onMapProviderChange(ESRI)}
+						>
 							<TextEl fontSize="1.23rem" lineHeight="2.15rem" text="Esri" />
 							<Radio
 								data-testid="map-provider-radio-button-esri"
 								value={ESRI}
 								checked={currentMapProvider === ESRI}
-								onChange={() => onMapProviderChange(ESRI)}
+								onChange={e => {
+									e.preventDefault();
+									e.stopPropagation();
+									onMapProviderChange(ESRI);
+								}}
 							/>
 						</Flex>
 						{currentMapProvider !== ESRI && <Divider className="mb-divider" />}
@@ -195,13 +205,23 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 							</Flex>
 						)}
 						{currentMapProvider === ESRI && <Divider className="mb-divider" />}
-						<Flex gap={0} padding="0.77rem 1.23rem" justifyContent="space-between" width="100%">
+						<Flex
+							data-testid="map-data-provider-here"
+							className={
+								currentMapProvider === HERE ? "map-data-provider selected-map-data-provider" : "map-data-provider"
+							}
+							onClick={() => onMapProviderChange(HERE)}
+						>
 							<TextEl fontSize="1.23rem" lineHeight="2.15rem" text="HERE" />
 							<Radio
 								data-testid="map-provider-radio-button-here"
 								value={HERE}
 								checked={currentMapProvider === HERE}
-								onChange={() => onMapProviderChange(HERE)}
+								onChange={e => {
+									e.preventDefault();
+									e.stopPropagation();
+									onMapProviderChange(HERE);
+								}}
 							/>
 						</Flex>
 						{currentMapProvider === HERE && (
