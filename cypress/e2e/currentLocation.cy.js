@@ -8,13 +8,14 @@
 
 describe("Verify that system is showing users current location", () => {
 	it("authentication", { scrollBehavior: false }, () => {
-		cy.visit(Cypress.env("URL"), {
+		cy.visit(Cypress.env("WEB_DOMAIN"), {
 			auth: {
-				username: Cypress.env("USERNAME"),
-				password: Cypress.env("PASSWORD")
+				username: Cypress.env("WEB_DOMAIN_USERNAME"),
+				password: Cypress.env("WEB_DOMAIN_PASSWORD")
 			}
 		});
 		cy.wait(20000);
+		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 		cy.get('[class="mapboxgl-user-location-dot mapboxgl-marker mapboxgl-marker-anchor-center"]').should("be.visible");
 		cy.wait(2000);
 	});

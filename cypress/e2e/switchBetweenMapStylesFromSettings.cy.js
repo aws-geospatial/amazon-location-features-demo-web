@@ -15,13 +15,14 @@
 
 describe("switch between map styles from settings", () => {
 	it("authentication", { scrollBehavior: false }, () => {
-		cy.visit(Cypress.env("URL"), {
+		cy.visit(Cypress.env("WEB_DOMAIN"), {
 			auth: {
-				username: Cypress.env("USERNAME"),
-				password: Cypress.env("PASSWORD")
+				username: Cypress.env("WEB_DOMAIN_USERNAME"),
+				password: Cypress.env("WEB_DOMAIN_PASSWORD")
 			}
 		});
 		cy.wait(20000);
+		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 		cy.get('[id="Icon"]').click();
 		cy.wait(2000);
 		cy.contains("Settings").click();

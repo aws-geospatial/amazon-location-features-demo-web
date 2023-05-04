@@ -12,13 +12,14 @@
 
 describe("Verify that search in routing fields is working and giving the same results as the normal search", () => {
 	it("authentication", { scrollBehavior: false }, () => {
-		cy.visit(Cypress.env("URL"), {
+		cy.visit(Cypress.env("WEB_DOMAIN"), {
 			auth: {
-				username: Cypress.env("USERNAME"),
-				password: Cypress.env("PASSWORD")
+				username: Cypress.env("WEB_DOMAIN_USERNAME"),
+				password: Cypress.env("WEB_DOMAIN_PASSWORD")
 			}
 		});
 		cy.wait(20000);
+		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 		cy.get('[class="amplify-flex icon outter-end-component"]').click();
 		cy.wait(3000);
 		cy.get('[placeholder="From"]').click().type("Rio tinto{enter}");

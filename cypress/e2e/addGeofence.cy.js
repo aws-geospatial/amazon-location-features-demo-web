@@ -13,16 +13,14 @@
 
 describe("Add Geofence", () => {
 	it("authentication", () => {
-		cy.visit(Cypress.env("URL"), {
+		cy.visit(Cypress.env("WEB_DOMAIN"), {
 			auth: {
-				username: Cypress.env("USERNAME"),
-				password: Cypress.env("PASSWORD")
+				username: Cypress.env("WEB_DOMAIN_USERNAME"),
+				password: Cypress.env("WEB_DOMAIN_PASSWORD")
 			}
 		});
 		cy.wait(5000);
-		// cy.clearLocalStorage();
-		// cy.clearAllSessionStorage();
-		// cy.exec("rm -rf ~/Library/Application\\ Support/Google/Chrome");
+		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 		cy.get('[id="Icon"]').click();
 		cy.wait(2000);
 		cy.contains("Settings").click();
@@ -30,33 +28,28 @@ describe("Add Geofence", () => {
 		cy.contains("Connect AWS Account").click();
 		cy.wait(2000);
 		cy.get('[placeholder="Enter IdentityPoolId"]').type(`${Cypress.env("IDENTITY_POOL_ID")}`);
-		cy.wait(2000);
 		cy.get('[placeholder="Enter UserDomain"]').type(`${Cypress.env("USER_DOMAIN")}`);
-		cy.wait(2000);
 		cy.get('[placeholder="Enter UserPoolClientId"]').type(`${Cypress.env("USER_POOL_CLIENT_ID")}`);
-		cy.wait(2000);
 		cy.get('[placeholder="Enter UserPoolId"]').type(`${Cypress.env("USER_POOL_ID")}`);
-		cy.wait(2000);
 		cy.get('[placeholder="Enter WebSocketUrl"]').type(`${Cypress.env("WEB_SOCKET_URL")}`);
-		cy.wait(2000);
 		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
-		cy.wait(6000);
+		cy.wait(5000);
 		cy.contains("Connect AWS Account").click();
 		cy.wait(2000);
 		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').eq(0).click();
 		cy.wait(2000);
-		cy.origin(Cypress.env("ORIGIN_WEB"), () => {
-			cy.get(Cypress.env("GET_WEB")).then(els => {
+		cy.origin(Cypress.env("USER_DOMAIN"), () => {
+			cy.get(".modal-content.background-customizable.modal-content-mobile.visible-md.visible-lg").then(els => {
 				[...els].forEach(el => {
 					cy.wait(2000);
 					cy.wrap(el)
 						.get('[placeholder="Username"]')
 						.eq(1)
-						.type(`${Cypress.env("EMAIL")}`);
+						.type(`${Cypress.env("COGNITO_EMAIL")}`);
 					cy.wrap(el)
 						.get('[placeholder="Password"]')
 						.eq(1)
-						.type(`${Cypress.env("EMAIL_PASS")}`);
+						.type(`${Cypress.env("COGNITO_PASSWORD")}`);
 					cy.wrap(el).get('[name="signInSubmitButton"]').eq(1).click();
 				});
 			});

@@ -10,13 +10,14 @@
 
 describe("Verify that user can search by categories ", () => {
 	it("should authenticate with credentials and search for schools", () => {
-		cy.visit(Cypress.env("URL"), {
+		cy.visit(Cypress.env("WEB_DOMAIN"), {
 			auth: {
-				username: Cypress.env("USERNAME"),
-				password: Cypress.env("PASSWORD")
+				username: Cypress.env("WEB_DOMAIN_USERNAME"),
+				password: Cypress.env("WEB_DOMAIN_PASSWORD")
 			}
 		});
 		cy.wait(20000);
+		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 		cy.get('[placeholder="Search"]').click().type("School").wait(5000).type("{enter}");
 		cy.wait(5000);
 		for (let i = 1; i <= 5; i++) {

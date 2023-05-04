@@ -10,13 +10,14 @@
 
 describe("Verify that Estimated time and distance will be displayed on the route list ", () => {
 	it("authentication", { scrollBehavior: false }, () => {
-		cy.visit(Cypress.env("URL"), {
+		cy.visit(Cypress.env("WEB_DOMAIN"), {
 			auth: {
-				username: Cypress.env("USERNAME"),
-				password: Cypress.env("PASSWORD")
+				username: Cypress.env("WEB_DOMAIN_USERNAME"),
+				password: Cypress.env("WEB_DOMAIN_PASSWORD")
 			}
 		});
 		cy.wait(20000);
+		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 		cy.get('[class="amplify-flex icon outter-end-component"]').click();
 		cy.wait(2000);
 		cy.get('[placeholder="From"]').type("40.7485492, -73.9879522");

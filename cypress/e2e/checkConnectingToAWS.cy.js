@@ -18,13 +18,14 @@
 
 describe("Check connecting to AWS from settings, from tracker and from geofence Case 1", () => {
 	it("authentication", () => {
-		cy.visit(Cypress.env("URL"), {
+		cy.visit(Cypress.env("WEB_DOMAIN"), {
 			auth: {
-				username: Cypress.env("USERNAME"),
-				password: Cypress.env("PASSWORD")
+				username: Cypress.env("WEB_DOMAIN_USERNAME"),
+				password: Cypress.env("WEB_DOMAIN_PASSWORD")
 			}
 		});
-		cy.wait(20000);
+		cy.wait(5000);
+		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 		cy.get('[id="Icon"]').click();
 		cy.wait(2000);
 		cy.contains("Settings").click();
@@ -32,17 +33,12 @@ describe("Check connecting to AWS from settings, from tracker and from geofence 
 		cy.contains("Connect AWS Account").click();
 		cy.wait(2000);
 		cy.get('[placeholder="Enter IdentityPoolId"]').type(`${Cypress.env("IDENTITY_POOL_ID")}`);
-		cy.wait(2000);
 		cy.get('[placeholder="Enter UserDomain"]').type(`${Cypress.env("USER_DOMAIN")}`);
-		cy.wait(2000);
 		cy.get('[placeholder="Enter UserPoolClientId"]').type(`${Cypress.env("USER_POOL_CLIENT_ID")}`);
-		cy.wait(2000);
 		cy.get('[placeholder="Enter UserPoolId"]').type(`${Cypress.env("USER_POOL_ID")}`);
-		cy.wait(2000);
 		cy.get('[placeholder="Enter WebSocketUrl"]').type(`${Cypress.env("WEB_SOCKET_URL")}`);
-		cy.wait(2000);
 		cy.get('[type="button"]').eq(3).click();
-		cy.wait(6000);
+		cy.wait(5000);
 		cy.contains("Connect AWS Account").click();
 		cy.wait(2000);
 		cy.get("div").should("contain", "Disconnect AWS Account");
@@ -67,29 +63,25 @@ describe("Check connecting to AWS from settings, from tracker and from geofence 
 
 context("Check connecting to AWS from settings, from tracker and from geofence Case 2", () => {
 	it("authentication", () => {
-		cy.visit(Cypress.env("URL"), {
+		cy.visit(Cypress.env("WEB_DOMAIN"), {
 			auth: {
-				username: Cypress.env("USERNAME"),
-				password: Cypress.env("PASSWORD")
+				username: Cypress.env("WEB_DOMAIN_USERNAME"),
+				password: Cypress.env("WEB_DOMAIN_PASSWORD")
 			}
 		});
-		cy.wait(20000);
+		cy.wait(5000);
+		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 		cy.get('[id="Icon"]').click();
 		cy.wait(2000);
 		cy.contains("Tracker").click();
 		cy.wait(2000);
 		cy.get('[placeholder="Enter IdentityPoolId"]').type(`${Cypress.env("IDENTITY_POOL_ID")}`);
-		cy.wait(2000);
 		cy.get('[placeholder="Enter UserDomain"]').type(`${Cypress.env("USER_DOMAIN")}`);
-		cy.wait(2000);
 		cy.get('[placeholder="Enter UserPoolClientId"]').type(`${Cypress.env("USER_POOL_CLIENT_ID")}`);
-		cy.wait(2000);
 		cy.get('[placeholder="Enter UserPoolId"]').type(`${Cypress.env("USER_POOL_ID")}`);
-		cy.wait(2000);
 		cy.get('[placeholder="Enter WebSocketUrl"]').type(`${Cypress.env("WEB_SOCKET_URL")}`);
-		cy.wait(2000);
 		cy.get('[type="button"]').eq(3).click();
-		cy.wait(6000);
+		cy.wait(5000);
 		cy.get("div").should("contain", "Your AWS account is now connected.");
 		cy.wait(2000);
 	});
@@ -112,29 +104,25 @@ context("Check connecting to AWS from settings, from tracker and from geofence C
 
 context("Check connecting to AWS from settings, from tracker and from geofence Case 3", () => {
 	it("authentication", () => {
-		cy.visit(Cypress.env("URL"), {
+		cy.visit(Cypress.env("WEB_DOMAIN"), {
 			auth: {
-				username: Cypress.env("USERNAME"),
-				password: Cypress.env("PASSWORD")
+				username: Cypress.env("WEB_DOMAIN_USERNAME"),
+				password: Cypress.env("WEB_DOMAIN_PASSWORD")
 			}
 		});
-		cy.wait(20000);
+		cy.wait(5000);
+		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 		cy.get('[id="Icon"]').click();
 		cy.wait(2000);
 		cy.contains("Geofence").click();
 		cy.wait(2000);
 		cy.get('[placeholder="Enter IdentityPoolId"]').type(`${Cypress.env("IDENTITY_POOL_ID")}`);
-		cy.wait(2000);
 		cy.get('[placeholder="Enter UserDomain"]').type(`${Cypress.env("USER_DOMAIN")}`);
-		cy.wait(2000);
 		cy.get('[placeholder="Enter UserPoolClientId"]').type(`${Cypress.env("USER_POOL_CLIENT_ID")}`);
-		cy.wait(2000);
 		cy.get('[placeholder="Enter UserPoolId"]').type(`${Cypress.env("USER_POOL_ID")}`);
-		cy.wait(2000);
 		cy.get('[placeholder="Enter WebSocketUrl"]').type(`${Cypress.env("WEB_SOCKET_URL")}`);
-		cy.wait(2000);
 		cy.get('[type="button"]').eq(3).click();
-		cy.wait(6000);
+		cy.wait(5000);
 		cy.get("div").should("contain", "Your AWS account is now connected.");
 		cy.wait(2000);
 	});

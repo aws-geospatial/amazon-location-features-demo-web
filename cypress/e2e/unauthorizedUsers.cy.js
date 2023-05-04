@@ -20,70 +20,16 @@
 
 describe("Unauthorized users MUST only have access to predefined permissions and resources (calculate route, geocode, reverse geocode etc.).", () => {
 	it("authentication", { scrollBehavior: false }, () => {
-		cy.visit(Cypress.env("URL"), {
+		cy.visit(Cypress.env("WEB_DOMAIN"), {
 			auth: {
-				username: Cypress.env("USERNAME"),
-				password: Cypress.env("PASSWORD")
+				username: Cypress.env("WEB_DOMAIN_USERNAME"),
+				password: Cypress.env("WEB_DOMAIN_PASSWORD")
 			}
 		});
-		cy.wait(20000);
-		cy.get('[id="Icon"]').click();
+		cy.wait(5000);
+		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 		cy.wait(2000);
-		cy.get('[class="amplify-flex locked-item"]').eq(0).should("be.visible");
-		cy.wait(2000);
-		cy.get('[class="amplify-flex locked-item"]').eq(1).should("be.visible");
-		cy.wait(2000);
-		cy.get(".map-styles-button > svg").click();
-		cy.wait(3000);
-		cy.contains("Streets").click();
-		cy.wait(5000);
-		cy.contains("Navigation").click();
-		cy.wait(5000);
-		cy.contains("Dark Gray").click();
-		cy.wait(5000);
-		cy.contains("Light Gray").click();
-		cy.wait(5000);
-		cy.contains("Imagery").click();
-		cy.wait(5000);
-		cy.get('[type="radio"]').check({ force: true });
-		cy.wait(2000);
-		cy.get(".map-styles-button > svg").click();
-		cy.wait(3000);
-		cy.contains("Explore").click();
-		cy.wait(3000);
-		cy.contains("Contrast").click();
-		cy.wait(5000);
-		cy.contains("Explore Truck").click();
-		cy.wait(5000);
-		cy.contains("Hybrid").click();
-		cy.wait(5000);
-		cy.contains("Imagery").click();
-		cy.wait(5000);
 		cy.get('[class="amplify-flex geofence-button"]').click();
-		cy.wait(4000);
-		cy.get("div").should("contain", "Connect AWS Account");
-		cy.wait(2000);
-		cy.get('[class="amplify-flex modal-close"]').click();
-		cy.wait(3000);
-		// cy.get('[class="mapboxgl-user-location-accuracy-circle mapboxgl-marker mapboxgl-marker-anchor-center"]').click({
-		// 	force: true
-		// });
-		cy.wait(5000);
-		cy.get('[title="Zoom in"]').click();
-		cy.wait(2000);
-		cy.get('[title="Zoom in"]').click();
-		cy.wait(2000);
-		cy.get('[title="Zoom in"]').click();
-		cy.wait(2000);
-		cy.get('[title="Zoom out"]').click();
-		cy.wait(2000);
-		cy.get('[title="Zoom out"]').click();
-		cy.wait(2000);
-		cy.get('[title="Zoom out"]').click();
-		cy.wait(2000);
-		cy.get('[class="amplify-flex inner-start-component"]').click();
-		cy.wait(2000);
-		cy.contains("Geofence").click();
 		cy.wait(2000);
 		cy.get("div").should("contain", "Connect AWS Account");
 		cy.wait(2000);
@@ -100,13 +46,13 @@ describe("Unauthorized users MUST only have access to predefined permissions and
 		cy.get('[placeholder="Search"]').click();
 		cy.wait(2000);
 		cy.get('[inputmode="search"]')
-			.type("44 Boobialla Street, Corbie Hill, Australia", { delay: 50 })
-			.wait(3000)
+			.type("gramercy park music school USA")
+			.wait(5000)
 			.type("{downArrow}")
-			.wait(1000)
 			.type("{enter}");
-		cy.wait(5000);
-		cy.get('[class="amplify-text amplify-text--tertiary"]').should("have.text", "Leeton NSW 2705, Australia");
-		cy.wait(2000);
+		cy.wait(10000);
+		cy.get(
+			"#root > div > div:nth-child(2) > div.mapboxgl-map > div.mapboxgl-popup.popup-container.mapboxgl-popup-anchor-left > div.mapboxgl-popup-content > div > div.info-container > p"
+		).should("have.text", "Gramercy Park Music School");
 	});
 });

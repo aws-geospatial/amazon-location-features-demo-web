@@ -12,13 +12,14 @@
 
 describe("Check disconnecting from AWS", () => {
 	it("authentication", () => {
-		cy.visit(Cypress.env("URL"), {
+		cy.visit(Cypress.env("WEB_DOMAIN"), {
 			auth: {
-				username: Cypress.env("USERNAME"),
-				password: Cypress.env("PASSWORD")
+				username: Cypress.env("WEB_DOMAIN_USERNAME"),
+				password: Cypress.env("WEB_DOMAIN_PASSWORD")
 			}
 		});
-		cy.wait(20000);
+		cy.wait(5000);
+		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 		cy.get('[id="Icon"]').click();
 		cy.wait(1000);
 		cy.contains("Settings").click();
@@ -26,17 +27,12 @@ describe("Check disconnecting from AWS", () => {
 		cy.contains("Connect AWS Account").click();
 		cy.wait(1000);
 		cy.get('[placeholder="Enter IdentityPoolId"]').type(`${Cypress.env("IDENTITY_POOL_ID")}`);
-		cy.wait(2000);
 		cy.get('[placeholder="Enter UserDomain"]').type(`${Cypress.env("USER_DOMAIN")}`);
-		cy.wait(2000);
 		cy.get('[placeholder="Enter UserPoolClientId"]').type(`${Cypress.env("USER_POOL_CLIENT_ID")}`);
-		cy.wait(2000);
 		cy.get('[placeholder="Enter UserPoolId"]').type(`${Cypress.env("USER_POOL_ID")}`);
-		cy.wait(2000);
 		cy.get('[placeholder="Enter WebSocketUrl"]').type(`${Cypress.env("WEB_SOCKET_URL")}`);
-		cy.wait(500);
 		cy.get('[type="button"]').eq(3).click();
-		cy.wait(3000);
+		cy.wait(5000);
 		cy.contains("Connect AWS Account").click();
 		cy.wait(2000);
 		cy.get("div").should("contain", "Disconnect AWS Account");

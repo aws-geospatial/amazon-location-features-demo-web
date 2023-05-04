@@ -9,13 +9,14 @@
 
 describe("Verify that we have three route options - Walk, Truck and Car", () => {
 	it("should authenticate login and verify travel mode elements", () => {
-		cy.visit(Cypress.env("URL"), {
+		cy.visit(Cypress.env("WEB_DOMAIN"), {
 			auth: {
-				username: Cypress.env("USERNAME"),
-				password: Cypress.env("PASSWORD")
+				username: Cypress.env("WEB_DOMAIN_USERNAME"),
+				password: Cypress.env("WEB_DOMAIN_PASSWORD")
 			}
 		});
 		cy.wait(20000);
+		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 		cy.get('[class="amplify-flex icon outter-end-component"]').click().wait(3000);
 		cy.get(".travel-mode").should("have.class", "selected");
 		cy.get(".travel-mode").should("exist").and("have.length", 3);

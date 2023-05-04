@@ -12,13 +12,14 @@
 
 describe("Verify that user can navigate on map or search or do routing or change map style without any need to connect to AWs", () => {
 	it("authentication", { scrollBehavior: false }, () => {
-		cy.visit(Cypress.env("URL"), {
+		cy.visit(Cypress.env("WEB_DOMAIN"), {
 			auth: {
-				username: Cypress.env("USERNAME"),
-				password: Cypress.env("PASSWORD")
+				username: Cypress.env("WEB_DOMAIN_USERNAME"),
+				password: Cypress.env("WEB_DOMAIN_PASSWORD")
 			}
 		});
 		cy.wait(20000);
+		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 		cy.get('[placeholder="Search"]').click().type("Coffee").wait(5000).type("{enter}");
 		cy.wait(10000);
 		cy.get(".map-styles-button > svg").click();
