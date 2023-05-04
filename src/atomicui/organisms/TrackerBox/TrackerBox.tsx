@@ -304,7 +304,7 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 							) : (
 								<>
 									<Button
-										width="7.62rem"
+										className="play-pause-button"
 										variation="primary"
 										fontFamily="AmazonEmber-Bold"
 										fontSize="0.92rem"
@@ -313,7 +313,7 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 									>
 										{isFetchingRoute ? <Loader size="large" /> : isPlaying ? "Pause" : "Simulate"}
 									</Button>
-									<Button className="edit-button" marginLeft="0.62rem" variation="primary" onClick={onEdit}>
+									<Button className="edit-button" variation="primary" onClick={onEdit}>
 										Edit
 									</Button>
 								</>
