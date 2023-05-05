@@ -1,9 +1,8 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
-/// <reference types="cypress" />
 
-describe("Verify that user can simulate trackers", () => {
-	beforeEach(() => {
+describe("Geofence", () => {
+	it("should allow user to add, edit and delete geofence", () => {
 		cy.visit(Cypress.env("WEB_DOMAIN"), {
 			auth: {
 				username: Cypress.env("WEB_DOMAIN_USERNAME"),
@@ -23,15 +22,16 @@ describe("Verify that user can simulate trackers", () => {
 		cy.get('[placeholder="Enter UserPoolClientId"]').type(`${Cypress.env("USER_POOL_CLIENT_ID")}`);
 		cy.get('[placeholder="Enter UserPoolId"]').type(`${Cypress.env("USER_POOL_ID")}`);
 		cy.get('[placeholder="Enter WebSocketUrl"]').type(`${Cypress.env("WEB_SOCKET_URL")}`);
-		cy.get('[type="button"]').eq(3).click();
+		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 		cy.wait(5000);
 		cy.contains("Connect AWS Account").click();
 		cy.wait(2000);
-		cy.get('[type="button"]').eq(3).click();
+		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').eq(0).click();
 		cy.wait(2000);
 		cy.origin(Cypress.env("USER_DOMAIN"), () => {
 			cy.get(".modal-content.background-customizable.modal-content-mobile.visible-md.visible-lg").then(els => {
 				[...els].forEach(el => {
+					cy.wait(2000);
 					cy.wrap(el)
 						.get('[placeholder="Username"]')
 						.eq(1)
@@ -44,61 +44,29 @@ describe("Verify that user can simulate trackers", () => {
 				});
 			});
 		});
-		cy.wait(5000);
-		cy.get('[placeholder="Search"]').click();
-		cy.wait(2000);
-		cy.get('[inputmode="search"]')
-			.type("gramercy park music school USA")
-			.wait(5000)
-			.type("{downArrow}")
-			.type("{enter}");
-		cy.wait(2000);
+		cy.wait(10000);
 		cy.get('[id="Icon"]').click();
+		cy.contains("Sign out").should("exist");
 		cy.wait(5000);
-		cy.contains("Tracker").click();
+		cy.get('[class="amplify-flex geofence-button"]').click();
 		cy.wait(2000);
-		cy.contains("Continue").click();
+		cy.get('[placeholder="Enter address or coordinates"]').type("Rio Tinto Perth Western Australia");
+		cy.wait(4000);
+		cy.contains("Rio Tinto Operations Centre").click();
 		cy.wait(2000);
-	});
-
-	it("should allow user to add a tracker for car", () => {
-		cy.get('[class="mapboxgl-canvas"]').click("left");
-		cy.wait(2000);
-		cy.get('[class="mapboxgl-canvas"]').click("right");
+		cy.get('[placeholder="Type unique Geofence Name"]').type("Geofence1");
 		cy.wait(2000);
 		cy.contains("Save").click();
 		cy.wait(2000);
-		cy.contains("Simulate").click();
+		cy.get("div").should("contain", "Geofence1");
 		cy.wait(2000);
-		cy.get("div").should("contain", "Pause");
-	});
-
-	it("should allow user to add a tracker for walk", () => {
-		cy.get('[class="icon-container"]').eq(0).click();
+		cy.contains("Geofence1").click();
 		cy.wait(2000);
-		cy.get('[class="mapboxgl-canvas"]').click("left");
-		cy.wait(2000);
-		cy.get('[class="mapboxgl-canvas"]').click("right");
+		cy.get('[type="number"]').type("50");
 		cy.wait(2000);
 		cy.contains("Save").click();
 		cy.wait(2000);
-		cy.contains("Simulate").click();
-		cy.wait(2000);
-		cy.get("div").should("contain", "Pause");
-	});
-
-	it("should allow user to add a tracker for drone", () => {
-		cy.get('[class="icon-container"]').eq(1).click();
-		cy.wait(2000);
-		cy.get('[class="mapboxgl-canvas"]').click("left");
-		cy.wait(2000);
-		cy.get('[class="mapboxgl-canvas"]').click("right");
-		cy.wait(2000);
-		cy.contains("Save").click();
-		cy.wait(2000);
-		cy.contains("Simulate").click();
-		cy.wait(5000);
-		cy.get("div").should("contain", "Pause");
-		cy.wait(2000);
+		cy.get('[data-testid="icon-trash-Geofence1"]').click({ force: true });
+		cy.get('[class="geofences-list-container"]').should("not.contain", "Geofence1");
 	});
 });

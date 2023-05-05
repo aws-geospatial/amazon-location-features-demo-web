@@ -1,14 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
-/// <reference types="cypress" />
 
-//STR
-// 1-Go to https://qa.amazonlocation.services/demo
-// 2-User can see hamburger menu
-// 3-User clicks on the hamburger menu
-// 4-Verify User is able to see demo, geofence, tracker, settings, more, overview, product, and samples
-
-describe("Verify that sidebar exists and functions as expected", () => {
+describe("Sidebar", () => {
 	it("should allow user to access the sidebar via hamburger menu", { scrollBehavior: false }, () => {
 		cy.visit(Cypress.env("WEB_DOMAIN"), {
 			auth: {
@@ -32,8 +25,6 @@ describe("Verify that sidebar exists and functions as expected", () => {
 		cy.wait(500);
 		cy.get("div").should("contain", "Overview");
 		cy.wait(500);
-		// cy.get("div").should("contain", "Product");
-		// cy.wait(2000);
 		cy.get("div").should("contain", "Samples");
 		cy.wait(2000);
 	});

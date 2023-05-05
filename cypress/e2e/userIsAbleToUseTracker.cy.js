@@ -1,29 +1,8 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
-/// <reference types="cypress" />
 
-//STR
-// 1-Go to https://qa.amazonlocation.services/demo
-// 2-I open hamburger menu
-// 3-I go to settings
-// 4-I click on connect your AWS account
-// 5-I add IdentityPoolId
-// 6-I add UserDomain
-// 7-I add UserPoolClientId
-// 8-I add UserPoolId
-// 9-I add WebSocketUrl
-// 10-I click on connect
-// 11-I close the app
-// 12-I reopen the open
-// 13-I click on settings
-// 14-I go to connect your AWS account
-// 15-I click on sign in
-// 16-I enter email and password
-// 17-I click on log in
-// 18-Verify User is able to sign in after being connected to AWS
-
-describe("User can sign in after being connected to AWS", () => {
-	it("authentication", () => {
+describe("Tracker", () => {
+	beforeEach(() => {
 		cy.visit(Cypress.env("WEB_DOMAIN"), {
 			auth: {
 				username: Cypress.env("WEB_DOMAIN_USERNAME"),
@@ -65,10 +44,66 @@ describe("User can sign in after being connected to AWS", () => {
 			});
 		});
 		cy.wait(5000);
+		cy.get('[placeholder="Search"]').click();
+		cy.wait(2000);
+		cy.get('[inputmode="search"]')
+			.type("gramercy park music school USA")
+			.wait(5000)
+			.type("{downArrow}")
+			.type("{enter}");
+		cy.wait(2000);
 		cy.get('[id="Icon"]').click();
-		cy.contains("Sign out").should("exist");
 		cy.wait(5000);
-		cy.get("div").should("contain", "Search");
+		cy.contains("Tracker").click();
+		cy.wait(2000);
+		cy.contains("Continue").click();
+		cy.wait(2000);
+	});
+
+	it("should allow user to add a tracker for car and be able to edit", () => {
+		cy.get('[class="mapboxgl-canvas"]').click("left");
+		cy.wait(2000);
+		cy.get('[class="mapboxgl-canvas"]').click("right");
+		cy.wait(2000);
+		cy.contains("Save").click();
+		cy.wait(2000);
+		cy.contains("Edit").click();
+		cy.wait(2000);
+		cy.get("div").should("contain", "Clear");
+		cy.get("div").should("contain", "Save");
+		cy.contains("Save").click();
+		cy.wait(2000);
+		cy.contains("Simulate").click();
+		cy.wait(2000);
+		cy.get("div").should("contain", "Pause");
+	});
+
+	it("should allow user to add a tracker for walk", () => {
+		cy.get('[class="icon-container"]').eq(0).click();
+		cy.wait(2000);
+		cy.get('[class="mapboxgl-canvas"]').click("left");
+		cy.wait(2000);
+		cy.get('[class="mapboxgl-canvas"]').click("right");
+		cy.wait(2000);
+		cy.contains("Save").click();
+		cy.wait(2000);
+		cy.contains("Simulate").click();
+		cy.wait(2000);
+		cy.get("div").should("contain", "Pause");
+	});
+
+	it("should allow user to add a tracker for drone", () => {
+		cy.get('[class="icon-container"]').eq(1).click();
+		cy.wait(2000);
+		cy.get('[class="mapboxgl-canvas"]').click("left");
+		cy.wait(2000);
+		cy.get('[class="mapboxgl-canvas"]').click("right");
+		cy.wait(2000);
+		cy.contains("Save").click();
+		cy.wait(2000);
+		cy.contains("Simulate").click();
+		cy.wait(5000);
+		cy.get("div").should("contain", "Pause");
 		cy.wait(2000);
 	});
 });

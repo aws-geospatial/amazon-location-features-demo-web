@@ -1,15 +1,8 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
-/// <reference types="cypress" />
 
-// STR
-// 1- Go to https://qa.amazonlocation.services/demo
-// 2- Once the map renders user can see + and - icons on the right bottom corner
-// 3- Verify that clicking + zooms in the map
-// 4- Verify that clicking - zooms out from the map
-
-describe("Verify that User can Zoom in/out", () => {
-	it("authentication", { scrollBehavior: false }, () => {
+describe("Map zoom in/out", () => {
+	it("should allow user to be able to zoom the map in and out", { scrollBehavior: false }, () => {
 		cy.visit(Cypress.env("WEB_DOMAIN"), {
 			auth: {
 				username: Cypress.env("WEB_DOMAIN_USERNAME"),
