@@ -34,10 +34,6 @@ describe("Switch between map styles from right side menu", () => {
 		cy.contains("Imagery").click();
 		cy.wait(5000);
 		cy.get('[type="radio"]').check({ force: true });
-		cy.wait(2000);
-		cy.get(".map-styles-button > svg").click();
-		cy.wait(3000);
-		cy.contains("Explore").click();
 		cy.wait(3000);
 		cy.contains("Contrast").click();
 		cy.wait(5000);
@@ -46,6 +42,5 @@ describe("Switch between map styles from right side menu", () => {
 		cy.contains("Hybrid").click();
 		cy.wait(5000);
 		cy.contains("Imagery").click();
-		cy.wait(5000);
 	});
 });

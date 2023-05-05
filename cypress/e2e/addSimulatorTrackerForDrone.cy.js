@@ -15,7 +15,7 @@
 // 10- Verify I see a toast message while exiting “Exited {geofence name} geofence
 
 describe("Add Simulator Tracker for drone", () => {
-	it("authentication", () => {
+	it("should allow user to add a tracker for drone", () => {
 		cy.visit(Cypress.env("WEB_DOMAIN"), {
 			auth: {
 				username: Cypress.env("WEB_DOMAIN_USERNAME"),

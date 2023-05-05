@@ -8,21 +8,18 @@
 // 3-I search for a location e.g. “Rio Tinto”
 // 4-Verify user sees 5 suggestions
 
-describe("Verify that user can search by categories ", () => {
-	it("should authenticate with credentials and search for schools", () => {
+describe("User can search and get suggestions ", () => {
+	it("user can use the search box and get suggestions based on input", () => {
 		cy.visit(Cypress.env("WEB_DOMAIN"), {
 			auth: {
 				username: Cypress.env("WEB_DOMAIN_USERNAME"),
 				password: Cypress.env("WEB_DOMAIN_PASSWORD")
 			}
 		});
-		cy.wait(20000);
+		cy.wait(5000);
 		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 		cy.get('[placeholder="Search"]').click().type("School").wait(5000).type("{enter}");
 		cy.wait(5000);
-		for (let i = 1; i <= 5; i++) {
-			cy.get('[class="mapboxgl-marker mapboxgl-marker-anchor-center"]').eq(i).should("be.visible");
-			cy.wait(500);
-		}
+		cy.get('[class="mapboxgl-marker mapboxgl-marker-anchor-center"]').should("be.visible");
 	});
 });

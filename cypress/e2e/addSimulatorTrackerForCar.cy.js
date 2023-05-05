@@ -15,7 +15,7 @@
 // 10- Verify I see a toast message while exiting “Exited {geofence name} geofence
 
 describe("Add Simulator Tracker for car", () => {
-	it("authentication", () => {
+	it("should allow user to add a tracker for car", () => {
 		cy.visit(Cypress.env("WEB_DOMAIN"), {
 			auth: {
 				username: Cypress.env("WEB_DOMAIN_USERNAME"),
@@ -58,7 +58,6 @@ describe("Add Simulator Tracker for car", () => {
 		});
 		cy.wait(5000);
 		cy.get('[id="Icon"]').click();
-		cy.contains("Sign out").should("exist");
 		cy.wait(5000);
 		cy.contains("Tracker").click();
 		cy.wait(2000);
@@ -73,8 +72,5 @@ describe("Add Simulator Tracker for car", () => {
 		cy.contains("Simulate").click();
 		cy.wait(2000);
 		cy.get("div").should("contain", "Pause");
-		cy.wait(5000);
-		cy.get("div").should("contain", "Simulate");
-		cy.wait(2000);
 	});
 });

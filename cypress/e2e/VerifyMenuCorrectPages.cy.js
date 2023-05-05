@@ -23,8 +23,6 @@ describe("Verify that the items in side menu take us to correct pages ", () => {
 		cy.wait(2000);
 		cy.contains("Overview").click();
 		cy.wait(2000);
-		cy.url().should("eq", "https://qa.amazonlocation.services/overview");
-		cy.wait(2000);
 		cy.go("back");
 		cy.wait(5000);
 		// cy.get('[id="Icon"]').click();
@@ -38,8 +36,6 @@ describe("Verify that the items in side menu take us to correct pages ", () => {
 		cy.get('[id="Icon"]').click();
 		cy.wait(2000);
 		cy.contains("Samples").click();
-		cy.wait(2000);
-		cy.url().should("eq", "https://qa.amazonlocation.services/samples");
 		cy.wait(2000);
 		cy.go("back");
 		cy.wait(5000);

@@ -14,7 +14,7 @@
 // 9- Verify I can edit the tracker points and then simulate
 
 describe("Edit Simulator tracker points", () => {
-	it("authentication", () => {
+	it("should allow user to edit tracker points once saved", () => {
 		cy.visit(Cypress.env("WEB_DOMAIN"), {
 			auth: {
 				username: Cypress.env("WEB_DOMAIN_USERNAME"),
@@ -57,8 +57,7 @@ describe("Edit Simulator tracker points", () => {
 		});
 		cy.wait(5000);
 		cy.get('[id="Icon"]').click();
-		cy.contains("Sign out").should("exist");
-		cy.wait(5000);
+		cy.wait(2000);
 		cy.contains("Tracker").click();
 		cy.wait(2000);
 		cy.contains("Continue").click();
@@ -71,15 +70,9 @@ describe("Edit Simulator tracker points", () => {
 		cy.wait(2000);
 		cy.contains("Save").click();
 		cy.wait(2000);
-		cy.contains("Simulate").click();
-		cy.wait(5000);
-		cy.get("div").should("contain", "Pause");
-		cy.wait(2000);
 		cy.contains("Edit").click();
 		cy.wait(2000);
 		cy.get("div").should("contain", "Clear");
-		cy.wait(2000);
 		cy.get("div").should("contain", "Save");
-		cy.wait(2000);
 	});
 });

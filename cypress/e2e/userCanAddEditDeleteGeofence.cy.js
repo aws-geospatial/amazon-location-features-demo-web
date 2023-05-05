@@ -11,8 +11,8 @@
 // 6-I click on save
 // 7-Verify User is able add Geofence
 
-describe("Add Geofence", () => {
-	it("authentication", () => {
+describe("Add, Edit and Delete Geofence", () => {
+	it("should allow user to add, edit and delete geofence", () => {
 		cy.visit(Cypress.env("WEB_DOMAIN"), {
 			auth: {
 				username: Cypress.env("WEB_DOMAIN_USERNAME"),
@@ -70,7 +70,13 @@ describe("Add Geofence", () => {
 		cy.wait(2000);
 		cy.get("div").should("contain", "Geofence1");
 		cy.wait(2000);
-		cy.get('[id="Icon/trash"]').eq(0).click({ force: true });
+		cy.contains("Geofence1").click();
 		cy.wait(2000);
+		cy.get('[type="number"]').type("50");
+		cy.wait(2000);
+		cy.contains("Save").click();
+		cy.wait(2000);
+		cy.get('[data-testid="icon-trash-Geofence1"]').click({ force: true });
+		cy.get('[class="geofences-list-container"]').should("not.contain", "Geofence1");
 	});
 });

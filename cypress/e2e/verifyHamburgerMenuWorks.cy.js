@@ -8,15 +8,15 @@
 // 3-User clicks on the hamburger menu
 // 4-Verify User is able to see demo, geofence, tracker, settings, more, overview, product, and samples
 
-describe("Verify that we have Side menu displayed as a humbrger menu, and it works fine", () => {
-	it("authentication", { scrollBehavior: false }, () => {
+describe("Verify that sidebar exists and functions as expected", () => {
+	it("should allow user to access the sidebar via hamburger menu", { scrollBehavior: false }, () => {
 		cy.visit(Cypress.env("WEB_DOMAIN"), {
 			auth: {
 				username: Cypress.env("WEB_DOMAIN_USERNAME"),
 				password: Cypress.env("WEB_DOMAIN_PASSWORD")
 			}
 		});
-		cy.wait(20000);
+		cy.wait(5000);
 		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 		cy.get('[id="Icon"]').click();
 		cy.wait(2000);
@@ -28,7 +28,7 @@ describe("Verify that we have Side menu displayed as a humbrger menu, and it wor
 		cy.wait(500);
 		cy.get("div").should("contain", "Settings");
 		cy.wait(500);
-		cy.get("div").should("contain", "More");
+		cy.get("div").should("contain", "About");
 		cy.wait(500);
 		cy.get("div").should("contain", "Overview");
 		cy.wait(500);
