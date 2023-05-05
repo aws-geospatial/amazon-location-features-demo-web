@@ -13,6 +13,9 @@ const usePersistedData = () => {
 
 	const methods = useMemo(
 		() => ({
+			setShowAppDownloadNotification: (showAppDownloadNotification: boolean) => {
+				setState({ showAppDownloadNotification });
+			},
 			setShowWelcomeModal: (showWelcomeModal: boolean) => {
 				setState({ showWelcomeModal });
 			},

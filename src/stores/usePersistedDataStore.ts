@@ -13,11 +13,13 @@ const {
 const localStorageKey = `${LOCAL_STORAGE_PREFIX}${PERSISTED_DATA}`;
 
 interface PersistedDataStoreProps {
+	showAppDownloadNotification: boolean;
 	showWelcomeModal: boolean;
 	defaultRouteOptions: RouteOptionsType;
 }
 
 const initialState: IStateProps<PersistedDataStoreProps> = {
+	showAppDownloadNotification: true,
 	showWelcomeModal: true,
 	defaultRouteOptions: { avoidFerries: true, avoidTolls: true }
 };
