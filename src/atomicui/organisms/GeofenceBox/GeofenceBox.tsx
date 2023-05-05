@@ -372,7 +372,11 @@ const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox })
 								<Flex gap={0} direction="column">
 									<TextEl text={GeofenceId} />
 								</Flex>
-								<div className="icon-trash-container" onClick={e => onDelete(e, GeofenceId)}>
+								<div
+									data-testid={`icon-trash-${GeofenceId}`}
+									className="icon-trash-container"
+									onClick={e => onDelete(e, GeofenceId)}
+								>
 									<IconTrash />
 								</div>
 							</Flex>
