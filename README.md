@@ -33,18 +33,16 @@ Builds the app for **development** to the `build` folder locally and starts the 
 
 ## E2E Tests
 #### Env keys required in `cypress.env.json` file, see `cypress.env.json.example` for reference. This is only needed to run the e2e tests locally.
->EMAIL=< EMAIL><br />
-EMAIL_PASS=<EMAIL_PASS><br />
+>WEB_DOMAIN=<WEB_DOMAIN><br />
+WEB_DOMAIN_USERNAME=<WEB_DOMAIN_USERNAME><br />
+WEB_DOMAIN_PASSWORD=<WEB_DOMAIN_PASSWORD><br />
 IDENTITY_POOL_ID=<IDENTITY_POOL_ID><br />
 USER_DOMAIN=<USER_DOMAIN><br />
 USER_POOL_CLIENT_ID=<USER_POOL_CLIENT_ID><br />
 USER_POOL_ID=<USER_POOL_ID><br />
 WEB_SOCKET_URL=<WEB_SOCKET_URL><br />
-USERNAME=< USERNAME><br />
-PASSWORD=< PASSWORD><br />
-URL=< URL><br />
-ORIGIN_WEB=<ORIGIN_WEB><br />
-GET_WEB=<GET_WEB><br />
+COGNITO_EMAIL=<COGNITO_EMAIL><br />
+COGNITO_PASSWORD=<COGNITO_PASSWORD><br />
 
 #### If you are configuring Github actions fo the e2e tests, make sure to add these keys to the secrets section of the repo with a `CYPRESS_` prefix.
 

@@ -199,7 +199,7 @@ const useAmplifyAuth = () => {
 					errorHandler(error, "Failed to sign out");
 				}
 			},
-			resetStore() {
+			resetStore: () => {
 				setState({
 					credentials: undefined,
 					authTokens: undefined,
@@ -214,7 +214,9 @@ const useAmplifyAuth = () => {
 				localStorage.clear();
 				methods.resetStore();
 				resetAwsStore();
-				window.location.reload();
+				setTimeout(() => {
+					window.location.reload();
+				}, 3000);
 			}
 		}),
 		[setInitial, setState, fetchHostedUi, getCurrentUserCredentials, login, store.credentials, detachPolicy, logout]

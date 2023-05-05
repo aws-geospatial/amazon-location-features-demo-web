@@ -1,0 +1,31 @@
+/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
+/* SPDX-License-Identifier: MIT-0 */
+
+describe("Sidebar", () => {
+	it("should allow user to access the sidebar via hamburger menu", { scrollBehavior: false }, () => {
+		cy.visit(Cypress.env("WEB_DOMAIN"), {
+			auth: {
+				username: Cypress.env("WEB_DOMAIN_USERNAME"),
+				password: Cypress.env("WEB_DOMAIN_PASSWORD")
+			}
+		});
+		cy.wait(5000);
+		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
+		cy.get('[id="Icon"]').click();
+		cy.wait(2000);
+		cy.get("div").should("contain", "Demo");
+		cy.wait(500);
+		cy.get("div").should("contain", "Geofence");
+		cy.wait(500);
+		cy.get("div").should("contain", "Tracker");
+		cy.wait(500);
+		cy.get("div").should("contain", "Settings");
+		cy.wait(500);
+		cy.get("div").should("contain", "About");
+		cy.wait(500);
+		cy.get("div").should("contain", "Overview");
+		cy.wait(500);
+		cy.get("div").should("contain", "Samples");
+		cy.wait(2000);
+	});
+});

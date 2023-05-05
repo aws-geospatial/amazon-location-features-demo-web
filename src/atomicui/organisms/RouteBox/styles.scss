@@ -377,6 +377,10 @@
 					text-align: right !important;
 					line-height: 18px !important;
 				}
+
+				@media only screen and (max-width: 425px) {
+					width: 100px;
+				}
 			}
 		}
 

@@ -29,18 +29,16 @@ jobs:
 
       - name: Run Cypress test
         env:
-          CYPRESS_EMAIL: ${{ secrets.EMAIL }}
-          CYPRESS_EMAIL_PASS: ${{ secrets.EMAILPASS }}
-          CYPRESS_IDENTITY_POOL_ID: ${{ secrets.IDENTITYPOOLID }}
-          CYPRESS_USER_DOMAIN: ${{ secrets.USERDOMAIN }}
-          CYPRESS_USER_POOL_CLIENT_ID: ${{ secrets.USERPOOLCLIENTID }}
-          CYPRESS_USER_POOL_ID: ${{ secrets.USERPOOLID }}
-          CYPRESS_WEB_SOCKET_URL: ${{ secrets.WEBSOCKETURL }}
-          CYPRESS_USERNAME: ${{ secrets.USERNAME }}
-          CYPRESS_PASSWORD: ${{ secrets.PASSWORD }}
-          CYPRESS_URL: ${{ secrets.URL }}
-          CYPRESS_ORIGIN_WEB: ${{ secrets.ORIGINWEB }}
-          CYPRESS_GET_WEB: ${{ secrets.GETWEB }}
+          CYPRESS_WEB_DOMAIN: ${{ secrets.WEB_DOMAIN }}
+          CYPRESS_WEB_DOMAIN_USERNAME: ${{ secrets.WEB_DOMAIN_USERNAME }}
+          CYPRESS_WEB_DOMAIN_PASSWORD: ${{ secrets.WEB_DOMAIN_PASSWORD }}
+          CYPRESS_IDENTITY_POOL_ID: ${{ secrets.IDENTITY_POOL_ID }}
+          CYPRESS_USER_DOMAIN: ${{ secrets.USER_DOMAIN }}
+          CYPRESS_USER_POOL_CLIENT_ID: ${{ secrets.USER_POOL_CLIENT_ID }}
+          CYPRESS_USER_POOL_ID: ${{ secrets.USER_POOL_ID }}
+          CYPRESS_WEB_SOCKET_URL: ${{ secrets.WEB_SOCKET_URL }}
+          CYPRESS_COGNITO_EMAIL: ${{ secrets.COGNITO_EMAIL }}
+          CYPRESS_COGNITO_PASSWORD: ${{ secrets.COGNITO_PASSWORD }}
         run: yarn cypress
 
       # - name: Setup AWS Cli
