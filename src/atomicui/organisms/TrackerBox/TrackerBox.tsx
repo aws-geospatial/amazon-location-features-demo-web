@@ -4,10 +4,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button, Card, Flex, Loader, View } from "@aws-amplify/ui-react";
-import { IconCar, IconClose, IconDroneSolid, IconInfoSolid, IconSegment, IconWalking } from "@demo/assets";
+import { IconArrow, IconCar, IconClose, IconDroneSolid, IconInfoSolid, IconSegment, IconWalking } from "@demo/assets";
 import { TextEl } from "@demo/atomicui/atoms";
 import { GeofenceMarker } from "@demo/atomicui/molecules";
-import { useAwsGeofence, useAwsRoute, useAwsTracker } from "@demo/hooks";
+import { useAwsGeofence, useAwsRoute, useAwsTracker, useMediaQuery } from "@demo/hooks";
 import { useWebSocketService } from "@demo/services";
 import { RouteDataType, TrackerType } from "@demo/types";
 import * as turf from "@turf/turf";
@@ -36,6 +36,7 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 	const [routeData, setRouteData] = useState<RouteDataType | undefined>(undefined);
 	const [points, setPoints] = useState<Position[] | undefined>(undefined);
 	const [trackerPos, setTrackerPos] = useState<Position | undefined>(undefined);
+	const [isExpanded, setIsExpanded] = useState(true);
 	const { isFetchingRoute } = useAwsRoute();
 	const { geofences, getGeofencesList } = useAwsGeofence();
 	const {
@@ -47,6 +48,7 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 		setTrackerPoints
 	} = useAwsTracker();
 	const subscription = useWebSocketService();
+	const isDesktop = useMediaQuery("(min-width: 1024px)");
 
 	useEffect(() => {
 		return () => {
@@ -62,10 +64,15 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 		setIsEditingRoute(true);
 	}, [fetchGeofencesList, setIsEditingRoute]);
 
+	useEffect(() => {
+		isDesktop && !isExpanded && setIsExpanded(true);
+	}, [isDesktop, isExpanded]);
+
 	const isSimulationEnbaled = useMemo(() => isSaved && routeData, [isSaved, routeData]);
 
 	const onPlayPause = () => {
 		if (isSimulationEnbaled) {
+			!isPlaying && !isDesktop && isExpanded && setIsExpanded(false);
 			setIsPlaying(s => !s);
 		}
 	};
@@ -98,6 +105,7 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 		setPoints(undefined);
 		setTrackerPos(undefined);
 		setIsPlaying(false);
+		!isDesktop && !isExpanded && setIsExpanded(true);
 	};
 
 	const renderGeofenceMarkers = useMemo(() => {
@@ -243,6 +251,15 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 				<Flex className="tracking-card-header">
 					<TextEl fontFamily="AmazonEmber-Medium" fontSize="1.08rem" text="Tracker" />
 					<Flex gap={0} alignItems="center">
+						{!!trackerPoints?.length && (
+							<Flex
+								className="tracking-card-caret"
+								style={{ transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)" }}
+								onClick={() => setIsExpanded(!isExpanded)}
+							>
+								<IconArrow />
+							</Flex>
+						)}
 						<Flex className="tracking-card-close" onClick={onClose}>
 							<IconClose />
 						</Flex>
@@ -321,7 +338,7 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 						</Flex>
 					)}
 				</Flex>
-				{renderTrackerPointsList}
+				{isExpanded && renderTrackerPointsList}
 			</Card>
 			{renderGeofenceMarkers}
 			{renderGeofences}
@@ -339,6 +356,7 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 				setPoints={setPoints}
 				trackerPos={trackerPos}
 				setTrackerPos={setTrackerPos}
+				isDesktop={isDesktop}
 			/>
 		</>
 	);
