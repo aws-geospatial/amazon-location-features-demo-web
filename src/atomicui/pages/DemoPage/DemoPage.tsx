@@ -238,14 +238,13 @@ const DemoPage: React.FC = () => {
 						],
 						{
 							padding: {
-								top: 150,
+								top: 220,
 								bottom: 30,
 								left: 60,
 								right: 70
 							},
 							speed: 5,
-							linear: false,
-							zoom: 12
+							linear: false
 						}
 				  );
 		}
