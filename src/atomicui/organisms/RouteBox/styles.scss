@@ -7,6 +7,25 @@
 	top: 21px !important;
 	z-index: 4;
 
+	.route-card-carit {
+		width: 20px;
+		height: 20px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		position: absolute;
+		right: 40px;
+		top: 10px;
+
+		svg {
+			fill: #8e8e93;
+		}
+
+		@media only screen and (min-width: 1024px) {
+			display: none;
+		}
+	}
+
 	.route-card-close {
 		width: 20px;
 		height: 20px;

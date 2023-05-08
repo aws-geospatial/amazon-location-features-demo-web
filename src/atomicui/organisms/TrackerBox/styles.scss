@@ -19,21 +19,39 @@
 		align-items: center;
 		border-bottom: 1px solid var(--grey-color-3);
 
+		.tracking-card-caret {
+			gap: 0;
+			position: absolute;
+			right: 4rem;
+			cursor: pointer;
+			display: flex;
+
+			svg {
+				fill: var(--grey-color);
+				width: 1.54rem;
+				height: 1.54rem;
+			}
+
+			@media only screen and (min-width: 1024px) {
+				display: none;
+			}
+		}
+
 		.tracking-card-close {
 			gap: 0;
 			padding-left: 0.77rem;
 			border-left: 1px solid var(--grey-color-3);
 			cursor: pointer;
-		}
 
-		.tracking-card-close > svg {
-			fill: var(--grey-color);
-			width: 1.54rem;
-			height: 1.54rem;
-		}
+			svg {
+				fill: var(--grey-color);
+				width: 1.54rem;
+				height: 1.54rem;
 
-		.tracking-card-close > svg:hover {
-			fill: var(--primary-color);
+				&:hover {
+					fill: var(--primary-color);
+				}
+			}
 		}
 	}
 

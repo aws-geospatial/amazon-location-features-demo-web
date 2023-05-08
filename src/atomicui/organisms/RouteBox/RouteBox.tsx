@@ -5,6 +5,7 @@ import React, { ChangeEvent, useCallback, useEffect, useMemo, useState } from "r
 
 import { Card, CheckboxField, Flex, Text, View } from "@aws-amplify/ui-react";
 import {
+	IconArrow,
 	IconArrowDownUp,
 	IconCar,
 	IconClose,
@@ -18,7 +19,7 @@ import {
 } from "@demo/assets";
 
 import { NotFoundCard, StepCard } from "@demo/atomicui/molecules";
-import { useAmplifyMap, useAwsPlace, useAwsRoute, usePersistedData } from "@demo/hooks";
+import { useAmplifyMap, useAwsPlace, useAwsRoute, useMediaQuery, usePersistedData } from "@demo/hooks";
 import { DistanceUnit, InputType, RouteOptionsType, SuggestionType, TravelMode } from "@demo/types";
 
 import { humanReadableTime } from "@demo/utils/dateTimeUtils";
@@ -48,6 +49,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 	const [isCurrentLocationSelected, setIsCurrentLocationSelected] = useState(false);
 	const [isSearching, setIsSearching] = useState(false);
 	const [stepsData, setStepsData] = useState<Place[]>([]);
+	const [isExpanded, setIsExpanded] = useState(true);
 	const { currentLocationData, mapStyle } = useAmplifyMap();
 	const { search, getPlaceData } = useAwsPlace();
 	const {
@@ -63,6 +65,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 	const { defaultRouteOptions } = usePersistedData();
 	const [expandRouteOptions, setExpandRouteOptions] = useState(false);
 	const [routeOptions, setRouteOptions] = useState<RouteOptionsType>({ ...defaultRouteOptions });
+	const isDesktop = useMediaQuery("(min-width: 1024px)");
 
 	const clearRoutePosition = useCallback((type: InputType) => setRoutePositions(undefined, type), [setRoutePositions]);
 
@@ -102,6 +105,10 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 		directions,
 		setDirections
 	]);
+
+	useEffect(() => {
+		isDesktop && !isExpanded && setIsExpanded(true);
+	}, [isDesktop, isExpanded]);
 
 	const getDestDept = useCallback(() => {
 		const obj: { DeparturePosition: Position | undefined; DestinationPosition: Position | undefined } = {
@@ -477,6 +484,15 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 	return (
 		<>
 			<Card data-testid="route-card" className="route-card" left={isSideMenuExpanded ? 245 : 21}>
+				{!!routeData && (
+					<View
+						className="route-card-carit"
+						style={{ transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)" }}
+						onClick={() => setIsExpanded(!isExpanded)}
+					>
+						<IconArrow />
+					</View>
+				)}
 				<View className="route-card-close" onClick={onClose}>
 					<IconClose />
 				</View>
@@ -532,7 +548,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 						<IconArrowDownUp />
 					</Flex>
 				</Flex>
-				{travelMode !== TravelMode.WALKING && (
+				{travelMode !== TravelMode.WALKING && isExpanded && (
 					<View
 						className={
 							inputFocused.from || inputFocused.to || !!routeData
@@ -637,7 +653,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 								<Text className="regular-text">{humanReadableTime(routeData.Summary.DurationSeconds * 1000)}</Text>
 							</View>
 						</View>
-						{renderSteps}
+						{isExpanded && renderSteps}
 					</View>
 				)}
 			</Card>
