@@ -49,7 +49,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 	const [isCurrentLocationSelected, setIsCurrentLocationSelected] = useState(false);
 	const [isSearching, setIsSearching] = useState(false);
 	const [stepsData, setStepsData] = useState<Place[]>([]);
-	const [isExpanded, setIsExpanded] = useState(true);
+	const [isCollapsed, setIsCollapsed] = useState(true);
 	const { currentLocationData, mapStyle } = useAmplifyMap();
 	const { search, getPlaceData } = useAwsPlace();
 	const {
@@ -107,8 +107,8 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 	]);
 
 	useEffect(() => {
-		isDesktop && !isExpanded && setIsExpanded(true);
-	}, [isDesktop, isExpanded]);
+		isDesktop && isCollapsed && setIsCollapsed(false);
+	}, [isDesktop, isCollapsed]);
 
 	const getDestDept = useCallback(() => {
 		const obj: { DeparturePosition: Position | undefined; DestinationPosition: Position | undefined } = {
@@ -484,15 +484,6 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 	return (
 		<>
 			<Card data-testid="route-card" className="route-card" left={isSideMenuExpanded ? 245 : 21}>
-				{!!routeData && (
-					<View
-						className="route-card-carit"
-						style={{ transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)" }}
-						onClick={() => setIsExpanded(!isExpanded)}
-					>
-						<IconArrow />
-					</View>
-				)}
 				<View className="route-card-close" onClick={onClose}>
 					<IconClose />
 				</View>
@@ -548,7 +539,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 						<IconArrowDownUp />
 					</Flex>
 				</Flex>
-				{travelMode !== TravelMode.WALKING && isExpanded && (
+				{travelMode !== TravelMode.WALKING && !isCollapsed && (
 					<View
 						className={
 							inputFocused.from || inputFocused.to || !!routeData
@@ -653,7 +644,13 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 								<Text className="regular-text">{humanReadableTime(routeData.Summary.DurationSeconds * 1000)}</Text>
 							</View>
 						</View>
-						{isExpanded && renderSteps}
+						{!isCollapsed && renderSteps}
+					</View>
+				)}
+				{routeData && (
+					<View className="show-hide-details-container bottom-border-radius" onClick={() => setIsCollapsed(s => !s)}>
+						<Text className="text">{isCollapsed ? "Route details" : "Hide details"}</Text>
+						<IconArrow style={{ transform: isCollapsed ? "rotate(0deg)" : "rotate(180deg)" }} />
 					</View>
 				)}
 			</Card>
