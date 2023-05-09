@@ -173,7 +173,7 @@ const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox })
 			const upperLimit = unit === "km" ? RadiusInM.MAX / 1000 : RadiusInM.MAX;
 
 			if (!isNaN(radius) && radius >= lowerLimit && radius <= upperLimit) {
-				setRadiusInM(unit === "km" ? radius * 1000 : radius);
+				setRadiusInM(unit === "km" ? parseFloat((radius * 1000).toFixed(2)) : parseInt(radius.toString()));
 			}
 		},
 		[unit]
@@ -259,7 +259,7 @@ const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox })
 									<InputField
 										label=""
 										type="number"
-										value={unit === "km" ? (radiusInM / 1000).toFixed(2) : radiusInM.toString()}
+										value={unit === "km" ? (radiusInM / 1000).toFixed(2) : parseInt(radiusInM.toString()).toString()}
 										onChange={e => onChangeRadius(e)}
 									/>
 								</View>
@@ -399,7 +399,13 @@ const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox })
 		} = features[0];
 		setValue(`${center[1]}, ${center[0]}`);
 		setGeofenceCenter(center);
-		setRadiusInM(radiusInKm === 2 ? radiusInM : radiusInKm > RadiusInM.MAX / 1000 ? RadiusInM.MAX : radiusInKm * 1000);
+		setRadiusInM(
+			radiusInKm === 2
+				? parseInt(radiusInM.toString())
+				: radiusInKm > RadiusInM.MAX / 1000
+				? RadiusInM.MAX
+				: parseInt((radiusInKm * 1000).toString())
+		);
 		radiusInKm > RadiusInM.MAX / 1000 &&
 			showToast({ content: "Radius can't be greater than 10 KM", type: ToastType.INFO });
 	};
