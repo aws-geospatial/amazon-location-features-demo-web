@@ -32,6 +32,7 @@ import {
 	useAwsPlace,
 	useAwsRoute,
 	useAwsTracker,
+	useMediaQuery,
 	usePersistedData
 } from "@demo/hooks";
 import { ToastType } from "@demo/types";
@@ -113,6 +114,7 @@ const DemoPage: React.FC = () => {
 	const { isEditingRoute, trackerPoints, setTrackerPoints, resetStore: resetAwsTrackingStore } = useAwsTracker();
 	const { showWelcomeModal, setShowWelcomeModal } = usePersistedData();
 	const location = useLocation();
+	const isDesktop = useMediaQuery("(min-width: 1024px)");
 
 	const clearCredsAndLocationClient = useCallback(() => {
 		clearCredentials();
@@ -212,24 +214,41 @@ const DemoPage: React.FC = () => {
 			mapViewRef.current?.fitBounds(bound as [number, number, number, number]);
 		} else if (show.routeBox && routeData?.Summary.RouteBBox) {
 			const boundingBox = routeData.Summary.RouteBBox;
-			mapViewRef.current?.fitBounds(
-				[
-					[boundingBox[0], boundingBox[1]],
-					[boundingBox[2], boundingBox[3]]
-				],
-				{
-					padding: {
-						top: 200,
-						bottom: 200,
-						left: 450,
-						right: 200
-					},
-					speed: 5,
-					linear: false
-				}
-			);
+			isDesktop
+				? mapViewRef.current?.fitBounds(
+						[
+							[boundingBox[0], boundingBox[1]],
+							[boundingBox[2], boundingBox[3]]
+						],
+						{
+							padding: {
+								top: 200,
+								bottom: 200,
+								left: 450,
+								right: 200
+							},
+							speed: 5,
+							linear: false
+						}
+				  )
+				: mapViewRef.current?.fitBounds(
+						[
+							[boundingBox[0], boundingBox[1]],
+							[boundingBox[2], boundingBox[3]]
+						],
+						{
+							padding: {
+								top: 235,
+								bottom: 30,
+								left: 60,
+								right: 70
+							},
+							speed: 5,
+							linear: false
+						}
+				  );
 		}
-	}, [suggestions, bound, show.routeBox, routeData]);
+	}, [suggestions, bound, show.routeBox, routeData, isDesktop]);
 
 	useEffect(() => {
 		if (directions) setShow(s => ({ ...s, routeBox: true }));

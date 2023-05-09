@@ -19,21 +19,39 @@
 		align-items: center;
 		border-bottom: 1px solid var(--grey-color-3);
 
+		.tracking-card-caret {
+			gap: 0;
+			position: absolute;
+			right: 4rem;
+			cursor: pointer;
+			display: flex;
+
+			svg {
+				fill: var(--grey-color);
+				width: 1.54rem;
+				height: 1.54rem;
+			}
+
+			@media only screen and (min-width: 1024px) {
+				display: none;
+			}
+		}
+
 		.tracking-card-close {
 			gap: 0;
 			padding-left: 0.77rem;
 			border-left: 1px solid var(--grey-color-3);
 			cursor: pointer;
-		}
 
-		.tracking-card-close > svg {
-			fill: var(--grey-color);
-			width: 1.54rem;
-			height: 1.54rem;
-		}
+			svg {
+				fill: var(--grey-color);
+				width: 1.54rem;
+				height: 1.54rem;
 
-		.tracking-card-close > svg:hover {
-			fill: var(--primary-color);
+				&:hover {
+					fill: var(--primary-color);
+				}
+			}
 		}
 	}
 
@@ -129,6 +147,34 @@
 				top: 1.62rem;
 				border-left: 4px dotted var(--grey-color-3);
 			}
+		}
+	}
+
+	.show-hide-details-container {
+		gap: 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		background-color: var(--light-color-2);
+		border-bottom-left-radius: 8px;
+		border-bottom-right-radius: 8px;
+
+		.text {
+			font-family: AmazonEmber-Bold;
+			font-size: 0.92rem;
+			margin-right: 0.31rem;
+			color: var(--primary-color);
+		}
+
+		svg {
+			width: 18px;
+			height: 18px;
+			fill: var(--primary-color);
+		}
+
+		@media only screen and (min-width: 1024px) {
+			display: none;
 		}
 	}
 }

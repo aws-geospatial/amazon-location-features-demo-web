@@ -25,6 +25,7 @@ interface TrackerSimulationProps {
 	setPoints: (p?: Position[]) => void;
 	trackerPos?: Position;
 	setTrackerPos: (tp?: Position) => void;
+	isDesktop: boolean;
 }
 
 let interval: NodeJS.Timer | undefined;
@@ -41,7 +42,8 @@ const TrackerSimulation: React.FC<TrackerSimulationProps> = ({
 	points,
 	setPoints,
 	trackerPos,
-	setTrackerPos
+	setTrackerPos,
+	isDesktop
 }) => {
 	const { getRoute } = useAwsRoute();
 	const {
@@ -179,22 +181,39 @@ const TrackerSimulation: React.FC<TrackerSimulationProps> = ({
 	const renderRoute = useMemo(() => {
 		if (routeData && points) {
 			const boundingBox = routeData.Summary.RouteBBox;
-			mapRef?.fitBounds(
-				[
-					[boundingBox[0], boundingBox[1]],
-					[boundingBox[2], boundingBox[3]]
-				],
-				{
-					padding: {
-						top: 200,
-						bottom: 200,
-						left: 450,
-						right: 200
-					},
-					speed: 5,
-					linear: false
-				}
-			);
+			isDesktop
+				? mapRef?.fitBounds(
+						[
+							[boundingBox[0], boundingBox[1]],
+							[boundingBox[2], boundingBox[3]]
+						],
+						{
+							padding: {
+								top: 200,
+								bottom: 200,
+								left: 450,
+								right: 200
+							},
+							speed: 5,
+							linear: false
+						}
+				  )
+				: mapRef?.fitBounds(
+						[
+							[boundingBox[0], boundingBox[1]],
+							[boundingBox[2], boundingBox[3]]
+						],
+						{
+							padding: {
+								top: 230,
+								bottom: 50,
+								left: 60,
+								right: 70
+							},
+							speed: 5,
+							linear: false
+						}
+				  );
 
 			const passedLineJson:
 				| GeoJSON.Feature<GeoJSON.Geometry>
@@ -255,7 +274,7 @@ const TrackerSimulation: React.FC<TrackerSimulationProps> = ({
 			);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [mapRef, routeData, points, trackerPos]);
+	}, [mapRef, routeData, points, trackerPos, isDesktop]);
 
 	const renderRouteTracker = useMemo(() => {
 		if (trackerPos) {

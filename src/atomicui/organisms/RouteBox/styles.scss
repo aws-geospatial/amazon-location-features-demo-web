@@ -124,8 +124,10 @@
 				fill: #8e8e93;
 				cursor: pointer;
 
-				&:hover {
-					fill: #008296;
+				@media only screen and (min-width: 1024px) {
+					&:hover {
+						fill: #008296;
+					}
 				}
 			}
 		}
@@ -386,6 +388,31 @@
 
 		.steps-container {
 			overflow: scroll;
+		}
+	}
+
+	.show-hide-details-container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		background-color: var(--light-color-2);
+
+		.text {
+			font-family: AmazonEmber-Bold;
+			font-size: 0.92rem;
+			margin-right: 0.31rem;
+			color: var(--primary-color);
+		}
+
+		svg {
+			width: 18px;
+			height: 18px;
+			fill: var(--primary-color);
+		}
+
+		@media only screen and (min-width: 1024px) {
+			display: none;
 		}
 	}
 
