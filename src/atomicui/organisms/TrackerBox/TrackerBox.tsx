@@ -3,7 +3,7 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
-import { Button, Card, Flex, Loader, View } from "@aws-amplify/ui-react";
+import { Button, Card, Flex, Loader, Text, View } from "@aws-amplify/ui-react";
 import { IconArrow, IconCar, IconClose, IconDroneSolid, IconInfoSolid, IconSegment, IconWalking } from "@demo/assets";
 import { TextEl } from "@demo/atomicui/atoms";
 import { GeofenceMarker } from "@demo/atomicui/molecules";
@@ -36,7 +36,7 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 	const [routeData, setRouteData] = useState<RouteDataType | undefined>(undefined);
 	const [points, setPoints] = useState<Position[] | undefined>(undefined);
 	const [trackerPos, setTrackerPos] = useState<Position | undefined>(undefined);
-	const [isExpanded, setIsExpanded] = useState(true);
+	const [isCollapsed, setIsCollapsed] = useState(true);
 	const { isFetchingRoute } = useAwsRoute();
 	const { geofences, getGeofencesList } = useAwsGeofence();
 	const {
@@ -65,14 +65,14 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 	}, [fetchGeofencesList, setIsEditingRoute]);
 
 	useEffect(() => {
-		isDesktop && !isExpanded && setIsExpanded(true);
-	}, [isDesktop, isExpanded]);
+		isDesktop && isCollapsed && setIsCollapsed(false);
+	}, [isDesktop, isCollapsed]);
 
 	const isSimulationEnbaled = useMemo(() => isSaved && routeData, [isSaved, routeData]);
 
 	const onPlayPause = () => {
 		if (isSimulationEnbaled) {
-			!isPlaying && !isDesktop && isExpanded && setIsExpanded(false);
+			!isPlaying && !isDesktop && !isCollapsed && setIsCollapsed(true);
 			setIsPlaying(s => !s);
 		}
 	};
@@ -105,7 +105,7 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 		setPoints(undefined);
 		setTrackerPos(undefined);
 		setIsPlaying(false);
-		!isDesktop && !isExpanded && setIsExpanded(true);
+		!isDesktop && isCollapsed && setIsCollapsed(false);
 	};
 
 	const renderGeofenceMarkers = useMemo(() => {
@@ -251,15 +251,6 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 				<Flex className="tracking-card-header">
 					<TextEl fontFamily="AmazonEmber-Medium" fontSize="1.08rem" text="Tracker" />
 					<Flex gap={0} alignItems="center">
-						{!!trackerPoints?.length && (
-							<Flex
-								className="tracking-card-caret"
-								style={{ transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)" }}
-								onClick={() => setIsExpanded(!isExpanded)}
-							>
-								<IconArrow />
-							</Flex>
-						)}
 						<Flex className="tracking-card-close" onClick={onClose}>
 							<IconClose />
 						</Flex>
@@ -338,7 +329,13 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 						</Flex>
 					)}
 				</Flex>
-				{isExpanded && renderTrackerPointsList}
+				{!isCollapsed && renderTrackerPointsList}
+				{!!trackerPoints?.length && (
+					<Flex className="show-hide-details-container bottom-border-radius" onClick={() => setIsCollapsed(s => !s)}>
+						<Text className="text">{isCollapsed ? "Route details" : "Hide details"}</Text>
+						<IconArrow style={{ transform: isCollapsed ? "rotate(0deg)" : "rotate(180deg)" }} />
+					</Flex>
+				)}
 			</Card>
 			{renderGeofenceMarkers}
 			{renderGeofences}
