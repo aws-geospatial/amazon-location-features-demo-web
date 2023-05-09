@@ -45,8 +45,10 @@
 .maplibregl-ctrl button.maplibregl-ctrl-geolocate .maplibregl-ctrl-icon {
 	background-image: url("@demo/assets/icons/icon-locate-me.svg");
 
-	&:hover {
-		background-image: url("@demo/assets/icons/icon-locate-me-filled.svg");
+	@media only screen and (min-width: 1024px) {
+		&:hover {
+			background-image: url("@demo/assets/icons/icon-locate-me-filled.svg");
+		}
 	}
 }
 
@@ -72,15 +74,17 @@
 .maplibregl-ctrl button.maplibregl-ctrl-zoom-in .maplibregl-ctrl-icon {
 	background-image: url("@demo/assets/icons/icon-zoom-plus.svg");
 
-	&:hover {
-		background-image: url("@demo/assets/icons/icon-zoom-plus-filled.svg");
+	@media only screen and (min-width: 1024px) {
+		&:hover {
+			background-image: url("@demo/assets/icons/icon-zoom-plus-filled.svg");
+		}
 	}
 }
 
 .mapboxgl-ctrl button.mapboxgl-ctrl-zoom-out,
 .maplibregl-ctrl button.maplibregl-ctrl-zoom-out {
 	&:hover {
-		border-radius: 0px;
+		border-radius: 0rem 0rem 0.62rem 0.62rem;
 	}
 }
 
@@ -88,8 +92,10 @@
 .maplibregl-ctrl button.maplibregl-ctrl-zoom-out .maplibregl-ctrl-icon {
 	background-image: url("@demo/assets/icons/icon-minus.svg");
 
-	&:hover {
-		background-image: url("@demo/assets/icons/icon-minus-filled.svg");
+	@media only screen and (min-width: 1024px) {
+		&:hover {
+			background-image: url("@demo/assets/icons/icon-minus-filled.svg");
+		}
 	}
 }
 

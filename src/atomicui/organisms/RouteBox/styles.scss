@@ -124,8 +124,10 @@
 				fill: #8e8e93;
 				cursor: pointer;
 
-				&:hover {
-					fill: #008296;
+				@media only screen and (min-width: 1024px) {
+					&:hover {
+						fill: #008296;
+					}
 				}
 			}
 		}
