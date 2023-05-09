@@ -189,14 +189,17 @@ input.amplify-input.amplify-field-group__control {
 			height: 20px;
 			cursor: pointer;
 
-			:hover {
-				fill: var(--primary-color);
+			@media only screen and (min-width: 1024px) {
+				&:hover {
+					fill: var(--primary-color);
+				}
 			}
 		}
 	}
 	.inner-end-component {
 		svg {
 			fill: var(--grey-light-color);
+			outline: none;
 		}
 	}
 
@@ -204,6 +207,7 @@ input.amplify-input.amplify-field-group__control {
 		border-left: 1px solid var(--grey-color-3);
 		svg {
 			fill: var(--grey-color);
+			outline: none;
 		}
 	}
 }
