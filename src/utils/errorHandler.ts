@@ -21,7 +21,7 @@ let isStackCorrupted = false;
 
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 export const errorHandler = (error: any, message?: string) => {
-	console.error("ERROR_HANDLER", { error });
+	console.error("ERROR_HANDLER", JSON.stringify(error), message);
 	const str = localStorage.getItem(authLocalStorageKey) as string;
 	const authLocalStorageObj = JSON.parse(str);
 

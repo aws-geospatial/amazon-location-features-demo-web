@@ -55,8 +55,10 @@
 .geofence-button:hover,
 .map-styles-button:hover > svg,
 .geofence-button:hover > svg {
-	background-color: var(--ghost-white);
-	fill: var(--primary-color);
+	@media only screen and (min-width: 1024px) {
+		background-color: var(--ghost-white);
+		fill: var(--primary-color);
+	}
 }
 
 .active,
@@ -100,8 +102,10 @@
 			svg {
 				fill: var(--grey-color);
 
-				&:hover {
-					fill: var(--primary-color);
+				@media only screen and (min-width: 1024px) {
+					&:hover {
+						fill: var(--primary-color);
+					}
 				}
 			}
 		}
@@ -158,8 +162,10 @@
 		justify-content: space-between;
 		width: 100%;
 
-		&:hover {
-			background-color: rgba(0, 130, 150, 0.08);
+		@media only screen and (min-width: 1024px) {
+			&:hover {
+				background-color: rgba(0, 130, 150, 0.08);
+			}
 		}
 	}
 
