@@ -2,7 +2,7 @@
 /* SPDX-License-Identifier: MIT-0 */
 
 describe("Unauthorized users have limited permissions", () => {
-	it("shouldn;t allow unauth users to user tracker and geofence", { scrollBehavior: false }, () => {
+	it("shouldn't allow unauth users to user tracker and geofence", { scrollBehavior: false }, () => {
 		cy.visit(Cypress.env("WEB_DOMAIN"), {
 			auth: {
 				username: Cypress.env("WEB_DOMAIN_USERNAME"),

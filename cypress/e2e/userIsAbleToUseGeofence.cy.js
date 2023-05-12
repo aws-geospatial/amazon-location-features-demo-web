@@ -68,5 +68,8 @@ describe("Geofence", () => {
 		cy.wait(2000);
 		cy.get('[data-testid="icon-trash-Geofence1"]').click({ force: true });
 		cy.get('[class="geofences-list-container"]').should("not.contain", "Geofence1");
+		cy.get('[class="amplify-flex geofence-card-close"]').click();
+		cy.get('[id="Icon"]').click();
+		cy.contains("Sign out").click();
 	});
 });

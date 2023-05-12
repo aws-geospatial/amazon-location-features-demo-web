@@ -76,6 +76,9 @@ describe("Tracker", () => {
 		cy.contains("Simulate").click();
 		cy.wait(2000);
 		cy.get("div").should("contain", "Pause");
+		cy.get('[class="amplify-flex tracking-card-close"]').click();
+		cy.get('[id="Icon"]').click();
+		cy.contains("Sign out").click();
 	});
 
 	it("should allow user to add a tracker for walk", () => {
@@ -90,6 +93,9 @@ describe("Tracker", () => {
 		cy.contains("Simulate").click();
 		cy.wait(2000);
 		cy.get("div").should("contain", "Pause");
+		cy.get('[class="amplify-flex tracking-card-close"]').click();
+		cy.get('[id="Icon"]').click();
+		cy.contains("Sign out").click();
 	});
 
 	it("should allow user to add a tracker for drone", () => {
@@ -104,6 +110,8 @@ describe("Tracker", () => {
 		cy.contains("Simulate").click();
 		cy.wait(5000);
 		cy.get("div").should("contain", "Pause");
-		cy.wait(2000);
+		cy.get('[class="amplify-flex tracking-card-close"]').click();
+		cy.get('[id="Icon"]').click();
+		cy.contains("Sign out").click();
 	});
 });

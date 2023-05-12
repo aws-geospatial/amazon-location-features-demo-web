@@ -62,7 +62,7 @@ describe("Route", () => {
 		cy.get(".travel-mode").should("exist").and("have.length", 3);
 	});
 
-	it("should allow user to search for route with toll route option", () => {
+	it("should allow user to search for route with avoid toll route option", () => {
 		cy.get('[placeholder="From"]').click().type("auburn sydney");
 		cy.wait(4000);
 		cy.contains("Auburn").click();
