@@ -5,7 +5,7 @@ import { useMemo } from "react";
 
 import { useAmplifyMapService } from "@demo/services";
 import { useAmplifyMapStore } from "@demo/stores";
-import { CurrentLocationDataType, EsriMapEnum, HereMapEnum, MapProviderEnum } from "@demo/types";
+import { CurrentLocationDataType, EsriMapEnum, HereMapEnum, MapProviderEnum, MapUnitEnum } from "@demo/types";
 
 import { errorHandler } from "@demo/utils/errorHandler";
 
@@ -33,6 +33,9 @@ const useAmplifyMap = () => {
 			},
 			setCurrentLocation: (currentLocationData: CurrentLocationDataType) => {
 				setState({ currentLocationData });
+			},
+			setMapUnit: (mapUnit: MapUnitEnum) => {
+				setState({ mapUnit });
 			},
 			setMapProvider: (mapProvider: MapProviderEnum) => {
 				setState({ mapProvider });

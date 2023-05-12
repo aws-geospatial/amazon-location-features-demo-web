@@ -4,7 +4,14 @@
 import React, { useCallback, useMemo, useState } from "react";
 
 import { Button, CheckboxField, Divider, Flex, Link, Radio, Text, View } from "@aws-amplify/ui-react";
-import { IconAwsCloudFormation, IconCloud, IconMapOutlined, IconPaintroller, IconShuffle } from "@demo/assets";
+import {
+	IconAwsCloudFormation,
+	IconCloud,
+	IconMapOutlined,
+	IconPaintroller,
+	IconPeopleArrows,
+	IconShuffle
+} from "@demo/assets";
 import { TextEl } from "@demo/atomicui/atoms";
 import { InputField, Modal } from "@demo/atomicui/molecules";
 import appConfig from "@demo/core/constants/appConfig";
@@ -15,6 +22,7 @@ import {
 	EsriMapEnum,
 	HereMapEnum,
 	MapProviderEnum,
+	MapUnitEnum,
 	SettingOptionEnum,
 	SettingOptionItemType
 } from "@demo/types";
@@ -30,7 +38,7 @@ const {
 } = appConfig;
 
 const { TITLE, TITLE_DESC, HOW_TO, STEP1, STEP1_DESC, STEP2, STEP2_DESC, STEP3, STEP3_DESC, AGREE } = connectAwsAccount;
-
+const { IMPERIAL, METRIC } = MapUnitEnum;
 const { ESRI, HERE } = MapProviderEnum;
 
 interface SettingsModalProps {
@@ -40,8 +48,10 @@ interface SettingsModalProps {
 }
 
 const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppState }) => {
-	const [selectedOption, setSelectedOption] = useState<SettingOptionEnum>(SettingOptionEnum.DATA_PROVIDER);
+	const [selectedOption, setSelectedOption] = useState<SettingOptionEnum>(SettingOptionEnum.UNITS);
 	const {
+		mapUnit: currentMapUnit,
+		setMapUnit,
 		mapProvider: currentMapProvider,
 		setMapProvider,
 		mapStyle: currentMapStyle,
@@ -70,6 +80,14 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 	const { resetStore: resetAwsStore } = useAws();
 	const keyArr = Object.keys(formValues);
 	const isAuthenticated = !!credentials?.authenticated;
+
+	const onMapUnitChange = useCallback(
+		(mapUnit: MapUnitEnum) => {
+			setMapUnit(mapUnit);
+			resetAppState();
+		},
+		[setMapUnit, resetAppState]
+	);
 
 	const onMapProviderChange = useCallback(
 		(mapProvider: MapProviderEnum) => {
@@ -160,6 +178,43 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 
 	const optionItems: Array<SettingOptionItemType> = useMemo(
 		() => [
+			{
+				id: SettingOptionEnum.UNITS,
+				title: SettingOptionEnum.UNITS,
+				defaultValue: currentMapUnit,
+				icon: <IconPeopleArrows />,
+				detailsComponent: (
+					<Flex
+						data-testid={`${SettingOptionEnum.UNITS}-details-component`}
+						gap={0}
+						direction="column"
+						padding="0rem 1.15rem"
+					>
+						<Flex gap={0} padding="1.08rem 0rem">
+							<Radio
+								data-testid="unit-imperial-radio"
+								value={IMPERIAL}
+								checked={currentMapUnit === IMPERIAL}
+								onChange={() => onMapUnitChange(IMPERIAL)}
+							>
+								<TextEl marginLeft="1.23rem" text={IMPERIAL} />
+								<TextEl variation="tertiary" marginLeft="1.23rem" text={"Miles, pounds"} />
+							</Radio>
+						</Flex>
+						<Flex gap={0} padding="1.08rem 0rem">
+							<Radio
+								data-testid="unit-metric-radio"
+								value={METRIC}
+								checked={currentMapUnit === METRIC}
+								onChange={() => onMapUnitChange(METRIC)}
+							>
+								<TextEl marginLeft="1.23rem" text={METRIC} />
+								<TextEl variation="tertiary" marginLeft="1.23rem" text={"Kilometers, kilograms"} />
+							</Radio>
+						</Flex>
+					</Flex>
+				)
+			},
 			{
 				id: SettingOptionEnum.DATA_PROVIDER,
 				title: SettingOptionEnum.DATA_PROVIDER,
@@ -400,6 +455,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 			}
 		],
 		[
+			currentMapUnit,
+			onMapUnitChange,
 			currentMapProvider,
 			onMapProviderChange,
 			selectedMapStyle,

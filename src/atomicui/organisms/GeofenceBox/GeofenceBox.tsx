@@ -8,8 +8,8 @@ import { IconBackArrow, IconClose, IconGeofenceMarker, IconPin, IconPlus, IconSe
 import { TextEl } from "@demo/atomicui/atoms";
 import { GeofenceMarker, InputField, NotFoundCard } from "@demo/atomicui/molecules";
 import { showToast } from "@demo/core";
-import { useAwsGeofence, useAwsPlace } from "@demo/hooks";
-import { CircleDrawEventType, RadiusInM, SuggestionType, ToastType } from "@demo/types";
+import { useAmplifyMap, useAwsGeofence, useAwsPlace } from "@demo/hooks";
+import { CircleDrawEventType, DistanceUnitEnum, MapUnitEnum, RadiusInM, SuggestionType, ToastType } from "@demo/types";
 import { Place, Position } from "aws-sdk/clients/location";
 import { LngLat, MapRef } from "react-map-gl";
 
@@ -26,7 +26,6 @@ const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox })
 	const [isEditing, setIsEditing] = useState(false);
 	const [value, setValue] = useState("");
 	const [name, setName] = useState("");
-	const [unit, setUnit] = useState("m");
 	/* Radius must be greater than 0 and not greater than 100,000 m (API requirement) */
 	const [radiusInM, setRadiusInM] = useState(RadiusInM.DEFAULT);
 	const [suggestions, setSuggestions] = useState<SuggestionType[] | undefined>(undefined);
@@ -36,6 +35,10 @@ const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox })
 		value: undefined,
 		radiusInM: undefined
 	});
+	const { mapUnit: currentMapUnit } = useAmplifyMap();
+	const [unit, setUnit] = useState(
+		currentMapUnit === MapUnitEnum.METRIC ? DistanceUnitEnum.METERS_SHORT : DistanceUnitEnum.MILES_SHORT
+	);
 	const { search, getPlaceData } = useAwsPlace();
 	const {
 		getGeofencesList,
@@ -169,14 +172,24 @@ const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox })
 	const onChangeRadius = useCallback(
 		(e: React.ChangeEvent<HTMLInputElement>) => {
 			const radius = Number(e.target.value);
-			const lowerLimit = unit === "km" ? RadiusInM.MIN / 1000 : RadiusInM.MIN;
-			const upperLimit = unit === "km" ? RadiusInM.MAX / 1000 : RadiusInM.MAX;
+			const lowerLimit =
+				currentMapUnit === MapUnitEnum.IMPERIAL
+					? RadiusInM.MIN / 1609
+					: unit === DistanceUnitEnum.KILOMETERS_SHORT
+					? RadiusInM.MIN / 1000
+					: RadiusInM.MIN;
+			const upperLimit =
+				currentMapUnit === MapUnitEnum.IMPERIAL
+					? RadiusInM.MAX / 1609
+					: unit === DistanceUnitEnum.KILOMETERS_SHORT
+					? RadiusInM.MAX / 1000
+					: RadiusInM.MAX;
 
 			if (!isNaN(radius) && radius >= lowerLimit && radius <= upperLimit) {
 				setRadiusInM(unit === "km" ? parseFloat((radius * 1000).toFixed(2)) : parseInt(radius.toString()));
 			}
 		},
-		[unit]
+		[currentMapUnit, unit]
 	);
 
 	const renderAddGeofence = useMemo(() => {
@@ -259,7 +272,13 @@ const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox })
 									<InputField
 										label=""
 										type="number"
-										value={unit === "km" ? (radiusInM / 1000).toFixed(2) : parseInt(radiusInM.toString()).toString()}
+										value={
+											currentMapUnit === MapUnitEnum.IMPERIAL
+												? (radiusInM / 1609).toFixed(2)
+												: unit === DistanceUnitEnum.KILOMETERS_SHORT
+												? (radiusInM / 1000).toFixed(2)
+												: parseInt(radiusInM.toString()).toString()
+										}
 										onChange={e => onChangeRadius(e)}
 									/>
 								</View>
@@ -271,11 +290,30 @@ const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox })
 									lineHeight="1.38rem"
 									label=""
 									labelHidden
-									value={unit === "km" ? "kilometers" : "meters"}
-									onChange={e => setUnit(e.target.value === "kilometers" ? "km" : "m")}
+									value={
+										currentMapUnit === MapUnitEnum.IMPERIAL
+											? DistanceUnitEnum.MILES_SHORT
+											: unit === DistanceUnitEnum.KILOMETERS_SHORT
+											? DistanceUnitEnum.KILOMETERS
+											: DistanceUnitEnum.METERS
+									}
+									onChange={e =>
+										setUnit(
+											e.target.value === DistanceUnitEnum.KILOMETERS
+												? DistanceUnitEnum.KILOMETERS_SHORT
+												: DistanceUnitEnum.METERS_SHORT
+										)
+									}
+									disabled={currentMapUnit === MapUnitEnum.IMPERIAL}
 								>
-									<option value="meters">Meters</option>
-									<option value="kilometers">Kilometers</option>
+									{currentMapUnit === MapUnitEnum.IMPERIAL ? (
+										<option value={DistanceUnitEnum.MILES}>{DistanceUnitEnum.MILES}</option>
+									) : (
+										<>
+											<option value={DistanceUnitEnum.METERS}>{DistanceUnitEnum.METERS}</option>
+											<option value={DistanceUnitEnum.KILOMETERS}>{DistanceUnitEnum.KILOMETERS}</option>
+										</>
+									)}
 								</SelectField>
 							</Flex>
 						</Flex>
@@ -321,7 +359,8 @@ const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox })
 		isEditing,
 		unit,
 		onChangeRadius,
-		current
+		current,
+		currentMapUnit
 	]);
 
 	const onDelete = useCallback(
