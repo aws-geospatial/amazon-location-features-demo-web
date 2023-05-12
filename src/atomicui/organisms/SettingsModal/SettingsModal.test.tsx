@@ -31,14 +31,15 @@ describe("<SettingsModal />", () => {
 		expect(settingsModal).toBeInTheDocument();
 	});
 
-	it("should should render the detail component according to the clicked/selected option item", async () => {
+	it("should render the detail component according to the clicked/selected option item", async () => {
 		await renderComponent();
 
 		for (const optionId of [
+			SettingOptionEnum.UNITS,
 			SettingOptionEnum.DATA_PROVIDER,
-			SettingOptionEnum.AWS_CLOUD_FORMATION,
 			SettingOptionEnum.MAP_STYLE,
-			SettingOptionEnum.ROUTE_OPTIONS
+			SettingOptionEnum.ROUTE_OPTIONS,
+			SettingOptionEnum.AWS_CLOUD_FORMATION
 		]) {
 			const optionItem = screen.getByTestId(`option-item-${optionId}`);
 			act(() => optionItem.click());
@@ -47,11 +48,21 @@ describe("<SettingsModal />", () => {
 		}
 	});
 
-	it("should change map provider successfully and call resetAppState", async () => {
+	it("should change map unit successfully", async () => {
+		await renderComponent();
+
+		const optionItem = screen.getByTestId(`option-item-${SettingOptionEnum.UNITS}`);
+		act(() => optionItem.click());
+
+		const unitImperialRadio = screen.getByTestId("unit-imperial-radio");
+		fireEvent.click(unitImperialRadio);
+		expect(resetAppState).toBeCalledTimes(1);
+	});
+
+	it("should change map data provider successfully", async () => {
 		await renderComponent();
 
 		const optionItem = screen.getByTestId(`option-item-${SettingOptionEnum.DATA_PROVIDER}`);
-		//  to show DATA_PROVIDER details component
 		act(() => optionItem.click());
 
 		const dataProviderHereRadio = screen.getByTestId("data-provider-here-radio");
@@ -63,27 +74,23 @@ describe("<SettingsModal />", () => {
 		await renderComponent();
 
 		const optionItem = screen.getByTestId(`option-item-${SettingOptionEnum.MAP_STYLE}`);
-		//  to show MAP_STYLE details component
 		act(() => optionItem.click());
 
-		// select esri map style
 		const dataProviderEsriRadio = screen.getAllByTestId("esri-map-style");
 		const randomNumber1 = faker.datatype.number({ min: 0, max: dataProviderEsriRadio.length - 1 });
 		await act(async () => dataProviderEsriRadio[randomNumber1].click());
 		expect(dataProviderEsriRadio[randomNumber1]).toHaveClass("selected");
 
-		// select here map style
 		const dataProviderHereRadio = screen.getAllByTestId("here-map-style");
 		const randomNumber2 = faker.datatype.number({ min: 0, max: dataProviderHereRadio.length - 1 });
 		await act(async () => dataProviderHereRadio[randomNumber2].click());
 		expect(dataProviderHereRadio[randomNumber2]).toHaveClass("selected");
 	});
 
-	it("should be able to select/unselect avoid-tolls and avoid-ferries", async () => {
+	it("should select/unselect avoid-tolls and avoid-ferries", async () => {
 		await renderComponent();
 
 		const optionItem = screen.getByTestId(`option-item-${SettingOptionEnum.ROUTE_OPTIONS}`);
-		//  to show ROUTE_OPTIONS details component
 		act(() => optionItem.click());
 
 		const avoidTolls = screen.getByTestId("avoid-tolls");
