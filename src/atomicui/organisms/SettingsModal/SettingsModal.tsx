@@ -16,7 +16,7 @@ import { TextEl } from "@demo/atomicui/atoms";
 import { InputField, Modal } from "@demo/atomicui/molecules";
 import appConfig from "@demo/core/constants/appConfig";
 import connectAwsAccount from "@demo/core/constants/connectAwsAccount";
-import { useAmplifyAuth, useAmplifyMap, useAws, usePersistedData } from "@demo/hooks";
+import { useAmplifyAuth, useAmplifyMap, useAws, useAwsIot, usePersistedData } from "@demo/hooks";
 import {
 	ConnectFormValuesType,
 	EsriMapEnum,
@@ -75,9 +75,11 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 		setConnectFormValues,
 		credentials,
 		onLogin,
-		onDetachPolicyAndLogout
+		setAuthTokens,
+		onLogout
 	} = useAmplifyAuth();
 	const { resetStore: resetAwsStore } = useAws();
+	const { detachPolicy } = useAwsIot();
 	const keyArr = Object.keys(formValues);
 	const isAuthenticated = !!credentials?.authenticated;
 
@@ -123,6 +125,12 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 		() => onDisconnectAwsAccount(resetAwsStore),
 		[onDisconnectAwsAccount, resetAwsStore]
 	);
+
+	const _onLogout = useCallback(async () => {
+		setAuthTokens(undefined);
+		await detachPolicy(credentials!.identityId);
+		await onLogout();
+	}, [setAuthTokens, detachPolicy, credentials, onLogout]);
 
 	const isBtnEnabled = useMemo(
 		() => keyArr.filter(key => !!formValues[key as keyof typeof formValues]).length === keyArr.length,
@@ -417,12 +425,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 										</Button>
 									</>
 								) : (
-									<Button
-										variation="primary"
-										fontFamily="AmazonEmber-Bold"
-										width="100%"
-										onClick={async () => await onDetachPolicyAndLogout()}
-									>
+									<Button variation="primary" fontFamily="AmazonEmber-Bold" width="100%" onClick={_onLogout}>
 										Sign out
 									</Button>
 								)
@@ -473,7 +476,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 			onChangeFormValues,
 			isAuthenticated,
 			_onLogin,
-			onDetachPolicyAndLogout
+			_onLogout
 		]
 	);
 
