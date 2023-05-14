@@ -32,7 +32,8 @@ const appConfig = {
 		AMPLIFY_AUTH_DATA: "AmplifyAuthData",
 		AMPLIFY_MAP_DATA: "AmplifyMapData",
 		PERSISTED_DATA: "PersistedData",
-		GEO_LOCATION_ALLOWED: "GeoLocationAllowed"
+		GEO_LOCATION_ALLOWED: "GeoLocationAllowed",
+		SHOULD_CLEAR_CREDENTIALS: "ShouldClearCredentials"
 	},
 	ROUTES: {
 		DEFAULT: "/",

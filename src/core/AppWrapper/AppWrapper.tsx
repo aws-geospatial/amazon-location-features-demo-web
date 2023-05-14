@@ -41,7 +41,7 @@ const AppWrapper: React.FC<AppWrapperProps> = ({ children }) => {
 								scope: ["email", "openid", "profile"],
 								redirectSignIn: `${window.location.origin}${DEMO}`,
 								redirectSignOut: `${window.location.origin}${DEMO}?sign_out=true`,
-								responseType: "token"
+								responseType: "code"
 							}
 					  }
 					: {
