@@ -64,9 +64,16 @@ interface CircleDrawControlProps {
 	radiusInM: number;
 	onCreate: (e: CircleDrawEventType) => void;
 	onUpdate: (e: CircleDrawEventType) => void;
+	isDesktop: boolean;
 }
 
-const CircleDrawControl: React.FC<CircleDrawControlProps> = ({ geofenceCenter, radiusInM, onCreate, onUpdate }) => {
+const CircleDrawControl: React.FC<CircleDrawControlProps> = ({
+	geofenceCenter,
+	radiusInM,
+	onCreate,
+	onUpdate,
+	isDesktop
+}) => {
 	const { current: mapRef } = useMap();
 
 	useEffect(() => {
@@ -94,7 +101,9 @@ const CircleDrawControl: React.FC<CircleDrawControlProps> = ({ geofenceCenter, r
 				draw.set(featureCollection);
 				const line = turf.lineString(circle.geometry.coordinates[0]);
 				const bbox = turf.bbox(line);
-				mapRef?.fitBounds(bbox as LngLatBoundsLike, { padding: 100 });
+				isDesktop
+					? mapRef?.fitBounds(bbox as LngLatBoundsLike, { padding: 100 })
+					: mapRef?.fitBounds(bbox as LngLatBoundsLike, { padding: { top: 280, right: 25, bottom: 25, left: 25 } });
 			} else {
 				const all = draw.getAll() as unknown as CircleDrawEventType;
 				all?.features[0]?.geometry?.coordinates[0]?.length > 2 && draw.deleteAll();
@@ -104,7 +113,7 @@ const CircleDrawControl: React.FC<CircleDrawControlProps> = ({ geofenceCenter, r
 		return () => {
 			clearTimeout(timeout);
 		};
-	}, [geofenceCenter, radiusInM, mapRef]);
+	}, [geofenceCenter, radiusInM, isDesktop, mapRef]);
 
 	const drawCreate = useCallback((e: CircleDrawEventType) => onCreate(e), [onCreate]);
 

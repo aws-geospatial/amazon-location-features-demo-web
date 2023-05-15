@@ -3,14 +3,23 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
-import { Button, Card, Flex, Loader, SelectField, SliderField, View } from "@aws-amplify/ui-react";
-import { IconBackArrow, IconClose, IconGeofenceMarker, IconPin, IconPlus, IconSearch, IconTrash } from "@demo/assets";
+import { Button, Card, Flex, Loader, SelectField, SliderField, Text, View } from "@aws-amplify/ui-react";
+import {
+	IconArrow,
+	IconBackArrow,
+	IconClose,
+	IconGeofenceMarker,
+	IconPin,
+	IconPlus,
+	IconSearch,
+	IconTrash
+} from "@demo/assets";
 import { TextEl } from "@demo/atomicui/atoms";
 import { GeofenceMarker, InputField, NotFoundCard } from "@demo/atomicui/molecules";
 import { showToast } from "@demo/core";
-import { useAmplifyMap, useAwsGeofence, useAwsPlace } from "@demo/hooks";
+import { useAmplifyMap, useAwsGeofence, useAwsPlace, useMediaQuery } from "@demo/hooks";
 import { CircleDrawEventType, DistanceUnitEnum, MapUnitEnum, RadiusInM, SuggestionType, ToastType } from "@demo/types";
-import { Place, Position } from "aws-sdk/clients/location";
+import { ListGeofenceResponseEntry, Place, Position } from "aws-sdk/clients/location";
 import { LngLat, MapRef } from "react-map-gl";
 
 import CircleDrawControl from "./CircleDrawControl";
@@ -26,6 +35,10 @@ const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox })
 	const [isEditing, setIsEditing] = useState(false);
 	const [value, setValue] = useState("");
 	const [name, setName] = useState("");
+	const { mapUnit: currentMapUnit } = useAmplifyMap();
+	const [unit, setUnit] = useState(
+		currentMapUnit === MapUnitEnum.METRIC ? DistanceUnitEnum.METERS_SHORT : DistanceUnitEnum.MILES_SHORT
+	);
 	/* Radius must be greater than 0 and not greater than 100,000 m (API requirement) */
 	const [radiusInM, setRadiusInM] = useState(RadiusInM.DEFAULT);
 	const [suggestions, setSuggestions] = useState<SuggestionType[] | undefined>(undefined);
@@ -35,10 +48,8 @@ const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox })
 		value: undefined,
 		radiusInM: undefined
 	});
-	const { mapUnit: currentMapUnit } = useAmplifyMap();
-	const [unit, setUnit] = useState(
-		currentMapUnit === MapUnitEnum.METRIC ? DistanceUnitEnum.METERS_SHORT : DistanceUnitEnum.MILES_SHORT
-	);
+	const [isCollapsed, setIsCollapsed] = useState(true);
+	const isDesktop = useMediaQuery("(min-width: 1024px)");
 	const { search, getPlaceData } = useAwsPlace();
 	const {
 		getGeofencesList,
@@ -49,6 +60,10 @@ const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox })
 		isAddingGeofence,
 		setIsAddingGeofence
 	} = useAwsGeofence();
+
+	useEffect(() => {
+		isDesktop && isCollapsed && setIsCollapsed(false);
+	}, [isDesktop, isCollapsed]);
 
 	const fetchGeofencesList = useCallback(async () => getGeofencesList(), [getGeofencesList]);
 
@@ -169,6 +184,7 @@ const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox })
 		}
 	};
 
+	// TODO: FIX THIS
 	const onChangeRadius = useCallback(
 		(e: React.ChangeEvent<HTMLInputElement>) => {
 			const radius = Number(e.target.value);
@@ -252,81 +268,85 @@ const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox })
 								text={errorMsg}
 							/>
 						)}
-						<Flex gap={0} direction="column" marginBottom="1.85rem">
-							<SliderField
-								className="geofence-radius-slider"
-								width="100%"
-								margin="0rem 1.23rem 0.62rem 0rem"
-								label="Radius"
-								fontFamily="AmazonEmber-Bold"
-								fontSize="1rem"
-								lineHeight="1.38rem"
-								isValueHidden
-								min={RadiusInM.MIN}
-								max={RadiusInM.MAX}
-								value={radiusInM}
-								onChange={radiusInM => setRadiusInM(radiusInM)}
-							/>
-							<Flex gap={0}>
-								<View className="radius-input-container">
-									<InputField
-										label=""
-										type="number"
-										value={
-											currentMapUnit === MapUnitEnum.IMPERIAL
-												? (radiusInM / 1609).toFixed(2)
-												: unit === DistanceUnitEnum.KILOMETERS_SHORT
-												? (radiusInM / 1000).toFixed(2)
-												: parseInt(radiusInM.toString()).toString()
-										}
-										onChange={e => onChangeRadius(e)}
+						{!isCollapsed && (
+							<>
+								<Flex gap={0} direction="column" marginBottom="1.85rem">
+									<SliderField
+										className="geofence-radius-slider"
+										width="100%"
+										margin="0rem 1.23rem 0.62rem 0rem"
+										label="Radius"
+										fontFamily="AmazonEmber-Bold"
+										fontSize="1rem"
+										lineHeight="1.38rem"
+										isValueHidden
+										min={RadiusInM.MIN}
+										max={RadiusInM.MAX}
+										value={radiusInM}
+										onChange={radiusInM => setRadiusInM(radiusInM)}
 									/>
-								</View>
-								<SelectField
-									className="unit-select-field"
-									flex={1}
-									fontFamily="AmazonEmber-Regular"
-									fontSize="1rem"
-									lineHeight="1.38rem"
-									label=""
-									labelHidden
-									value={
-										currentMapUnit === MapUnitEnum.IMPERIAL
-											? DistanceUnitEnum.MILES_SHORT
-											: unit === DistanceUnitEnum.KILOMETERS_SHORT
-											? DistanceUnitEnum.KILOMETERS
-											: DistanceUnitEnum.METERS
-									}
-									onChange={e =>
-										setUnit(
-											e.target.value === DistanceUnitEnum.KILOMETERS
-												? DistanceUnitEnum.KILOMETERS_SHORT
-												: DistanceUnitEnum.METERS_SHORT
-										)
-									}
-									disabled={currentMapUnit === MapUnitEnum.IMPERIAL}
+									<Flex gap={0}>
+										<View className="radius-input-container">
+											<InputField
+												label=""
+												type="number"
+												value={
+													currentMapUnit === MapUnitEnum.IMPERIAL
+														? (radiusInM / 1609).toFixed(2)
+														: unit === DistanceUnitEnum.KILOMETERS_SHORT
+														? (radiusInM / 1000).toFixed(2)
+														: parseInt(radiusInM.toString()).toString()
+												}
+												onChange={e => onChangeRadius(e)}
+											/>
+										</View>
+										<SelectField
+											className="unit-select-field"
+											flex={1}
+											fontFamily="AmazonEmber-Regular"
+											fontSize="1rem"
+											lineHeight="1.38rem"
+											label=""
+											labelHidden
+											value={
+												currentMapUnit === MapUnitEnum.IMPERIAL
+													? DistanceUnitEnum.MILES_SHORT
+													: unit === DistanceUnitEnum.KILOMETERS_SHORT
+													? DistanceUnitEnum.KILOMETERS
+													: DistanceUnitEnum.METERS
+											}
+											onChange={e =>
+												setUnit(
+													e.target.value === DistanceUnitEnum.KILOMETERS
+														? DistanceUnitEnum.KILOMETERS_SHORT
+														: DistanceUnitEnum.METERS_SHORT
+												)
+											}
+											disabled={currentMapUnit === MapUnitEnum.IMPERIAL}
+										>
+											{currentMapUnit === MapUnitEnum.IMPERIAL ? (
+												<option value={DistanceUnitEnum.MILES}>{DistanceUnitEnum.MILES}</option>
+											) : (
+												<>
+													<option value={DistanceUnitEnum.METERS}>{DistanceUnitEnum.METERS}</option>
+													<option value={DistanceUnitEnum.KILOMETERS}>{DistanceUnitEnum.KILOMETERS}</option>
+												</>
+											)}
+										</SelectField>
+									</Flex>
+								</Flex>
+								<Button
+									variation="primary"
+									fontFamily="AmazonEmber-Bold"
+									fontSize="13px"
+									lineHeight="18px"
+									disabled={isSaveDisabled}
+									onClick={onSave}
 								>
-									{currentMapUnit === MapUnitEnum.IMPERIAL ? (
-										<option value={DistanceUnitEnum.MILES}>{DistanceUnitEnum.MILES}</option>
-									) : (
-										<>
-											<option value={DistanceUnitEnum.METERS}>{DistanceUnitEnum.METERS}</option>
-											<option value={DistanceUnitEnum.KILOMETERS}>{DistanceUnitEnum.KILOMETERS}</option>
-										</>
-									)}
-								</SelectField>
-							</Flex>
-						</Flex>
-						<Button
-							variation="primary"
-							fontFamily="AmazonEmber-Bold"
-							fontSize="13px"
-							lineHeight="18px"
-							disabled={isSaveDisabled}
-							onClick={onSave}
-						>
-							Save
-						</Button>
+									Save
+								</Button>
+							</>
+						)}
 					</>
 				)}
 				{isAddingGeofence && (
@@ -360,7 +380,8 @@ const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox })
 		unit,
 		onChangeRadius,
 		current,
-		currentMapUnit
+		currentMapUnit,
+		isCollapsed
 	]);
 
 	const onDelete = useCallback(
@@ -384,6 +405,38 @@ const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox })
 		[setIsAddingGeofence]
 	);
 
+	const renderGeofenceListItem = useCallback(
+		({ GeofenceId, Geometry: { Circle } }: ListGeofenceResponseEntry, idx: number) => {
+			if (Circle) {
+				const { Center, Radius } = Circle;
+
+				return (
+					<Flex
+						key={idx}
+						className={idx !== geofences!.length - 1 ? "geofence-item border-bottom" : "geofence-item"}
+						gap={0}
+						padding="10px 0px 10px 10px"
+						alignItems="center"
+						onClick={() => onClickGeofenceItem(GeofenceId, Center, Radius)}
+					>
+						<IconGeofenceMarker />
+						<Flex gap={0} direction="column">
+							<TextEl text={GeofenceId} />
+						</Flex>
+						<div
+							data-testid={`icon-trash-${GeofenceId}`}
+							className="icon-trash-container"
+							onClick={e => onDelete(e, GeofenceId)}
+						>
+							<IconTrash />
+						</div>
+					</Flex>
+				);
+			}
+		},
+		[geofences, onClickGeofenceItem, onDelete]
+	);
+
 	const renderGeofencesList = useMemo(() => {
 		if (isFetchingGeofences) {
 			return (
@@ -393,61 +446,42 @@ const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox })
 				</Flex>
 			);
 		} else {
-			return geofences?.length ? (
-				geofences.map(({ GeofenceId, Geometry: { Circle } }, idx) => {
-					if (Circle) {
-						const { Center, Radius } = Circle;
+			if (geofences?.length) {
+				return isCollapsed
+					? geofences.slice(0, 3).map((geofence, idx) => renderGeofenceListItem(geofence, idx))
+					: geofences.map((geofence, idx) => renderGeofenceListItem(geofence, idx));
+			} else {
+				return (
+					<Flex gap={0} direction="column" justifyContent="center" alignItems="center" padding="24px 24px">
+						<TextEl text="You haven't created any geofences" />
+						<TextEl variation="tertiary" text="Add a geofence to view it here!" />
+					</Flex>
+				);
+			}
+		}
+	}, [isFetchingGeofences, geofences, renderGeofenceListItem, isCollapsed]);
 
-						return (
-							<Flex
-								key={idx}
-								className={idx !== geofences.length - 1 ? "geofence-item border-bottom" : "geofence-item"}
-								gap={0}
-								padding="10px 0px 10px 10px"
-								alignItems="center"
-								onClick={() => onClickGeofenceItem(GeofenceId, Center, Radius)}
-							>
-								<IconGeofenceMarker />
-								<Flex gap={0} direction="column">
-									<TextEl text={GeofenceId} />
-								</Flex>
-								<div
-									data-testid={`icon-trash-${GeofenceId}`}
-									className="icon-trash-container"
-									onClick={e => onDelete(e, GeofenceId)}
-								>
-									<IconTrash />
-								</div>
-							</Flex>
-						);
-					}
-				})
-			) : (
-				<Flex gap={0} direction="column" justifyContent="center" alignItems="center" padding="24px 24px">
-					<TextEl text="You haven't created any geofences" />
-					<TextEl variation="tertiary" text="Add a geofence to view it here!" />
+	const isAddingOrEditing = useMemo(() => isAddingGeofence || isEditing, [isAddingGeofence, isEditing]);
+
+	const renderShowHideContainer = useMemo(() => {
+		if (!isAddingOrEditing && geofences && geofences.length > 3) {
+			return (
+				<Flex className="show-hide-details-container" onClick={() => setIsCollapsed(s => !s)}>
+					<Text className="text">{isCollapsed ? "Geofence details" : "Hide details"}</Text>
+					<IconArrow style={{ transform: isCollapsed ? "rotate(0deg)" : "rotate(180deg)" }} />
 				</Flex>
 			);
 		}
-	}, [isFetchingGeofences, geofences, onClickGeofenceItem, onDelete]);
 
-	const setCirclePropertiesFromDrawControl = (e: CircleDrawEventType) => {
-		const { features } = e;
-		const {
-			properties: { center, radiusInKm }
-		} = features[0];
-		setValue(`${center[1]}, ${center[0]}`);
-		setGeofenceCenter(center);
-		setRadiusInM(
-			radiusInKm === 2
-				? parseInt(radiusInM.toString())
-				: radiusInKm > RadiusInM.MAX / 1000
-				? RadiusInM.MAX
-				: parseInt((radiusInKm * 1000).toString())
-		);
-		radiusInKm > RadiusInM.MAX / 1000 &&
-			showToast({ content: "Radius can't be greater than 10 KM", type: ToastType.INFO });
-	};
+		if ((isAddingGeofence && !!geofenceCenter) || isEditing) {
+			return (
+				<Flex className="show-hide-details-container" onClick={() => setIsCollapsed(s => !s)}>
+					<Text className="text">{isCollapsed ? "Geofence details" : "Hide details"}</Text>
+					<IconArrow style={{ transform: isCollapsed ? "rotate(0deg)" : "rotate(180deg)" }} />
+				</Flex>
+			);
+		}
+	}, [isAddingOrEditing, geofences, isAddingGeofence, geofenceCenter, isEditing, isCollapsed]);
 
 	const renderGeofenceMarkers = useMemo(() => {
 		if (geofences?.length) {
@@ -478,7 +512,23 @@ const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox })
 		}
 	}, [isAddingGeofence, geofenceCenter, name]);
 
-	const isAddingOrEditing = isAddingGeofence || isEditing;
+	const setCirclePropertiesFromDrawControl = (e: CircleDrawEventType) => {
+		const { features } = e;
+		const {
+			properties: { center, radiusInKm }
+		} = features[0];
+		setValue(`${center[1]}, ${center[0]}`);
+		setGeofenceCenter(center);
+		setRadiusInM(
+			radiusInKm === 2
+				? parseInt(radiusInM.toString())
+				: radiusInKm > RadiusInM.MAX / 1000
+				? RadiusInM.MAX
+				: parseInt((radiusInKm * 1000).toString())
+		);
+		radiusInKm > RadiusInM.MAX / 1000 &&
+			showToast({ content: "Radius can't be greater than 10 KM", type: ToastType.INFO });
+	};
 
 	return (
 		<>
@@ -508,6 +558,7 @@ const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox })
 					</Flex>
 				</Flex>
 				{isAddingGeofence ? renderAddGeofence : <View className="geofences-list-container">{renderGeofencesList}</View>}
+				{renderShowHideContainer}
 			</Card>
 			{renderGeofenceMarkers}
 			{renderCircleGeofenceMarker}
@@ -517,6 +568,7 @@ const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox })
 					radiusInM={radiusInM}
 					onCreate={e => setCirclePropertiesFromDrawControl(e)}
 					onUpdate={e => setCirclePropertiesFromDrawControl(e)}
+					isDesktop={isDesktop}
 				/>
 			)}
 		</>
