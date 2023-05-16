@@ -26,6 +26,9 @@ import CircleDrawControl from "./CircleDrawControl";
 
 import "./styles.scss";
 
+const { IMPERIAL, METRIC } = MapUnitEnum;
+const { MILES, MILES_SHORT, FEET, FEET_SHORT, KILOMETERS, KILOMETERS_SHORT, METERS, METERS_SHORT } = DistanceUnitEnum;
+
 interface GeofenceBoxProps {
 	mapRef: MapRef | null;
 	setShowGeofenceBox: (b: boolean) => void;
@@ -36,9 +39,7 @@ const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox })
 	const [value, setValue] = useState("");
 	const [name, setName] = useState("");
 	const { mapUnit: currentMapUnit } = useAmplifyMap();
-	const [unit, setUnit] = useState(
-		currentMapUnit === MapUnitEnum.METRIC ? DistanceUnitEnum.METERS_SHORT : DistanceUnitEnum.MILES_SHORT
-	);
+	const [unit, setUnit] = useState(currentMapUnit === METRIC ? METERS_SHORT : FEET_SHORT);
 	/* Radius must be greater than 0 and not greater than 100,000 m (API requirement) */
 	const [radiusInM, setRadiusInM] = useState(RadiusInM.DEFAULT);
 	const [suggestions, setSuggestions] = useState<SuggestionType[] | undefined>(undefined);
@@ -189,20 +190,32 @@ const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox })
 		(e: React.ChangeEvent<HTMLInputElement>) => {
 			const radius = Number(e.target.value);
 			const lowerLimit =
-				currentMapUnit === MapUnitEnum.IMPERIAL
-					? RadiusInM.MIN / 1609
-					: unit === DistanceUnitEnum.KILOMETERS_SHORT
+				currentMapUnit === IMPERIAL
+					? unit === MILES_SHORT
+						? RadiusInM.MIN / 1609
+						: RadiusInM.MIN / 3.281
+					: unit === KILOMETERS_SHORT
 					? RadiusInM.MIN / 1000
 					: RadiusInM.MIN;
 			const upperLimit =
-				currentMapUnit === MapUnitEnum.IMPERIAL
-					? RadiusInM.MAX / 1609
-					: unit === DistanceUnitEnum.KILOMETERS_SHORT
+				currentMapUnit === IMPERIAL
+					? unit === MILES_SHORT
+						? RadiusInM.MAX / 1609
+						: RadiusInM.MAX / 3.281
+					: unit === KILOMETERS_SHORT
 					? RadiusInM.MAX / 1000
 					: RadiusInM.MAX;
 
 			if (!isNaN(radius) && radius >= lowerLimit && radius <= upperLimit) {
-				setRadiusInM(unit === "km" ? parseFloat((radius * 1000).toFixed(2)) : parseInt(radius.toString()));
+				setRadiusInM(
+					currentMapUnit === IMPERIAL
+						? unit === MILES_SHORT
+							? parseFloat((radius * 1609).toFixed(2))
+							: parseFloat((radius / 3.281).toFixed(2))
+						: unit === KILOMETERS_SHORT
+						? parseFloat((radius * 1000).toFixed(2))
+						: parseInt(radius.toString())
+				);
 			}
 		},
 		[currentMapUnit, unit]
@@ -291,9 +304,11 @@ const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox })
 												label=""
 												type="number"
 												value={
-													currentMapUnit === MapUnitEnum.IMPERIAL
-														? (radiusInM / 1609).toFixed(2)
-														: unit === DistanceUnitEnum.KILOMETERS_SHORT
+													currentMapUnit === IMPERIAL
+														? unit === MILES_SHORT
+															? (radiusInM / 1609).toFixed(2)
+															: (radiusInM * 3.281).toFixed(2)
+														: unit === KILOMETERS_SHORT
 														? (radiusInM / 1000).toFixed(2)
 														: parseInt(radiusInM.toString()).toString()
 												}
@@ -309,27 +324,29 @@ const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox })
 											label=""
 											labelHidden
 											value={
-												currentMapUnit === MapUnitEnum.IMPERIAL
-													? DistanceUnitEnum.MILES_SHORT
-													: unit === DistanceUnitEnum.KILOMETERS_SHORT
-													? DistanceUnitEnum.KILOMETERS
-													: DistanceUnitEnum.METERS
+												currentMapUnit === IMPERIAL
+													? unit === MILES_SHORT
+														? MILES
+														: FEET
+													: unit === KILOMETERS_SHORT
+													? KILOMETERS
+													: METERS
 											}
-											onChange={e =>
-												setUnit(
-													e.target.value === DistanceUnitEnum.KILOMETERS
-														? DistanceUnitEnum.KILOMETERS_SHORT
-														: DistanceUnitEnum.METERS_SHORT
-												)
-											}
-											disabled={currentMapUnit === MapUnitEnum.IMPERIAL}
+											onChange={e => {
+												currentMapUnit === IMPERIAL
+													? setUnit(e.target.value === MILES ? MILES_SHORT : FEET_SHORT)
+													: setUnit(e.target.value === KILOMETERS ? KILOMETERS_SHORT : METERS_SHORT);
+											}}
 										>
-											{currentMapUnit === MapUnitEnum.IMPERIAL ? (
-												<option value={DistanceUnitEnum.MILES}>{DistanceUnitEnum.MILES}</option>
+											{currentMapUnit === IMPERIAL ? (
+												<>
+													<option value={MILES}>{MILES}</option>
+													<option value={FEET}>{FEET}</option>
+												</>
 											) : (
 												<>
-													<option value={DistanceUnitEnum.METERS}>{DistanceUnitEnum.METERS}</option>
-													<option value={DistanceUnitEnum.KILOMETERS}>{DistanceUnitEnum.KILOMETERS}</option>
+													<option value={KILOMETERS}>{KILOMETERS}</option>
+													<option value={METERS}>{METERS}</option>
 												</>
 											)}
 										</SelectField>

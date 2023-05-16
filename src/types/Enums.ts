@@ -31,12 +31,14 @@ export enum MapUnitEnum {
 }
 
 export enum DistanceUnitEnum {
+	MILES = "Miles",
+	MILES_SHORT = "mi",
+	FEET = "Feet",
+	FEET_SHORT = "ft",
 	KILOMETERS = "Kilometers",
 	KILOMETERS_SHORT = "km",
 	METERS = "Meters",
-	METERS_SHORT = "m",
-	MILES = "Miles",
-	MILES_SHORT = "mi"
+	METERS_SHORT = "m"
 }
 
 export enum MapProviderEnum {

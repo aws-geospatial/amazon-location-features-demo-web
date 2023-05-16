@@ -16,6 +16,9 @@ import { Tooltip } from "react-tooltip";
 
 import "./styles.scss";
 
+const { METRIC } = MapUnitEnum;
+const { KILOMETERS_SHORT, METERS_SHORT, MILES_SHORT, FEET_SHORT } = DistanceUnitEnum;
+
 interface SearchBoxProps {
 	mapRef: MapRef | null;
 	isSideMenuExpanded: boolean;
@@ -128,19 +131,18 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		const address = separateIndex > 1 ? label.substring(separateIndex + 1).trim() : null;
 		const _distance = distance ? parseFloat(distance) : undefined;
 		const unit = _distance
-			? currentMapUnit === MapUnitEnum.METRIC
+			? currentMapUnit === METRIC
 				? _distance > 1000
-					? DistanceUnitEnum.KILOMETERS_SHORT
-					: DistanceUnitEnum.METERS_SHORT
-				: DistanceUnitEnum.MILES_SHORT
+					? KILOMETERS_SHORT
+					: METERS_SHORT
+				: _distance * 3.281 > 5280
+				? MILES_SHORT
+				: FEET_SHORT
 			: undefined;
 		const computedDistance = _distance
-			? (unit === DistanceUnitEnum.MILES_SHORT
-					? _distance / 1609
-					: unit === DistanceUnitEnum.KILOMETERS_SHORT
-					? _distance / 1000
-					: _distance
-			  ).toFixed(1)
+			? currentMapUnit === METRIC
+				? (unit === KILOMETERS_SHORT ? _distance / 1000 : _distance).toFixed(1)
+				: (unit === MILES_SHORT ? _distance / 1609 : _distance * 3.281).toFixed(1)
 			: undefined;
 
 		return (

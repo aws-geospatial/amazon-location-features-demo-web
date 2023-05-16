@@ -21,6 +21,7 @@ const localStorageKey = `${LOCAL_STORAGE_PREFIX}${AMPLIFY_MAP_DATA}`;
 
 interface AmplifyMapStoreProps {
 	currentLocationData?: CurrentLocationDataType;
+	isAutomaticMapUnit: boolean;
 	mapUnit: MapUnitEnum;
 	mapProvider: MapProviderEnum;
 	mapStyle: EsriMapEnum | HereMapEnum;
@@ -28,7 +29,8 @@ interface AmplifyMapStoreProps {
 }
 
 const initialState: IStateProps<AmplifyMapStoreProps> = {
-	mapUnit: MapUnitEnum.METRIC,
+	isAutomaticMapUnit: true,
+	mapUnit: MapUnitEnum.IMPERIAL,
 	mapProvider: MapProviderEnum.ESRI,
 	mapStyle: EsriMapEnum.ESRI_LIGHT,
 	attributionText: "Esri, HERE, Garmin, FAO, NOAA, USGS, © OpenStreetMap contributors, and the GIS User Community"

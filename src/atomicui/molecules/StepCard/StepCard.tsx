@@ -10,6 +10,9 @@ import { DistanceUnitEnum, MapUnitEnum, SuggestionType, TravelMode } from "@demo
 import { Position, Step } from "aws-sdk/clients/location";
 import "./styles.scss";
 
+const { METRIC } = MapUnitEnum;
+const { KILOMETERS_SHORT, MILES_SHORT } = DistanceUnitEnum;
+
 interface StepCardProps {
 	step: Step;
 	isFirst: boolean;
@@ -75,9 +78,7 @@ const StepCard: React.FC<StepCardProps> = ({ step, isFirst, isLast, travelMode }
 				<Text>
 					{placeData.Place?.Label || `${(placeData.Place?.Geometry.Point?.[1], placeData.Place?.Geometry.Point?.[0])}`}
 				</Text>
-				<Text>{`${step.Distance.toFixed(2)} ${
-					currentMapUnit === MapUnitEnum.METRIC ? DistanceUnitEnum.KILOMETERS_SHORT : DistanceUnitEnum.MILES_SHORT
-				}`}</Text>
+				<Text>{`${step.Distance.toFixed(2)} ${currentMapUnit === METRIC ? KILOMETERS_SHORT : MILES_SHORT}`}</Text>
 			</View>
 		</View>
 	) : null;

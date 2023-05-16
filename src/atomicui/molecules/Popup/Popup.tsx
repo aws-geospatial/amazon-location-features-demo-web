@@ -17,6 +17,9 @@ import { Popup as PopupGl } from "react-map-gl";
 import { Tooltip } from "react-tooltip";
 import "./styles.scss";
 
+const { METRIC } = MapUnitEnum;
+const { KILOMETERS, KILOMETERS_SHORT, MILES, MILES_SHORT } = DistanceUnitEnum;
+
 interface Props {
 	active: boolean;
 	info: SuggestionType;
@@ -39,9 +42,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 					currentLocationData?.currentLocation?.latitude as number
 				],
 				[longitude, latitude],
-				currentMapUnit === MapUnitEnum.METRIC
-					? (DistanceUnitEnum.KILOMETERS.toLowerCase() as Units)
-					: (DistanceUnitEnum.MILES.toLowerCase() as Units)
+				currentMapUnit === METRIC ? (KILOMETERS.toLowerCase() as Units) : (MILES.toLowerCase() as Units)
 			),
 		[currentLocationData, longitude, latitude, currentMapUnit]
 	);
@@ -49,7 +50,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 	/* Esri route can't be calculated when distance is greater than 400 km or 248.55 mi */
 	const isEsriLimitation = useMemo(() => {
 		if (geodesicDistance) {
-			const maxDistance = currentMapUnit === MapUnitEnum.METRIC ? 400 : 248.55;
+			const maxDistance = currentMapUnit === METRIC ? 400 : 248.55;
 			return currentMapProvider === MapProviderEnum.ESRI && geodesicDistance >= maxDistance;
 		} else {
 			return true;
@@ -63,7 +64,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 				currentLocationData?.currentLocation?.latitude
 			] as Position,
 			DestinationPosition: [longitude, latitude],
-			DistanceUnit: currentMapUnit === MapUnitEnum.METRIC ? DistanceUnitEnum.KILOMETERS : DistanceUnitEnum.MILES,
+			DistanceUnit: currentMapUnit === METRIC ? KILOMETERS : MILES,
 			TravelMode: "Car"
 		};
 		const r = await getRoute(params as CalculateRouteRequest);
@@ -107,15 +108,13 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 					<TextEl
 						variation="secondary"
 						fontFamily="AmazonEmber-Bold"
-						text={`${geodesicDistance} ${
-							currentMapUnit === MapUnitEnum.METRIC ? DistanceUnitEnum.KILOMETERS_SHORT : DistanceUnitEnum.MILES_SHORT
-						}`}
+						text={`${geodesicDistance} ${currentMapUnit === METRIC ? KILOMETERS_SHORT : MILES_SHORT}`}
 					/>
 					<TextEl
 						style={{ marginTop: "0px" }}
 						variation="info"
 						text={`Distance is greater than ${
-							currentMapUnit === MapUnitEnum.METRIC ? "400 km" : "248.55 mi"
+							currentMapUnit === METRIC ? "400 km" : "248.55 mi"
 						}, can't calculate via Esri, kindly switch to HERE provider`}
 					/>
 				</Flex>
@@ -126,9 +125,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 					<TextEl
 						variation="secondary"
 						fontFamily="AmazonEmber-Bold"
-						text={`${geodesicDistance} ${
-							currentMapUnit === MapUnitEnum.METRIC ? DistanceUnitEnum.KILOMETERS_SHORT : DistanceUnitEnum.MILES_SHORT
-						}`}
+						text={`${geodesicDistance} ${currentMapUnit === METRIC ? KILOMETERS_SHORT : MILES_SHORT}`}
 					/>
 					<TextEl style={{ marginTop: "0px" }} variation="info" text="Route not found" />
 				</Flex>
@@ -143,9 +140,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 						<TextEl
 							variation="secondary"
 							fontFamily="AmazonEmber-Bold"
-							text={`${distance} ${
-								currentMapUnit === MapUnitEnum.METRIC ? DistanceUnitEnum.KILOMETERS_SHORT : DistanceUnitEnum.MILES_SHORT
-							}`}
+							text={`${distance} ${currentMapUnit === METRIC ? KILOMETERS_SHORT : MILES_SHORT}`}
 						/>
 					) : (
 						<Placeholder width={30} display="inline-block" />

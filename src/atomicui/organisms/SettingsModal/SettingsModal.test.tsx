@@ -53,6 +53,7 @@ describe("<SettingsModal />", () => {
 
 		const optionItem = screen.getByTestId(`option-item-${SettingOptionEnum.UNITS}`);
 		act(() => optionItem.click());
+		expect(screen.getByTestId(`${SettingOptionEnum.UNITS}-details-component`)).toHaveTextContent("Automatic");
 
 		const unitImperialRadio = screen.getByTestId("unit-imperial-radio");
 		fireEvent.click(unitImperialRadio);

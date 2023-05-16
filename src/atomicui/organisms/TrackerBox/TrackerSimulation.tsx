@@ -13,6 +13,9 @@ import { Layer, LayerProps, MapRef, Marker, Source } from "react-map-gl";
 
 import { trackerTypes } from "./TrackerBox";
 
+const { IMPERIAL } = MapUnitEnum;
+const { MILES, KILOMETERS } = DistanceUnitEnum;
+
 interface TrackerSimulationProps {
 	mapRef: MapRef | null;
 	isSaved: boolean;
@@ -59,7 +62,7 @@ const TrackerSimulation: React.FC<TrackerSimulationProps> = ({
 		if (trackerPoints && trackerPoints.length >= 2) {
 			const params: Omit<CalculateRouteRequest, "CalculatorName" | "DepartNow"> = {
 				IncludeLegGeometry: true,
-				DistanceUnit: currentMapUnit === MapUnitEnum.IMPERIAL ? DistanceUnitEnum.MILES : DistanceUnitEnum.KILOMETERS,
+				DistanceUnit: currentMapUnit === IMPERIAL ? MILES : KILOMETERS,
 				DeparturePosition: trackerPoints[0],
 				DestinationPosition: trackerPoints[trackerPoints.length - 1],
 				TravelMode: selectedTrackerType === TrackerType.WALK ? TravelMode.WALKING : TravelMode.CAR,

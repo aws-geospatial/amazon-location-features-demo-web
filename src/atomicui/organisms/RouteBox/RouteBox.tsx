@@ -28,6 +28,9 @@ import { Layer, LayerProps, LngLat, MapRef, Marker as ReactMapGlMarker, Source }
 
 import "./styles.scss";
 
+const { METRIC } = MapUnitEnum;
+const { KILOMETERS, KILOMETERS_SHORT, MILES, MILES_SHORT } = DistanceUnitEnum;
+
 interface RouteBoxProps {
 	mapRef: MapRef | null;
 	setShowRouteBox: (b: boolean) => void;
@@ -147,7 +150,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 		if (obj?.DeparturePosition && obj?.DestinationPosition) {
 			const params: Omit<CalculateRouteRequest, "CalculatorName" | "DepartNow"> = {
 				IncludeLegGeometry: true,
-				DistanceUnit: currentMapUnit === MapUnitEnum.METRIC ? DistanceUnitEnum.KILOMETERS : DistanceUnitEnum.MILES,
+				DistanceUnit: currentMapUnit === METRIC ? KILOMETERS : MILES,
 				DeparturePosition: obj.DeparturePosition,
 				DestinationPosition: obj.DestinationPosition,
 				TravelMode: travelMode,
@@ -639,9 +642,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 									<Text className="grey-text">Selected</Text>
 								</View>
 								<Text className="grey-text">{`${routeData.Summary.Distance.toFixed(2)} ${
-									currentMapUnit === MapUnitEnum.METRIC
-										? DistanceUnitEnum.KILOMETERS_SHORT
-										: DistanceUnitEnum.MILES_SHORT
+									currentMapUnit === METRIC ? KILOMETERS_SHORT : MILES_SHORT
 								}`}</Text>
 							</View>
 							<View className="duration">

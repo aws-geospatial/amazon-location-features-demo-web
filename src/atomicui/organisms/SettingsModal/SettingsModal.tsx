@@ -36,7 +36,6 @@ const {
 	ROUTES: { HELP },
 	AWS_TERMS_AND_CONDITIONS
 } = appConfig;
-
 const { TITLE, TITLE_DESC, HOW_TO, STEP1, STEP1_DESC, STEP2, STEP2_DESC, STEP3, STEP3_DESC, AGREE } = connectAwsAccount;
 const { IMPERIAL, METRIC } = MapUnitEnum;
 const { ESRI, HERE } = MapProviderEnum;
@@ -50,6 +49,8 @@ interface SettingsModalProps {
 const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppState }) => {
 	const [selectedOption, setSelectedOption] = useState<SettingOptionEnum>(SettingOptionEnum.UNITS);
 	const {
+		isAutomaticMapUnit,
+		setIsAutomaticMapUnit,
 		mapUnit: currentMapUnit,
 		setMapUnit,
 		mapProvider: currentMapProvider,
@@ -83,12 +84,18 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 	const keyArr = Object.keys(formValues);
 	const isAuthenticated = !!credentials?.authenticated;
 
+	const handleAutoMapUnitChange = useCallback(() => {
+		setIsAutomaticMapUnit(false);
+		resetAppState();
+	}, [setIsAutomaticMapUnit, resetAppState]);
+
 	const onMapUnitChange = useCallback(
 		(mapUnit: MapUnitEnum) => {
+			setIsAutomaticMapUnit(false);
 			setMapUnit(mapUnit);
 			resetAppState();
 		},
-		[setMapUnit, resetAppState]
+		[setIsAutomaticMapUnit, setMapUnit, resetAppState]
 	);
 
 	const onMapProviderChange = useCallback(
@@ -200,9 +207,19 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 					>
 						<Flex gap={0} padding="1.08rem 0rem">
 							<Radio
+								data-testid="unit-automatic-radio"
+								value={"Automatic"}
+								checked={isAutomaticMapUnit}
+								onChange={handleAutoMapUnitChange}
+							>
+								<TextEl marginLeft="1.23rem" text={"Automatic"} />
+							</Radio>
+						</Flex>
+						<Flex gap={0} padding="1.08rem 0rem">
+							<Radio
 								data-testid="unit-imperial-radio"
 								value={IMPERIAL}
-								checked={currentMapUnit === IMPERIAL}
+								checked={!isAutomaticMapUnit && currentMapUnit === IMPERIAL}
 								onChange={() => onMapUnitChange(IMPERIAL)}
 							>
 								<TextEl marginLeft="1.23rem" text={IMPERIAL} />
@@ -213,7 +230,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 							<Radio
 								data-testid="unit-metric-radio"
 								value={METRIC}
-								checked={currentMapUnit === METRIC}
+								checked={!isAutomaticMapUnit && currentMapUnit === METRIC}
 								onChange={() => onMapUnitChange(METRIC)}
 							>
 								<TextEl marginLeft="1.23rem" text={METRIC} />
@@ -459,6 +476,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 		],
 		[
 			currentMapUnit,
+			isAutomaticMapUnit,
+			handleAutoMapUnitChange,
 			onMapUnitChange,
 			currentMapProvider,
 			onMapProviderChange,

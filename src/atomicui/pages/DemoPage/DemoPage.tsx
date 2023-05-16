@@ -104,7 +104,8 @@ const DemoPage: React.FC = () => {
 	} = useAmplifyAuth();
 	const { locationClient, createLocationClient, iotClient, createIotClient, resetStore: resetAwsStore } = useAws();
 	const { attachPolicy } = useAwsIot();
-	const { mapStyle, currentLocationData, setCurrentLocation } = useAmplifyMap();
+	const { mapStyle, currentLocationData, setCurrentLocation, isAutomaticMapUnit, setAutomaticMapUnit } =
+		useAmplifyMap();
 	const {
 		setViewpoint,
 		setMarker,
@@ -124,6 +125,13 @@ const DemoPage: React.FC = () => {
 	const { showWelcomeModal, setShowWelcomeModal } = usePersistedData();
 	const isDesktop = useMediaQuery("(min-width: 1024px)");
 	const shouldClearCredentials = localStorage.getItem(SHOULD_CLEAR_CREDENTIALS) === "true";
+
+	useEffect(() => {
+		if (isAutomaticMapUnit) {
+			setAutomaticMapUnit();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isAutomaticMapUnit]);
 
 	const clearCredsAndLocationClient = useCallback(() => {
 		clearCredentials();
