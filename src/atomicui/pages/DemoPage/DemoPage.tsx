@@ -4,7 +4,7 @@
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 
 import { Flex, Text, View } from "@aws-amplify/ui-react";
-import { IconLocateMe, LogoStroke } from "@demo/assets";
+import { IconLocateMe, LogoDark, LogoLight } from "@demo/assets";
 import {
 	ConnectAwsAccountModal,
 	ConfirmationModal as InformationModal,
@@ -104,8 +104,13 @@ const DemoPage: React.FC = () => {
 	} = useAmplifyAuth();
 	const { locationClient, createLocationClient, iotClient, createIotClient, resetStore: resetAwsStore } = useAws();
 	const { attachPolicy } = useAwsIot();
-	const { mapStyle, currentLocationData, setCurrentLocation, isAutomaticMapUnit, setAutomaticMapUnit } =
-		useAmplifyMap();
+	const {
+		mapStyle: currentMapStyle,
+		currentLocationData,
+		setCurrentLocation,
+		isAutomaticMapUnit,
+		setAutomaticMapUnit
+	} = useAmplifyMap();
 	const {
 		setViewpoint,
 		setMarker,
@@ -417,7 +422,7 @@ const DemoPage: React.FC = () => {
 						? { ...currentLocationData.currentLocation, zoom }
 						: { ...viewpoint, zoom }
 				}
-				mapStyle={mapStyle}
+				mapStyle={currentMapStyle}
 				onClick={handleMapClick}
 				onLoad={onLoad}
 				onZoom={({ viewState }) => setZoom(viewState.zoom)}
@@ -558,7 +563,7 @@ const DemoPage: React.FC = () => {
 				hideCancelButton
 			/>
 			<Flex className="logo-stroke-container">
-				<img src={LogoStroke} />
+				{currentMapStyle.toLowerCase().includes("dark") ? <LogoDark /> : <LogoLight />}
 			</Flex>
 		</View>
 	) : null;
