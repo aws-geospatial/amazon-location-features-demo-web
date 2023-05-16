@@ -185,7 +185,6 @@ const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox })
 		}
 	};
 
-	// TODO: FIX THIS
 	const onChangeRadius = useCallback(
 		(e: React.ChangeEvent<HTMLInputElement>) => {
 			const radius = Number(e.target.value);

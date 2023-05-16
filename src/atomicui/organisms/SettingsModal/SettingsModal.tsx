@@ -85,7 +85,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 	const isAuthenticated = !!credentials?.authenticated;
 
 	const handleAutoMapUnitChange = useCallback(() => {
-		setIsAutomaticMapUnit(false);
+		setIsAutomaticMapUnit(true);
 		resetAppState();
 	}, [setIsAutomaticMapUnit, resetAppState]);
 
@@ -499,7 +499,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 		]
 	);
 
-	// TODO: make responsive for below 960px
 	const renderOptionItems = useMemo(() => {
 		return optionItems.map(({ id, title, defaultValue, icon }) => (
 			<Flex
