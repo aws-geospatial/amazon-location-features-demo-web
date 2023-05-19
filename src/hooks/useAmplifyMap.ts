@@ -43,7 +43,7 @@ const useAmplifyMap = () => {
 			},
 			setAutomaticMapUnit: () => {
 				if (store.isAutomaticMapUnit) {
-					const isMetric = !imperialCountries.includes(navigator.language.toUpperCase().substring(0, 2));
+					const isMetric = !imperialCountries.includes(navigator.language.split("-")[1]);
 					isMetric ? setState({ mapUnit: METRIC }) : setState({ mapUnit: IMPERIAL });
 				}
 			},
