@@ -21,6 +21,8 @@ describe("<MapButtons/>", () => {
 	let onOpenSignInModal: jest.Mock<any, any, any>;
 	let onShowGeofenceBox: jest.Mock<any, any, any>;
 	const resetAppState = jest.fn();
+	const onShowGrabDisclaimerModal = jest.fn();
+	const onShowGridLoader = jest.fn();
 
 	beforeEach(() => {
 		jest.useFakeTimers();
@@ -47,6 +49,9 @@ describe("<MapButtons/>", () => {
 				onOpenSignInModal={onOpenSignInModal}
 				onShowGeofenceBox={onShowGeofenceBox}
 				resetAppState={resetAppState}
+				showGrabDisclaimerModal={false}
+				onShowGrabDisclaimerModal={onShowGrabDisclaimerModal}
+				onShowGridLoader={onShowGridLoader}
 			/>
 		);
 

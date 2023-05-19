@@ -9,9 +9,20 @@ describe("<SettingsModal />", () => {
 
 	const onClose = jest.fn();
 	const resetAppState = jest.fn();
+	const onShowGrabDisclaimerModal = jest.fn();
+	const onShowGridLoader = jest.fn();
 
 	const renderComponent = async (props?: {}): Promise<RenderResult> => {
-		const renderedComponent = render(<SettingsModal open onClose={onClose} resetAppState={resetAppState} {...props} />);
+		const renderedComponent = render(
+			<SettingsModal
+				open
+				onClose={onClose}
+				resetAppState={resetAppState}
+				onShowGrabDisclaimerModal={onShowGrabDisclaimerModal}
+				onShowGridLoader={onShowGridLoader}
+				{...props}
+			/>
+		);
 		settingsModal = await screen.findByTestId("settings-modal");
 
 		return renderedComponent;
