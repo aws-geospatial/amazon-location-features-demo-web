@@ -1,7 +1,9 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { userAgent } from "@demo/core/constants";
+import { UserAgentEnum } from "@demo/types";
+
+const { IOS, ANDROID } = UserAgentEnum;
 
 const androidCheck = /(android)/i.test(navigator.userAgent);
 const iosCheck =
@@ -10,10 +12,10 @@ const iosCheck =
 	(navigator.userAgent.includes("Mac") && "ontouchend" in document);
 
 function isUserDeviceIsIOS() {
-	return iosCheck && androidCheck === false ? userAgent.IOS : undefined;
+	return iosCheck && androidCheck === false ? IOS : undefined;
 }
 function isUserDeviceIsAndroid(): string | undefined {
-	return androidCheck && iosCheck === false ? userAgent.Android : undefined;
+	return androidCheck && iosCheck === false ? ANDROID : undefined;
 }
 
 export { isUserDeviceIsIOS, isUserDeviceIsAndroid };

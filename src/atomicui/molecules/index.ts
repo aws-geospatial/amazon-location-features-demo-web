@@ -4,7 +4,6 @@
 export * from "./FilterModal";
 export * from "./InfoBlock";
 export * from "./InputField";
-export * from "./Modal";
 export * from "./NotFoundCard";
 export * from "./TabsEl";
 export * from "./CheckboxGroup";
@@ -18,3 +17,4 @@ export * from "./ConnectAwsAccountModal";
 export * from "./SignInModal";
 export * from "./ConfirmationModal";
 export * from "./WelcomeModal";
+export * from "./GrabConfirmationModal";

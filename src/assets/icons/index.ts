@@ -16,6 +16,7 @@ export { ReactComponent as IconClose } from "./icon-close.svg";
 export { ReactComponent as IconCloud } from "./icon-cloud.svg";
 export { ReactComponent as IconCodeMenu } from "./icon-code-menu-icon.svg";
 export { ReactComponent as IconCode } from "./icon-code.svg";
+export { ReactComponent as IconCompassMenu } from "./icon-compass-menu-icon.svg";
 export { ReactComponent as IconCompass } from "./icon-compass.svg";
 export { ReactComponent as IconCopyPages } from "./icon-copy-pages.svg";
 export { ReactComponent as IconCopy } from "./icon-copy.svg";

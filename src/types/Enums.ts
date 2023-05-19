@@ -43,7 +43,8 @@ export enum DistanceUnitEnum {
 
 export enum MapProviderEnum {
 	ESRI = "Esri",
-	HERE = "HERE"
+	HERE = "HERE",
+	GRAB = "Grab"
 }
 
 export enum EsriMapEnum {
@@ -78,6 +79,16 @@ export enum HereMapStyleEnum {
 	"location.aws.com.demo.maps.HERE.ExploreTruck" = "VectorHereExploreTruck",
 	"location.aws.com.demo.maps.HERE.Hybrid" = "HybridHereExploreSatellite",
 	"location.aws.com.demo.maps.HERE.Imagery" = "RasterHereExploreSatellite"
+}
+
+export enum GrabMapEnum {
+	GRAB_STANDARD_LIGHT = "location.aws.com.demo.maps.Grab.StandardLight",
+	GRAB_STANDARD_DARK = "location.aws.com.demo.maps.Grab.StandardDark"
+}
+
+export enum GrabMapStyleEnum {
+	"location.aws.com.demo.maps.Grab.StandardLight" = "VectorGrabStandardLight",
+	"location.aws.com.demo.maps.Grab.StandardDark" = "VectorGrabStandardDark"
 }
 
 export enum CirclreDrawTypeEnum {
@@ -116,4 +127,9 @@ export enum HelpAccordionEnum {
 	CREATE = "Creation",
 	DELETE = "Deletion",
 	TROUBLESHOOT = "Troubleshooting"
+}
+
+export enum UserAgentEnum {
+	IOS = "IOS",
+	ANDROID = "Android"
 }

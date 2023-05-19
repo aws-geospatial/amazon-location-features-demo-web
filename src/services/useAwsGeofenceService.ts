@@ -3,7 +3,7 @@
 
 import { useMemo } from "react";
 
-import appConfig from "@demo/core/constants/appConfig";
+import { appConfig } from "@demo/core/constants";
 import { useAws } from "@demo/hooks";
 import {
 	BatchDeleteGeofenceRequest,
@@ -14,7 +14,9 @@ import {
 	PutGeofenceRequest
 } from "aws-sdk/clients/location";
 
-const { GEOFENCE_COLLECTION, DEVICE_ID_WEB } = appConfig;
+const {
+	MAP_RESOURCES: { GEOFENCE_COLLECTION, DEVICE_ID_WEB }
+} = appConfig;
 
 const useAwsGeofenceService = () => {
 	const { locationClient } = useAws();

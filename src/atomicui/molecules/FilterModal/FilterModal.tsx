@@ -4,11 +4,9 @@
 import React, { useEffect, useState } from "react";
 
 import { Badge, Button, Flex, Text, View } from "@aws-amplify/ui-react";
-
-import "./styles.scss";
 import { IconCheck, IconClose } from "@demo/assets";
-
-import { Modal } from "../Modal";
+import { Modal } from "@demo/atomicui/atoms";
+import "./styles.scss";
 
 interface FilterModalProps {
 	isOpen: boolean;

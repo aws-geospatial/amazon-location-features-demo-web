@@ -12,42 +12,45 @@ import {
 	IconPeopleArrows,
 	IconShuffle
 } from "@demo/assets";
-import { TextEl } from "@demo/atomicui/atoms";
-import { InputField, Modal } from "@demo/atomicui/molecules";
-import appConfig from "@demo/core/constants/appConfig";
-import connectAwsAccount from "@demo/core/constants/connectAwsAccount";
+import { Modal, TextEl } from "@demo/atomicui/atoms";
+import { InputField } from "@demo/atomicui/molecules";
+import { appConfig, connectAwsAccountData } from "@demo/core/constants";
 import { useAmplifyAuth, useAmplifyMap, useAws, useAwsIot, usePersistedData } from "@demo/hooks";
 import {
 	ConnectFormValuesType,
 	EsriMapEnum,
+	GrabMapEnum,
 	HereMapEnum,
 	MapProviderEnum,
 	MapUnitEnum,
 	SettingOptionEnum,
 	SettingOptionItemType
 } from "@demo/types";
-
 import "./styles.scss";
 
 const {
-	ESRI_STYLES,
-	HERE_STYLES,
-	CF_TEMPLATE,
+	ENV: { CF_TEMPLATE },
 	ROUTES: { HELP },
-	AWS_TERMS_AND_CONDITIONS
+	MAP_RESOURCES: {
+		MAP_STYLES: { ESRI_STYLES, HERE_STYLES, GRAB_STYLES }
+	},
+	LINKS: { AWS_TERMS_AND_CONDITIONS }
 } = appConfig;
-const { TITLE, TITLE_DESC, HOW_TO, STEP1, STEP1_DESC, STEP2, STEP2_DESC, STEP3, STEP3_DESC, AGREE } = connectAwsAccount;
+const { TITLE, TITLE_DESC, HOW_TO, STEP1, STEP1_DESC, STEP2, STEP2_DESC, STEP3, STEP3_DESC, AGREE } =
+	connectAwsAccountData;
 const { IMPERIAL, METRIC } = MapUnitEnum;
-const { ESRI, HERE } = MapProviderEnum;
+const { ESRI, HERE, GRAB } = MapProviderEnum;
 
 interface SettingsModalProps {
 	open: boolean;
 	onClose: () => void;
 	resetAppState: () => void;
+	onShowGrabDisclaimerModal: (mapStyle?: GrabMapEnum) => void;
 }
 
-const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppState }) => {
+const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppState, onShowGrabDisclaimerModal }) => {
 	const [selectedOption, setSelectedOption] = useState<SettingOptionEnum>(SettingOptionEnum.UNITS);
+	const { switchToDefaultRegionStack } = useAmplifyAuth();
 	const {
 		isAutomaticMapUnit,
 		setIsAutomaticMapUnit,
@@ -100,30 +103,79 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 
 	const onMapProviderChange = useCallback(
 		(mapProvider: MapProviderEnum) => {
-			setMapProvider(mapProvider === ESRI ? ESRI : HERE);
-			setMapStyle(mapProvider === ESRI ? EsriMapEnum.ESRI_LIGHT : HereMapEnum.HERE_CONTRAST);
-			resetAppState();
+			if (mapProvider === GRAB) {
+				onShowGrabDisclaimerModal();
+			} else {
+				if (currentMapProvider === GRAB) {
+					switchToDefaultRegionStack();
+					resetAwsStore();
+					setMapProvider(mapProvider);
+					setMapStyle(mapProvider === ESRI ? EsriMapEnum.ESRI_LIGHT : HereMapEnum.HERE_EXPLORE);
+					resetAppState();
+				} else {
+					setMapProvider(mapProvider);
+					setMapStyle(mapProvider === ESRI ? EsriMapEnum.ESRI_LIGHT : HereMapEnum.HERE_EXPLORE);
+					resetAppState();
+				}
+			}
+
 			setTimeout(
 				() => setAttributionText(document.getElementsByClassName("mapboxgl-ctrl-attrib-inner")[0].innerHTML),
 				3000
 			);
 		},
-		[setMapProvider, setMapStyle, resetAppState, setAttributionText]
+		[
+			onShowGrabDisclaimerModal,
+			currentMapProvider,
+			switchToDefaultRegionStack,
+			resetAwsStore,
+			setMapProvider,
+			setMapStyle,
+			resetAppState,
+			setAttributionText
+		]
 	);
 
 	const onMapStyleChange = useCallback(
-		(mapStyle: EsriMapEnum | HereMapEnum) => {
+		(mapStyle: EsriMapEnum | HereMapEnum | GrabMapEnum) => {
+			const splitArr = mapStyle.split(".");
+			const mapProviderFromStyle = splitArr[splitArr.length - 2] as MapProviderEnum;
+
 			if (
-				(currentMapProvider === ESRI && mapStyle.includes(ESRI)) ||
-				(currentMapProvider === HERE && mapStyle.includes(HERE))
+				(currentMapProvider === ESRI && mapProviderFromStyle === ESRI) ||
+				(currentMapProvider === HERE && mapProviderFromStyle === HERE) ||
+				(currentMapProvider === GRAB && mapProviderFromStyle === GRAB)
 			) {
+				/* No map provider switch required */
 				setMapStyle(mapStyle);
 			} else {
-				setMapProvider(currentMapProvider === ESRI ? HERE : ESRI);
-				setMapStyle(mapStyle);
+				if (currentMapProvider === GRAB) {
+					/* Switching from Grab map provider to different map provider and style */
+					switchToDefaultRegionStack();
+					resetAwsStore();
+					setMapProvider(mapProviderFromStyle);
+					setMapStyle(mapStyle);
+				} else if (mapProviderFromStyle === GRAB) {
+					/* Switching from different map provider and style to Grab map provider and style */
+					onShowGrabDisclaimerModal(mapStyle as GrabMapEnum);
+				} else {
+					/* Switching between Esri and HERE map provider and style */
+					setMapProvider(mapProviderFromStyle);
+					setMapStyle(mapStyle);
+				}
+
+				resetAppState();
 			}
 		},
-		[currentMapProvider, setMapStyle, setMapProvider]
+		[
+			currentMapProvider,
+			setMapStyle,
+			switchToDefaultRegionStack,
+			resetAwsStore,
+			setMapProvider,
+			onShowGrabDisclaimerModal,
+			resetAppState
+		]
 	);
 
 	const _onLogin = useCallback(async () => await onLogin(), [onLogin]);
@@ -252,11 +304,18 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 						direction="column"
 						padding="0rem 1.15rem"
 					>
+						{/* Esri */}
 						<Flex gap={0} padding="1.08rem 0rem">
-							<Radio value={ESRI} checked={currentMapProvider === ESRI} onChange={() => onMapProviderChange(ESRI)}>
+							<Radio
+								data-testid="data-provider-esri-radio"
+								value={ESRI}
+								checked={currentMapProvider === ESRI}
+								onChange={() => onMapProviderChange(ESRI)}
+							>
 								<TextEl marginLeft="1.23rem" text={ESRI} />
 							</Radio>
 						</Flex>
+						{/* HERE */}
 						<Flex gap={0} padding="1.08rem 0rem">
 							<Radio
 								data-testid="data-provider-here-radio"
@@ -265,6 +324,17 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 								onChange={() => onMapProviderChange(HERE)}
 							>
 								<TextEl marginLeft="1.23rem" text={HERE} />
+							</Radio>
+						</Flex>
+						{/* Grab */}
+						<Flex gap={0} padding="1.08rem 0rem">
+							<Radio
+								data-testid="data-provider-grab-radio"
+								value={GRAB}
+								checked={currentMapProvider === GRAB}
+								onChange={() => onMapProviderChange(GRAB)}
+							>
+								<TextEl marginLeft="1.23rem" text={GRAB} />
 							</Radio>
 						</Flex>
 					</Flex>
@@ -283,8 +353,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 						padding="0rem 1.15rem"
 						overflow="scroll"
 					>
+						{/* Esri */}
 						<Flex gap={0} direction="column" padding="0.82rem 0rem 1.23rem 0rem">
-							<TextEl fontSize="1rem" lineHeight="1.38rem" variation="tertiary" text="Esri" />
+							<TextEl fontSize="1rem" lineHeight="1.38rem" variation="tertiary" text={ESRI} />
 							<Flex className="sm-styles-container">
 								{ESRI_STYLES.map(({ id, image, name }) => (
 									<Flex
@@ -300,12 +371,31 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 							</Flex>
 						</Flex>
 						<Divider className="styles-divider" />
+						{/* HERE */}
 						<Flex gap={0} direction="column" padding="1.31rem 0rem 1.23rem 0rem">
-							<TextEl fontSize="1rem" lineHeight="1.38rem" variation="tertiary" text="HERE" />
+							<TextEl fontSize="1rem" lineHeight="1.38rem" variation="tertiary" text={HERE} />
 							<Flex className="sm-styles-container">
 								{HERE_STYLES.map(({ id, image, name }) => (
 									<Flex
 										data-testid="here-map-style"
+										key={id}
+										className={id === currentMapStyle ? "sm-style selected" : "sm-style"}
+										onClick={() => onMapStyleChange(id)}
+									>
+										<img src={image} />
+										<TextEl marginTop="0.62rem" text={name} />
+									</Flex>
+								))}
+							</Flex>
+						</Flex>
+						<Divider className="styles-divider" />
+						{/* Grab */}
+						<Flex gap={0} direction="column" padding="1.31rem 0rem 1.23rem 0rem">
+							<TextEl fontSize="1rem" lineHeight="1.38rem" variation="tertiary" text={GRAB} />
+							<Flex className="sm-styles-container">
+								{GRAB_STYLES.map(({ id, image, name }) => (
+									<Flex
+										data-testid="gran-map-style"
 										key={id}
 										className={id === currentMapStyle ? "sm-style selected" : "sm-style"}
 										onClick={() => onMapStyleChange(id)}

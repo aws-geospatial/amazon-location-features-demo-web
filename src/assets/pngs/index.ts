@@ -33,3 +33,5 @@ export { default as SelectPolicy } from "./SelectPolicy.png";
 export { default as ConfirmDeletePolicy } from "./ConfirmDeletePolicy.png";
 export { default as ConfirmDeleteStack } from "./ConfirmDeleteStack.png";
 export { default as LaunchStack } from "./LaunchStack.png";
+export { default as GrabStandardLight } from "./GrabStandardLight.png";
+export { default as GrabStandardDark } from "./GrabStandardDark.png";

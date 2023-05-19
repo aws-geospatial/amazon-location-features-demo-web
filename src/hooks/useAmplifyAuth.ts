@@ -4,7 +4,7 @@
 import { useMemo } from "react";
 
 import { showToast } from "@demo/core/Toast";
-import appConfig from "@demo/core/constants/appConfig";
+import { appConfig } from "@demo/core/constants";
 import { useAmplifyAuthService } from "@demo/services";
 import { useAmplifyAuthStore } from "@demo/stores";
 import { AuthTokensType, ConnectFormValuesType, ToastType } from "@demo/types";
@@ -14,6 +14,7 @@ import { Amplify, Auth } from "aws-amplify";
 import AWS from "aws-sdk";
 
 const {
+	ENV: { IDENTITY_POOL_ID, REGION, IDENTITY_POOL_ID_ASIA, REGION_ASIA },
 	ROUTES: { DEMO, ERROR_BOUNDARY }
 } = appConfig;
 
@@ -110,8 +111,8 @@ const useAmplifyAuth = () => {
 						// 				oauth: {
 						// 					domain,
 						// 					scope: ["email", "openid", "profile"],
-						// 					redirectSignIn: `${window.location.origin}${appConfig.ROUTES.DEMO}`,
-						// 					redirectSignOut: `${window.location.origin}${appConfig.ROUTES.DEMO}`,
+						// 					redirectSignIn: `${window.location.origin}${DEMO}`,
+						// 					redirectSignOut: `${window.location.origin}${DEMO}`,
 						// 					responseType: "token"
 						// 				}
 						// 			},
@@ -208,8 +209,22 @@ const useAmplifyAuth = () => {
 					await methods.getCurrentUserCredentials();
 					resetAwsStore();
 				} catch (error) {
-					console.error("HANDLE_CURRENT_SESSION_ERROR===>>>", JSON.stringify(error));
+					console.error("HANDLE_CURRENT_SESSION_ERROR:", JSON.stringify(error));
 				}
+			},
+			switchToAsiaRegionStack: () => {
+				setState({
+					identityPoolId: IDENTITY_POOL_ID_ASIA,
+					region: REGION_ASIA,
+					credentials: undefined
+				});
+			},
+			switchToDefaultRegionStack: () => {
+				setState({
+					identityPoolId: IDENTITY_POOL_ID,
+					region: REGION,
+					credentials: undefined
+				});
 			},
 			resetStore: () => {
 				setState({

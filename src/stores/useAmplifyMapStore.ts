@@ -1,10 +1,11 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import appConfig from "@demo/core/constants/appConfig";
+import { appConfig } from "@demo/core/constants";
 import {
 	CurrentLocationDataType,
 	EsriMapEnum,
+	GrabMapEnum,
 	HereMapEnum,
 	IStateProps,
 	MapProviderEnum,
@@ -14,8 +15,7 @@ import {
 import createStore from "./createStore";
 
 const {
-	GLOBAL_CONSTANTS: { LOCAL_STORAGE_PREFIX },
-	PERSIST_STORAGE_KEYS: { AMPLIFY_MAP_DATA }
+	PERSIST_STORAGE_KEYS: { LOCAL_STORAGE_PREFIX, AMPLIFY_MAP_DATA }
 } = appConfig;
 const localStorageKey = `${LOCAL_STORAGE_PREFIX}${AMPLIFY_MAP_DATA}`;
 
@@ -24,7 +24,7 @@ interface AmplifyMapStoreProps {
 	isAutomaticMapUnit: boolean;
 	mapUnit: MapUnitEnum;
 	mapProvider: MapProviderEnum;
-	mapStyle: EsriMapEnum | HereMapEnum;
+	mapStyle: EsriMapEnum | HereMapEnum | GrabMapEnum;
 	attributionText: string;
 }
 

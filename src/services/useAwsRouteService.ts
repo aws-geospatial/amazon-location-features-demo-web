@@ -3,13 +3,15 @@
 
 import { useMemo } from "react";
 
-import appConfig from "@demo/core/constants/appConfig";
+import { appConfig } from "@demo/core/constants";
 import { useAws } from "@demo/hooks";
 import { MapProviderEnum } from "@demo/types";
 import { CalculateRouteRequest } from "aws-sdk/clients/location";
 
 const {
-	ROUTE_CALCULATORS: { ESRI, HERE }
+	MAP_RESOURCES: {
+		ROUTE_CALCULATORS: { ESRI, HERE, GRAB }
+	}
 } = appConfig;
 
 const useAwsRouteService = () => {
@@ -21,7 +23,14 @@ const useAwsRouteService = () => {
 				await locationClient
 					?.calculateRoute({
 						...params,
-						CalculatorName: mapProvider === MapProviderEnum.ESRI ? ESRI : HERE,
+						CalculatorName:
+							mapProvider === MapProviderEnum.ESRI
+								? ESRI
+								: mapProvider === MapProviderEnum.HERE
+								? HERE
+								: mapProvider === MapProviderEnum.GRAB
+								? GRAB
+								: "",
 						DepartNow: true
 					})
 					.promise()

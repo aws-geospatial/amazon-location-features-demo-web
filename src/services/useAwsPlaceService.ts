@@ -3,7 +3,7 @@
 
 import { useMemo } from "react";
 
-import appConfig from "@demo/core/constants/appConfig";
+import { appConfig } from "@demo/core/constants";
 import { useAws } from "@demo/hooks";
 import { MapProviderEnum, ViewPointType } from "@demo/types";
 import {
@@ -15,7 +15,9 @@ import {
 } from "aws-sdk/clients/location";
 
 const {
-	PLACE_INDEXES: { ESRI, HERE }
+	MAP_RESOURCES: {
+		PLACE_INDEXES: { ESRI, HERE, GRAB }
+	}
 } = appConfig;
 
 const useAwsPlaceService = (mapProvider: MapProviderEnum, viewpoint?: ViewPointType) => {
@@ -23,7 +25,14 @@ const useAwsPlaceService = (mapProvider: MapProviderEnum, viewpoint?: ViewPointT
 
 	const config = useMemo(
 		() => ({
-			IndexName: mapProvider === MapProviderEnum.ESRI ? ESRI : HERE,
+			IndexName:
+				mapProvider === MapProviderEnum.ESRI
+					? ESRI
+					: mapProvider === MapProviderEnum.HERE
+					? HERE
+					: mapProvider === MapProviderEnum.GRAB
+					? GRAB
+					: "",
 			Language: "en"
 		}),
 		[mapProvider]

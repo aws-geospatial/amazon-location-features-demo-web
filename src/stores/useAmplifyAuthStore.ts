@@ -3,16 +3,14 @@
 
 import { ICredentials } from "@aws-amplify/core";
 
-import appConfig from "@demo/core/constants/appConfig";
+import { appConfig } from "@demo/core/constants";
 import { AuthTokensType, IStateProps } from "@demo/types";
 
 import createStore from "./createStore";
 
 const {
-	GLOBAL_CONSTANTS: { LOCAL_STORAGE_PREFIX },
-	PERSIST_STORAGE_KEYS: { AMPLIFY_AUTH_DATA },
-	IDENTITY_POOL_ID,
-	REGION
+	ENV: { IDENTITY_POOL_ID, REGION },
+	PERSIST_STORAGE_KEYS: { LOCAL_STORAGE_PREFIX, AMPLIFY_AUTH_DATA }
 } = appConfig;
 const localStorageKey = `${LOCAL_STORAGE_PREFIX}${AMPLIFY_AUTH_DATA}`;
 

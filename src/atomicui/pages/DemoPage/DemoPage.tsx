@@ -7,6 +7,7 @@ import { Flex, Text, View } from "@aws-amplify/ui-react";
 import { IconLocateMe, LogoDark, LogoLight } from "@demo/assets";
 import {
 	ConnectAwsAccountModal,
+	GrabConfirmationModal,
 	ConfirmationModal as InformationModal,
 	MapButtons,
 	SignInModal,
@@ -22,7 +23,7 @@ import {
 	TrackingBox
 } from "@demo/atomicui/organisms";
 import { showToast } from "@demo/core";
-import appConfig from "@demo/core/constants/appConfig";
+import { appConfig } from "@demo/core/constants";
 import {
 	useAmplifyAuth,
 	useAmplifyMap,
@@ -35,11 +36,12 @@ import {
 	useMediaQuery,
 	usePersistedData
 } from "@demo/hooks";
-import { ToastType } from "@demo/types";
+import { GrabMapEnum, MapProviderEnum, ToastType } from "@demo/types";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { getCurrentLocation } from "@demo/utils/getCurrentLocation";
 import { Signer } from "aws-amplify";
 import { differenceInMilliseconds } from "date-fns";
+import { LngLatBoundsLike } from "mapbox-gl";
 import { omit } from "ramda";
 import {
 	GeolocateControl,
@@ -56,8 +58,9 @@ import "./styles.scss";
 
 const {
 	PERSIST_STORAGE_KEYS: { SHOULD_CLEAR_CREDENTIALS, GEO_LOCATION_ALLOWED },
-	AMAZON_LOCATION_TERMS_AND_CONDITIONS,
-	ROUTES: { DEMO }
+	ROUTES: { DEMO },
+	MAP_RESOURCES: { MAX_BOUNDS },
+	LINKS: { AMAZON_LOCATION_TERMS_AND_CONDITIONS }
 } = appConfig;
 const initShow = {
 	loader: true,
@@ -70,7 +73,9 @@ const initShow = {
 	settings: false,
 	stylesCard: false,
 	trackingDisclaimerModal: false,
-	about: false
+	about: false,
+	grabDisclaimerModal: false,
+	mapStyle: undefined
 };
 let interval: NodeJS.Timer | undefined;
 let timeout: NodeJS.Timer | undefined;
@@ -88,6 +93,8 @@ const DemoPage: React.FC = () => {
 		stylesCard: boolean;
 		trackingDisclaimerModal: boolean;
 		about: boolean;
+		grabDisclaimerModal: boolean;
+		mapStyle?: GrabMapEnum;
 	}>(initShow);
 	const [height, setHeight] = React.useState(window.innerHeight);
 	const mapViewRef = useRef<MapRef | null>(null);
@@ -100,10 +107,12 @@ const DemoPage: React.FC = () => {
 		authTokens,
 		setAuthTokens,
 		onLogout,
-		handleCurrentSession
+		handleCurrentSession,
+		switchToAsiaRegionStack
 	} = useAmplifyAuth();
 	const { locationClient, createLocationClient, iotClient, createIotClient, resetStore: resetAwsStore } = useAws();
 	const { attachPolicy } = useAwsIot();
+	const { mapProvider: currentMapProvider, setMapProvider, setMapStyle } = useAmplifyMap();
 	const {
 		mapStyle: currentMapStyle,
 		currentLocationData,
@@ -378,13 +387,13 @@ const DemoPage: React.FC = () => {
 
 	const locationError = useMemo(() => !!currentLocationData?.error, [currentLocationData]);
 
-	const resetAppState = () => {
+	const resetAppState = useCallback(() => {
 		clearPoiList();
 		resetAwsRouteStore();
 		resetAwsGeofenceStore();
 		resetAwsTrackingStore();
 		setShow(s => ({ ...initShow, stylesCard: s.stylesCard, settings: s.settings }));
-	};
+	}, [clearPoiList, resetAwsRouteStore, resetAwsGeofenceStore, resetAwsTrackingStore]);
 
 	const transformRequest = useCallback(
 		(url: string, resourceType: string) => {
@@ -409,6 +418,15 @@ const DemoPage: React.FC = () => {
 		[region, credentials]
 	);
 
+	const onHandleGrabMapChange = useCallback(() => {
+		setShow(s => ({ ...s, grabDisclaimerModal: false }));
+		switchToAsiaRegionStack();
+		resetAwsStore();
+		setMapProvider(MapProviderEnum.GRAB);
+		setMapStyle(show.mapStyle ? show.mapStyle : GrabMapEnum.GRAB_STANDARD_LIGHT);
+		resetAppState();
+	}, [switchToAsiaRegionStack, resetAwsStore, setMapProvider, setMapStyle, show, resetAppState]);
+
 	return credentials ? (
 		<View style={{ height }}>
 			<Map
@@ -427,7 +445,11 @@ const DemoPage: React.FC = () => {
 				onLoad={onLoad}
 				onZoom={({ viewState }) => setZoom(viewState.zoom)}
 				minZoom={2}
-				maxBounds={[-210, -80, 290, 85]}
+				maxBounds={
+					currentMapProvider === MapProviderEnum.GRAB
+						? (MAX_BOUNDS.GRAB as LngLatBoundsLike)
+						: (MAX_BOUNDS.DEFAULT as LngLatBoundsLike)
+				}
 				onError={error => errorHandler(error.error)}
 				onIdle={() => show.loader && setShow(s => ({ ...s, loader: false }))}
 				transformRequest={transformRequest}
@@ -482,6 +504,10 @@ const DemoPage: React.FC = () => {
 						onOpenSignInModal={() => setShow(s => ({ ...s, signInModal: true }))}
 						onShowGeofenceBox={() => setShow(s => ({ ...s, geofenceBox: true }))}
 						resetAppState={resetAppState}
+						showGrabDisclaimerModal={show.grabDisclaimerModal}
+						onShowGrabDisclaimerModal={(mapStyle?: GrabMapEnum) =>
+							setShow(s => ({ ...s, grabDisclaimerModal: true, mapStyle }))
+						}
 					/>
 					{locationError ? (
 						<Flex className="location-disabled" onClick={getCurrentGeoLocation}>
@@ -533,6 +559,9 @@ const DemoPage: React.FC = () => {
 				open={show.settings}
 				onClose={() => setShow(s => ({ ...s, settings: false }))}
 				resetAppState={resetAppState}
+				onShowGrabDisclaimerModal={(mapStyle?: GrabMapEnum) =>
+					setTimeout(() => setShow(s => ({ ...s, grabDisclaimerModal: true, mapStyle })), 0)
+				}
 			/>
 			<AboutModal open={show.about} onClose={() => setShow(s => ({ ...s, about: false }))} />
 			<InformationModal
@@ -561,6 +590,11 @@ const DemoPage: React.FC = () => {
 				}
 				onConfirm={onEnableTracking}
 				hideCancelButton
+			/>
+			<GrabConfirmationModal
+				open={show.grabDisclaimerModal}
+				onClose={() => setShow(s => ({ ...s, grabDisclaimerModal: false, mapStyle: undefined }))}
+				onConfirm={onHandleGrabMapChange}
 			/>
 			<Flex className="logo-stroke-container">
 				{currentMapStyle.toLowerCase().includes("dark") ? <LogoDark /> : <LogoLight />}

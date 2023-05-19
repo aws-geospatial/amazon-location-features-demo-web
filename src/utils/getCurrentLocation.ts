@@ -3,7 +3,7 @@
 
 import { showToast } from "@demo/core";
 
-import appConfig from "@demo/core/constants/appConfig";
+import { appConfig } from "@demo/core/constants";
 import { CurrentLocationDataType, ToastType } from "@demo/types";
 import * as R from "ramda";
 
@@ -20,7 +20,6 @@ export const getCurrentLocation = (
 				const {
 					coords: { latitude, longitude }
 				} = currentLocation;
-				// setCurrentLocation({ currentLocation, error: undefined });
 				setCurrentLocation({ currentLocation: { latitude, longitude }, error: undefined });
 				setTimeout(() => {
 					window.location.reload();
@@ -56,12 +55,12 @@ export const getCurrentLocation = (
 		);
 	} else {
 		const errorObj = {
-			PERMISSION_DENIED: 1,
+			PERMISSION_DENIED: 1 as number,
 			POSITION_UNAVAILABLE: 2,
 			TIMEOUT: 3,
 			code: 1,
 			message: "Please check that your location services are enabled on your phone."
-		};
+		} as GeolocationPositionError;
 
 		setCurrentLocation({ currentLocation: undefined, error: errorObj });
 		showToast({ content: errorObj.message, type: ToastType.ERROR });

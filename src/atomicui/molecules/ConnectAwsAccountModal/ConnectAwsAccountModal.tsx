@@ -5,21 +5,18 @@ import React, { useMemo, useState } from "react";
 
 import { Button, Flex, Link, Text, View } from "@aws-amplify/ui-react";
 import { IconAwsCloudFormation, IconCheckMarkCircle } from "@demo/assets";
-import { TextEl } from "@demo/atomicui/atoms";
-import { InputField, Modal } from "@demo/atomicui/molecules";
-import appConfig from "@demo/core/constants/appConfig";
-import connectAwsAccount from "@demo/core/constants/connectAwsAccount";
+import { Modal, TextEl } from "@demo/atomicui/atoms";
+import { InputField } from "@demo/atomicui/molecules";
+import { appConfig, connectAwsAccountData } from "@demo/core/constants";
 import { useAmplifyAuth, useAws } from "@demo/hooks";
 import { ConnectFormValuesType } from "@demo/types";
-
 import "./styles.scss";
 
 const {
-	CF_TEMPLATE,
+	ENV: { CF_TEMPLATE },
 	ROUTES: { HELP },
-	AWS_TERMS_AND_CONDITIONS
+	LINKS: { AWS_TERMS_AND_CONDITIONS }
 } = appConfig;
-
 const {
 	TITLE,
 	TITLE_DESC,
@@ -33,7 +30,7 @@ const {
 	AGREE,
 	POST_CONNECT,
 	POST_CONNECT_DESC
-} = connectAwsAccount;
+} = connectAwsAccountData;
 
 interface ConnectAwsAccountModalProps {
 	open: boolean;

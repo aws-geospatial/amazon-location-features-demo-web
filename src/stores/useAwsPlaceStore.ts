@@ -1,14 +1,14 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import appConfig from "@demo/core/constants/appConfig";
+import { appConfig } from "@demo/core/constants";
 import { ClustersType, IStateProps, SuggestionType, ViewPointType } from "@demo/types";
 import { Double } from "aws-sdk/clients/location";
 
 import createStore from "./createStore";
 
 const {
-	GLOBAL_CONSTANTS: { AMAZON_OFFICE }
+	MAP_RESOURCES: { AMAZON_OFFICE }
 } = appConfig;
 
 interface AwsPlaceStoreProps {

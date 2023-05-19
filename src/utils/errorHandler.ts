@@ -3,12 +3,11 @@
 
 import { showToast } from "@demo/core/Toast";
 
-import appConfig from "@demo/core/constants/appConfig";
+import { appConfig } from "@demo/core/constants";
 import { ToastType } from "@demo/types";
 
 const {
-	GLOBAL_CONSTANTS: { LOCAL_STORAGE_PREFIX },
-	PERSIST_STORAGE_KEYS: { SHOULD_CLEAR_CREDENTIALS, AMPLIFY_AUTH_DATA },
+	PERSIST_STORAGE_KEYS: { LOCAL_STORAGE_PREFIX, SHOULD_CLEAR_CREDENTIALS, AMPLIFY_AUTH_DATA },
 	ROUTES: { ERROR_BOUNDARY }
 } = appConfig;
 const authLocalStorageKey = `${LOCAL_STORAGE_PREFIX}${AMPLIFY_AUTH_DATA}`;

@@ -3,14 +3,23 @@
 
 import { useMemo } from "react";
 
-import appConfig from "@demo/core/constants/appConfig";
+import { appConfig } from "@demo/core/constants";
 import { useAmplifyMapService } from "@demo/services";
 import { useAmplifyMapStore } from "@demo/stores";
-import { CurrentLocationDataType, EsriMapEnum, HereMapEnum, MapProviderEnum, MapUnitEnum } from "@demo/types";
+import {
+	CurrentLocationDataType,
+	EsriMapEnum,
+	GrabMapEnum,
+	HereMapEnum,
+	MapProviderEnum,
+	MapUnitEnum
+} from "@demo/types";
 
 import { errorHandler } from "@demo/utils/errorHandler";
 
-const { imperialCountries } = appConfig;
+const {
+	MAP_RESOURCES: { IMPERIAL_COUNTRIES }
+} = appConfig;
 const { IMPERIAL, METRIC } = MapUnitEnum;
 
 const useAmplifyMap = () => {
@@ -43,7 +52,7 @@ const useAmplifyMap = () => {
 			},
 			setAutomaticMapUnit: () => {
 				if (store.isAutomaticMapUnit) {
-					const isMetric = !imperialCountries.includes(navigator.language.toUpperCase().substring(0, 2));
+					const isMetric = !IMPERIAL_COUNTRIES.includes(navigator.language.split("-")[1]);
 					isMetric ? setState({ mapUnit: METRIC }) : setState({ mapUnit: IMPERIAL });
 				}
 			},
@@ -53,7 +62,7 @@ const useAmplifyMap = () => {
 			setMapProvider: (mapProvider: MapProviderEnum) => {
 				setState({ mapProvider });
 			},
-			setMapStyle: (mapStyle: EsriMapEnum | HereMapEnum) => {
+			setMapStyle: (mapStyle: EsriMapEnum | HereMapEnum | GrabMapEnum) => {
 				setState({ mapStyle });
 			},
 			setAttributionText: (attributionText: string) => {

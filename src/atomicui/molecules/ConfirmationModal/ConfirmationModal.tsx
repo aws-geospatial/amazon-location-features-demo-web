@@ -4,7 +4,7 @@
 import React from "react";
 
 import { Button, Flex, Text } from "@aws-amplify/ui-react";
-import { Modal } from "@demo/atomicui/molecules";
+import { Modal } from "@demo/atomicui/atoms";
 import "./styles.scss";
 
 interface ConfirmationModalProps {

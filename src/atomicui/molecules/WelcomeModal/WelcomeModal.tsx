@@ -5,9 +5,9 @@ import React from "react";
 
 import { Button, Flex, Text } from "@aws-amplify/ui-react";
 import { LogoSmall } from "@demo/assets";
-import { Modal } from "@demo/atomicui/molecules";
+import { Modal } from "@demo/atomicui/atoms";
+import { appConfig } from "@demo/core/constants";
 import "./styles.scss";
-import appConfig from "@demo/core/constants/appConfig";
 
 const {
 	ROUTES: { TERMS }
