@@ -66,6 +66,7 @@ const appConfig = {
 	},
 	MAP_RESOURCES: {
 		IMPERIAL_COUNTRIES: ["US", "GB", "LR", "MM"],
+		GRAB_SUPPORTED_AWS_REGIONS: ["ap-southeast-1"],
 		AMAZON_OFFICE: {
 			longitude: -122.3382794774697,
 			latitude: 47.615070822950685

@@ -32,6 +32,7 @@ const {
 	ENV: { CF_TEMPLATE },
 	ROUTES: { HELP },
 	MAP_RESOURCES: {
+		GRAB_SUPPORTED_AWS_REGIONS,
 		MAP_STYLES: { ESRI_STYLES, HERE_STYLES, GRAB_STYLES }
 	},
 	LINKS: { AWS_TERMS_AND_CONDITIONS }
@@ -46,11 +47,18 @@ interface SettingsModalProps {
 	onClose: () => void;
 	resetAppState: () => void;
 	onShowGrabDisclaimerModal: (mapStyle?: GrabMapEnum) => void;
+	onShowGridLoader: () => void;
 }
 
-const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppState, onShowGrabDisclaimerModal }) => {
+const SettingsModal: React.FC<SettingsModalProps> = ({
+	open,
+	onClose,
+	resetAppState,
+	onShowGrabDisclaimerModal,
+	onShowGridLoader
+}) => {
 	const [selectedOption, setSelectedOption] = useState<SettingOptionEnum>(SettingOptionEnum.UNITS);
-	const { switchToDefaultRegionStack } = useAmplifyAuth();
+	const { switchToDefaultRegionStack, region } = useAmplifyAuth();
 	const {
 		isAutomaticMapUnit,
 		setIsAutomaticMapUnit,
@@ -86,6 +94,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 	const { detachPolicy } = useAwsIot();
 	const keyArr = Object.keys(formValues);
 	const isAuthenticated = !!credentials?.authenticated;
+	const isGrabVisible =
+		!isUserAwsAccountConnected || (isUserAwsAccountConnected && GRAB_SUPPORTED_AWS_REGIONS.includes(region));
 
 	const handleAutoMapUnitChange = useCallback(() => {
 		setIsAutomaticMapUnit(true);
@@ -103,6 +113,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 
 	const onMapProviderChange = useCallback(
 		(mapProvider: MapProviderEnum) => {
+			onShowGridLoader();
+
 			if (mapProvider === GRAB) {
 				onShowGrabDisclaimerModal();
 			} else {
@@ -125,6 +137,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 			);
 		},
 		[
+			onShowGridLoader,
 			onShowGrabDisclaimerModal,
 			currentMapProvider,
 			switchToDefaultRegionStack,
@@ -140,6 +153,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 		(mapStyle: EsriMapEnum | HereMapEnum | GrabMapEnum) => {
 			const splitArr = mapStyle.split(".");
 			const mapProviderFromStyle = splitArr[splitArr.length - 2] as MapProviderEnum;
+			onShowGridLoader();
 
 			if (
 				(currentMapProvider === ESRI && mapProviderFromStyle === ESRI) ||
@@ -168,6 +182,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 			}
 		},
 		[
+			onShowGridLoader,
 			currentMapProvider,
 			setMapStyle,
 			switchToDefaultRegionStack,
@@ -327,16 +342,18 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 							</Radio>
 						</Flex>
 						{/* Grab */}
-						<Flex gap={0} padding="1.08rem 0rem">
-							<Radio
-								data-testid="data-provider-grab-radio"
-								value={GRAB}
-								checked={currentMapProvider === GRAB}
-								onChange={() => onMapProviderChange(GRAB)}
-							>
-								<TextEl marginLeft="1.23rem" text={GRAB} />
-							</Radio>
-						</Flex>
+						{isGrabVisible && (
+							<Flex gap={0} padding="1.08rem 0rem">
+								<Radio
+									data-testid="data-provider-grab-radio"
+									value={GRAB}
+									checked={currentMapProvider === GRAB}
+									onChange={() => onMapProviderChange(GRAB)}
+								>
+									<TextEl marginLeft="1.23rem" text={GRAB} />
+								</Radio>
+							</Flex>
+						)}
 					</Flex>
 				)
 			},
@@ -370,8 +387,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 								))}
 							</Flex>
 						</Flex>
-						<Divider className="styles-divider" />
 						{/* HERE */}
+						<Divider className="styles-divider" />
 						<Flex gap={0} direction="column" padding="1.31rem 0rem 1.23rem 0rem">
 							<TextEl fontSize="1rem" lineHeight="1.38rem" variation="tertiary" text={HERE} />
 							<Flex className="sm-styles-container">
@@ -388,24 +405,28 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 								))}
 							</Flex>
 						</Flex>
-						<Divider className="styles-divider" />
 						{/* Grab */}
-						<Flex gap={0} direction="column" padding="1.31rem 0rem 1.23rem 0rem">
-							<TextEl fontSize="1rem" lineHeight="1.38rem" variation="tertiary" text={GRAB} />
-							<Flex className="sm-styles-container">
-								{GRAB_STYLES.map(({ id, image, name }) => (
-									<Flex
-										data-testid="gran-map-style"
-										key={id}
-										className={id === currentMapStyle ? "sm-style selected" : "sm-style"}
-										onClick={() => onMapStyleChange(id)}
-									>
-										<img src={image} />
-										<TextEl marginTop="0.62rem" text={name} />
+						{isGrabVisible && (
+							<>
+								<Divider className="styles-divider" />
+								<Flex gap={0} direction="column" padding="1.31rem 0rem 1.23rem 0rem">
+									<TextEl fontSize="1rem" lineHeight="1.38rem" variation="tertiary" text={GRAB} />
+									<Flex className="sm-styles-container">
+										{GRAB_STYLES.map(({ id, image, name }) => (
+											<Flex
+												data-testid="gran-map-style"
+												key={id}
+												className={id === currentMapStyle ? "sm-style selected" : "sm-style"}
+												onClick={() => onMapStyleChange(id)}
+											>
+												<img src={image} />
+												<TextEl marginTop="0.62rem" text={name} />
+											</Flex>
+										))}
 									</Flex>
-								))}
-							</Flex>
-						</Flex>
+								</Flex>
+							</>
+						)}
 					</Flex>
 				)
 			},
@@ -567,6 +588,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 		[
 			currentMapUnit,
 			isAutomaticMapUnit,
+			isGrabVisible,
 			handleAutoMapUnitChange,
 			onMapUnitChange,
 			currentMapProvider,

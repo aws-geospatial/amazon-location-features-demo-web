@@ -63,7 +63,7 @@ const {
 	LINKS: { AMAZON_LOCATION_TERMS_AND_CONDITIONS }
 } = appConfig;
 const initShow = {
-	loader: true,
+	gridLoader: true,
 	sidebar: false,
 	routeBox: false,
 	signInModal: false,
@@ -82,7 +82,7 @@ let timeout: NodeJS.Timer | undefined;
 
 const DemoPage: React.FC = () => {
 	const [show, setShow] = React.useState<{
-		loader: boolean;
+		gridLoader: boolean;
 		sidebar: boolean;
 		routeBox: boolean;
 		signInModal: boolean;
@@ -425,9 +425,10 @@ const DemoPage: React.FC = () => {
 		setMapProvider(MapProviderEnum.GRAB);
 		setMapStyle(show.mapStyle ? show.mapStyle : GrabMapEnum.GRAB_STANDARD_LIGHT);
 		resetAppState();
+		setShow(s => ({ ...s, gridLoader: true }));
 	}, [switchToAsiaRegionStack, resetAwsStore, setMapProvider, setMapStyle, show, resetAppState]);
 
-	return credentials ? (
+	return (
 		<View style={{ height }}>
 			<Map
 				style={{ width: "100%", height: "100%" }}
@@ -450,11 +451,13 @@ const DemoPage: React.FC = () => {
 						? (MAX_BOUNDS.GRAB as LngLatBoundsLike)
 						: (MAX_BOUNDS.DEFAULT as LngLatBoundsLike)
 				}
-				onError={error => errorHandler(error.error)}
-				onIdle={() => show.loader && setShow(s => ({ ...s, loader: false }))}
+				onError={error => (!!credentials ? errorHandler(error.error) : console.error("MAP_ERROR:", { error }))}
+				onIdle={() => {
+					show.gridLoader && setShow(s => ({ ...s, gridLoader: false }));
+				}}
 				transformRequest={transformRequest}
 			>
-				<View className={show.loader ? "loader-container" : ""}>
+				<View className={show.gridLoader ? "loader-container" : ""}>
 					{show.sidebar && (
 						<Sidebar
 							onCloseSidebar={() => setShow(s => ({ ...s, sidebar: false }))}
@@ -508,6 +511,7 @@ const DemoPage: React.FC = () => {
 						onShowGrabDisclaimerModal={(mapStyle?: GrabMapEnum) =>
 							setShow(s => ({ ...s, grabDisclaimerModal: true, mapStyle }))
 						}
+						onShowGridLoader={() => setShow(s => ({ ...s, gridLoader: true }))}
 					/>
 					{locationError ? (
 						<Flex className="location-disabled" onClick={getCurrentGeoLocation}>
@@ -562,6 +566,7 @@ const DemoPage: React.FC = () => {
 				onShowGrabDisclaimerModal={(mapStyle?: GrabMapEnum) =>
 					setTimeout(() => setShow(s => ({ ...s, grabDisclaimerModal: true, mapStyle })), 0)
 				}
+				onShowGridLoader={() => setShow(s => ({ ...s, gridLoader: true }))}
 			/>
 			<AboutModal open={show.about} onClose={() => setShow(s => ({ ...s, about: false }))} />
 			<InformationModal
@@ -600,7 +605,7 @@ const DemoPage: React.FC = () => {
 				{currentMapStyle.toLowerCase().includes("dark") ? <LogoDark /> : <LogoLight />}
 			</Flex>
 		</View>
-	) : null;
+	);
 };
 
 export default DemoPage;
