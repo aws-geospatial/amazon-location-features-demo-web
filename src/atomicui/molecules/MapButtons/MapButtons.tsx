@@ -282,7 +282,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 						{currentMapProvider === HERE && <Divider className="mb-divider" />}
 						{/* Grab */}
 						<Flex
-							data-testid="map-data-provider-here"
+							data-testid="map-data-provider-grab"
 							className={
 								currentMapProvider === GRAB ? "map-data-provider selected-map-data-provider" : "map-data-provider"
 							}
