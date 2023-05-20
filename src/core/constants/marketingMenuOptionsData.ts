@@ -5,8 +5,7 @@ import IconCodeMenu from "@demo/assets/icons/icon-code-menu-icon.svg";
 import IconCompassMenu from "@demo/assets/icons/icon-compass-menu-icon.svg";
 // import IconCubesMenu from "assets/icons/icon-cubes-menu-icon.svg";
 import IconPlayMenu from "@demo/assets/icons/icon-play-menu-icon.svg";
-
-import appConfig from "./appConfig";
+import { appConfig } from "@demo/core/constants";
 
 const {
 	ENV: { APPLE_APP_STORE_LINK, GOOGLE_PLAY_STORE_LINK },
@@ -18,7 +17,7 @@ const {
 	}
 } = appConfig;
 
-const marketingMenuOptions = [
+const marketingMenuOptionsData = [
 	{
 		label: "Overview",
 		link: OVERVIEW,
@@ -59,6 +58,4 @@ const marketingMenuOptions = [
 	}
 ];
 
-const sidebarData = marketingMenuOptions.filter(v => v.label !== "Demo");
-
-export default sidebarData;
+export default marketingMenuOptionsData;
