@@ -3,13 +3,7 @@
 
 describe("Settings", () => {
 	beforeEach(() => {
-		cy.visit(Cypress.env("WEB_DOMAIN"), {
-			auth: {
-				username: Cypress.env("WEB_DOMAIN_USERNAME"),
-				password: Cypress.env("WEB_DOMAIN_PASSWORD")
-			}
-		});
-		cy.wait(5000);
+		cy.visitDomain(Cypress.env("WEB_DOMAIN"))
 		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 		cy.get('[id="Icon"]').click();
 		cy.contains("Settings").click();
