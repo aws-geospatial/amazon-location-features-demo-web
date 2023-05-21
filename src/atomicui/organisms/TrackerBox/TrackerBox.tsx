@@ -332,7 +332,7 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 				{!isCollapsed && renderTrackerPointsList}
 				{!!trackerPoints?.length && (
 					<Flex className="show-hide-details-container bottom-border-radius" onClick={() => setIsCollapsed(s => !s)}>
-						<Text className="text">{isCollapsed ? "Route details" : "Hide details"}</Text>
+						<Text className="text">{isCollapsed ? "Tracker details" : "Hide details"}</Text>
 						<IconArrow style={{ transform: isCollapsed ? "rotate(0deg)" : "rotate(180deg)" }} />
 					</Flex>
 				)}

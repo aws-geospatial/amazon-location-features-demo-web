@@ -7,14 +7,17 @@ import { Autocomplete, ComboBoxOption, Flex, Loader, View } from "@aws-amplify/u
 import { IconActionMenu, IconClose, IconDirections, IconPin, IconSearch } from "@demo/assets";
 import { TextEl } from "@demo/atomicui/atoms";
 import { Marker, NotFoundCard, SuggestionMarker } from "@demo/atomicui/molecules";
-import { useAwsPlace } from "@demo/hooks";
-import { SuggestionType } from "@demo/types";
+import { useAmplifyMap, useAwsPlace } from "@demo/hooks";
+import { DistanceUnitEnum, MapUnitEnum, SuggestionType } from "@demo/types";
 import { uuid } from "@demo/utils/uuid";
 import { LngLat } from "mapbox-gl";
 import { MapRef } from "react-map-gl";
 import { Tooltip } from "react-tooltip";
 
 import "./styles.scss";
+
+const { METRIC } = MapUnitEnum;
+const { KILOMETERS_SHORT, METERS_SHORT, MILES_SHORT, FEET_SHORT } = DistanceUnitEnum;
 
 interface SearchBoxProps {
 	mapRef: MapRef | null;
@@ -42,6 +45,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	const [value, setValue] = useState<string>("");
 	const [isFocused, setIsFocused] = useState(false);
 	const autocompleteRef = useRef<HTMLInputElement | null>(null);
+	const { mapUnit: currentMapUnit } = useAmplifyMap();
 	const {
 		clusters,
 		suggestions,
@@ -126,8 +130,20 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		const title = separateIndex > -1 ? label.substring(0, separateIndex) : label;
 		const address = separateIndex > 1 ? label.substring(separateIndex + 1).trim() : null;
 		const _distance = distance ? parseFloat(distance) : undefined;
-		const unit = _distance ? (_distance > 1000 ? "km" : "m") : undefined;
-		const computedDistance = _distance ? (unit === "km" ? _distance / 1000 : _distance).toFixed(1) : undefined;
+		const unit = _distance
+			? currentMapUnit === METRIC
+				? _distance > 1000
+					? KILOMETERS_SHORT
+					: METERS_SHORT
+				: _distance * 3.281 > 5280
+				? MILES_SHORT
+				: FEET_SHORT
+			: undefined;
+		const computedDistance = _distance
+			? currentMapUnit === METRIC
+				? (unit === KILOMETERS_SHORT ? _distance / 1000 : _distance).toFixed(1)
+				: (unit === MILES_SHORT ? _distance / 1609 : _distance * 3.281).toFixed(1)
+			: undefined;
 
 		return (
 			<Flex key={id} className="option-container" onMouseOver={() => setHover(option)}>

@@ -4,14 +4,17 @@
 import React, { useCallback, useEffect, useMemo } from "react";
 
 // import { IconTrackerIntersect } from "@demo/assets";
-import { useAwsGeofence, useAwsRoute, useAwsTracker, usePersistedData } from "@demo/hooks";
-import { DistanceUnit, RouteDataType, TrackerType, TravelMode } from "@demo/types";
+import { useAmplifyMap, useAwsGeofence, useAwsRoute, useAwsTracker, usePersistedData } from "@demo/hooks";
+import { DistanceUnitEnum, MapUnitEnum, RouteDataType, TrackerType, TravelMode } from "@demo/types";
 import * as turf from "@turf/turf";
 import { CalculateRouteRequest, Position } from "aws-sdk/clients/location";
 import { Layer, LayerProps, MapRef, Marker, Source } from "react-map-gl";
 // import { calculateGeodesicDistance } from "@demo/utils/geoCalculation";
 
 import { trackerTypes } from "./TrackerBox";
+
+const { IMPERIAL } = MapUnitEnum;
+const { MILES, KILOMETERS } = DistanceUnitEnum;
 
 interface TrackerSimulationProps {
 	mapRef: MapRef | null;
@@ -45,6 +48,7 @@ const TrackerSimulation: React.FC<TrackerSimulationProps> = ({
 	setTrackerPos,
 	isDesktop
 }) => {
+	const { mapUnit: currentMapUnit } = useAmplifyMap();
 	const { getRoute } = useAwsRoute();
 	const {
 		evaluateGeofence
@@ -58,7 +62,7 @@ const TrackerSimulation: React.FC<TrackerSimulationProps> = ({
 		if (trackerPoints && trackerPoints.length >= 2) {
 			const params: Omit<CalculateRouteRequest, "CalculatorName" | "DepartNow"> = {
 				IncludeLegGeometry: true,
-				DistanceUnit: DistanceUnit.KILOMETERS,
+				DistanceUnit: currentMapUnit === IMPERIAL ? MILES : KILOMETERS,
 				DeparturePosition: trackerPoints[0],
 				DestinationPosition: trackerPoints[trackerPoints.length - 1],
 				TravelMode: selectedTrackerType === TrackerType.WALK ? TravelMode.WALKING : TravelMode.CAR,
@@ -78,7 +82,7 @@ const TrackerSimulation: React.FC<TrackerSimulationProps> = ({
 					travelMode: selectedTrackerType === TrackerType.WALK ? TrackerType.WALK : TrackerType.CAR
 				});
 		}
-	}, [trackerPoints, selectedTrackerType, defaultRouteOptions, getRoute, setRouteData]);
+	}, [trackerPoints, currentMapUnit, selectedTrackerType, defaultRouteOptions, getRoute, setRouteData]);
 
 	/* Route calculation for travel mode drone */
 	const calculatePath = useCallback(() => {

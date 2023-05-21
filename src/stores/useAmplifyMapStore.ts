@@ -2,7 +2,14 @@
 /* SPDX-License-Identifier: MIT-0 */
 
 import appConfig from "@demo/core/constants/appConfig";
-import { CurrentLocationDataType, EsriMapEnum, HereMapEnum, IStateProps, MapProviderEnum } from "@demo/types";
+import {
+	CurrentLocationDataType,
+	EsriMapEnum,
+	HereMapEnum,
+	IStateProps,
+	MapProviderEnum,
+	MapUnitEnum
+} from "@demo/types";
 
 import createStore from "./createStore";
 
@@ -14,12 +21,16 @@ const localStorageKey = `${LOCAL_STORAGE_PREFIX}${AMPLIFY_MAP_DATA}`;
 
 interface AmplifyMapStoreProps {
 	currentLocationData?: CurrentLocationDataType;
+	isAutomaticMapUnit: boolean;
+	mapUnit: MapUnitEnum;
 	mapProvider: MapProviderEnum;
 	mapStyle: EsriMapEnum | HereMapEnum;
 	attributionText: string;
 }
 
 const initialState: IStateProps<AmplifyMapStoreProps> = {
+	isAutomaticMapUnit: true,
+	mapUnit: MapUnitEnum.IMPERIAL,
 	mapProvider: MapProviderEnum.ESRI,
 	mapStyle: EsriMapEnum.ESRI_LIGHT,
 	attributionText: "Esri, HERE, Garmin, FAO, NOAA, USGS, © OpenStreetMap contributors, and the GIS User Community"
