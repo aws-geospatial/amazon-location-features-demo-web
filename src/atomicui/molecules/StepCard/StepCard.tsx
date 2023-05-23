@@ -5,13 +5,10 @@ import React, { memo, useCallback, useEffect, useState } from "react";
 
 import { Text, View } from "@aws-amplify/ui-react";
 import { IconDestination, IconSegment } from "@demo/assets";
-import { useAmplifyMap, useAwsPlace } from "@demo/hooks";
-import { DistanceUnitEnum, MapUnitEnum, SuggestionType, TravelMode } from "@demo/types";
+import { useAwsPlace } from "@demo/hooks";
+import { SuggestionType, TravelMode } from "@demo/types";
 import { Position, Step } from "aws-sdk/clients/location";
 import "./styles.scss";
-
-const { METRIC } = MapUnitEnum;
-const { KILOMETERS_SHORT, MILES_SHORT } = DistanceUnitEnum;
 
 interface StepCardProps {
 	step: Step;
@@ -22,7 +19,6 @@ interface StepCardProps {
 
 const StepCard: React.FC<StepCardProps> = ({ step, isFirst, isLast, travelMode }) => {
 	const [placeData, setPlaceData] = useState<SuggestionType | undefined>(undefined);
-	const { mapUnit: currentMapUnit } = useAmplifyMap();
 	const { getPlaceDataByCoordinates } = useAwsPlace();
 	const onlyOneEl = isFirst && isLast;
 
@@ -78,7 +74,7 @@ const StepCard: React.FC<StepCardProps> = ({ step, isFirst, isLast, travelMode }
 				<Text>
 					{placeData.Place?.Label || `${(placeData.Place?.Geometry.Point?.[1], placeData.Place?.Geometry.Point?.[0])}`}
 				</Text>
-				<Text>{`${step.Distance.toFixed(2)} ${currentMapUnit === METRIC ? KILOMETERS_SHORT : MILES_SHORT}`}</Text>
+				<Text>{`${step.Distance.toFixed(2)} km`}</Text>
 			</View>
 		</View>
 	) : null;

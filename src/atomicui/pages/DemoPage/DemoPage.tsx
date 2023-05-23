@@ -4,7 +4,7 @@
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 
 import { Flex, Text, View } from "@aws-amplify/ui-react";
-import { IconLocateMe, LogoDark, LogoLight } from "@demo/assets";
+import { IconLocateMe, LogoStroke } from "@demo/assets";
 import {
 	ConnectAwsAccountModal,
 	ConfirmationModal as InformationModal,
@@ -51,11 +51,12 @@ import {
 	MapRef,
 	NavigationControl
 } from "react-map-gl";
+import { useLocation } from "react-router-dom";
 
 import "./styles.scss";
 
 const {
-	PERSIST_STORAGE_KEYS: { SHOULD_CLEAR_CREDENTIALS, GEO_LOCATION_ALLOWED },
+	PERSIST_STORAGE_KEYS: { GEO_LOCATION_ALLOWED },
 	AMAZON_LOCATION_TERMS_AND_CONDITIONS,
 	ROUTES: { DEMO }
 } = appConfig;
@@ -72,8 +73,6 @@ const initShow = {
 	trackingDisclaimerModal: false,
 	about: false
 };
-let interval: NodeJS.Timer | undefined;
-let timeout: NodeJS.Timer | undefined;
 
 const DemoPage: React.FC = () => {
 	const [show, setShow] = React.useState<{
@@ -92,25 +91,11 @@ const DemoPage: React.FC = () => {
 	const [height, setHeight] = React.useState(window.innerHeight);
 	const mapViewRef = useRef<MapRef | null>(null);
 	const geolocateControlRef = useRef<GeolocateControlRef | null>(null);
-	const {
-		credentials,
-		getCurrentUserCredentials,
-		clearCredentials,
-		region,
-		authTokens,
-		setAuthTokens,
-		onLogout,
-		handleCurrentSession
-	} = useAmplifyAuth();
+	const { credentials, getCurrentUserCredentials, clearCredentials, region, authTokens, setAuthTokens, onLogout } =
+		useAmplifyAuth();
 	const { locationClient, createLocationClient, iotClient, createIotClient, resetStore: resetAwsStore } = useAws();
 	const { attachPolicy } = useAwsIot();
-	const {
-		mapStyle: currentMapStyle,
-		currentLocationData,
-		setCurrentLocation,
-		isAutomaticMapUnit,
-		setAutomaticMapUnit
-	} = useAmplifyMap();
+	const { mapStyle, currentLocationData, setCurrentLocation } = useAmplifyMap();
 	const {
 		setViewpoint,
 		setMarker,
@@ -128,57 +113,28 @@ const DemoPage: React.FC = () => {
 	const { resetStore: resetAwsGeofenceStore } = useAwsGeofence();
 	const { isEditingRoute, trackerPoints, setTrackerPoints, resetStore: resetAwsTrackingStore } = useAwsTracker();
 	const { showWelcomeModal, setShowWelcomeModal } = usePersistedData();
+	const location = useLocation();
 	const isDesktop = useMediaQuery("(min-width: 1024px)");
-	const shouldClearCredentials = localStorage.getItem(SHOULD_CLEAR_CREDENTIALS) === "true";
-
-	useEffect(() => {
-		if (isAutomaticMapUnit) {
-			setAutomaticMapUnit();
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isAutomaticMapUnit]);
 
 	const clearCredsAndLocationClient = useCallback(() => {
 		clearCredentials();
 		resetAwsStore();
 	}, [clearCredentials, resetAwsStore]);
 
-	if (shouldClearCredentials || (!!credentials && !credentials?.identityId)) {
-		localStorage.removeItem(SHOULD_CLEAR_CREDENTIALS);
+	if (!!credentials && !credentials?.identityId) {
 		clearCredsAndLocationClient();
 	}
 
-	/* Fetch the current user credentials */
+	/* Fetch credentials when the app loads and set refresh timeout for when they expire */
 	useEffect(() => {
-		if (credentials?.identityId && credentials?.expiration) {
-			const now = new Date();
-			const expiration = new Date(credentials.expiration);
-
-			if (now > expiration) {
-				/* If the credentials are expired, clear them and the location client */
-				clearCredsAndLocationClient();
-			} else {
-				/* If the credentials are not expired, set the refresh interval/timeout */
-				interval && clearInterval(interval);
-				timeout && clearTimeout(timeout);
-
-				if (credentials.authenticated) {
-					/* If the credentials are authenticated, set the refresh interval */
-					interval = setInterval(() => {
-						handleCurrentSession(resetAwsStore);
-					}, 10 * 60 * 1000);
-				} else {
-					/* If the credentials are not authenticated, set the refresh timeout */
-					timeout = setTimeout(() => {
-						clearCredsAndLocationClient();
-					}, differenceInMilliseconds(new Date(credentials.expiration || 0), new Date()));
-				}
-			}
-		} else {
-			/* If the credentials are not present, fetch them */
+		if (!credentials) {
 			getCurrentUserCredentials();
+		} else {
+			setTimeout(() => {
+				clearCredsAndLocationClient();
+			}, differenceInMilliseconds(new Date(credentials.expiration || 0), new Date()));
 		}
-	}, [credentials, getCurrentUserCredentials, handleCurrentSession, resetAwsStore, clearCredsAndLocationClient]);
+	}, [credentials, getCurrentUserCredentials, clearCredsAndLocationClient]);
 
 	/* Instantiate location and iot client from aws-sdk whenever the credentials change */
 	useEffect(() => {
@@ -191,32 +147,23 @@ const DemoPage: React.FC = () => {
 		}
 	}, [credentials, locationClient, createLocationClient, region, iotClient, createIotClient]);
 
-	const _onLogout = useCallback(async () => {
-		await onLogout();
-		clearCredentials();
-		resetAwsStore();
-	}, [onLogout, clearCredentials, resetAwsStore]);
-
-	/* Fired when user logs in or logs out */
+	/* Clear old credentials to fetch new auth credentials when user signs in and save authTokens */
 	useEffect(() => {
-		const searchParams = new URLSearchParams(window.location.search);
-		const code = searchParams.get("code");
-		const state = searchParams.get("state");
-		const sign_out = searchParams.get("sign_out");
+		const { hash } = location;
+		const hashArr = hash.slice(1).split("&");
 
-		/* After login */
-		if (code && state && !authTokens) {
-			window.history.replaceState(undefined, "", DEMO);
-			setAuthTokens({ code, state });
+		if (hashArr.length > 1 && ["id_token", "access_token"].includes(hashArr[0].split("=")[0])) {
+			setAuthTokens({
+				id_token: hashArr[0].split("=")[1],
+				access_token: hashArr[1].split("=")[1],
+				expires_in: hashArr[2].split("=")[1],
+				token_type: hashArr[3].split("=")[1],
+				state: hashArr[4].split("=")[1]
+			});
+			location.hash = "";
 			setTimeout(() => clearCredsAndLocationClient(), 0);
 		}
-
-		/* After logout */
-		if (sign_out === "true") {
-			window.history.replaceState(undefined, "", DEMO);
-			!!credentials?.authenticated && !authTokens && _onLogout();
-		}
-	}, [setAuthTokens, clearCredsAndLocationClient, credentials, authTokens, _onLogout]);
+	}, [location, setAuthTokens, clearCredsAndLocationClient]);
 
 	const _attachPolicy = useCallback(async () => {
 		if (!!credentials?.authenticated && !!authTokens) {
@@ -224,10 +171,26 @@ const DemoPage: React.FC = () => {
 		}
 	}, [credentials, authTokens, attachPolicy]);
 
-	/* Attach IoT policy to authenticated user to ensure successful websocket connection */
+	/* Attach policy to authenticated user to ensure successful websocket connection */
 	useEffect(() => {
 		_attachPolicy();
 	}, [_attachPolicy]);
+
+	const _onLogout = useCallback(async () => {
+		await onLogout();
+		clearCredentials();
+		resetAwsStore();
+	}, [onLogout, clearCredentials, resetAwsStore]);
+
+	/* Sign user out when sign_out queary params received */
+	useEffect(() => {
+		const { search } = location;
+
+		if (search && search === "?sign_out=true" && !!credentials?.authenticated) {
+			window.history.replaceState(undefined, "", DEMO);
+			_onLogout();
+		}
+	}, [location, credentials, _onLogout]);
 
 	const onResize = useCallback(() => setHeight(window.innerHeight), []);
 
@@ -422,7 +385,7 @@ const DemoPage: React.FC = () => {
 						? { ...currentLocationData.currentLocation, zoom }
 						: { ...viewpoint, zoom }
 				}
-				mapStyle={currentMapStyle}
+				mapStyle={mapStyle}
 				onClick={handleMapClick}
 				onLoad={onLoad}
 				onZoom={({ viewState }) => setZoom(viewState.zoom)}
@@ -563,7 +526,7 @@ const DemoPage: React.FC = () => {
 				hideCancelButton
 			/>
 			<Flex className="logo-stroke-container">
-				{currentMapStyle.toLowerCase().includes("dark") ? <LogoDark /> : <LogoLight />}
+				<img src={LogoStroke} />
 			</Flex>
 		</View>
 	) : null;

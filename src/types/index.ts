@@ -12,7 +12,7 @@ export type { CurrentLocationDataType } from "./CurrentLocationDataType";
 export type { ClustersType } from "./ClustersType";
 export {
 	CirclreDrawTypeEnum,
-	DistanceUnitEnum,
+	DistanceUnit,
 	EsriMapEnum,
 	EsriMapStyleEnum,
 	HelpAccordionEnum,
@@ -21,7 +21,6 @@ export {
 	InputType,
 	LocationErrorMessage,
 	MapProviderEnum,
-	MapUnitEnum,
 	RadiusInM,
 	SettingOptionEnum,
 	ToastType,

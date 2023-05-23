@@ -5,6 +5,7 @@ import { useMemo } from "react";
 
 import { showToast } from "@demo/core/Toast";
 import appConfig from "@demo/core/constants/appConfig";
+import { useAwsIot } from "@demo/hooks";
 import { useAmplifyAuthService } from "@demo/services";
 import { useAmplifyAuthStore } from "@demo/stores";
 import { AuthTokensType, ConnectFormValuesType, ToastType } from "@demo/types";
@@ -13,15 +14,12 @@ import { errorHandler } from "@demo/utils/errorHandler";
 import { Amplify, Auth } from "aws-amplify";
 import AWS from "aws-sdk";
 
-const {
-	ROUTES: { DEMO, ERROR_BOUNDARY }
-} = appConfig;
-
 const useAmplifyAuth = () => {
 	const store = useAmplifyAuthStore();
 	const { setInitial } = store;
 	const { setState } = useAmplifyAuthStore;
-	const { getCurrentUserCredentials, login, logout, fetchHostedUi, getCurrentSession } = useAmplifyAuthService();
+	const { getCurrentUserCredentials, login, logout, fetchHostedUi } = useAmplifyAuthService();
+	const { detachPolicy } = useAwsIot();
 
 	const methods = useMemo(
 		() => ({
@@ -129,8 +127,8 @@ const useAmplifyAuth = () => {
 								oauth: {
 									domain,
 									scope: ["email", "openid", "profile"],
-									redirectSignIn: `${window.location.origin}${DEMO}`,
-									redirectSignOut: `${window.location.origin}${DEMO}`,
+									redirectSignIn: `${window.location.origin}${appConfig.ROUTES.DEMO}`,
+									redirectSignOut: `${window.location.origin}${appConfig.ROUTES.DEMO}`,
 									responseType: "token"
 								}
 							},
@@ -147,7 +145,7 @@ const useAmplifyAuth = () => {
 						setState({ credentials });
 					} else {
 						setState({ credentials: undefined });
-						window.location.replace(ERROR_BOUNDARY);
+						window.location.replace(appConfig.ROUTES.ERROR_BOUNDARY);
 					}
 				} catch (error) {
 					errorHandler(error, "Failed to fetch credentials");
@@ -180,35 +178,25 @@ const useAmplifyAuth = () => {
 			},
 			onLogin: async () => {
 				try {
-					setState({ authTokens: undefined });
 					await login();
 				} catch (error) {
 					errorHandler(error, "Failed to sign in");
 				}
 			},
-			onLogout: async () => {
+			onDetachPolicyAndLogout: async () => {
 				try {
-					await logout();
+					await detachPolicy(store.credentials!.identityId);
 					setState({ authTokens: undefined });
+					await logout();
 				} catch (error) {
 					errorHandler(error, "Failed to sign out");
 				}
 			},
-			onDisconnectAwsAccount: (resetAwsStore: () => void) => {
-				localStorage.clear();
-				methods.resetStore();
-				resetAwsStore();
-				setTimeout(() => {
-					window.location.reload();
-				}, 3000);
-			},
-			handleCurrentSession: async (resetAwsStore: () => void) => {
+			onLogout: async () => {
 				try {
-					await getCurrentSession();
-					await methods.getCurrentUserCredentials();
-					resetAwsStore();
+					await logout();
 				} catch (error) {
-					console.error("HANDLE_CURRENT_SESSION_ERROR===>>>", JSON.stringify(error));
+					errorHandler(error, "Failed to sign out");
 				}
 			},
 			resetStore: () => {
@@ -221,9 +209,17 @@ const useAmplifyAuth = () => {
 					webSocketUrl: undefined
 				});
 				setInitial();
+			},
+			onDisconnectAwsAccount: (resetAwsStore: () => void) => {
+				localStorage.clear();
+				methods.resetStore();
+				resetAwsStore();
+				setTimeout(() => {
+					window.location.reload();
+				}, 3000);
 			}
 		}),
-		[setInitial, setState, fetchHostedUi, getCurrentUserCredentials, login, logout, getCurrentSession]
+		[setInitial, setState, fetchHostedUi, getCurrentUserCredentials, login, store.credentials, detachPolicy, logout]
 	);
 
 	return { ...methods, ...store };

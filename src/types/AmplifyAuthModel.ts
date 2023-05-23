@@ -2,7 +2,10 @@
 /* SPDX-License-Identifier: MIT-0 */
 
 export type AuthTokensType = {
-	code: string;
+	id_token: string;
+	access_token: string;
+	expires_in: string;
+	token_type: string;
 	state: string;
 };
 

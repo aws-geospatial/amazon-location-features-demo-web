@@ -3,7 +3,13 @@
 
 describe("Tracker", () => {
 	beforeEach(() => {
-		cy.visitDomain(Cypress.env("WEB_DOMAIN"))
+		cy.visit(Cypress.env("WEB_DOMAIN"), {
+			auth: {
+				username: Cypress.env("WEB_DOMAIN_USERNAME"),
+				password: Cypress.env("WEB_DOMAIN_PASSWORD")
+			}
+		});
+		cy.wait(5000);
 		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 		cy.get('[id="Icon"]').click();
 		cy.wait(2000);
@@ -70,29 +76,21 @@ describe("Tracker", () => {
 		cy.contains("Simulate").click();
 		cy.wait(2000);
 		cy.get("div").should("contain", "Pause");
-		cy.get('[class="amplify-flex tracking-card-close"]').click();
-		cy.get('[id="Icon"]').click();
-		cy.contains("Sign out").click();
-		cy.wait(5000);
 	});
 
-	// it("should allow user to add a tracker for walk", () => {
-	// 	cy.get('[class="icon-container"]').eq(0).click();
-	// 	cy.wait(2000);
-	// 	cy.get('[class="mapboxgl-canvas"]').click("left");
-	// 	cy.wait(2000);
-	// 	cy.get('[class="mapboxgl-canvas"]').click("right");
-	// 	cy.wait(2000);
-	// 	cy.contains("Save").click();
-	// 	cy.wait(2000);
-	// 	cy.contains("Simulate").click();
-	// 	cy.wait(2000);
-	// 	cy.get("div").should("contain", "Pause");
-	// 	cy.get('[class="amplify-flex tracking-card-close"]').click();
-	// 	cy.get('[id="Icon"]').click();
-	// 	cy.contains("Sign out").click();
-	// 	cy.wait(5000);
-	// });
+	it("should allow user to add a tracker for walk", () => {
+		cy.get('[class="icon-container"]').eq(0).click();
+		cy.wait(2000);
+		cy.get('[class="mapboxgl-canvas"]').click("left");
+		cy.wait(2000);
+		cy.get('[class="mapboxgl-canvas"]').click("right");
+		cy.wait(2000);
+		cy.contains("Save").click();
+		cy.wait(2000);
+		cy.contains("Simulate").click();
+		cy.wait(2000);
+		cy.get("div").should("contain", "Pause");
+	});
 
 	it("should allow user to add a tracker for drone", () => {
 		cy.get('[class="icon-container"]').eq(1).click();
@@ -106,9 +104,6 @@ describe("Tracker", () => {
 		cy.contains("Simulate").click();
 		cy.wait(5000);
 		cy.get("div").should("contain", "Pause");
-		cy.get('[class="amplify-flex tracking-card-close"]').click();
-		cy.get('[id="Icon"]').click();
-		cy.contains("Sign out").click();
-		cy.wait(5000);
+		cy.wait(2000);
 	});
 });
