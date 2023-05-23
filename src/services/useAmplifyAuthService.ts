@@ -22,7 +22,8 @@ const useAmplifyAuthService = () => {
 				),
 			getCurrentUserCredentials: async () => await Auth.currentUserCredentials(),
 			login: async () => await Auth.federatedSignIn(),
-			logout: async () => await Auth.signOut()
+			logout: async () => await Auth.signOut(),
+			getCurrentSession: async () => await Auth.currentSession()
 		}),
 		[]
 	);

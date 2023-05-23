@@ -1,17 +1,15 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
+import { faker } from "@faker-js/faker";
+
 describe("Geofence", () => {
-	it("should allow user to add, edit and delete geofence", () => {
-		cy.visit(Cypress.env("WEB_DOMAIN"), {
-			auth: {
-				username: Cypress.env("WEB_DOMAIN_USERNAME"),
-				password: Cypress.env("WEB_DOMAIN_PASSWORD")
-			}
-		});
-		cy.wait(5000);
-		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
-		cy.get('[id="Icon"]').click();
+	const geofenceName = faker.random.word();
+
+	beforeEach(() => {
+		cy.visitDomain(Cypress.env("WEB_DOMAIN"));
+		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click({ force: true });
+		cy.get('[id="Icon"]').click({ force: true });
 		cy.wait(2000);
 		cy.contains("Settings").click();
 		cy.wait(2000);
@@ -50,23 +48,29 @@ describe("Geofence", () => {
 		cy.wait(5000);
 		cy.get('[class="amplify-flex geofence-button"]').click();
 		cy.wait(2000);
+	});
+
+	it("should allow user to add, edit and delete geofence", () => {
 		cy.get('[placeholder="Enter address or coordinates"]').type("Rio Tinto Perth Western Australia");
 		cy.wait(4000);
 		cy.contains("Rio Tinto Operations Centre").click();
 		cy.wait(2000);
-		cy.get('[placeholder="Type unique Geofence Name"]').type("Geofence1");
+		cy.get('[placeholder="Type unique Geofence Name"]').type(`${geofenceName}`);
 		cy.wait(2000);
 		cy.contains("Save").click();
 		cy.wait(2000);
-		cy.get("div").should("contain", "Geofence1");
+		cy.get("div").should("contain", `${geofenceName}`);
 		cy.wait(2000);
-		cy.contains("Geofence1").click();
+		cy.contains(`${geofenceName}`).click({ force: true });
 		cy.wait(2000);
-		cy.get('[type="number"]').type("50");
+		cy.contains("Save").should("be.disabled");
+		cy.contains("Go Back").click();
 		cy.wait(2000);
-		cy.contains("Save").click();
-		cy.wait(2000);
-		cy.get('[data-testid="icon-trash-Geofence1"]').click({ force: true });
-		cy.get('[class="geofences-list-container"]').should("not.contain", "Geofence1");
+		cy.get(`[data-testid="icon-trash-${geofenceName}"]`).click({ force: true });
+		cy.get('[class="geofences-list-container"]').should("not.contain", `${geofenceName}`);
+		cy.get('[class="amplify-flex geofence-card-close"]').click();
+		cy.get('[id="Icon"]').click();
+		cy.contains("Sign out").click();
+		cy.wait(5000);
 	});
 });
