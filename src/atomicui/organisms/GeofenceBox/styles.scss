@@ -8,6 +8,10 @@
 	overflow: hidden;
 	z-index: 4;
 
+	@media only screen and (max-width: 480px) {
+		width: 75% !important;
+	}
+
 	.geofence-card-header {
 		gap: 0;
 		padding: 10px 10px 10px 16px;
@@ -66,26 +70,26 @@
 		min-height: 20px;
 		border-radius: 50%;
 		background-color: var(--primary-color);
+	}
 
-		svg {
-			width: 18px;
-			height: 18px;
-			fill: var(--white-color);
-		}
+	.icon-plus-rounded > svg {
+		width: 18px;
+		height: 18px;
+		fill: var(--white-color);
 	}
 
 	.icon-search-container {
 		gap: 0;
 		align-items: center;
+	}
 
-		svg {
-			fill: var(--grey-color);
-			cursor: pointer;
+	.icon-search-container > svg {
+		fill: var(--grey-color);
+		cursor: pointer;
+	}
 
-			&:hover {
-				fill: var(--primary-color);
-			}
-		}
+	.icon-search-container > svg:hover {
+		fill: var(--primary-color);
 	}
 
 	.border-top {
@@ -106,10 +110,10 @@
 			width: 24px;
 			height: 24px;
 		}
+	}
 
-		&:hover {
-			background-color: var(--ghost-white);
-		}
+	.suggestion:hover {
+		background-color: var(--ghost-white);
 	}
 
 	.amplify-sliderfield__root.amplify-sliderfield__root--horizontal.geofence-radius-slider
@@ -179,71 +183,39 @@
 		overflow: scroll;
 		position: relative;
 
-		.border-bottom {
-			border-bottom: 1px solid var(--border-separator-color);
-		}
-
 		.geofence-item {
 			gap: 0;
 			padding: 10px 0px 10px 10px;
 			align-items: center;
 			cursor: pointer;
+		}
 
-			&:hover {
-				background-color: var(--ghost-white);
-			}
+		.geofence-item:hover {
+			background-color: var(--ghost-white);
+		}
+
+		.border-bottom {
+			border-bottom: 1px solid var(--border-separator-color);
 		}
 
 		.icon-trash-container {
 			display: flex;
 			align-items: center;
-
-			svg {
-				fill: var(--grey-color);
-				width: 16px;
-				height: 16px;
-				cursor: pointer;
-				position: absolute;
-				right: 16px;
-
-				&:hover {
-					fill: var(--primary-color);
-					background: var(--border-separator-color);
-					border-radius: 2px;
-				}
-			}
-		}
-	}
-
-	.show-hide-details-container {
-		gap: 0;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		width: 100%;
-		background-color: var(--light-color-2);
-		border-bottom-left-radius: 8px;
-		border-bottom-right-radius: 8px;
-
-		.text {
-			font-family: AmazonEmber-Bold;
-			font-size: 0.92rem;
-			margin-right: 0.31rem;
-			color: var(--primary-color);
 		}
 
-		svg {
-			width: 18px;
-			height: 18px;
+		.icon-trash-container > svg {
+			fill: var(--grey-color);
+			width: 16px;
+			height: 16px;
+			cursor: pointer;
+			position: absolute;
+			right: 16px;
+		}
+
+		.icon-trash-container > svg:hover {
 			fill: var(--primary-color);
+			background: var(--border-separator-color);
+			border-radius: 2px;
 		}
-
-		@media only screen and (min-width: 1024px) {
-			display: none;
-		}
-	}
-
-	@media only screen and (max-width: 480px) {
-		width: 75% !important;
 	}
 }

@@ -3,7 +3,13 @@
 
 describe("Search", () => {
 	beforeEach(() => {
-		cy.visitDomain(Cypress.env("WEB_DOMAIN"))
+		cy.visit(Cypress.env("WEB_DOMAIN"), {
+			auth: {
+				username: Cypress.env("WEB_DOMAIN_USERNAME"),
+				password: Cypress.env("WEB_DOMAIN_PASSWORD")
+			}
+		});
+		cy.wait(20000);
 		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 	});
 

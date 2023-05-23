@@ -25,10 +25,8 @@
 				border-left-style: solid;
 				border-left-color: var(--white-color);
 
-				@media only screen and (min-width: 1024px) {
-					&:hover {
-						background-color: rgba(0, 130, 150, 0.08);
-					}
+				&:hover {
+					background-color: rgba(0, 130, 150, 0.08);
 				}
 
 				&.selected {
@@ -62,17 +60,17 @@
 			}
 
 			.amplify-text.more-secondary-text {
-				font-family: "AmazonEmber-Regular";
-				font-size: 1rem;
-				line-height: 1.38rem;
-				color: var(--grey-color);
-				margin-top: 0.31rem;
-				a {
-					font-family: "AmazonEmber-Regular";
-					color: var(--primary-color);
-					cursor: pointer;
-					text-decoration: none;
-				}
+                font-family: "AmazonEmber-Regular";
+                font-size: 1rem;
+                line-height: 1.38rem;
+                color: var(--grey-color);
+                margin-top: 0.31rem;
+                a {
+                    font-family: "AmazonEmber-Regular";
+                    color: var(--primary-color);
+                    cursor: pointer;
+                    text-decoration: none;
+                }
 			}
 		}
 

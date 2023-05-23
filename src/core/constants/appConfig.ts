@@ -32,8 +32,7 @@ const appConfig = {
 		AMPLIFY_AUTH_DATA: "AmplifyAuthData",
 		AMPLIFY_MAP_DATA: "AmplifyMapData",
 		PERSISTED_DATA: "PersistedData",
-		GEO_LOCATION_ALLOWED: "GeoLocationAllowed",
-		SHOULD_CLEAR_CREDENTIALS: "ShouldClearCredentials"
+		GEO_LOCATION_ALLOWED: "GeoLocationAllowed"
 	},
 	ROUTES: {
 		DEFAULT: "/",
@@ -52,7 +51,6 @@ const appConfig = {
 		NOT_FOUND: "/404",
 		ERROR_BOUNDARY: "/error"
 	},
-	imperialCountries: ["US", "GB", "LR", "MM"],
 	AMAZON_LOCATION_GIT: "https://github.com/aws-geospatial",
 	AMAZON_LOCATION_BLOGS: "https://aws.amazon.com/blogs/mobile/category/mobile-services/amazon-location/",
 	AMAZON_LOCATION_DEV_GUIDE_SAMPLES: "https://docs.aws.amazon.com/location/latest/developerguide/samples.html",

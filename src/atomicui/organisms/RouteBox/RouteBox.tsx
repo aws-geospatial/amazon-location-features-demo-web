@@ -20,16 +20,13 @@ import {
 
 import { NotFoundCard, StepCard } from "@demo/atomicui/molecules";
 import { useAmplifyMap, useAwsPlace, useAwsRoute, useMediaQuery, usePersistedData } from "@demo/hooks";
-import { DistanceUnitEnum, InputType, MapUnitEnum, RouteOptionsType, SuggestionType, TravelMode } from "@demo/types";
+import { DistanceUnit, InputType, RouteOptionsType, SuggestionType, TravelMode } from "@demo/types";
 
 import { humanReadableTime } from "@demo/utils/dateTimeUtils";
 import { CalculateRouteRequest, LineString, Place, Position } from "aws-sdk/clients/location";
 import { Layer, LayerProps, LngLat, MapRef, Marker as ReactMapGlMarker, Source } from "react-map-gl";
 
 import "./styles.scss";
-
-const { METRIC } = MapUnitEnum;
-const { KILOMETERS, KILOMETERS_SHORT, MILES, MILES_SHORT } = DistanceUnitEnum;
 
 interface RouteBoxProps {
 	mapRef: MapRef | null;
@@ -53,7 +50,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 	const [isSearching, setIsSearching] = useState(false);
 	const [stepsData, setStepsData] = useState<Place[]>([]);
 	const [isCollapsed, setIsCollapsed] = useState(true);
-	const { currentLocationData, mapStyle, mapUnit: currentMapUnit } = useAmplifyMap();
+	const { currentLocationData, mapStyle } = useAmplifyMap();
 	const { search, getPlaceData } = useAwsPlace();
 	const {
 		setRoutePositions,
@@ -150,7 +147,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 		if (obj?.DeparturePosition && obj?.DestinationPosition) {
 			const params: Omit<CalculateRouteRequest, "CalculatorName" | "DepartNow"> = {
 				IncludeLegGeometry: true,
-				DistanceUnit: currentMapUnit === METRIC ? KILOMETERS : MILES,
+				DistanceUnit: DistanceUnit.KILOMETERS,
 				DeparturePosition: obj.DeparturePosition,
 				DestinationPosition: obj.DestinationPosition,
 				TravelMode: travelMode,
@@ -172,7 +169,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 			const rd = await getRoute(params as CalculateRouteRequest);
 			rd && setRouteData({ ...rd, travelMode: travelMode as TravelMode });
 		}
-	}, [getDestDept, currentMapUnit, travelMode, routeOptions, getRoute, setRouteData]);
+	}, [getDestDept, travelMode, routeOptions, getRoute, setRouteData]);
 
 	useEffect(() => {
 		!routeData && calculateRouteData();
@@ -641,9 +638,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 									<View className="separator" />
 									<Text className="grey-text">Selected</Text>
 								</View>
-								<Text className="grey-text">{`${routeData.Summary.Distance.toFixed(2)} ${
-									currentMapUnit === METRIC ? KILOMETERS_SHORT : MILES_SHORT
-								}`}</Text>
+								<Text className="grey-text">{`${routeData.Summary.Distance.toFixed(2)} km`}</Text>
 							</View>
 							<View className="duration">
 								<Text className="regular-text">{humanReadableTime(routeData.Summary.DurationSeconds * 1000)}</Text>

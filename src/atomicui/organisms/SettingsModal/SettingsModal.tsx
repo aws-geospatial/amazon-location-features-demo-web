@@ -4,25 +4,17 @@
 import React, { useCallback, useMemo, useState } from "react";
 
 import { Button, CheckboxField, Divider, Flex, Link, Radio, Text, View } from "@aws-amplify/ui-react";
-import {
-	IconAwsCloudFormation,
-	IconCloud,
-	IconMapOutlined,
-	IconPaintroller,
-	IconPeopleArrows,
-	IconShuffle
-} from "@demo/assets";
+import { IconAwsCloudFormation, IconCloud, IconMapOutlined, IconPaintroller, IconShuffle } from "@demo/assets";
 import { TextEl } from "@demo/atomicui/atoms";
 import { InputField, Modal } from "@demo/atomicui/molecules";
 import appConfig from "@demo/core/constants/appConfig";
 import connectAwsAccount from "@demo/core/constants/connectAwsAccount";
-import { useAmplifyAuth, useAmplifyMap, useAws, useAwsIot, usePersistedData } from "@demo/hooks";
+import { useAmplifyAuth, useAmplifyMap, useAws, usePersistedData } from "@demo/hooks";
 import {
 	ConnectFormValuesType,
 	EsriMapEnum,
 	HereMapEnum,
 	MapProviderEnum,
-	MapUnitEnum,
 	SettingOptionEnum,
 	SettingOptionItemType
 } from "@demo/types";
@@ -36,8 +28,9 @@ const {
 	ROUTES: { HELP },
 	AWS_TERMS_AND_CONDITIONS
 } = appConfig;
+
 const { TITLE, TITLE_DESC, HOW_TO, STEP1, STEP1_DESC, STEP2, STEP2_DESC, STEP3, STEP3_DESC, AGREE } = connectAwsAccount;
-const { IMPERIAL, METRIC } = MapUnitEnum;
+
 const { ESRI, HERE } = MapProviderEnum;
 
 interface SettingsModalProps {
@@ -47,12 +40,8 @@ interface SettingsModalProps {
 }
 
 const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppState }) => {
-	const [selectedOption, setSelectedOption] = useState<SettingOptionEnum>(SettingOptionEnum.UNITS);
+	const [selectedOption, setSelectedOption] = useState<SettingOptionEnum>(SettingOptionEnum.DATA_PROVIDER);
 	const {
-		isAutomaticMapUnit,
-		setIsAutomaticMapUnit,
-		mapUnit: currentMapUnit,
-		setMapUnit,
 		mapProvider: currentMapProvider,
 		setMapProvider,
 		mapStyle: currentMapStyle,
@@ -76,27 +65,11 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 		setConnectFormValues,
 		credentials,
 		onLogin,
-		setAuthTokens,
-		onLogout
+		onDetachPolicyAndLogout
 	} = useAmplifyAuth();
 	const { resetStore: resetAwsStore } = useAws();
-	const { detachPolicy } = useAwsIot();
 	const keyArr = Object.keys(formValues);
 	const isAuthenticated = !!credentials?.authenticated;
-
-	const handleAutoMapUnitChange = useCallback(() => {
-		setIsAutomaticMapUnit(true);
-		resetAppState();
-	}, [setIsAutomaticMapUnit, resetAppState]);
-
-	const onMapUnitChange = useCallback(
-		(mapUnit: MapUnitEnum) => {
-			setIsAutomaticMapUnit(false);
-			setMapUnit(mapUnit);
-			resetAppState();
-		},
-		[setIsAutomaticMapUnit, setMapUnit, resetAppState]
-	);
 
 	const onMapProviderChange = useCallback(
 		(mapProvider: MapProviderEnum) => {
@@ -132,12 +105,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 		() => onDisconnectAwsAccount(resetAwsStore),
 		[onDisconnectAwsAccount, resetAwsStore]
 	);
-
-	const _onLogout = useCallback(async () => {
-		setAuthTokens(undefined);
-		await detachPolicy(credentials!.identityId);
-		await onLogout();
-	}, [setAuthTokens, detachPolicy, credentials, onLogout]);
 
 	const isBtnEnabled = useMemo(
 		() => keyArr.filter(key => !!formValues[key as keyof typeof formValues]).length === keyArr.length,
@@ -193,53 +160,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 
 	const optionItems: Array<SettingOptionItemType> = useMemo(
 		() => [
-			{
-				id: SettingOptionEnum.UNITS,
-				title: SettingOptionEnum.UNITS,
-				defaultValue: currentMapUnit,
-				icon: <IconPeopleArrows />,
-				detailsComponent: (
-					<Flex
-						data-testid={`${SettingOptionEnum.UNITS}-details-component`}
-						gap={0}
-						direction="column"
-						padding="0rem 1.15rem"
-					>
-						<Flex gap={0} padding="1.08rem 0rem">
-							<Radio
-								data-testid="unit-automatic-radio"
-								value={"Automatic"}
-								checked={isAutomaticMapUnit}
-								onChange={handleAutoMapUnitChange}
-							>
-								<TextEl marginLeft="1.23rem" text={"Automatic"} />
-							</Radio>
-						</Flex>
-						<Flex gap={0} padding="1.08rem 0rem">
-							<Radio
-								data-testid="unit-imperial-radio"
-								value={IMPERIAL}
-								checked={!isAutomaticMapUnit && currentMapUnit === IMPERIAL}
-								onChange={() => onMapUnitChange(IMPERIAL)}
-							>
-								<TextEl marginLeft="1.23rem" text={IMPERIAL} />
-								<TextEl variation="tertiary" marginLeft="1.23rem" text={"Miles, pounds"} />
-							</Radio>
-						</Flex>
-						<Flex gap={0} padding="1.08rem 0rem">
-							<Radio
-								data-testid="unit-metric-radio"
-								value={METRIC}
-								checked={!isAutomaticMapUnit && currentMapUnit === METRIC}
-								onChange={() => onMapUnitChange(METRIC)}
-							>
-								<TextEl marginLeft="1.23rem" text={METRIC} />
-								<TextEl variation="tertiary" marginLeft="1.23rem" text={"Kilometers, kilograms"} />
-							</Radio>
-						</Flex>
-					</Flex>
-				)
-			},
 			{
 				id: SettingOptionEnum.DATA_PROVIDER,
 				title: SettingOptionEnum.DATA_PROVIDER,
@@ -442,7 +362,12 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 										</Button>
 									</>
 								) : (
-									<Button variation="primary" fontFamily="AmazonEmber-Bold" width="100%" onClick={_onLogout}>
+									<Button
+										variation="primary"
+										fontFamily="AmazonEmber-Bold"
+										width="100%"
+										onClick={async () => await onDetachPolicyAndLogout()}
+									>
 										Sign out
 									</Button>
 								)
@@ -475,10 +400,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 			}
 		],
 		[
-			currentMapUnit,
-			isAutomaticMapUnit,
-			handleAutoMapUnitChange,
-			onMapUnitChange,
 			currentMapProvider,
 			onMapProviderChange,
 			selectedMapStyle,
@@ -495,10 +416,11 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 			onChangeFormValues,
 			isAuthenticated,
 			_onLogin,
-			_onLogout
+			onDetachPolicyAndLogout
 		]
 	);
 
+	// TODO: make responsive for below 960px
 	const renderOptionItems = useMemo(() => {
 		return optionItems.map(({ id, title, defaultValue, icon }) => (
 			<Flex

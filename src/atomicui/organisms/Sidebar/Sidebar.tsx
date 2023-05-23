@@ -8,7 +8,7 @@ import { IconClose, IconCompass, IconGear, IconGeofence, IconInfo, IconLockSolid
 import { List, Logo } from "@demo/atomicui/atoms";
 import { sideBarMenuOptions } from "@demo/core/constants";
 import appConfig from "@demo/core/constants/appConfig";
-import { useAmplifyAuth, useAmplifyMap, useAws, useAwsIot } from "@demo/hooks";
+import { useAmplifyAuth, useAmplifyMap, useAws } from "@demo/hooks";
 import { MapProviderEnum } from "@demo/types";
 import { useNavigate } from "react-router-dom";
 import { Tooltip } from "react-tooltip";
@@ -40,11 +40,10 @@ const Sidebar: React.FC<Props> = ({
 	onShowTrackingDisclaimerModal,
 	onShowAboutModal
 }) => {
-	const { isUserAwsAccountConnected, credentials, onLogin, onLogout, onDisconnectAwsAccount, setAuthTokens } =
+	const { isUserAwsAccountConnected, credentials, onLogin, onDetachPolicyAndLogout, onDisconnectAwsAccount } =
 		useAmplifyAuth();
 	const { mapProvider } = useAmplifyMap();
 	const { resetStore: resetAwsStore } = useAws();
-	const { detachPolicy } = useAwsIot();
 	const navigate = useNavigate();
 	const isAuthenticated = !!credentials?.authenticated;
 
@@ -90,11 +89,7 @@ const Sidebar: React.FC<Props> = ({
 		onShowAboutModal();
 	};
 
-	const _onLogout = async () => {
-		setAuthTokens(undefined);
-		await detachPolicy(credentials!.identityId);
-		await onLogout();
-	};
+	const _onLogout = async () => await onDetachPolicyAndLogout();
 
 	const _onLogin = async () => await onLogin();
 

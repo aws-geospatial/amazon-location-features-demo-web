@@ -114,6 +114,7 @@ const AboutModal: React.FC<AboutModalProps> = ({ open, onClose }) => {
 		[attributionText, handlePartnerLearnMore]
 	);
 
+	// TODO: make responsive for below 960px
 	const renderOptionItems = useMemo(() => {
 		return optionItems.map(({ id, title }) => (
 			<Flex
