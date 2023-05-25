@@ -1,4 +1,3 @@
-import allureWriter from "@shelex/cypress-allure-plugin/writer";
 import { defineConfig } from "cypress";
 import { cypressBrowserPermissionsPlugin } from "cypress-browser-permissions";
 
@@ -25,11 +24,10 @@ export default defineConfig({
 
 			// eslint-disable-next-line no-param-reassign
 			config = cypressBrowserPermissionsPlugin(on, config);
-			allureWriter(on, config);
 			return config;
 		},
 		specPattern: "./cypress/e2e/**/*.cy.{js,jsx,ts,tsx}",
-		supportFile: false,
+		supportFile: "cypress/support/index.js",
 		chromeWebSecurity: false,
 		env: {
 			browserPermissions: {

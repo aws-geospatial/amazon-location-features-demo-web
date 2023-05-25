@@ -3,13 +3,7 @@
 
 describe("Route", () => {
 	beforeEach(() => {
-		cy.visit(Cypress.env("WEB_DOMAIN"), {
-			auth: {
-				username: Cypress.env("WEB_DOMAIN_USERNAME"),
-				password: Cypress.env("WEB_DOMAIN_PASSWORD")
-			}
-		});
-		cy.wait(20000);
+		cy.visitDomain(Cypress.env("WEB_DOMAIN"));
 		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 		cy.get('[class="amplify-flex icon outter-end-component"]').click();
 		cy.wait(2000);
@@ -62,7 +56,7 @@ describe("Route", () => {
 		cy.get(".travel-mode").should("exist").and("have.length", 3);
 	});
 
-	it("should allow user to search for route with toll route option", () => {
+	it("should allow user to search for route with avoid toll route option", () => {
 		cy.get('[placeholder="From"]').click().type("auburn sydney");
 		cy.wait(4000);
 		cy.contains("Auburn").click();

@@ -3,13 +3,7 @@
 
 describe("Search", () => {
 	beforeEach(() => {
-		cy.visit(Cypress.env("WEB_DOMAIN"), {
-			auth: {
-				username: Cypress.env("WEB_DOMAIN_USERNAME"),
-				password: Cypress.env("WEB_DOMAIN_PASSWORD")
-			}
-		});
-		cy.wait(20000);
+		cy.visitDomain(Cypress.env("WEB_DOMAIN"));
 		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 	});
 
@@ -20,10 +14,11 @@ describe("Search", () => {
 	});
 
 	it("should allow user to search by address", { scrollBehavior: false }, () => {
-		cy.get('[placeholder="Search"]')
-			.click()
-			.type("44 Boobialla Street, Corbie Hill, Australia")
-			.wait(5000)
+		cy.get('[placeholder="Search"]').click();
+		cy.wait(2000);
+		cy.get('[inputmode="search"]')
+			.type("gramercy park music school USA")
+			.wait(10000)
 			.type("{downArrow}")
 			.type("{enter}");
 		cy.wait(10000);
@@ -31,12 +26,9 @@ describe("Search", () => {
 	});
 
 	it("should allow user to search by geocode", { scrollBehavior: false }, () => {
-		cy.get('[placeholder="Search"]')
-			.click()
-			.type("-31.9627092,115.9248736")
-			.wait(5000)
-			.type("{downArrow}")
-			.type("{enter}");
+		cy.get('[placeholder="Search"]').click();
+		cy.wait(2000);
+		cy.get('[inputmode="search"]').type("-31.9627092,115.9248736").wait(10000).type("{downArrow}").type("{enter}");
 		cy.wait(10000);
 		cy.get('[class="amplify-text amplify-text--tertiary"]').should(
 			"have.text",
@@ -49,7 +41,9 @@ describe("Search", () => {
 		Cypress.on("uncaught:exception", (err, runnable) => {
 			return false;
 		});
-		cy.get('[placeholder="Search"]').click().type("Rio tinto").type("{enter}");
+		cy.get('[placeholder="Search"]').click();
+		cy.wait(2000);
+		cy.get('[inputmode="search"]').type("Rio tinto").wait(10000).type("{enter}");
 		cy.wait(10000);
 		cy.get("div").should("contain", "Rio Tinto");
 		cy.wait(2000);
@@ -66,8 +60,10 @@ describe("Search", () => {
 	});
 
 	it("should allow user to view the list of search results once search is performed", { scrollBehavior: false }, () => {
-		cy.get('[placeholder="Search"]').click().type("Kewdale");
-		cy.wait(5000);
+		cy.get('[placeholder="Search"]').click();
+		cy.wait(2000);
+		cy.get('[inputmode="search"]').type("gramercy park music school USA");
+		cy.wait(10000);
 		cy.get('[class="amplify-scrollview amplify-autocomplete__menu" ]').should("be.visible");
 	});
 });
