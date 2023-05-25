@@ -52,10 +52,10 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 			geodesicDistance
 				? currentMapUnit === METRIC
 					? geodesicDistance < 1
-						? `${(geodesicDistance * 1000).toFixed(2)} ${METERS_SHORT}`
+						? `${geodesicDistance * 1000} ${METERS_SHORT}`
 						: `${geodesicDistance.toFixed(2)} ${KILOMETERS_SHORT}`
 					: geodesicDistance < 1
-					? `${(geodesicDistance * 5280).toFixed(2)} ${FEET_SHORT}`
+					? `${parseInt((geodesicDistance * 5280).toString())} ${FEET_SHORT}`
 					: `${geodesicDistance.toFixed(2)} ${MILES_SHORT}`
 				: "",
 		[geodesicDistance, currentMapUnit]
