@@ -4,7 +4,6 @@
 describe("Settings", () => {
 	beforeEach(() => {
 		cy.visitDomain(Cypress.env("WEB_DOMAIN"));
-		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 		cy.get('[id="Icon"]').click();
 		cy.contains("Settings").click();
 	});
