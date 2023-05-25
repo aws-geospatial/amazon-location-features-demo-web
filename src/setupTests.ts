@@ -43,13 +43,13 @@ jest.mock("@demo/core/constants/appConfig", () => ({
 	MAP_RESOURCES: {
 		IMPERIAL_COUNTRIES: ["US", "GB", "LR", "MM"],
 		GRAB_SUPPORTED_AWS_REGIONS: ["ap-southeast-1"],
-		AMAZON_OFFICE: {
-			longitude: -122.3382794774697,
-			latitude: 47.615070822950685
+		AMAZON_HQ: {
+			US: { longitude: -122.3408586, latitude: 47.6149975 },
+			SG: { longitude: 103.8461793, latitude: 1.2840177 }
 		},
 		MAX_BOUNDS: {
 			DEFAULT: [-210, -80, 290, 85],
-			GRAB: [96.5, -11.5, 141.5, 11.5]
+			GRAB: [90.0, -21.943045533438166, 146.25, 31.952162238024968]
 		},
 		// MAP_ITEMS: {
 		// 	[EsriMapEnum.ESRI_DARK_GRAY_CANVAS]: {

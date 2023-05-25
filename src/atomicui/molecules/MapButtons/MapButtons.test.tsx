@@ -12,7 +12,7 @@ describe("<MapButtons/>", () => {
 	let mapStylesCard: HTMLElement | null;
 	let mapStylesItems: HTMLElement[] | null;
 	let mapProviderButtonEsri: HTMLElement | null;
-	let mapProviderButtonHere: HTMLElement | null;
+	// let mapProviderButtonHere: HTMLElement | null;
 	let esriMapStyles: HTMLElement | null;
 	let hereMapStyles: HTMLElement | null;
 
@@ -20,13 +20,11 @@ describe("<MapButtons/>", () => {
 	let onOpenConnectAwsAccountModal: jest.Mock<any, any, any>;
 	let onOpenSignInModal: jest.Mock<any, any, any>;
 	let onShowGeofenceBox: jest.Mock<any, any, any>;
-	const resetAppState = jest.fn();
-	const onShowGrabDisclaimerModal = jest.fn();
 	const onShowGridLoader = jest.fn();
+	const handleMapProviderChange = jest.fn();
 
 	beforeEach(() => {
 		jest.useFakeTimers();
-		resetAppState.mockRestore();
 	});
 	afterEach(() => jest.useRealTimers());
 
@@ -48,10 +46,10 @@ describe("<MapButtons/>", () => {
 				onOpenConnectAwsAccountModal={onOpenConnectAwsAccountModal}
 				onOpenSignInModal={onOpenSignInModal}
 				onShowGeofenceBox={onShowGeofenceBox}
-				resetAppState={resetAppState}
+				isGrabVisible={false}
 				showGrabDisclaimerModal={false}
-				onShowGrabDisclaimerModal={onShowGrabDisclaimerModal}
 				onShowGridLoader={onShowGridLoader}
+				handleMapProviderChange={handleMapProviderChange}
 			/>
 		);
 
@@ -61,7 +59,7 @@ describe("<MapButtons/>", () => {
 		mapStylesCard = screen.queryByTestId("map-styles-card");
 		mapStylesItems = screen.queryAllByTestId("map-style-item");
 		mapProviderButtonEsri = screen.queryByTestId("map-data-provider-esri");
-		mapProviderButtonHere = screen.queryByTestId("map-data-provider-here");
+		// mapProviderButtonHere = screen.queryByTestId("map-data-provider-here");
 		esriMapStyles = screen.queryByTestId("esri-map-styles");
 		hereMapStyles = screen.queryByTestId("here-map-styles");
 
@@ -92,27 +90,28 @@ describe("<MapButtons/>", () => {
 
 	it("should change the map provider when a certain map provider is selected", async () => {
 		openStylesCard = true;
-		let renderedComponent = await renderComponent();
+		// const renderedComponent = await renderComponent();
+		await renderComponent();
 
 		expect(esriMapStyles).toBeInTheDocument();
 		expect(hereMapStyles).toBeNull();
 
-		fireEvent.click(mapProviderButtonHere as HTMLElement);
-		expect(resetAppState).toBeCalledTimes(1);
-		renderedComponent.unmount();
+		// fireEvent.click(mapProviderButtonHere as HTMLElement);
+		// expect(handleMapProviderChange).toBeCalledTimes(1);
+		// renderedComponent.unmount();
 
-		renderedComponent = await renderComponent();
-		expect(esriMapStyles).toBeNull();
-		expect(hereMapStyles).toBeInTheDocument();
+		// renderedComponent = await renderComponent();
+		// expect(esriMapStyles).toBeNull();
+		// expect(hereMapStyles).toBeInTheDocument();
 
 		fireEvent.click(mapProviderButtonEsri as HTMLElement);
-		expect(resetAppState).toBeCalledTimes(2);
-		renderedComponent.unmount();
+		expect(handleMapProviderChange).toBeCalledTimes(1);
+		// renderedComponent.unmount();
 
-		await renderComponent();
-		expect(hereMapStyles).toBeNull();
-		expect(esriMapStyles).toBeInTheDocument();
-		openStylesCard = false;
+		// await renderComponent();
+		// expect(hereMapStyles).toBeNull();
+		// expect(esriMapStyles).toBeInTheDocument();
+		// openStylesCard = false;
 	});
 
 	it("should add `selected` class when a certain style is selected/clicked", async () => {

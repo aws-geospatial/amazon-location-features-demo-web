@@ -68,6 +68,9 @@ const useAmplifyMap = () => {
 			setAttributionText: (attributionText: string) => {
 				setState({ attributionText });
 			},
+			setIsCurrentLocationDisabled: (isCurrentLocationDisabled: boolean) => {
+				setState({ isCurrentLocationDisabled });
+			},
 			resetStore() {
 				setState({
 					currentLocationData: undefined

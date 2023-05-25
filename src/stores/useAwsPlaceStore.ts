@@ -8,7 +8,9 @@ import { Double } from "aws-sdk/clients/location";
 import createStore from "./createStore";
 
 const {
-	MAP_RESOURCES: { AMAZON_OFFICE }
+	MAP_RESOURCES: {
+		AMAZON_HQ: { US }
+	}
 } = appConfig;
 
 interface AwsPlaceStoreProps {
@@ -32,7 +34,7 @@ const initialState: IStateProps<AwsPlaceStoreProps> = {
 	zoom: 5,
 	clusterZoom: 18,
 	precision: 10,
-	viewpoint: AMAZON_OFFICE
+	viewpoint: US
 };
 
 export default createStore<AwsPlaceStoreProps>(initialState);

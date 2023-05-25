@@ -32,7 +32,6 @@ const {
 	ENV: { CF_TEMPLATE },
 	ROUTES: { HELP },
 	MAP_RESOURCES: {
-		GRAB_SUPPORTED_AWS_REGIONS,
 		MAP_STYLES: { ESRI_STYLES, HERE_STYLES, GRAB_STYLES }
 	},
 	LINKS: { AWS_TERMS_AND_CONDITIONS }
@@ -46,29 +45,27 @@ interface SettingsModalProps {
 	open: boolean;
 	onClose: () => void;
 	resetAppState: () => void;
-	onShowGrabDisclaimerModal: (mapStyle?: GrabMapEnum) => void;
-	onShowGridLoader: () => void;
+	isGrabVisible: boolean;
+	handleMapProviderChange: (mapProvider: MapProviderEnum) => void;
+	handleMapStyleChange: (mapStyle: EsriMapEnum | HereMapEnum | GrabMapEnum) => void;
 }
 
 const SettingsModal: React.FC<SettingsModalProps> = ({
 	open,
 	onClose,
 	resetAppState,
-	onShowGrabDisclaimerModal,
-	onShowGridLoader
+	isGrabVisible,
+	handleMapProviderChange,
+	handleMapStyleChange
 }) => {
 	const [selectedOption, setSelectedOption] = useState<SettingOptionEnum>(SettingOptionEnum.UNITS);
-	const { switchToDefaultRegionStack, region } = useAmplifyAuth();
 	const {
 		isAutomaticMapUnit,
 		setIsAutomaticMapUnit,
 		mapUnit: currentMapUnit,
 		setMapUnit,
 		mapProvider: currentMapProvider,
-		setMapProvider,
-		mapStyle: currentMapStyle,
-		setMapStyle,
-		setAttributionText
+		mapStyle: currentMapStyle
 	} = useAmplifyMap();
 	const { defaultRouteOptions, setDefaultRouteOptions } = usePersistedData();
 	const [formValues, setFormValues] = useState<ConnectFormValuesType>({
@@ -94,8 +91,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 	const { detachPolicy } = useAwsIot();
 	const keyArr = Object.keys(formValues);
 	const isAuthenticated = !!credentials?.authenticated;
-	const isGrabVisible =
-		!isUserAwsAccountConnected || (isUserAwsAccountConnected && GRAB_SUPPORTED_AWS_REGIONS.includes(region));
 
 	const handleAutoMapUnitChange = useCallback(() => {
 		setIsAutomaticMapUnit(true);
@@ -109,88 +104,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 			resetAppState();
 		},
 		[setIsAutomaticMapUnit, setMapUnit, resetAppState]
-	);
-
-	const onMapProviderChange = useCallback(
-		(mapProvider: MapProviderEnum) => {
-			onShowGridLoader();
-
-			if (mapProvider === GRAB) {
-				onShowGrabDisclaimerModal();
-			} else {
-				if (currentMapProvider === GRAB) {
-					switchToDefaultRegionStack();
-					resetAwsStore();
-					setMapProvider(mapProvider);
-					setMapStyle(mapProvider === ESRI ? EsriMapEnum.ESRI_LIGHT : HereMapEnum.HERE_EXPLORE);
-					resetAppState();
-				} else {
-					setMapProvider(mapProvider);
-					setMapStyle(mapProvider === ESRI ? EsriMapEnum.ESRI_LIGHT : HereMapEnum.HERE_EXPLORE);
-					resetAppState();
-				}
-			}
-
-			setTimeout(
-				() => setAttributionText(document.getElementsByClassName("mapboxgl-ctrl-attrib-inner")[0].innerHTML),
-				3000
-			);
-		},
-		[
-			onShowGridLoader,
-			onShowGrabDisclaimerModal,
-			currentMapProvider,
-			switchToDefaultRegionStack,
-			resetAwsStore,
-			setMapProvider,
-			setMapStyle,
-			resetAppState,
-			setAttributionText
-		]
-	);
-
-	const onMapStyleChange = useCallback(
-		(mapStyle: EsriMapEnum | HereMapEnum | GrabMapEnum) => {
-			const splitArr = mapStyle.split(".");
-			const mapProviderFromStyle = splitArr[splitArr.length - 2] as MapProviderEnum;
-			onShowGridLoader();
-
-			if (
-				(currentMapProvider === ESRI && mapProviderFromStyle === ESRI) ||
-				(currentMapProvider === HERE && mapProviderFromStyle === HERE) ||
-				(currentMapProvider === GRAB && mapProviderFromStyle === GRAB)
-			) {
-				/* No map provider switch required */
-				setMapStyle(mapStyle);
-			} else {
-				if (currentMapProvider === GRAB) {
-					/* Switching from Grab map provider to different map provider and style */
-					switchToDefaultRegionStack();
-					resetAwsStore();
-					setMapProvider(mapProviderFromStyle);
-					setMapStyle(mapStyle);
-				} else if (mapProviderFromStyle === GRAB) {
-					/* Switching from different map provider and style to Grab map provider and style */
-					onShowGrabDisclaimerModal(mapStyle as GrabMapEnum);
-				} else {
-					/* Switching between Esri and HERE map provider and style */
-					setMapProvider(mapProviderFromStyle);
-					setMapStyle(mapStyle);
-				}
-
-				resetAppState();
-			}
-		},
-		[
-			onShowGridLoader,
-			currentMapProvider,
-			setMapStyle,
-			switchToDefaultRegionStack,
-			resetAwsStore,
-			setMapProvider,
-			onShowGrabDisclaimerModal,
-			resetAppState
-		]
 	);
 
 	const _onLogin = useCallback(async () => await onLogin(), [onLogin]);
@@ -325,7 +238,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								data-testid="data-provider-esri-radio"
 								value={ESRI}
 								checked={currentMapProvider === ESRI}
-								onChange={() => onMapProviderChange(ESRI)}
+								onChange={() => handleMapProviderChange(ESRI)}
 							>
 								<TextEl marginLeft="1.23rem" text={ESRI} />
 							</Radio>
@@ -336,7 +249,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								data-testid="data-provider-here-radio"
 								value={HERE}
 								checked={currentMapProvider === HERE}
-								onChange={() => onMapProviderChange(HERE)}
+								onChange={() => handleMapProviderChange(HERE)}
 							>
 								<TextEl marginLeft="1.23rem" text={HERE} />
 							</Radio>
@@ -348,7 +261,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 									data-testid="data-provider-grab-radio"
 									value={GRAB}
 									checked={currentMapProvider === GRAB}
-									onChange={() => onMapProviderChange(GRAB)}
+									onChange={() => handleMapProviderChange(GRAB)}
 								>
 									<TextEl marginLeft="1.23rem" text={GRAB} />
 								</Radio>
@@ -379,7 +292,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 										data-testid="esri-map-style"
 										key={id}
 										className={id === currentMapStyle ? "sm-style selected" : "sm-style"}
-										onClick={() => onMapStyleChange(id)}
+										onClick={() => handleMapStyleChange(id)}
 									>
 										<img src={image} />
 										<TextEl marginTop="0.62rem" text={name} />
@@ -397,7 +310,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 										data-testid="here-map-style"
 										key={id}
 										className={id === currentMapStyle ? "sm-style selected" : "sm-style"}
-										onClick={() => onMapStyleChange(id)}
+										onClick={() => handleMapStyleChange(id)}
 									>
 										<img src={image} />
 										<TextEl marginTop="0.62rem" text={name} />
@@ -417,7 +330,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 												data-testid="gran-map-style"
 												key={id}
 												className={id === currentMapStyle ? "sm-style selected" : "sm-style"}
-												onClick={() => onMapStyleChange(id)}
+												onClick={() => handleMapStyleChange(id)}
 											>
 												<img src={image} />
 												<TextEl marginTop="0.62rem" text={name} />
@@ -592,10 +505,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 			handleAutoMapUnitChange,
 			onMapUnitChange,
 			currentMapProvider,
-			onMapProviderChange,
+			handleMapProviderChange,
 			selectedMapStyle,
 			currentMapStyle,
-			onMapStyleChange,
+			handleMapStyleChange,
 			defaultRouteOptions,
 			setDefaultRouteOptions,
 			isUserAwsAccountConnected,

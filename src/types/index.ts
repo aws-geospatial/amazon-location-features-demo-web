@@ -36,3 +36,4 @@ export type { CirclePropertiesType, CircleDrawEventType, CircleFeatureType } fro
 export type { SettingOptionItemType } from "./SettingOptionItemType";
 export type { RouteOptionsType } from "./RouteOptionsType";
 export type { HelpAccordionType } from "./HelpType";
+export type { ShowStateType } from "./ShowStateType";

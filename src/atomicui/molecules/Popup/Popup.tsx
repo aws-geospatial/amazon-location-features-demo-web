@@ -28,8 +28,13 @@ interface Props {
 }
 const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 	const [routeData, setRouteData] = useState<CalculateRouteResponse>();
-	const { currentLocationData, mapProvider: currentMapProvider, mapUnit: currentMapUnit } = useAmplifyMap();
-	const { clearPoiList } = useAwsPlace();
+	const {
+		currentLocationData,
+		mapProvider: currentMapProvider,
+		mapUnit: currentMapUnit,
+		isCurrentLocationDisabled
+	} = useAmplifyMap();
+	const { clearPoiList, viewpoint } = useAwsPlace();
 	const { getRoute, setDirections, isFetchingRoute } = useAwsRoute();
 	const [longitude, latitude] = info.Place?.Geometry.Point as Position;
 	const isDesktop = useMediaQuery("(min-width: 1024px)");
@@ -59,17 +64,19 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 
 	const loadRouteData = useCallback(async () => {
 		const params: Omit<CalculateRouteRequest, "CalculatorName" | "DepartNow"> = {
-			DeparturePosition: [
-				currentLocationData?.currentLocation?.longitude,
-				currentLocationData?.currentLocation?.latitude
-			] as Position,
+			DeparturePosition: !isCurrentLocationDisabled
+				? ([
+						currentLocationData?.currentLocation?.longitude,
+						currentLocationData?.currentLocation?.latitude
+				  ] as Position)
+				: [viewpoint.longitude, viewpoint.latitude],
 			DestinationPosition: [longitude, latitude],
 			DistanceUnit: currentMapUnit === METRIC ? KILOMETERS : MILES,
 			TravelMode: "Car"
 		};
 		const r = await getRoute(params as CalculateRouteRequest);
 		setRouteData(r);
-	}, [currentLocationData, longitude, latitude, currentMapUnit, getRoute]);
+	}, [isCurrentLocationDisabled, currentLocationData, viewpoint, longitude, latitude, currentMapUnit, getRoute]);
 
 	useEffect(() => {
 		if (!routeData && active && !isEsriLimitation) {

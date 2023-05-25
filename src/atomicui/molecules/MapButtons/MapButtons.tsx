@@ -7,7 +7,7 @@ import { Card, Divider, Flex, Placeholder, Radio, View } from "@aws-amplify/ui-r
 import { IconClose, IconGeofencePlusSolid, IconInfoSolid, IconMapSolid } from "@demo/assets";
 import { TextEl } from "@demo/atomicui/atoms";
 import { appConfig } from "@demo/core/constants";
-import { useAmplifyAuth, useAmplifyMap, useAws, useAwsGeofence } from "@demo/hooks";
+import { useAmplifyAuth, useAmplifyMap, useAwsGeofence } from "@demo/hooks";
 import { EsriMapEnum, GrabMapEnum, HereMapEnum, MapProviderEnum } from "@demo/types";
 import { Tooltip } from "react-tooltip";
 import "./styles.scss";
@@ -15,7 +15,6 @@ import "./styles.scss";
 const { ESRI, HERE, GRAB } = MapProviderEnum;
 const {
 	MAP_RESOURCES: {
-		GRAB_SUPPORTED_AWS_REGIONS,
 		MAP_STYLES: { ESRI_STYLES, HERE_STYLES, GRAB_STYLES }
 	}
 } = appConfig;
@@ -27,10 +26,10 @@ interface MapButtonsProps {
 	onOpenConnectAwsAccountModal: () => void;
 	onOpenSignInModal: () => void;
 	onShowGeofenceBox: () => void;
-	resetAppState: () => void;
+	isGrabVisible: boolean;
 	showGrabDisclaimerModal: boolean;
-	onShowGrabDisclaimerModal: (mapStyle?: GrabMapEnum) => void;
 	onShowGridLoader: () => void;
+	handleMapProviderChange: (mapProvider: MapProviderEnum) => void;
 }
 
 const MapButtons: React.FC<MapButtonsProps> = ({
@@ -40,27 +39,18 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	onOpenConnectAwsAccountModal,
 	onOpenSignInModal,
 	onShowGeofenceBox,
-	resetAppState,
+	isGrabVisible,
 	showGrabDisclaimerModal,
-	onShowGrabDisclaimerModal,
-	onShowGridLoader
+	onShowGridLoader,
+	handleMapProviderChange
 }) => {
 	const [isLoadingImg, setIsLoadingImg] = useState(true);
 	const stylesCardRef = useRef<HTMLDivElement | null>(null);
 	const stylesCardTogglerRef = useRef<HTMLDivElement | null>(null);
-	const { credentials, isUserAwsAccountConnected, region, switchToDefaultRegionStack } = useAmplifyAuth();
-	const { resetStore: resetAwsStore } = useAws();
-	const {
-		mapProvider: currentMapProvider,
-		setMapProvider,
-		mapStyle: currentMapStyle,
-		setMapStyle,
-		setAttributionText
-	} = useAmplifyMap();
+	const { credentials, isUserAwsAccountConnected } = useAmplifyAuth();
+	const { mapProvider: currentMapProvider, mapStyle: currentMapStyle, setMapStyle } = useAmplifyMap();
 	const { isAddingGeofence, setIsAddingGeofence } = useAwsGeofence();
 	const isAuthenticated = !!credentials?.authenticated;
-	const isGrabVisible =
-		!isUserAwsAccountConnected || (isUserAwsAccountConnected && GRAB_SUPPORTED_AWS_REGIONS.includes(region));
 
 	const handleClickOutside = useCallback(
 		(ev: MouseEvent) => {
@@ -114,47 +104,10 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 		}
 	};
 
-	const onMapProviderChange = useCallback(
-		(mapProvider: MapProviderEnum) => {
-			onShowGridLoader();
-			setIsLoadingImg(true);
-
-			if (mapProvider === GRAB) {
-				/* Switching from different map provider and style to Grab map provider and style */
-				onShowGrabDisclaimerModal();
-			} else {
-				if (currentMapProvider === GRAB) {
-					/* Switching from Grab map provider to different map provider and style */
-					switchToDefaultRegionStack();
-					resetAwsStore();
-					setMapProvider(mapProvider);
-					setMapStyle(mapProvider === ESRI ? EsriMapEnum.ESRI_LIGHT : HereMapEnum.HERE_EXPLORE);
-				} else {
-					/* Switching between Esri and HERE map provider and style */
-					setMapProvider(mapProvider);
-					setMapStyle(mapProvider === ESRI ? EsriMapEnum.ESRI_LIGHT : HereMapEnum.HERE_EXPLORE);
-				}
-
-				resetAppState();
-			}
-
-			setTimeout(
-				() => setAttributionText(document.getElementsByClassName("mapboxgl-ctrl-attrib-inner")[0].innerHTML),
-				3000
-			);
-		},
-		[
-			onShowGridLoader,
-			onShowGrabDisclaimerModal,
-			currentMapProvider,
-			switchToDefaultRegionStack,
-			resetAwsStore,
-			setMapProvider,
-			setMapStyle,
-			resetAppState,
-			setAttributionText
-		]
-	);
+	const _handleMapProviderChange = (mapProvider: MapProviderEnum) => {
+		setIsLoadingImg(true);
+		handleMapProviderChange(mapProvider);
+	};
 
 	const onChangeStyle = (id: EsriMapEnum | HereMapEnum | GrabMapEnum) => {
 		if (id !== currentMapStyle) {
@@ -215,7 +168,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 							className={
 								currentMapProvider === ESRI ? "map-data-provider selected-map-data-provider" : "map-data-provider"
 							}
-							onClick={() => onMapProviderChange(ESRI)}
+							onClick={() => _handleMapProviderChange(ESRI)}
 						>
 							<TextEl fontSize="1.23rem" lineHeight="2.15rem" text={ESRI} />
 							<Radio
@@ -225,7 +178,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 								onChange={e => {
 									e.preventDefault();
 									e.stopPropagation();
-									onMapProviderChange(ESRI);
+									_handleMapProviderChange(ESRI);
 								}}
 							/>
 						</Flex>
@@ -255,7 +208,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 							className={
 								currentMapProvider === HERE ? "map-data-provider selected-map-data-provider" : "map-data-provider"
 							}
-							onClick={() => onMapProviderChange(HERE)}
+							onClick={() => _handleMapProviderChange(HERE)}
 						>
 							<TextEl fontSize="1.23rem" lineHeight="2.15rem" text={HERE} />
 							<Radio
@@ -265,7 +218,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 								onChange={e => {
 									e.preventDefault();
 									e.stopPropagation();
-									onMapProviderChange(HERE);
+									_handleMapProviderChange(HERE);
 								}}
 							/>
 						</Flex>
@@ -296,7 +249,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 									className={
 										currentMapProvider === GRAB ? "map-data-provider selected-map-data-provider" : "map-data-provider"
 									}
-									onClick={() => onMapProviderChange(GRAB)}
+									onClick={() => handleMapProviderChange(GRAB)}
 								>
 									<TextEl fontSize="1.23rem" lineHeight="2.15rem" text={GRAB} />
 									<Radio
@@ -306,7 +259,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 										onChange={e => {
 											e.preventDefault();
 											e.stopPropagation();
-											onMapProviderChange(GRAB);
+											handleMapProviderChange(GRAB);
 										}}
 									/>
 								</Flex>

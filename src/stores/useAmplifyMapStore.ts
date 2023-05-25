@@ -26,6 +26,7 @@ interface AmplifyMapStoreProps {
 	mapProvider: MapProviderEnum;
 	mapStyle: EsriMapEnum | HereMapEnum | GrabMapEnum;
 	attributionText: string;
+	isCurrentLocationDisabled: boolean;
 }
 
 const initialState: IStateProps<AmplifyMapStoreProps> = {
@@ -33,7 +34,8 @@ const initialState: IStateProps<AmplifyMapStoreProps> = {
 	mapUnit: MapUnitEnum.IMPERIAL,
 	mapProvider: MapProviderEnum.ESRI,
 	mapStyle: EsriMapEnum.ESRI_LIGHT,
-	attributionText: "Esri, HERE, Garmin, FAO, NOAA, USGS, © OpenStreetMap contributors, and the GIS User Community"
+	attributionText: "Esri, HERE, Garmin, FAO, NOAA, USGS, © OpenStreetMap contributors, and the GIS User Community",
+	isCurrentLocationDisabled: false
 };
 
 export default createStore<AmplifyMapStoreProps>(initialState, true, localStorageKey);
