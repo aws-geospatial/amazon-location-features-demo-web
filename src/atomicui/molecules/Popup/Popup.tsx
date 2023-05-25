@@ -137,22 +137,12 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 				</Flex>
 			);
 		} else {
-			const distance = routeData?.Summary.Distance;
-			const distanceWithUnit = distance
-				? currentMapUnit === METRIC
-					? distance < 1
-						? `${(distance * 1000).toFixed(2)} ${METERS_SHORT}`
-						: `${distance.toFixed(2)} ${KILOMETERS_SHORT}`
-					: distance < 1
-					? `${(distance * 5280).toFixed(2)} ${FEET_SHORT}`
-					: `${distance.toFixed(2)} ${MILES_SHORT}`
-				: "";
 			const timeInSeconds = routeData?.Summary.DurationSeconds || 0;
 
 			return (
 				<View data-testid="route-info-container" className="route-info">
-					{!isFetchingRoute && distance ? (
-						<TextEl variation="secondary" fontFamily="AmazonEmber-Bold" text={distanceWithUnit} />
+					{!isFetchingRoute && geodesicDistanceWithUnit ? (
+						<TextEl variation="secondary" fontFamily="AmazonEmber-Bold" text={geodesicDistanceWithUnit} />
 					) : (
 						<Placeholder width={30} display="inline-block" />
 					)}
