@@ -18,7 +18,7 @@ import { Tooltip } from "react-tooltip";
 import "./styles.scss";
 
 const { METRIC } = MapUnitEnum;
-const { KILOMETERS, KILOMETERS_SHORT, MILES, MILES_SHORT } = DistanceUnitEnum;
+const { KILOMETERS, KILOMETERS_SHORT, METERS_SHORT, MILES, MILES_SHORT, FEET_SHORT } = DistanceUnitEnum;
 
 interface Props {
 	active: boolean;
@@ -45,6 +45,20 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 				currentMapUnit === METRIC ? (KILOMETERS.toLowerCase() as Units) : (MILES.toLowerCase() as Units)
 			),
 		[currentLocationData, longitude, latitude, currentMapUnit]
+	);
+
+	const geodesicDistanceWithUnit = useMemo(
+		() =>
+			geodesicDistance
+				? currentMapUnit === METRIC
+					? geodesicDistance < 1
+						? `${(geodesicDistance * 1000).toFixed(2)} ${METERS_SHORT}`
+						: `${geodesicDistance.toFixed(2)} ${KILOMETERS_SHORT}`
+					: geodesicDistance < 1
+					? `${(geodesicDistance * 5280).toFixed(2)} ${FEET_SHORT}`
+					: `${geodesicDistance.toFixed(2)} ${MILES_SHORT}`
+				: "",
+		[geodesicDistance, currentMapUnit]
 	);
 
 	/* Esri route can't be calculated when distance is greater than 400 km or 248.55 mi */
@@ -105,11 +119,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 		} else if (isEsriLimitation) {
 			return (
 				<Flex data-testid="esri-limitation-message-container" gap={0} direction={"column"}>
-					<TextEl
-						variation="secondary"
-						fontFamily="AmazonEmber-Bold"
-						text={`${geodesicDistance} ${currentMapUnit === METRIC ? KILOMETERS_SHORT : MILES_SHORT}`}
-					/>
+					<TextEl variation="secondary" fontFamily="AmazonEmber-Bold" text={geodesicDistanceWithUnit} />
 					<TextEl
 						style={{ marginTop: "0px" }}
 						variation="info"
@@ -122,26 +132,27 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 		} else if (currentMapProvider === MapProviderEnum.HERE && !routeData) {
 			return (
 				<Flex data-testid="here-message-container" gap={0} direction={"column"}>
-					<TextEl
-						variation="secondary"
-						fontFamily="AmazonEmber-Bold"
-						text={`${geodesicDistance} ${currentMapUnit === METRIC ? KILOMETERS_SHORT : MILES_SHORT}`}
-					/>
+					<TextEl variation="secondary" fontFamily="AmazonEmber-Bold" text={geodesicDistanceWithUnit} />
 					<TextEl style={{ marginTop: "0px" }} variation="info" text="Route not found" />
 				</Flex>
 			);
 		} else {
-			const distance = routeData?.Summary.Distance.toFixed(2);
+			const distance = routeData?.Summary.Distance;
+			const distanceWithUnit = distance
+				? currentMapUnit === METRIC
+					? distance < 1
+						? `${(distance * 1000).toFixed(2)} ${METERS_SHORT}`
+						: `${distance.toFixed(2)} ${KILOMETERS_SHORT}`
+					: distance < 1
+					? `${(distance * 5280).toFixed(2)} ${FEET_SHORT}`
+					: `${distance.toFixed(2)} ${MILES_SHORT}`
+				: "";
 			const timeInSeconds = routeData?.Summary.DurationSeconds || 0;
 
 			return (
 				<View data-testid="route-info-container" className="route-info">
 					{!isFetchingRoute && distance ? (
-						<TextEl
-							variation="secondary"
-							fontFamily="AmazonEmber-Bold"
-							text={`${distance} ${currentMapUnit === METRIC ? KILOMETERS_SHORT : MILES_SHORT}`}
-						/>
+						<TextEl variation="secondary" fontFamily="AmazonEmber-Bold" text={distanceWithUnit} />
 					) : (
 						<Placeholder width={30} display="inline-block" />
 					)}
@@ -161,7 +172,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 		}
 	}, [
 		currentLocationData,
-		geodesicDistance,
+		geodesicDistanceWithUnit,
 		currentMapUnit,
 		isEsriLimitation,
 		currentMapProvider,
