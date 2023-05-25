@@ -144,6 +144,12 @@
 	background-image: url("@demo/assets/pngs/Loading.png");
 }
 
+@media only screen and (max-width: 760px) {
+	.mapboxgl-ctrl-attrib-inner {
+		margin-bottom: 25px;
+	}
+}
+
 @media only screen and (max-width: 640px) {
 	.maplibregl-ctrl-attrib-inner.mapboxgl-ctrl-attrib-inner {
 		margin-top: -20px;

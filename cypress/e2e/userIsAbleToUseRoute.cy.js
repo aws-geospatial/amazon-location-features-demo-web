@@ -3,8 +3,7 @@
 
 describe("Route", () => {
 	beforeEach(() => {
-		cy.visitDomain(Cypress.env("WEB_DOMAIN"))
-		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
+		cy.visitDomain(Cypress.env("WEB_DOMAIN"));
 		cy.get('[class="amplify-flex icon outter-end-component"]').click();
 		cy.wait(2000);
 	});

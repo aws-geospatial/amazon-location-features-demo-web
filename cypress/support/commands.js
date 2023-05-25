@@ -15,9 +15,11 @@ Cypress.Commands.add("visitDomain", domain => {
 				password: Cypress.env("WEB_DOMAIN_PASSWORD")
 			}
 		});
-		cy.wait(5000);
+		cy.wait(20000);
+		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 	} else {
 		cy.visit(domain);
-		cy.wait(5000);
+		cy.wait(20000);
+		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 	}
 });
