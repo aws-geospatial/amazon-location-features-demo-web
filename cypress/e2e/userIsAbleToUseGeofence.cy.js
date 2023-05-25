@@ -8,7 +8,6 @@ describe("Geofence", () => {
 
 	beforeEach(() => {
 		cy.visitDomain(Cypress.env("WEB_DOMAIN"));
-		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click({ force: true });
 		cy.get('[id="Icon"]').click({ force: true });
 		cy.wait(2000);
 		cy.contains("Settings").click();
