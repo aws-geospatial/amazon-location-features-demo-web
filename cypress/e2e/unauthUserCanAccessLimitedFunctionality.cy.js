@@ -3,7 +3,7 @@
 
 describe("Unauthorized users have limited permissions", () => {
 	it("shouldn't allow unauth users to user tracker and geofence", { scrollBehavior: false }, () => {
-		cy.visitDomain(Cypress.env("WEB_DOMAIN"))
+		cy.visitDomain(Cypress.env("WEB_DOMAIN"));
 		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 		cy.wait(2000);
 		cy.get('[class="amplify-flex geofence-button"]').click();

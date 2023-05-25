@@ -3,7 +3,7 @@
 
 describe("Switch data provider and map styles", () => {
 	beforeEach(() => {
-		cy.visitDomain(Cypress.env("WEB_DOMAIN"))
+		cy.visitDomain(Cypress.env("WEB_DOMAIN"));
 		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 	});
 
