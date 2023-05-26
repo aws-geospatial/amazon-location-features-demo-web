@@ -20,7 +20,15 @@ import {
 
 import { NotFoundCard, StepCard } from "@demo/atomicui/molecules";
 import { useAmplifyMap, useAwsPlace, useAwsRoute, useMediaQuery, usePersistedData } from "@demo/hooks";
-import { DistanceUnitEnum, InputType, MapUnitEnum, RouteOptionsType, SuggestionType, TravelMode } from "@demo/types";
+import {
+	DistanceUnitEnum,
+	InputType,
+	MapProviderEnum,
+	MapUnitEnum,
+	RouteOptionsType,
+	SuggestionType,
+	TravelMode
+} from "@demo/types";
 
 import { humanReadableTime } from "@demo/utils/dateTimeUtils";
 import { CalculateRouteRequest, LineString, Place, Position } from "aws-sdk/clients/location";
@@ -53,7 +61,13 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 	const [isSearching, setIsSearching] = useState(false);
 	const [stepsData, setStepsData] = useState<Place[]>([]);
 	const [isCollapsed, setIsCollapsed] = useState(true);
-	const { currentLocationData, mapStyle, mapUnit: currentMapUnit, isCurrentLocationDisabled } = useAmplifyMap();
+	const {
+		currentLocationData,
+		mapStyle,
+		mapUnit: currentMapUnit,
+		isCurrentLocationDisabled,
+		mapProvider: currentMapProvider
+	} = useAmplifyMap();
 	const { search, getPlaceData, viewpoint } = useAwsPlace();
 	const {
 		setRoutePositions,
@@ -528,13 +542,35 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 					>
 						<IconWalking />
 					</View>
-					<View
-						data-testid="travel-mode-truck-icon-container"
-						className={travelMode === TravelMode.TRUCK ? "travel-mode selected" : "travel-mode"}
-						onClick={() => handleTravelModeChange(TravelMode.TRUCK)}
-					>
-						<IconTruckSolid />
-					</View>
+					{currentMapProvider !== MapProviderEnum.GRAB && (
+						<View
+							data-testid="travel-mode-truck-icon-container"
+							className={travelMode === TravelMode.TRUCK ? "travel-mode selected" : "travel-mode"}
+							onClick={() => handleTravelModeChange(TravelMode.TRUCK)}
+						>
+							<IconTruckSolid />
+						</View>
+					)}
+					{currentMapProvider === MapProviderEnum.GRAB && (
+						<>
+							<View
+								data-testid="travel-mode-bicycle-icon-container"
+								className={travelMode === TravelMode.BICYCLE ? "travel-mode selected" : "travel-mode"}
+								onClick={() => handleTravelModeChange(TravelMode.BICYCLE)}
+							>
+								{/* <IconBicycle /> */}
+								BC
+							</View>
+							<View
+								data-testid="travel-mode-motorcycle-icon-container"
+								className={travelMode === TravelMode.MOTORCYCLE ? "travel-mode selected" : "travel-mode"}
+								onClick={() => handleTravelModeChange(TravelMode.MOTORCYCLE)}
+							>
+								{/* <IconMotorcycle /> */}
+								MC
+							</View>
+						</>
+					)}
 				</Flex>
 				<Flex className="from-to-container" gap={0}>
 					<Flex className="marker-container">
@@ -654,13 +690,24 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 								<IconCar />
 							) : travelMode === TravelMode.TRUCK ? (
 								<IconTruckSolid />
-							) : (
+							) : travelMode === TravelMode.WALKING ? (
 								<IconWalking />
+							) : travelMode === TravelMode.BICYCLE ? (
+								// <IconBicycle />
+								"BC"
+							) : (
+								// <IconMotorcycle />
+								"MC"
 							)}
 							<View className="travel-and-distance">
 								<View className="selected-travel-mode">
 									<Text className="dark-text">
-										{travelMode === TravelMode.CAR || travelMode === TravelMode.TRUCK ? "Drive" : "Walk"}
+										{travelMode === TravelMode.CAR ||
+										travelMode === TravelMode.TRUCK ||
+										travelMode === TravelMode.BICYCLE ||
+										travelMode === TravelMode.MOTORCYCLE
+											? "Drive"
+											: "Walk"}
 									</Text>
 									<View className="separator" />
 									<Text className="grey-text">Selected</Text>

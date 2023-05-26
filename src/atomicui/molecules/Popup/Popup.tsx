@@ -136,7 +136,10 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 					/>
 				</Flex>
 			);
-		} else if (currentMapProvider === MapProviderEnum.HERE && !routeData) {
+		} else if (
+			(currentMapProvider === MapProviderEnum.HERE || currentMapProvider === MapProviderEnum.GRAB) &&
+			!routeData
+		) {
 			return (
 				<Flex data-testid="here-message-container" gap={0} direction={"column"}>
 					<TextEl variation="secondary" fontFamily="AmazonEmber-Bold" text={geodesicDistanceWithUnit} />

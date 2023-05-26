@@ -32,7 +32,8 @@ const {
 	ENV: { CF_TEMPLATE },
 	ROUTES: { HELP },
 	MAP_RESOURCES: {
-		MAP_STYLES: { ESRI_STYLES, HERE_STYLES, GRAB_STYLES }
+		MAP_STYLES: { ESRI_STYLES, HERE_STYLES, GRAB_STYLES },
+		GRAB_SUPPORTED_AWS_REGIONS
 	},
 	LINKS: { AWS_TERMS_AND_CONDITIONS }
 } = appConfig;
@@ -48,6 +49,7 @@ interface SettingsModalProps {
 	isGrabVisible: boolean;
 	handleMapProviderChange: (mapProvider: MapProviderEnum) => void;
 	handleMapStyleChange: (mapStyle: EsriMapEnum | HereMapEnum | GrabMapEnum) => void;
+	handleCurrentLocationAndViewpoint: (b: boolean) => void;
 }
 
 const SettingsModal: React.FC<SettingsModalProps> = ({
@@ -56,7 +58,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 	resetAppState,
 	isGrabVisible,
 	handleMapProviderChange,
-	handleMapStyleChange
+	handleMapStyleChange,
+	handleCurrentLocationAndViewpoint
 }) => {
 	const [selectedOption, setSelectedOption] = useState<SettingOptionEnum>(SettingOptionEnum.UNITS);
 	const {
@@ -65,7 +68,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 		mapUnit: currentMapUnit,
 		setMapUnit,
 		mapProvider: currentMapProvider,
-		mapStyle: currentMapStyle
+		mapStyle: currentMapStyle,
+		setMapProvider,
+		setMapStyle
 	} = useAmplifyMap();
 	const { defaultRouteOptions, setDefaultRouteOptions } = usePersistedData();
 	const [formValues, setFormValues] = useState<ConnectFormValuesType>({
@@ -148,6 +153,15 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 			webSocketUrl,
 			/* Success callback */
 			() => {
+				if (
+					currentMapProvider === MapProviderEnum.GRAB &&
+					!GRAB_SUPPORTED_AWS_REGIONS.includes(identityPoolId.split(":")[0])
+				) {
+					setMapProvider(MapProviderEnum.ESRI);
+					setMapStyle(EsriMapEnum.ESRI_LIGHT);
+					handleCurrentLocationAndViewpoint(false);
+				}
+
 				setConnectFormValues(formValues);
 				clearCredentials();
 				resetAwsStore();
@@ -157,6 +171,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 	}, [
 		formValues,
 		validateFormValues,
+		currentMapProvider,
+		setMapProvider,
+		setMapStyle,
+		handleCurrentLocationAndViewpoint,
 		setConnectFormValues,
 		clearCredentials,
 		resetAwsStore,

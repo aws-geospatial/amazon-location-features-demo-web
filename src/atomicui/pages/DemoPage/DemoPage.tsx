@@ -260,25 +260,58 @@ const DemoPage: React.FC = () => {
 			mapViewRef.current?.fitBounds(bound as [number, number, number, number]);
 		} else if (show.routeBox && routeData?.Summary.RouteBBox) {
 			const boundingBox = routeData.Summary.RouteBBox;
-			const padding = isDesktop
-				? currentMapProvider === MapProviderEnum.GRAB
-					? {
-							top: 200,
-							bottom: 200,
-							left: 900,
-							right: 200
-					  }
-					: {
+			// const options = isDesktop
+			// 	? currentMapProvider === MapProviderEnum.GRAB
+			// 		? {
+			// 				padding: {
+			// 					top: 200,
+			// 					bottom: 200,
+			// 					left: 700,
+			// 					right: 200
+			// 				},
+			// 				speed: 5,
+			// 				linear: false
+			// 		  }
+			// 		: {
+			// 				padding: {
+			// 					top: 200,
+			// 					bottom: 200,
+			// 					left: 450,
+			// 					right: 200
+			// 				},
+			// 				speed: 5,
+			// 				linear: false
+			// 		  }
+			// 	: {
+			// 			padding: {
+			// 				top: 235,
+			// 				bottom: 30,
+			// 				left: 60,
+			// 				right: 70
+			// 			},
+			// 			speed: 5,
+			// 			linear: false
+			// 	  };
+			const options = isDesktop
+				? {
+						padding: {
 							top: 200,
 							bottom: 200,
 							left: 450,
 							right: 200
-					  }
+						},
+						speed: 5,
+						linear: false
+				  }
 				: {
-						top: 235,
-						bottom: 30,
-						left: 60,
-						right: 70
+						padding: {
+							top: 235,
+							bottom: 30,
+							left: 60,
+							right: 70
+						},
+						speed: 5,
+						linear: false
 				  };
 			isDesktop
 				? mapViewRef.current?.fitBounds(
@@ -286,27 +319,14 @@ const DemoPage: React.FC = () => {
 							[boundingBox[0], boundingBox[1]],
 							[boundingBox[2], boundingBox[3]]
 						],
-						{
-							padding,
-							speed: 5,
-							linear: false
-						}
+						options
 				  )
 				: mapViewRef.current?.fitBounds(
 						[
 							[boundingBox[0], boundingBox[1]],
 							[boundingBox[2], boundingBox[3]]
 						],
-						{
-							padding: {
-								top: 235,
-								bottom: 30,
-								left: 60,
-								right: 70
-							},
-							speed: 5,
-							linear: false
-						}
+						options
 				  );
 		}
 	}, [suggestions, bound, show.routeBox, routeData, isDesktop, currentMapProvider]);
@@ -455,15 +475,20 @@ const DemoPage: React.FC = () => {
 						/* If current location lies outside Grab MAX_BOUNDS */
 						setIsCurrentLocationDisabled(true);
 						setViewpoint({ latitude: AMAZON_HQ.SG.latitude, longitude: AMAZON_HQ.SG.longitude });
-						setTimeout(
-							() => mapViewRef.current?.flyTo({ center: [AMAZON_HQ.SG.longitude, AMAZON_HQ.SG.latitude], zoom: 5 }),
-							2000
-						);
+						setTimeout(() => {
+							mapViewRef.current?.flyTo({
+								center: [AMAZON_HQ.SG.longitude, AMAZON_HQ.SG.latitude],
+								zoom: !!routeData ? undefined : 5
+							});
+						}, 1000);
 					}
 				} else {
 					/* If current location data doesn't exists */
 					setViewpoint({ latitude: AMAZON_HQ.SG.latitude, longitude: AMAZON_HQ.SG.longitude });
-					mapViewRef.current?.flyTo({ center: [AMAZON_HQ.SG.longitude, AMAZON_HQ.SG.latitude], zoom: 5 });
+					mapViewRef.current?.flyTo({
+						center: [AMAZON_HQ.SG.longitude, AMAZON_HQ.SG.latitude],
+						zoom: !!routeData ? undefined : 5
+					});
 				}
 			} else {
 				/* When switching from Grab */
@@ -471,14 +496,17 @@ const DemoPage: React.FC = () => {
 					const { latitude, longitude } = currentLocationData.currentLocation;
 					setIsCurrentLocationDisabled(false);
 					setViewpoint({ latitude, longitude });
-					mapViewRef.current?.flyTo({ center: [longitude, latitude], zoom: 5 });
+					mapViewRef.current?.flyTo({ center: [longitude, latitude], zoom: !!routeData ? undefined : 5 });
 				} else {
 					setViewpoint({ latitude: AMAZON_HQ.US.latitude, longitude: AMAZON_HQ.US.longitude });
-					mapViewRef.current?.flyTo({ center: [AMAZON_HQ.US.longitude, AMAZON_HQ.US.latitude], zoom: 5 });
+					mapViewRef.current?.flyTo({
+						center: [AMAZON_HQ.US.longitude, AMAZON_HQ.US.latitude],
+						zoom: !!routeData ? undefined : 5
+					});
 				}
 			}
 		},
-		[currentLocationData, setViewpoint, setIsCurrentLocationDisabled, isCurrentLocationDisabled]
+		[currentLocationData, setViewpoint, routeData, setIsCurrentLocationDisabled, isCurrentLocationDisabled]
 	);
 
 	useEffect(() => {
@@ -738,6 +766,7 @@ const DemoPage: React.FC = () => {
 			<ConnectAwsAccountModal
 				open={show.connectAwsAccount}
 				onClose={() => setShow(s => ({ ...s, connectAwsAccount: false }))}
+				handleCurrentLocationAndViewpoint={handleCurrentLocationAndViewpoint}
 			/>
 			<SettingsModal
 				open={show.settings}
@@ -746,6 +775,7 @@ const DemoPage: React.FC = () => {
 				isGrabVisible={isGrabVisible}
 				handleMapProviderChange={onMapProviderChange}
 				handleMapStyleChange={onMapStyleChange}
+				handleCurrentLocationAndViewpoint={handleCurrentLocationAndViewpoint}
 			/>
 			<AboutModal open={show.about} onClose={() => setShow(s => ({ ...s, about: false }))} />
 			<InformationModal

@@ -4,7 +4,9 @@
 export enum TravelMode {
 	CAR = "Car",
 	WALKING = "Walking",
-	TRUCK = "Truck"
+	TRUCK = "Truck",
+	BICYCLE = "Bicycle",
+	MOTORCYCLE = "Motorcycle"
 }
 
 export enum InputType {
