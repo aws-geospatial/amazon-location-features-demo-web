@@ -12,7 +12,8 @@ import {
 	GrabMapEnum,
 	HereMapEnum,
 	MapProviderEnum,
-	MapUnitEnum
+	MapUnitEnum,
+	ViewPointType
 } from "@demo/types";
 
 import { errorHandler } from "@demo/utils/errorHandler";
@@ -46,6 +47,9 @@ const useAmplifyMap = () => {
 			},
 			setCurrentLocation: (currentLocationData: CurrentLocationDataType) => {
 				setState({ currentLocationData });
+			},
+			setViewpoint: (viewpoint: ViewPointType) => {
+				setState({ viewpoint });
 			},
 			setIsAutomaticMapUnit: (isAutomaticMapUnit: boolean) => {
 				setState({ isAutomaticMapUnit });

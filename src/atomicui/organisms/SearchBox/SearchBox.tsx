@@ -8,7 +8,7 @@ import { IconActionMenu, IconClose, IconDirections, IconPin, IconSearch } from "
 import { TextEl } from "@demo/atomicui/atoms";
 import { Marker, NotFoundCard, SuggestionMarker } from "@demo/atomicui/molecules";
 import { useAmplifyMap, useAwsPlace } from "@demo/hooks";
-import { DistanceUnitEnum, MapUnitEnum, SuggestionType } from "@demo/types";
+import { DistanceUnitEnum, MapProviderEnum, MapUnitEnum, SuggestionType } from "@demo/types";
 import { calculateGeodesicDistance } from "@demo/utils/geoCalculation";
 import { uuid } from "@demo/utils/uuid";
 import { Units } from "@turf/turf";
@@ -47,7 +47,13 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	const [value, setValue] = useState<string>("");
 	const [isFocused, setIsFocused] = useState(false);
 	const autocompleteRef = useRef<HTMLInputElement | null>(null);
-	const { mapUnit: currentMapUnit, currentLocationData } = useAmplifyMap();
+	const {
+		mapProvider: currentMapProvider,
+		mapUnit: currentMapUnit,
+		isCurrentLocationDisabled,
+		currentLocationData,
+		viewpoint
+	} = useAmplifyMap();
 	const {
 		clusters,
 		suggestions,
@@ -57,9 +63,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		isSearching,
 		clearPoiList,
 		setSelectedMarker,
-		setHoveredMarker,
-		setZoom,
-		viewpoint
+		setHoveredMarker
 	} = useAwsPlace();
 
 	useEffect(() => {
@@ -75,10 +79,16 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 
 	const handleSearch = useCallback(
 		async (value: string, exact = false) => {
-			const { lng: longitude, lat: latitude } = mapRef?.getCenter() as LngLat;
-			await search(value, { longitude, latitude }, exact);
+			let vp = viewpoint;
+
+			if (currentMapProvider !== MapProviderEnum.GRAB) {
+				const { lng: longitude, lat: latitude } = mapRef?.getCenter() as LngLat;
+				vp = { longitude, latitude };
+			}
+
+			await search(value, { longitude: vp.longitude, latitude: vp.latitude }, exact);
 		},
-		[mapRef, search]
+		[viewpoint, currentMapProvider, mapRef, search]
 	);
 
 	const selectSuggestion = async ({ text, label, placeid }: ComboBoxOption) => {
@@ -90,7 +100,6 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 			);
 
 			await setSelectedMarker(selectedMarker);
-			setZoom(15);
 		}
 	};
 
@@ -136,7 +145,9 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		const destCoords = _geometry?.Point ? _geometry?.Point : undefined;
 		const geodesicDistance = destCoords
 			? calculateGeodesicDistance(
-					currentLocationData?.currentLocation
+					isCurrentLocationDisabled
+						? [viewpoint.longitude, viewpoint.latitude]
+						: currentLocationData?.currentLocation
 						? [
 								currentLocationData.currentLocation.longitude as number,
 								currentLocationData.currentLocation.latitude as number

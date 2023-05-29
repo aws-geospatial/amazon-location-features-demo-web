@@ -112,23 +112,14 @@ const DemoPage: React.FC = () => {
 		mapStyle: currentMapStyle,
 		currentLocationData,
 		setCurrentLocation,
+		viewpoint,
+		setViewpoint,
 		isAutomaticMapUnit,
 		setAutomaticMapUnit,
 		setAttributionText
 	} = useAmplifyMap();
-	const {
-		setViewpoint,
-		setMarker,
-		marker,
-		selectedMarker,
-		suggestions,
-		viewpoint,
-		bound,
-		clearPoiList,
-		zoom,
-		setZoom,
-		setSelectedMarker
-	} = useAwsPlace();
+	const { setMarker, marker, selectedMarker, suggestions, bound, clearPoiList, zoom, setZoom, setSelectedMarker } =
+		useAwsPlace();
 	const { routeData, directions, resetStore: resetAwsRouteStore, setRouteData } = useAwsRoute();
 	const { resetStore: resetAwsGeofenceStore } = useAwsGeofence();
 	const { isEditingRoute, trackerPoints, setTrackerPoints, resetStore: resetAwsTrackingStore } = useAwsTracker();
@@ -508,16 +499,6 @@ const DemoPage: React.FC = () => {
 		},
 		[currentLocationData, setViewpoint, routeData, setIsCurrentLocationDisabled, isCurrentLocationDisabled]
 	);
-
-	useEffect(() => {
-		if (
-			currentMapProvider === MapProviderEnum.GRAB &&
-			viewpoint.latitude !== AMAZON_HQ.SG.latitude &&
-			viewpoint.longitude !== AMAZON_HQ.SG.longitude
-		) {
-			handleCurrentLocationAndViewpoint();
-		}
-	}, [currentMapProvider, viewpoint, handleCurrentLocationAndViewpoint]);
 
 	const onMapProviderChange = useCallback(
 		(mapProvider: MapProviderEnum) => {

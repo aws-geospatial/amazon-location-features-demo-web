@@ -11,6 +11,7 @@ describe("<SettingsModal />", () => {
 	const resetAppState = jest.fn();
 	const handleMapProviderChange = jest.fn();
 	const handleMapStyleChange = jest.fn();
+	const handleCurrentLocationAndViewpoint = jest.fn();
 
 	const renderComponent = async (): Promise<RenderResult> => {
 		const renderedComponent = render(
@@ -21,6 +22,7 @@ describe("<SettingsModal />", () => {
 				isGrabVisible={false}
 				handleMapProviderChange={handleMapProviderChange}
 				handleMapStyleChange={handleMapStyleChange}
+				handleCurrentLocationAndViewpoint={handleCurrentLocationAndViewpoint}
 			/>
 		);
 		settingsModal = await screen.findByTestId("settings-modal");

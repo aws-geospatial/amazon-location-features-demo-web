@@ -7,9 +7,11 @@ import { Card, CheckboxField, Flex, Text, View } from "@aws-amplify/ui-react";
 import {
 	IconArrow,
 	IconArrowDownUp,
+	IconBicycleSolid,
 	IconCar,
 	IconClose,
 	IconDestination,
+	IconMotorcycleSolid,
 	IconMyLocation,
 	IconPin,
 	IconSearch,
@@ -63,12 +65,13 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 	const [isCollapsed, setIsCollapsed] = useState(true);
 	const {
 		currentLocationData,
+		viewpoint,
 		mapStyle,
 		mapUnit: currentMapUnit,
 		isCurrentLocationDisabled,
 		mapProvider: currentMapProvider
 	} = useAmplifyMap();
-	const { search, getPlaceData, viewpoint } = useAwsPlace();
+	const { search, getPlaceData } = useAwsPlace();
 	const {
 		setRoutePositions,
 		getRoute,
@@ -558,16 +561,14 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 								className={travelMode === TravelMode.BICYCLE ? "travel-mode selected" : "travel-mode"}
 								onClick={() => handleTravelModeChange(TravelMode.BICYCLE)}
 							>
-								{/* <IconBicycle /> */}
-								BC
+								<IconBicycleSolid />
 							</View>
 							<View
 								data-testid="travel-mode-motorcycle-icon-container"
 								className={travelMode === TravelMode.MOTORCYCLE ? "travel-mode selected" : "travel-mode"}
 								onClick={() => handleTravelModeChange(TravelMode.MOTORCYCLE)}
 							>
-								{/* <IconMotorcycle /> */}
-								MC
+								<IconMotorcycleSolid />
 							</View>
 						</>
 					)}
@@ -693,11 +694,9 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 							) : travelMode === TravelMode.WALKING ? (
 								<IconWalking />
 							) : travelMode === TravelMode.BICYCLE ? (
-								// <IconBicycle />
-								"BC"
+								<IconBicycleSolid />
 							) : (
-								// <IconMotorcycle />
-								"MC"
+								<IconMotorcycleSolid />
 							)}
 							<View className="travel-and-distance">
 								<View className="selected-travel-mode">

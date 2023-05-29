@@ -9,18 +9,23 @@ import {
 	HereMapEnum,
 	IStateProps,
 	MapProviderEnum,
-	MapUnitEnum
+	MapUnitEnum,
+	ViewPointType
 } from "@demo/types";
 
 import createStore from "./createStore";
 
 const {
-	PERSIST_STORAGE_KEYS: { LOCAL_STORAGE_PREFIX, AMPLIFY_MAP_DATA }
+	PERSIST_STORAGE_KEYS: { LOCAL_STORAGE_PREFIX, AMPLIFY_MAP_DATA },
+	MAP_RESOURCES: {
+		AMAZON_HQ: { US }
+	}
 } = appConfig;
 const localStorageKey = `${LOCAL_STORAGE_PREFIX}${AMPLIFY_MAP_DATA}`;
 
 interface AmplifyMapStoreProps {
 	currentLocationData?: CurrentLocationDataType;
+	viewpoint: ViewPointType;
 	isAutomaticMapUnit: boolean;
 	mapUnit: MapUnitEnum;
 	mapProvider: MapProviderEnum;
@@ -30,6 +35,7 @@ interface AmplifyMapStoreProps {
 }
 
 const initialState: IStateProps<AmplifyMapStoreProps> = {
+	viewpoint: US,
 	isAutomaticMapUnit: true,
 	mapUnit: MapUnitEnum.IMPERIAL,
 	mapProvider: MapProviderEnum.ESRI,

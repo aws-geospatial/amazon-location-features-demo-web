@@ -30,11 +30,12 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 	const [routeData, setRouteData] = useState<CalculateRouteResponse>();
 	const {
 		currentLocationData,
+		viewpoint,
 		mapProvider: currentMapProvider,
 		mapUnit: currentMapUnit,
 		isCurrentLocationDisabled
 	} = useAmplifyMap();
-	const { clearPoiList, viewpoint } = useAwsPlace();
+	const { clearPoiList } = useAwsPlace();
 	const { getRoute, setDirections, isFetchingRoute } = useAwsRoute();
 	const [longitude, latitude] = info.Place?.Geometry.Point as Position;
 	const isDesktop = useMediaQuery("(min-width: 1024px)");
@@ -42,14 +43,18 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 	const geodesicDistance = useMemo(
 		() =>
 			calculateGeodesicDistance(
-				[
-					currentLocationData?.currentLocation?.longitude as number,
-					currentLocationData?.currentLocation?.latitude as number
-				],
+				isCurrentLocationDisabled
+					? [viewpoint.longitude, viewpoint.latitude]
+					: currentLocationData?.currentLocation
+					? [
+							currentLocationData.currentLocation.longitude as number,
+							currentLocationData.currentLocation.latitude as number
+					  ]
+					: [viewpoint.longitude, viewpoint.latitude],
 				[longitude, latitude],
 				currentMapUnit === METRIC ? (KILOMETERS.toLowerCase() as Units) : (MILES.toLowerCase() as Units)
 			),
-		[currentLocationData, longitude, latitude, currentMapUnit]
+		[isCurrentLocationDisabled, viewpoint, currentLocationData, longitude, latitude, currentMapUnit]
 	);
 
 	const geodesicDistanceWithUnit = useMemo(
@@ -72,7 +77,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 			const maxDistance = currentMapUnit === METRIC ? 400 : 248.55;
 			return currentMapProvider === MapProviderEnum.ESRI && geodesicDistance >= maxDistance;
 		} else {
-			return true;
+			return false;
 		}
 	}, [geodesicDistance, currentMapUnit, currentMapProvider]);
 

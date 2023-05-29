@@ -90,28 +90,12 @@ describe("<MapButtons/>", () => {
 
 	it("should change the map provider when a certain map provider is selected", async () => {
 		openStylesCard = true;
-		// const renderedComponent = await renderComponent();
 		await renderComponent();
 
 		expect(esriMapStyles).toBeInTheDocument();
 		expect(hereMapStyles).toBeNull();
-
-		// fireEvent.click(mapProviderButtonHere as HTMLElement);
-		// expect(handleMapProviderChange).toBeCalledTimes(1);
-		// renderedComponent.unmount();
-
-		// renderedComponent = await renderComponent();
-		// expect(esriMapStyles).toBeNull();
-		// expect(hereMapStyles).toBeInTheDocument();
-
 		fireEvent.click(mapProviderButtonEsri as HTMLElement);
 		expect(handleMapProviderChange).toBeCalledTimes(1);
-		// renderedComponent.unmount();
-
-		// await renderComponent();
-		// expect(hereMapStyles).toBeNull();
-		// expect(esriMapStyles).toBeInTheDocument();
-		// openStylesCard = false;
 	});
 
 	it("should add `selected` class when a certain style is selected/clicked", async () => {

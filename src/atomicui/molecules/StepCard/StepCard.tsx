@@ -75,10 +75,12 @@ const StepCard: React.FC<StepCardProps> = ({ step, isFirst, isLast, travelMode }
 				</View>
 			)}
 			<View className="step-card-details">
-				<Text>
+				<Text className="address">
 					{placeData.Place?.Label || `${(placeData.Place?.Geometry.Point?.[1], placeData.Place?.Geometry.Point?.[0])}`}
 				</Text>
-				<Text>{`${step.Distance.toFixed(2)} ${currentMapUnit === METRIC ? KILOMETERS_SHORT : MILES_SHORT}`}</Text>
+				<Text className="distance">{`${step.Distance.toFixed(2)} ${
+					currentMapUnit === METRIC ? KILOMETERS_SHORT : MILES_SHORT
+				}`}</Text>
 			</View>
 		</View>
 	) : null;
