@@ -12,11 +12,6 @@ export enum InputType {
 	TO = "to"
 }
 
-export enum DistanceUnit {
-	KILOMETERS = "Kilometers",
-	MILES = "Miles"
-}
-
 export enum LocationErrorMessage {
 	DENIED = "Permission denied, please enable browser location and refresh the page",
 	UNAVAILABLE = "Permission unavailable, please check that your location services are enabled.",
@@ -28,6 +23,22 @@ export enum ToastType {
 	SUCCESS = "success",
 	WARNING = "warning",
 	ERROR = "error"
+}
+
+export enum MapUnitEnum {
+	IMPERIAL = "Imperial",
+	METRIC = "Metric"
+}
+
+export enum DistanceUnitEnum {
+	MILES = "Miles",
+	MILES_SHORT = "mi",
+	FEET = "Feet",
+	FEET_SHORT = "ft",
+	KILOMETERS = "Kilometers",
+	KILOMETERS_SHORT = "km",
+	METERS = "Meters",
+	METERS_SHORT = "m"
 }
 
 export enum MapProviderEnum {

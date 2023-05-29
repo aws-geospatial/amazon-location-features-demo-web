@@ -81,4 +81,6 @@ export { ReactComponent as IconYoutube } from "./icon-youtube.svg";
 export { ReactComponent as IconZoomPlusFilled } from "./icon-zoom-plus-filled.svg";
 export { ReactComponent as IconZoomPlus } from "./icon-zoom-plus.svg";
 export { ReactComponent as LogoSmall } from "./logo.svg";
+export { ReactComponent as LogoDark } from "./LogoDark.svg";
+export { ReactComponent as LogoLight } from "./LogoLight.svg";
 export { ReactComponent as IconTickCircle } from "./tick-circle.svg";

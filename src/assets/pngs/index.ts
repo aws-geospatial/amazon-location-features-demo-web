@@ -10,7 +10,6 @@ export { default as HereExploreTruck } from "./HereExploreTruck.png";
 export { default as HereHybrid } from "./HereHybrid.png";
 export { default as HereImagery } from "./HereImagery.png";
 export { default as Loading } from "./Loading.png";
-export { default as LogoStroke } from "./LogoStroke.png";
 export { default as GooglePlayDownload } from "./google-play-download.png";
 export { default as AppleStoreDownload } from "./apple-store-download.png";
 export { default as EmptyConnectModal } from "./EmptyConnectModal.png";

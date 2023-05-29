@@ -2,7 +2,7 @@
 /* SPDX-License-Identifier: MIT-0 */
 
 import turfHaversineDistance from "@turf/distance";
-import { Coord } from "@turf/turf";
+import { Coord, Units } from "@turf/turf";
 import { Position } from "aws-sdk/clients/location";
 import Geohash from "ngeohash";
 
@@ -70,7 +70,7 @@ export const getPrecision = (zoom: number, def = 10): number => {
 	}
 };
 
-export const calculateGeodesicDistance = (start: Coord, end: Coord) => {
-	const geodesicDistance = turfHaversineDistance(start, end, { units: "kilometers" });
+export const calculateGeodesicDistance = (start: Coord, end: Coord, units: Units) => {
+	const geodesicDistance = turfHaversineDistance(start, end, { units });
 	return isNaN(geodesicDistance) ? undefined : parseFloat(geodesicDistance.toFixed(2));
 };
