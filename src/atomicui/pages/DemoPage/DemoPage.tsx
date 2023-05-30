@@ -251,38 +251,6 @@ const DemoPage: React.FC = () => {
 			mapViewRef.current?.fitBounds(bound as [number, number, number, number]);
 		} else if (show.routeBox && routeData?.Summary.RouteBBox) {
 			const boundingBox = routeData.Summary.RouteBBox;
-			// const options = isDesktop
-			// 	? currentMapProvider === MapProviderEnum.GRAB
-			// 		? {
-			// 				padding: {
-			// 					top: 200,
-			// 					bottom: 200,
-			// 					left: 700,
-			// 					right: 200
-			// 				},
-			// 				speed: 5,
-			// 				linear: false
-			// 		  }
-			// 		: {
-			// 				padding: {
-			// 					top: 200,
-			// 					bottom: 200,
-			// 					left: 450,
-			// 					right: 200
-			// 				},
-			// 				speed: 5,
-			// 				linear: false
-			// 		  }
-			// 	: {
-			// 			padding: {
-			// 				top: 235,
-			// 				bottom: 30,
-			// 				left: 60,
-			// 				right: 70
-			// 			},
-			// 			speed: 5,
-			// 			linear: false
-			// 	  };
 			const options = isDesktop
 				? {
 						padding: {
@@ -335,11 +303,19 @@ const DemoPage: React.FC = () => {
 	const getCurrentGeoLocation = useCallback(() => {
 		if (isCurrentLocationDisabled) {
 			showToast({ content: "Your current location is not supported by Grab", type: ToastType.INFO });
-			mapViewRef.current?.flyTo({ center: [AMAZON_HQ.SG.longitude, AMAZON_HQ.SG.latitude], zoom: 5 });
+			setZoom(5);
+			mapViewRef.current?.flyTo({ center: [AMAZON_HQ.SG.longitude, AMAZON_HQ.SG.latitude] });
 		} else {
 			getCurrentLocation(setCurrentLocation, setViewpoint, currentMapProvider, setIsCurrentLocationDisabled);
 		}
-	}, [isCurrentLocationDisabled, setCurrentLocation, setViewpoint, currentMapProvider, setIsCurrentLocationDisabled]);
+	}, [
+		isCurrentLocationDisabled,
+		setZoom,
+		setCurrentLocation,
+		setViewpoint,
+		currentMapProvider,
+		setIsCurrentLocationDisabled
+	]);
 
 	useEffect(() => {
 		if ("permissions" in navigator) {
@@ -466,19 +442,17 @@ const DemoPage: React.FC = () => {
 						/* If current location lies outside Grab MAX_BOUNDS */
 						setIsCurrentLocationDisabled(true);
 						setViewpoint({ latitude: AMAZON_HQ.SG.latitude, longitude: AMAZON_HQ.SG.longitude });
-						setTimeout(() => {
-							mapViewRef.current?.flyTo({
-								center: [AMAZON_HQ.SG.longitude, AMAZON_HQ.SG.latitude],
-								zoom: !!routeData ? undefined : 5
-							});
-						}, 1000);
+						setZoom(15);
+						mapViewRef.current?.flyTo({
+							center: [AMAZON_HQ.SG.longitude, AMAZON_HQ.SG.latitude]
+						});
 					}
 				} else {
 					/* If current location data doesn't exists */
 					setViewpoint({ latitude: AMAZON_HQ.SG.latitude, longitude: AMAZON_HQ.SG.longitude });
+					setZoom(15);
 					mapViewRef.current?.flyTo({
-						center: [AMAZON_HQ.SG.longitude, AMAZON_HQ.SG.latitude],
-						zoom: !!routeData ? undefined : 5
+						center: [AMAZON_HQ.SG.longitude, AMAZON_HQ.SG.latitude]
 					});
 				}
 			} else {
@@ -487,17 +461,18 @@ const DemoPage: React.FC = () => {
 					const { latitude, longitude } = currentLocationData.currentLocation;
 					setIsCurrentLocationDisabled(false);
 					setViewpoint({ latitude, longitude });
-					mapViewRef.current?.flyTo({ center: [longitude, latitude], zoom: !!routeData ? undefined : 5 });
+					setZoom(15);
+					mapViewRef.current?.flyTo({ center: [longitude, latitude] });
 				} else {
 					setViewpoint({ latitude: AMAZON_HQ.US.latitude, longitude: AMAZON_HQ.US.longitude });
+					setZoom(15);
 					mapViewRef.current?.flyTo({
-						center: [AMAZON_HQ.US.longitude, AMAZON_HQ.US.latitude],
-						zoom: !!routeData ? undefined : 5
+						center: [AMAZON_HQ.US.longitude, AMAZON_HQ.US.latitude]
 					});
 				}
 			}
 		},
-		[currentLocationData, setViewpoint, routeData, setIsCurrentLocationDisabled, isCurrentLocationDisabled]
+		[currentLocationData, setViewpoint, setZoom, setIsCurrentLocationDisabled, isCurrentLocationDisabled]
 	);
 
 	const onMapProviderChange = useCallback(
@@ -528,10 +503,13 @@ const DemoPage: React.FC = () => {
 				resetAppState();
 			}
 
-			setTimeout(
-				() => setAttributionText(document.getElementsByClassName("mapboxgl-ctrl-attrib-inner")[0].innerHTML),
-				3000
-			);
+			setTimeout(() => {
+				const el = document.getElementsByClassName("mapboxgl-ctrl-attrib-inner")[0].innerHTML;
+
+				if (!!el) {
+					setAttributionText(el);
+				}
+			}, 3000);
 		},
 		[
 			currentMapProvider,
@@ -630,7 +608,7 @@ const DemoPage: React.FC = () => {
 				maxTileCacheSize={100}
 				zoom={zoom}
 				initialViewState={
-					currentLocationData?.currentLocation
+					currentLocationData?.currentLocation && !isCurrentLocationDisabled
 						? { ...currentLocationData.currentLocation, zoom }
 						: { ...viewpoint, zoom }
 				}

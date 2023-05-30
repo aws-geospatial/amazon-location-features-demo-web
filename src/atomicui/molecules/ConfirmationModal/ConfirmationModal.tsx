@@ -78,7 +78,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 						</Flex>
 					)}
 					{!hideCancelButton && (
-						<Flex data-testId="confirmation-cancel-button" className="confirmation-cancel-button" onClick={onClose}>
+						<Flex data-testid="confirmation-cancel-button" className="confirmation-cancel-button" onClick={onClose}>
 							<Text className="bold" fontSize="1.08rem" textAlign="center">
 								{cancelationText}
 							</Text>

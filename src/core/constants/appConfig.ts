@@ -69,7 +69,7 @@ const appConfig = {
 		GRAB_SUPPORTED_AWS_REGIONS: ["ap-southeast-1"],
 		AMAZON_HQ: {
 			US: { longitude: -122.3408586, latitude: 47.6149975 },
-			SG: { longitude: 103.8461793, latitude: 1.2840177 }
+			SG: { longitude: 103.8485701, latitude: 1.2840829 }
 		},
 		MAX_BOUNDS: {
 			DEFAULT: [-210, -80, 290, 85],
