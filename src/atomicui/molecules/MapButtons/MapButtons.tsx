@@ -187,7 +187,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 							<Flex data-testid="esri-map-styles" gap={0} padding="0rem 1.23rem 1.23rem 1.23rem" wrap="wrap">
 								{ESRI_STYLES.map(({ id, image, name }) => (
 									<Flex
-										data-testid="map-style-item"
+										data-testid={`map-style-item-${name}`}
 										key={id}
 										className={id === currentMapStyle ? "mb-style-container selected" : "mb-style-container"}
 										onClick={() => onChangeStyle(id)}
@@ -227,6 +227,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 							<Flex data-testid="here-map-styles" gap={0} padding="0rem 1.23rem 1.23rem 1.23rem" wrap="wrap">
 								{HERE_STYLES.map(({ id, image, name }) => (
 									<Flex
+										data-testid={`map-style-item-${name}`}
 										key={id}
 										className={id === currentMapStyle ? "mb-style-container selected" : "mb-style-container"}
 										onClick={() => onChangeStyle(id)}
@@ -267,6 +268,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 									<Flex data-testid="grab-map-styles" gap={0} padding="0rem 1.23rem 1.23rem 1.23rem" wrap="wrap">
 										{GRAB_STYLES.map(({ id, image, name }) => (
 											<Flex
+												data-testid={`map-style-item-${name}`}
 												key={id}
 												className={id === currentMapStyle ? "mb-style-container selected" : "mb-style-container"}
 												onClick={() => onChangeStyle(id)}

@@ -4,7 +4,12 @@
 import React from "react";
 
 import { ConfirmationModal } from "@demo/atomicui/molecules";
+import { appConfig } from "@demo/core/constants";
 import "./styles.scss";
+
+const {
+	LINKS: { GRAB_DEVELOPER_GUIDE }
+} = appConfig;
 
 interface GrabConfirmationModalProps {
 	open: boolean;
@@ -17,12 +22,12 @@ const GrabConfirmationModal: React.FC<GrabConfirmationModalProps> = ({ open, onC
 		<ConfirmationModal
 			open={open}
 			onClose={onClose}
-			heading={"Grab Confirmation"}
-			description={"Using Grab data provider will limit your mapping capabilities."}
+			heading={"Enable Grab"}
+			description={"Grab map provider only operated in Southeast Asia and Asia Pacific (Singapore) Region."}
 			onConfirm={onConfirm}
-			confirmationText={"Continue"}
-			// hideCancelButton={false}
-			// cancelationText={cancelationText}
+			confirmationText={"Enable Grab"}
+			showLearnMore={true}
+			handleLeanMore={() => window.open(GRAB_DEVELOPER_GUIDE, "_blank")}
 		/>
 	);
 };

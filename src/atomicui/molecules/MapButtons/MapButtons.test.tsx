@@ -10,11 +10,15 @@ describe("<MapButtons/>", () => {
 	let mapStylesButtons: HTMLElement;
 	let geofenceControlButton: HTMLElement;
 	let mapStylesCard: HTMLElement | null;
-	let mapStylesItems: HTMLElement[] | null;
-	let mapProviderButtonEsri: HTMLElement | null;
-	// let mapProviderButtonHere: HTMLElement | null;
+	// let mapProviderButtonEsri: HTMLElement | null;
 	let esriMapStyles: HTMLElement | null;
+	let mapStylesItemsEsriStreets: HTMLElement | null;
+	let mapProviderButtonHere: HTMLElement | null;
 	let hereMapStyles: HTMLElement | null;
+	// let mapStylesItemsHereContrast: HTMLElement | null;
+	let mapProviderButtonGrab: HTMLElement | null;
+	let grabMapStyles: HTMLElement | null;
+	// let mapStylesItemsGrabDark: HTMLElement | null;
 
 	let onCloseSidebar: jest.Mock<any, any, any>;
 	let onOpenConnectAwsAccountModal: jest.Mock<any, any, any>;
@@ -46,7 +50,7 @@ describe("<MapButtons/>", () => {
 				onOpenConnectAwsAccountModal={onOpenConnectAwsAccountModal}
 				onOpenSignInModal={onOpenSignInModal}
 				onShowGeofenceBox={onShowGeofenceBox}
-				isGrabVisible={false}
+				isGrabVisible={true}
 				showGrabDisclaimerModal={false}
 				onShowGridLoader={onShowGridLoader}
 				handleMapProviderChange={handleMapProviderChange}
@@ -57,11 +61,15 @@ describe("<MapButtons/>", () => {
 		mapStylesButtons = await screen.findByTestId("map-styles-button");
 		geofenceControlButton = await screen.findByTestId("geofence-control-button");
 		mapStylesCard = screen.queryByTestId("map-styles-card");
-		mapStylesItems = screen.queryAllByTestId("map-style-item");
-		mapProviderButtonEsri = screen.queryByTestId("map-data-provider-esri");
-		// mapProviderButtonHere = screen.queryByTestId("map-data-provider-here");
+		// mapProviderButtonEsri = screen.queryByTestId("map-data-provider-esri");
 		esriMapStyles = screen.queryByTestId("esri-map-styles");
+		mapStylesItemsEsriStreets = screen.queryByTestId("map-style-item-Streets");
+		mapProviderButtonHere = screen.queryByTestId("map-data-provider-here");
 		hereMapStyles = screen.queryByTestId("here-map-styles");
+		// mapStylesItemsHereContrast = screen.queryByTestId("map-style-item-Contrast");
+		mapProviderButtonGrab = screen.queryByTestId("map-data-provider-grab");
+		grabMapStyles = screen.queryByTestId("grab-map-styles");
+		// mapStylesItemsGrabDark = screen.queryByTestId("map-style-item-Dark");
 
 		return renderedComponent;
 	};
@@ -71,7 +79,7 @@ describe("<MapButtons/>", () => {
 		expect(mapButtons).toBeInTheDocument();
 	});
 
-	it("should toggle styles card visibility and add `active` class on map styles button click", async () => {
+	it("should be able to click on map styles shortcut and view the map providers and styles", async () => {
 		let renderedComponent = await renderComponent();
 		expect(mapStylesCard).toBe(null);
 		expect(mapStylesButtons.className).not.toContain("active");
@@ -94,22 +102,25 @@ describe("<MapButtons/>", () => {
 
 		expect(esriMapStyles).toBeInTheDocument();
 		expect(hereMapStyles).toBeNull();
-		fireEvent.click(mapProviderButtonEsri as HTMLElement);
+		expect(grabMapStyles).toBeNull();
+
+		fireEvent.click(mapProviderButtonHere as HTMLElement);
 		expect(handleMapProviderChange).toBeCalledTimes(1);
+
+		fireEvent.click(mapProviderButtonGrab as HTMLElement);
+		expect(handleMapProviderChange).toBeCalledTimes(2);
 	});
 
-	it("should add `selected` class when a certain style is selected/clicked", async () => {
+	it("should change the map style when a certain map style is selected", async () => {
 		openStylesCard = true;
 		await renderComponent();
-		const mapStylesItem = mapStylesItems![mapStylesItems!.length - 1];
 
-		expect(mapStylesItem.className).not.toContain("selected");
-		act(() => mapStylesItem.click());
-		expect(mapStylesItem.className).toContain("selected");
-		openStylesCard = false;
+		expect(mapStylesItemsEsriStreets).not.toContain("mb-style-container selected");
+		fireEvent.click(mapStylesItemsEsriStreets as HTMLElement);
+		expect(mapStylesItemsEsriStreets?.className).toContain("mb-style-container selected");
 	});
 
-	it("should toggle styles card visibility and add `active` class on map styles button click", async () => {
+	it("should be able to click on geofence shortcut and get to connect AWS account", async () => {
 		await renderComponent();
 		expect(geofenceControlButton.className).not.toContain("active");
 		act(() => geofenceControlButton.click());

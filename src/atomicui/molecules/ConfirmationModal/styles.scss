@@ -13,6 +13,13 @@
 		align-self: center;
 		height: 100%;
 
+		.confirmation-learn-more-button {
+			gap: 0;
+			justify-content: center;
+			margin-top: 1.54rem;
+			cursor: pointer;
+		}
+
 		.confirmation-cancel-button {
 			gap: 0;
 			justify-content: center;

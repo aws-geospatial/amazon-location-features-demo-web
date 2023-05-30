@@ -19,12 +19,18 @@ const useAmplifyMapReturnValue: {
 	currentLocationData: {
 		error: null | string;
 	};
+	viewpoint: { longitude: number; latitude: number };
 	mapProvider: string;
+	mapUnit: string;
+	isCurrentLocationDisabled: boolean;
 } = {
 	currentLocationData: {
 		error: null
 	},
-	mapProvider: "Esri"
+	viewpoint: { longitude: -122.3408586, latitude: 47.6149975 },
+	mapProvider: "Esri",
+	mapUnit: "Imperial",
+	isCurrentLocationDisabled: false
 };
 
 jest.mock("hooks", () => ({

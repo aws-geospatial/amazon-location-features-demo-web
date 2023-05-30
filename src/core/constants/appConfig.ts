@@ -164,7 +164,8 @@ const appConfig = {
 		AWS_ACCEPTABLE_USE_POLICY: "https://aws.amazon.com/aup/",
 		AWS_PRIVACY_NOTICE: "https://aws.amazon.com/privacy/",
 		ESRI_ATTRIBUTION_LINK: "https://www.esri.com/en-us/legal/terms/data-attributions",
-		HERE_ATTRIBUTION_LINK: "https://legal.here.com/en-gb/terms/general-content-supplier-terms-and-notices"
+		HERE_ATTRIBUTION_LINK: "https://legal.here.com/en-gb/terms/general-content-supplier-terms-and-notices",
+		GRAB_DEVELOPER_GUIDE: "https://docs.aws.amazon.com/location/latest/developerguide/grab.html"
 	}
 };
 
