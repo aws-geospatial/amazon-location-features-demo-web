@@ -76,6 +76,7 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({ height, show,
 				isGrabVisible={isGrabVisible}
 				handleMapProviderChange={() => {}}
 				handleMapStyleChange={() => {}}
+				handleCurrentLocationAndViewpoint={() => {}}
 			/>
 			<Flex className="logo-stroke-container">
 				<LogoLight />
