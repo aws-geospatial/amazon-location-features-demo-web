@@ -9,7 +9,6 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 const App = () => {
 	const router = createBrowserRouter(RouteChunks);
-	const queryClient = new QueryClient();
 
 	return (
 		<StrictMode>
