@@ -35,7 +35,7 @@ import {
 import { humanReadableTime } from "@demo/utils/dateTimeUtils";
 import { CalculateRouteRequest, LineString, Place, Position } from "aws-sdk/clients/location";
 import { Layer, LayerProps, LngLat, MapRef, Marker as ReactMapGlMarker, Source } from "react-map-gl";
-
+import { Tooltip } from "react-tooltip";
 import "./styles.scss";
 
 const { METRIC } = MapUnitEnum;
@@ -536,14 +536,24 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 						className={travelMode === TravelMode.CAR ? "travel-mode selected" : "travel-mode"}
 						onClick={() => handleTravelModeChange(TravelMode.CAR)}
 					>
-						<IconCar />
+						<IconCar
+							data-tooltip-id="icon-car-tooltip"
+							data-tooltip-place="top"
+							data-tooltip-content={'Calculate route with "Car" as travel mode'}
+						/>
+						<Tooltip id="icon-car-tooltip" />
 					</View>
 					<View
 						data-testid="travel-mode-walking-icon-container"
 						className={travelMode === TravelMode.WALKING ? "travel-mode selected" : "travel-mode"}
 						onClick={() => handleTravelModeChange(TravelMode.WALKING)}
 					>
-						<IconWalking />
+						<IconWalking
+							data-tooltip-id="icon-walking-tooltip"
+							data-tooltip-place="top"
+							data-tooltip-content={'Calculate route with "Walking" as travel mode'}
+						/>
+						<Tooltip id="icon-walking-tooltip" />
 					</View>
 					{currentMapProvider !== MapProviderEnum.GRAB && (
 						<View
@@ -551,7 +561,12 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 							className={travelMode === TravelMode.TRUCK ? "travel-mode selected" : "travel-mode"}
 							onClick={() => handleTravelModeChange(TravelMode.TRUCK)}
 						>
-							<IconTruckSolid />
+							<IconTruckSolid
+								data-tooltip-id="icon-truck-tooltip"
+								data-tooltip-place="top"
+								data-tooltip-content={'Calculate route with "Truck" as travel mode'}
+							/>
+							<Tooltip id="icon-truck-tooltip" />
 						</View>
 					)}
 					{currentMapProvider === MapProviderEnum.GRAB && (
@@ -561,14 +576,24 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 								className={travelMode === TravelMode.BICYCLE ? "travel-mode selected" : "travel-mode"}
 								onClick={() => handleTravelModeChange(TravelMode.BICYCLE)}
 							>
-								<IconBicycleSolid />
+								<IconBicycleSolid
+									data-tooltip-id="icon-bicycle-tooltip"
+									data-tooltip-place="top"
+									data-tooltip-content={'Calculate route with "Bicycle" as travel mode'}
+								/>
+								<Tooltip id="icon-bicycle-tooltip" />
 							</View>
 							<View
 								data-testid="travel-mode-motorcycle-icon-container"
 								className={travelMode === TravelMode.MOTORCYCLE ? "travel-mode selected" : "travel-mode"}
 								onClick={() => handleTravelModeChange(TravelMode.MOTORCYCLE)}
 							>
-								<IconMotorcycleSolid />
+								<IconMotorcycleSolid
+									data-tooltip-id="icon-motorcycle-tooltip"
+									data-tooltip-place="top"
+									data-tooltip-content={'Calculate route with "Motorcycle" as travel mode'}
+								/>
+								<Tooltip id="icon-motorcycle-tooltip" />
 							</View>
 						</>
 					)}

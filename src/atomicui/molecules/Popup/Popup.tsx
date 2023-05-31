@@ -7,7 +7,7 @@ import { Button, Flex, Placeholder, Text, View } from "@aws-amplify/ui-react";
 import { IconCar, IconClose, IconCopyPages, IconDirections, IconInfo } from "@demo/assets";
 import { TextEl } from "@demo/atomicui/atoms";
 import { useAmplifyMap, useAwsPlace, useAwsRoute, useMediaQuery } from "@demo/hooks";
-import { DistanceUnitEnum, MapProviderEnum, MapUnitEnum, SuggestionType } from "@demo/types";
+import { DistanceUnitEnum, MapProviderEnum, MapUnitEnum, SuggestionType, TravelMode } from "@demo/types";
 
 import { humanReadableTime } from "@demo/utils/dateTimeUtils";
 import { calculateGeodesicDistance } from "@demo/utils/geoCalculation";
@@ -43,9 +43,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 	const geodesicDistance = useMemo(
 		() =>
 			calculateGeodesicDistance(
-				isCurrentLocationDisabled
-					? [viewpoint.longitude, viewpoint.latitude]
-					: currentLocationData?.currentLocation
+				currentLocationData?.currentLocation && !isCurrentLocationDisabled
 					? [
 							currentLocationData.currentLocation.longitude as number,
 							currentLocationData.currentLocation.latitude as number
@@ -83,15 +81,16 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 
 	const loadRouteData = useCallback(async () => {
 		const params: Omit<CalculateRouteRequest, "CalculatorName" | "DepartNow"> = {
-			DeparturePosition: !isCurrentLocationDisabled
-				? ([
-						currentLocationData?.currentLocation?.longitude,
-						currentLocationData?.currentLocation?.latitude
-				  ] as Position)
-				: [viewpoint.longitude, viewpoint.latitude],
+			DeparturePosition:
+				!!currentLocationData?.currentLocation && !isCurrentLocationDisabled
+					? ([
+							currentLocationData?.currentLocation?.longitude,
+							currentLocationData?.currentLocation?.latitude
+					  ] as Position)
+					: [viewpoint.longitude, viewpoint.latitude],
 			DestinationPosition: [longitude, latitude],
 			DistanceUnit: currentMapUnit === METRIC ? KILOMETERS : MILES,
-			TravelMode: "Car"
+			TravelMode: TravelMode.CAR
 		};
 		const r = await getRoute(params as CalculateRouteRequest);
 		setRouteData(r);

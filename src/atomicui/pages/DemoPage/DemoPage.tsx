@@ -504,7 +504,9 @@ const DemoPage: React.FC = () => {
 			}
 
 			setTimeout(() => {
-				const el = document.getElementsByClassName("mapboxgl-ctrl-attrib-inner")[0].innerHTML;
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore: Unreachable code error
+				const el = document.getElementsByClassName("mapboxgl-ctrl-attrib-inner")[0]?.innerText || "";
 
 				if (!!el) {
 					setAttributionText(el);
