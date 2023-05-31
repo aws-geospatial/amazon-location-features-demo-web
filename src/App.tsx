@@ -5,7 +5,6 @@ import { StrictMode, Suspense } from "react";
 
 import { Loader } from "@aws-amplify/ui-react";
 import { AppWrapper, RouteChunks, ToastContainer } from "@demo/core";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 const App = () => {
@@ -26,12 +25,10 @@ const App = () => {
 					/>
 				}
 			>
-				<QueryClientProvider client={queryClient}>
-					<AppWrapper>
-						<ToastContainer />
-						<RouterProvider fallbackElement={<>OOPS!</>} router={router} />
-					</AppWrapper>
-				</QueryClientProvider>
+				<AppWrapper>
+					<ToastContainer />
+					<RouterProvider fallbackElement={<>OOPS!</>} router={router} />
+				</AppWrapper>
 			</Suspense>
 		</StrictMode>
 	);
