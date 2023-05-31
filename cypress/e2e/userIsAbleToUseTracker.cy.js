@@ -54,9 +54,9 @@ describe("Tracker", () => {
 	});
 
 	it("should allow user to add a tracker for car and be able to edit", () => {
-		cy.get('[class="mapboxgl-canvas"]').click("left");
+		cy.get('[class="mapboxgl-canvas"]').click("left", { force: true });
 		cy.wait(2000);
-		cy.get('[class="mapboxgl-canvas"]').click("right");
+		cy.get('[class="mapboxgl-canvas"]').click("right", { force: true });
 		cy.wait(2000);
 		cy.contains("Save").click();
 		cy.wait(2000);
