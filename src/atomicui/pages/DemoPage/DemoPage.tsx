@@ -733,11 +733,13 @@ const DemoPage: React.FC = () => {
 						fontSize: "0.77rem",
 						borderRadius: "0.62rem",
 						marginRight: "0.77rem",
+						marginBottom: !isDesktop ? "2.77rem" : "0rem",
 						backgroundColor: currentMapStyle.toLowerCase().includes("dark")
 							? "rgba(0, 0, 0, 0.2)"
 							: "var(--white-color)",
 						color: currentMapStyle.toLowerCase().includes("dark") ? "var(--white-color)" : "var(--black-color)"
 					}}
+					compact={!isDesktop}
 				/>
 			</Map>
 			<WelcomeModal open={showWelcomeModal} onClose={() => setShowWelcomeModal(false)} />
