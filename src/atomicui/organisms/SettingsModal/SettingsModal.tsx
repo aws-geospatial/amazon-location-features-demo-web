@@ -113,11 +113,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 
 	const _onLogin = useCallback(async () => await onLogin(), [onLogin]);
 
-	const _onDisconnectAwsAccount = useCallback(
-		() => onDisconnectAwsAccount(resetAwsStore),
-		[onDisconnectAwsAccount, resetAwsStore]
-	);
-
 	const _onLogout = useCallback(async () => {
 		setAuthTokens(undefined);
 		await detachPolicy(credentials!.identityId);
@@ -478,7 +473,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 											width="100%"
 											backgroundColor="var(--red-color)"
 											marginTop="0.62rem"
-											onClick={_onDisconnectAwsAccount}
+											onClick={onDisconnectAwsAccount}
 										>
 											Disconnect AWS Account
 										</Button>
@@ -530,7 +525,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 			defaultRouteOptions,
 			setDefaultRouteOptions,
 			isUserAwsAccountConnected,
-			_onDisconnectAwsAccount,
+			onDisconnectAwsAccount,
 			onConnect,
 			formValues,
 			isBtnEnabled,

@@ -5,6 +5,7 @@ import { useMemo } from "react";
 
 import { showToast } from "@demo/core/Toast";
 import { appConfig } from "@demo/core/constants";
+import { useAmplifyMap, useAws } from "@demo/hooks";
 import { useAmplifyAuthService } from "@demo/services";
 import { useAmplifyAuthStore } from "@demo/stores";
 import { AuthTokensType, ConnectFormValuesType, ToastType } from "@demo/types";
@@ -23,6 +24,8 @@ const useAmplifyAuth = () => {
 	const { setInitial } = store;
 	const { setState } = useAmplifyAuthStore;
 	const { getCurrentUserCredentials, login, logout, fetchHostedUi, getCurrentSession } = useAmplifyAuthService();
+	const { resetStore: resetAwsStore } = useAws();
+	const { resetStore: resetAmplifyMapStore } = useAmplifyMap();
 
 	const methods = useMemo(
 		() => ({
@@ -195,10 +198,11 @@ const useAmplifyAuth = () => {
 					errorHandler(error, "Failed to sign out");
 				}
 			},
-			onDisconnectAwsAccount: (resetAwsStore: () => void) => {
+			onDisconnectAwsAccount: () => {
 				localStorage.clear();
 				methods.resetStore();
 				resetAwsStore();
+				resetAmplifyMapStore();
 				setTimeout(() => {
 					window.location.reload();
 				}, 3000);
@@ -238,7 +242,17 @@ const useAmplifyAuth = () => {
 				setInitial();
 			}
 		}),
-		[setInitial, setState, fetchHostedUi, getCurrentUserCredentials, login, logout, getCurrentSession]
+		[
+			setInitial,
+			setState,
+			fetchHostedUi,
+			getCurrentUserCredentials,
+			login,
+			logout,
+			getCurrentSession,
+			resetAmplifyMapStore,
+			resetAwsStore
+		]
 	);
 
 	return { ...methods, ...store };

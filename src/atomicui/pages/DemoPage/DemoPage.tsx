@@ -301,7 +301,7 @@ const DemoPage: React.FC = () => {
 	}, [clearPoiList, isCurrentLocationDisabled, routeData, setRouteData]);
 
 	const getCurrentGeoLocation = useCallback(() => {
-		if (isCurrentLocationDisabled) {
+		if (isCurrentLocationDisabled && GRAB_SUPPORTED_AWS_REGIONS.includes(region)) {
 			showToast({ content: "Your current location is not supported by Grab", type: ToastType.INFO });
 			setZoom(5);
 			mapViewRef.current?.flyTo({ center: [AMAZON_HQ.SG.longitude, AMAZON_HQ.SG.latitude] });
@@ -310,6 +310,7 @@ const DemoPage: React.FC = () => {
 		}
 	}, [
 		isCurrentLocationDisabled,
+		region,
 		setZoom,
 		setCurrentLocation,
 		setViewpoint,
@@ -683,7 +684,7 @@ const DemoPage: React.FC = () => {
 						handleMapProviderChange={onMapProviderChange}
 					/>
 					{locationError || isCurrentLocationDisabled ? (
-						<Flex className="location-disabled" onClick={getCurrentGeoLocation}>
+						<Flex className="location-disabled" onClick={() => getCurrentGeoLocation()}>
 							<IconLocateMe />
 						</Flex>
 					) : (
