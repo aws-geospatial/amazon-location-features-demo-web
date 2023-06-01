@@ -45,6 +45,7 @@ import { differenceInMilliseconds } from "date-fns";
 import { LngLatBoundsLike } from "mapbox-gl";
 import { omit } from "ramda";
 import {
+	AttributionControl,
 	GeolocateControl,
 	GeolocateControlRef,
 	GeolocateErrorEvent,
@@ -632,6 +633,7 @@ const DemoPage: React.FC = () => {
 				onError={error => errorHandler(error.error)}
 				onIdle={() => show.gridLoader && setShow(s => ({ ...s, gridLoader: false }))}
 				transformRequest={transformRequest}
+				attributionControl={false}
 			>
 				<View className={show.gridLoader ? "loader-container" : ""}>
 					{show.sidebar && (
@@ -726,6 +728,17 @@ const DemoPage: React.FC = () => {
 						showCompass={false}
 					/>
 				</View>
+				<AttributionControl
+					style={{
+						fontSize: "0.77rem",
+						borderRadius: "0.62rem",
+						marginRight: "0.77rem",
+						backgroundColor: currentMapStyle.toLowerCase().includes("dark")
+							? "rgba(0, 0, 0, 0.2)"
+							: "var(--white-color)",
+						color: currentMapStyle.toLowerCase().includes("dark") ? "var(--white-color)" : "var(--black-color)"
+					}}
+				/>
 			</Map>
 			<WelcomeModal open={showWelcomeModal} onClose={() => setShowWelcomeModal(false)} />
 			<SignInModal open={show.signInModal} onClose={() => setShow(s => ({ ...s, signInModal: false }))} />

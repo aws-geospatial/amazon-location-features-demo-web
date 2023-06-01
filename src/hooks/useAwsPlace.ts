@@ -5,10 +5,7 @@ import { useMemo } from "react";
 
 import { useAmplifyMap } from "@demo/hooks";
 import { useAwsPlaceService } from "@demo/services";
-import {
-	// useAmplifyMapStore,
-	useAwsPlaceStore
-} from "@demo/stores";
+import { useAwsPlaceStore } from "@demo/stores";
 import { ClustersType, SuggestionType, ViewPointType } from "@demo/types";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { calculateClusters, getHash, getPrecision, isGeoString } from "@demo/utils/geoCalculation";
@@ -18,9 +15,8 @@ const useAwsPlace = () => {
 	const store = useAwsPlaceStore();
 	const { setInitial } = store;
 	const { setState } = useAwsPlaceStore;
-	const { mapProvider: currentMapProvider, viewpoint, setViewpoint } = useAmplifyMap();
-	// const { mapProvider } = useAmplifyMapStore();
-	const placesService = useAwsPlaceService(currentMapProvider, viewpoint);
+	const { setViewpoint } = useAmplifyMap();
+	const placesService = useAwsPlaceService();
 
 	const methods = useMemo(
 		() => ({

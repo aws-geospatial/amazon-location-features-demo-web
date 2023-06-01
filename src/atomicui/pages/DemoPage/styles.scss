@@ -103,11 +103,6 @@
 	}
 }
 
-.mapboxgl-ctrl.mapboxgl-ctrl-attrib,
-.maplibregl-ctrl.maplibregl-ctrl-attrib {
-	background-color: transparent;
-}
-
 .logo-stroke-container {
 	gap: 0;
 	position: absolute;
@@ -150,13 +145,13 @@
 	}
 }
 
-@media only screen and (max-width: 640px) {
-	.maplibregl-ctrl-attrib-inner.mapboxgl-ctrl-attrib-inner {
-		margin-top: -20px;
-	}
-}
-@media only screen and (max-width: 624px) {
-	.maplibregl-ctrl-attrib-inner.mapboxgl-ctrl-attrib-inner {
-		margin-top: -50px;
-	}
-}
+// @media only screen and (max-width: 640px) {
+// 	.maplibregl-ctrl-attrib-inner.mapboxgl-ctrl-attrib-inner {
+// 		margin-top: -20px;
+// 	}
+// }
+// @media only screen and (max-width: 624px) {
+// 	.maplibregl-ctrl-attrib-inner.mapboxgl-ctrl-attrib-inner {
+// 		margin-top: -50px;
+// 	}
+// }
