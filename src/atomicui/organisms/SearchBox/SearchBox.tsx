@@ -8,7 +8,7 @@ import { IconActionMenu, IconClose, IconDirections, IconPin, IconSearch } from "
 import { TextEl } from "@demo/atomicui/atoms";
 import { Marker, NotFoundCard, SuggestionMarker } from "@demo/atomicui/molecules";
 import { useAmplifyMap, useAwsPlace } from "@demo/hooks";
-import { DistanceUnitEnum, MapProviderEnum, MapUnitEnum, SuggestionType } from "@demo/types";
+import { DistanceUnitEnum, MapUnitEnum, SuggestionType } from "@demo/types";
 import { calculateGeodesicDistance } from "@demo/utils/geoCalculation";
 import { uuid } from "@demo/utils/uuid";
 import { Units } from "@turf/turf";
@@ -47,13 +47,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	const [value, setValue] = useState<string>("");
 	const [isFocused, setIsFocused] = useState(false);
 	const autocompleteRef = useRef<HTMLInputElement | null>(null);
-	const {
-		mapProvider: currentMapProvider,
-		mapUnit: currentMapUnit,
-		isCurrentLocationDisabled,
-		currentLocationData,
-		viewpoint
-	} = useAmplifyMap();
+	const { mapUnit: currentMapUnit, isCurrentLocationDisabled, currentLocationData, viewpoint } = useAmplifyMap();
 	const {
 		clusters,
 		suggestions,
@@ -79,16 +73,12 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 
 	const handleSearch = useCallback(
 		async (value: string, exact = false) => {
-			let vp = viewpoint;
-
-			if (currentMapProvider !== MapProviderEnum.GRAB) {
-				const { lng: longitude, lat: latitude } = mapRef?.getCenter() as LngLat;
-				vp = { longitude, latitude };
-			}
+			const { lng: longitude, lat: latitude } = mapRef?.getCenter() as LngLat;
+			const vp = { longitude, latitude };
 
 			await search(value, { longitude: vp.longitude, latitude: vp.latitude }, exact);
 		},
-		[viewpoint, currentMapProvider, mapRef, search]
+		[mapRef, search]
 	);
 
 	const selectSuggestion = async ({ text, label, placeid }: ComboBoxOption) => {

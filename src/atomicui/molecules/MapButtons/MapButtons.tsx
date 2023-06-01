@@ -105,8 +105,10 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	};
 
 	const _handleMapProviderChange = (mapProvider: MapProviderEnum) => {
-		setIsLoadingImg(true);
-		handleMapProviderChange(mapProvider);
+		if (mapProvider !== currentMapProvider) {
+			setIsLoadingImg(true);
+			handleMapProviderChange(mapProvider);
+		}
 	};
 
 	const onChangeStyle = (id: EsriMapEnum | HereMapEnum | GrabMapEnum) => {
@@ -250,7 +252,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 									className={
 										currentMapProvider === GRAB ? "map-data-provider selected-map-data-provider" : "map-data-provider"
 									}
-									onClick={() => handleMapProviderChange(GRAB)}
+									onClick={() => _handleMapProviderChange(GRAB)}
 								>
 									<TextEl fontSize="1.23rem" lineHeight="2.15rem" text={GRAB} />
 									<Radio
@@ -260,7 +262,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 										onChange={e => {
 											e.preventDefault();
 											e.stopPropagation();
-											handleMapProviderChange(GRAB);
+											_handleMapProviderChange(GRAB);
 										}}
 									/>
 								</Flex>

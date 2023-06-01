@@ -198,7 +198,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 						direction="column"
 						padding="0rem 1.15rem"
 					>
-						<Flex gap={0} padding="1.08rem 0rem">
+						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
 							<Radio
 								data-testid="unit-automatic-radio"
 								value={"Automatic"}
@@ -208,7 +208,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								<TextEl marginLeft="1.23rem" text={"Automatic"} />
 							</Radio>
 						</Flex>
-						<Flex gap={0} padding="1.08rem 0rem">
+						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
 							<Radio
 								data-testid="unit-imperial-radio"
 								value={IMPERIAL}
@@ -219,7 +219,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								<TextEl variation="tertiary" marginLeft="1.23rem" text={"Miles, pounds"} />
 							</Radio>
 						</Flex>
-						<Flex gap={0} padding="1.08rem 0rem">
+						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
 							<Radio
 								data-testid="unit-metric-radio"
 								value={METRIC}
@@ -246,7 +246,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 						padding="0rem 1.15rem"
 					>
 						{/* Esri */}
-						<Flex gap={0} padding="1.08rem 0rem">
+						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
 							<Radio
 								data-testid="data-provider-esri-radio"
 								value={ESRI}
@@ -257,7 +257,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 							</Radio>
 						</Flex>
 						{/* HERE */}
-						<Flex gap={0} padding="1.08rem 0rem">
+						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
 							<Radio
 								data-testid="data-provider-here-radio"
 								value={HERE}
@@ -269,7 +269,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 						</Flex>
 						{/* Grab */}
 						{isGrabVisible && (
-							<Flex gap={0} padding="1.08rem 0rem">
+							<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
 								<Radio
 									data-testid="data-provider-grab-radio"
 									value={GRAB}

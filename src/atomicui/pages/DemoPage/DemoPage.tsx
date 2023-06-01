@@ -301,16 +301,20 @@ const DemoPage: React.FC = () => {
 	}, [clearPoiList, isCurrentLocationDisabled, routeData, setRouteData]);
 
 	const getCurrentGeoLocation = useCallback(() => {
-		if (isCurrentLocationDisabled && GRAB_SUPPORTED_AWS_REGIONS.includes(region)) {
-			showToast({ content: "Your current location is not supported by Grab", type: ToastType.INFO });
-			setZoom(5);
-			mapViewRef.current?.flyTo({ center: [AMAZON_HQ.SG.longitude, AMAZON_HQ.SG.latitude] });
+		if (GRAB_SUPPORTED_AWS_REGIONS.includes(region)) {
+			if (isCurrentLocationDisabled) {
+				showToast({ content: "Your current location is not supported by Grab", type: ToastType.INFO });
+				setZoom(5);
+				mapViewRef.current?.flyTo({ center: [AMAZON_HQ.SG.longitude, AMAZON_HQ.SG.latitude] });
+			} else {
+				getCurrentLocation(setCurrentLocation, setViewpoint, currentMapProvider, setIsCurrentLocationDisabled);
+			}
 		} else {
 			getCurrentLocation(setCurrentLocation, setViewpoint, currentMapProvider, setIsCurrentLocationDisabled);
 		}
 	}, [
-		isCurrentLocationDisabled,
 		region,
+		isCurrentLocationDisabled,
 		setZoom,
 		setCurrentLocation,
 		setViewpoint,

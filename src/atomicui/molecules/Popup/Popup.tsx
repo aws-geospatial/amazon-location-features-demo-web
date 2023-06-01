@@ -81,26 +81,29 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 
 	const loadRouteData = useCallback(async () => {
 		const params: Omit<CalculateRouteRequest, "CalculatorName" | "DepartNow"> = {
-			DeparturePosition:
-				!!currentLocationData?.currentLocation && !isCurrentLocationDisabled
-					? ([
-							currentLocationData?.currentLocation?.longitude,
-							currentLocationData?.currentLocation?.latitude
-					  ] as Position)
-					: [viewpoint.longitude, viewpoint.latitude],
+			DeparturePosition: [
+				currentLocationData?.currentLocation?.longitude,
+				currentLocationData?.currentLocation?.latitude
+			] as Position,
 			DestinationPosition: [longitude, latitude],
 			DistanceUnit: currentMapUnit === METRIC ? KILOMETERS : MILES,
 			TravelMode: TravelMode.CAR
 		};
 		const r = await getRoute(params as CalculateRouteRequest);
 		setRouteData(r);
-	}, [isCurrentLocationDisabled, currentLocationData, viewpoint, longitude, latitude, currentMapUnit, getRoute]);
+	}, [currentLocationData, longitude, latitude, currentMapUnit, getRoute]);
 
 	useEffect(() => {
-		if (!routeData && active && !isEsriLimitation) {
+		if (
+			!routeData &&
+			active &&
+			!isEsriLimitation &&
+			!!currentLocationData?.currentLocation &&
+			!isCurrentLocationDisabled
+		) {
 			loadRouteData();
 		}
-	}, [routeData, active, isEsriLimitation, loadRouteData]);
+	}, [routeData, active, isEsriLimitation, currentLocationData, isCurrentLocationDisabled, loadRouteData]);
 
 	const onClose = useCallback(async () => {
 		await select(undefined);
@@ -114,15 +117,22 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 	};
 
 	const renderRouteInfo = useMemo(() => {
-		if (currentLocationData?.error) {
+		if (currentLocationData?.error || isCurrentLocationDisabled) {
 			return (
 				<Flex data-testid="permission-denied-error-container" gap={3} alignItems="center">
-					<TextEl variation="info" text="Location permission denied" />
+					<TextEl
+						variation="info"
+						text={isCurrentLocationDisabled ? "Current location disabled" : "Current location permission denied"}
+					/>
 					<IconInfo
 						className="location-permission-denied-info-icon"
 						data-tooltip-id="location-permission-denied-info"
 						data-tooltip-place="top"
-						data-tooltip-content="Distance can't be calculate if location permission is not granted, kindly grant access to location from the URL bar or browser settings"
+						data-tooltip-content={
+							isCurrentLocationDisabled
+								? "Distance can't be calculated, since your current location has been disabled due to Grab limitation"
+								: "Distance can't be calculate if location permission is not granted, kindly grant access to location from the URL bar or browser settings"
+						}
 					/>
 					<Tooltip id="location-permission-denied-info" />
 				</Flex>
@@ -140,10 +150,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 					/>
 				</Flex>
 			);
-		} else if (
-			(currentMapProvider === MapProviderEnum.HERE || currentMapProvider === MapProviderEnum.GRAB) &&
-			!routeData
-		) {
+		} else if (!isFetchingRoute && !routeData) {
 			return (
 				<Flex data-testid="here-message-container" gap={0} direction={"column"}>
 					<TextEl variation="secondary" fontFamily="AmazonEmber-Bold" text={geodesicDistanceWithUnit} />
@@ -176,10 +183,10 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 		}
 	}, [
 		currentLocationData,
+		isCurrentLocationDisabled,
 		geodesicDistanceWithUnit,
 		currentMapUnit,
 		isEsriLimitation,
-		currentMapProvider,
 		routeData,
 		isFetchingRoute
 	]);

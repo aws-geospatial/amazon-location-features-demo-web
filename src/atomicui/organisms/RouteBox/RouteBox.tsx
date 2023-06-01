@@ -157,13 +157,9 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 				obj.DeparturePosition = [placeData.from.Geometry.Point?.[0], placeData.from.Geometry.Point?.[1]] as Position;
 				obj.DestinationPosition = [placeData.to.Geometry.Point?.[0], placeData.to.Geometry.Point?.[1]] as Position;
 				return obj;
-			} else if (!placeData.from && placeData.to && isCurrentLocationDisabled) {
-				obj.DeparturePosition = [viewpoint.longitude, viewpoint.latitude];
-				obj.DestinationPosition = [placeData.to.Geometry.Point?.[0], placeData.to.Geometry.Point?.[1]] as Position;
-				return obj;
 			}
 		}
-	}, [isCurrentLocationSelected, placeData, currentLocationData, isCurrentLocationDisabled, viewpoint]);
+	}, [isCurrentLocationSelected, placeData, currentLocationData]);
 
 	const calculateRouteData = useCallback(async () => {
 		const obj = getDestDept();
@@ -203,11 +199,10 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 		if (directions) {
 			directions.info.Place?.Geometry.Point &&
 				setValue({
-					from: isCurrentLocationDisabled
-						? `${viewpoint.latitude}, ${viewpoint.longitude}`
-						: !currentLocationData?.error && !directions.isEsriLimitation
-						? "My Location"
-						: "",
+					from:
+						!currentLocationData?.error && !directions.isEsriLimitation && !isCurrentLocationDisabled
+							? "My Location"
+							: "",
 					to: directions.info.Place.Label
 						? directions.info.Place.Label
 						: `${directions.info.Place.Geometry.Point[1]}, ${directions.info.Place.Geometry.Point[0]}`
@@ -396,14 +391,8 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 					<IconSegment width="32px" height="32px" />
 				</ReactMapGlMarker>
 			);
-		} else if (routePositions?.to && isCurrentLocationDisabled) {
-			return (
-				<ReactMapGlMarker longitude={viewpoint.longitude} latitude={viewpoint.latitude}>
-					<IconSegment width="32px" height="32px" />
-				</ReactMapGlMarker>
-			);
 		}
-	}, [routePositions, isCurrentLocationDisabled, viewpoint]);
+	}, [routePositions]);
 
 	const routeToMarker = useMemo(() => {
 		if (routePositions?.to) {
@@ -441,7 +430,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 							? routePositions.from
 							: !isCurrentLocationDisabled
 							? [currentLocationData?.currentLocation?.longitude, currentLocationData?.currentLocation?.latitude]
-							: [viewpoint.longitude, viewpoint.latitude],
+							: undefined,
 						routeData.Legs[0].StartPosition
 					] as LineString
 				}
@@ -522,7 +511,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 				</>
 			);
 		}
-	}, [routeData, routePositions, isCurrentLocationDisabled, currentLocationData, viewpoint, mapRef]);
+	}, [routeData, routePositions, isCurrentLocationDisabled, currentLocationData, mapRef]);
 
 	return (
 		<>
