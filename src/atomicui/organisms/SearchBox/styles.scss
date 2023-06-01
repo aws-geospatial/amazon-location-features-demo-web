@@ -64,7 +64,6 @@
 		height: 0px;
 	}
 
-	// below 480px
 	@media only screen and (max-width: 480px) {
 		width: 75%;
 		max-width: 288.031px;
@@ -134,7 +133,6 @@ input.amplify-input.amplify-field-group__control {
 
 .amplify-flex.option-container {
 	gap: 0;
-	height: 56px;
 	justify-content: flex-start;
 	align-items: center;
 
