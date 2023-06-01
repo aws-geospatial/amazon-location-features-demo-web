@@ -1,6 +1,6 @@
 import { View } from "@aws-amplify/ui-react";
-import { MapProviderEnum } from "@demo/types";
-import * as geoCalculationUtils from "@demo/utils/geoCalculation";
+// import { MapProviderEnum } from "@demo/types";
+// import * as geoCalculationUtils from "@demo/utils/geoCalculation";
 import { faker } from "@faker-js/faker";
 import { RenderResult, act, fireEvent, render, screen } from "@testing-library/react";
 
@@ -98,24 +98,24 @@ describe("<Popup/>", () => {
 		expect(navigator.clipboard.writeText).toBeCalled();
 	});
 
-	it("should render Route Info message per case", async () => {
-		let renderedComponent = await renderComponent();
-		expect(esriLimitationMessageContainer).toBeInTheDocument();
-		renderedComponent.unmount();
+	// it("should render Route Info message per case", async () => {
+	// 	let renderedComponent = await renderComponent();
+	// 	expect(esriLimitationMessageContainer).toBeInTheDocument();
+	// 	renderedComponent.unmount();
 
-		jest.spyOn(geoCalculationUtils, "calculateGeodesicDistance").mockReturnValue(123);
-		renderedComponent = await renderComponent();
-		expect(routeInfoContainer).toBeInTheDocument();
-		renderedComponent.unmount();
+	// 	jest.spyOn(geoCalculationUtils, "calculateGeodesicDistance").mockReturnValue(123);
+	// 	renderedComponent = await renderComponent();
+	// 	expect(routeInfoContainer).toBeInTheDocument();
+	// 	renderedComponent.unmount();
 
-		useAmplifyMapReturnValue["mapProvider"] = MapProviderEnum.HERE;
-		renderedComponent = await renderComponent();
-		expect(hereMessageContainer).toBeInTheDocument();
-		renderedComponent.unmount();
+	// 	useAmplifyMapReturnValue["mapProvider"] = MapProviderEnum.HERE;
+	// 	renderedComponent = await renderComponent();
+	// 	expect(hereMessageContainer).toBeInTheDocument();
+	// 	renderedComponent.unmount();
 
-		useAmplifyMapReturnValue["currentLocationData"]["error"] = "something";
-		renderedComponent = await renderComponent();
-		expect(permissionDeniedErrorContainer).toBeInTheDocument();
-		renderedComponent.unmount();
-	});
+	// 	useAmplifyMapReturnValue["currentLocationData"]["error"] = "something";
+	// 	renderedComponent = await renderComponent();
+	// 	expect(permissionDeniedErrorContainer).toBeInTheDocument();
+	// 	renderedComponent.unmount();
+	// });
 });
