@@ -254,7 +254,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 									}
 									onClick={() => _handleMapProviderChange(GRAB)}
 								>
-									<TextEl fontSize="1.23rem" lineHeight="2.15rem" text={GRAB} />
+									<TextEl fontSize="1.23rem" lineHeight="2.15rem" text={`${GRAB}Maps`} />
 									<Radio
 										data-testid="map-provider-radio-button-grab"
 										value={GRAB}

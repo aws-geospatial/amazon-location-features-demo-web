@@ -276,7 +276,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 									checked={currentMapProvider === GRAB}
 									onChange={() => handleMapProviderChange(GRAB)}
 								>
-									<TextEl marginLeft="1.23rem" text={GRAB} />
+									<TextEl marginLeft="1.23rem" text={`${GRAB}Maps`} />
 								</Radio>
 							</Flex>
 						)}
@@ -336,7 +336,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 							<>
 								<Divider className="styles-divider" />
 								<Flex gap={0} direction="column" padding="1.31rem 0rem 1.23rem 0rem">
-									<TextEl fontSize="1rem" lineHeight="1.38rem" variation="tertiary" text={GRAB} />
+									<TextEl fontSize="1rem" lineHeight="1.38rem" variation="tertiary" text={`${GRAB}Maps`} />
 									<Flex className="sm-styles-container">
 										{GRAB_STYLES.map(({ id, image, name }) => (
 											<Flex

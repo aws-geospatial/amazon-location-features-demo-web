@@ -134,7 +134,9 @@ const useAwsPlace = () => {
 					setState({ selectedMarker });
 					return;
 				}
+
 				let coords;
+
 				if (!selectedMarker.PlaceId) {
 					const { Place } = selectedMarker;
 					coords = Place?.Geometry.Point;
@@ -146,10 +148,10 @@ const useAwsPlace = () => {
 						errorHandler(error, "Failed to fetch place by ID for marker");
 					}
 				}
+
 				const [longitude, latitude] = coords as Position;
-				const viewpoint = { longitude, latitude };
-				setState({ selectedMarker, hoveredMarker: undefined });
-				setViewpoint(viewpoint);
+				setState({ selectedMarker, hoveredMarker: undefined, zoom: 15 });
+				setViewpoint({ longitude, latitude });
 			},
 			setHoveredMarker: (hoveredMarker?: SuggestionType) => {
 				setState({ hoveredMarker });
