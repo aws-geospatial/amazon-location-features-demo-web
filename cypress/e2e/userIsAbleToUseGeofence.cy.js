@@ -43,6 +43,7 @@ describe("Geofence", () => {
 		});
 		cy.wait(10000);
 		cy.get('[id="Icon"]').click();
+		cy.wait(5000);
 		cy.contains("Sign out").should("exist");
 		cy.wait(5000);
 		cy.get('[class="amplify-flex geofence-button"]').click();
