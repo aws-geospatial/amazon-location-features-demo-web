@@ -106,7 +106,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 
 	const _handleMapProviderChange = (mapProvider: MapProviderEnum) => {
 		if (mapProvider !== currentMapProvider) {
-			setIsLoadingImg(true);
+			// setIsLoadingImg(true);
 			handleMapProviderChange(mapProvider);
 		}
 	};
