@@ -301,7 +301,6 @@ const DemoPage: React.FC = () => {
 		routeData && setRouteData(routeData);
 	}, [clearPoiList, isCurrentLocationDisabled, routeData, setRouteData]);
 
-	console.log({ zoom });
 	const getCurrentGeoLocation = useCallback(() => {
 		if (GRAB_SUPPORTED_AWS_REGIONS.includes(region)) {
 			if (isCurrentLocationDisabled) {
