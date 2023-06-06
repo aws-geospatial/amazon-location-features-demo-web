@@ -279,7 +279,59 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 		setRouteData(undefined);
 	};
 
-	const onClickRouteOptions = () => setExpandRouteOptions(!expandRouteOptions);
+	const onClickRouteOptions = useCallback(() => setExpandRouteOptions(!expandRouteOptions), [expandRouteOptions]);
+
+	const renderRouteOptionsContainer = useMemo(
+		() => (
+			<View
+				className={
+					inputFocused.from || inputFocused.to || !!routeData
+						? "route-options-container"
+						: "route-options-container bottom-border-radius"
+				}
+			>
+				{!expandRouteOptions ? (
+					<Text className="collapsed-route-options-text" onClick={onClickRouteOptions}>
+						Route Options
+					</Text>
+				) : (
+					<View className="expanded-route-options">
+						<Text className="text-1">Route Options</Text>
+						<Text className="text-2" onClick={onClickRouteOptions}>
+							Close
+						</Text>
+					</View>
+				)}
+				{expandRouteOptions && (
+					<View className="route-option-items">
+						<CheckboxField
+							className="option-item"
+							label="Avoid tolls"
+							name="Avoid tolls"
+							value="Avoid tolls"
+							checked={routeOptions.avoidTolls}
+							onChange={e => {
+								setRouteOptions({ ...routeOptions, avoidTolls: e.target.checked });
+								setRouteData(undefined);
+							}}
+						/>
+						<CheckboxField
+							className="option-item"
+							label="Avoid ferries"
+							name="Avoid ferries"
+							value="Avoid ferries"
+							checked={routeOptions.avoidFerries}
+							onChange={e => {
+								setRouteOptions({ ...routeOptions, avoidFerries: e.target.checked });
+								setRouteData(undefined);
+							}}
+						/>
+					</View>
+				)}
+			</View>
+		),
+		[inputFocused, routeData, expandRouteOptions, onClickRouteOptions, routeOptions, setRouteData]
+	);
 
 	const onSelectCurrentLocaiton = (type: InputType) => {
 		type === InputType.FROM && setValue({ ...value, from: isCurrentLocationSelected ? "" : "My Location" });
@@ -544,21 +596,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 						/>
 						<Tooltip id="icon-walking-tooltip" />
 					</View>
-					{currentMapProvider !== MapProviderEnum.GRAB && (
-						<View
-							data-testid="travel-mode-truck-icon-container"
-							className={travelMode === TravelMode.TRUCK ? "travel-mode selected" : "travel-mode"}
-							onClick={() => handleTravelModeChange(TravelMode.TRUCK)}
-						>
-							<IconTruckSolid
-								data-tooltip-id="icon-truck-tooltip"
-								data-tooltip-place="top"
-								data-tooltip-content={'Calculate route with "Truck" as travel mode'}
-							/>
-							<Tooltip id="icon-truck-tooltip" />
-						</View>
-					)}
-					{currentMapProvider === MapProviderEnum.GRAB && (
+					{currentMapProvider === MapProviderEnum.GRAB ? (
 						<>
 							<View
 								data-testid="travel-mode-bicycle-icon-container"
@@ -585,6 +623,19 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 								<Tooltip id="icon-motorcycle-tooltip" />
 							</View>
 						</>
+					) : (
+						<View
+							data-testid="travel-mode-truck-icon-container"
+							className={travelMode === TravelMode.TRUCK ? "travel-mode selected" : "travel-mode"}
+							onClick={() => handleTravelModeChange(TravelMode.TRUCK)}
+						>
+							<IconTruckSolid
+								data-tooltip-id="icon-truck-tooltip"
+								data-tooltip-place="top"
+								data-tooltip-content={'Calculate route with "Truck" as travel mode'}
+							/>
+							<Tooltip id="icon-truck-tooltip" />
+						</View>
 					)}
 				</Flex>
 				<Flex className="from-to-container" gap={0}>
@@ -616,54 +667,11 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 						<IconArrowDownUp />
 					</Flex>
 				</Flex>
-				{travelMode !== TravelMode.WALKING && !isCollapsed && (
-					<View
-						className={
-							inputFocused.from || inputFocused.to || !!routeData
-								? "route-options-container"
-								: "route-options-container bottom-border-radius"
-						}
-					>
-						{!expandRouteOptions ? (
-							<Text className="collapsed-route-options-text" onClick={onClickRouteOptions}>
-								Route Options
-							</Text>
-						) : (
-							<View className="expanded-route-options">
-								<Text className="text-1">Route Options</Text>
-								<Text className="text-2" onClick={onClickRouteOptions}>
-									Close
-								</Text>
-							</View>
-						)}
-						{expandRouteOptions && (
-							<View className="route-option-items">
-								<CheckboxField
-									className="option-item"
-									label="Avoid tolls"
-									name="Avoid tolls"
-									value="Avoid tolls"
-									checked={routeOptions.avoidTolls}
-									onChange={e => {
-										setRouteOptions({ ...routeOptions, avoidTolls: e.target.checked });
-										setRouteData(undefined);
-									}}
-								/>
-								<CheckboxField
-									className="option-item"
-									label="Avoid ferries"
-									name="Avoid ferries"
-									value="Avoid ferries"
-									checked={routeOptions.avoidFerries}
-									onChange={e => {
-										setRouteOptions({ ...routeOptions, avoidFerries: e.target.checked });
-										setRouteData(undefined);
-									}}
-								/>
-							</View>
-						)}
-					</View>
-				)}
+				{travelMode !== TravelMode.WALKING && !isCollapsed
+					? renderRouteOptionsContainer
+					: currentMapProvider === MapProviderEnum.GRAB && !isCollapsed
+					? renderRouteOptionsContainer
+					: null}
 				<View className="search-results-container" maxHeight={window.innerHeight - 260}>
 					{(inputFocused.from || inputFocused.to) &&
 						(!placeData.from || !placeData.to) &&
