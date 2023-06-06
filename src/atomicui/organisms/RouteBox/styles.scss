@@ -188,8 +188,8 @@
 				padding: 10px 0px;
 				gap: 0;
 
-				label {
-					> span:nth-child(2) {
+				.amplify-flex.amplify-checkbox {
+					.amplify-text.amplify-checkbox__label {
 						opacity: 1 !important;
 						color: rgba(35, 47, 62, 1) !important;
 						font-size: 13px !important;
@@ -201,14 +201,14 @@
 						margin-left: 16px;
 					}
 
-					> span:nth-child(3) {
+					.amplify-flex.amplify-checkbox__button {
 						border-radius: 3px;
 						border: 1px solid #c7c7cc;
 						opacity: 1;
 						width: 20px;
 						height: 20px;
 
-						> span {
+						.amplify-icon.amplify-checkbox__icon {
 							display: flex;
 							justify-content: center !important;
 							align-items: center !important;
@@ -216,7 +216,7 @@
 							width: 100% !important;
 							height: 100% !important;
 
-							> svg {
+							svg {
 								width: 100%;
 								height: 100%;
 							}
