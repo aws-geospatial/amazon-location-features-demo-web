@@ -5,21 +5,19 @@ import React, { useMemo, useState } from "react";
 
 import { Button, Flex, Link, Text, View } from "@aws-amplify/ui-react";
 import { IconAwsCloudFormation, IconCheckMarkCircle } from "@demo/assets";
-import { TextEl } from "@demo/atomicui/atoms";
-import { InputField, Modal } from "@demo/atomicui/molecules";
-import appConfig from "@demo/core/constants/appConfig";
-import connectAwsAccount from "@demo/core/constants/connectAwsAccount";
-import { useAmplifyAuth, useAws } from "@demo/hooks";
-import { ConnectFormValuesType } from "@demo/types";
-
+import { Modal, TextEl } from "@demo/atomicui/atoms";
+import { InputField } from "@demo/atomicui/molecules";
+import { appConfig, connectAwsAccountData } from "@demo/core/constants";
+import { useAmplifyAuth, useAmplifyMap, useAws } from "@demo/hooks";
+import { ConnectFormValuesType, EsriMapEnum, MapProviderEnum } from "@demo/types";
 import "./styles.scss";
 
 const {
-	CF_TEMPLATE,
+	ENV: { CF_TEMPLATE },
 	ROUTES: { HELP },
-	AWS_TERMS_AND_CONDITIONS
+	MAP_RESOURCES: { GRAB_SUPPORTED_AWS_REGIONS },
+	LINKS: { AWS_TERMS_AND_CONDITIONS }
 } = appConfig;
-
 const {
 	TITLE,
 	TITLE_DESC,
@@ -33,14 +31,19 @@ const {
 	AGREE,
 	POST_CONNECT,
 	POST_CONNECT_DESC
-} = connectAwsAccount;
+} = connectAwsAccountData;
 
 interface ConnectAwsAccountModalProps {
 	open: boolean;
 	onClose: () => void;
+	handleCurrentLocationAndViewpoint: (b: boolean) => void;
 }
 
-const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({ open, onClose }) => {
+const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
+	open,
+	onClose,
+	handleCurrentLocationAndViewpoint
+}) => {
 	const [formValues, setFormValues] = useState<ConnectFormValuesType>({
 		IdentityPoolId: "",
 		UserDomain: "",
@@ -57,6 +60,7 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({ open, o
 		validateFormValues
 	} = useAmplifyAuth();
 	const { resetStore: resetAwsStore } = useAws();
+	const { mapProvider: currentMapProvider, setMapProvider, setMapStyle } = useAmplifyMap();
 	const keyArr = Object.keys(formValues);
 
 	const _onClose = () => {
@@ -90,6 +94,15 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({ open, o
 			webSocketUrl,
 			/* Success callback */
 			() => {
+				if (
+					currentMapProvider === MapProviderEnum.GRAB &&
+					!GRAB_SUPPORTED_AWS_REGIONS.includes(identityPoolId.split(":")[0])
+				) {
+					setMapProvider(MapProviderEnum.ESRI);
+					setMapStyle(EsriMapEnum.ESRI_LIGHT);
+					handleCurrentLocationAndViewpoint(false);
+				}
+
 				setConnectFormValues(formValues);
 				clearCredentials();
 				resetAwsStore();

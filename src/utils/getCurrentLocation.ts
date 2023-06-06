@@ -3,16 +3,20 @@
 
 import { showToast } from "@demo/core";
 
-import appConfig from "@demo/core/constants/appConfig";
-import { CurrentLocationDataType, ToastType } from "@demo/types";
+import { appConfig } from "@demo/core/constants";
+import { CurrentLocationDataType, MapProviderEnum, ToastType, ViewPointType } from "@demo/types";
 import * as R from "ramda";
 
 const {
-	PERSIST_STORAGE_KEYS: { GEO_LOCATION_ALLOWED }
+	PERSIST_STORAGE_KEYS: { GEO_LOCATION_ALLOWED },
+	MAP_RESOURCES: { MAX_BOUNDS, AMAZON_HQ }
 } = appConfig;
 
 export const getCurrentLocation = (
-	setCurrentLocation: (currentLocationData: CurrentLocationDataType) => void
+	setCurrentLocation: (currentLocationData: CurrentLocationDataType) => void,
+	setViewpoint: (viewpoint: ViewPointType) => void,
+	currentMapProvider: MapProviderEnum,
+	setIsCurrentLocationDisabled: (isCurrentLocationDisabled: boolean) => void
 ): void => {
 	if ("geolocation" in navigator) {
 		navigator.geolocation.getCurrentPosition(
@@ -20,11 +24,27 @@ export const getCurrentLocation = (
 				const {
 					coords: { latitude, longitude }
 				} = currentLocation;
-				// setCurrentLocation({ currentLocation, error: undefined });
-				setCurrentLocation({ currentLocation: { latitude, longitude }, error: undefined });
-				setTimeout(() => {
-					window.location.reload();
-				}, 0);
+
+				if (currentMapProvider === MapProviderEnum.GRAB) {
+					const [westBound, southBound, eastBound, northBound] = MAX_BOUNDS.GRAB;
+					const isWithinBounds =
+						latitude >= southBound && latitude <= northBound && longitude >= westBound && longitude <= eastBound;
+
+					!isWithinBounds && setIsCurrentLocationDisabled(true);
+					setCurrentLocation({ currentLocation: { latitude, longitude }, error: undefined });
+					isWithinBounds
+						? setViewpoint({ latitude, longitude })
+						: setViewpoint({ latitude: AMAZON_HQ.SG.latitude, longitude: AMAZON_HQ.SG.longitude });
+					setTimeout(() => {
+						window.location.reload();
+					}, 0);
+				} else {
+					setCurrentLocation({ currentLocation: { latitude, longitude }, error: undefined });
+					setViewpoint({ latitude, longitude });
+					setTimeout(() => {
+						window.location.reload();
+					}, 0);
+				}
 			},
 			error => {
 				const errorObj = {
@@ -56,12 +76,12 @@ export const getCurrentLocation = (
 		);
 	} else {
 		const errorObj = {
-			PERMISSION_DENIED: 1,
+			PERMISSION_DENIED: 1 as number,
 			POSITION_UNAVAILABLE: 2,
 			TIMEOUT: 3,
 			code: 1,
 			message: "Please check that your location services are enabled on your phone."
-		};
+		} as GeolocationPositionError;
 
 		setCurrentLocation({ currentLocation: undefined, error: errorObj });
 		showToast({ content: errorObj.message, type: ToastType.ERROR });

@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-const connectAwsAccount = {
+const connectAwsAccountData = {
 	TITLE: "Connect AWS Account",
 	TITLE_DESC:
 		"Connect your AWS account to enable Geofences and Trackers. This will ensure your tracking and geofencing data is only stored in your account. After you log in, all features of the Demo App will run using resources you deploy in your AWS account. Log out if you wish to continue running the Demo App using resources in AWS’s demo app account.",
@@ -20,4 +20,4 @@ const connectAwsAccount = {
 		"Please Sign in to access Tracking and Geofence features or continue to use other features as unauthenticated user."
 };
 
-export default connectAwsAccount;
+export default connectAwsAccountData;

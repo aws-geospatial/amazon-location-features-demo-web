@@ -9,9 +9,22 @@ describe("<SettingsModal />", () => {
 
 	const onClose = jest.fn();
 	const resetAppState = jest.fn();
+	const handleMapProviderChange = jest.fn();
+	const handleMapStyleChange = jest.fn();
+	const handleCurrentLocationAndViewpoint = jest.fn();
 
-	const renderComponent = async (props?: {}): Promise<RenderResult> => {
-		const renderedComponent = render(<SettingsModal open onClose={onClose} resetAppState={resetAppState} {...props} />);
+	const renderComponent = async (): Promise<RenderResult> => {
+		const renderedComponent = render(
+			<SettingsModal
+				open
+				onClose={onClose}
+				resetAppState={resetAppState}
+				isGrabVisible={false}
+				handleMapProviderChange={handleMapProviderChange}
+				handleMapStyleChange={handleMapStyleChange}
+				handleCurrentLocationAndViewpoint={handleCurrentLocationAndViewpoint}
+			/>
+		);
 		settingsModal = await screen.findByTestId("settings-modal");
 
 		return renderedComponent;
@@ -68,7 +81,8 @@ describe("<SettingsModal />", () => {
 
 		const dataProviderHereRadio = screen.getByTestId("data-provider-here-radio");
 		fireEvent.click(dataProviderHereRadio);
-		expect(resetAppState).toBeCalledTimes(1);
+		// expect(resetAppState).toBeCalledTimes(1);
+		expect(handleMapProviderChange).toBeCalledTimes(1);
 	});
 
 	it("should change map style and add the selected in the map style item when the user clicks it", async () => {
@@ -80,12 +94,14 @@ describe("<SettingsModal />", () => {
 		const dataProviderEsriRadio = screen.getAllByTestId("esri-map-style");
 		const randomNumber1 = faker.datatype.number({ min: 0, max: dataProviderEsriRadio.length - 1 });
 		await act(async () => dataProviderEsriRadio[randomNumber1].click());
-		expect(dataProviderEsriRadio[randomNumber1]).toHaveClass("selected");
+		// expect(dataProviderEsriRadio[randomNumber1]).toHaveClass("selected");
+		expect(handleMapStyleChange).toBeCalledTimes(1);
 
 		const dataProviderHereRadio = screen.getAllByTestId("here-map-style");
 		const randomNumber2 = faker.datatype.number({ min: 0, max: dataProviderHereRadio.length - 1 });
 		await act(async () => dataProviderHereRadio[randomNumber2].click());
-		expect(dataProviderHereRadio[randomNumber2]).toHaveClass("selected");
+		// expect(dataProviderHereRadio[randomNumber2]).toHaveClass("selected");
+		expect(handleMapStyleChange).toBeCalledTimes(2);
 	});
 
 	it("should select/unselect avoid-tolls and avoid-ferries", async () => {

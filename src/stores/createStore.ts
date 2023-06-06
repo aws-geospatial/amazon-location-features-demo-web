@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import appConfig from "@demo/core/constants/appConfig";
+import { appConfig } from "@demo/core/constants";
 import { BaseStateProps } from "@demo/types";
 import { SetState, create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
@@ -10,7 +10,7 @@ import { devtools, persist } from "zustand/middleware";
 const createStore = <T>(
 	initialState: T,
 	persistant = false,
-	localStorageKey = appConfig.GLOBAL_CONSTANTS.LOCAL_STORAGE_PREFIX
+	localStorageKey = appConfig.PERSIST_STORAGE_KEYS.LOCAL_STORAGE_PREFIX
 ) => {
 	const createState = (set: SetState<T & BaseStateProps>) => {
 		const init = {

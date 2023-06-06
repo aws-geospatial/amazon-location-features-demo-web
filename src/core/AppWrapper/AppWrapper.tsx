@@ -4,7 +4,7 @@
 import React, { ReactNode, useMemo } from "react";
 
 import { ThemeProvider } from "@aws-amplify/ui-react";
-import appConfig from "@demo/core/constants/appConfig";
+import { appConfig } from "@demo/core/constants";
 import { useAmplifyAuth } from "@demo/hooks";
 import { appTheme } from "@demo/theme";
 import { EsriMapEnum } from "@demo/types";
@@ -17,7 +17,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 
 const {
 	ROUTES: { DEMO },
-	MAP_ITEMS
+	MAP_RESOURCES: { MAP_ITEMS }
 } = appConfig;
 
 interface AppWrapperProps {

@@ -5,8 +5,7 @@ import React from "react";
 
 import { Button, Flex } from "@aws-amplify/ui-react";
 import { IconGeofence, IconRoute } from "@demo/assets";
-import { TextEl } from "@demo/atomicui/atoms";
-import { Modal } from "@demo/atomicui/molecules";
+import { Modal, TextEl } from "@demo/atomicui/atoms";
 import { useAmplifyAuth } from "@demo/hooks";
 import "./styles.scss";
 

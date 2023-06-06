@@ -1,14 +1,13 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import appConfig from "@demo/core/constants/appConfig";
+import { appConfig } from "@demo/core/constants";
 import { IStateProps, RouteOptionsType } from "@demo/types";
 
 import createStore from "./createStore";
 
 const {
-	GLOBAL_CONSTANTS: { LOCAL_STORAGE_PREFIX },
-	PERSIST_STORAGE_KEYS: { PERSISTED_DATA }
+	PERSIST_STORAGE_KEYS: { LOCAL_STORAGE_PREFIX, PERSISTED_DATA }
 } = appConfig;
 const localStorageKey = `${LOCAL_STORAGE_PREFIX}${PERSISTED_DATA}`;
 

@@ -3,10 +3,10 @@
 
 import { useMemo } from "react";
 
+import { useAmplifyMap } from "@demo/hooks";
 import { useAwsPlaceService } from "@demo/services";
-import { useAmplifyMapStore, useAwsPlaceStore } from "@demo/stores";
+import { useAwsPlaceStore } from "@demo/stores";
 import { ClustersType, SuggestionType, ViewPointType } from "@demo/types";
-
 import { errorHandler } from "@demo/utils/errorHandler";
 import { calculateClusters, getHash, getPrecision, isGeoString } from "@demo/utils/geoCalculation";
 import { Position } from "aws-sdk/clients/location";
@@ -15,8 +15,8 @@ const useAwsPlace = () => {
 	const store = useAwsPlaceStore();
 	const { setInitial } = store;
 	const { setState } = useAwsPlaceStore;
-	const { mapProvider } = useAmplifyMapStore();
-	const placesService = useAwsPlaceService(mapProvider, store.viewpoint);
+	const { setViewpoint } = useAmplifyMap();
+	const placesService = useAwsPlaceService();
 
 	const methods = useMemo(
 		() => ({
@@ -30,9 +30,9 @@ const useAwsPlace = () => {
 								suggestions: data?.Results.map(({ PlaceId, Text }) => ({ PlaceId, Text }))
 						  });
 					setState({
-						viewpoint,
 						bound: undefined
 					});
+					setViewpoint(viewpoint);
 				} catch (error) {
 					errorHandler(error, "Failed to search place suggestions");
 				} finally {
@@ -67,9 +67,9 @@ const useAwsPlace = () => {
 					cb ? cb(suggestions as SuggestionType[]) : setState({ suggestions });
 					setState({
 						bound: data?.Summary.ResultBBox,
-						viewpoint,
 						clusters
 					});
+					setViewpoint(viewpoint);
 				} catch (error) {
 					errorHandler(error, "Failed to search place by text");
 				} finally {
@@ -98,7 +98,8 @@ const useAwsPlace = () => {
 					const Hash = getHash([vPoint.longitude, vPoint.latitude], 10);
 					const suggestion = { ...data?.Results[0], Hash };
 					cb ? cb([suggestion]) : setState({ suggestions: [suggestion] });
-					setState({ viewpoint: vPoint, bound: undefined });
+					setState({ bound: undefined });
+					setViewpoint(vPoint);
 				} catch (error) {
 					errorHandler(error, "Failed to search place by coordinates");
 				} finally {
@@ -125,9 +126,6 @@ const useAwsPlace = () => {
 					return { zoom };
 				});
 			},
-			setViewpoint: (viewpoint: ViewPointType) => {
-				setState({ viewpoint });
-			},
 			setMarker: (marker?: Omit<ViewPointType, "zoom" | "info">) => {
 				setState({ marker });
 			},
@@ -136,7 +134,9 @@ const useAwsPlace = () => {
 					setState({ selectedMarker });
 					return;
 				}
+
 				let coords;
+
 				if (!selectedMarker.PlaceId) {
 					const { Place } = selectedMarker;
 					coords = Place?.Geometry.Point;
@@ -148,9 +148,10 @@ const useAwsPlace = () => {
 						errorHandler(error, "Failed to fetch place by ID for marker");
 					}
 				}
+
 				const [longitude, latitude] = coords as Position;
-				const viewpoint = { longitude, latitude };
-				setState({ viewpoint, selectedMarker, hoveredMarker: undefined });
+				setState({ selectedMarker, hoveredMarker: undefined, zoom: 15 });
+				setViewpoint({ longitude, latitude });
 			},
 			setHoveredMarker: (hoveredMarker?: SuggestionType) => {
 				setState({ hoveredMarker });
@@ -176,7 +177,7 @@ const useAwsPlace = () => {
 				setInitial();
 			}
 		}),
-		[placesService, setState, store.precision, setInitial]
+		[placesService, setState, store.precision, setInitial, setViewpoint]
 	);
 	return useMemo(() => ({ ...methods, ...store }), [methods, store]);
 };

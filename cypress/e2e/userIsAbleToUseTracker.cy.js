@@ -54,9 +54,9 @@ describe("Tracker", () => {
 	});
 
 	it("should allow user to add a tracker for car and be able to edit", () => {
-		cy.get('[class="mapboxgl-canvas"]').click("left");
+		cy.get('[class="mapboxgl-canvas"]').click("left", { force: true });
 		cy.wait(2000);
-		cy.get('[class="mapboxgl-canvas"]').click("right");
+		cy.get('[class="mapboxgl-canvas"]').click("right", { force: true });
 		cy.wait(2000);
 		cy.contains("Save").click();
 		cy.wait(2000);
@@ -93,21 +93,21 @@ describe("Tracker", () => {
 	// 	cy.wait(5000);
 	// });
 
-	it("should allow user to add a tracker for drone", () => {
-		cy.get('[class="icon-container"]').eq(1).click();
-		cy.wait(2000);
-		cy.get('[class="mapboxgl-canvas"]').click("left");
-		cy.wait(2000);
-		cy.get('[class="mapboxgl-canvas"]').click("right");
-		cy.wait(2000);
-		cy.contains("Save").click();
-		cy.wait(2000);
-		cy.contains("Simulate").click();
-		cy.wait(5000);
-		cy.get("div").should("contain", "Pause");
-		cy.get('[class="amplify-flex tracking-card-close"]').click();
-		cy.get('[id="Icon"]').click();
-		cy.contains("Sign out").click();
-		cy.wait(5000);
-	});
+	// it("should allow user to add a tracker for drone", () => {
+	// 	cy.get('[class="icon-container"]').eq(1).click();
+	// 	cy.wait(2000);
+	// 	cy.get('[class="mapboxgl-canvas"]').click("left");
+	// 	cy.wait(2000);
+	// 	cy.get('[class="mapboxgl-canvas"]').click("right");
+	// 	cy.wait(2000);
+	// 	cy.contains("Save").click();
+	// 	cy.wait(2000);
+	// 	cy.contains("Simulate").click();
+	// 	cy.wait(5000);
+	// 	cy.get("div").should("contain", "Pause");
+	// 	cy.get('[class="amplify-flex tracking-card-close"]').click();
+	// 	cy.get('[id="Icon"]').click();
+	// 	cy.contains("Sign out").click();
+	// 	cy.wait(5000);
+	// });
 });

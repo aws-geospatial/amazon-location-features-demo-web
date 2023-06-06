@@ -4,7 +4,8 @@
 import { useMemo } from "react";
 
 import { showToast } from "@demo/core/Toast";
-import appConfig from "@demo/core/constants/appConfig";
+import { appConfig } from "@demo/core/constants";
+import { useAmplifyMap, useAws } from "@demo/hooks";
 import { useAmplifyAuthService } from "@demo/services";
 import { useAmplifyAuthStore } from "@demo/stores";
 import { AuthTokensType, ConnectFormValuesType, ToastType } from "@demo/types";
@@ -14,6 +15,7 @@ import { Amplify, Auth } from "aws-amplify";
 import AWS from "aws-sdk";
 
 const {
+	ENV: { IDENTITY_POOL_ID, REGION, IDENTITY_POOL_ID_ASIA, REGION_ASIA },
 	ROUTES: { DEMO, ERROR_BOUNDARY }
 } = appConfig;
 
@@ -22,6 +24,8 @@ const useAmplifyAuth = () => {
 	const { setInitial } = store;
 	const { setState } = useAmplifyAuthStore;
 	const { getCurrentUserCredentials, login, logout, fetchHostedUi, getCurrentSession } = useAmplifyAuthService();
+	const { resetStore: resetAwsStore } = useAws();
+	const { resetStore: resetAmplifyMapStore } = useAmplifyMap();
 
 	const methods = useMemo(
 		() => ({
@@ -110,8 +114,8 @@ const useAmplifyAuth = () => {
 						// 				oauth: {
 						// 					domain,
 						// 					scope: ["email", "openid", "profile"],
-						// 					redirectSignIn: `${window.location.origin}${appConfig.ROUTES.DEMO}`,
-						// 					redirectSignOut: `${window.location.origin}${appConfig.ROUTES.DEMO}`,
+						// 					redirectSignIn: `${window.location.origin}${DEMO}`,
+						// 					redirectSignOut: `${window.location.origin}${DEMO}`,
 						// 					responseType: "token"
 						// 				}
 						// 			},
@@ -194,10 +198,11 @@ const useAmplifyAuth = () => {
 					errorHandler(error, "Failed to sign out");
 				}
 			},
-			onDisconnectAwsAccount: (resetAwsStore: () => void) => {
+			onDisconnectAwsAccount: () => {
 				localStorage.clear();
 				methods.resetStore();
 				resetAwsStore();
+				resetAmplifyMapStore();
 				setTimeout(() => {
 					window.location.reload();
 				}, 3000);
@@ -208,8 +213,22 @@ const useAmplifyAuth = () => {
 					await methods.getCurrentUserCredentials();
 					resetAwsStore();
 				} catch (error) {
-					console.error("HANDLE_CURRENT_SESSION_ERROR===>>>", JSON.stringify(error));
+					console.error("HANDLE_CURRENT_SESSION_ERROR:", JSON.stringify(error));
 				}
+			},
+			switchToAsiaRegionStack: () => {
+				setState({
+					identityPoolId: IDENTITY_POOL_ID_ASIA,
+					region: REGION_ASIA,
+					credentials: undefined
+				});
+			},
+			switchToDefaultRegionStack: () => {
+				setState({
+					identityPoolId: IDENTITY_POOL_ID,
+					region: REGION,
+					credentials: undefined
+				});
 			},
 			resetStore: () => {
 				setState({
@@ -223,7 +242,17 @@ const useAmplifyAuth = () => {
 				setInitial();
 			}
 		}),
-		[setInitial, setState, fetchHostedUi, getCurrentUserCredentials, login, logout, getCurrentSession]
+		[
+			setInitial,
+			setState,
+			fetchHostedUi,
+			getCurrentUserCredentials,
+			login,
+			logout,
+			getCurrentSession,
+			resetAmplifyMapStore,
+			resetAwsStore
+		]
 	);
 
 	return { ...methods, ...store };

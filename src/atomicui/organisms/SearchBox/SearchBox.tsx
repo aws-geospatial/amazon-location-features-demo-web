@@ -9,15 +9,17 @@ import { TextEl } from "@demo/atomicui/atoms";
 import { Marker, NotFoundCard, SuggestionMarker } from "@demo/atomicui/molecules";
 import { useAmplifyMap, useAwsPlace } from "@demo/hooks";
 import { DistanceUnitEnum, MapUnitEnum, SuggestionType } from "@demo/types";
+import { calculateGeodesicDistance } from "@demo/utils/geoCalculation";
 import { uuid } from "@demo/utils/uuid";
+import { Units } from "@turf/turf";
+import { Location } from "aws-sdk";
 import { LngLat } from "mapbox-gl";
 import { MapRef } from "react-map-gl";
 import { Tooltip } from "react-tooltip";
-
 import "./styles.scss";
 
 const { METRIC } = MapUnitEnum;
-const { KILOMETERS_SHORT, METERS_SHORT, MILES_SHORT, FEET_SHORT } = DistanceUnitEnum;
+const { KILOMETERS, KILOMETERS_SHORT, METERS_SHORT, MILES, MILES_SHORT, FEET_SHORT } = DistanceUnitEnum;
 
 interface SearchBoxProps {
 	mapRef: MapRef | null;
@@ -45,7 +47,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	const [value, setValue] = useState<string>("");
 	const [isFocused, setIsFocused] = useState(false);
 	const autocompleteRef = useRef<HTMLInputElement | null>(null);
-	const { mapUnit: currentMapUnit } = useAmplifyMap();
+	const { mapUnit: currentMapUnit, isCurrentLocationDisabled, currentLocationData, viewpoint } = useAmplifyMap();
 	const {
 		clusters,
 		suggestions,
@@ -55,8 +57,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		isSearching,
 		clearPoiList,
 		setSelectedMarker,
-		setHoveredMarker,
-		setZoom
+		setHoveredMarker
 	} = useAwsPlace();
 
 	useEffect(() => {
@@ -73,30 +74,31 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	const handleSearch = useCallback(
 		async (value: string, exact = false) => {
 			const { lng: longitude, lat: latitude } = mapRef?.getCenter() as LngLat;
-			await search(value, { longitude, latitude }, exact);
+			const vp = { longitude, latitude };
+
+			await search(value, { longitude: vp.longitude, latitude: vp.latitude }, exact);
 		},
 		[mapRef, search]
 	);
 
-	const selectSuggestion = async ({ text, label, placeId }: ComboBoxOption) => {
-		if (!placeId) {
+	const selectSuggestion = async ({ text, label, placeid }: ComboBoxOption) => {
+		if (!placeid) {
 			await handleSearch(text || label, true);
 		} else {
 			const selectedMarker = suggestions?.find(
-				(i: SuggestionType) => i.PlaceId === placeId || i.Place?.Label === placeId
+				(i: SuggestionType) => i.PlaceId === placeid || i.Place?.Label === placeid
 			);
 
 			await setSelectedMarker(selectedMarker);
-			setZoom(15);
 		}
 	};
 
 	const setHover = useCallback(
-		({ placeId }: ComboBoxOption) => {
-			if (!placeId) return;
+		({ placeid }: ComboBoxOption) => {
+			if (!placeid) return;
 
 			const selectedMarker = suggestions?.find(
-				(i: SuggestionType) => i.PlaceId === placeId || i.Place?.Label === placeId
+				(i: SuggestionType) => i.PlaceId === placeid || i.Place?.Label === placeid
 			);
 			setHoveredMarker(selectedMarker);
 		},
@@ -119,45 +121,55 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 
 	const renderOption = (option: {
 		id: string;
-		placeId?: string;
+		placeid?: string;
 		label: string;
-		distance?: string;
 		country?: string;
 		region?: string;
+		geometry?: string;
 	}) => {
-		const { id, placeId, label, distance, country, region } = option;
+		const { id, placeid, label, country, region, geometry } = option;
 		const separateIndex = id !== "" ? label.indexOf(",") : -1;
 		const title = separateIndex > -1 ? label.substring(0, separateIndex) : label;
 		const address = separateIndex > 1 ? label.substring(separateIndex + 1).trim() : null;
-		const _distance = distance ? parseFloat(distance) : undefined;
-		const unit = _distance
-			? currentMapUnit === METRIC
-				? _distance > 1000
-					? KILOMETERS_SHORT
-					: METERS_SHORT
-				: _distance * 3.281 > 5280
-				? MILES_SHORT
-				: FEET_SHORT
+		const _geometry = geometry ? (JSON.parse(geometry) as Location.PlaceGeometry) : undefined;
+		const destCoords = _geometry?.Point ? _geometry?.Point : undefined;
+		const geodesicDistance = destCoords
+			? calculateGeodesicDistance(
+					isCurrentLocationDisabled
+						? [viewpoint.longitude, viewpoint.latitude]
+						: currentLocationData?.currentLocation
+						? [
+								currentLocationData.currentLocation.longitude as number,
+								currentLocationData.currentLocation.latitude as number
+						  ]
+						: [viewpoint.longitude, viewpoint.latitude],
+					[destCoords[0], destCoords[1]],
+					currentMapUnit === METRIC ? (KILOMETERS.toLowerCase() as Units) : (MILES.toLowerCase() as Units)
+			  )
 			: undefined;
-		const computedDistance = _distance
+		const geodesicDistanceWithUnit = geodesicDistance
 			? currentMapUnit === METRIC
-				? (unit === KILOMETERS_SHORT ? _distance / 1000 : _distance).toFixed(1)
-				: (unit === MILES_SHORT ? _distance / 1609 : _distance * 3.281).toFixed(1)
+				? geodesicDistance < 1
+					? `${geodesicDistance * 1000} ${METERS_SHORT}`
+					: `${geodesicDistance.toFixed(2)} ${KILOMETERS_SHORT}`
+				: geodesicDistance < 1
+				? `${parseInt((geodesicDistance * 5280).toString())} ${FEET_SHORT}`
+				: `${geodesicDistance.toFixed(2)} ${MILES_SHORT}`
 			: undefined;
 
 		return (
 			<Flex key={id} className="option-container" onMouseOver={() => setHover(option)}>
-				{!placeId ? <IconSearch /> : <IconPin />}
+				{!placeid ? <IconSearch /> : <IconPin />}
 				<View className="option-details">
 					<TextEl text={title} />
-					{computedDistance ? (
+					{geodesicDistanceWithUnit ? (
 						<Flex gap={0} alignItems="center">
-							<TextEl variation="tertiary" text={`${computedDistance} ${unit}`} />
+							<TextEl variation="tertiary" text={geodesicDistanceWithUnit} />
 							<View className="separator" />
 							<TextEl variation="tertiary" text={`${region}, ${country}`} />
 						</Flex>
 					) : (
-						<TextEl variation="tertiary" text={placeId && address ? address : "Search nearby"} />
+						<TextEl variation="tertiary" text={placeid && address ? address : "Search nearby"} />
 					)}
 				</View>
 			</Flex>
@@ -166,14 +178,14 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 
 	const options = useMemo(
 		() =>
-			suggestions?.map(({ PlaceId, Text, Place, Distance }: SuggestionType) => {
+			suggestions?.map(({ PlaceId, Text, Place }: SuggestionType) => {
 				return {
 					id: uuid.randomUUID(),
-					placeId: PlaceId || Place?.Label || "",
+					placeid: PlaceId || Place?.Label || "",
 					label: Text || Place?.Label || "",
-					distance: Distance?.toString() || "",
 					country: Place?.Country || "",
-					region: Place?.Region || ""
+					region: Place?.Region || "",
+					geometry: Place?.Geometry ? JSON.stringify(Place.Geometry) : ""
 				};
 			}),
 		[suggestions]
@@ -190,8 +202,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 				<SuggestionMarker key={s.Hash} active={true} searchValue={value} setSearchValue={setValue} {...s} />
 			));
 		} else if (!clusters) {
-			return suggestions?.map((s, i) =>
-				s.PlaceId ? (
+			return suggestions?.map((s, i) => {
+				return s.PlaceId ? (
 					<SuggestionMarker
 						key={`${s.PlaceId}_${i}`}
 						active={s.PlaceId === selectedMarker?.PlaceId}
@@ -199,8 +211,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 						setSearchValue={setValue}
 						{...s}
 					/>
-				) : null
-			);
+				) : null;
+			});
 		} else {
 			return Object.keys(clusters).reduce((acc, key) => {
 				const cluster = clusters[key];

@@ -18,6 +18,8 @@ export {
 	HelpAccordionEnum,
 	HereMapEnum,
 	HereMapStyleEnum,
+	GrabMapEnum,
+	GrabMapStyleEnum,
 	InputType,
 	LocationErrorMessage,
 	MapProviderEnum,
@@ -26,10 +28,12 @@ export {
 	SettingOptionEnum,
 	ToastType,
 	TrackerType,
-	TravelMode
+	TravelMode,
+	UserAgentEnum
 } from "./Enums";
 export type { RouteDataType } from "./RouteDataType";
 export type { CirclePropertiesType, CircleDrawEventType, CircleFeatureType } from "./CircleDrawControlTypes";
 export type { SettingOptionItemType } from "./SettingOptionItemType";
 export type { RouteOptionsType } from "./RouteOptionsType";
 export type { HelpAccordionType } from "./HelpType";
+export type { ShowStateType } from "./ShowStateType";
