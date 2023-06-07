@@ -3,7 +3,7 @@
 
 describe("Tracker", () => {
 	beforeEach(() => {
-		cy.visitDomain(Cypress.env("WEB_DOMAIN"));
+		cy.visitDomain(`${Cypress.env("WEB_DOMAIN")}`);
 		cy.get('[id="Icon"]').click();
 		cy.wait(2000);
 		cy.contains("Settings").click();

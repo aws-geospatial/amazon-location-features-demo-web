@@ -3,7 +3,7 @@
 
 describe("Switch data provider and map styles", () => {
 	beforeEach(() => {
-		cy.visitDomain(Cypress.env("WEB_DOMAIN"));
+		cy.visitDomain(`${Cypress.env("WEB_DOMAIN")}`);
 	});
 
 	it("should allow user to switch between map styles from right side menu", { scrollBehavior: false }, () => {

@@ -8,17 +8,16 @@ Cypress.Commands.add("grantLocationAccess", () => {
 });
 
 Cypress.Commands.add("visitDomain", domain => {
-	if (typeof domain === "string" && domain.includes("dev")) {
-		cy.visit(domain, {
-			auth: {
-				username: Cypress.env("WEB_DOMAIN_USERNAME"),
-				password: Cypress.env("WEB_DOMAIN_PASSWORD")
-			}
-		});
-		cy.wait(20000);
-		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
-	} else {
-		cy.visit(domain);
+	if (typeof domain === "string") {
+		domain.includes("dev")
+			? cy.visit(domain, {
+					auth: {
+						username: Cypress.env("WEB_DOMAIN_USERNAME"),
+						password: Cypress.env("WEB_DOMAIN_PASSWORD")
+					}
+			  })
+			: cy.visit(domain);
+
 		cy.wait(20000);
 		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 	}
