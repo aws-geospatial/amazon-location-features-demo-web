@@ -3,7 +3,7 @@
 
 describe("Connecting and Disconnecting AWS account", () => {
 	beforeEach(() => {
-		cy.visitDomain(Cypress.env("WEB_DOMAIN"));
+		cy.visitDomain(`${Cypress.env("WEB_DOMAIN")}`);
 		cy.get('[id="Icon"]').click();
 	});
 

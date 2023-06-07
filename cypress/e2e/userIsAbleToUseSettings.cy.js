@@ -3,7 +3,7 @@
 
 describe("Settings", () => {
 	beforeEach(() => {
-		cy.visitDomain(Cypress.env("WEB_DOMAIN"));
+		cy.visitDomain(`${Cypress.env("WEB_DOMAIN")}`);
 		cy.get('[id="Icon"]').click();
 		cy.contains("Settings").click();
 	});

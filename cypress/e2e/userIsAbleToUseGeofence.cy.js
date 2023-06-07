@@ -7,7 +7,7 @@ describe("Geofence", () => {
 	const geofenceName = faker.random.word();
 
 	beforeEach(() => {
-		cy.visitDomain(Cypress.env("WEB_DOMAIN"));
+		cy.visitDomain(`${Cypress.env("WEB_DOMAIN")}`);
 		cy.get('[id="Icon"]').click({ force: true });
 		cy.wait(2000);
 		cy.contains("Settings").click();
