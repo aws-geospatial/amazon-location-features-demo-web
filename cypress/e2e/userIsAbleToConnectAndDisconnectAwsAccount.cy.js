@@ -20,7 +20,7 @@ describe("Connecting and Disconnecting AWS account", () => {
 		cy.get("div").should("contain", "Your AWS account is now connected.");
 		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
 		cy.wait(2000);
-		cy.origin(Cypress.env("USER_DOMAIN"), () => {
+		cy.origin(`${Cypress.env("USER_DOMAIN")}`, () => {
 			cy.get(".modal-content.background-customizable.modal-content-mobile.visible-md.visible-lg").then(els => {
 				[...els].forEach(el => {
 					cy.wrap(el)
