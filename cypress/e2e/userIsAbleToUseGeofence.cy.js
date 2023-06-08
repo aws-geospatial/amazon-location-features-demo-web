@@ -25,7 +25,7 @@ describe("Geofence", () => {
 		cy.wait(2000);
 		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').eq(0).click();
 		cy.wait(2000);
-		cy.origin(Cypress.env("USER_DOMAIN"), () => {
+		cy.origin(`${Cypress.env("USER_DOMAIN")}`, () => {
 			cy.get(".modal-content.background-customizable.modal-content-mobile.visible-md.visible-lg").then(els => {
 				[...els].forEach(el => {
 					cy.wait(2000);
