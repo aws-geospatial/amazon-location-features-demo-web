@@ -21,7 +21,7 @@ describe("Tracker", () => {
 		cy.wait(2000);
 		cy.get('[type="button"]').eq(3).click();
 		cy.wait(2000);
-		cy.origin(Cypress.env("USER_DOMAIN"), () => {
+		cy.origin(`${Cypress.env("USER_DOMAIN")}`, () => {
 			cy.get(".modal-content.background-customizable.modal-content-mobile.visible-md.visible-lg").then(els => {
 				[...els].forEach(el => {
 					cy.wrap(el)
