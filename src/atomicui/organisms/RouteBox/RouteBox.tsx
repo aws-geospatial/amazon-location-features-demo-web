@@ -667,11 +667,9 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 						<IconArrowDownUp />
 					</Flex>
 				</Flex>
-				{travelMode !== TravelMode.WALKING && !isCollapsed
-					? renderRouteOptionsContainer
-					: currentMapProvider === MapProviderEnum.GRAB && !isCollapsed
-					? renderRouteOptionsContainer
-					: null}
+				{[TravelMode.CAR, TravelMode.TRUCK].includes(travelMode as TravelMode) &&
+					!isCollapsed &&
+					renderRouteOptionsContainer}
 				<View className="search-results-container" maxHeight={window.innerHeight - 260}>
 					{(inputFocused.from || inputFocused.to) &&
 						(!placeData.from || !placeData.to) &&
