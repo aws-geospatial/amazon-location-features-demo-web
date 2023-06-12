@@ -12,7 +12,7 @@ import {
 	IconPeopleArrows,
 	IconShuffle
 } from "@demo/assets";
-import { Modal, TextEl } from "@demo/atomicui/atoms";
+import { DropdownEl, Modal, TextEl } from "@demo/atomicui/atoms";
 import { InputField } from "@demo/atomicui/molecules";
 import { appConfig, connectAwsAccountData } from "@demo/core/constants";
 import { useAmplifyAuth, useAmplifyMap, useAws, useAwsIot, usePersistedData } from "@demo/hooks";
@@ -26,6 +26,7 @@ import {
 	SettingOptionEnum,
 	SettingOptionItemType
 } from "@demo/types";
+import { transformCloudFormationLink } from "@demo/utils/transformCloudFormationLink";
 import "./styles.scss";
 
 const {
@@ -37,7 +38,7 @@ const {
 	},
 	LINKS: { AWS_TERMS_AND_CONDITIONS }
 } = appConfig;
-const { TITLE, TITLE_DESC, HOW_TO, STEP1, STEP1_DESC, STEP2, STEP2_DESC, STEP3, STEP3_DESC, AGREE } =
+const { TITLE, TITLE_DESC, HOW_TO, STEP1, STEP1_DESC, STEP2, STEP2_DESC, STEP3, STEP3_DESC, AGREE, OPTIONS } =
 	connectAwsAccountData;
 const { IMPERIAL, METRIC } = MapUnitEnum;
 const { ESRI, HERE, GRAB } = MapProviderEnum;
@@ -80,6 +81,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 		UserPoolId: "",
 		WebSocketUrl: ""
 	});
+	const [cloudFormationLink, setCloudFormationLink] = useState(CF_TEMPLATE);
+	const [stackRegion, setStackRegion] = useState<{ value: string; label: string }>(OPTIONS[2]);
 	const {
 		isUserAwsAccountConnected,
 		validateFormValues,
@@ -183,6 +186,12 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 				: HERE_STYLES.find(({ id }) => id === currentMapStyle)?.name,
 		[currentMapProvider, currentMapStyle]
 	);
+
+	const _onSelect = (option: { value: string; label: string }) => {
+		const newUrl = transformCloudFormationLink(CF_TEMPLATE, option.value);
+		setCloudFormationLink(newUrl);
+		setStackRegion(option);
+	};
 
 	const optionItems: Array<SettingOptionItemType> = useMemo(
 		() => [
@@ -414,14 +423,17 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 							</Flex>
 						</Flex>
 						<Flex className="sm-aws-cloudformation-form">
-							<TextEl
-								fontFamily="AmazonEmber-Bold"
-								fontSize="1.23rem"
-								lineHeight="1.85rem"
-								marginBottom="1.38rem"
+							<Flex
+								gap={0}
+								justifyContent="space-between"
+								alignItems="center"
 								alignSelf="flex-start"
-								text={HOW_TO}
-							/>
+								margin="1.85rem 0rem 1.85rem 0rem"
+								width="100%"
+							>
+								<TextEl fontFamily="AmazonEmber-Bold" fontSize="1.23rem" text={HOW_TO} />
+								<DropdownEl defaultOption={stackRegion} options={OPTIONS} onSelect={_onSelect} />
+							</Flex>
 							<Flex gap={0} marginBottom="1.85rem" alignSelf="flex-start">
 								<View className="step-number">
 									<TextEl fontFamily="AmazonEmber-Bold" text="1" />
@@ -429,7 +441,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								<View>
 									<Flex gap={5}>
 										<Text className="bold">
-											<Link href={CF_TEMPLATE} target="_blank">
+											<Link href={cloudFormationLink} target="_blank">
 												Click here
 											</Link>
 											{STEP1}
@@ -533,7 +545,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 			onChangeFormValues,
 			isAuthenticated,
 			_onLogin,
-			_onLogout
+			_onLogout,
+			stackRegion,
+			cloudFormationLink
 		]
 	);
 
