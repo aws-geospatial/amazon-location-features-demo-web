@@ -1,23 +1,22 @@
-# Amazon Location Web Demo
-
+# Amazon Location Features Demo Web
 ## Requirements
-
-1. This project is developed using Node v14.19.2
-2. Run the [CF template](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create?stackName=amazon-location-resources-setup&templateURL=https://amazon-location-resources-setup.s3.amazonaws.com/location-services.yaml) using your own AWS account and get `IdentityPoolId` and `region` from stack output
-3. Keys mentioned above will be added to `.env` file, which is required to get the project running
+1. Run the [CF template](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create?stackName=amazon-location-resources-setup&templateURL=https://amazon-location-resources-setup.s3.amazonaws.com/location-services.yaml) or run the CF template from  `/extra/cloudformation/default-resources-template.yaml` on AWS in `us-west-2` region, using your own AWS account and get `IdentityPoolId` and `Region` from stack output.
+2. Values from above stack output will be added to `.env` file against the following keys `VITE_AWS_COGNITO_IDENTITY_POOL_ID` and `VITE_AWS_REGION` respectively.
+3. Run the CF template from  `/extra/cloudformation/default-grab-resources-template.yaml` on AWS in `ap-southeast-1` region, using your own AWS account and get `IdentityPoolId` and `Region` from stack output.
+4. Values from above stack output will be added to `.env` file against the following keys `VITE_AWS_COGNITO_IDENTITY_POOL_ID_ASIA` and `VITE_AWS_REGION_ASIA` respectively.
+5. Upload the CF template from `/extra/cloudformation/main-cf-template.yaml` and add the link to the `VITE_AWS_CF_TEMPLATE` in `.env` file.
+6. Add the `VITE_APPLE_APP_STORE_LINK` and `VITE_GOOGLE_PLAY_STORE_LINK` in `.env` file with the links to pointing to respective stores.
 
 #### Env keys required in `.env` file, see `.env.example` for reference
-
-> VITE_AWS_COGNITO_IDENTITY_POOL_ID=<VITE_AWS_COGNITO_IDENTITY_POOL_ID><br />
-VITE_AWS_REGION=<VITE_AWS_REGION><br />
-VITE_AWS_COGNITO_IDENTITY_POOL_ID_ASIA=<VITE_AWS_COGNITO_IDENTITY_POOL_ID_ASIA><br />
-VITE_AWS_REGION_ASIA=<VITE_AWS_REGION_ASIA><br />
-VITE_AWS_CF_TEMPLATE=<VITE_AWS_CF_TEMPLATE><br />
-VITE_APPLE_APP_STORE_LINK=<VITE_APPLE_APP_STORE_LINK><br />
-VITE_GOOGLE_PLAY_STORE_LINK=<VITE_GOOGLE_PLAY_STORE_LINK><br />
+> VITE_AWS_COGNITO_IDENTITY_POOL_ID<br />
+VITE_AWS_REGION<br />
+VITE_AWS_COGNITO_IDENTITY_POOL_ID_ASIA<br />
+VITE_AWS_REGION_ASIA<br />
+VITE_AWS_CF_TEMPLATE<br />
+VITE_APPLE_APP_STORE_LINK<br />
+VITE_GOOGLE_PLAY_STORE_LINK<br />
 
 ## Configure
-
 > git clone https://github.com/aws-geospatial/amazon-location-features-demo-web.git<br />
 cd amazon-location-features-demo-web/<br />
 yarn install<br />
@@ -35,16 +34,16 @@ Builds the app for **development** to the `build` folder locally and starts the 
 
 ## E2E Tests
 #### Env keys required in `cypress.env.json` file, see `cypress.env.json.example` for reference. This is only needed to run the e2e tests locally.
->WEB_DOMAIN=<WEB_DOMAIN><br />
-WEB_DOMAIN_USERNAME=<WEB_DOMAIN_USERNAME><br />
-WEB_DOMAIN_PASSWORD=<WEB_DOMAIN_PASSWORD><br />
-IDENTITY_POOL_ID=<IDENTITY_POOL_ID><br />
-USER_DOMAIN=<USER_DOMAIN><br />
-USER_POOL_CLIENT_ID=<USER_POOL_CLIENT_ID><br />
-USER_POOL_ID=<USER_POOL_ID><br />
-WEB_SOCKET_URL=<WEB_SOCKET_URL><br />
-COGNITO_EMAIL=<COGNITO_EMAIL><br />
-COGNITO_PASSWORD=<COGNITO_PASSWORD><br />
+>WEB_DOMAIN<br />
+WEB_DOMAIN_USERNAME<br />
+WEB_DOMAIN_PASSWORD<br />
+IDENTITY_POOL_ID<br />
+USER_DOMAIN<br />
+USER_POOL_CLIENT_ID<br />
+USER_POOL_ID<br />
+WEB_SOCKET_URL<br />
+COGNITO_EMAIL<br />
+COGNITO_PASSWORD<br />
 
 #### If you are configuring Github actions fo the e2e tests, make sure to add these keys to the secrets section of the repo with a `CYPRESS_` prefix.
 

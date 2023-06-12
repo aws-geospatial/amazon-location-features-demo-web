@@ -5,12 +5,13 @@ import React, { useMemo, useState } from "react";
 
 import { Button, Flex, Link, Text, View } from "@aws-amplify/ui-react";
 import { IconAwsCloudFormation, IconCheckMarkCircle } from "@demo/assets";
-import { Modal, TextEl } from "@demo/atomicui/atoms";
+import { DropdownEl, Modal, TextEl } from "@demo/atomicui/atoms";
 import { InputField } from "@demo/atomicui/molecules";
 import { appConfig, connectAwsAccountData } from "@demo/core/constants";
 import { useAmplifyAuth, useAmplifyMap, useAws } from "@demo/hooks";
 import { ConnectFormValuesType, EsriMapEnum, MapProviderEnum } from "@demo/types";
 import "./styles.scss";
+import { transformCloudFormationLink } from "@demo/utils/transformCloudFormationLink";
 
 const {
 	ENV: { CF_TEMPLATE },
@@ -30,7 +31,8 @@ const {
 	STEP3_DESC,
 	AGREE,
 	POST_CONNECT,
-	POST_CONNECT_DESC
+	POST_CONNECT_DESC,
+	OPTIONS
 } = connectAwsAccountData;
 
 interface ConnectAwsAccountModalProps {
@@ -51,6 +53,8 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 		UserPoolId: "",
 		WebSocketUrl: ""
 	});
+	const [cloudFormationLink, setCloudFormationLink] = useState(CF_TEMPLATE);
+	const [stackRegion, setStackRegion] = useState<{ value: string; label: string }>(OPTIONS[2]);
 	const {
 		isUserAwsAccountConnected,
 		setConnectFormValues,
@@ -66,6 +70,12 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 	const _onClose = () => {
 		onClose();
 		isUserAwsAccountConnected && window.location.reload();
+	};
+
+	const _onSelect = (option: { value: string; label: string }) => {
+		const newUrl = transformCloudFormationLink(CF_TEMPLATE, option.value);
+		setCloudFormationLink(newUrl);
+		setStackRegion(option);
 	};
 
 	const isBtnEnabled = useMemo(
@@ -141,13 +151,10 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 							{TITLE_DESC}
 						</Text>
 						<View>
-							<TextEl
-								fontFamily="AmazonEmber-Bold"
-								fontSize="1.23rem"
-								lineHeight="1.85rem"
-								marginTop="1.85rem"
-								text={HOW_TO}
-							/>
+							<Flex gap={0} justifyContent="space-between" alignItems="center" marginTop="1rem">
+								<TextEl fontFamily="AmazonEmber-Bold" fontSize="1.23rem" lineHeight="1.85rem" text={HOW_TO} />
+								<DropdownEl defaultOption={stackRegion} options={OPTIONS} onSelect={_onSelect} />
+							</Flex>
 							<View marginTop="1.23rem">
 								<Flex gap={0} marginBottom="1.85rem">
 									<View className="step-number">
@@ -156,7 +163,7 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 									<View>
 										<Flex gap={5}>
 											<Text className="bold">
-												<Link href={CF_TEMPLATE} target="_blank">
+												<Link href={cloudFormationLink} target="_blank">
 													Click here
 												</Link>
 												{STEP1}
