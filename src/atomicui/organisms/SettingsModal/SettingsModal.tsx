@@ -433,7 +433,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								<Text className="bold" fontSize="1.08rem">
 									{HOW_TO}
 								</Text>
-								<DropdownEl defaultOption={stackRegion} options={OPTIONS} onSelect={_onSelect} />
+								<DropdownEl defaultOption={stackRegion} options={OPTIONS} onSelect={_onSelect} showSelected />
 							</Flex>
 							<Flex gap={0} marginBottom="1.85rem" alignSelf="flex-start">
 								<View className="step-number">
