@@ -425,13 +425,14 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 						<Flex className="sm-aws-cloudformation-form">
 							<Flex
 								gap={0}
-								justifyContent="space-between"
+								justifyContent="flex-start"
 								alignItems="center"
-								alignSelf="flex-start"
 								margin="1.85rem 0rem 1.85rem 0rem"
 								width="100%"
 							>
-								<TextEl fontFamily="AmazonEmber-Bold" fontSize="1.23rem" text={HOW_TO} />
+								<Text className="bold" fontSize="1.08rem">
+									{HOW_TO}
+								</Text>
 								<DropdownEl defaultOption={stackRegion} options={OPTIONS} onSelect={_onSelect} />
 							</Flex>
 							<Flex gap={0} marginBottom="1.85rem" alignSelf="flex-start">
