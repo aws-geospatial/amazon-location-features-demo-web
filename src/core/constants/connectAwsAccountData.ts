@@ -5,7 +5,7 @@ const connectAwsAccountData = {
 	TITLE: "Connect AWS Account",
 	TITLE_DESC:
 		"Connect your AWS account to enable Geofences and Trackers. This will ensure your tracking and geofencing data is only stored in your account. After you log in, all features of the Demo App will run using resources you deploy in your AWS account. Log out if you wish to continue running the Demo App using resources in AWS’s demo app account.",
-	HOW_TO: "How to connect:",
+	HOW_TO: "How to connect to",
 	STEP1: " to run a CloudFormation template to securely create required resources.",
 	STEP1_DESC:
 		"You can delete these resources through the stack deletion option or ‘Manage resources’ pages in the menu on the left. Please note, Grab resources can only be created in ap-southeast-1 region.",

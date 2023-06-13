@@ -15,7 +15,7 @@
 
 		p {
 			font-family: "AmazonEmber-Bold";
-			font-size: 0.92rem;
+			font-size: 1.08rem;
 			color: var(--primary-color);
 			margin-right: 0.5rem;
 			white-space: nowrap;
@@ -30,10 +30,10 @@
 
 	.options {
 		position: absolute;
-		right: 0;
+		left: 5%;
 		display: flex;
 		flex-direction: column;
-		width: 21rem;
+		width: 21.5rem;
 		height: 16rem;
 		overflow: auto;
 		list-style: none;
@@ -50,7 +50,7 @@
 
 			@media only screen and (min-width: 1024px) {
 				&:hover {
-					background-color: var(--primary-color);
+					background-color: rgba(0, 130, 150, 0.08);
 				}
 			}
 		}
@@ -61,7 +61,8 @@
 		}
 
 		@media only screen and (max-width: 562px) {
-			width: 18rem;
+			width: 12rem;
+			left: -10%;
 		}
 	}
 }
