@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button, CheckboxField, Divider, Flex, Link, Radio, Text, View } from "@aws-amplify/ui-react";
 import {
@@ -99,6 +99,15 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 	const { detachPolicy } = useAwsIot();
 	const keyArr = Object.keys(formValues);
 	const isAuthenticated = !!credentials?.authenticated;
+
+	useEffect(() => {
+		const newUrl = transformCloudFormationLink(CF_TEMPLATE, OPTIONS[3].value);
+
+		if (currentMapProvider === MapProviderEnum.GRAB && cloudFormationLink !== newUrl) {
+			setCloudFormationLink(newUrl);
+			setStackRegion(OPTIONS[3]);
+		}
+	}, [currentMapProvider, cloudFormationLink]);
 
 	const handleAutoMapUnitChange = useCallback(() => {
 		setIsAutomaticMapUnit(true);
