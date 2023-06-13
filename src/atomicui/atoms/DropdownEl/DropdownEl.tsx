@@ -7,9 +7,10 @@ interface DropdownElProps {
 	defaultOption?: { value: string; label: string };
 	options: { value: string; label: string }[];
 	onSelect: (option: { value: string; label: string }) => void;
+	showSelected?: boolean;
 }
 
-const DropdownEl: React.FC<DropdownElProps> = ({ defaultOption, options, onSelect }) => {
+const DropdownEl: React.FC<DropdownElProps> = ({ defaultOption, options, onSelect, showSelected = false }) => {
 	const [open, setOpen] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -50,7 +51,7 @@ const DropdownEl: React.FC<DropdownElProps> = ({ defaultOption, options, onSelec
 					{options.map(option => (
 						<li
 							key={option.value}
-							className={defaultOption?.value === option.value ? "selected" : ""}
+							className={showSelected && defaultOption?.value === option.value ? "selected" : ""}
 							onClick={() => handleClick(option)}
 						>
 							{option.label}
