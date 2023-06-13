@@ -164,7 +164,7 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 								<Text className="bold" fontSize="1.08rem">
 									{HOW_TO}
 								</Text>
-								<DropdownEl defaultOption={stackRegion} options={OPTIONS} onSelect={_onSelect} />
+								<DropdownEl defaultOption={stackRegion} options={OPTIONS} onSelect={_onSelect} showSelected />
 							</Flex>
 							<View marginTop="1.23rem">
 								<Flex gap={0} marginBottom="1.85rem">

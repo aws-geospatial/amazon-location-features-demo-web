@@ -56,8 +56,7 @@
 		}
 
 		.selected {
-			background-color: var(--primary-color);
-			color: var(--white-color);
+			background-color: rgba(0, 130, 150, 0.08);
 		}
 
 		@media only screen and (max-width: 562px) {
