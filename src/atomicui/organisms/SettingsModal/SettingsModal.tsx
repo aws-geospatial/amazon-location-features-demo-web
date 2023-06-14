@@ -207,7 +207,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 			{
 				id: SettingOptionEnum.UNITS,
 				title: SettingOptionEnum.UNITS,
-				defaultValue: currentMapUnit,
+				defaultValue: isAutomaticMapUnit ? "Automatic" : currentMapUnit,
 				icon: <IconPeopleArrows />,
 				detailsComponent: (
 					<Flex
@@ -224,6 +224,15 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								onChange={handleAutoMapUnitChange}
 							>
 								<TextEl marginLeft="1.23rem" text={"Automatic"} />
+								<TextEl
+									variation="tertiary"
+									marginLeft="1.23rem"
+									text={
+										currentMapUnit === IMPERIAL
+											? "Based on your browser settings (Miles, pounds)"
+											: "Based on your browser settings (Kilometers, kilograms)"
+									}
+								/>
 							</Radio>
 						</Flex>
 						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
@@ -358,7 +367,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 									<Flex className="sm-styles-container">
 										{GRAB_STYLES.map(({ id, image, name }) => (
 											<Flex
-												data-testid="gran-map-style"
+												data-testid="grab-map-style"
 												key={id}
 												className={id === currentMapStyle ? "sm-style selected" : "sm-style"}
 												onClick={() => handleMapStyleChange(id)}
