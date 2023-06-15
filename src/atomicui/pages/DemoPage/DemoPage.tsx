@@ -581,8 +581,7 @@ const DemoPage: React.FC = () => {
 			setIsCurrentLocationDisabled,
 			handleCurrentLocationAndViewpoint,
 			setMapProvider,
-			resetAppState,
-			show.settings
+			resetAppState
 		]
 	);
 
