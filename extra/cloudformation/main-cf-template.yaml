@@ -2,677 +2,677 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: This CloudFormation template provisions the resources required to connect to AWS account
 
 Parameters:
-      AmazonLocationCognitoUserEmail:
-            Type: String
-            AllowedPattern: '[^@]+@[^@]+\.[^@]+'
-            Description: Cognito Username. It should be a valid Email
+  AmazonLocationCognitoUserEmail:
+    Type: String
+    AllowedPattern: '[^@]+@[^@]+\.[^@]+'
+    Description: Cognito Username. It should be a valid Email
 
 Conditions:
-      EnableGrab: !Equals [!Ref "AWS::Region", "ap-southeast-1"]
+  EnableGrab: !Equals [!Ref "AWS::Region", "ap-southeast-1"]
 
 Resources:
-      ################ Congito #######################
+  ################ Congito #######################
 
-      # Creates a user pool in cognito for your app to auth against
-      # This example requires MFA and validates the phone number to use as MFA
-      # Other fields can be added to the schema
-      AmazonLocationDemoUserPool:
-            Type: "AWS::Cognito::UserPool"
-            Properties:
-                  AdminCreateUserConfig:
-                        InviteMessageTemplate:
-                              EmailSubject: "Login Credentials for Amazon Location Demo"
-                              EmailMessage: !Sub |
-                                    This is an automated message to provide you with your login credentials to connect the demo app to your AWS Account. Connecting your AWS account enables Geofences and Trackers. This will ensure your tracking and geofencing data is only stored in your account. After you log in, all features of the Demo App will run using resources you deploy in your AWS account subject to <a href="https://aws.amazon.com/pricing">AWS Pricing</a>.<br><br>
-                                    Username: {username} <br>
-                                    Temporary Password: {####} <br>
-                                    Please note that this account was automatically created after running a CloudFormation template to set up a resource stack required to run the Amazon Location Demo Apps.<br><br>
-                                    Thank you for your participation in the Amazon Location Demo.
-                  AliasAttributes:
-                        - preferred_username
-                  UserPoolName: !Sub ${AWS::StackName}
-                  AutoVerifiedAttributes:
-                        - email
-                  MfaConfiguration: "OFF"
-                  Schema:
-                        - Name: email
-                          AttributeDataType: String
-                          Mutable: false
-                          Required: true
+  # Creates a user pool in cognito for your app to auth against
+  # This example requires MFA and validates the phone number to use as MFA
+  # Other fields can be added to the schema
+  AmazonLocationDemoUserPool:
+    Type: "AWS::Cognito::UserPool"
+    Properties:
+      AdminCreateUserConfig:
+        InviteMessageTemplate:
+          EmailSubject: "Login Credentials for Amazon Location Demo"
+          EmailMessage: !Sub |
+            This is an automated message to provide you with your login credentials to connect the demo app to your AWS Account. Connecting your AWS account enables Geofences and Trackers. This will ensure your tracking and geofencing data is only stored in your account. After you log in, all features of the Demo App will run using resources you deploy in your AWS account subject to <a href="https://aws.amazon.com/pricing">AWS Pricing</a>.<br><br>
+            Username: {username} <br>
+            Temporary Password: {####} <br>
+            Please note that this account was automatically created after running a CloudFormation template to set up a resource stack required to run the Amazon Location Demo Apps.<br><br>
+            Thank you for your participation in the Amazon Location Demo.
+      AliasAttributes:
+        - preferred_username
+      UserPoolName: !Sub ${AWS::StackName}
+      AutoVerifiedAttributes:
+        - email
+      MfaConfiguration: "OFF"
+      Schema:
+        - Name: email
+          AttributeDataType: String
+          Mutable: false
+          Required: true
 
-      # Creates a User Pool Client to be used by the identity pool
-      AmazonLocationDemoUserPoolClient:
-            Type: "AWS::Cognito::UserPoolClient"
-            Properties:
-                  ClientName: user-pool-client
-                  GenerateSecret: false
-                  UserPoolId: !Ref AmazonLocationDemoUserPool
-                  CallbackURLs:
-                        - amazon://signin/
-                        - amazonlocationdemo://signin/
-                        - https://location.aws.com/demo
-                        - http://localhost:3000/demo
-                        - https://dev.amazonlocation.services/demo
-                  LogoutURLs:
-                        - amazon://signout/
-                        - amazonlocationdemo://signout/
-                        - https://location.aws.com/demo?sign_out=true
-                        - http://localhost:3000/demo?sign_out=true
-                        - https://dev.amazonlocation.services/demo?sign_out=true
-                  AllowedOAuthFlows:
-                        - implicit
-                        - code
-                  AllowedOAuthScopes:
-                        - email
-                        - openid
-                        - profile
-                  AllowedOAuthFlowsUserPoolClient: true
-                  SupportedIdentityProviders:
-                        - COGNITO
+  # Creates a User Pool Client to be used by the identity pool
+  AmazonLocationDemoUserPoolClient:
+    Type: "AWS::Cognito::UserPoolClient"
+    Properties:
+      ClientName: user-pool-client
+      GenerateSecret: false
+      UserPoolId: !Ref AmazonLocationDemoUserPool
+      CallbackURLs:
+        - amazon://signin/
+        - amazonlocationdemo://signin/
+        - https://location.aws.com/demo
+        - http://localhost:3000/demo
+        - https://dev.amazonlocation.services/demo
+      LogoutURLs:
+        - amazon://signout/
+        - amazonlocationdemo://signout/
+        - https://location.aws.com/demo?sign_out=true
+        - http://localhost:3000/demo?sign_out=true
+        - https://dev.amazonlocation.services/demo?sign_out=true
+      AllowedOAuthFlows:
+        - implicit
+        - code
+      AllowedOAuthScopes:
+        - email
+        - openid
+        - profile
+      AllowedOAuthFlowsUserPoolClient: true
+      SupportedIdentityProviders:
+        - COGNITO
 
-      AmazonLocationDemoUserPoolUser:
-            Type: AWS::Cognito::UserPoolUser
-            Properties:
-                  DesiredDeliveryMediums:
-                        - EMAIL
-                  UserAttributes:
-                        - Name: email
-                          Value: !Ref AmazonLocationCognitoUserEmail
-                  Username: !Ref AmazonLocationCognitoUserEmail
-                  UserPoolId: !Ref AmazonLocationDemoUserPool
+  AmazonLocationDemoUserPoolUser:
+    Type: AWS::Cognito::UserPoolUser
+    Properties:
+      DesiredDeliveryMediums:
+        - EMAIL
+      UserAttributes:
+        - Name: email
+          Value: !Ref AmazonLocationCognitoUserEmail
+      Username: !Ref AmazonLocationCognitoUserEmail
+      UserPoolId: !Ref AmazonLocationDemoUserPool
 
-      AmazonLocationDemoUserPoolDomain:
-            Type: AWS::Cognito::UserPoolDomain
-            Properties:
-                  UserPoolId: !Ref AmazonLocationDemoUserPool
-                  Domain: !Ref AWS::AccountId
+  AmazonLocationDemoUserPoolDomain:
+    Type: AWS::Cognito::UserPoolDomain
+    Properties:
+      UserPoolId: !Ref AmazonLocationDemoUserPool
+      Domain: !Ref AWS::AccountId
 
-      AmazonLocationDemoCognitoIdentityPoolUnauthRole:
-            Type: "AWS::IAM::Role"
-            Properties:
-                  AssumeRolePolicyDocument:
-                        Statement:
-                              - Action: "sts:AssumeRoleWithWebIdentity"
-                                Condition:
-                                      "ForAnyValue:StringLike":
-                                            "cognito-identity.amazonaws.com:amr": unauthenticated
-                                Effect: Allow
-                                Principal:
-                                      Federated: cognito-identity.amazonaws.com
-                        Version: 2012-10-17
+  AmazonLocationDemoCognitoIdentityPoolUnauthRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: "sts:AssumeRoleWithWebIdentity"
+            Condition:
+              "ForAnyValue:StringLike":
+                "cognito-identity.amazonaws.com:amr": unauthenticated
+            Effect: Allow
+            Principal:
+              Federated: cognito-identity.amazonaws.com
+        Version: 2012-10-17
 
-      AmazonLocationDemoCognitoIdentityPoolUnauthRolePolicy:
-            Type: "AWS::IAM::Policy"
-            Properties:
-                  PolicyDocument:
-                        Statement:
-                              - Action:
-                                      - "geo:GetPlace"
-                                      - "geo:SearchPlaceIndex*"
-                                      - "geo:GetMap*"
-                                      - "geo:CalculateRoute"
-                                Effect: Allow
-                                Resource:
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.Light"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.DarkGrayCanvas"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.Imagery"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.LightGrayCanvas"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.Navigation"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.Streets"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.Explore"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.Contrast"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.ExploreTruck"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.Hybrid"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.Imagery"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Grab.StandardLight"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Grab.StandardDark"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:place-index/location.aws.com.demo.places.Esri.PlaceIndex"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:place-index/location.aws.com.demo.places.HERE.PlaceIndex"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:place-index/location.aws.com.demo.places.Grab.PlaceIndex"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:route-calculator/location.aws.com.demo.routes.Esri.RouteCalculator"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:route-calculator/location.aws.com.demo.routes.HERE.RouteCalculator"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:route-calculator/location.aws.com.demo.routes.Grab.RouteCalculator"
-                        Version: 2012-10-17
-                  PolicyName: !Sub "AmazonLocationDemoCognitoUnauthRolePolicy-${AWS::StackName}"
-                  Roles:
-                        - !Ref AmazonLocationDemoCognitoIdentityPoolUnauthRole
+  AmazonLocationDemoCognitoIdentityPoolUnauthRolePolicy:
+    Type: "AWS::IAM::Policy"
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - "geo:GetPlace"
+              - "geo:SearchPlaceIndex*"
+              - "geo:GetMap*"
+              - "geo:CalculateRoute"
+            Effect: Allow
+            Resource:
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.Light"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.DarkGrayCanvas"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.Imagery"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.LightGrayCanvas"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.Navigation"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.Streets"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.Explore"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.Contrast"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.ExploreTruck"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.Hybrid"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.Imagery"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Grab.StandardLight"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Grab.StandardDark"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:place-index/location.aws.com.demo.places.Esri.PlaceIndex"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:place-index/location.aws.com.demo.places.HERE.PlaceIndex"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:place-index/location.aws.com.demo.places.Grab.PlaceIndex"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:route-calculator/location.aws.com.demo.routes.Esri.RouteCalculator"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:route-calculator/location.aws.com.demo.routes.HERE.RouteCalculator"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:route-calculator/location.aws.com.demo.routes.Grab.RouteCalculator"
+        Version: 2012-10-17
+      PolicyName: !Sub "AmazonLocationDemoCognitoUnauthRolePolicy-${AWS::StackName}"
+      Roles:
+        - !Ref AmazonLocationDemoCognitoIdentityPoolUnauthRole
 
-      AmazonLocationDemoCognitoIdentityPool:
-            Type: "AWS::Cognito::IdentityPool"
-            Properties:
-                  AllowUnauthenticatedIdentities: true
-                  AllowClassicFlow: true
-                  CognitoIdentityProviders:
-                        - ClientId: !Ref AmazonLocationDemoUserPoolClient
-                          ProviderName: !GetAtt AmazonLocationDemoUserPool.ProviderName
+  AmazonLocationDemoCognitoIdentityPool:
+    Type: "AWS::Cognito::IdentityPool"
+    Properties:
+      AllowUnauthenticatedIdentities: true
+      AllowClassicFlow: true
+      CognitoIdentityProviders:
+        - ClientId: !Ref AmazonLocationDemoUserPoolClient
+          ProviderName: !GetAtt AmazonLocationDemoUserPool.ProviderName
 
-      AmazonLocationDemoCognitoIdentityPoolAuthenticatedRole:
-            Type: "AWS::IAM::Role"
-            Properties:
-                  AssumeRolePolicyDocument:
-                        Statement:
-                              - Action: "sts:AssumeRoleWithWebIdentity"
-                                Condition:
-                                      StringEquals:
-                                            "cognito-identity.amazonaws.com:aud": !Ref AmazonLocationDemoCognitoIdentityPool
-                                      "ForAnyValue:StringLike":
-                                            "cognito-identity.amazonaws.com:amr": authenticated
-                                Effect: Allow
-                                Principal:
-                                      Federated: cognito-identity.amazonaws.com
-                        Version: 2012-10-17
-                  Description: !Join
-                        - ""
-                        - - "Default Authenticated Role for Identity Pool "
-                          - !GetAtt
-                            - AmazonLocationDemoCognitoIdentityPool
-                            - Name
+  AmazonLocationDemoCognitoIdentityPoolAuthenticatedRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: "sts:AssumeRoleWithWebIdentity"
+            Condition:
+              StringEquals:
+                "cognito-identity.amazonaws.com:aud": !Ref AmazonLocationDemoCognitoIdentityPool
+              "ForAnyValue:StringLike":
+                "cognito-identity.amazonaws.com:amr": authenticated
+            Effect: Allow
+            Principal:
+              Federated: cognito-identity.amazonaws.com
+        Version: 2012-10-17
+      Description: !Join
+        - ""
+        - - "Default Authenticated Role for Identity Pool "
+          - !GetAtt
+            - AmazonLocationDemoCognitoIdentityPool
+            - Name
 
-      AmazonLocationDemoCognitoIdentityPoolAuthRolePolicy:
-            Type: "AWS::IAM::Policy"
-            Properties:
-                  PolicyDocument:
-                        Statement:
-                              - Action:
-                                      - "geo:GetPlace"
-                                      - "geo:SearchPlaceIndex*"
-                                      - "geo:GetMap*"
-                                      - "geo:CalculateRoute"
-                                      - "geo:ListGeofences"
-                                      - "geo:GetGeofence"
-                                      - "geo:BatchPutGeofence"
-                                      - "geo:BatchEvaluateGeofences"
-                                      - "geo:PutGeofence"
-                                      - "geo:BatchDeleteGeofence"
-                                      - "geo:GetDevicePosition*"
-                                      - "geo:ListDevicePositions"
-                                      - "geo:BatchDeleteDevicePositionHistory"
-                                      - "geo:BatchGetDevicePosition"
-                                      - "geo:BatchUpdateDevicePosition"
-                                      - "iot:Subscribe"
-                                      - "iot:Publish"
-                                      - "iot:Connect"
-                                      - "iot:Receive"
-                                      - "iam:ListRolePolicies"
-                                      - "iam:GetRolePolicy"
-                                Effect: Allow
-                                Resource:
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.Light"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.DarkGrayCanvas"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.Imagery"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.LightGrayCanvas"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.Navigation"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.Streets"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.Explore"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.Contrast"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.ExploreTruck"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.Hybrid"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.Imagery"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Grab.StandardLight"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Grab.StandardDark"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:place-index/location.aws.com.demo.places.Esri.PlaceIndex"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:place-index/location.aws.com.demo.places.HERE.PlaceIndex"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:place-index/location.aws.com.demo.places.Grab.PlaceIndex"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:route-calculator/location.aws.com.demo.routes.Esri.RouteCalculator"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:route-calculator/location.aws.com.demo.routes.HERE.RouteCalculator"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:route-calculator/location.aws.com.demo.routes.Grab.RouteCalculator"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:geofence-collection/location.aws.com.demo.geofences.GeofenceCollection"
-                                      - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:tracker/location.aws.com.demo.trackers.Tracker"
-                                      - !Sub "arn:aws:iot:${AWS::Region}:${AWS::AccountId}:client/${!cognito-identity.amazonaws.com:sub}"
-                                      - !Sub "arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topic/${!cognito-identity.amazonaws.com:sub}"
-                                      - !Sub "arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topicfilter/${!cognito-identity.amazonaws.com:sub}/*"
-                                      - !Sub "arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topic/${!cognito-identity.amazonaws.com:sub}/tracker"
-                                      - !GetAtt AmazonLocationDemoCognitoIdentityPoolUnauthRole.Arn
-                                      - !GetAtt AmazonLocationDemoCognitoIdentityPoolAuthenticatedRole.Arn
-                              - Action:
-                                      - "iot:AttachPolicy"
-                                      - "iot:DetachPolicy"
-                                      - "iot:AttachPrincipalPolicy"
-                                      - "iot:DetachPrincipalPolicy"
-                                Effect: Allow
-                                Resource:
-                                      - "*"
-                                Condition:
-                                      StringEquals:
-                                            cognito-identity.amazonaws.com:sub: "${cognito-identity.amazonaws.com:sub}"
-                        Version: 2012-10-17
-                  PolicyName: !Sub "AmazonLocationDemoCognitoPoolAuthRolePolicy-${AWS::StackName}"
-                  Roles:
-                        - !Ref AmazonLocationDemoCognitoIdentityPoolAuthenticatedRole
+  AmazonLocationDemoCognitoIdentityPoolAuthRolePolicy:
+    Type: "AWS::IAM::Policy"
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - "geo:GetPlace"
+              - "geo:SearchPlaceIndex*"
+              - "geo:GetMap*"
+              - "geo:CalculateRoute"
+              - "geo:ListGeofences"
+              - "geo:GetGeofence"
+              - "geo:BatchPutGeofence"
+              - "geo:BatchEvaluateGeofences"
+              - "geo:PutGeofence"
+              - "geo:BatchDeleteGeofence"
+              - "geo:GetDevicePosition*"
+              - "geo:ListDevicePositions"
+              - "geo:BatchDeleteDevicePositionHistory"
+              - "geo:BatchGetDevicePosition"
+              - "geo:BatchUpdateDevicePosition"
+              - "iot:Subscribe"
+              - "iot:Publish"
+              - "iot:Connect"
+              - "iot:Receive"
+              - "iam:ListRolePolicies"
+              - "iam:GetRolePolicy"
+            Effect: Allow
+            Resource:
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.Light"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.DarkGrayCanvas"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.Imagery"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.LightGrayCanvas"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.Navigation"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.Streets"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.Explore"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.Contrast"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.ExploreTruck"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.Hybrid"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.Imagery"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Grab.StandardLight"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Grab.StandardDark"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:place-index/location.aws.com.demo.places.Esri.PlaceIndex"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:place-index/location.aws.com.demo.places.HERE.PlaceIndex"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:place-index/location.aws.com.demo.places.Grab.PlaceIndex"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:route-calculator/location.aws.com.demo.routes.Esri.RouteCalculator"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:route-calculator/location.aws.com.demo.routes.HERE.RouteCalculator"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:route-calculator/location.aws.com.demo.routes.Grab.RouteCalculator"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:geofence-collection/location.aws.com.demo.geofences.GeofenceCollection"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:tracker/location.aws.com.demo.trackers.Tracker"
+              - !Sub "arn:aws:iot:${AWS::Region}:${AWS::AccountId}:client/${!cognito-identity.amazonaws.com:sub}"
+              - !Sub "arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topic/${!cognito-identity.amazonaws.com:sub}"
+              - !Sub "arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topicfilter/${!cognito-identity.amazonaws.com:sub}/*"
+              - !Sub "arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topic/${!cognito-identity.amazonaws.com:sub}/tracker"
+              - !GetAtt AmazonLocationDemoCognitoIdentityPoolUnauthRole.Arn
+              - !GetAtt AmazonLocationDemoCognitoIdentityPoolAuthenticatedRole.Arn
+          - Action:
+              - "iot:AttachPolicy"
+              - "iot:DetachPolicy"
+              - "iot:AttachPrincipalPolicy"
+              - "iot:DetachPrincipalPolicy"
+            Effect: Allow
+            Resource:
+              - "*"
+            Condition:
+              StringEquals:
+                cognito-identity.amazonaws.com:sub: "${cognito-identity.amazonaws.com:sub}"
+        Version: 2012-10-17
+      PolicyName: !Sub "AmazonLocationDemoCognitoPoolAuthRolePolicy-${AWS::StackName}"
+      Roles:
+        - !Ref AmazonLocationDemoCognitoIdentityPoolAuthenticatedRole
 
-      AmazonLocationDemoCognitoIdentityPoolDefaultRoleAttachment:
-            Type: "AWS::Cognito::IdentityPoolRoleAttachment"
-            Properties:
-                  IdentityPoolId: !Ref AmazonLocationDemoCognitoIdentityPool
-                  Roles:
-                        authenticated: !GetAtt
-                              - AmazonLocationDemoCognitoIdentityPoolAuthenticatedRole
-                              - Arn
-                        unauthenticated: !GetAtt
-                              - AmazonLocationDemoCognitoIdentityPoolUnauthRole
-                              - Arn
+  AmazonLocationDemoCognitoIdentityPoolDefaultRoleAttachment:
+    Type: "AWS::Cognito::IdentityPoolRoleAttachment"
+    Properties:
+      IdentityPoolId: !Ref AmazonLocationDemoCognitoIdentityPool
+      Roles:
+        authenticated: !GetAtt
+          - AmazonLocationDemoCognitoIdentityPoolAuthenticatedRole
+          - Arn
+        unauthenticated: !GetAtt
+          - AmazonLocationDemoCognitoIdentityPoolUnauthRole
+          - Arn
 
-      AmazonLocationDemoMapsEsriLight:
-            Type: AWS::Location::Map
-            Properties:
-                  Configuration:
-                        Style: VectorEsriTopographic
-                  Description: You created this resource by running Amazon Location Demo's CloudFormation template.
-                  MapName: location.aws.com.demo.maps.Esri.Light
+  AmazonLocationDemoMapsEsriLight:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorEsriTopographic
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.Esri.Light
 
-      AmazonLocationDemoMapsGrabLight:
-            Condition: EnableGrab
-            Type: AWS::Location::Map
-            Properties:
-                  Configuration:
-                        Style: VectorGrabStandardLight
-                  Description: You created this resource by running Amazon Location Demo's CloudFormation template.
-                  MapName: location.aws.com.demo.maps.Grab.StandardLight
+  AmazonLocationDemoMapsGrabStandardLight:
+    Condition: EnableGrab
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorGrabStandardLight
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.Grab.StandardLight
 
-      AmazonLocationDemoMapsGrabDark:
-            Condition: EnableGrab
-            Type: AWS::Location::Map
-            Properties:
-                  Configuration:
-                        Style: VectorGrabStandardDark
-                  Description: You created this resource by running Amazon Location Demo's CloudFormation template.
-                  MapName: location.aws.com.demo.maps.Grab.StandardDark
+  AmazonLocationDemoMapsGrabStandardDark:
+    Condition: EnableGrab
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorGrabStandardDark
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.Grab.StandardDark
 
-      AmazonLocationDemoMapsEsriStreets:
-            Type: AWS::Location::Map
-            Properties:
-                  Configuration:
-                        Style: VectorEsriStreets
-                  Description: You created this resource by running Amazon Location Demo's CloudFormation template.
-                  MapName: location.aws.com.demo.maps.Esri.Streets
+  AmazonLocationDemoMapsEsriStreets:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorEsriStreets
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.Esri.Streets
 
-      AmazonLocationDemoMapsEsriDarkGrayCanvas:
-            Type: AWS::Location::Map
-            Properties:
-                  Configuration:
-                        Style: VectorEsriDarkGrayCanvas
-                  Description: You created this resource by running Amazon Location Demo's CloudFormation template.
-                  MapName: location.aws.com.demo.maps.Esri.DarkGrayCanvas
+  AmazonLocationDemoMapsEsriDarkGrayCanvas:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorEsriDarkGrayCanvas
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.Esri.DarkGrayCanvas
 
-      AmazonLocationDemoMapsEsriImagery:
-            Type: AWS::Location::Map
-            Properties:
-                  Configuration:
-                        Style: RasterEsriImagery
-                  Description: You created this resource by running Amazon Location Demo's CloudFormation template.
-                  MapName: location.aws.com.demo.maps.Esri.Imagery
+  AmazonLocationDemoMapsEsriImagery:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: RasterEsriImagery
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.Esri.Imagery
 
-      AmazonLocationDemoMapsEsriLightGrayCanvas:
-            Type: AWS::Location::Map
-            Properties:
-                  Configuration:
-                        Style: VectorEsriLightGrayCanvas
-                  Description: You created this resource by running Amazon Location Demo's CloudFormation template.
-                  MapName: location.aws.com.demo.maps.Esri.LightGrayCanvas
+  AmazonLocationDemoMapsEsriLightGrayCanvas:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorEsriLightGrayCanvas
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.Esri.LightGrayCanvas
 
-      AmazonLocationDemoMapsEsriNavigation:
-            Type: AWS::Location::Map
-            Properties:
-                  Configuration:
-                        Style: VectorEsriNavigation
-                  Description: You created this resource by running Amazon Location Demo's CloudFormation template.
-                  MapName: location.aws.com.demo.maps.Esri.Navigation
+  AmazonLocationDemoMapsEsriNavigation:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorEsriNavigation
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.Esri.Navigation
 
-      AmazonLocationDemoMapsHere:
-            Type: AWS::Location::Map
-            Properties:
-                  Configuration:
-                        Style: VectorHereExplore
-                  Description: You created this resource by running Amazon Location Demo's CloudFormation template.
-                  MapName: location.aws.com.demo.maps.HERE.Explore
+  AmazonLocationDemoMapsHere:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorHereExplore
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.HERE.Explore
 
-      AmazonLocationDemoMapsHereContrast:
-            Type: AWS::Location::Map
-            Properties:
-                  Configuration:
-                        Style: VectorHereContrast
-                  Description: You created this resource by running Amazon Location Demo's CloudFormation template.
-                  MapName: location.aws.com.demo.maps.HERE.Contrast
+  AmazonLocationDemoMapsHereContrast:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorHereContrast
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.HERE.Contrast
 
-      AmazonLocationDemoMapsHereExploreTruck:
-            Type: AWS::Location::Map
-            Properties:
-                  Configuration:
-                        Style: VectorHereExploreTruck
-                  Description: You created this resource by running Amazon Location Demo's CloudFormation template.
-                  MapName: location.aws.com.demo.maps.HERE.ExploreTruck
+  AmazonLocationDemoMapsHereExploreTruck:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorHereExploreTruck
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.HERE.ExploreTruck
 
-      AmazonLocationDemoMapsHereHybrid:
-            Type: AWS::Location::Map
-            Properties:
-                  Configuration:
-                        Style: HybridHereExploreSatellite
-                  Description: You created this resource by running Amazon Location Demo's CloudFormation template.
-                  MapName: location.aws.com.demo.maps.HERE.Hybrid
+  AmazonLocationDemoMapsHereHybrid:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: HybridHereExploreSatellite
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.HERE.Hybrid
 
-      AmazonLocationDemoMapsHereImagery:
-            Type: AWS::Location::Map
-            Properties:
-                  Configuration:
-                        Style: RasterHereExploreSatellite
-                  Description: You created this resource by running Amazon Location Demo's CloudFormation template.
-                  MapName: location.aws.com.demo.maps.HERE.Imagery
+  AmazonLocationDemoMapsHereImagery:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: RasterHereExploreSatellite
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.HERE.Imagery
 
-      AmazonLocationDemoPlaceIndexEsr:
-            Type: AWS::Location::PlaceIndex
-            Properties:
-                  DataSource: Esri
-                  Description: You created this resource by running Amazon Location Demo's CloudFormation template.
-                  IndexName: location.aws.com.demo.places.Esri.PlaceIndex
+  AmazonLocationDemoPlaceIndexEsr:
+    Type: AWS::Location::PlaceIndex
+    Properties:
+      DataSource: Esri
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      IndexName: location.aws.com.demo.places.Esri.PlaceIndex
 
-      AmazonLocationDemoPlaceIndexHere:
-            Type: AWS::Location::PlaceIndex
-            Properties:
-                  DataSource: Here
-                  Description: You created this resource by running Amazon Location Demo's CloudFormation template.
-                  IndexName: location.aws.com.demo.places.HERE.PlaceIndex
+  AmazonLocationDemoPlaceIndexHere:
+    Type: AWS::Location::PlaceIndex
+    Properties:
+      DataSource: Here
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      IndexName: location.aws.com.demo.places.HERE.PlaceIndex
 
-      AmazonLocationDemoPlaceIndexGrab:
-            Condition: EnableGrab
-            Type: AWS::Location::PlaceIndex
-            Properties:
-                  DataSource: Grab
-                  Description: You created this resource by running Amazon Location Demo's CloudFormation template.
-                  IndexName: location.aws.com.demo.places.Grab.PlaceIndex
+  AmazonLocationDemoPlaceIndexGrab:
+    Condition: EnableGrab
+    Type: AWS::Location::PlaceIndex
+    Properties:
+      DataSource: Grab
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      IndexName: location.aws.com.demo.places.Grab.PlaceIndex
 
-      AmazonLocationDemoRouteEsri:
-            Type: AWS::Location::RouteCalculator
-            Properties:
-                  CalculatorName: location.aws.com.demo.routes.Esri.RouteCalculator
-                  DataSource: Esri
-                  Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+  AmazonLocationDemoRouteEsri:
+    Type: AWS::Location::RouteCalculator
+    Properties:
+      CalculatorName: location.aws.com.demo.routes.Esri.RouteCalculator
+      DataSource: Esri
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
 
-      AmazonLocationDemoRouteHere:
-            Type: AWS::Location::RouteCalculator
-            Properties:
-                  CalculatorName: location.aws.com.demo.routes.HERE.RouteCalculator
-                  DataSource: Here
-                  Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+  AmazonLocationDemoRouteHere:
+    Type: AWS::Location::RouteCalculator
+    Properties:
+      CalculatorName: location.aws.com.demo.routes.HERE.RouteCalculator
+      DataSource: Here
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
 
-      AmazonLocationDemoRouteGrab:
-            Condition: EnableGrab
-            Type: AWS::Location::RouteCalculator
-            Properties:
-                  CalculatorName: location.aws.com.demo.routes.Grab.RouteCalculator
-                  DataSource: Grab
-                  Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+  AmazonLocationDemoRouteGrab:
+    Condition: EnableGrab
+    Type: AWS::Location::RouteCalculator
+    Properties:
+      CalculatorName: location.aws.com.demo.routes.Grab.RouteCalculator
+      DataSource: Grab
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
 
-      AmazonLocationDemoGeofenceCollection:
-            Type: AWS::Location::GeofenceCollection
-            Properties:
-                  CollectionName: location.aws.com.demo.geofences.GeofenceCollection
-                  Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+  AmazonLocationDemoGeofenceCollection:
+    Type: AWS::Location::GeofenceCollection
+    Properties:
+      CollectionName: location.aws.com.demo.geofences.GeofenceCollection
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
 
-      AmazonLocationDemoTracker:
-            Type: AWS::Location::Tracker
-            Properties:
-                  Description: You created this resource by running Amazon Location Demo's CloudFormation template.
-                  PositionFiltering: DistanceBased
-                  TrackerName: location.aws.com.demo.trackers.Tracker
+  AmazonLocationDemoTracker:
+    Type: AWS::Location::Tracker
+    Properties:
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      PositionFiltering: DistanceBased
+      TrackerName: location.aws.com.demo.trackers.Tracker
 
-      AmazonLocationDemoTrackerConsumer:
-            Type: AWS::Location::TrackerConsumer
-            Properties:
-                  ConsumerArn: !GetAtt AmazonLocationDemoGeofenceCollection.Arn
-                  TrackerName: location.aws.com.demo.trackers.Tracker
+  AmazonLocationDemoTrackerConsumer:
+    Type: AWS::Location::TrackerConsumer
+    Properties:
+      ConsumerArn: !GetAtt AmazonLocationDemoGeofenceCollection.Arn
+      TrackerName: location.aws.com.demo.trackers.Tracker
 
-      AmazonLocationDemoGeoFenceLogGroup:
-            Type: AWS::Logs::LogGroup
-            Properties:
-                  LogGroupName: /aws/events/AmazonLocationMonitor-GeofenceCollection
-      AmazonLocationDemoEventRule:
-            Type: AWS::Events::Rule
-            Properties:
-                  Name: AmazonLocationMonitor-GeofenceCollection
-                  EventPattern:
-                        source:
-                              - aws.geo
-                        detail-type:
-                              - Location Geofence Event
-                        resources:
-                              - !GetAtt AmazonLocationDemoGeofenceCollection.Arn
-                  State: ENABLED
-                  Targets:
-                        - Id: GeoFenceLogGroupTarget
-                          Arn: !GetAtt AmazonLocationDemoGeoFenceLogGroup.Arn
-                        - Id: LambdaTarget
-                          Arn: !GetAtt AmazonLocationDemoIoTPublisherLambda.Arn
-      AmazonLocationDemoIoTPolicy:
-            Type: AWS::IoT::Policy
-            Properties:
-                  PolicyName: AmazonLocationIotPolicy
-                  PolicyDocument:
-                        Version: "2012-10-17"
-                        Statement:
-                              - Effect: Allow
-                                Action:
-                                      - iot:Connect
-                                      - iot:Publish
-                                      - iot:Subscribe
-                                      - iot:Receive
-                                Resource:
-                                      - !Sub "arn:aws:iot:${AWS::Region}:${AWS::AccountId}:client/${!cognito-identity.amazonaws.com:sub}"
-                                      - !Sub "arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topic/${!cognito-identity.amazonaws.com:sub}"
-                                      - !Sub "arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topicfilter/${!cognito-identity.amazonaws.com:sub}/*"
-                                      - !Sub "arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topic/${!cognito-identity.amazonaws.com:sub}/tracker"
+  AmazonLocationDemoGeoFenceLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/events/AmazonLocationMonitor-GeofenceCollection
+  AmazonLocationDemoEventRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: AmazonLocationMonitor-GeofenceCollection
+      EventPattern:
+        source:
+          - aws.geo
+        detail-type:
+          - Location Geofence Event
+        resources:
+          - !GetAtt AmazonLocationDemoGeofenceCollection.Arn
+      State: ENABLED
+      Targets:
+        - Id: GeoFenceLogGroupTarget
+          Arn: !GetAtt AmazonLocationDemoGeoFenceLogGroup.Arn
+        - Id: LambdaTarget
+          Arn: !GetAtt AmazonLocationDemoIoTPublisherLambda.Arn
+  AmazonLocationDemoIoTPolicy:
+    Type: AWS::IoT::Policy
+    Properties:
+      PolicyName: AmazonLocationIotPolicy
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - iot:Connect
+              - iot:Publish
+              - iot:Subscribe
+              - iot:Receive
+            Resource:
+              - !Sub "arn:aws:iot:${AWS::Region}:${AWS::AccountId}:client/${!cognito-identity.amazonaws.com:sub}"
+              - !Sub "arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topic/${!cognito-identity.amazonaws.com:sub}"
+              - !Sub "arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topicfilter/${!cognito-identity.amazonaws.com:sub}/*"
+              - !Sub "arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topic/${!cognito-identity.amazonaws.com:sub}/tracker"
 
-      AmazonLocationDemoIoTEndpointLambda:
-            Type: AWS::Lambda::Function
-            Properties:
-                  FunctionName: AmazonLocationDemoIotEndpointProvider
-                  Handler: index.handler
-                  Runtime: nodejs16.x
-                  Timeout: 30
-                  Role: !GetAtt AmazonLocationLambdaExecutionRole.Arn
-                  Code:
-                        ZipFile: |
-                              var aws = require("aws-sdk");
-                              exports.handler = function(event, context) {
-                                  console.log("REQUEST RECEIVED:\n" + JSON.stringify(event));
-                                  const iot = new aws.Iot();
-                                  // For Delete requests, immediately send a SUCCESS response.
+  AmazonLocationDemoIoTEndpointLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: AmazonLocationDemoIotEndpointProvider
+      Handler: index.handler
+      Runtime: nodejs16.x
+      Timeout: 30
+      Role: !GetAtt AmazonLocationLambdaExecutionRole.Arn
+      Code:
+        ZipFile: |
+          var aws = require("aws-sdk");
+          exports.handler = function(event, context) {
+              console.log("REQUEST RECEIVED:\n" + JSON.stringify(event));
+              const iot = new aws.Iot();
+              // For Delete requests, immediately send a SUCCESS response.
 
-                                  if (event.RequestType == "Delete") {
-                                  iot.listTargetsForPolicy({policyName: 'AmazonLocationIotPolicy'}, function(err, data) {
-                                    if (err) console.log(err, err.stack); // an error occurred
-                                    else     {
-                                      const targets =  data.targets; 
-                                      console.log(targets);
-                                      targets.forEach(target => {
-                                      const detachParams = {
-                                        policyName: 'AmazonLocationIotPolicy',
-                                        target: target
-                                      };
-                                      console.log('Detaching -----', target, detachParams);
-                                      iot.detachPolicy(detachParams, function(err, data) {
-                                        if (err) {
-                                          console.log('Inside detachpol');
-                                          console.log(err, err.stack);
-                                        } else {
-                                          console.log('Detached policy from target');
-                                        }
-                                      });
-                                    });
-                                    }
-                                  });
-                                  sendResponse(event, context, "SUCCESS");
-                                  return;
-                                  }
-                                  else {
-                                  iot.describeEndpoint({}, (err, data) => {
-                                  let responseData, responseStatus;
-                                      if (err) {
-                                          responseStatus = "FAILED";
-                                          responseData = { Error: "describeEndpoint call failed" };
-                                          console.log(responseData.Error + ":\n", err);
-                                      } else  {
-                                          responseStatus = "SUCCESS";
-                                          responseData = { IotEndpointAddress: data.endpointAddress.replace('.iot', '-ats.iot')};
-                                          console.log('response data: ' + JSON.stringify(responseData));
-                                      }
-                                      sendResponse(event, context, responseStatus, responseData);
-                                  });
-                                }
-                              };
-                              // Send response to the pre-signed S3 URL
-                              function sendResponse(event, context, responseStatus, responseData) {
-                                  var responseBody = JSON.stringify({
-                                      Status: responseStatus,
-                                      Reason: "See the details in CloudWatch Log Stream: " + context.logStreamName,
-                                      PhysicalResourceId: context.logStreamName,
-                                      StackId: event.StackId,
-                                      RequestId: event.RequestId,
-                                      LogicalResourceId: event.LogicalResourceId,
-                                      Data: responseData
-                                  });
-                                  console.log("RESPONSE BODY:\n", responseBody);
-                                  var https = require("https");
-                                  var url = require("url");
-                                  var parsedUrl = url.parse(event.ResponseURL);
-                                  var options = {
-                                      hostname: parsedUrl.hostname,
-                                      port: 443,
-                                      path: parsedUrl.path,
-                                      method: "PUT",
-                                      headers: {
-                                          "content-type": "",
-                                          "content-length": responseBody.length
-                                      }
-                                  };
-                                  console.log("SENDING RESPONSE...\n");
-                                  var request = https.request(options, function(response) {
-                                      console.log("STATUS: " + response.statusCode);
-                                      console.log("HEADERS: " + JSON.stringify(response.headers));
-                                      // Tell AWS Lambda that the function execution is done
-                                      context.done();
-                                  });
-                                  request.on("error", function(error) {
-                                      console.log("sendResponse Error:" + error);
-                                      // Tell AWS Lambda that the function execution is done
-                                      context.done();
-                                  });
-                                  // write data to request body
-                                  request.write(responseBody);
-                                  request.end();
-                              }
-            DependsOn: AmazonLocationDemoIoTPolicy
-      AmazonLocationDemoIoTPublisherLambda:
-            Type: AWS::Lambda::Function
-            Properties:
-                  Code:
-                        ZipFile: |
-                              const AWS = require('aws-sdk')
-                              const iot = new AWS.Iot();
-                              exports.handler =  function(event) {
-                                console.log("event===>>>", JSON.stringify(event));
-                                var param = {
-                                  endpointType: "iot:Data-ATS"
-                                };
-                                iot.describeEndpoint(param, function(err, data) {
-                                  if (err) {
-                                    console.log("error===>>>", err, err.stack); // an error occurred
-                                  } else {
-                                    var endp = data['endpointAddress'];
-                                    const iotdata = new AWS.IotData({endpoint: endp});    
-                                    const trackerEvent = event["detail"]["EventType"];
-                                    const src = event["source"];
-                                    const time = event["time"];
-                                    const gfId = event["detail"]["GeofenceId"];
-                                    const identityId = `${event["detail"]["PositionProperties"]["region"]}:${event["detail"]["PositionProperties"]["id"]}`
-                                    console.log("identityId===>>>", identityId)
-                                    const msg =  {
-                                        "trackerEventType" : trackerEvent,
-                                        "source" : src,
-                                        "eventTime" : time,
-                                        "geofenceId" : gfId
-                                      };
-                                    const params = {
-                                      topic: `${identityId}/tracker`,
-                                      payload: JSON.stringify(msg),
-                                      qos: 0
-                                    };
-                                    iotdata.publish(params, function(err, data) {
-                                        if (err) {
-                                          console.log("error===>>>", err, err.stack); // an error occurred
-                                        } else {
-                                          console.log("Ladmbda triggered===>>>", trackerEvent);  // successful response 
-                                        }
-                                    }); 
-                                  }
-                                });
-                              }
-                  FunctionName: AmazonLocationDemoIoTPublisher
-                  Handler: index.handler
-                  Role: !GetAtt [AmazonLocationLambdaExecutionRole, Arn]
-                  Runtime: nodejs16.x
-                  Timeout: 30
-      AmazonLocationLambdaExecutionRole:
-            Type: AWS::IAM::Role
-            Properties:
-                  AssumeRolePolicyDocument:
-                        Version: "2012-10-17"
-                        Statement:
-                              - Effect: Allow
-                                Principal:
-                                      Service:
-                                            - lambda.amazonaws.com
-                                Action:
-                                      - "sts:AssumeRole"
-                  Path: /
-                  Policies:
-                        - PolicyName: root
-                          PolicyDocument:
-                                Version: "2012-10-17"
-                                Statement:
-                                      - Effect: Allow
-                                        Action:
-                                              - "iot:*"
-                                              - "iot:Publish"
-                                              - "logs:CreateLogGroup"
-                                              - "logs:CreateLogStream"
-                                              - "logs:PutLogEvents"
-                                        Resource: "*"
+              if (event.RequestType == "Delete") {
+              iot.listTargetsForPolicy({policyName: 'AmazonLocationIotPolicy'}, function(err, data) {
+                if (err) console.log(err, err.stack); // an error occurred
+                else     {
+                  const targets =  data.targets; 
+                  console.log(targets);
+                  targets.forEach(target => {
+                  const detachParams = {
+                    policyName: 'AmazonLocationIotPolicy',
+                    target: target
+                  };
+                  console.log('Detaching -----', target, detachParams);
+                  iot.detachPolicy(detachParams, function(err, data) {
+                    if (err) {
+                      console.log('Inside detachpol');
+                      console.log(err, err.stack);
+                    } else {
+                      console.log('Detached policy from target');
+                    }
+                  });
+                });
+                }
+              });
+              sendResponse(event, context, "SUCCESS");
+              return;
+              }
+              else {
+              iot.describeEndpoint({}, (err, data) => {
+              let responseData, responseStatus;
+                  if (err) {
+                      responseStatus = "FAILED";
+                      responseData = { Error: "describeEndpoint call failed" };
+                      console.log(responseData.Error + ":\n", err);
+                  } else  {
+                      responseStatus = "SUCCESS";
+                      responseData = { IotEndpointAddress: data.endpointAddress.replace('.iot', '-ats.iot')};
+                      console.log('response data: ' + JSON.stringify(responseData));
+                  }
+                  sendResponse(event, context, responseStatus, responseData);
+              });
+            }
+          };
+          // Send response to the pre-signed S3 URL
+          function sendResponse(event, context, responseStatus, responseData) {
+              var responseBody = JSON.stringify({
+                  Status: responseStatus,
+                  Reason: "See the details in CloudWatch Log Stream: " + context.logStreamName,
+                  PhysicalResourceId: context.logStreamName,
+                  StackId: event.StackId,
+                  RequestId: event.RequestId,
+                  LogicalResourceId: event.LogicalResourceId,
+                  Data: responseData
+              });
+              console.log("RESPONSE BODY:\n", responseBody);
+              var https = require("https");
+              var url = require("url");
+              var parsedUrl = url.parse(event.ResponseURL);
+              var options = {
+                  hostname: parsedUrl.hostname,
+                  port: 443,
+                  path: parsedUrl.path,
+                  method: "PUT",
+                  headers: {
+                      "content-type": "",
+                      "content-length": responseBody.length
+                  }
+              };
+              console.log("SENDING RESPONSE...\n");
+              var request = https.request(options, function(response) {
+                  console.log("STATUS: " + response.statusCode);
+                  console.log("HEADERS: " + JSON.stringify(response.headers));
+                  // Tell AWS Lambda that the function execution is done
+                  context.done();
+              });
+              request.on("error", function(error) {
+                  console.log("sendResponse Error:" + error);
+                  // Tell AWS Lambda that the function execution is done
+                  context.done();
+              });
+              // write data to request body
+              request.write(responseBody);
+              request.end();
+          }
+    DependsOn: AmazonLocationDemoIoTPolicy
+  AmazonLocationDemoIoTPublisherLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        ZipFile: |
+          const AWS = require('aws-sdk')
+          const iot = new AWS.Iot();
+          exports.handler =  function(event) {
+            console.log("event===>>>", JSON.stringify(event));
+            var param = {
+              endpointType: "iot:Data-ATS"
+            };
+            iot.describeEndpoint(param, function(err, data) {
+              if (err) {
+                console.log("error===>>>", err, err.stack); // an error occurred
+              } else {
+                var endp = data['endpointAddress'];
+                const iotdata = new AWS.IotData({endpoint: endp});    
+                const trackerEvent = event["detail"]["EventType"];
+                const src = event["source"];
+                const time = event["time"];
+                const gfId = event["detail"]["GeofenceId"];
+                const identityId = `${event["detail"]["PositionProperties"]["region"]}:${event["detail"]["PositionProperties"]["id"]}`
+                console.log("identityId===>>>", identityId)
+                const msg =  {
+                    "trackerEventType" : trackerEvent,
+                    "source" : src,
+                    "eventTime" : time,
+                    "geofenceId" : gfId
+                  };
+                const params = {
+                  topic: `${identityId}/tracker`,
+                  payload: JSON.stringify(msg),
+                  qos: 0
+                };
+                iotdata.publish(params, function(err, data) {
+                    if (err) {
+                      console.log("error===>>>", err, err.stack); // an error occurred
+                    } else {
+                      console.log("Ladmbda triggered===>>>", trackerEvent);  // successful response 
+                    }
+                }); 
+              }
+            });
+          }
+      FunctionName: AmazonLocationDemoIoTPublisher
+      Handler: index.handler
+      Role: !GetAtt [AmazonLocationLambdaExecutionRole, Arn]
+      Runtime: nodejs16.x
+      Timeout: 30
+  AmazonLocationLambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - "sts:AssumeRole"
+      Path: /
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "iot:*"
+                  - "iot:Publish"
+                  - "logs:CreateLogGroup"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                Resource: "*"
 
-      AmazonLocationDemoLambdaInvokePermission:
-            Type: AWS::Lambda::Permission
-            Properties:
-                  Action: lambda:InvokeFunction
-                  FunctionName: AmazonLocationDemoIoTPublisher
-                  Principal: events.amazonaws.com
-                  SourceArn: !GetAtt AmazonLocationDemoEventRule.Arn
+  AmazonLocationDemoLambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: AmazonLocationDemoIoTPublisher
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt AmazonLocationDemoEventRule.Arn
 
-      AmazonLocationDemoIotEndpoint:
-            Type: "Custom::IotEndpoint"
-            DependsOn: AmazonLocationDemoIoTEndpointLambda
-            Properties:
-                  ServiceToken: !GetAtt AmazonLocationDemoIoTEndpointLambda.Arn
+  AmazonLocationDemoIotEndpoint:
+    Type: "Custom::IotEndpoint"
+    DependsOn: AmazonLocationDemoIoTEndpointLambda
+    Properties:
+      ServiceToken: !GetAtt AmazonLocationDemoIoTEndpointLambda.Arn
 
 Outputs:
-      UserPoolId:
-            Value: !Ref AmazonLocationDemoUserPool
+  UserPoolId:
+    Value: !Ref AmazonLocationDemoUserPool
 
-      UserPoolClientId:
-            Value: !Ref AmazonLocationDemoUserPoolClient
+  UserPoolClientId:
+    Value: !Ref AmazonLocationDemoUserPoolClient
 
-      UserDomain:
-            Value: !Sub "https://${AWS::AccountId}.auth.${AWS::Region}.amazoncognito.com/"
+  UserDomain:
+    Value: !Sub "https://${AWS::AccountId}.auth.${AWS::Region}.amazoncognito.com/"
 
-      IdentityPoolId:
-            Value: !Ref AmazonLocationDemoCognitoIdentityPool
+  IdentityPoolId:
+    Value: !Ref AmazonLocationDemoCognitoIdentityPool
 
-      WebSocketUrl:
-            Value: !GetAtt AmazonLocationDemoIotEndpoint.IotEndpointAddress
+  WebSocketUrl:
+    Value: !GetAtt AmazonLocationDemoIotEndpoint.IotEndpointAddress
 
-      UserEmail:
-            Value: !Ref AmazonLocationCognitoUserEmail
+  UserEmail:
+    Value: !Ref AmazonLocationCognitoUserEmail
 
-      IAMAuthRoleName:
-            Value: !Ref AmazonLocationDemoCognitoIdentityPoolAuthenticatedRole
+  IAMAuthRoleName:
+    Value: !Ref AmazonLocationDemoCognitoIdentityPoolAuthenticatedRole
 
-      IAMUnAuthRoleName:
-            Value: !Ref AmazonLocationDemoCognitoIdentityPoolUnauthRole
+  IAMUnAuthRoleName:
+    Value: !Ref AmazonLocationDemoCognitoIdentityPoolUnauthRole
