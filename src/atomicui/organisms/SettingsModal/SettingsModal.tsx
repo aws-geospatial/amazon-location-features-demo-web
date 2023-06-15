@@ -30,7 +30,7 @@ import { transformCloudFormationLink } from "@demo/utils/transformCloudFormation
 import "./styles.scss";
 
 const {
-	ENV: { CF_TEMPLATE },
+	ENV: { CF_TEMPLATE, REGION, REGION_ASIA },
 	ROUTES: { HELP },
 	MAP_RESOURCES: {
 		MAP_STYLES: { ESRI_STYLES, HERE_STYLES, GRAB_STYLES },
@@ -40,6 +40,8 @@ const {
 } = appConfig;
 const { TITLE, TITLE_DESC, HOW_TO, STEP1, STEP1_DESC, STEP2, STEP2_DESC, STEP3, STEP3_DESC, AGREE, OPTIONS } =
 	connectAwsAccountData;
+const defaultRegion = OPTIONS.find(option => option.value === REGION) as { value: string; label: string };
+const defaultRegionAsia = OPTIONS.find(option => option.value === REGION_ASIA) as { value: string; label: string };
 const { IMPERIAL, METRIC } = MapUnitEnum;
 const { ESRI, HERE, GRAB } = MapProviderEnum;
 
@@ -82,7 +84,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 		WebSocketUrl: ""
 	});
 	const [cloudFormationLink, setCloudFormationLink] = useState(CF_TEMPLATE);
-	const [stackRegion, setStackRegion] = useState<{ value: string; label: string }>(OPTIONS[2]);
+	const [stackRegion, setStackRegion] = useState<{ value: string; label: string }>(defaultRegion);
 	const {
 		isUserAwsAccountConnected,
 		validateFormValues,
@@ -101,11 +103,11 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 	const isAuthenticated = !!credentials?.authenticated;
 
 	useEffect(() => {
-		const newUrl = transformCloudFormationLink(CF_TEMPLATE, OPTIONS[3].value);
+		const newUrl = transformCloudFormationLink(REGION_ASIA);
 
 		if (currentMapProvider === MapProviderEnum.GRAB && cloudFormationLink !== newUrl) {
 			setCloudFormationLink(newUrl);
-			setStackRegion(OPTIONS[3]);
+			setStackRegion(defaultRegionAsia);
 		}
 	}, [currentMapProvider, cloudFormationLink]);
 
@@ -197,7 +199,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 	);
 
 	const _onSelect = (option: { value: string; label: string }) => {
-		const newUrl = transformCloudFormationLink(CF_TEMPLATE, option.value);
+		const newUrl = transformCloudFormationLink(option.value);
 		setCloudFormationLink(newUrl);
 		setStackRegion(option);
 	};
