@@ -1,3 +1,9 @@
-export const transformCloudFormationLink = (urlString: string, newRegion: string) => {
-	return urlString.replace(/us-west-2/g, newRegion);
+import { appConfig } from "@demo/core/constants";
+
+const {
+	ENV: { CF_TEMPLATE, REGION }
+} = appConfig;
+
+export const transformCloudFormationLink = (newRegion: string) => {
+	return (CF_TEMPLATE as string).replaceAll(REGION, newRegion);
 };
