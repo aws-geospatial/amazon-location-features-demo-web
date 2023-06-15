@@ -1,11 +1,7 @@
 # Amazon Location Features Demo Web
-<<<<<<< HEAD
-## Requirements
-=======
 
 ## Requirements
 
->>>>>>> feature_ALS-1311
 1. Run the [CF template](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create?stackName=amazon-location-resources-setup&templateURL=https://amazon-location-resources-setup.s3.amazonaws.com/location-services.yaml) or run the CF template from  `/extra/cloudformation/default-resources-template.yaml` on AWS in `us-west-2` region, using your own AWS account and get `IdentityPoolId` and `Region` from stack output.
 2. Values from above stack output will be added to `.env` file against the following keys `VITE_AWS_COGNITO_IDENTITY_POOL_ID` and `VITE_AWS_REGION` respectively.
 3. Run the CF template from  `/extra/cloudformation/default-grab-resources-template.yaml` on AWS in `ap-southeast-1` region, using your own AWS account and get `IdentityPoolId` and `Region` from stack output.
@@ -14,10 +10,7 @@
 6. Add the `VITE_APPLE_APP_STORE_LINK` and `VITE_GOOGLE_PLAY_STORE_LINK` in `.env` file with the links to pointing to respective stores.
 
 #### Env keys required in `.env` file, see `.env.example` for reference
-<<<<<<< HEAD
-=======
 
->>>>>>> feature_ALS-1311
 > VITE_AWS_COGNITO_IDENTITY_POOL_ID<br />
 VITE_AWS_REGION<br />
 VITE_AWS_COGNITO_IDENTITY_POOL_ID_ASIA<br />
@@ -27,6 +20,7 @@ VITE_APPLE_APP_STORE_LINK<br />
 VITE_GOOGLE_PLAY_STORE_LINK<br />
 
 ## Configure
+
 > git clone https://github.com/aws-geospatial/amazon-location-features-demo-web.git<br />
 cd amazon-location-features-demo-web/<br />
 yarn install<br />
@@ -48,10 +42,7 @@ Builds the app for **development** to the `build` folder locally and starts the 
 ## E2E Tests
 
 #### Env keys required in `cypress.env.json` file, see `cypress.env.json.example` for reference. This is only needed to run the e2e tests locally.
-<<<<<<< HEAD
-=======
 
->>>>>>> feature_ALS-1311
 >WEB_DOMAIN<br />
 WEB_DOMAIN_USERNAME<br />
 WEB_DOMAIN_PASSWORD<br />
