@@ -79,10 +79,13 @@ Run all the test cases for all the components within the repo and provides a cov
 - location.aws.com.demo.maps.HERE.ExploreTruck - VectorHereExploreTruck
 - location.aws.com.demo.maps.HERE.Hybrid - HybridHereExploreSatellite
 - location.aws.com.demo.maps.HERE.Imagery - RasterHereExploreSatellite
+- location.aws.com.demo.maps.Grab.StandardLight - VectorGrabStandardLight
+- location.aws.com.demo.maps.Grab.StandardDark - VectorGrabStandardDark
 
 > Place indexes (Name)
 - location.aws.com.demo.places.Esri.PlaceIndex
 - location.aws.com.demo.places.HERE.PlaceIndex
+- location.aws.com.demo.places.Grab.PlaceIndex
 
 > Route calculators (Name)
 - location.aws.com.demo.routes.Esri.RouteCalculator
@@ -90,6 +93,7 @@ Run all the test cases for all the components within the repo and provides a cov
 
 > Geofence collections (Name)
 - location.aws.com.demo.geofences.GeofenceCollection
+- location.aws.com.demo.routes.Grab.RouteCalculator
 
 > Trackers (Name)
 - location.aws.com.demo.trackers.Tracker
