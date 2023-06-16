@@ -2,7 +2,7 @@
 
 ## Requirements
 
-1. Run the [CF template](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create?stackName=amazon-location-resources-setup&templateURL=https://amazon-location-demo-resources.s3.amazonaws.com/location-services.yaml) or run the CF template from  `/extra/cloudformation/default-resources-template.yaml` on AWS in `us-east-1` region, using your own AWS account and get `IdentityPoolId` and `Region` from stack output.
+1. Run the [CF template](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create?stackName=amazon-location-resources-setup&templateURL=https://amazon-location-resources-setup.s3.amazonaws.com/location-services.yaml) or run the CF template from  `/extra/cloudformation/default-resources-template.yaml` on AWS in `us-east-1` region, using your own AWS account and get `IdentityPoolId` and `Region` from stack output.
 2. Values from above stack output will be added to `.env` file against the following keys `VITE_AWS_COGNITO_IDENTITY_POOL_ID` and `VITE_AWS_REGION` respectively.
 3. Run the CF template from  `/extra/cloudformation/default-grab-resources-template.yaml` on AWS in `ap-southeast-1` region, using your own AWS account and get `IdentityPoolId` and `Region` from stack output.
 4. Values from above stack output will be added to `.env` file against the following keys `VITE_AWS_COGNITO_IDENTITY_POOL_ID_ASIA` and `VITE_AWS_REGION_ASIA` respectively.
