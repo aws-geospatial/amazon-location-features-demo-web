@@ -152,26 +152,26 @@
 				height: 75%;
 				gap: 0;
 				.filter-bubble {
-					width: 5px;
-					height: 5px;
+					width: 8px;
+					height: 8px;
 					&.live {
 						background-color: orange;
 						border-radius: 50%;
 						display: flex;
 						position: relative;
-						top: -7px;
-						left: -7px;
+						top: -6px;
+						left: -8px;
 					}
 				}
 				.filter-icon {
-					width: 1.5rem;
-					height: 1.5rem;
+					width: 1.6rem;
+					height: 1.6rem;
 					&.live {
-						use {
+						path {
 							fill: var(--primary-color);
 						}
 					}
-					use {
+					path {
 						fill: var(--grey-light-color);
 					}
 				}
@@ -249,7 +249,9 @@
 		img {
 			border-radius: 0.62rem;
 			min-width: 7.6rem;
-			min-height: 6.31rem;
+			max-height: 6.31rem;
+			width: 100%;
+			height: 100%;
 		}
 
 		&.selected {

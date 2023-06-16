@@ -4,7 +4,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import { Card, CheckboxField, Divider, Flex, Placeholder, SearchField, Text } from "@aws-amplify/ui-react";
-import { IconClose, IconFilter, IconGeofencePlusSolid, IconMapSolid, IconSearch } from "@demo/assets";
+import { IconClose, IconFilterFunnel, IconGeofencePlusSolid, IconMapSolid, IconSearch } from "@demo/assets";
 import { TextEl } from "@demo/atomicui/atoms";
 import { appConfig } from "@demo/core/constants";
 import { useAmplifyAuth, useAmplifyMap, useAwsGeofence } from "@demo/hooks";
@@ -19,7 +19,9 @@ import {
 	TypeEnum
 } from "@demo/types";
 import { Tooltip } from "react-tooltip";
+
 import "./styles.scss";
+import { NotFoundCard } from "../NotFoundCard";
 
 const { GRAB } = MapProviderEnum;
 const {
@@ -36,7 +38,7 @@ const filters = {
 	Type: Object.values(TypeEnum).map(value => value)
 };
 
-interface MapButtonsProps {
+export interface MapButtonsProps {
 	openStylesCard: boolean;
 	setOpenStylesCard: (b: boolean) => void;
 	onCloseSidebar: () => void;
@@ -51,6 +53,7 @@ interface MapButtonsProps {
 	setSearchValue: (s: string) => void;
 	selectedFilters: MapStyleFilterTypes;
 	setSelectedFilters: React.Dispatch<React.SetStateAction<MapStyleFilterTypes>>;
+	isLoading?: boolean;
 }
 
 const MapButtons: React.FC<MapButtonsProps> = ({
@@ -71,7 +74,8 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 		Attribute: [],
 		Type: []
 	},
-	setSelectedFilters
+	setSelectedFilters,
+	isLoading = false
 }) => {
 	const [isLoadingImg, setIsLoadingImg] = useState(true);
 	const [showFilter, setShowFilter] = useState(false);
@@ -308,10 +312,12 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 								className="map-styles-search-field"
 								onChange={e => setSearchValue(e.target.value)}
 								onClear={() => setSearchValue("")}
+								onClick={() => !!showFilter && setShowFilter(false)}
+								data-testid="map-styles-search-field"
 							/>
 							<Flex className="filter-container">
 								<Flex className="filter-icon-wrapper" onClick={() => setShowFilter(show => !show)}>
-									<IconFilter className={hasAnyFilterSelected ? "filter-icon live" : "filter-icon"} />
+									<IconFilterFunnel className={hasAnyFilterSelected ? "filter-icon live" : "filter-icon"} />
 									<span className={hasAnyFilterSelected ? "filter-bubble live" : "filter-bubble"} />
 								</Flex>
 							</Flex>
@@ -333,6 +339,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 												value={item}
 												checked={selectedFilters[key as keyof MapStyleFilterTypes].includes(item)}
 												onChange={e => handleFilterChange(e, key)}
+												data-testid={`filter-checkbox-${item}`}
 											/>
 										))}
 									</Flex>
@@ -343,6 +350,15 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 					{!showFilter && (
 						<Flex gap={0} direction="column" className="maps-container">
 							<Flex data-testid="esri-map-styles" gap={0} padding="0 0 1.23rem 0" wrap="wrap">
+								{!searchAndFilteredResults.length && (
+									<Flex width={"80%"} margin={"0 auto"}>
+										<NotFoundCard
+											title="No matching styles found"
+											text="Make sure your search is spelled correctly and try again"
+											textFontSize="0.95rem"
+										/>
+									</Flex>
+								)}
 								{searchAndFilteredResults.map((item, i) =>
 									"title" in item ? (
 										<Flex key={i} width={"100%"} direction={"column"}>
@@ -355,15 +371,17 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 										(item.filters?.provider !== GRAB || (item.filters?.provider === GRAB && isGrabVisible)) && (
 											<Flex key={i} marginBottom={"1.2rem"}>
 												<Flex
-													data-testid={`map-style-item-${item.name}`}
+													data-testid={`map-style-item-${item.id}`}
 													className={item.id === currentMapStyle ? "mb-style-container selected" : "mb-style-container"}
 													onClick={() => onChangeStyle(item.id)}
 												>
 													<Flex gap={0} position="relative">
-														{isLoadingImg && <Placeholder position="absolute" width="82px" height="82px" />}
+														{(isLoading || isLoadingImg) && (
+															<Placeholder position="absolute" width="100%" height="100%" />
+														)}
 														<img src={item.image} alt={item.name} onLoad={() => setIsLoadingImg(false)} />
 													</Flex>
-													<TextEl marginTop="0.62rem" text={item.name} />
+													{!isLoading && <TextEl marginTop="0.62rem" text={item.name} />}
 												</Flex>
 											</Flex>
 										)

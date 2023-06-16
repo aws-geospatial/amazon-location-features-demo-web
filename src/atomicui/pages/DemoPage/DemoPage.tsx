@@ -816,7 +816,13 @@ const DemoPage: React.FC = () => {
 			</Flex>
 		</View>
 	) : (
-		<DemoPlaceholderPage height={height} show={show} isGrabVisible={isGrabVisible} />
+		<DemoPlaceholderPage
+			searchValue={searchValue}
+			selectedFilters={selectedFilters}
+			height={height}
+			show={show}
+			isGrabVisible={isGrabVisible}
+		/>
 	);
 };
 
