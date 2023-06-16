@@ -29,7 +29,9 @@ export {
 	ToastType,
 	TrackerType,
 	TravelMode,
-	UserAgentEnum
+	UserAgentEnum,
+	AttributeEnum,
+	TypeEnum
 } from "./Enums";
 export type { RouteDataType } from "./RouteDataType";
 export type { CirclePropertiesType, CircleDrawEventType, CircleFeatureType } from "./CircleDrawControlTypes";

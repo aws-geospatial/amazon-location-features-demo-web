@@ -696,7 +696,13 @@ const DemoPage: React.FC = () => {
 						isGrabVisible={isGrabVisible}
 						showGrabDisclaimerModal={show.grabDisclaimerModal}
 						onShowGridLoader={() => setShow(s => ({ ...s, gridLoader: true }))}
-						handleMapProviderChange={onMapProviderChange}
+						handleMapStyleChange={(id, mapProvider) => {
+							if (mapProvider === MapProviderEnum.GRAB && currentMapProvider !== MapProviderEnum.GRAB) {
+								setShow(s => ({ ...s, grabDisclaimerModal: true }));
+							} else {
+								onMapStyleChange(id);
+							}
+						}}
 					/>
 					{locationError || isCurrentLocationDisabled ? (
 						<Flex className="location-disabled" onClick={() => getCurrentGeoLocation()}>

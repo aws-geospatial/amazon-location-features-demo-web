@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { MapProviderEnum } from "@demo/types";
 import { RenderResult, act, fireEvent, render, screen } from "@testing-library/react";
 
 import MapButtons from "./MapButtons";
@@ -26,6 +27,7 @@ describe("<MapButtons/>", () => {
 	let onShowGeofenceBox: jest.Mock<any, any, any>;
 	const onShowGridLoader = jest.fn();
 	const handleMapProviderChange = jest.fn();
+	const handleMapStyleChange = jest.fn();
 
 	beforeEach(() => {
 		jest.useFakeTimers();
@@ -53,7 +55,8 @@ describe("<MapButtons/>", () => {
 				isGrabVisible={true}
 				showGrabDisclaimerModal={false}
 				onShowGridLoader={onShowGridLoader}
-				handleMapProviderChange={handleMapProviderChange}
+				// handleMapProviderChange={handleMapProviderChange}
+				handleMapStyleChange={handleMapStyleChange}
 			/>
 		);
 

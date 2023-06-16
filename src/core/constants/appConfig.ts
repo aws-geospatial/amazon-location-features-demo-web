@@ -22,7 +22,8 @@ import {
 	GrabMapEnum,
 	GrabMapStyleEnum,
 	HereMapEnum,
-	HereMapStyleEnum
+	HereMapStyleEnum,
+	MapProviderEnum
 } from "@demo/types";
 
 const getEnv = (key: string) => {
@@ -118,23 +119,88 @@ const appConfig = {
 		},
 		MAP_STYLES: {
 			ESRI_STYLES: [
-				{ id: EsriMapEnum.ESRI_LIGHT, image: EsriLight, name: "Light" },
-				{ id: EsriMapEnum.ESRI_STREET_MAP, image: EsriStreets, name: "Streets" },
-				{ id: EsriMapEnum.ESRI_NAVIGATION, image: EsriNavigation, name: "Navigation" },
-				{ id: EsriMapEnum.ESRI_DARK_GRAY_CANVAS, image: EsriDarkGray, name: "Dark Gray" },
-				{ id: EsriMapEnum.ESRI_LIGHT_GRAY_CANVAS, image: EsriLightGray, name: "Light Gray" },
-				{ id: EsriMapEnum.ESRI_IMAGERY, image: EsriImagery, name: "Imagery" }
+				{
+					id: EsriMapEnum.ESRI_LIGHT,
+					image: EsriLight,
+					name: "Light",
+					filters: { provider: MapProviderEnum.ESRI, attribute: ["Light"], type: ["Vector"] }
+				},
+				{
+					id: EsriMapEnum.ESRI_STREET_MAP,
+					image: EsriStreets,
+					name: "Streets",
+					filters: { provider: MapProviderEnum.ESRI, attribute: ["Light"], type: ["Vector"] }
+				},
+				{
+					id: EsriMapEnum.ESRI_NAVIGATION,
+					image: EsriNavigation,
+					name: "Navigation",
+					filters: { provider: MapProviderEnum.ESRI, attribute: ["Light"], type: ["Vector"] }
+				},
+				{
+					id: EsriMapEnum.ESRI_DARK_GRAY_CANVAS,
+					image: EsriDarkGray,
+					name: "Dark Gray",
+					filters: { provider: MapProviderEnum.ESRI, attribute: ["Dark"], type: ["Vector"] }
+				},
+				{
+					id: EsriMapEnum.ESRI_LIGHT_GRAY_CANVAS,
+					image: EsriLightGray,
+					name: "Light Gray",
+					filters: { provider: MapProviderEnum.ESRI, attribute: ["Dark"], type: ["Vector"] }
+				},
+				{
+					id: EsriMapEnum.ESRI_IMAGERY,
+					image: EsriImagery,
+					name: "Imagery",
+					filters: { provider: MapProviderEnum.ESRI, attribute: ["Satellite"], type: ["Raster"] }
+				}
 			],
 			HERE_STYLES: [
-				{ id: HereMapEnum.HERE_EXPLORE, image: HereExplore, name: "Explore" },
-				{ id: HereMapEnum.HERE_CONTRAST, image: HereConrast, name: "Contrast" },
-				{ id: HereMapEnum.HERE_EXPLORE_TRUCK, image: HereExploreTruck, name: "Explore Truck" },
-				{ id: HereMapEnum.HERE_HYBRID, image: HereHybrid, name: "Hybrid" },
-				{ id: HereMapEnum.HERE_IMAGERY, image: HereImagery, name: "Imagery" }
+				{
+					id: HereMapEnum.HERE_EXPLORE,
+					image: HereExplore,
+					name: "Explore",
+					filters: { provider: MapProviderEnum.HERE, attribute: ["Light"], type: ["Vector"] }
+				},
+				{
+					id: HereMapEnum.HERE_CONTRAST,
+					image: HereConrast,
+					name: "Contrast",
+					filters: { provider: MapProviderEnum.HERE, attribute: ["Dark", "3D"], type: ["Vector"] }
+				},
+				{
+					id: HereMapEnum.HERE_EXPLORE_TRUCK,
+					image: HereExploreTruck,
+					name: "Explore Truck",
+					filters: { provider: MapProviderEnum.HERE, attribute: ["Truck"], type: ["Vector"] }
+				},
+				{
+					id: HereMapEnum.HERE_HYBRID,
+					image: HereHybrid,
+					name: "Hybrid",
+					filters: { provider: MapProviderEnum.HERE, attribute: ["Satellite"], type: ["Raster", "Vector"] }
+				},
+				{
+					id: HereMapEnum.HERE_IMAGERY,
+					image: HereImagery,
+					name: "Imagery",
+					filters: { provider: MapProviderEnum.HERE, attribute: ["Satellite"], type: ["Raster"] }
+				}
 			],
 			GRAB_STYLES: [
-				{ id: GrabMapEnum.GRAB_STANDARD_LIGHT, image: GrabStandardLight, name: "Light" },
-				{ id: GrabMapEnum.GRAB_STANDARD_DARK, image: GrabStandardDark, name: "Dark" }
+				{
+					id: GrabMapEnum.GRAB_STANDARD_LIGHT,
+					image: GrabStandardLight,
+					name: "Light",
+					filters: { provider: MapProviderEnum.GRAB, attribute: ["Light"], type: ["Vector"] }
+				},
+				{
+					id: GrabMapEnum.GRAB_STANDARD_DARK,
+					image: GrabStandardDark,
+					name: "Dark",
+					filters: { provider: MapProviderEnum.GRAB, attribute: ["Dark"], type: ["Vector"] }
+				}
 			]
 		},
 		PLACE_INDEXES: {

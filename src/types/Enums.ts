@@ -135,3 +135,16 @@ export enum UserAgentEnum {
 	IOS = "IOS",
 	ANDROID = "Android"
 }
+
+export enum AttributeEnum {
+	Light = "Light",
+	Dark = "Dark",
+	Satellite = "Satellite",
+	ThreeD = "3D",
+	Truck = "Truck"
+}
+
+export enum TypeEnum {
+	Vector = "Vector",
+	Raster = "Raster"
+}

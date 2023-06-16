@@ -3,21 +3,46 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
-import { Card, Divider, Flex, Placeholder, Radio, View } from "@aws-amplify/ui-react";
-import { IconClose, IconGeofencePlusSolid, IconInfoSolid, IconMapSolid } from "@demo/assets";
+import { Card, CheckboxField, Divider, Flex, Placeholder, SearchField, Text } from "@aws-amplify/ui-react";
+import { IconClose, IconFilter, IconGeofencePlusSolid, IconMapSolid, IconSearch } from "@demo/assets";
 import { TextEl } from "@demo/atomicui/atoms";
 import { appConfig } from "@demo/core/constants";
 import { useAmplifyAuth, useAmplifyMap, useAwsGeofence } from "@demo/hooks";
-import { EsriMapEnum, GrabMapEnum, HereMapEnum, MapProviderEnum } from "@demo/types";
+import { AttributeEnum, EsriMapEnum, GrabMapEnum, HereMapEnum, MapProviderEnum, TypeEnum } from "@demo/types";
 import { Tooltip } from "react-tooltip";
 import "./styles.scss";
 
-const { ESRI, HERE, GRAB } = MapProviderEnum;
+const { GRAB } = MapProviderEnum;
 const {
 	MAP_RESOURCES: {
 		MAP_STYLES: { ESRI_STYLES, HERE_STYLES, GRAB_STYLES }
 	}
 } = appConfig;
+
+const MAP_STYLES = [...ESRI_STYLES, ...HERE_STYLES, ...GRAB_STYLES] as MapStyle[];
+
+const filters = {
+	Providers: Object.values(MapProviderEnum).map(value => value),
+	Attribute: Object.values(AttributeEnum).map(value => value),
+	Type: Object.values(TypeEnum).map(value => value)
+};
+
+type SelectedFilters = {
+	Providers: string[];
+	Attribute: string[];
+	Type: string[];
+};
+
+interface MapStyle {
+	id: EsriMapEnum;
+	image: string;
+	name: string;
+	filters: {
+		provider: MapProviderEnum;
+		attribute: string[];
+		type: string[];
+	};
+}
 
 interface MapButtonsProps {
 	openStylesCard: boolean;
@@ -29,7 +54,7 @@ interface MapButtonsProps {
 	isGrabVisible: boolean;
 	showGrabDisclaimerModal: boolean;
 	onShowGridLoader: () => void;
-	handleMapProviderChange: (mapProvider: MapProviderEnum) => void;
+	handleMapStyleChange: (id: EsriMapEnum | HereMapEnum | GrabMapEnum, mapProvider: MapProviderEnum) => void;
 }
 
 const MapButtons: React.FC<MapButtonsProps> = ({
@@ -42,13 +67,20 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	isGrabVisible,
 	showGrabDisclaimerModal,
 	onShowGridLoader,
-	handleMapProviderChange
+	handleMapStyleChange
 }) => {
 	const [isLoadingImg, setIsLoadingImg] = useState(true);
+	const [showFilter, setShowFilter] = useState(false);
+	const [searchValue, setSearchValue] = useState("");
+	const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>({
+		Providers: [],
+		Attribute: [],
+		Type: []
+	});
 	const stylesCardRef = useRef<HTMLDivElement | null>(null);
 	const stylesCardTogglerRef = useRef<HTMLDivElement | null>(null);
 	const { credentials, isUserAwsAccountConnected } = useAmplifyAuth();
-	const { mapProvider: currentMapProvider, mapStyle: currentMapStyle, setMapStyle } = useAmplifyMap();
+	const { mapStyle: currentMapStyle, setMapStyle } = useAmplifyMap();
 	const { isAddingGeofence, setIsAddingGeofence } = useAwsGeofence();
 	const isAuthenticated = !!credentials?.authenticated;
 
@@ -104,19 +136,122 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 		}
 	};
 
-	const _handleMapProviderChange = (mapProvider: MapProviderEnum) => {
-		if (mapProvider !== currentMapProvider) {
-			// setIsLoadingImg(true);
-			handleMapProviderChange(mapProvider);
+	// const _handleMapProviderChange = (mapProvider: MapProviderEnum) => {
+	// 	if (mapProvider !== currentMapProvider) {
+	// 		// setIsLoadingImg(true);
+	// 		handleMapProviderChange(mapProvider);
+	// 	}
+	// };
+
+	const onChangeStyle = (id: EsriMapEnum | HereMapEnum | GrabMapEnum, mapProvider: MapProviderEnum) => {
+		if (id !== currentMapStyle) {
+			onShowGridLoader();
+			// setMapStyle(id);
+			handleMapStyleChange(id, mapProvider);
 		}
 	};
 
-	const onChangeStyle = (id: EsriMapEnum | HereMapEnum | GrabMapEnum) => {
-		if (id !== currentMapStyle) {
-			onShowGridLoader();
-			setMapStyle(id);
-		}
+	const addProviderTitle = useCallback(
+		(styles: MapStyle[], isGrabVisible: boolean): (MapStyle | { title: string })[] => {
+			return styles.reduce((acc: (MapStyle | { title: string })[], style: MapStyle) => {
+				const { filters } = style;
+				const provider = filters?.provider === GRAB ? `${GRAB}Maps` : filters?.provider;
+
+				if (!(provider === `${GRAB}Maps` && !isGrabVisible)) {
+					if (!acc.some(item => "title" in item && item.title === provider)) {
+						acc.push({ title: provider });
+					}
+					acc.push(style);
+				}
+
+				return acc;
+			}, []);
+		},
+		[]
+	);
+
+	const stylesWithTitles = addProviderTitle(MAP_STYLES, isGrabVisible);
+
+	/**
+	 * Filters and groups map styles based on the provided keyword and selected filters.
+	 *
+	 * @param {Array<MapStyle | { title: string }>} styles - The array of map styles to filter.
+	 * @param {string} keyword - The keyword to filter map styles by.
+	 * @param {SelectedFilters} selectedFilters - The selected filters to apply.
+	 * @returns {Array<MapStyle | { title: string }>} - The filtered and grouped map styles.
+	 */
+	const searchStyles = (
+		styles: Array<MapStyle | { title: string }>,
+		keyword: string,
+		selectedFilters: SelectedFilters
+	): Array<MapStyle | { title: string }> => {
+		const lowerCaseKeyword = keyword.toLowerCase();
+
+		// Check if there is no keyword and no filters are selected
+		const noKeywordAndFilters =
+			lowerCaseKeyword === "" &&
+			selectedFilters.Providers.length === 0 &&
+			selectedFilters.Attribute.length === 0 &&
+			selectedFilters.Type.length === 0;
+
+		// Return the original styles array if there is no keyword and no filters are selected
+		if (noKeywordAndFilters) return styles;
+
+		// Group styles by provider
+		const groupedStyles = styles.reduce((acc: { [key: string]: Array<MapStyle | { title: string }> }, item) => {
+			const providerKey = "title" in item ? (item.title === `${GRAB}Maps` ? GRAB : item.title) : item.filters.provider;
+			acc[providerKey] = acc[providerKey] || [];
+			if (!("title" in item)) acc[providerKey].push(item);
+			return acc;
+		}, {});
+
+		// Filter styles within each group and flatten the result
+		return Object.entries(groupedStyles).flatMap(([provider, styles]) => {
+			// Filter styles based on keyword and selected filters
+			const filteredGroup = styles.filter(item => {
+				const { filters, name } = item as MapStyle;
+				const matchesKeyword =
+					filters.provider.toLowerCase().includes(lowerCaseKeyword) ||
+					filters.attribute.some(attr => attr.toLowerCase().includes(lowerCaseKeyword)) ||
+					filters.type.some(type => type.toLowerCase().includes(lowerCaseKeyword)) ||
+					name.toLowerCase().includes(lowerCaseKeyword);
+
+				const matchesFilters =
+					(selectedFilters.Providers.length === 0 || selectedFilters.Providers.includes(filters.provider)) &&
+					(selectedFilters.Attribute.length === 0 ||
+						filters.attribute.some(attr => selectedFilters.Attribute.includes(attr))) &&
+					(selectedFilters.Type.length === 0 || filters.type.some(type => selectedFilters.Type.includes(type)));
+
+				return matchesKeyword && matchesFilters;
+			});
+
+			// Add the filtered group to the result if it's not empty
+			return filteredGroup.length > 0
+				? [{ title: provider === GRAB ? `${GRAB}Maps` : provider }, ...filteredGroup]
+				: [];
+		});
 	};
+
+	/**
+	 * Handles changes to filter checkboxes by updating the selected filters state.
+	 *
+	 * @param {React.ChangeEvent<HTMLInputElement>} e - The change event from the input element.
+	 * @param {string} filterCategory - The category of the filter being changed (e.g., 'Providers', 'Attribute', 'Type').
+	 */
+	const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>, filterCategory: string) => {
+		const { name, checked } = e.target;
+		setSelectedFilters(prevFilters => {
+			const key = filterCategory as keyof SelectedFilters;
+			return {
+				...prevFilters,
+				[key]: checked ? [...prevFilters[key], name] : prevFilters[key].filter(item => item !== name)
+			};
+		});
+	};
+
+	const searchAndFilteredResults = searchStyles(stylesWithTitles, searchValue, selectedFilters);
+	const hasAnyFilterSelected =
+		!!selectedFilters.Providers.length || !!selectedFilters.Attribute.length || !!selectedFilters.Type.length;
 
 	return (
 		<>
@@ -148,7 +283,6 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 			</Flex>
 			{openStylesCard && (
 				<Card data-testid="map-styles-card" ref={stylesCardRef} className="map-styles-card">
-					<View className="triangle-pointer" />
 					<Flex className="map-styles-header">
 						<TextEl margin="1.23rem 0rem" fontFamily="AmazonEmber-Bold" fontSize="1.23rem" text="Map style" />
 						<Flex className="map-styles-icon-close-container" onClick={() => setOpenStylesCard(false)}>
@@ -156,137 +290,91 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 						</Flex>
 					</Flex>
 					<Flex className="ms-info-container">
-						<IconInfoSolid />
-						<TextEl
-							variation="tertiary"
-							text={"Changing data provider also affects\nPaces & Routes API"}
-							whiteSpace="pre-line"
-						/>
+						<TextEl variation="tertiary" text={"Changing data provider also affects Paces & Routes API"} />
 					</Flex>
-					<Flex gap={0} direction="column">
-						{/* Esri */}
+					<Flex direction={"column"} gap={0}>
 						<Flex
-							data-testid="map-data-provider-esri"
-							className={
-								currentMapProvider === ESRI ? "map-data-provider selected-map-data-provider" : "map-data-provider"
-							}
-							onClick={() => _handleMapProviderChange(ESRI)}
+							className={showFilter ? "maps-styles-search with-filters" : "maps-styles-search"}
+							marginBottom={showFilter ? 0 : "0.6rem"}
 						>
-							<TextEl fontSize="1.23rem" lineHeight="2.15rem" text={ESRI} />
-							<Radio
-								data-testid="map-provider-radio-button-esri"
-								value={ESRI}
-								checked={currentMapProvider === ESRI}
-								onChange={e => {
-									e.preventDefault();
-									e.stopPropagation();
-									_handleMapProviderChange(ESRI);
-								}}
-							/>
-						</Flex>
-						{currentMapProvider !== ESRI && <Divider className="mb-divider" />}
-						{currentMapProvider === ESRI && (
-							<Flex data-testid="esri-map-styles" gap={0} padding="0rem 1.23rem 1.23rem 1.23rem" wrap="wrap">
-								{ESRI_STYLES.map(({ id, image, name }) => (
-									<Flex
-										data-testid={`map-style-item-${name}`}
-										key={id}
-										className={id === currentMapStyle ? "mb-style-container selected" : "mb-style-container"}
-										onClick={() => onChangeStyle(id)}
-									>
-										<Flex gap={0} position="relative">
-											{isLoadingImg && <Placeholder position="absolute" width="82px" height="82px" />}
-											<img src={image} alt={name} onLoad={() => setIsLoadingImg(false)} />
-										</Flex>
-										<TextEl marginTop="0.62rem" text={name} />
+							<SearchField
+								label="Search"
+								placeholder="Search styles"
+								hasSearchButton={false}
+								hasSearchIcon={true}
+								size={"large"}
+								innerStartComponent={
+									<Flex className="search-icon-container">
+										<IconSearch className="search-icon" />
 									</Flex>
-								))}
-							</Flex>
-						)}
-						{/* HERE */}
-						{currentMapProvider === ESRI && <Divider className="mb-divider" />}
-						<Flex
-							data-testid="map-data-provider-here"
-							className={
-								currentMapProvider === HERE ? "map-data-provider selected-map-data-provider" : "map-data-provider"
-							}
-							onClick={() => _handleMapProviderChange(HERE)}
-						>
-							<TextEl fontSize="1.23rem" lineHeight="2.15rem" text={HERE} />
-							<Radio
-								data-testid="map-provider-radio-button-here"
-								value={HERE}
-								checked={currentMapProvider === HERE}
-								onChange={e => {
-									e.preventDefault();
-									e.stopPropagation();
-									_handleMapProviderChange(HERE);
-								}}
+								}
+								className="map-styles-search-field"
+								onChange={e => setSearchValue(e.target.value)}
+								onClear={() => setSearchValue("")}
 							/>
-						</Flex>
-						{currentMapProvider !== HERE && <Divider className="mb-divider" />}
-						{currentMapProvider === HERE && (
-							<Flex data-testid="here-map-styles" gap={0} padding="0rem 1.23rem 1.23rem 1.23rem" wrap="wrap">
-								{HERE_STYLES.map(({ id, image, name }) => (
-									<Flex
-										data-testid={`map-style-item-${name}`}
-										key={id}
-										className={id === currentMapStyle ? "mb-style-container selected" : "mb-style-container"}
-										onClick={() => onChangeStyle(id)}
-									>
-										<Flex gap={0} position="relative">
-											{isLoadingImg && <Placeholder position="absolute" width="82px" height="82px" />}
-											<img src={image} alt={name} onLoad={() => setIsLoadingImg(false)} />
-										</Flex>
-										<TextEl marginTop="0.62rem" text={name} />
-									</Flex>
-								))}
-							</Flex>
-						)}
-						{/* Grab */}
-						{isGrabVisible && (
-							<>
-								{currentMapProvider === HERE && <Divider className="mb-divider" />}
-								<Flex
-									data-testid="map-data-provider-grab"
-									className={
-										currentMapProvider === GRAB ? "map-data-provider selected-map-data-provider" : "map-data-provider"
-									}
-									onClick={() => _handleMapProviderChange(GRAB)}
-								>
-									<TextEl fontSize="1.23rem" lineHeight="2.15rem" text={`${GRAB}Maps`} />
-									<Radio
-										data-testid="map-provider-radio-button-grab"
-										value={GRAB}
-										checked={currentMapProvider === GRAB}
-										onChange={e => {
-											e.preventDefault();
-											e.stopPropagation();
-											_handleMapProviderChange(GRAB);
-										}}
-									/>
+							<Flex className="filter-container">
+								<Flex className="filter-icon-wrapper" onClick={() => setShowFilter(show => !show)}>
+									<IconFilter className={hasAnyFilterSelected ? "filter-icon live" : "filter-icon"} />
+									<span className={hasAnyFilterSelected ? "filter-bubble live" : "filter-bubble"} />
 								</Flex>
-								{currentMapProvider === GRAB && (
-									<Flex data-testid="grab-map-styles" gap={0} padding="0rem 1.23rem 1.23rem 1.23rem" wrap="wrap">
-										{GRAB_STYLES.map(({ id, image, name }) => (
-											<Flex
-												data-testid={`map-style-item-${name}`}
-												key={id}
-												className={id === currentMapStyle ? "mb-style-container selected" : "mb-style-container"}
-												onClick={() => onChangeStyle(id)}
-											>
-												<Flex gap={0} position="relative">
-													{isLoadingImg && <Placeholder position="absolute" width="82px" height="82px" />}
-													<img src={image} alt={name} onLoad={() => setIsLoadingImg(false)} />
-												</Flex>
-												<TextEl marginTop="0.62rem" text={name} />
-											</Flex>
+							</Flex>
+						</Flex>
+						{showFilter && (
+							<Flex className="maps-filter-container" direction="column">
+								{Object.entries(filters).map(([key, value]) => (
+									<Flex key={key} direction="column">
+										<Text as="strong" fontWeight={700} fontSize="1em">
+											{key}
+										</Text>
+										{value.map((item: string, i) => (
+											<CheckboxField
+												className="filters-checkbox"
+												size={"large"}
+												key={i}
+												label={item === GRAB ? `${item}Maps` : item}
+												name={item}
+												value={item}
+												checked={selectedFilters[key as keyof SelectedFilters].includes(item)}
+												onChange={e => handleFilterChange(e, key)}
+											/>
 										))}
 									</Flex>
-								)}
-							</>
+								))}
+							</Flex>
 						)}
 					</Flex>
+					{!showFilter && (
+						<Flex gap={0} direction="column" className="maps-container">
+							<Flex data-testid="esri-map-styles" gap={0} padding="0 0 1.23rem 0" wrap="wrap">
+								{searchAndFilteredResults.map((item, i) =>
+									"title" in item ? (
+										<Flex key={i} width={"100%"} direction={"column"}>
+											{i !== 0 && <Divider margin="0 1rem" className="mb-divider" />}
+											<Text as="strong" fontWeight={700} fontSize="1em" padding={"0.6rem 1.2rem 0.4rem"}>
+												{item.title}
+											</Text>
+										</Flex>
+									) : (
+										(item.filters?.provider !== GRAB || (item.filters?.provider === GRAB && isGrabVisible)) && (
+											<Flex key={i} marginBottom={"1.2rem"}>
+												<Flex
+													data-testid={`map-style-item-${item.name}`}
+													className={item.id === currentMapStyle ? "mb-style-container selected" : "mb-style-container"}
+													onClick={() => onChangeStyle(item.id, item.filters?.provider)}
+												>
+													<Flex gap={0} position="relative">
+														{isLoadingImg && <Placeholder position="absolute" width="82px" height="82px" />}
+														<img src={item.image} alt={item.name} onLoad={() => setIsLoadingImg(false)} />
+													</Flex>
+													<TextEl marginTop="0.62rem" text={item.name} />
+												</Flex>
+											</Flex>
+										)
+									)
+								)}
+							</Flex>
+						</Flex>
+					)}
 				</Card>
 			)}
 		</>
