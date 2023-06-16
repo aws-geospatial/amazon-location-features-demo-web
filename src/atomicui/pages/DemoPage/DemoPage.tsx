@@ -7,6 +7,7 @@ import { Flex, Text, View } from "@aws-amplify/ui-react";
 import { IconLocateMe, LogoDark, LogoLight } from "@demo/assets";
 import {
 	ConnectAwsAccountModal,
+	GrabConfirmationModal,
 	ConfirmationModal as InformationModal,
 	MapButtons,
 	SignInModal,
@@ -21,8 +22,9 @@ import {
 	Sidebar,
 	TrackingBox
 } from "@demo/atomicui/organisms";
+import { DemoPlaceholderPage } from "@demo/atomicui/pages";
 import { showToast } from "@demo/core";
-import appConfig from "@demo/core/constants/appConfig";
+import { appConfig } from "@demo/core/constants";
 import {
 	useAmplifyAuth,
 	useAmplifyMap,
@@ -35,13 +37,15 @@ import {
 	useMediaQuery,
 	usePersistedData
 } from "@demo/hooks";
-import { ToastType } from "@demo/types";
+import { EsriMapEnum, GrabMapEnum, HereMapEnum, MapProviderEnum, ShowStateType, ToastType } from "@demo/types";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { getCurrentLocation } from "@demo/utils/getCurrentLocation";
 import { Signer } from "aws-amplify";
 import { differenceInMilliseconds } from "date-fns";
+import { LngLatBoundsLike } from "mapbox-gl";
 import { omit } from "ramda";
 import {
+	AttributionControl,
 	GeolocateControl,
 	GeolocateControlRef,
 	GeolocateErrorEvent,
@@ -56,11 +60,12 @@ import "./styles.scss";
 
 const {
 	PERSIST_STORAGE_KEYS: { SHOULD_CLEAR_CREDENTIALS, GEO_LOCATION_ALLOWED },
-	AMAZON_LOCATION_TERMS_AND_CONDITIONS,
-	ROUTES: { DEMO }
+	ROUTES: { DEMO },
+	MAP_RESOURCES: { MAX_BOUNDS, AMAZON_HQ, GRAB_SUPPORTED_AWS_REGIONS },
+	LINKS: { AMAZON_LOCATION_TERMS_AND_CONDITIONS }
 } = appConfig;
 const initShow = {
-	loader: true,
+	gridLoader: true,
 	sidebar: false,
 	routeBox: false,
 	signInModal: false,
@@ -70,25 +75,15 @@ const initShow = {
 	settings: false,
 	stylesCard: false,
 	trackingDisclaimerModal: false,
-	about: false
+	about: false,
+	grabDisclaimerModal: false,
+	mapStyle: undefined
 };
 let interval: NodeJS.Timer | undefined;
 let timeout: NodeJS.Timer | undefined;
 
 const DemoPage: React.FC = () => {
-	const [show, setShow] = React.useState<{
-		loader: boolean;
-		sidebar: boolean;
-		routeBox: boolean;
-		signInModal: boolean;
-		connectAwsAccount: boolean;
-		geofenceBox: boolean;
-		trackingBox: boolean;
-		settings: boolean;
-		stylesCard: boolean;
-		trackingDisclaimerModal: boolean;
-		about: boolean;
-	}>(initShow);
+	const [show, setShow] = React.useState<ShowStateType>(initShow);
 	const [height, setHeight] = React.useState(window.innerHeight);
 	const mapViewRef = useRef<MapRef | null>(null);
 	const geolocateControlRef = useRef<GeolocateControlRef | null>(null);
@@ -100,36 +95,42 @@ const DemoPage: React.FC = () => {
 		authTokens,
 		setAuthTokens,
 		onLogout,
-		handleCurrentSession
+		handleCurrentSession,
+		switchToAsiaRegionStack,
+		isUserAwsAccountConnected,
+		switchToDefaultRegionStack
 	} = useAmplifyAuth();
 	const { locationClient, createLocationClient, iotClient, createIotClient, resetStore: resetAwsStore } = useAws();
 	const { attachPolicy } = useAwsIot();
 	const {
+		mapProvider: currentMapProvider,
+		setMapProvider,
+		setMapStyle,
+		isCurrentLocationDisabled,
+		setIsCurrentLocationDisabled
+	} = useAmplifyMap();
+	const {
 		mapStyle: currentMapStyle,
 		currentLocationData,
 		setCurrentLocation,
-		isAutomaticMapUnit,
-		setAutomaticMapUnit
-	} = useAmplifyMap();
-	const {
-		setViewpoint,
-		setMarker,
-		marker,
-		selectedMarker,
-		suggestions,
 		viewpoint,
-		bound,
-		clearPoiList,
-		zoom,
-		setZoom,
-		setSelectedMarker
-	} = useAwsPlace();
+		setViewpoint,
+		isAutomaticMapUnit,
+		setAutomaticMapUnit,
+		setAttributionText
+	} = useAmplifyMap();
+	const { setMarker, marker, selectedMarker, suggestions, bound, clearPoiList, zoom, setZoom, setSelectedMarker } =
+		useAwsPlace();
 	const { routeData, directions, resetStore: resetAwsRouteStore, setRouteData } = useAwsRoute();
 	const { resetStore: resetAwsGeofenceStore } = useAwsGeofence();
 	const { isEditingRoute, trackerPoints, setTrackerPoints, resetStore: resetAwsTrackingStore } = useAwsTracker();
 	const { showWelcomeModal, setShowWelcomeModal } = usePersistedData();
 	const isDesktop = useMediaQuery("(min-width: 1024px)");
 	const shouldClearCredentials = localStorage.getItem(SHOULD_CLEAR_CREDENTIALS) === "true";
+	const isGrabVisible = useMemo(
+		() => !isUserAwsAccountConnected || (isUserAwsAccountConnected && GRAB_SUPPORTED_AWS_REGIONS.includes(region)),
+		[isUserAwsAccountConnected, region]
+	);
 
 	useEffect(() => {
 		if (isAutomaticMapUnit) {
@@ -251,41 +252,44 @@ const DemoPage: React.FC = () => {
 			mapViewRef.current?.fitBounds(bound as [number, number, number, number]);
 		} else if (show.routeBox && routeData?.Summary.RouteBBox) {
 			const boundingBox = routeData.Summary.RouteBBox;
+			const options = isDesktop
+				? {
+						padding: {
+							top: 200,
+							bottom: 200,
+							left: 450,
+							right: 200
+						},
+						speed: 5,
+						linear: false
+				  }
+				: {
+						padding: {
+							top: 235,
+							bottom: 30,
+							left: 60,
+							right: 70
+						},
+						speed: 5,
+						linear: false
+				  };
 			isDesktop
 				? mapViewRef.current?.fitBounds(
 						[
 							[boundingBox[0], boundingBox[1]],
 							[boundingBox[2], boundingBox[3]]
 						],
-						{
-							padding: {
-								top: 200,
-								bottom: 200,
-								left: 450,
-								right: 200
-							},
-							speed: 5,
-							linear: false
-						}
+						options
 				  )
 				: mapViewRef.current?.fitBounds(
 						[
 							[boundingBox[0], boundingBox[1]],
 							[boundingBox[2], boundingBox[3]]
 						],
-						{
-							padding: {
-								top: 235,
-								bottom: 30,
-								left: 60,
-								right: 70
-							},
-							speed: 5,
-							linear: false
-						}
+						options
 				  );
 		}
-	}, [suggestions, bound, show.routeBox, routeData, isDesktop]);
+	}, [suggestions, bound, show.routeBox, routeData, isDesktop, currentMapProvider]);
 
 	useEffect(() => {
 		if (directions) setShow(s => ({ ...s, routeBox: true }));
@@ -293,11 +297,33 @@ const DemoPage: React.FC = () => {
 
 	const onLoad = useCallback(() => {
 		clearPoiList();
-		geolocateControlRef.current?.trigger();
+		!isCurrentLocationDisabled && geolocateControlRef.current?.trigger();
 		routeData && setRouteData(routeData);
-	}, [clearPoiList, routeData, setRouteData]);
+	}, [clearPoiList, isCurrentLocationDisabled, routeData, setRouteData]);
 
-	const getCurrentGeoLocation = useCallback(() => getCurrentLocation(setCurrentLocation), [setCurrentLocation]);
+	const getCurrentGeoLocation = useCallback(() => {
+		if (GRAB_SUPPORTED_AWS_REGIONS.includes(region)) {
+			if (isCurrentLocationDisabled) {
+				showToast({
+					content:
+						"Your current location is outside countries supported by Grab. Currently, Grab supports Malaysia, Philippines, Thailand, Singapore, Vietnam, Indonesia, Myanmar, Cambodia",
+					type: ToastType.INFO
+				});
+				mapViewRef.current?.flyTo({ center: [AMAZON_HQ.SG.longitude, AMAZON_HQ.SG.latitude], zoom: 15 });
+			} else {
+				getCurrentLocation(setCurrentLocation, setViewpoint, currentMapProvider, setIsCurrentLocationDisabled);
+			}
+		} else {
+			getCurrentLocation(setCurrentLocation, setViewpoint, currentMapProvider, setIsCurrentLocationDisabled);
+		}
+	}, [
+		region,
+		isCurrentLocationDisabled,
+		setCurrentLocation,
+		setViewpoint,
+		currentMapProvider,
+		setIsCurrentLocationDisabled
+	]);
 
 	useEffect(() => {
 		if ("permissions" in navigator) {
@@ -378,14 +404,6 @@ const DemoPage: React.FC = () => {
 
 	const locationError = useMemo(() => !!currentLocationData?.error, [currentLocationData]);
 
-	const resetAppState = () => {
-		clearPoiList();
-		resetAwsRouteStore();
-		resetAwsGeofenceStore();
-		resetAwsTrackingStore();
-		setShow(s => ({ ...initShow, stylesCard: s.stylesCard, settings: s.settings }));
-	};
-
 	const transformRequest = useCallback(
 		(url: string, resourceType: string) => {
 			let newUrl = url;
@@ -409,7 +427,189 @@ const DemoPage: React.FC = () => {
 		[region, credentials]
 	);
 
-	return credentials ? (
+	const resetAppState = useCallback(() => {
+		clearPoiList();
+		resetAwsRouteStore();
+		resetAwsGeofenceStore();
+		resetAwsTrackingStore();
+		setShow(s => ({ ...initShow, stylesCard: s.stylesCard, settings: s.settings }));
+	}, [clearPoiList, resetAwsRouteStore, resetAwsGeofenceStore, resetAwsTrackingStore]);
+
+	const handleCurrentLocationAndViewpoint = useCallback(
+		(switchToGrab = true) => {
+			if (switchToGrab) {
+				/* When switching to Grab */
+				if (currentLocationData?.currentLocation) {
+					/* If current location data exists */
+					const { latitude, longitude } = currentLocationData.currentLocation;
+					const [westBound, southBound, eastBound, northBound] = MAX_BOUNDS.GRAB;
+					const isWithinBounds =
+						latitude >= southBound && latitude <= northBound && longitude >= westBound && longitude <= eastBound;
+
+					if (!isWithinBounds) {
+						/* If current location lies outside Grab MAX_BOUNDS */
+						setIsCurrentLocationDisabled(true);
+						setViewpoint({ latitude: AMAZON_HQ.SG.latitude, longitude: AMAZON_HQ.SG.longitude });
+						setZoom(15);
+						mapViewRef.current?.flyTo({
+							center: [AMAZON_HQ.SG.longitude, AMAZON_HQ.SG.latitude]
+						});
+					}
+				} else {
+					/* If current location data doesn't exists */
+					setViewpoint({ latitude: AMAZON_HQ.SG.latitude, longitude: AMAZON_HQ.SG.longitude });
+					setZoom(15);
+					mapViewRef.current?.flyTo({
+						center: [AMAZON_HQ.SG.longitude, AMAZON_HQ.SG.latitude]
+					});
+				}
+			} else {
+				/* When switching from Grab */
+				if (currentLocationData?.currentLocation && isCurrentLocationDisabled) {
+					const { latitude, longitude } = currentLocationData.currentLocation;
+					setIsCurrentLocationDisabled(false);
+					setViewpoint({ latitude, longitude });
+					setZoom(15);
+					mapViewRef.current?.flyTo({ center: [longitude, latitude] });
+				} else {
+					setViewpoint({ latitude: AMAZON_HQ.US.latitude, longitude: AMAZON_HQ.US.longitude });
+					setZoom(15);
+					mapViewRef.current?.flyTo({
+						center: [AMAZON_HQ.US.longitude, AMAZON_HQ.US.latitude]
+					});
+				}
+			}
+		},
+		[currentLocationData, setViewpoint, setZoom, setIsCurrentLocationDisabled, isCurrentLocationDisabled]
+	);
+
+	const onMapProviderChange = useCallback(
+		(mapProvider: MapProviderEnum) => {
+			setShow(s => ({ ...s, gridLoader: true }));
+
+			if (mapProvider === MapProviderEnum.GRAB) {
+				/* Switching from different map provider and style to Grab map provider and style */
+				setShow(s => ({ ...s, grabDisclaimerModal: true }));
+			} else {
+				if (currentMapProvider === MapProviderEnum.GRAB) {
+					/* Switching from Grab map provider to different map provider and style */
+					if (!isUserAwsAccountConnected) {
+						switchToDefaultRegionStack();
+						resetAwsStore();
+						setIsCurrentLocationDisabled(false);
+					}
+
+					setMapProvider(mapProvider);
+					setMapStyle(mapProvider === MapProviderEnum.ESRI ? EsriMapEnum.ESRI_LIGHT : HereMapEnum.HERE_EXPLORE);
+					handleCurrentLocationAndViewpoint(false);
+				} else {
+					/* Switching between Esri and HERE map provider and style */
+					setMapProvider(mapProvider);
+					setMapStyle(mapProvider === MapProviderEnum.ESRI ? EsriMapEnum.ESRI_LIGHT : HereMapEnum.HERE_EXPLORE);
+				}
+
+				resetAppState();
+			}
+
+			setTimeout(() => {
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore: Unreachable code error
+				const el = document.getElementsByClassName("mapboxgl-ctrl-attrib-inner")[0]?.innerText || "";
+
+				if (!!el) {
+					setAttributionText(el);
+				}
+			}, 3000);
+		},
+		[
+			currentMapProvider,
+			isUserAwsAccountConnected,
+			switchToDefaultRegionStack,
+			resetAwsStore,
+			setIsCurrentLocationDisabled,
+			setMapProvider,
+			setMapStyle,
+			handleCurrentLocationAndViewpoint,
+			resetAppState,
+			setAttributionText
+		]
+	);
+
+	const onMapStyleChange = useCallback(
+		(mapStyle: EsriMapEnum | HereMapEnum | GrabMapEnum) => {
+			const splitArr = mapStyle.split(".");
+			const mapProviderFromStyle = splitArr[splitArr.length - 2] as MapProviderEnum;
+			setShow(s => ({ ...s, gridLoader: true }));
+
+			if (
+				(currentMapProvider === MapProviderEnum.ESRI && mapProviderFromStyle === MapProviderEnum.ESRI) ||
+				(currentMapProvider === MapProviderEnum.HERE && mapProviderFromStyle === MapProviderEnum.HERE) ||
+				(currentMapProvider === MapProviderEnum.GRAB && mapProviderFromStyle === MapProviderEnum.GRAB)
+			) {
+				/* No map provider switch required */
+				setMapStyle(mapStyle);
+			} else {
+				if (currentMapProvider === MapProviderEnum.GRAB) {
+					/* Switching from Grab map provider to different map provider and style */
+					if (!isUserAwsAccountConnected) {
+						switchToDefaultRegionStack();
+						resetAwsStore();
+						setIsCurrentLocationDisabled(false);
+					}
+
+					setMapProvider(mapProviderFromStyle);
+					setMapStyle(mapStyle);
+					handleCurrentLocationAndViewpoint(false);
+				} else if (mapProviderFromStyle === MapProviderEnum.GRAB) {
+					/* Switching from different map provider and style to Grab map provider and style */
+					setTimeout(() => setShow(s => ({ ...s, grabDisclaimerModal: true, mapStyle: mapStyle as GrabMapEnum })), 0);
+				} else {
+					/* Switching between Esri and HERE map provider and style */
+					setMapProvider(mapProviderFromStyle);
+					setMapStyle(mapStyle);
+				}
+
+				resetAppState();
+			}
+		},
+		[
+			currentMapProvider,
+			isUserAwsAccountConnected,
+			setMapStyle,
+			switchToDefaultRegionStack,
+			resetAwsStore,
+			setIsCurrentLocationDisabled,
+			handleCurrentLocationAndViewpoint,
+			setMapProvider,
+			resetAppState
+		]
+	);
+
+	const handleGrabMapChange = useCallback(() => {
+		setShow(s => ({ ...s, grabDisclaimerModal: false }));
+
+		if (!isUserAwsAccountConnected) {
+			switchToAsiaRegionStack();
+			resetAwsStore();
+		}
+
+		setMapProvider(MapProviderEnum.GRAB);
+		setMapStyle(show.mapStyle ? show.mapStyle : GrabMapEnum.GRAB_STANDARD_LIGHT);
+		setShow(s => ({ ...s, gridLoader: true }));
+		resetAppState();
+		handleCurrentLocationAndViewpoint();
+	}, [
+		isUserAwsAccountConnected,
+		switchToAsiaRegionStack,
+		resetAwsStore,
+		setMapProvider,
+		setMapStyle,
+		show,
+		resetAppState,
+		handleCurrentLocationAndViewpoint
+	]);
+
+	return !!credentials?.identityId ? (
 		<View style={{ height }}>
 			<Map
 				style={{ width: "100%", height: "100%" }}
@@ -418,21 +618,26 @@ const DemoPage: React.FC = () => {
 				maxTileCacheSize={100}
 				zoom={zoom}
 				initialViewState={
-					currentLocationData?.currentLocation
+					currentLocationData?.currentLocation && !isCurrentLocationDisabled
 						? { ...currentLocationData.currentLocation, zoom }
 						: { ...viewpoint, zoom }
 				}
 				mapStyle={currentMapStyle}
+				minZoom={2}
+				maxBounds={
+					currentMapProvider === MapProviderEnum.GRAB
+						? (MAX_BOUNDS.GRAB as LngLatBoundsLike)
+						: (MAX_BOUNDS.DEFAULT as LngLatBoundsLike)
+				}
 				onClick={handleMapClick}
 				onLoad={onLoad}
 				onZoom={({ viewState }) => setZoom(viewState.zoom)}
-				minZoom={2}
-				maxBounds={[-210, -80, 290, 85]}
 				onError={error => errorHandler(error.error)}
-				onIdle={() => show.loader && setShow(s => ({ ...s, loader: false }))}
+				onIdle={() => show.gridLoader && setShow(s => ({ ...s, gridLoader: false }))}
 				transformRequest={transformRequest}
+				attributionControl={false}
 			>
-				<View className={show.loader ? "loader-container" : ""}>
+				<View className={show.gridLoader ? "loader-container" : ""}>
 					{show.sidebar && (
 						<Sidebar
 							onCloseSidebar={() => setShow(s => ({ ...s, sidebar: false }))}
@@ -481,10 +686,13 @@ const DemoPage: React.FC = () => {
 						onOpenConnectAwsAccountModal={() => setShow(s => ({ ...s, connectAwsAccount: true }))}
 						onOpenSignInModal={() => setShow(s => ({ ...s, signInModal: true }))}
 						onShowGeofenceBox={() => setShow(s => ({ ...s, geofenceBox: true }))}
-						resetAppState={resetAppState}
+						isGrabVisible={isGrabVisible}
+						showGrabDisclaimerModal={show.grabDisclaimerModal}
+						onShowGridLoader={() => setShow(s => ({ ...s, gridLoader: true }))}
+						handleMapProviderChange={onMapProviderChange}
 					/>
-					{locationError ? (
-						<Flex className="location-disabled" onClick={getCurrentGeoLocation}>
+					{locationError || isCurrentLocationDisabled ? (
+						<Flex className="location-disabled" onClick={() => getCurrentGeoLocation()}>
 							<IconLocateMe />
 						</Flex>
 					) : (
@@ -522,17 +730,35 @@ const DemoPage: React.FC = () => {
 						showCompass={false}
 					/>
 				</View>
+				<AttributionControl
+					style={{
+						fontSize: "0.77rem",
+						borderRadius: "0.62rem",
+						marginRight: "0.77rem",
+						marginBottom: !isDesktop ? "2.77rem" : "0rem",
+						backgroundColor: currentMapStyle.toLowerCase().includes("dark")
+							? "rgba(0, 0, 0, 0.2)"
+							: "var(--white-color)",
+						color: currentMapStyle.toLowerCase().includes("dark") ? "var(--white-color)" : "var(--black-color)"
+					}}
+					compact={!isDesktop}
+				/>
 			</Map>
 			<WelcomeModal open={showWelcomeModal} onClose={() => setShowWelcomeModal(false)} />
 			<SignInModal open={show.signInModal} onClose={() => setShow(s => ({ ...s, signInModal: false }))} />
 			<ConnectAwsAccountModal
 				open={show.connectAwsAccount}
 				onClose={() => setShow(s => ({ ...s, connectAwsAccount: false }))}
+				handleCurrentLocationAndViewpoint={handleCurrentLocationAndViewpoint}
 			/>
 			<SettingsModal
 				open={show.settings}
 				onClose={() => setShow(s => ({ ...s, settings: false }))}
 				resetAppState={resetAppState}
+				isGrabVisible={isGrabVisible}
+				handleMapProviderChange={onMapProviderChange}
+				handleMapStyleChange={onMapStyleChange}
+				handleCurrentLocationAndViewpoint={handleCurrentLocationAndViewpoint}
 			/>
 			<AboutModal open={show.about} onClose={() => setShow(s => ({ ...s, about: false }))} />
 			<InformationModal
@@ -562,11 +788,18 @@ const DemoPage: React.FC = () => {
 				onConfirm={onEnableTracking}
 				hideCancelButton
 			/>
+			<GrabConfirmationModal
+				open={show.grabDisclaimerModal}
+				onClose={() => setShow(s => ({ ...s, grabDisclaimerModal: false, mapStyle: undefined }))}
+				onConfirm={handleGrabMapChange}
+			/>
 			<Flex className="logo-stroke-container">
 				{currentMapStyle.toLowerCase().includes("dark") ? <LogoDark /> : <LogoLight />}
 			</Flex>
 		</View>
-	) : null;
+	) : (
+		<DemoPlaceholderPage height={height} show={show} isGrabVisible={isGrabVisible} />
+	);
 };
 
 export default DemoPage;

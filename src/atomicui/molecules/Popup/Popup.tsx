@@ -7,7 +7,7 @@ import { Button, Flex, Placeholder, Text, View } from "@aws-amplify/ui-react";
 import { IconCar, IconClose, IconCopyPages, IconDirections, IconInfo } from "@demo/assets";
 import { TextEl } from "@demo/atomicui/atoms";
 import { useAmplifyMap, useAwsPlace, useAwsRoute, useMediaQuery } from "@demo/hooks";
-import { DistanceUnitEnum, MapProviderEnum, MapUnitEnum, SuggestionType } from "@demo/types";
+import { DistanceUnitEnum, MapProviderEnum, MapUnitEnum, SuggestionType, TravelMode } from "@demo/types";
 
 import { humanReadableTime } from "@demo/utils/dateTimeUtils";
 import { calculateGeodesicDistance } from "@demo/utils/geoCalculation";
@@ -18,7 +18,7 @@ import { Tooltip } from "react-tooltip";
 import "./styles.scss";
 
 const { METRIC } = MapUnitEnum;
-const { KILOMETERS, KILOMETERS_SHORT, MILES, MILES_SHORT } = DistanceUnitEnum;
+const { KILOMETERS, KILOMETERS_SHORT, METERS_SHORT, MILES, MILES_SHORT, FEET_SHORT } = DistanceUnitEnum;
 
 interface Props {
 	active: boolean;
@@ -28,7 +28,13 @@ interface Props {
 }
 const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 	const [routeData, setRouteData] = useState<CalculateRouteResponse>();
-	const { currentLocationData, mapProvider: currentMapProvider, mapUnit: currentMapUnit } = useAmplifyMap();
+	const {
+		currentLocationData,
+		viewpoint,
+		mapProvider: currentMapProvider,
+		mapUnit: currentMapUnit,
+		isCurrentLocationDisabled
+	} = useAmplifyMap();
 	const { clearPoiList } = useAwsPlace();
 	const { getRoute, setDirections, isFetchingRoute } = useAwsRoute();
 	const [longitude, latitude] = info.Place?.Geometry.Point as Position;
@@ -37,14 +43,30 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 	const geodesicDistance = useMemo(
 		() =>
 			calculateGeodesicDistance(
-				[
-					currentLocationData?.currentLocation?.longitude as number,
-					currentLocationData?.currentLocation?.latitude as number
-				],
+				currentLocationData?.currentLocation && !isCurrentLocationDisabled
+					? [
+							currentLocationData.currentLocation.longitude as number,
+							currentLocationData.currentLocation.latitude as number
+					  ]
+					: [viewpoint.longitude, viewpoint.latitude],
 				[longitude, latitude],
 				currentMapUnit === METRIC ? (KILOMETERS.toLowerCase() as Units) : (MILES.toLowerCase() as Units)
 			),
-		[currentLocationData, longitude, latitude, currentMapUnit]
+		[isCurrentLocationDisabled, viewpoint, currentLocationData, longitude, latitude, currentMapUnit]
+	);
+
+	const geodesicDistanceWithUnit = useMemo(
+		() =>
+			geodesicDistance
+				? currentMapUnit === METRIC
+					? geodesicDistance < 1
+						? `${geodesicDistance * 1000} ${METERS_SHORT}`
+						: `${geodesicDistance.toFixed(2)} ${KILOMETERS_SHORT}`
+					: geodesicDistance < 1
+					? `${parseInt((geodesicDistance * 5280).toString())} ${FEET_SHORT}`
+					: `${geodesicDistance.toFixed(2)} ${MILES_SHORT}`
+				: "",
+		[geodesicDistance, currentMapUnit]
 	);
 
 	/* Esri route can't be calculated when distance is greater than 400 km or 248.55 mi */
@@ -53,7 +75,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 			const maxDistance = currentMapUnit === METRIC ? 400 : 248.55;
 			return currentMapProvider === MapProviderEnum.ESRI && geodesicDistance >= maxDistance;
 		} else {
-			return true;
+			return false;
 		}
 	}, [geodesicDistance, currentMapUnit, currentMapProvider]);
 
@@ -65,17 +87,23 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 			] as Position,
 			DestinationPosition: [longitude, latitude],
 			DistanceUnit: currentMapUnit === METRIC ? KILOMETERS : MILES,
-			TravelMode: "Car"
+			TravelMode: TravelMode.CAR
 		};
 		const r = await getRoute(params as CalculateRouteRequest);
 		setRouteData(r);
 	}, [currentLocationData, longitude, latitude, currentMapUnit, getRoute]);
 
 	useEffect(() => {
-		if (!routeData && active && !isEsriLimitation) {
+		if (
+			!routeData &&
+			active &&
+			!isEsriLimitation &&
+			!!currentLocationData?.currentLocation &&
+			!isCurrentLocationDisabled
+		) {
 			loadRouteData();
 		}
-	}, [routeData, active, isEsriLimitation, loadRouteData]);
+	}, [routeData, active, isEsriLimitation, currentLocationData, isCurrentLocationDisabled, loadRouteData]);
 
 	const onClose = useCallback(async () => {
 		await select(undefined);
@@ -89,15 +117,22 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 	};
 
 	const renderRouteInfo = useMemo(() => {
-		if (currentLocationData?.error) {
+		if (currentLocationData?.error || isCurrentLocationDisabled) {
 			return (
 				<Flex data-testid="permission-denied-error-container" gap={3} alignItems="center">
-					<TextEl variation="info" text="Location permission denied" />
+					<TextEl
+						variation="info"
+						text={isCurrentLocationDisabled ? "Current location disabled" : "Current location permission denied"}
+					/>
 					<IconInfo
 						className="location-permission-denied-info-icon"
 						data-tooltip-id="location-permission-denied-info"
 						data-tooltip-place="top"
-						data-tooltip-content="Distance can't be calculate if location permission is not granted, kindly grant access to location from the URL bar or browser settings"
+						data-tooltip-content={
+							isCurrentLocationDisabled
+								? "Distance can't be calculated since your current location is outside countries supported by Grab. Currently, Grab supports Malaysia, Philippines, Thailand, Singapore, Vietnam, Indonesia, Myanmar, Cambodia"
+								: "Distance can't be calculate if location permission is not granted, kindly grant access to location from the URL bar or browser settings"
+						}
 					/>
 					<Tooltip id="location-permission-denied-info" />
 				</Flex>
@@ -105,11 +140,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 		} else if (isEsriLimitation) {
 			return (
 				<Flex data-testid="esri-limitation-message-container" gap={0} direction={"column"}>
-					<TextEl
-						variation="secondary"
-						fontFamily="AmazonEmber-Bold"
-						text={`${geodesicDistance} ${currentMapUnit === METRIC ? KILOMETERS_SHORT : MILES_SHORT}`}
-					/>
+					<TextEl variation="secondary" fontFamily="AmazonEmber-Bold" text={geodesicDistanceWithUnit} />
 					<TextEl
 						style={{ marginTop: "0px" }}
 						variation="info"
@@ -119,29 +150,20 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 					/>
 				</Flex>
 			);
-		} else if (currentMapProvider === MapProviderEnum.HERE && !routeData) {
+		} else if (!isFetchingRoute && !routeData) {
 			return (
 				<Flex data-testid="here-message-container" gap={0} direction={"column"}>
-					<TextEl
-						variation="secondary"
-						fontFamily="AmazonEmber-Bold"
-						text={`${geodesicDistance} ${currentMapUnit === METRIC ? KILOMETERS_SHORT : MILES_SHORT}`}
-					/>
+					<TextEl variation="secondary" fontFamily="AmazonEmber-Bold" text={geodesicDistanceWithUnit} />
 					<TextEl style={{ marginTop: "0px" }} variation="info" text="Route not found" />
 				</Flex>
 			);
 		} else {
-			const distance = routeData?.Summary.Distance.toFixed(2);
 			const timeInSeconds = routeData?.Summary.DurationSeconds || 0;
 
 			return (
 				<View data-testid="route-info-container" className="route-info">
-					{!isFetchingRoute && distance ? (
-						<TextEl
-							variation="secondary"
-							fontFamily="AmazonEmber-Bold"
-							text={`${distance} ${currentMapUnit === METRIC ? KILOMETERS_SHORT : MILES_SHORT}`}
-						/>
+					{!isFetchingRoute && geodesicDistanceWithUnit ? (
+						<TextEl variation="secondary" fontFamily="AmazonEmber-Bold" text={geodesicDistanceWithUnit} />
 					) : (
 						<Placeholder width={30} display="inline-block" />
 					)}
@@ -161,10 +183,10 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 		}
 	}, [
 		currentLocationData,
-		geodesicDistance,
+		isCurrentLocationDisabled,
+		geodesicDistanceWithUnit,
 		currentMapUnit,
 		isEsriLimitation,
-		currentMapProvider,
 		routeData,
 		isFetchingRoute
 	]);

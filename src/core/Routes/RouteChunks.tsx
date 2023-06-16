@@ -3,7 +3,7 @@
 
 import { lazy } from "react";
 
-import appConfig from "@demo/core/constants/appConfig";
+import { appConfig } from "@demo/core/constants";
 import { Navigate, RouteObject } from "react-router-dom";
 
 const { ERROR_BOUNDARY, DEFAULT, DEMO } = appConfig.ROUTES;

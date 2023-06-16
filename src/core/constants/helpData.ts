@@ -25,7 +25,7 @@ import {
 } from "@demo/assets";
 import { HelpAccordionEnum } from "@demo/types";
 
-export const helpData = [
+const helpData = [
 	{
 		title: HelpAccordionEnum.CREATE,
 		description:
@@ -135,3 +135,5 @@ export const helpData = [
 		]
 	}
 ];
+
+export default helpData;

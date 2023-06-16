@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button, CheckboxField, Divider, Flex, Link, Radio, Text, View } from "@aws-amplify/ui-react";
 import {
@@ -12,41 +12,58 @@ import {
 	IconPeopleArrows,
 	IconShuffle
 } from "@demo/assets";
-import { TextEl } from "@demo/atomicui/atoms";
-import { InputField, Modal } from "@demo/atomicui/molecules";
-import appConfig from "@demo/core/constants/appConfig";
-import connectAwsAccount from "@demo/core/constants/connectAwsAccount";
+import { DropdownEl, Modal, TextEl } from "@demo/atomicui/atoms";
+import { InputField } from "@demo/atomicui/molecules";
+import { appConfig, connectAwsAccountData } from "@demo/core/constants";
 import { useAmplifyAuth, useAmplifyMap, useAws, useAwsIot, usePersistedData } from "@demo/hooks";
 import {
 	ConnectFormValuesType,
 	EsriMapEnum,
+	GrabMapEnum,
 	HereMapEnum,
 	MapProviderEnum,
 	MapUnitEnum,
 	SettingOptionEnum,
 	SettingOptionItemType
 } from "@demo/types";
-
+import { transformCloudFormationLink } from "@demo/utils/transformCloudFormationLink";
 import "./styles.scss";
 
 const {
-	ESRI_STYLES,
-	HERE_STYLES,
-	CF_TEMPLATE,
+	ENV: { CF_TEMPLATE, REGION, REGION_ASIA },
 	ROUTES: { HELP },
-	AWS_TERMS_AND_CONDITIONS
+	MAP_RESOURCES: {
+		MAP_STYLES: { ESRI_STYLES, HERE_STYLES, GRAB_STYLES },
+		GRAB_SUPPORTED_AWS_REGIONS
+	},
+	LINKS: { AWS_TERMS_AND_CONDITIONS }
 } = appConfig;
-const { TITLE, TITLE_DESC, HOW_TO, STEP1, STEP1_DESC, STEP2, STEP2_DESC, STEP3, STEP3_DESC, AGREE } = connectAwsAccount;
+const { TITLE, TITLE_DESC, HOW_TO, STEP1, STEP1_DESC, STEP2, STEP2_DESC, STEP3, STEP3_DESC, AGREE, OPTIONS } =
+	connectAwsAccountData;
+const defaultRegion = OPTIONS.find(option => option.value === REGION) as { value: string; label: string };
+const defaultRegionAsia = OPTIONS.find(option => option.value === REGION_ASIA) as { value: string; label: string };
 const { IMPERIAL, METRIC } = MapUnitEnum;
-const { ESRI, HERE } = MapProviderEnum;
+const { ESRI, HERE, GRAB } = MapProviderEnum;
 
 interface SettingsModalProps {
 	open: boolean;
 	onClose: () => void;
 	resetAppState: () => void;
+	isGrabVisible: boolean;
+	handleMapProviderChange: (mapProvider: MapProviderEnum) => void;
+	handleMapStyleChange: (mapStyle: EsriMapEnum | HereMapEnum | GrabMapEnum) => void;
+	handleCurrentLocationAndViewpoint: (b: boolean) => void;
 }
 
-const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppState }) => {
+const SettingsModal: React.FC<SettingsModalProps> = ({
+	open,
+	onClose,
+	resetAppState,
+	isGrabVisible,
+	handleMapProviderChange,
+	handleMapStyleChange,
+	handleCurrentLocationAndViewpoint
+}) => {
 	const [selectedOption, setSelectedOption] = useState<SettingOptionEnum>(SettingOptionEnum.UNITS);
 	const {
 		isAutomaticMapUnit,
@@ -54,10 +71,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 		mapUnit: currentMapUnit,
 		setMapUnit,
 		mapProvider: currentMapProvider,
-		setMapProvider,
 		mapStyle: currentMapStyle,
-		setMapStyle,
-		setAttributionText
+		setMapProvider,
+		setMapStyle
 	} = useAmplifyMap();
 	const { defaultRouteOptions, setDefaultRouteOptions } = usePersistedData();
 	const [formValues, setFormValues] = useState<ConnectFormValuesType>({
@@ -67,6 +83,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 		UserPoolId: "",
 		WebSocketUrl: ""
 	});
+	const [cloudFormationLink, setCloudFormationLink] = useState(CF_TEMPLATE);
+	const [stackRegion, setStackRegion] = useState<{ value: string; label: string }>(defaultRegion);
 	const {
 		isUserAwsAccountConnected,
 		validateFormValues,
@@ -84,6 +102,15 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 	const keyArr = Object.keys(formValues);
 	const isAuthenticated = !!credentials?.authenticated;
 
+	useEffect(() => {
+		const newUrl = transformCloudFormationLink(REGION_ASIA);
+
+		if (currentMapProvider === MapProviderEnum.GRAB && cloudFormationLink !== newUrl) {
+			setCloudFormationLink(newUrl);
+			setStackRegion(defaultRegionAsia);
+		}
+	}, [currentMapProvider, cloudFormationLink]);
+
 	const handleAutoMapUnitChange = useCallback(() => {
 		setIsAutomaticMapUnit(true);
 		resetAppState();
@@ -98,40 +125,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 		[setIsAutomaticMapUnit, setMapUnit, resetAppState]
 	);
 
-	const onMapProviderChange = useCallback(
-		(mapProvider: MapProviderEnum) => {
-			setMapProvider(mapProvider === ESRI ? ESRI : HERE);
-			setMapStyle(mapProvider === ESRI ? EsriMapEnum.ESRI_LIGHT : HereMapEnum.HERE_CONTRAST);
-			resetAppState();
-			setTimeout(
-				() => setAttributionText(document.getElementsByClassName("mapboxgl-ctrl-attrib-inner")[0].innerHTML),
-				3000
-			);
-		},
-		[setMapProvider, setMapStyle, resetAppState, setAttributionText]
-	);
-
-	const onMapStyleChange = useCallback(
-		(mapStyle: EsriMapEnum | HereMapEnum) => {
-			if (
-				(currentMapProvider === ESRI && mapStyle.includes(ESRI)) ||
-				(currentMapProvider === HERE && mapStyle.includes(HERE))
-			) {
-				setMapStyle(mapStyle);
-			} else {
-				setMapProvider(currentMapProvider === ESRI ? HERE : ESRI);
-				setMapStyle(mapStyle);
-			}
-		},
-		[currentMapProvider, setMapStyle, setMapProvider]
-	);
-
 	const _onLogin = useCallback(async () => await onLogin(), [onLogin]);
-
-	const _onDisconnectAwsAccount = useCallback(
-		() => onDisconnectAwsAccount(resetAwsStore),
-		[onDisconnectAwsAccount, resetAwsStore]
-	);
 
 	const _onLogout = useCallback(async () => {
 		setAuthTokens(undefined);
@@ -168,6 +162,15 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 			webSocketUrl,
 			/* Success callback */
 			() => {
+				if (
+					currentMapProvider === MapProviderEnum.GRAB &&
+					!GRAB_SUPPORTED_AWS_REGIONS.includes(identityPoolId.split(":")[0])
+				) {
+					setMapProvider(MapProviderEnum.ESRI);
+					setMapStyle(EsriMapEnum.ESRI_LIGHT);
+					handleCurrentLocationAndViewpoint(false);
+				}
+
 				setConnectFormValues(formValues);
 				clearCredentials();
 				resetAwsStore();
@@ -177,6 +180,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 	}, [
 		formValues,
 		validateFormValues,
+		currentMapProvider,
+		setMapProvider,
+		setMapStyle,
+		handleCurrentLocationAndViewpoint,
 		setConnectFormValues,
 		clearCredentials,
 		resetAwsStore,
@@ -191,12 +198,18 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 		[currentMapProvider, currentMapStyle]
 	);
 
+	const _onSelect = (option: { value: string; label: string }) => {
+		const newUrl = transformCloudFormationLink(option.value);
+		setCloudFormationLink(newUrl);
+		setStackRegion(option);
+	};
+
 	const optionItems: Array<SettingOptionItemType> = useMemo(
 		() => [
 			{
 				id: SettingOptionEnum.UNITS,
 				title: SettingOptionEnum.UNITS,
-				defaultValue: currentMapUnit,
+				defaultValue: isAutomaticMapUnit ? "Automatic" : currentMapUnit,
 				icon: <IconPeopleArrows />,
 				detailsComponent: (
 					<Flex
@@ -205,7 +218,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 						direction="column"
 						padding="0rem 1.15rem"
 					>
-						<Flex gap={0} padding="1.08rem 0rem">
+						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
 							<Radio
 								data-testid="unit-automatic-radio"
 								value={"Automatic"}
@@ -213,9 +226,18 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 								onChange={handleAutoMapUnitChange}
 							>
 								<TextEl marginLeft="1.23rem" text={"Automatic"} />
+								<TextEl
+									variation="tertiary"
+									marginLeft="1.23rem"
+									text={
+										currentMapUnit === IMPERIAL
+											? "Based on your browser settings (Miles, pounds)"
+											: "Based on your browser settings (Kilometers, kilograms)"
+									}
+								/>
 							</Radio>
 						</Flex>
-						<Flex gap={0} padding="1.08rem 0rem">
+						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
 							<Radio
 								data-testid="unit-imperial-radio"
 								value={IMPERIAL}
@@ -226,7 +248,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 								<TextEl variation="tertiary" marginLeft="1.23rem" text={"Miles, pounds"} />
 							</Radio>
 						</Flex>
-						<Flex gap={0} padding="1.08rem 0rem">
+						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
 							<Radio
 								data-testid="unit-metric-radio"
 								value={METRIC}
@@ -252,21 +274,41 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 						direction="column"
 						padding="0rem 1.15rem"
 					>
-						<Flex gap={0} padding="1.08rem 0rem">
-							<Radio value={ESRI} checked={currentMapProvider === ESRI} onChange={() => onMapProviderChange(ESRI)}>
+						{/* Esri */}
+						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
+							<Radio
+								data-testid="data-provider-esri-radio"
+								value={ESRI}
+								checked={currentMapProvider === ESRI}
+								onChange={() => handleMapProviderChange(ESRI)}
+							>
 								<TextEl marginLeft="1.23rem" text={ESRI} />
 							</Radio>
 						</Flex>
-						<Flex gap={0} padding="1.08rem 0rem">
+						{/* HERE */}
+						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
 							<Radio
 								data-testid="data-provider-here-radio"
 								value={HERE}
 								checked={currentMapProvider === HERE}
-								onChange={() => onMapProviderChange(HERE)}
+								onChange={() => handleMapProviderChange(HERE)}
 							>
 								<TextEl marginLeft="1.23rem" text={HERE} />
 							</Radio>
 						</Flex>
+						{/* Grab */}
+						{isGrabVisible && (
+							<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
+								<Radio
+									data-testid="data-provider-grab-radio"
+									value={GRAB}
+									checked={currentMapProvider === GRAB}
+									onChange={() => handleMapProviderChange(GRAB)}
+								>
+									<TextEl marginLeft="1.23rem" text={`${GRAB}Maps`} />
+								</Radio>
+							</Flex>
+						)}
 					</Flex>
 				)
 			},
@@ -283,15 +325,16 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 						padding="0rem 1.15rem"
 						overflow="scroll"
 					>
+						{/* Esri */}
 						<Flex gap={0} direction="column" padding="0.82rem 0rem 1.23rem 0rem">
-							<TextEl fontSize="1rem" lineHeight="1.38rem" variation="tertiary" text="Esri" />
+							<TextEl fontSize="1rem" lineHeight="1.38rem" variation="tertiary" text={ESRI} />
 							<Flex className="sm-styles-container">
 								{ESRI_STYLES.map(({ id, image, name }) => (
 									<Flex
 										data-testid="esri-map-style"
 										key={id}
 										className={id === currentMapStyle ? "sm-style selected" : "sm-style"}
-										onClick={() => onMapStyleChange(id)}
+										onClick={() => handleMapStyleChange(id)}
 									>
 										<img src={image} />
 										<TextEl marginTop="0.62rem" text={name} />
@@ -299,16 +342,17 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 								))}
 							</Flex>
 						</Flex>
+						{/* HERE */}
 						<Divider className="styles-divider" />
 						<Flex gap={0} direction="column" padding="1.31rem 0rem 1.23rem 0rem">
-							<TextEl fontSize="1rem" lineHeight="1.38rem" variation="tertiary" text="HERE" />
+							<TextEl fontSize="1rem" lineHeight="1.38rem" variation="tertiary" text={HERE} />
 							<Flex className="sm-styles-container">
 								{HERE_STYLES.map(({ id, image, name }) => (
 									<Flex
 										data-testid="here-map-style"
 										key={id}
 										className={id === currentMapStyle ? "sm-style selected" : "sm-style"}
-										onClick={() => onMapStyleChange(id)}
+										onClick={() => handleMapStyleChange(id)}
 									>
 										<img src={image} />
 										<TextEl marginTop="0.62rem" text={name} />
@@ -316,6 +360,28 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 								))}
 							</Flex>
 						</Flex>
+						{/* Grab */}
+						{isGrabVisible && (
+							<>
+								<Divider className="styles-divider" />
+								<Flex gap={0} direction="column" padding="1.31rem 0rem 1.23rem 0rem">
+									<TextEl fontSize="1rem" lineHeight="1.38rem" variation="tertiary" text={`${GRAB}Maps`} />
+									<Flex className="sm-styles-container">
+										{GRAB_STYLES.map(({ id, image, name }) => (
+											<Flex
+												data-testid="grab-map-style"
+												key={id}
+												className={id === currentMapStyle ? "sm-style selected" : "sm-style"}
+												onClick={() => handleMapStyleChange(id)}
+											>
+												<img src={image} />
+												<TextEl marginTop="0.62rem" text={name} />
+											</Flex>
+										))}
+									</Flex>
+								</Flex>
+							</>
+						)}
 					</Flex>
 				)
 			},
@@ -377,14 +443,18 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 							</Flex>
 						</Flex>
 						<Flex className="sm-aws-cloudformation-form">
-							<TextEl
-								fontFamily="AmazonEmber-Bold"
-								fontSize="1.23rem"
-								lineHeight="1.85rem"
-								marginBottom="1.38rem"
-								alignSelf="flex-start"
-								text={HOW_TO}
-							/>
+							<Flex
+								gap={0}
+								justifyContent="flex-start"
+								alignItems="center"
+								margin="1.85rem 0rem 1.85rem 0rem"
+								width="100%"
+							>
+								<Text className="bold" fontSize="1.08rem">
+									{HOW_TO}
+								</Text>
+								<DropdownEl defaultOption={stackRegion} options={OPTIONS} onSelect={_onSelect} showSelected />
+							</Flex>
 							<Flex gap={0} marginBottom="1.85rem" alignSelf="flex-start">
 								<View className="step-number">
 									<TextEl fontFamily="AmazonEmber-Bold" text="1" />
@@ -392,7 +462,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 								<View>
 									<Flex gap={5}>
 										<Text className="bold">
-											<Link href={CF_TEMPLATE} target="_blank">
+											<Link href={cloudFormationLink} target="_blank">
 												Click here
 											</Link>
 											{STEP1}
@@ -436,7 +506,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 											width="100%"
 											backgroundColor="var(--red-color)"
 											marginTop="0.62rem"
-											onClick={_onDisconnectAwsAccount}
+											onClick={onDisconnectAwsAccount}
 										>
 											Disconnect AWS Account
 										</Button>
@@ -477,17 +547,18 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 		[
 			currentMapUnit,
 			isAutomaticMapUnit,
+			isGrabVisible,
 			handleAutoMapUnitChange,
 			onMapUnitChange,
 			currentMapProvider,
-			onMapProviderChange,
+			handleMapProviderChange,
 			selectedMapStyle,
 			currentMapStyle,
-			onMapStyleChange,
+			handleMapStyleChange,
 			defaultRouteOptions,
 			setDefaultRouteOptions,
 			isUserAwsAccountConnected,
-			_onDisconnectAwsAccount,
+			onDisconnectAwsAccount,
 			onConnect,
 			formValues,
 			isBtnEnabled,
@@ -495,7 +566,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, resetAppSt
 			onChangeFormValues,
 			isAuthenticated,
 			_onLogin,
-			_onLogout
+			_onLogout,
+			stackRegion,
+			cloudFormationLink
 		]
 	);
 

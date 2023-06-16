@@ -6,14 +6,14 @@ import React from "react";
 import { Button, Card, Flex, Text, View } from "@aws-amplify/ui-react";
 import { IconClose, IconCompass, IconGear, IconGeofence, IconInfo, IconLockSolid, IconRoute } from "@demo/assets";
 import { List, Logo } from "@demo/atomicui/atoms";
-import { sideBarMenuOptions } from "@demo/core/constants";
-import appConfig from "@demo/core/constants/appConfig";
-import { useAmplifyAuth, useAmplifyMap, useAws, useAwsIot } from "@demo/hooks";
+import { appConfig, marketingMenuOptionsData } from "@demo/core/constants";
+import { useAmplifyAuth, useAmplifyMap, useAwsIot } from "@demo/hooks";
 import { MapProviderEnum } from "@demo/types";
 import { useNavigate } from "react-router-dom";
 import { Tooltip } from "react-tooltip";
-
 import "./styles.scss";
+
+const sidebarData = marketingMenuOptionsData.filter(v => v.label !== "Demo");
 
 interface Props {
 	onCloseSidebar: () => void;
@@ -43,7 +43,6 @@ const Sidebar: React.FC<Props> = ({
 	const { isUserAwsAccountConnected, credentials, onLogin, onLogout, onDisconnectAwsAccount, setAuthTokens } =
 		useAmplifyAuth();
 	const { mapProvider } = useAmplifyMap();
-	const { resetStore: resetAwsStore } = useAws();
 	const { detachPolicy } = useAwsIot();
 	const navigate = useNavigate();
 	const isAuthenticated = !!credentials?.authenticated;
@@ -97,8 +96,6 @@ const Sidebar: React.FC<Props> = ({
 	};
 
 	const _onLogin = async () => await onLogin();
-
-	const _onDisconnectAwsAccount = () => onDisconnectAwsAccount(resetAwsStore);
 
 	return (
 		<Card data-testid="side-bar" className="side-bar">
@@ -167,7 +164,7 @@ const Sidebar: React.FC<Props> = ({
 					<Text>About</Text>
 				</Flex>
 			</View>
-			<List listArray={sideBarMenuOptions} className="verticle-list side-bar__external-menu" hideIcons />
+			<List listArray={sidebarData} className="verticle-list side-bar__external-menu" hideIcons />
 			<View className="button-wrapper">
 				{isUserAwsAccountConnected && (
 					<Button variation="primary" fontFamily="AmazonEmber-Bold" onClick={isAuthenticated ? _onLogout : _onLogin}>
@@ -185,7 +182,7 @@ const Sidebar: React.FC<Props> = ({
 						fontFamily="AmazonEmber-Bold"
 						className="disconnect-button"
 						marginTop="8px"
-						onClick={_onDisconnectAwsAccount}
+						onClick={onDisconnectAwsAccount}
 					>
 						Disconnect AWS Account
 					</Button>

@@ -5,24 +5,21 @@ import React, { useCallback, useMemo, useState } from "react";
 
 import { Button, Divider, Flex, Text } from "@aws-amplify/ui-react";
 import { IconPoweredByAws1 } from "@demo/assets";
-import { Modal } from "@demo/atomicui/molecules";
-import aboutModal from "@demo/core/constants/aboutModal";
-import appConfig from "@demo/core/constants/appConfig";
+import { Modal } from "@demo/atomicui/atoms";
+import { aboutModalData, appConfig } from "@demo/core/constants";
 import { useAmplifyMap } from "@demo/hooks";
 import { AboutOptionEnum, MapProviderEnum } from "@demo/types/Enums";
-
 import "./styles.scss";
 
 const {
-	ESRI_ATTRIBUTION_LINK,
-	HERE_ATTRIBUTION_LINK,
-	ROUTES: { SOFTWARE_ATTRIBUTIONS, TERMS }
+	ROUTES: { SOFTWARE_ATTRIBUTIONS, TERMS },
+	LINKS: { ESRI_ATTRIBUTION_LINK, HERE_ATTRIBUTION_LINK }
 } = appConfig;
 const {
 	ABOUT: { VERSION, VERSION_VALUE, BUILD, COPYRIGHT },
 	TERMS: { TERMS_PREFIX, TERMS_LINK_LABEL, TERMS_SUFFIX },
 	ATTRIBUTIONS: { PARTNER_ATTRIBUTION_TITLE, SOFTWARE_ATTRIBUTION_TITLE, SOFTWARE_ATTRIBUTION_DESC }
-} = aboutModal;
+} = aboutModalData;
 
 interface AboutModalProps {
 	open: boolean;

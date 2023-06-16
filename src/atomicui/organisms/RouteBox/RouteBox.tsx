@@ -7,9 +7,11 @@ import { Card, CheckboxField, Flex, Text, View } from "@aws-amplify/ui-react";
 import {
 	IconArrow,
 	IconArrowDownUp,
+	IconBicycleSolid,
 	IconCar,
 	IconClose,
 	IconDestination,
+	IconMotorcycleSolid,
 	IconMyLocation,
 	IconPin,
 	IconSearch,
@@ -20,12 +22,20 @@ import {
 
 import { NotFoundCard, StepCard } from "@demo/atomicui/molecules";
 import { useAmplifyMap, useAwsPlace, useAwsRoute, useMediaQuery, usePersistedData } from "@demo/hooks";
-import { DistanceUnitEnum, InputType, MapUnitEnum, RouteOptionsType, SuggestionType, TravelMode } from "@demo/types";
+import {
+	DistanceUnitEnum,
+	InputType,
+	MapProviderEnum,
+	MapUnitEnum,
+	RouteOptionsType,
+	SuggestionType,
+	TravelMode
+} from "@demo/types";
 
 import { humanReadableTime } from "@demo/utils/dateTimeUtils";
 import { CalculateRouteRequest, LineString, Place, Position } from "aws-sdk/clients/location";
 import { Layer, LayerProps, LngLat, MapRef, Marker as ReactMapGlMarker, Source } from "react-map-gl";
-
+import { Tooltip } from "react-tooltip";
 import "./styles.scss";
 
 const { METRIC } = MapUnitEnum;
@@ -53,7 +63,14 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 	const [isSearching, setIsSearching] = useState(false);
 	const [stepsData, setStepsData] = useState<Place[]>([]);
 	const [isCollapsed, setIsCollapsed] = useState(true);
-	const { currentLocationData, mapStyle, mapUnit: currentMapUnit } = useAmplifyMap();
+	const {
+		currentLocationData,
+		viewpoint,
+		mapStyle,
+		mapUnit: currentMapUnit,
+		isCurrentLocationDisabled,
+		mapProvider: currentMapProvider
+	} = useAmplifyMap();
 	const { search, getPlaceData } = useAwsPlace();
 	const {
 		setRoutePositions,
@@ -182,7 +199,10 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 		if (directions) {
 			directions.info.Place?.Geometry.Point &&
 				setValue({
-					from: !currentLocationData?.error && !directions.isEsriLimitation ? "My Location" : "",
+					from:
+						!currentLocationData?.error && !directions.isEsriLimitation && !isCurrentLocationDisabled
+							? "My Location"
+							: "",
 					to: directions.info.Place.Label
 						? directions.info.Place.Label
 						: `${directions.info.Place.Geometry.Point[1]}, ${directions.info.Place.Geometry.Point[0]}`
@@ -194,7 +214,14 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 				!currentLocationData?.error && calculateRouteData();
 			}, 1000);
 		}
-	}, [directions, currentLocationData?.error, setRoutePositions, calculateRouteData]);
+	}, [
+		directions,
+		isCurrentLocationDisabled,
+		viewpoint,
+		currentLocationData?.error,
+		setRoutePositions,
+		calculateRouteData
+	]);
 
 	const onClose = () => {
 		resetAwsRouteStore();
@@ -252,7 +279,59 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 		setRouteData(undefined);
 	};
 
-	const onClickRouteOptions = () => setExpandRouteOptions(!expandRouteOptions);
+	const onClickRouteOptions = useCallback(() => setExpandRouteOptions(!expandRouteOptions), [expandRouteOptions]);
+
+	const renderRouteOptionsContainer = useMemo(
+		() => (
+			<View
+				className={
+					inputFocused.from || inputFocused.to || !!routeData
+						? "route-options-container"
+						: "route-options-container bottom-border-radius"
+				}
+			>
+				{!expandRouteOptions ? (
+					<Text className="collapsed-route-options-text" onClick={onClickRouteOptions}>
+						Route Options
+					</Text>
+				) : (
+					<View className="expanded-route-options">
+						<Text className="text-1">Route Options</Text>
+						<Text className="text-2" onClick={onClickRouteOptions}>
+							Close
+						</Text>
+					</View>
+				)}
+				{expandRouteOptions && (
+					<View className="route-option-items">
+						<CheckboxField
+							className="option-item"
+							label="Avoid tolls"
+							name="Avoid tolls"
+							value="Avoid tolls"
+							checked={routeOptions.avoidTolls}
+							onChange={e => {
+								setRouteOptions({ ...routeOptions, avoidTolls: e.target.checked });
+								setRouteData(undefined);
+							}}
+						/>
+						<CheckboxField
+							className="option-item"
+							label="Avoid ferries"
+							name="Avoid ferries"
+							value="Avoid ferries"
+							checked={routeOptions.avoidFerries}
+							onChange={e => {
+								setRouteOptions({ ...routeOptions, avoidFerries: e.target.checked });
+								setRouteData(undefined);
+							}}
+						/>
+					</View>
+				)}
+			</View>
+		),
+		[inputFocused, routeData, expandRouteOptions, onClickRouteOptions, routeOptions, setRouteData]
+	);
 
 	const onSelectCurrentLocaiton = (type: InputType) => {
 		type === InputType.FROM && setValue({ ...value, from: isCurrentLocationSelected ? "" : "My Location" });
@@ -401,7 +480,9 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 					coordinates: [
 						routePositions.from
 							? routePositions.from
-							: [currentLocationData?.currentLocation?.longitude, currentLocationData?.currentLocation?.latitude],
+							: !isCurrentLocationDisabled
+							? [currentLocationData?.currentLocation?.longitude, currentLocationData?.currentLocation?.latitude]
+							: undefined,
 						routeData.Legs[0].StartPosition
 					] as LineString
 				}
@@ -482,7 +563,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 				</>
 			);
 		}
-	}, [routeData, routePositions, currentLocationData, mapRef]);
+	}, [routeData, routePositions, isCurrentLocationDisabled, currentLocationData, mapRef]);
 
 	return (
 		<>
@@ -496,22 +577,66 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 						className={travelMode === TravelMode.CAR ? "travel-mode selected" : "travel-mode"}
 						onClick={() => handleTravelModeChange(TravelMode.CAR)}
 					>
-						<IconCar />
+						<IconCar
+							data-tooltip-id="icon-car-tooltip"
+							data-tooltip-place="top"
+							data-tooltip-content={'Calculate route with "Car" as travel mode'}
+						/>
+						<Tooltip id="icon-car-tooltip" />
 					</View>
 					<View
 						data-testid="travel-mode-walking-icon-container"
 						className={travelMode === TravelMode.WALKING ? "travel-mode selected" : "travel-mode"}
 						onClick={() => handleTravelModeChange(TravelMode.WALKING)}
 					>
-						<IconWalking />
+						<IconWalking
+							data-tooltip-id="icon-walking-tooltip"
+							data-tooltip-place="top"
+							data-tooltip-content={'Calculate route with "Walking" as travel mode'}
+						/>
+						<Tooltip id="icon-walking-tooltip" />
 					</View>
-					<View
-						data-testid="travel-mode-truck-icon-container"
-						className={travelMode === TravelMode.TRUCK ? "travel-mode selected" : "travel-mode"}
-						onClick={() => handleTravelModeChange(TravelMode.TRUCK)}
-					>
-						<IconTruckSolid />
-					</View>
+					{currentMapProvider === MapProviderEnum.GRAB ? (
+						<>
+							<View
+								data-testid="travel-mode-bicycle-icon-container"
+								className={travelMode === TravelMode.BICYCLE ? "travel-mode selected" : "travel-mode"}
+								onClick={() => handleTravelModeChange(TravelMode.BICYCLE)}
+							>
+								<IconBicycleSolid
+									data-tooltip-id="icon-bicycle-tooltip"
+									data-tooltip-place="top"
+									data-tooltip-content={'Calculate route with "Bicycle" as travel mode'}
+								/>
+								<Tooltip id="icon-bicycle-tooltip" />
+							</View>
+							<View
+								data-testid="travel-mode-motorcycle-icon-container"
+								className={travelMode === TravelMode.MOTORCYCLE ? "travel-mode selected" : "travel-mode"}
+								onClick={() => handleTravelModeChange(TravelMode.MOTORCYCLE)}
+							>
+								<IconMotorcycleSolid
+									data-tooltip-id="icon-motorcycle-tooltip"
+									data-tooltip-place="top"
+									data-tooltip-content={'Calculate route with "Motorcycle" as travel mode'}
+								/>
+								<Tooltip id="icon-motorcycle-tooltip" />
+							</View>
+						</>
+					) : (
+						<View
+							data-testid="travel-mode-truck-icon-container"
+							className={travelMode === TravelMode.TRUCK ? "travel-mode selected" : "travel-mode"}
+							onClick={() => handleTravelModeChange(TravelMode.TRUCK)}
+						>
+							<IconTruckSolid
+								data-tooltip-id="icon-truck-tooltip"
+								data-tooltip-place="top"
+								data-tooltip-content={'Calculate route with "Truck" as travel mode'}
+							/>
+							<Tooltip id="icon-truck-tooltip" />
+						</View>
+					)}
 				</Flex>
 				<Flex className="from-to-container" gap={0}>
 					<Flex className="marker-container">
@@ -542,59 +667,15 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 						<IconArrowDownUp />
 					</Flex>
 				</Flex>
-				{travelMode !== TravelMode.WALKING && !isCollapsed && (
-					<View
-						className={
-							inputFocused.from || inputFocused.to || !!routeData
-								? "route-options-container"
-								: "route-options-container bottom-border-radius"
-						}
-					>
-						{!expandRouteOptions ? (
-							<Text className="collapsed-route-options-text" onClick={onClickRouteOptions}>
-								Route Options
-							</Text>
-						) : (
-							<View className="expanded-route-options">
-								<Text className="text-1">Route Options</Text>
-								<Text className="text-2" onClick={onClickRouteOptions}>
-									Close
-								</Text>
-							</View>
-						)}
-						{expandRouteOptions && (
-							<View className="route-option-items">
-								<CheckboxField
-									className="option-item"
-									label="Avoid tolls"
-									name="Avoid tolls"
-									value="Avoid tolls"
-									checked={routeOptions.avoidTolls}
-									onChange={e => {
-										setRouteOptions({ ...routeOptions, avoidTolls: e.target.checked });
-										setRouteData(undefined);
-									}}
-								/>
-								<CheckboxField
-									className="option-item"
-									label="Avoid ferries"
-									name="Avoid ferries"
-									value="Avoid ferries"
-									checked={routeOptions.avoidFerries}
-									onChange={e => {
-										setRouteOptions({ ...routeOptions, avoidFerries: e.target.checked });
-										setRouteData(undefined);
-									}}
-								/>
-							</View>
-						)}
-					</View>
-				)}
+				{[TravelMode.CAR, TravelMode.TRUCK].includes(travelMode as TravelMode) &&
+					!isCollapsed &&
+					renderRouteOptionsContainer}
 				<View className="search-results-container" maxHeight={window.innerHeight - 260}>
 					{(inputFocused.from || inputFocused.to) &&
 						(!placeData.from || !placeData.to) &&
 						currentLocationData?.currentLocation &&
-						!isCurrentLocationSelected && (
+						!isCurrentLocationSelected &&
+						!isCurrentLocationDisabled && (
 							<View
 								className="current-location-toggle-container"
 								onClick={() => onSelectCurrentLocaiton(inputFocused.from ? InputType.FROM : InputType.TO)}
@@ -630,13 +711,22 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 								<IconCar />
 							) : travelMode === TravelMode.TRUCK ? (
 								<IconTruckSolid />
-							) : (
+							) : travelMode === TravelMode.WALKING ? (
 								<IconWalking />
+							) : travelMode === TravelMode.BICYCLE ? (
+								<IconBicycleSolid />
+							) : (
+								<IconMotorcycleSolid />
 							)}
 							<View className="travel-and-distance">
 								<View className="selected-travel-mode">
 									<Text className="dark-text">
-										{travelMode === TravelMode.CAR || travelMode === TravelMode.TRUCK ? "Drive" : "Walk"}
+										{travelMode === TravelMode.CAR ||
+										travelMode === TravelMode.TRUCK ||
+										travelMode === TravelMode.BICYCLE ||
+										travelMode === TravelMode.MOTORCYCLE
+											? "Drive"
+											: "Walk"}
 									</Text>
 									<View className="separator" />
 									<Text className="grey-text">Selected</Text>

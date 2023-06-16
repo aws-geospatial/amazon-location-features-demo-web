@@ -3,15 +3,19 @@
 
 import { useMemo } from "react";
 
-import appConfig from "@demo/core/constants/appConfig";
+import { appConfig } from "@demo/core/constants";
 import { Auth } from "aws-amplify";
+
+const {
+	ROUTES: { DEMO }
+} = appConfig;
 
 const useAmplifyAuthService = () => {
 	return useMemo(
 		() => ({
 			fetchHostedUi: async (domain: string, userPoolWebClientId: string) =>
 				await fetch(
-					`https://${domain}/login?client_id=${userPoolWebClientId}&response_type=token&scope=email+openid+profile&redirect_uri=${window.location.origin}${appConfig.ROUTES.DEMO}`,
+					`https://${domain}/login?client_id=${userPoolWebClientId}&response_type=token&scope=email+openid+profile&redirect_uri=${window.location.origin}${DEMO}`,
 					{
 						method: "POST",
 						headers: {

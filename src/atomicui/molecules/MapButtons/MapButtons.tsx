@@ -6,12 +6,18 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Card, Divider, Flex, Placeholder, Radio, View } from "@aws-amplify/ui-react";
 import { IconClose, IconGeofencePlusSolid, IconInfoSolid, IconMapSolid } from "@demo/assets";
 import { TextEl } from "@demo/atomicui/atoms";
-import appConfig from "@demo/core/constants/appConfig";
+import { appConfig } from "@demo/core/constants";
 import { useAmplifyAuth, useAmplifyMap, useAwsGeofence } from "@demo/hooks";
-import { EsriMapEnum, HereMapEnum, MapProviderEnum } from "@demo/types";
+import { EsriMapEnum, GrabMapEnum, HereMapEnum, MapProviderEnum } from "@demo/types";
 import { Tooltip } from "react-tooltip";
-
 import "./styles.scss";
+
+const { ESRI, HERE, GRAB } = MapProviderEnum;
+const {
+	MAP_RESOURCES: {
+		MAP_STYLES: { ESRI_STYLES, HERE_STYLES, GRAB_STYLES }
+	}
+} = appConfig;
 
 interface MapButtonsProps {
 	openStylesCard: boolean;
@@ -20,11 +26,11 @@ interface MapButtonsProps {
 	onOpenConnectAwsAccountModal: () => void;
 	onOpenSignInModal: () => void;
 	onShowGeofenceBox: () => void;
-	resetAppState: () => void;
+	isGrabVisible: boolean;
+	showGrabDisclaimerModal: boolean;
+	onShowGridLoader: () => void;
+	handleMapProviderChange: (mapProvider: MapProviderEnum) => void;
 }
-
-const { ESRI_STYLES, HERE_STYLES } = appConfig;
-const { ESRI, HERE } = MapProviderEnum;
 
 const MapButtons: React.FC<MapButtonsProps> = ({
 	openStylesCard,
@@ -33,19 +39,16 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	onOpenConnectAwsAccountModal,
 	onOpenSignInModal,
 	onShowGeofenceBox,
-	resetAppState
+	isGrabVisible,
+	showGrabDisclaimerModal,
+	onShowGridLoader,
+	handleMapProviderChange
 }) => {
 	const [isLoadingImg, setIsLoadingImg] = useState(true);
 	const stylesCardRef = useRef<HTMLDivElement | null>(null);
 	const stylesCardTogglerRef = useRef<HTMLDivElement | null>(null);
 	const { credentials, isUserAwsAccountConnected } = useAmplifyAuth();
-	const {
-		mapProvider: currentMapProvider,
-		setMapProvider,
-		mapStyle: currentMapStyle,
-		setMapStyle,
-		setAttributionText
-	} = useAmplifyMap();
+	const { mapProvider: currentMapProvider, mapStyle: currentMapStyle, setMapStyle } = useAmplifyMap();
 	const { isAddingGeofence, setIsAddingGeofence } = useAwsGeofence();
 	const isAuthenticated = !!credentials?.authenticated;
 
@@ -55,12 +58,13 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 				stylesCardRef.current &&
 				!stylesCardRef.current.contains(ev.target as Node) &&
 				stylesCardTogglerRef.current &&
-				!stylesCardTogglerRef.current.contains(ev.target as Node)
+				!stylesCardTogglerRef.current.contains(ev.target as Node) &&
+				!showGrabDisclaimerModal
 			) {
 				setOpenStylesCard(false);
 			}
 		},
-		[setOpenStylesCard]
+		[showGrabDisclaimerModal, setOpenStylesCard]
 	);
 
 	useEffect(() => {
@@ -100,22 +104,16 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 		}
 	};
 
-	const onMapProviderChange = useCallback(
-		(mapProvider: MapProviderEnum) => {
-			setIsLoadingImg(true);
-			setMapProvider(mapProvider === ESRI ? ESRI : HERE);
-			setMapStyle(mapProvider === ESRI ? EsriMapEnum.ESRI_LIGHT : HereMapEnum.HERE_EXPLORE);
-			resetAppState();
-			setTimeout(
-				() => setAttributionText(document.getElementsByClassName("mapboxgl-ctrl-attrib-inner")[0].innerHTML),
-				3000
-			);
-		},
-		[setMapProvider, setMapStyle, resetAppState, setAttributionText]
-	);
+	const _handleMapProviderChange = (mapProvider: MapProviderEnum) => {
+		if (mapProvider !== currentMapProvider) {
+			// setIsLoadingImg(true);
+			handleMapProviderChange(mapProvider);
+		}
+	};
 
-	const onChangeStyle = (id: EsriMapEnum | HereMapEnum) => {
+	const onChangeStyle = (id: EsriMapEnum | HereMapEnum | GrabMapEnum) => {
 		if (id !== currentMapStyle) {
+			onShowGridLoader();
 			setMapStyle(id);
 		}
 	};
@@ -166,14 +164,15 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 						/>
 					</Flex>
 					<Flex gap={0} direction="column">
+						{/* Esri */}
 						<Flex
 							data-testid="map-data-provider-esri"
 							className={
 								currentMapProvider === ESRI ? "map-data-provider selected-map-data-provider" : "map-data-provider"
 							}
-							onClick={() => onMapProviderChange(ESRI)}
+							onClick={() => _handleMapProviderChange(ESRI)}
 						>
-							<TextEl fontSize="1.23rem" lineHeight="2.15rem" text="Esri" />
+							<TextEl fontSize="1.23rem" lineHeight="2.15rem" text={ESRI} />
 							<Radio
 								data-testid="map-provider-radio-button-esri"
 								value={ESRI}
@@ -181,7 +180,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 								onChange={e => {
 									e.preventDefault();
 									e.stopPropagation();
-									onMapProviderChange(ESRI);
+									_handleMapProviderChange(ESRI);
 								}}
 							/>
 						</Flex>
@@ -190,29 +189,30 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 							<Flex data-testid="esri-map-styles" gap={0} padding="0rem 1.23rem 1.23rem 1.23rem" wrap="wrap">
 								{ESRI_STYLES.map(({ id, image, name }) => (
 									<Flex
-										data-testid="map-style-item"
+										data-testid={`map-style-item-${name}`}
 										key={id}
 										className={id === currentMapStyle ? "mb-style-container selected" : "mb-style-container"}
 										onClick={() => onChangeStyle(id)}
 									>
 										<Flex gap={0} position="relative">
 											{isLoadingImg && <Placeholder position="absolute" width="82px" height="82px" />}
-											<img src={image} onLoad={() => setIsLoadingImg(false)} />
+											<img src={image} alt={name} onLoad={() => setIsLoadingImg(false)} />
 										</Flex>
 										<TextEl marginTop="0.62rem" text={name} />
 									</Flex>
 								))}
 							</Flex>
 						)}
+						{/* HERE */}
 						{currentMapProvider === ESRI && <Divider className="mb-divider" />}
 						<Flex
 							data-testid="map-data-provider-here"
 							className={
 								currentMapProvider === HERE ? "map-data-provider selected-map-data-provider" : "map-data-provider"
 							}
-							onClick={() => onMapProviderChange(HERE)}
+							onClick={() => _handleMapProviderChange(HERE)}
 						>
-							<TextEl fontSize="1.23rem" lineHeight="2.15rem" text="HERE" />
+							<TextEl fontSize="1.23rem" lineHeight="2.15rem" text={HERE} />
 							<Radio
 								data-testid="map-provider-radio-button-here"
 								value={HERE}
@@ -220,26 +220,71 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 								onChange={e => {
 									e.preventDefault();
 									e.stopPropagation();
-									onMapProviderChange(HERE);
+									_handleMapProviderChange(HERE);
 								}}
 							/>
 						</Flex>
+						{currentMapProvider !== HERE && <Divider className="mb-divider" />}
 						{currentMapProvider === HERE && (
 							<Flex data-testid="here-map-styles" gap={0} padding="0rem 1.23rem 1.23rem 1.23rem" wrap="wrap">
 								{HERE_STYLES.map(({ id, image, name }) => (
 									<Flex
+										data-testid={`map-style-item-${name}`}
 										key={id}
 										className={id === currentMapStyle ? "mb-style-container selected" : "mb-style-container"}
 										onClick={() => onChangeStyle(id)}
 									>
 										<Flex gap={0} position="relative">
 											{isLoadingImg && <Placeholder position="absolute" width="82px" height="82px" />}
-											<img src={image} alt={"FISH"} onLoad={() => setIsLoadingImg(false)} />
+											<img src={image} alt={name} onLoad={() => setIsLoadingImg(false)} />
 										</Flex>
 										<TextEl marginTop="0.62rem" text={name} />
 									</Flex>
 								))}
 							</Flex>
+						)}
+						{/* Grab */}
+						{isGrabVisible && (
+							<>
+								{currentMapProvider === HERE && <Divider className="mb-divider" />}
+								<Flex
+									data-testid="map-data-provider-grab"
+									className={
+										currentMapProvider === GRAB ? "map-data-provider selected-map-data-provider" : "map-data-provider"
+									}
+									onClick={() => _handleMapProviderChange(GRAB)}
+								>
+									<TextEl fontSize="1.23rem" lineHeight="2.15rem" text={`${GRAB}Maps`} />
+									<Radio
+										data-testid="map-provider-radio-button-grab"
+										value={GRAB}
+										checked={currentMapProvider === GRAB}
+										onChange={e => {
+											e.preventDefault();
+											e.stopPropagation();
+											_handleMapProviderChange(GRAB);
+										}}
+									/>
+								</Flex>
+								{currentMapProvider === GRAB && (
+									<Flex data-testid="grab-map-styles" gap={0} padding="0rem 1.23rem 1.23rem 1.23rem" wrap="wrap">
+										{GRAB_STYLES.map(({ id, image, name }) => (
+											<Flex
+												data-testid={`map-style-item-${name}`}
+												key={id}
+												className={id === currentMapStyle ? "mb-style-container selected" : "mb-style-container"}
+												onClick={() => onChangeStyle(id)}
+											>
+												<Flex gap={0} position="relative">
+													{isLoadingImg && <Placeholder position="absolute" width="82px" height="82px" />}
+													<img src={image} alt={name} onLoad={() => setIsLoadingImg(false)} />
+												</Flex>
+												<TextEl marginTop="0.62rem" text={name} />
+											</Flex>
+										))}
+									</Flex>
+								)}
+							</>
 						)}
 					</Flex>
 				</Card>

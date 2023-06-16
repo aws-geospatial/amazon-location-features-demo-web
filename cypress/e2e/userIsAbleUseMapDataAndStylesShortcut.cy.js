@@ -7,26 +7,25 @@ describe("Switch data provider and map styles", () => {
 	});
 
 	it("should allow user to switch between map styles from right side menu", { scrollBehavior: false }, () => {
-		cy.get(".map-styles-button > svg").click();
-		cy.wait(3000);
-		cy.contains("Streets").click();
+		cy.get('[data-testid="map-styles-button"]').click();
+
+		cy.get('[data-testid="map-data-provider-esri"]').should("have.class", "selected-map-data-provider");
+		cy.get('[data-testid="map-style-item-Streets"]').click();
 		cy.wait(5000);
-		cy.contains("Navigation").click();
+		cy.get('[data-testid="map-style-item-Streets"]').should("have.class", "selected");
+
+		cy.get('[data-testid="map-data-provider-here"]').click();
+		cy.get('[data-testid="map-data-provider-here"]').should("have.class", "selected-map-data-provider");
+		cy.get('[data-testid="map-style-item-Contrast"]').click();
 		cy.wait(5000);
-		cy.contains("Dark Gray").click();
+		cy.get('[data-testid="map-style-item-Contrast"]').should("have.class", "selected");
+
+		cy.get('[data-testid="map-data-provider-grab"]').click();
+		cy.get('[data-testid="confirmation-button"]').click();
 		cy.wait(5000);
-		cy.contains("Light Gray").click();
+		cy.get('[data-testid="map-data-provider-grab"]').should("have.class", "selected-map-data-provider");
+		cy.get('[data-testid="map-style-item-Dark"]').click();
 		cy.wait(5000);
-		cy.contains("Imagery").click();
-		cy.wait(5000);
-		cy.get('[type="radio"]').check({ force: true });
-		cy.wait(3000);
-		cy.contains("Contrast").click();
-		cy.wait(5000);
-		cy.contains("Explore Truck").click();
-		cy.wait(5000);
-		cy.contains("Hybrid").click();
-		cy.wait(5000);
-		cy.contains("Imagery").click();
+		cy.get('[data-testid="map-style-item-Dark"]').should("have.class", "selected");
 	});
 });

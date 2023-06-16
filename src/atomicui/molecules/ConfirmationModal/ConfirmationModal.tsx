@@ -4,7 +4,7 @@
 import React from "react";
 
 import { Button, Flex, Text } from "@aws-amplify/ui-react";
-import { Modal } from "@demo/atomicui/molecules";
+import { Modal } from "@demo/atomicui/atoms";
 import "./styles.scss";
 
 interface ConfirmationModalProps {
@@ -14,6 +14,8 @@ interface ConfirmationModalProps {
 	description?: string | React.ReactNode;
 	onConfirm: () => void;
 	confirmationText?: string;
+	showLearnMore?: boolean;
+	handleLeanMore?: () => void;
 	hideCancelButton?: boolean;
 	cancelationText?: string;
 }
@@ -25,6 +27,8 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 	description = "Are you sure?",
 	onConfirm,
 	confirmationText = "Continue",
+	showLearnMore = false,
+	handleLeanMore = () => {},
 	hideCancelButton = false,
 	cancelationText = "Cancel"
 }) => {
@@ -62,8 +66,19 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 					>
 						{confirmationText}
 					</Button>
+					{showLearnMore && (
+						<Flex
+							data-testid="confirmation-learn-more-button"
+							className="confirmation-learn-more-button"
+							onClick={handleLeanMore}
+						>
+							<Text className="bold" fontSize="1.08rem" textAlign="center">
+								Learn more
+							</Text>
+						</Flex>
+					)}
 					{!hideCancelButton && (
-						<Flex className="confirmation-cancel-button" onClick={onClose}>
+						<Flex data-testid="confirmation-cancel-button" className="confirmation-cancel-button" onClick={onClose}>
 							<Text className="bold" fontSize="1.08rem" textAlign="center">
 								{cancelationText}
 							</Text>

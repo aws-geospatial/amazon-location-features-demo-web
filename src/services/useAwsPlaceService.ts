@@ -3,9 +3,9 @@
 
 import { useMemo } from "react";
 
-import appConfig from "@demo/core/constants/appConfig";
-import { useAws } from "@demo/hooks";
-import { MapProviderEnum, ViewPointType } from "@demo/types";
+import { appConfig } from "@demo/core/constants";
+import { useAmplifyMap, useAws } from "@demo/hooks";
+import { MapProviderEnum } from "@demo/types";
 import {
 	GetPlaceRequest,
 	Position,
@@ -15,18 +15,28 @@ import {
 } from "aws-sdk/clients/location";
 
 const {
-	PLACE_INDEXES: { ESRI, HERE }
+	MAP_RESOURCES: {
+		PLACE_INDEXES: { ESRI, HERE, GRAB }
+	}
 } = appConfig;
 
-const useAwsPlaceService = (mapProvider: MapProviderEnum, viewpoint?: ViewPointType) => {
+const useAwsPlaceService = () => {
 	const { locationClient } = useAws();
+	const { mapProvider: currentMapProvider, viewpoint } = useAmplifyMap();
 
 	const config = useMemo(
 		() => ({
-			IndexName: mapProvider === MapProviderEnum.ESRI ? ESRI : HERE,
+			IndexName:
+				currentMapProvider === MapProviderEnum.ESRI
+					? ESRI
+					: currentMapProvider === MapProviderEnum.HERE
+					? HERE
+					: currentMapProvider === MapProviderEnum.GRAB
+					? GRAB
+					: "",
 			Language: "en"
 		}),
-		[mapProvider]
+		[currentMapProvider]
 	);
 
 	return useMemo(
@@ -34,7 +44,10 @@ const useAwsPlaceService = (mapProvider: MapProviderEnum, viewpoint?: ViewPointT
 			getPlaceSuggestions: async (Text: string) => {
 				const params: SearchPlaceIndexForSuggestionsRequest = {
 					...config,
-					BiasPosition: [viewpoint?.longitude as number, viewpoint?.latitude as number],
+					BiasPosition:
+						currentMapProvider !== MapProviderEnum.GRAB
+							? [viewpoint?.longitude as number, viewpoint?.latitude as number]
+							: undefined,
 					Text
 				};
 
@@ -51,7 +64,10 @@ const useAwsPlaceService = (mapProvider: MapProviderEnum, viewpoint?: ViewPointT
 			getPlacesByText: async (Text: string) => {
 				const params: SearchPlaceIndexForTextRequest = {
 					...config,
-					BiasPosition: [viewpoint?.longitude as number, viewpoint?.latitude as number],
+					BiasPosition:
+						currentMapProvider !== MapProviderEnum.GRAB
+							? [viewpoint?.longitude as number, viewpoint?.latitude as number]
+							: undefined,
 					Text
 				};
 
@@ -66,7 +82,7 @@ const useAwsPlaceService = (mapProvider: MapProviderEnum, viewpoint?: ViewPointT
 				return await locationClient?.searchPlaceIndexForPosition(params).promise();
 			}
 		}),
-		[config, locationClient, viewpoint]
+		[config, locationClient, currentMapProvider, viewpoint]
 	);
 };
 
