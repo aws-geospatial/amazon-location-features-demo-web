@@ -17,6 +17,7 @@ import {
 	HereImagery
 } from "@demo/assets";
 import {
+	AttributeEnum,
 	EsriMapEnum,
 	EsriMapStyleEnum,
 	GrabMapEnum,
@@ -25,6 +26,8 @@ import {
 	HereMapStyleEnum,
 	MapProviderEnum
 } from "@demo/types";
+
+import { TypeEnum } from "../../types/Enums";
 
 const getEnv = (key: string) => {
 	return import.meta.env[key];
@@ -123,37 +126,37 @@ const appConfig = {
 					id: EsriMapEnum.ESRI_LIGHT,
 					image: EsriLight,
 					name: "Light",
-					filters: { provider: MapProviderEnum.ESRI, attribute: ["Light"], type: ["Vector"] }
+					filters: { provider: MapProviderEnum.ESRI, attribute: [AttributeEnum.Light], type: [TypeEnum.Vector] }
 				},
 				{
 					id: EsriMapEnum.ESRI_STREET_MAP,
 					image: EsriStreets,
 					name: "Streets",
-					filters: { provider: MapProviderEnum.ESRI, attribute: ["Light"], type: ["Vector"] }
+					filters: { provider: MapProviderEnum.ESRI, attribute: [AttributeEnum.Light], type: [TypeEnum.Vector] }
 				},
 				{
 					id: EsriMapEnum.ESRI_NAVIGATION,
 					image: EsriNavigation,
 					name: "Navigation",
-					filters: { provider: MapProviderEnum.ESRI, attribute: ["Light"], type: ["Vector"] }
+					filters: { provider: MapProviderEnum.ESRI, attribute: [AttributeEnum.Light], type: [TypeEnum.Vector] }
 				},
 				{
 					id: EsriMapEnum.ESRI_DARK_GRAY_CANVAS,
 					image: EsriDarkGray,
 					name: "Dark Gray",
-					filters: { provider: MapProviderEnum.ESRI, attribute: ["Dark"], type: ["Vector"] }
+					filters: { provider: MapProviderEnum.ESRI, attribute: [AttributeEnum.Dark], type: [TypeEnum.Vector] }
 				},
 				{
 					id: EsriMapEnum.ESRI_LIGHT_GRAY_CANVAS,
 					image: EsriLightGray,
 					name: "Light Gray",
-					filters: { provider: MapProviderEnum.ESRI, attribute: ["Dark"], type: ["Vector"] }
+					filters: { provider: MapProviderEnum.ESRI, attribute: [AttributeEnum.Dark], type: [TypeEnum.Vector] }
 				},
 				{
 					id: EsriMapEnum.ESRI_IMAGERY,
 					image: EsriImagery,
 					name: "Imagery",
-					filters: { provider: MapProviderEnum.ESRI, attribute: ["Satellite"], type: ["Raster"] }
+					filters: { provider: MapProviderEnum.ESRI, attribute: [AttributeEnum.Satellite], type: [TypeEnum.Raster] }
 				}
 			],
 			HERE_STYLES: [
@@ -161,31 +164,39 @@ const appConfig = {
 					id: HereMapEnum.HERE_EXPLORE,
 					image: HereExplore,
 					name: "Explore",
-					filters: { provider: MapProviderEnum.HERE, attribute: ["Light"], type: ["Vector"] }
+					filters: { provider: MapProviderEnum.HERE, attribute: [AttributeEnum.Light], type: [TypeEnum.Vector] }
 				},
 				{
 					id: HereMapEnum.HERE_CONTRAST,
 					image: HereConrast,
 					name: "Contrast",
-					filters: { provider: MapProviderEnum.HERE, attribute: ["Dark", "3D"], type: ["Vector"] }
+					filters: {
+						provider: MapProviderEnum.HERE,
+						attribute: [AttributeEnum.Dark, AttributeEnum.ThreeD],
+						type: [TypeEnum.Vector]
+					}
 				},
 				{
 					id: HereMapEnum.HERE_EXPLORE_TRUCK,
 					image: HereExploreTruck,
 					name: "Explore Truck",
-					filters: { provider: MapProviderEnum.HERE, attribute: ["Truck"], type: ["Vector"] }
+					filters: { provider: MapProviderEnum.HERE, attribute: [AttributeEnum.Truck], type: [TypeEnum.Vector] }
 				},
 				{
 					id: HereMapEnum.HERE_HYBRID,
 					image: HereHybrid,
 					name: "Hybrid",
-					filters: { provider: MapProviderEnum.HERE, attribute: ["Satellite"], type: ["Raster", "Vector"] }
+					filters: {
+						provider: MapProviderEnum.HERE,
+						attribute: [AttributeEnum.Satellite],
+						type: [TypeEnum.Raster, TypeEnum.Vector]
+					}
 				},
 				{
 					id: HereMapEnum.HERE_IMAGERY,
 					image: HereImagery,
 					name: "Imagery",
-					filters: { provider: MapProviderEnum.HERE, attribute: ["Satellite"], type: ["Raster"] }
+					filters: { provider: MapProviderEnum.HERE, attribute: [AttributeEnum.Satellite], type: [TypeEnum.Raster] }
 				}
 			],
 			GRAB_STYLES: [
@@ -193,13 +204,13 @@ const appConfig = {
 					id: GrabMapEnum.GRAB_STANDARD_LIGHT,
 					image: GrabStandardLight,
 					name: "Light",
-					filters: { provider: MapProviderEnum.GRAB, attribute: ["Light"], type: ["Vector"] }
+					filters: { provider: MapProviderEnum.GRAB, attribute: [AttributeEnum.Light], type: [TypeEnum.Vector] }
 				},
 				{
 					id: GrabMapEnum.GRAB_STANDARD_DARK,
 					image: GrabStandardDark,
 					name: "Dark",
-					filters: { provider: MapProviderEnum.GRAB, attribute: ["Dark"], type: ["Vector"] }
+					filters: { provider: MapProviderEnum.GRAB, attribute: [AttributeEnum.Dark], type: [TypeEnum.Vector] }
 				}
 			]
 		},

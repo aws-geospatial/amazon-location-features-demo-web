@@ -8,7 +8,16 @@ import { IconClose, IconFilter, IconGeofencePlusSolid, IconMapSolid, IconSearch 
 import { TextEl } from "@demo/atomicui/atoms";
 import { appConfig } from "@demo/core/constants";
 import { useAmplifyAuth, useAmplifyMap, useAwsGeofence } from "@demo/hooks";
-import { AttributeEnum, EsriMapEnum, GrabMapEnum, HereMapEnum, MapProviderEnum, TypeEnum } from "@demo/types";
+import {
+	AttributeEnum,
+	EsriMapEnum,
+	GrabMapEnum,
+	HereMapEnum,
+	MapProviderEnum,
+	MapStyle,
+	MapStyleFilterTypes,
+	TypeEnum
+} from "@demo/types";
 import { Tooltip } from "react-tooltip";
 import "./styles.scss";
 
@@ -27,23 +36,6 @@ const filters = {
 	Type: Object.values(TypeEnum).map(value => value)
 };
 
-type SelectedFilters = {
-	Providers: string[];
-	Attribute: string[];
-	Type: string[];
-};
-
-interface MapStyle {
-	id: EsriMapEnum;
-	image: string;
-	name: string;
-	filters: {
-		provider: MapProviderEnum;
-		attribute: string[];
-		type: string[];
-	};
-}
-
 interface MapButtonsProps {
 	openStylesCard: boolean;
 	setOpenStylesCard: (b: boolean) => void;
@@ -54,7 +46,11 @@ interface MapButtonsProps {
 	isGrabVisible: boolean;
 	showGrabDisclaimerModal: boolean;
 	onShowGridLoader: () => void;
-	handleMapStyleChange: (id: EsriMapEnum | HereMapEnum | GrabMapEnum, mapProvider: MapProviderEnum) => void;
+	handleMapStyleChange: (id: EsriMapEnum | HereMapEnum | GrabMapEnum) => void;
+	searchValue: string;
+	setSearchValue: (s: string) => void;
+	selectedFilters: MapStyleFilterTypes;
+	setSelectedFilters: React.Dispatch<React.SetStateAction<MapStyleFilterTypes>>;
 }
 
 const MapButtons: React.FC<MapButtonsProps> = ({
@@ -67,20 +63,22 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	isGrabVisible,
 	showGrabDisclaimerModal,
 	onShowGridLoader,
-	handleMapStyleChange
-}) => {
-	const [isLoadingImg, setIsLoadingImg] = useState(true);
-	const [showFilter, setShowFilter] = useState(false);
-	const [searchValue, setSearchValue] = useState("");
-	const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>({
+	handleMapStyleChange,
+	searchValue = "",
+	setSearchValue,
+	selectedFilters = {
 		Providers: [],
 		Attribute: [],
 		Type: []
-	});
+	},
+	setSelectedFilters
+}) => {
+	const [isLoadingImg, setIsLoadingImg] = useState(true);
+	const [showFilter, setShowFilter] = useState(false);
 	const stylesCardRef = useRef<HTMLDivElement | null>(null);
 	const stylesCardTogglerRef = useRef<HTMLDivElement | null>(null);
 	const { credentials, isUserAwsAccountConnected } = useAmplifyAuth();
-	const { mapStyle: currentMapStyle, setMapStyle } = useAmplifyMap();
+	const { mapStyle: currentMapStyle } = useAmplifyMap();
 	const { isAddingGeofence, setIsAddingGeofence } = useAwsGeofence();
 	const isAuthenticated = !!credentials?.authenticated;
 
@@ -143,11 +141,10 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	// 	}
 	// };
 
-	const onChangeStyle = (id: EsriMapEnum | HereMapEnum | GrabMapEnum, mapProvider: MapProviderEnum) => {
+	const onChangeStyle = (id: EsriMapEnum | HereMapEnum | GrabMapEnum) => {
 		if (id !== currentMapStyle) {
 			onShowGridLoader();
-			// setMapStyle(id);
-			handleMapStyleChange(id, mapProvider);
+			handleMapStyleChange(id);
 		}
 	};
 
@@ -170,8 +167,6 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 		[]
 	);
 
-	const stylesWithTitles = addProviderTitle(MAP_STYLES, isGrabVisible);
-
 	/**
 	 * Filters and groups map styles based on the provided keyword and selected filters.
 	 *
@@ -183,7 +178,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	const searchStyles = (
 		styles: Array<MapStyle | { title: string }>,
 		keyword: string,
-		selectedFilters: SelectedFilters
+		selectedFilters: MapStyleFilterTypes
 	): Array<MapStyle | { title: string }> => {
 		const lowerCaseKeyword = keyword.toLowerCase();
 
@@ -241,7 +236,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>, filterCategory: string) => {
 		const { name, checked } = e.target;
 		setSelectedFilters(prevFilters => {
-			const key = filterCategory as keyof SelectedFilters;
+			const key = filterCategory as keyof MapStyleFilterTypes;
 			return {
 				...prevFilters,
 				[key]: checked ? [...prevFilters[key], name] : prevFilters[key].filter(item => item !== name)
@@ -249,6 +244,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 		});
 	};
 
+	const stylesWithTitles = addProviderTitle(MAP_STYLES, isGrabVisible);
 	const searchAndFilteredResults = searchStyles(stylesWithTitles, searchValue, selectedFilters);
 	const hasAnyFilterSelected =
 		!!selectedFilters.Providers.length || !!selectedFilters.Attribute.length || !!selectedFilters.Type.length;
@@ -308,6 +304,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 										<IconSearch className="search-icon" />
 									</Flex>
 								}
+								value={searchValue}
 								className="map-styles-search-field"
 								onChange={e => setSearchValue(e.target.value)}
 								onClear={() => setSearchValue("")}
@@ -334,7 +331,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 												label={item === GRAB ? `${item}Maps` : item}
 												name={item}
 												value={item}
-												checked={selectedFilters[key as keyof SelectedFilters].includes(item)}
+												checked={selectedFilters[key as keyof MapStyleFilterTypes].includes(item)}
 												onChange={e => handleFilterChange(e, key)}
 											/>
 										))}
@@ -360,7 +357,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 												<Flex
 													data-testid={`map-style-item-${item.name}`}
 													className={item.id === currentMapStyle ? "mb-style-container selected" : "mb-style-container"}
-													onClick={() => onChangeStyle(item.id, item.filters?.provider)}
+													onClick={() => onChangeStyle(item.id)}
 												>
 													<Flex gap={0} position="relative">
 														{isLoadingImg && <Placeholder position="absolute" width="82px" height="82px" />}

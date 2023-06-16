@@ -37,7 +37,15 @@ import {
 	useMediaQuery,
 	usePersistedData
 } from "@demo/hooks";
-import { EsriMapEnum, GrabMapEnum, HereMapEnum, MapProviderEnum, ShowStateType, ToastType } from "@demo/types";
+import {
+	EsriMapEnum,
+	GrabMapEnum,
+	HereMapEnum,
+	MapProviderEnum,
+	MapStyleFilterTypes,
+	ShowStateType,
+	ToastType
+} from "@demo/types";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { getCurrentLocation } from "@demo/utils/getCurrentLocation";
 import { Signer } from "aws-amplify";
@@ -85,6 +93,12 @@ let timeout: NodeJS.Timer | undefined;
 const DemoPage: React.FC = () => {
 	const [show, setShow] = React.useState<ShowStateType>(initShow);
 	const [height, setHeight] = React.useState(window.innerHeight);
+	const [searchValue, setSearchValue] = React.useState("");
+	const [selectedFilters, setSelectedFilters] = React.useState<MapStyleFilterTypes>({
+		Providers: [],
+		Attribute: [],
+		Type: []
+	});
 	const mapViewRef = useRef<MapRef | null>(null);
 	const geolocateControlRef = useRef<GeolocateControlRef | null>(null);
 	const {
@@ -689,13 +703,11 @@ const DemoPage: React.FC = () => {
 						isGrabVisible={isGrabVisible}
 						showGrabDisclaimerModal={show.grabDisclaimerModal}
 						onShowGridLoader={() => setShow(s => ({ ...s, gridLoader: true }))}
-						handleMapStyleChange={(id, mapProvider) => {
-							if (mapProvider === MapProviderEnum.GRAB && currentMapProvider !== MapProviderEnum.GRAB) {
-								setShow(s => ({ ...s, grabDisclaimerModal: true }));
-							} else {
-								onMapStyleChange(id);
-							}
-						}}
+						handleMapStyleChange={onMapStyleChange}
+						searchValue={searchValue}
+						setSearchValue={setSearchValue}
+						selectedFilters={selectedFilters}
+						setSelectedFilters={setSelectedFilters}
 					/>
 					{locationError || isCurrentLocationDisabled ? (
 						<Flex className="location-disabled" onClick={() => getCurrentGeoLocation()}>

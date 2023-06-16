@@ -10,6 +10,7 @@ export type { ViewPointType } from "./ViewPointType";
 export type { SuggestionType } from "./SuggestionType";
 export type { CurrentLocationDataType } from "./CurrentLocationDataType";
 export type { ClustersType } from "./ClustersType";
+export type { MapStyleFilterTypes, MapStyle } from "./MapStyleFilterTypes";
 export {
 	CirclreDrawTypeEnum,
 	DistanceUnitEnum,
