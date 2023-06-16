@@ -562,13 +562,7 @@ const DemoPage: React.FC = () => {
 					handleCurrentLocationAndViewpoint(false);
 				} else if (mapProviderFromStyle === MapProviderEnum.GRAB) {
 					/* Switching from different map provider and style to Grab map provider and style */
-
-					if (show.settings) {
-						setShow(s => ({ ...s, settings: false }));
-						setTimeout(() => setShow(s => ({ ...s, grabDisclaimerModal: true, mapStyle: mapStyle as GrabMapEnum })), 0);
-					} else {
-						setShow(s => ({ ...s, grabDisclaimerModal: true, mapStyle: mapStyle as GrabMapEnum }));
-					}
+					setTimeout(() => setShow(s => ({ ...s, grabDisclaimerModal: true, mapStyle: mapStyle as GrabMapEnum })), 0);
 				} else {
 					/* Switching between Esri and HERE map provider and style */
 					setMapProvider(mapProviderFromStyle);
@@ -587,8 +581,7 @@ const DemoPage: React.FC = () => {
 			setIsCurrentLocationDisabled,
 			handleCurrentLocationAndViewpoint,
 			setMapProvider,
-			resetAppState,
-			show.settings
+			resetAppState
 		]
 	);
 

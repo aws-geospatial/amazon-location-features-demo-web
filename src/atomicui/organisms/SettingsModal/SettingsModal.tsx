@@ -30,7 +30,7 @@ import { transformCloudFormationLink } from "@demo/utils/transformCloudFormation
 import "./styles.scss";
 
 const {
-	ENV: { CF_TEMPLATE },
+	ENV: { CF_TEMPLATE, REGION, REGION_ASIA },
 	ROUTES: { HELP },
 	MAP_RESOURCES: {
 		MAP_STYLES: { ESRI_STYLES, HERE_STYLES, GRAB_STYLES },
@@ -40,6 +40,8 @@ const {
 } = appConfig;
 const { TITLE, TITLE_DESC, HOW_TO, STEP1, STEP1_DESC, STEP2, STEP2_DESC, STEP3, STEP3_DESC, AGREE, OPTIONS } =
 	connectAwsAccountData;
+const defaultRegion = OPTIONS.find(option => option.value === REGION) as { value: string; label: string };
+const defaultRegionAsia = OPTIONS.find(option => option.value === REGION_ASIA) as { value: string; label: string };
 const { IMPERIAL, METRIC } = MapUnitEnum;
 const { ESRI, HERE, GRAB } = MapProviderEnum;
 
@@ -82,7 +84,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 		WebSocketUrl: ""
 	});
 	const [cloudFormationLink, setCloudFormationLink] = useState(CF_TEMPLATE);
-	const [stackRegion, setStackRegion] = useState<{ value: string; label: string }>(OPTIONS[2]);
+	const [stackRegion, setStackRegion] = useState<{ value: string; label: string }>(defaultRegion);
 	const {
 		isUserAwsAccountConnected,
 		validateFormValues,
@@ -101,11 +103,11 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 	const isAuthenticated = !!credentials?.authenticated;
 
 	useEffect(() => {
-		const newUrl = transformCloudFormationLink(CF_TEMPLATE, OPTIONS[3].value);
+		const newUrl = transformCloudFormationLink(REGION_ASIA);
 
 		if (currentMapProvider === MapProviderEnum.GRAB && cloudFormationLink !== newUrl) {
 			setCloudFormationLink(newUrl);
-			setStackRegion(OPTIONS[3]);
+			setStackRegion(defaultRegionAsia);
 		}
 	}, [currentMapProvider, cloudFormationLink]);
 
@@ -197,7 +199,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 	);
 
 	const _onSelect = (option: { value: string; label: string }) => {
-		const newUrl = transformCloudFormationLink(CF_TEMPLATE, option.value);
+		const newUrl = transformCloudFormationLink(option.value);
 		setCloudFormationLink(newUrl);
 		setStackRegion(option);
 	};
@@ -207,7 +209,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 			{
 				id: SettingOptionEnum.UNITS,
 				title: SettingOptionEnum.UNITS,
-				defaultValue: currentMapUnit,
+				defaultValue: isAutomaticMapUnit ? "Automatic" : currentMapUnit,
 				icon: <IconPeopleArrows />,
 				detailsComponent: (
 					<Flex
@@ -224,6 +226,15 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								onChange={handleAutoMapUnitChange}
 							>
 								<TextEl marginLeft="1.23rem" text={"Automatic"} />
+								<TextEl
+									variation="tertiary"
+									marginLeft="1.23rem"
+									text={
+										currentMapUnit === IMPERIAL
+											? "Based on your browser settings (Miles, pounds)"
+											: "Based on your browser settings (Kilometers, kilograms)"
+									}
+								/>
 							</Radio>
 						</Flex>
 						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
@@ -358,7 +369,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 									<Flex className="sm-styles-container">
 										{GRAB_STYLES.map(({ id, image, name }) => (
 											<Flex
-												data-testid="gran-map-style"
+												data-testid="grab-map-style"
 												key={id}
 												className={id === currentMapStyle ? "sm-style selected" : "sm-style"}
 												onClick={() => handleMapStyleChange(id)}
