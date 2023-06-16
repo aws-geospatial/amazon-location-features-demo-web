@@ -130,7 +130,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 						data-tooltip-place="top"
 						data-tooltip-content={
 							isCurrentLocationDisabled
-								? "Distance can't be calculated, since your current location has been disabled due to Grab limitation"
+								? "Distance can't be calculated since your current location is outside countries supported by Grab. Currently, Grab supports Malaysia, Philippines, Thailand, Singapore, Vietnam, Indonesia, Myanmar, Cambodia"
 								: "Distance can't be calculate if location permission is not granted, kindly grant access to location from the URL bar or browser settings"
 						}
 					/>

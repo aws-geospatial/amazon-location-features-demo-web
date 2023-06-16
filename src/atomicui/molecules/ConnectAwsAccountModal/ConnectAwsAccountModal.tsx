@@ -1,19 +1,20 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { Button, Flex, Link, Text, View } from "@aws-amplify/ui-react";
 import { IconAwsCloudFormation, IconCheckMarkCircle } from "@demo/assets";
-import { Modal, TextEl } from "@demo/atomicui/atoms";
+import { DropdownEl, Modal, TextEl } from "@demo/atomicui/atoms";
 import { InputField } from "@demo/atomicui/molecules";
 import { appConfig, connectAwsAccountData } from "@demo/core/constants";
 import { useAmplifyAuth, useAmplifyMap, useAws } from "@demo/hooks";
 import { ConnectFormValuesType, EsriMapEnum, MapProviderEnum } from "@demo/types";
 import "./styles.scss";
+import { transformCloudFormationLink } from "@demo/utils/transformCloudFormationLink";
 
 const {
-	ENV: { CF_TEMPLATE },
+	ENV: { CF_TEMPLATE, REGION, REGION_ASIA },
 	ROUTES: { HELP },
 	MAP_RESOURCES: { GRAB_SUPPORTED_AWS_REGIONS },
 	LINKS: { AWS_TERMS_AND_CONDITIONS }
@@ -30,8 +31,11 @@ const {
 	STEP3_DESC,
 	AGREE,
 	POST_CONNECT,
-	POST_CONNECT_DESC
+	POST_CONNECT_DESC,
+	OPTIONS
 } = connectAwsAccountData;
+const defaultRegion = OPTIONS.find(option => option.value === REGION) as { value: string; label: string };
+const defaultRegionAsia = OPTIONS.find(option => option.value === REGION_ASIA) as { value: string; label: string };
 
 interface ConnectAwsAccountModalProps {
 	open: boolean;
@@ -51,6 +55,8 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 		UserPoolId: "",
 		WebSocketUrl: ""
 	});
+	const [cloudFormationLink, setCloudFormationLink] = useState(CF_TEMPLATE);
+	const [stackRegion, setStackRegion] = useState<{ value: string; label: string }>(defaultRegion);
 	const {
 		isUserAwsAccountConnected,
 		setConnectFormValues,
@@ -63,9 +69,24 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 	const { mapProvider: currentMapProvider, setMapProvider, setMapStyle } = useAmplifyMap();
 	const keyArr = Object.keys(formValues);
 
+	useEffect(() => {
+		const newUrl = transformCloudFormationLink(REGION_ASIA);
+
+		if (currentMapProvider === MapProviderEnum.GRAB && cloudFormationLink !== newUrl) {
+			setCloudFormationLink(newUrl);
+			setStackRegion(defaultRegionAsia);
+		}
+	}, [currentMapProvider, cloudFormationLink]);
+
 	const _onClose = () => {
 		onClose();
 		isUserAwsAccountConnected && window.location.reload();
+	};
+
+	const _onSelect = (option: { value: string; label: string }) => {
+		const newUrl = transformCloudFormationLink(option.value);
+		setCloudFormationLink(newUrl);
+		setStackRegion(option);
 	};
 
 	const isBtnEnabled = useMemo(
@@ -141,13 +162,12 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 							{TITLE_DESC}
 						</Text>
 						<View>
-							<TextEl
-								fontFamily="AmazonEmber-Bold"
-								fontSize="1.23rem"
-								lineHeight="1.85rem"
-								marginTop="1.85rem"
-								text={HOW_TO}
-							/>
+							<Flex gap={0} justifyContent="flex-start" alignItems="center" marginTop="1rem">
+								<Text className="bold" fontSize="1.08rem">
+									{HOW_TO}
+								</Text>
+								<DropdownEl defaultOption={stackRegion} options={OPTIONS} onSelect={_onSelect} showSelected />
+							</Flex>
 							<View marginTop="1.23rem">
 								<Flex gap={0} marginBottom="1.85rem">
 									<View className="step-number">
@@ -156,7 +176,7 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 									<View>
 										<Flex gap={5}>
 											<Text className="bold">
-												<Link href={CF_TEMPLATE} target="_blank">
+												<Link href={cloudFormationLink} target="_blank">
 													Click here
 												</Link>
 												{STEP1}

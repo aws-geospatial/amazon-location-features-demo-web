@@ -304,7 +304,11 @@ const DemoPage: React.FC = () => {
 	const getCurrentGeoLocation = useCallback(() => {
 		if (GRAB_SUPPORTED_AWS_REGIONS.includes(region)) {
 			if (isCurrentLocationDisabled) {
-				showToast({ content: "Your current location is not supported by Grab", type: ToastType.INFO });
+				showToast({
+					content:
+						"Your current location is outside countries supported by Grab. Currently, Grab supports Malaysia, Philippines, Thailand, Singapore, Vietnam, Indonesia, Myanmar, Cambodia",
+					type: ToastType.INFO
+				});
 				mapViewRef.current?.flyTo({ center: [AMAZON_HQ.SG.longitude, AMAZON_HQ.SG.latitude], zoom: 15 });
 			} else {
 				getCurrentLocation(setCurrentLocation, setViewpoint, currentMapProvider, setIsCurrentLocationDisabled);
@@ -558,7 +562,7 @@ const DemoPage: React.FC = () => {
 					handleCurrentLocationAndViewpoint(false);
 				} else if (mapProviderFromStyle === MapProviderEnum.GRAB) {
 					/* Switching from different map provider and style to Grab map provider and style */
-					setShow(s => ({ ...s, grabDisclaimerModal: true, mapStyle: mapStyle as GrabMapEnum }));
+					setTimeout(() => setShow(s => ({ ...s, grabDisclaimerModal: true, mapStyle: mapStyle as GrabMapEnum })), 0);
 				} else {
 					/* Switching between Esri and HERE map provider and style */
 					setMapProvider(mapProviderFromStyle);

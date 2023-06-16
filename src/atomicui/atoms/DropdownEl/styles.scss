@@ -1,0 +1,67 @@
+.dropdown-container {
+	position: relative;
+	display: inline-block;
+
+	.trigger {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		max-width: 18.15rem;
+		height: 2.46rem;
+		outline: none;
+		cursor: pointer;
+		background-color: transparent;
+		padding: 0.62rem 1rem;
+
+		p {
+			font-family: "AmazonEmber-Bold";
+			font-size: 1.08rem;
+			color: var(--primary-color);
+			margin-right: 0.5rem;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		@media only screen and (max-width: 562px) {
+			max-width: 10.15rem;
+		}
+	}
+
+	.options {
+		position: absolute;
+		left: 5%;
+		display: flex;
+		flex-direction: column;
+		width: 21.5rem;
+		height: 16rem;
+		overflow: auto;
+		list-style: none;
+		background-color: var(--white-color);
+		box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.202633);
+		border-radius: 0.62rem;
+		margin-top: 0.62rem;
+		padding: 0;
+
+		li {
+			cursor: pointer;
+			padding: 8px 16px;
+			user-select: none;
+
+			@media only screen and (min-width: 1024px) {
+				&:hover {
+					background-color: rgba(0, 130, 150, 0.08);
+				}
+			}
+		}
+
+		.selected {
+			background-color: rgba(0, 130, 150, 0.08);
+		}
+
+		@media only screen and (max-width: 562px) {
+			width: 12rem;
+			left: -10%;
+		}
+	}
+}

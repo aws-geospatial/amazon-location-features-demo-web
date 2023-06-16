@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button, CheckboxField, Divider, Flex, Link, Radio, Text, View } from "@aws-amplify/ui-react";
 import {
@@ -12,7 +12,7 @@ import {
 	IconPeopleArrows,
 	IconShuffle
 } from "@demo/assets";
-import { Modal, TextEl } from "@demo/atomicui/atoms";
+import { DropdownEl, Modal, TextEl } from "@demo/atomicui/atoms";
 import { InputField } from "@demo/atomicui/molecules";
 import { appConfig, connectAwsAccountData } from "@demo/core/constants";
 import { useAmplifyAuth, useAmplifyMap, useAws, useAwsIot, usePersistedData } from "@demo/hooks";
@@ -26,10 +26,11 @@ import {
 	SettingOptionEnum,
 	SettingOptionItemType
 } from "@demo/types";
+import { transformCloudFormationLink } from "@demo/utils/transformCloudFormationLink";
 import "./styles.scss";
 
 const {
-	ENV: { CF_TEMPLATE },
+	ENV: { CF_TEMPLATE, REGION, REGION_ASIA },
 	ROUTES: { HELP },
 	MAP_RESOURCES: {
 		MAP_STYLES: { ESRI_STYLES, HERE_STYLES, GRAB_STYLES },
@@ -37,8 +38,10 @@ const {
 	},
 	LINKS: { AWS_TERMS_AND_CONDITIONS }
 } = appConfig;
-const { TITLE, TITLE_DESC, HOW_TO, STEP1, STEP1_DESC, STEP2, STEP2_DESC, STEP3, STEP3_DESC, AGREE } =
+const { TITLE, TITLE_DESC, HOW_TO, STEP1, STEP1_DESC, STEP2, STEP2_DESC, STEP3, STEP3_DESC, AGREE, OPTIONS } =
 	connectAwsAccountData;
+const defaultRegion = OPTIONS.find(option => option.value === REGION) as { value: string; label: string };
+const defaultRegionAsia = OPTIONS.find(option => option.value === REGION_ASIA) as { value: string; label: string };
 const { IMPERIAL, METRIC } = MapUnitEnum;
 const { ESRI, HERE, GRAB } = MapProviderEnum;
 
@@ -80,6 +83,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 		UserPoolId: "",
 		WebSocketUrl: ""
 	});
+	const [cloudFormationLink, setCloudFormationLink] = useState(CF_TEMPLATE);
+	const [stackRegion, setStackRegion] = useState<{ value: string; label: string }>(defaultRegion);
 	const {
 		isUserAwsAccountConnected,
 		validateFormValues,
@@ -96,6 +101,15 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 	const { detachPolicy } = useAwsIot();
 	const keyArr = Object.keys(formValues);
 	const isAuthenticated = !!credentials?.authenticated;
+
+	useEffect(() => {
+		const newUrl = transformCloudFormationLink(REGION_ASIA);
+
+		if (currentMapProvider === MapProviderEnum.GRAB && cloudFormationLink !== newUrl) {
+			setCloudFormationLink(newUrl);
+			setStackRegion(defaultRegionAsia);
+		}
+	}, [currentMapProvider, cloudFormationLink]);
 
 	const handleAutoMapUnitChange = useCallback(() => {
 		setIsAutomaticMapUnit(true);
@@ -184,12 +198,18 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 		[currentMapProvider, currentMapStyle]
 	);
 
+	const _onSelect = (option: { value: string; label: string }) => {
+		const newUrl = transformCloudFormationLink(option.value);
+		setCloudFormationLink(newUrl);
+		setStackRegion(option);
+	};
+
 	const optionItems: Array<SettingOptionItemType> = useMemo(
 		() => [
 			{
 				id: SettingOptionEnum.UNITS,
 				title: SettingOptionEnum.UNITS,
-				defaultValue: currentMapUnit,
+				defaultValue: isAutomaticMapUnit ? "Automatic" : currentMapUnit,
 				icon: <IconPeopleArrows />,
 				detailsComponent: (
 					<Flex
@@ -206,6 +226,15 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								onChange={handleAutoMapUnitChange}
 							>
 								<TextEl marginLeft="1.23rem" text={"Automatic"} />
+								<TextEl
+									variation="tertiary"
+									marginLeft="1.23rem"
+									text={
+										currentMapUnit === IMPERIAL
+											? "Based on your browser settings (Miles, pounds)"
+											: "Based on your browser settings (Kilometers, kilograms)"
+									}
+								/>
 							</Radio>
 						</Flex>
 						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
@@ -340,7 +369,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 									<Flex className="sm-styles-container">
 										{GRAB_STYLES.map(({ id, image, name }) => (
 											<Flex
-												data-testid="gran-map-style"
+												data-testid="grab-map-style"
 												key={id}
 												className={id === currentMapStyle ? "sm-style selected" : "sm-style"}
 												onClick={() => handleMapStyleChange(id)}
@@ -414,14 +443,18 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 							</Flex>
 						</Flex>
 						<Flex className="sm-aws-cloudformation-form">
-							<TextEl
-								fontFamily="AmazonEmber-Bold"
-								fontSize="1.23rem"
-								lineHeight="1.85rem"
-								marginBottom="1.38rem"
-								alignSelf="flex-start"
-								text={HOW_TO}
-							/>
+							<Flex
+								gap={0}
+								justifyContent="flex-start"
+								alignItems="center"
+								margin="1.85rem 0rem 1.85rem 0rem"
+								width="100%"
+							>
+								<Text className="bold" fontSize="1.08rem">
+									{HOW_TO}
+								</Text>
+								<DropdownEl defaultOption={stackRegion} options={OPTIONS} onSelect={_onSelect} showSelected />
+							</Flex>
 							<Flex gap={0} marginBottom="1.85rem" alignSelf="flex-start">
 								<View className="step-number">
 									<TextEl fontFamily="AmazonEmber-Bold" text="1" />
@@ -429,7 +462,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								<View>
 									<Flex gap={5}>
 										<Text className="bold">
-											<Link href={CF_TEMPLATE} target="_blank">
+											<Link href={cloudFormationLink} target="_blank">
 												Click here
 											</Link>
 											{STEP1}
@@ -533,7 +566,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 			onChangeFormValues,
 			isAuthenticated,
 			_onLogin,
-			_onLogout
+			_onLogout,
+			stackRegion,
+			cloudFormationLink
 		]
 	);
 
