@@ -316,7 +316,11 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 								data-testid="map-styles-search-field"
 							/>
 							<Flex className="filter-container">
-								<Flex className="filter-icon-wrapper" onClick={() => setShowFilter(show => !show)}>
+								<Flex
+									className="filter-icon-wrapper"
+									onClick={() => setShowFilter(show => !show)}
+									data-testid="filter-icon-wrapper"
+								>
 									<IconFilterFunnel className={hasAnyFilterSelected ? "filter-icon live" : "filter-icon"} />
 									<span className={hasAnyFilterSelected ? "filter-bubble live" : "filter-bubble"} />
 								</Flex>

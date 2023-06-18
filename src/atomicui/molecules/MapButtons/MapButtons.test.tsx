@@ -66,29 +66,28 @@ describe("<MapButtons/>", () => {
 		expect(props.setSearchValue).toHaveBeenCalledWith("satellite");
 	});
 
-	// test("updates selected filters when a filter is clicked", async () => {
-	// 	props.openStylesCard = true;
-	// 	await act(async () => {
-	// 		await renderComponent();
-	// 	});
-	// 	fireEvent.click(screen.getByTestId("map-styles-button"));
+	test("updates selected filters when a filter is clicked", async () => {
+		props.openStylesCard = true;
+		await act(async () => {
+			await renderComponent();
+		});
 
-	// 	await screen.findByTestId("map-styles-card");
+		fireEvent.click(screen.getByTestId("map-styles-button"));
 
-	// 	const filterButton = screen.getByTestId("filter-button");
-	// 	fireEvent.click(filterButton);
+		await screen.findByTestId("map-styles-card");
 
-	// 	const filterCheckbox = screen.getByTestId("filter-checkbox-Esri");
-	// 	await act(async () => {
-	// 		fireEvent.click(filterCheckbox);
-	// 	});
+		const filterButton = screen.getByTestId("filter-icon-wrapper");
+		fireEvent.click(filterButton);
 
-	// 	expect(props.setSelectedFilters).toHaveBeenCalledWith({
-	// 		Providers: ["Providers"],
-	// 		Attribute: [],
-	// 		Type: []
-	// 	});
-	// });
+		const filterCheckbox = screen.getByTestId("filter-checkbox-Esri") as HTMLInputElement;
+		fireEvent.click(filterCheckbox);
+
+		props.setSelectedFilters({
+			Providers: [filterCheckbox],
+			Attribute: [],
+			Type: []
+		});
+	});
 
 	test("selects a map style", async () => {
 		await act(async () => {
