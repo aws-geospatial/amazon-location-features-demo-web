@@ -23,7 +23,8 @@ describe("<MapButtons/>", () => {
 			Type: []
 		},
 		setSelectedFilters: jest.fn(),
-		isLoading: false
+		isLoading: false,
+		resetSearchAndFilters: jest.fn()
 	};
 
 	const renderComponent = async () => {

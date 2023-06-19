@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Card, CheckboxField, Divider, Flex, Placeholder, SearchField, Text } from "@aws-amplify/ui-react";
 import { IconClose, IconFilterFunnel, IconGeofencePlusSolid, IconMapSolid, IconSearch } from "@demo/assets";
@@ -54,6 +54,8 @@ export interface MapButtonsProps {
 	selectedFilters: MapStyleFilterTypes;
 	setSelectedFilters: React.Dispatch<React.SetStateAction<MapStyleFilterTypes>>;
 	isLoading?: boolean;
+	onlyMapStyles?: boolean;
+	resetSearchAndFilters?: () => void;
 }
 
 const MapButtons: React.FC<MapButtonsProps> = ({
@@ -75,7 +77,9 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 		Type: []
 	},
 	setSelectedFilters,
-	isLoading = false
+	isLoading = false,
+	onlyMapStyles = false,
+	resetSearchAndFilters
 }) => {
 	const [isLoadingImg, setIsLoadingImg] = useState(true);
 	const [showFilter, setShowFilter] = useState(false);
@@ -96,9 +100,10 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 				!showGrabDisclaimerModal
 			) {
 				setOpenStylesCard(false);
+				resetSearchAndFilters && resetSearchAndFilters();
 			}
 		},
-		[showGrabDisclaimerModal, setOpenStylesCard]
+		[showGrabDisclaimerModal, setOpenStylesCard, resetSearchAndFilters]
 	);
 
 	useEffect(() => {
@@ -112,6 +117,8 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	const toggleMapStyles = () => {
 		setIsLoadingImg(true);
 		setOpenStylesCard(!openStylesCard);
+		setSearchValue("");
+		resetSearchAndFilters && resetSearchAndFilters();
 	};
 
 	const onConnectAwsAccount = () => {
@@ -145,12 +152,15 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	// 	}
 	// };
 
-	const onChangeStyle = (id: EsriMapEnum | HereMapEnum | GrabMapEnum) => {
-		if (id !== currentMapStyle) {
-			onShowGridLoader();
-			handleMapStyleChange(id);
-		}
-	};
+	const onChangeStyle = useCallback(
+		(id: EsriMapEnum | HereMapEnum | GrabMapEnum) => {
+			if (id !== currentMapStyle) {
+				onShowGridLoader();
+				handleMapStyleChange(id);
+			}
+		},
+		[currentMapStyle, handleMapStyleChange, onShowGridLoader]
+	);
 
 	const addProviderTitle = useCallback(
 		(styles: MapStyle[], isGrabVisible: boolean): (MapStyle | { title: string })[] => {
@@ -237,21 +247,164 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	 * @param {React.ChangeEvent<HTMLInputElement>} e - The change event from the input element.
 	 * @param {string} filterCategory - The category of the filter being changed (e.g., 'Providers', 'Attribute', 'Type').
 	 */
-	const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>, filterCategory: string) => {
-		const { name, checked } = e.target;
-		setSelectedFilters(prevFilters => {
-			const key = filterCategory as keyof MapStyleFilterTypes;
-			return {
-				...prevFilters,
-				[key]: checked ? [...prevFilters[key], name] : prevFilters[key].filter(item => item !== name)
-			};
-		});
-	};
+	const handleFilterChange = useCallback(
+		(e: React.ChangeEvent<HTMLInputElement>, filterCategory: string) => {
+			const { name, checked } = e.target;
+			setSelectedFilters(prevFilters => {
+				const key = filterCategory as keyof MapStyleFilterTypes;
+				return {
+					...prevFilters,
+					[key]: checked ? [...prevFilters[key], name] : prevFilters[key].filter(item => item !== name)
+				};
+			});
+		},
+		[setSelectedFilters]
+	);
 
 	const stylesWithTitles = addProviderTitle(MAP_STYLES, isGrabVisible);
 	const searchAndFilteredResults = searchStyles(stylesWithTitles, searchValue, selectedFilters);
 	const hasAnyFilterSelected =
 		!!selectedFilters.Providers.length || !!selectedFilters.Attribute.length || !!selectedFilters.Type.length;
+
+	const mapStyles = useMemo(
+		() => (
+			<Flex
+				direction={"column"}
+				className={onlyMapStyles ? "map-styles-wrapper only-map-styles" : "map-styles-wrapper"}
+			>
+				<Flex direction={"column"} gap={0}>
+					<Flex
+						className={showFilter ? "maps-styles-search with-filters" : "maps-styles-search"}
+						marginBottom={showFilter ? 0 : "0.6rem"}
+					>
+						<SearchField
+							label="Search"
+							placeholder="Search styles"
+							hasSearchButton={false}
+							hasSearchIcon={true}
+							size={"large"}
+							innerStartComponent={
+								<Flex className="search-icon-container">
+									<IconSearch className="search-icon" />
+								</Flex>
+							}
+							value={searchValue}
+							className="map-styles-search-field"
+							onChange={e => setSearchValue(e.target.value)}
+							onClear={() => setSearchValue("")}
+							onClick={() => !!showFilter && setShowFilter(false)}
+							data-testid="map-styles-search-field"
+						/>
+						<Flex className="filter-container">
+							<Flex
+								className="filter-icon-wrapper"
+								onClick={() => setShowFilter(show => !show)}
+								data-testid="filter-icon-wrapper"
+							>
+								<IconFilterFunnel className={hasAnyFilterSelected ? "filter-icon live" : "filter-icon"} />
+								<span className={hasAnyFilterSelected ? "filter-bubble live" : "filter-bubble"} />
+							</Flex>
+						</Flex>
+					</Flex>
+					{showFilter && (
+						<Flex className="maps-filter-container" direction="column">
+							{Object.entries(filters).map(([key, value]) => (
+								<Flex key={key} direction="column">
+									<Text as="strong" fontWeight={700} fontSize="1em">
+										{key}
+									</Text>
+									{value.map((item: string, i) => (
+										<CheckboxField
+											className="filters-checkbox"
+											size={"large"}
+											key={i}
+											label={item === GRAB ? `${item}Maps` : item}
+											name={item}
+											value={item}
+											checked={selectedFilters[key as keyof MapStyleFilterTypes].includes(item)}
+											onChange={e => handleFilterChange(e, key)}
+											data-testid={`filter-checkbox-${item}`}
+										/>
+									))}
+								</Flex>
+							))}
+						</Flex>
+					)}
+				</Flex>
+				{!showFilter && (
+					<Flex gap={0} direction="column" className="maps-container">
+						<Flex
+							data-testid="esri-map-styles"
+							gap={0}
+							padding={onlyMapStyles ? "0 0 1.23rem" : "0 0.7rem 1.23rem 0.5rem"}
+							wrap="wrap"
+						>
+							{!searchAndFilteredResults.length && (
+								<Flex width={"80%"} margin={"0 auto"}>
+									<NotFoundCard
+										title="No matching styles found"
+										text="Make sure your search is spelled correctly and try again"
+										textFontSize="0.95rem"
+									/>
+								</Flex>
+							)}
+							{searchAndFilteredResults.map((item, i) =>
+								"title" in item ? (
+									<Flex key={i} width={"100%"} direction={"column"}>
+										{i !== 0 && <Divider className="mb-divider" />}
+										<Text as="strong" fontWeight={700} fontSize="1em" padding={"0.6rem 1.2rem 0.4rem"}>
+											{item.title}
+										</Text>
+									</Flex>
+								) : (
+									(item.filters?.provider !== GRAB || (item.filters?.provider === GRAB && isGrabVisible)) && (
+										<Flex key={i} marginBottom={"1.2rem"} width="33.33%">
+											<Flex
+												data-testid={`map-style-item-${item.id}`}
+												className={item.id === currentMapStyle ? "mb-style-container selected" : "mb-style-container"}
+												onClick={() => onChangeStyle(item.id)}
+												width="100%"
+											>
+												<Flex gap={0} position="relative">
+													{(isLoading || isLoadingImg) && (
+														<Placeholder position="absolute" width="100%" height="100%" />
+													)}
+													<img
+														className={onlyMapStyles ? "map-image only-map" : "map-image"}
+														src={item.image}
+														alt={item.name}
+														onLoad={() => setIsLoadingImg(false)}
+													/>
+												</Flex>
+												{!isLoading && <TextEl marginTop="0.62rem" text={item.name} />}
+											</Flex>
+										</Flex>
+									)
+								)
+							)}
+						</Flex>
+					</Flex>
+				)}
+			</Flex>
+		),
+		[
+			currentMapStyle,
+			handleFilterChange,
+			hasAnyFilterSelected,
+			isGrabVisible,
+			isLoading,
+			isLoadingImg,
+			onChangeStyle,
+			searchAndFilteredResults,
+			searchValue,
+			selectedFilters,
+			setSearchValue,
+			showFilter,
+			onlyMapStyles
+		]
+	);
+
+	if (onlyMapStyles) return mapStyles;
 
 	return (
 		<>
@@ -292,108 +445,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 					<Flex className="ms-info-container">
 						<TextEl variation="tertiary" text={"Changing data provider also affects Paces & Routes API"} />
 					</Flex>
-					<Flex direction={"column"} gap={0}>
-						<Flex
-							className={showFilter ? "maps-styles-search with-filters" : "maps-styles-search"}
-							marginBottom={showFilter ? 0 : "0.6rem"}
-						>
-							<SearchField
-								label="Search"
-								placeholder="Search styles"
-								hasSearchButton={false}
-								hasSearchIcon={true}
-								size={"large"}
-								innerStartComponent={
-									<Flex className="search-icon-container">
-										<IconSearch className="search-icon" />
-									</Flex>
-								}
-								value={searchValue}
-								className="map-styles-search-field"
-								onChange={e => setSearchValue(e.target.value)}
-								onClear={() => setSearchValue("")}
-								onClick={() => !!showFilter && setShowFilter(false)}
-								data-testid="map-styles-search-field"
-							/>
-							<Flex className="filter-container">
-								<Flex
-									className="filter-icon-wrapper"
-									onClick={() => setShowFilter(show => !show)}
-									data-testid="filter-icon-wrapper"
-								>
-									<IconFilterFunnel className={hasAnyFilterSelected ? "filter-icon live" : "filter-icon"} />
-									<span className={hasAnyFilterSelected ? "filter-bubble live" : "filter-bubble"} />
-								</Flex>
-							</Flex>
-						</Flex>
-						{showFilter && (
-							<Flex className="maps-filter-container" direction="column">
-								{Object.entries(filters).map(([key, value]) => (
-									<Flex key={key} direction="column">
-										<Text as="strong" fontWeight={700} fontSize="1em">
-											{key}
-										</Text>
-										{value.map((item: string, i) => (
-											<CheckboxField
-												className="filters-checkbox"
-												size={"large"}
-												key={i}
-												label={item === GRAB ? `${item}Maps` : item}
-												name={item}
-												value={item}
-												checked={selectedFilters[key as keyof MapStyleFilterTypes].includes(item)}
-												onChange={e => handleFilterChange(e, key)}
-												data-testid={`filter-checkbox-${item}`}
-											/>
-										))}
-									</Flex>
-								))}
-							</Flex>
-						)}
-					</Flex>
-					{!showFilter && (
-						<Flex gap={0} direction="column" className="maps-container">
-							<Flex data-testid="esri-map-styles" gap={0} padding="0 0 1.23rem 0" wrap="wrap">
-								{!searchAndFilteredResults.length && (
-									<Flex width={"80%"} margin={"0 auto"}>
-										<NotFoundCard
-											title="No matching styles found"
-											text="Make sure your search is spelled correctly and try again"
-											textFontSize="0.95rem"
-										/>
-									</Flex>
-								)}
-								{searchAndFilteredResults.map((item, i) =>
-									"title" in item ? (
-										<Flex key={i} width={"100%"} direction={"column"}>
-											{i !== 0 && <Divider margin="0 1rem" className="mb-divider" />}
-											<Text as="strong" fontWeight={700} fontSize="1em" padding={"0.6rem 1.2rem 0.4rem"}>
-												{item.title}
-											</Text>
-										</Flex>
-									) : (
-										(item.filters?.provider !== GRAB || (item.filters?.provider === GRAB && isGrabVisible)) && (
-											<Flex key={i} marginBottom={"1.2rem"}>
-												<Flex
-													data-testid={`map-style-item-${item.id}`}
-													className={item.id === currentMapStyle ? "mb-style-container selected" : "mb-style-container"}
-													onClick={() => onChangeStyle(item.id)}
-												>
-													<Flex gap={0} position="relative">
-														{(isLoading || isLoadingImg) && (
-															<Placeholder position="absolute" width="100%" height="100%" />
-														)}
-														<img src={item.image} alt={item.name} onLoad={() => setIsLoadingImg(false)} />
-													</Flex>
-													{!isLoading && <TextEl marginTop="0.62rem" text={item.name} />}
-												</Flex>
-											</Flex>
-										)
-									)
-								)}
-							</Flex>
-						</Flex>
-					)}
+					{mapStyles}
 				</Card>
 			)}
 		</>
