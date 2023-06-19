@@ -331,7 +331,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 						</Flex>
 					)}
 				</Flex>
-				{!showFilter && (
+				{(!showFilter || onlyMapStyles) && (
 					<Flex gap={0} direction="column" className="maps-container">
 						<Flex
 							data-testid="esri-map-styles"

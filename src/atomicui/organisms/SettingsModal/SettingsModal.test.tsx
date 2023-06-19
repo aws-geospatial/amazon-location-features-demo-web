@@ -1,5 +1,4 @@
 import { SettingOptionEnum } from "@demo/types";
-import { faker } from "@faker-js/faker";
 import { RenderResult, act, fireEvent, render, screen } from "@testing-library/react";
 
 import SettingsModal from "./SettingsModal";
