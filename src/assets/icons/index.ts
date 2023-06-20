@@ -29,6 +29,7 @@ export { ReactComponent as IconDroneSolid } from "./icon-drone-solid.svg";
 export { ReactComponent as IconMail } from "./icon-email-solid.svg";
 export { ReactComponent as IconFacebook } from "./icon-facebook-solid.svg";
 export { ReactComponent as IconFilter } from "./icon-filter.svg";
+export { ReactComponent as IconFilterFunnel } from "./icon-filter-funnel.svg";
 export { ReactComponent as IconFire } from "./icon-fire.svg";
 export { ReactComponent as IconGear } from "./icon-gear.svg";
 export { ReactComponent as IconGeofenceColor } from "./icon-geofence-color.svg";
