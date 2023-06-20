@@ -1,3 +1,4 @@
+import { MapButtons } from "@demo/atomicui/molecules";
 import { SettingOptionEnum } from "@demo/types";
 import { RenderResult, act, fireEvent, render, screen } from "@testing-library/react";
 
@@ -13,6 +14,30 @@ describe("<SettingsModal />", () => {
 	const handleCurrentLocationAndViewpoint = jest.fn();
 	const resetSearchAndFilters = jest.fn();
 
+	const props = {
+		openStylesCard: false,
+		isGrabVisible: true,
+		showGrabDisclaimerModal: false,
+		searchValue: "",
+		isLoading: false,
+		onlyMapStyles: true,
+		selectedFilters: {
+			Providers: [],
+			Attribute: [],
+			Type: []
+		},
+		setOpenStylesCard: jest.fn(),
+		onCloseSidebar: jest.fn(),
+		onOpenConnectAwsAccountModal: jest.fn(),
+		onOpenSignInModal: jest.fn(),
+		onShowGeofenceBox: jest.fn(),
+		onShowGridLoader: jest.fn(),
+		handleMapStyleChange: jest.fn(),
+		setSearchValue: jest.fn(),
+		setSelectedFilters: jest.fn(),
+		resetSearchAndFilters: jest.fn()
+	};
+
 	const renderComponent = async (): Promise<RenderResult> => {
 		const renderedComponent = render(
 			<SettingsModal
@@ -24,7 +49,7 @@ describe("<SettingsModal />", () => {
 				handleMapStyleChange={handleMapStyleChange}
 				handleCurrentLocationAndViewpoint={handleCurrentLocationAndViewpoint}
 				resetSearchAndFilters={resetSearchAndFilters}
-				mapButtons={<div>Map Buttons</div>}
+				mapButtons={<MapButtons {...props} />}
 			/>
 		);
 		settingsModal = await screen.findByTestId("settings-modal");

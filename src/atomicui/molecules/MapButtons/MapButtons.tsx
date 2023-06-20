@@ -101,6 +101,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 			) {
 				setOpenStylesCard(false);
 				resetSearchAndFilters && resetSearchAndFilters();
+				setShowFilter(false);
 			}
 		},
 		[showGrabDisclaimerModal, setOpenStylesCard, resetSearchAndFilters]
@@ -119,6 +120,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 		setOpenStylesCard(!openStylesCard);
 		setSearchValue("");
 		resetSearchAndFilters && resetSearchAndFilters();
+		setShowFilter(false);
 	};
 
 	const onConnectAwsAccount = () => {

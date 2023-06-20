@@ -226,6 +226,25 @@
 			.amplify-checkbox__label {
 				font-size: 1rem;
 				color: var(--tertiary-color);
+				margin-left: 0.4rem;
+			}
+			.amplify-flex.amplify-checkbox__button {
+				&:before {
+					background: var(--light-color-2);
+					border: 1px solid var(--grey-color-2)
+				}
+				span {
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					svg {
+						stroke-width: 4px;
+						stroke-linejoin: bevel;
+						stroke: var(--white-color);
+						width: 8px;
+						height: 8px;
+					}
+				}
 			}
 		}
 	}
