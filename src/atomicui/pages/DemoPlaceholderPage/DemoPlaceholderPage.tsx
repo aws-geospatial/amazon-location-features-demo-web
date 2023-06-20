@@ -90,6 +90,26 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 				handleMapProviderChange={() => {}}
 				handleMapStyleChange={() => {}}
 				handleCurrentLocationAndViewpoint={() => {}}
+				mapButtons={
+					<MapButtons
+						openStylesCard={show.stylesCard}
+						setOpenStylesCard={() => {}}
+						onCloseSidebar={() => {}}
+						onOpenConnectAwsAccountModal={() => {}}
+						onOpenSignInModal={() => {}}
+						onShowGeofenceBox={() => {}}
+						isGrabVisible={isGrabVisible}
+						showGrabDisclaimerModal={show.grabDisclaimerModal}
+						onShowGridLoader={() => {}}
+						handleMapStyleChange={() => {}}
+						searchValue={searchValue}
+						setSearchValue={() => {}}
+						selectedFilters={selectedFilters}
+						setSelectedFilters={() => {}}
+						isLoading={true}
+					/>
+				}
+				resetSearchAndFilters={() => {}}
 			/>
 			<Flex className="logo-stroke-container">
 				<LogoLight />
