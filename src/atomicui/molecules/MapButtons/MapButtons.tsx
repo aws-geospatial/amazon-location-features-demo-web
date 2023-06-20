@@ -445,7 +445,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 						</Flex>
 					</Flex>
 					<Flex className="ms-info-container">
-						<TextEl variation="tertiary" text={"Changing data provider also affects Paces & Routes API"} />
+						<TextEl variation="tertiary" text={"Changing data provider also affects Places & Routes API"} />
 					</Flex>
 					{mapStyles}
 				</Card>
