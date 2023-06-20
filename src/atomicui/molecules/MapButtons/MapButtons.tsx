@@ -159,7 +159,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 						<IconInfoSolid />
 						<TextEl
 							variation="tertiary"
-							text={"Changing data provider also affects\nPaces & Routes API"}
+							text={"Changing data provider also affects Places & Routes API"}
 							whiteSpace="pre-line"
 						/>
 					</Flex>
