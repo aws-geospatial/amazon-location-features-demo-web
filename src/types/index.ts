@@ -10,6 +10,7 @@ export type { ViewPointType } from "./ViewPointType";
 export type { SuggestionType } from "./SuggestionType";
 export type { CurrentLocationDataType } from "./CurrentLocationDataType";
 export type { ClustersType } from "./ClustersType";
+export type { MapStyleFilterTypes, MapStyle } from "./MapStyleFilterTypes";
 export {
 	CirclreDrawTypeEnum,
 	DistanceUnitEnum,
@@ -29,7 +30,9 @@ export {
 	ToastType,
 	TrackerType,
 	TravelMode,
-	UserAgentEnum
+	UserAgentEnum,
+	AttributeEnum,
+	TypeEnum
 } from "./Enums";
 export type { RouteDataType } from "./RouteDataType";
 export type { CirclePropertiesType, CircleDrawEventType, CircleFeatureType } from "./CircleDrawControlTypes";

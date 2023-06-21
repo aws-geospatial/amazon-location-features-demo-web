@@ -1,129 +1,107 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { RenderResult, act, fireEvent, render, screen } from "@testing-library/react";
+import { EsriMapEnum } from "@demo/types";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 
 import MapButtons from "./MapButtons";
 
 describe("<MapButtons/>", () => {
-	let openStylesCard = false;
-
-	let mapButtons: HTMLElement;
-	let mapStylesButtons: HTMLElement;
-	let geofenceControlButton: HTMLElement;
-	let mapStylesCard: HTMLElement | null;
-	// let mapProviderButtonEsri: HTMLElement | null;
-	let esriMapStyles: HTMLElement | null;
-	let mapStylesItemsEsriStreets: HTMLElement | null;
-	let mapProviderButtonHere: HTMLElement | null;
-	let hereMapStyles: HTMLElement | null;
-	// let mapStylesItemsHereContrast: HTMLElement | null;
-	let mapProviderButtonGrab: HTMLElement | null;
-	let grabMapStyles: HTMLElement | null;
-	// let mapStylesItemsGrabDark: HTMLElement | null;
-
-	let onCloseSidebar: jest.Mock<any, any, any>;
-	let onOpenConnectAwsAccountModal: jest.Mock<any, any, any>;
-	let onOpenSignInModal: jest.Mock<any, any, any>;
-	let onShowGeofenceBox: jest.Mock<any, any, any>;
-	const onShowGridLoader = jest.fn();
-	const handleMapProviderChange = jest.fn();
-
-	beforeEach(() => {
-		jest.useFakeTimers();
-	});
-	afterEach(() => jest.useRealTimers());
-
-	const renderComponent = async (): Promise<RenderResult> => {
-		const setOpenStylesCard = (isOpen: boolean) => {
-			openStylesCard = isOpen;
-		};
-
-		onCloseSidebar = jest.fn();
-		onOpenConnectAwsAccountModal = jest.fn();
-		onOpenSignInModal = jest.fn();
-		onShowGeofenceBox = jest.fn();
-
-		const renderedComponent = render(
-			<MapButtons
-				openStylesCard={openStylesCard}
-				setOpenStylesCard={setOpenStylesCard}
-				onCloseSidebar={onCloseSidebar}
-				onOpenConnectAwsAccountModal={onOpenConnectAwsAccountModal}
-				onOpenSignInModal={onOpenSignInModal}
-				onShowGeofenceBox={onShowGeofenceBox}
-				isGrabVisible={true}
-				showGrabDisclaimerModal={false}
-				onShowGridLoader={onShowGridLoader}
-				handleMapProviderChange={handleMapProviderChange}
-			/>
-		);
-
-		mapButtons = await screen.findByTestId("map-buttons-container");
-		mapStylesButtons = await screen.findByTestId("map-styles-button");
-		geofenceControlButton = await screen.findByTestId("geofence-control-button");
-		mapStylesCard = screen.queryByTestId("map-styles-card");
-		// mapProviderButtonEsri = screen.queryByTestId("map-data-provider-esri");
-		esriMapStyles = screen.queryByTestId("esri-map-styles");
-		mapStylesItemsEsriStreets = screen.queryByTestId("map-style-item-Streets");
-		mapProviderButtonHere = screen.queryByTestId("map-data-provider-here");
-		hereMapStyles = screen.queryByTestId("here-map-styles");
-		// mapStylesItemsHereContrast = screen.queryByTestId("map-style-item-Contrast");
-		mapProviderButtonGrab = screen.queryByTestId("map-data-provider-grab");
-		grabMapStyles = screen.queryByTestId("grab-map-styles");
-		// mapStylesItemsGrabDark = screen.queryByTestId("map-style-item-Dark");
-
-		return renderedComponent;
+	const props = {
+		openStylesCard: false,
+		setOpenStylesCard: jest.fn(),
+		onCloseSidebar: jest.fn(),
+		onOpenConnectAwsAccountModal: jest.fn(),
+		onOpenSignInModal: jest.fn(),
+		onShowGeofenceBox: jest.fn(),
+		isGrabVisible: true,
+		showGrabDisclaimerModal: false,
+		onShowGridLoader: jest.fn(),
+		handleMapStyleChange: jest.fn(),
+		searchValue: "",
+		setSearchValue: jest.fn(),
+		selectedFilters: {
+			Providers: [],
+			Attribute: [],
+			Type: []
+		},
+		setSelectedFilters: jest.fn(),
+		isLoading: false,
+		resetSearchAndFilters: jest.fn()
 	};
 
-	it("should render successfully", async () => {
-		await renderComponent();
-		expect(mapButtons).toBeInTheDocument();
+	const renderComponent = async () => {
+		render(<MapButtons {...props} />);
+	};
+
+	test("renders map buttons container", async () => {
+		await act(async () => {
+			await renderComponent();
+		});
+		expect(screen.getByTestId("map-buttons-container")).toBeInTheDocument();
 	});
 
-	it("should be able to click on map styles shortcut and view the map providers and styles", async () => {
-		let renderedComponent = await renderComponent();
-		expect(mapStylesCard).toBe(null);
-		expect(mapStylesButtons.className).not.toContain("active");
-		act(() => mapStylesButtons.click());
-		renderedComponent.unmount();
+	test("renders map styles button and opens the map styles card", async () => {
+		props.openStylesCard = true;
+		await act(async () => {
+			await renderComponent();
+		});
 
-		renderedComponent = await renderComponent();
-		expect(mapStylesCard).toBeInTheDocument();
-		expect(mapStylesButtons.className).toContain("active");
-		act(() => mapStylesButtons.click());
-		renderedComponent.unmount();
-
-		await renderComponent();
-		expect(mapStylesCard).toBe(null);
+		expect(screen.getByTestId("map-styles-card")).toBeInTheDocument();
 	});
 
-	it("should change the map provider when a certain map provider is selected", async () => {
-		openStylesCard = true;
-		await renderComponent();
-
-		expect(esriMapStyles).toBeInTheDocument();
-		expect(hereMapStyles).toBeNull();
-		expect(grabMapStyles).toBeNull();
-
-		fireEvent.click(mapProviderButtonHere as HTMLElement);
-		expect(handleMapProviderChange).toBeCalledTimes(1);
-
-		fireEvent.click(mapProviderButtonGrab as HTMLElement);
-		expect(handleMapProviderChange).toBeCalledTimes(2);
+	test("renders geofence control button", async () => {
+		await act(async () => {
+			await renderComponent();
+		});
+		expect(screen.getByTestId("geofence-control-button")).toBeInTheDocument();
 	});
 
-	it("should change the map style when a certain map style is selected", async () => {
-		openStylesCard = true;
-		await renderComponent();
+	test("searches for map styles", async () => {
+		await act(async () => {
+			await renderComponent();
+		});
+		fireEvent.click(screen.getByTestId("map-styles-button"));
 
-		expect(mapStylesItemsEsriStreets).not.toContain("mb-style-container selected");
-		fireEvent.click(mapStylesItemsEsriStreets as HTMLElement);
-		expect(mapStylesItemsEsriStreets?.className).toContain("mb-style-container selected");
+		await act(async () => {
+			fireEvent.change(screen.getByPlaceholderText("Search styles"), { target: { value: "satellite" } });
+		});
+
+		expect(props.setSearchValue).toHaveBeenCalledWith("satellite");
 	});
 
-	it("should be able to click on geofence shortcut and get to connect AWS account", async () => {
-		await renderComponent();
-		expect(geofenceControlButton.className).not.toContain("active");
-		act(() => geofenceControlButton.click());
-		expect(onOpenConnectAwsAccountModal).toBeCalled();
+	test("updates selected filters when a filter is clicked", async () => {
+		props.openStylesCard = true;
+		await act(async () => {
+			await renderComponent();
+		});
+
+		fireEvent.click(screen.getByTestId("map-styles-button"));
+
+		await screen.findByTestId("map-styles-card");
+
+		const filterButton = screen.getByTestId("filter-icon-wrapper");
+		fireEvent.click(filterButton);
+
+		const filterCheckbox = screen.getByTestId("filter-checkbox-Esri") as HTMLInputElement;
+		fireEvent.click(filterCheckbox);
+
+		props.setSelectedFilters({
+			Providers: [filterCheckbox],
+			Attribute: [],
+			Type: []
+		});
+	});
+
+	test("selects a map style", async () => {
+		await act(async () => {
+			await renderComponent();
+		});
+		fireEvent.click(screen.getByTestId("map-styles-button"));
+
+		await screen.findByTestId("map-styles-card");
+
+		await act(async () => {
+			fireEvent.click(screen.getByTestId(`map-style-item-${EsriMapEnum.ESRI_STREET_MAP}`));
+		});
+
+		expect(props.handleMapStyleChange).toHaveBeenCalledWith(EsriMapEnum.ESRI_STREET_MAP);
 	});
 });

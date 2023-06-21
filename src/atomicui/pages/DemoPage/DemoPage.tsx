@@ -37,7 +37,15 @@ import {
 	useMediaQuery,
 	usePersistedData
 } from "@demo/hooks";
-import { EsriMapEnum, GrabMapEnum, HereMapEnum, MapProviderEnum, ShowStateType, ToastType } from "@demo/types";
+import {
+	EsriMapEnum,
+	GrabMapEnum,
+	HereMapEnum,
+	MapProviderEnum,
+	MapStyleFilterTypes,
+	ShowStateType,
+	ToastType
+} from "@demo/types";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { getCurrentLocation } from "@demo/utils/getCurrentLocation";
 import { Signer } from "aws-amplify";
@@ -85,6 +93,12 @@ let timeout: NodeJS.Timer | undefined;
 const DemoPage: React.FC = () => {
 	const [show, setShow] = React.useState<ShowStateType>(initShow);
 	const [height, setHeight] = React.useState(window.innerHeight);
+	const [searchValue, setSearchValue] = React.useState("");
+	const [selectedFilters, setSelectedFilters] = React.useState<MapStyleFilterTypes>({
+		Providers: [],
+		Attribute: [],
+		Type: []
+	});
 	const mapViewRef = useRef<MapRef | null>(null);
 	const geolocateControlRef = useRef<GeolocateControlRef | null>(null);
 	const {
@@ -138,6 +152,18 @@ const DemoPage: React.FC = () => {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isAutomaticMapUnit]);
+
+	const handleResetCallback = useCallback(
+		function handleReset() {
+			setSearchValue("");
+			setSelectedFilters({
+				Providers: [],
+				Attribute: [],
+				Type: []
+			});
+		},
+		[setSearchValue, setSelectedFilters]
+	);
 
 	const clearCredsAndLocationClient = useCallback(() => {
 		clearCredentials();
@@ -689,7 +715,12 @@ const DemoPage: React.FC = () => {
 						isGrabVisible={isGrabVisible}
 						showGrabDisclaimerModal={show.grabDisclaimerModal}
 						onShowGridLoader={() => setShow(s => ({ ...s, gridLoader: true }))}
-						handleMapProviderChange={onMapProviderChange}
+						handleMapStyleChange={onMapStyleChange}
+						searchValue={searchValue}
+						setSearchValue={setSearchValue}
+						selectedFilters={selectedFilters}
+						setSelectedFilters={setSelectedFilters}
+						resetSearchAndFilters={handleResetCallback}
 					/>
 					{locationError || isCurrentLocationDisabled ? (
 						<Flex className="location-disabled" onClick={() => getCurrentGeoLocation()}>
@@ -753,12 +784,35 @@ const DemoPage: React.FC = () => {
 			/>
 			<SettingsModal
 				open={show.settings}
-				onClose={() => setShow(s => ({ ...s, settings: false }))}
+				onClose={() => {
+					handleResetCallback();
+					setShow(s => ({ ...s, settings: false }));
+				}}
 				resetAppState={resetAppState}
 				isGrabVisible={isGrabVisible}
 				handleMapProviderChange={onMapProviderChange}
 				handleMapStyleChange={onMapStyleChange}
 				handleCurrentLocationAndViewpoint={handleCurrentLocationAndViewpoint}
+				resetSearchAndFilters={handleResetCallback}
+				mapButtons={
+					<MapButtons
+						openStylesCard={show.stylesCard}
+						setOpenStylesCard={b => setShow(s => ({ ...s, stylesCard: b }))}
+						onCloseSidebar={() => setShow(s => ({ ...s, sidebar: false }))}
+						onOpenConnectAwsAccountModal={() => setShow(s => ({ ...s, connectAwsAccount: true }))}
+						onOpenSignInModal={() => setShow(s => ({ ...s, signInModal: true }))}
+						onShowGeofenceBox={() => setShow(s => ({ ...s, geofenceBox: true }))}
+						isGrabVisible={isGrabVisible}
+						showGrabDisclaimerModal={show.grabDisclaimerModal}
+						onShowGridLoader={() => setShow(s => ({ ...s, gridLoader: true }))}
+						handleMapStyleChange={onMapStyleChange}
+						searchValue={searchValue}
+						setSearchValue={setSearchValue}
+						selectedFilters={selectedFilters}
+						setSelectedFilters={setSelectedFilters}
+						onlyMapStyles
+					/>
+				}
 			/>
 			<AboutModal open={show.about} onClose={() => setShow(s => ({ ...s, about: false }))} />
 			<InformationModal
@@ -798,7 +852,13 @@ const DemoPage: React.FC = () => {
 			</Flex>
 		</View>
 	) : (
-		<DemoPlaceholderPage height={height} show={show} isGrabVisible={isGrabVisible} />
+		<DemoPlaceholderPage
+			searchValue={searchValue}
+			selectedFilters={selectedFilters}
+			height={height}
+			show={show}
+			isGrabVisible={isGrabVisible}
+		/>
 	);
 };
 

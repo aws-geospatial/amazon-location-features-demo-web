@@ -1,5 +1,5 @@
+import { MapButtons } from "@demo/atomicui/molecules";
 import { SettingOptionEnum } from "@demo/types";
-import { faker } from "@faker-js/faker";
 import { RenderResult, act, fireEvent, render, screen } from "@testing-library/react";
 
 import SettingsModal from "./SettingsModal";
@@ -12,6 +12,31 @@ describe("<SettingsModal />", () => {
 	const handleMapProviderChange = jest.fn();
 	const handleMapStyleChange = jest.fn();
 	const handleCurrentLocationAndViewpoint = jest.fn();
+	const resetSearchAndFilters = jest.fn();
+
+	const props = {
+		openStylesCard: false,
+		isGrabVisible: true,
+		showGrabDisclaimerModal: false,
+		searchValue: "",
+		isLoading: false,
+		onlyMapStyles: true,
+		selectedFilters: {
+			Providers: [],
+			Attribute: [],
+			Type: []
+		},
+		setOpenStylesCard: jest.fn(),
+		onCloseSidebar: jest.fn(),
+		onOpenConnectAwsAccountModal: jest.fn(),
+		onOpenSignInModal: jest.fn(),
+		onShowGeofenceBox: jest.fn(),
+		onShowGridLoader: jest.fn(),
+		handleMapStyleChange: jest.fn(),
+		setSearchValue: jest.fn(),
+		setSelectedFilters: jest.fn(),
+		resetSearchAndFilters: jest.fn()
+	};
 
 	const renderComponent = async (): Promise<RenderResult> => {
 		const renderedComponent = render(
@@ -23,6 +48,8 @@ describe("<SettingsModal />", () => {
 				handleMapProviderChange={handleMapProviderChange}
 				handleMapStyleChange={handleMapStyleChange}
 				handleCurrentLocationAndViewpoint={handleCurrentLocationAndViewpoint}
+				resetSearchAndFilters={resetSearchAndFilters}
+				mapButtons={<MapButtons {...props} />}
 			/>
 		);
 		settingsModal = await screen.findByTestId("settings-modal");
@@ -83,25 +110,6 @@ describe("<SettingsModal />", () => {
 		fireEvent.click(dataProviderHereRadio);
 		// expect(resetAppState).toBeCalledTimes(1);
 		expect(handleMapProviderChange).toBeCalledTimes(1);
-	});
-
-	it("should change map style and add the selected in the map style item when the user clicks it", async () => {
-		await renderComponent();
-
-		const optionItem = screen.getByTestId(`option-item-${SettingOptionEnum.MAP_STYLE}`);
-		act(() => optionItem.click());
-
-		const dataProviderEsriRadio = screen.getAllByTestId("esri-map-style");
-		const randomNumber1 = faker.datatype.number({ min: 0, max: dataProviderEsriRadio.length - 1 });
-		await act(async () => dataProviderEsriRadio[randomNumber1].click());
-		// expect(dataProviderEsriRadio[randomNumber1]).toHaveClass("selected");
-		expect(handleMapStyleChange).toBeCalledTimes(1);
-
-		const dataProviderHereRadio = screen.getAllByTestId("here-map-style");
-		const randomNumber2 = faker.datatype.number({ min: 0, max: dataProviderHereRadio.length - 1 });
-		await act(async () => dataProviderHereRadio[randomNumber2].click());
-		// expect(dataProviderHereRadio[randomNumber2]).toHaveClass("selected");
-		expect(handleMapStyleChange).toBeCalledTimes(2);
 	});
 
 	it("should select/unselect avoid-tolls and avoid-ferries", async () => {
