@@ -13,7 +13,7 @@ interface IProps {
 
 const NotFoundCard: React.FC<IProps> = ({
 	title = "No matching places found",
-	text = "Make sure your search is spelled correctly. Try adding a city, country or postcode.",
+	text = "Make sure your search is spelled correctly. Try adding a city, postcode, or country.",
 	textFontSize
 }) => (
 	<View className="not-found-card">
