@@ -18,7 +18,6 @@ const useWebSocketService = (): { subscription: ZenObservable.Subscription | nul
 	const { region, webSocketUrl, credentials } = useAmplifyAuth();
 	const url = useMemo(() => webSocketUrl?.split("//")[1]?.replace("/", "") || webSocketUrl, [webSocketUrl]);
 
-	// console.log(connectionState);
 	useEffect(() => {
 		Hub.listen("pubsub", ({ payload: { data } }) => {
 			if (connectionState !== data.connectionState) {
@@ -42,7 +41,6 @@ const useWebSocketService = (): { subscription: ZenObservable.Subscription | nul
 				provider: "AWSIoTProvider"
 			}).subscribe({
 				next: data => {
-					console.log(data);
 					if (data.value.source === "aws.geo") {
 						showToast({
 							content: `${data.value.trackerEventType === "ENTER" ? "Entered" : "Exited"} ${

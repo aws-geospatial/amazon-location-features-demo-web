@@ -56,16 +56,8 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 		trackerPoints,
 		setTrackerPoints
 	} = useAwsTracker();
-	// const [connectionState, setConnectionState] = useState("Disconnected");
-
-	// const handleConnectionStateChange = useCallback((status: string) => {
-	// 	setConnectionState(status);
-	// }, []);
-
-	// console.log("connectionState", connectionState);
-
-	// usePubsubConnectionState(handleConnectionStateChange);
 	const { subscription, connectionState } = useWebSocketService();
+
 	const isDesktop = useMediaQuery("(min-width: 1024px)");
 
 	useEffect(() => {
@@ -355,25 +347,23 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 					</Flex>
 				)}
 				<Flex justifyContent="flex-end" padding="10px 12px">
-					<Flex>
-						<IconCloud
-							className={
-								connectionState === "Connected"
-									? "tracking-card-cloud-icon connected"
-									: "tracking-card-cloud-icon connecting"
-							}
-							data-tooltip-id="notification-services"
-							data-tooltip-place="top"
-							data-tooltip-content={
-								connectionState === "Connected"
-									? "You are connected to the notification services"
-									: "Connection to the notification services was lost, Reconnecting..."
-							}
-						/>
-						<Tooltip id="notification-services" />
-					</Flex>
+					<IconCloud
+						className={
+							connectionState === "Connected"
+								? "tracking-card-cloud-icon connected"
+								: "tracking-card-cloud-icon connecting"
+						}
+						data-tooltip-id="notification-services"
+						data-tooltip-place="bottom"
+						data-tooltip-content={
+							connectionState === "Connected"
+								? "Connected successfully, you will be able to receive Enter/Exit notifications"
+								: "Connecting to socket, you will not be able to receive Enter/Exit notifications meanwhile"
+						}
+					/>
 				</Flex>
 			</Card>
+			<Tooltip id="notification-services" />
 			{renderGeofenceMarkers}
 			{renderGeofences}
 			{renderTrackerPointMarkers}
