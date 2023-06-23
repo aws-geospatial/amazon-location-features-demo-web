@@ -3,7 +3,7 @@
 
 describe("Search", () => {
 	beforeEach(() => {
-		cy.visitDomain(`${Cypress.env("WEB_DOMAIN")}`);
+		cy.visitDomain(`${Cypress.env("WEB_DOMAIN")}/demo`);
 	});
 
 	it("should allow user to view the list of search results once search is performed", { scrollBehavior: false }, () => {
