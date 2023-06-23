@@ -180,7 +180,11 @@ const appConfig = {
 					id: HereMapEnum.HERE_EXPLORE_TRUCK,
 					image: HereExploreTruck,
 					name: "Explore Truck",
-					filters: { provider: MapProviderEnum.HERE, attribute: [AttributeEnum.Truck], type: [TypeEnum.Vector] }
+					filters: {
+						provider: MapProviderEnum.HERE,
+						attribute: [AttributeEnum.Truck, AttributeEnum.Light],
+						type: [TypeEnum.Vector]
+					}
 				},
 				{
 					id: HereMapEnum.HERE_HYBRID,
