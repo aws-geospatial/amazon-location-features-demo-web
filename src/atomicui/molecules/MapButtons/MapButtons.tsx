@@ -303,7 +303,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 								onClick={() => setShowFilter(show => !show)}
 								data-testid="filter-icon-wrapper"
 							>
-								<IconFilterFunnel className={hasAnyFilterSelected ? "filter-icon live" : "filter-icon"} />
+								<IconFilterFunnel className={showFilter || hasAnyFilterSelected ? "filter-icon live" : "filter-icon"} />
 								<span className={hasAnyFilterSelected ? "filter-bubble live" : "filter-bubble"} />
 							</Flex>
 						</Flex>
