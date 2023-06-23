@@ -177,4 +177,15 @@
 			display: none;
 		}
 	}
+
+	.tracking-card-cloud-icon {
+		outline: 0;
+		&.connected {
+			fill: var(--success);
+		}
+
+		&.connecting {
+			fill: var(--secondary-contrast-color);
+		}
+	}
 }

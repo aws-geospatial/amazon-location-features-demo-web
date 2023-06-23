@@ -4,7 +4,16 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button, Card, Flex, Loader, Text, View } from "@aws-amplify/ui-react";
-import { IconArrow, IconCar, IconClose, IconDroneSolid, IconInfoSolid, IconSegment, IconWalking } from "@demo/assets";
+import {
+	IconArrow,
+	IconCar,
+	IconClose,
+	IconCloud,
+	IconDroneSolid,
+	IconInfoSolid,
+	IconSegment,
+	IconWalking
+} from "@demo/assets";
 import { TextEl } from "@demo/atomicui/atoms";
 import { GeofenceMarker } from "@demo/atomicui/molecules";
 import { useAwsGeofence, useAwsRoute, useAwsTracker, useMediaQuery } from "@demo/hooks";
@@ -47,12 +56,21 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 		trackerPoints,
 		setTrackerPoints
 	} = useAwsTracker();
-	const subscription = useWebSocketService();
+	// const [connectionState, setConnectionState] = useState("Disconnected");
+
+	// const handleConnectionStateChange = useCallback((status: string) => {
+	// 	setConnectionState(status);
+	// }, []);
+
+	// console.log("connectionState", connectionState);
+
+	// usePubsubConnectionState(handleConnectionStateChange);
+	const { subscription, connectionState } = useWebSocketService();
 	const isDesktop = useMediaQuery("(min-width: 1024px)");
 
 	useEffect(() => {
 		return () => {
-			subscription.unsubscribe();
+			subscription?.unsubscribe();
 			PubSub.removePluggable("AWSIoTProvider");
 		};
 	}, [subscription]);
@@ -336,6 +354,25 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 						<IconArrow style={{ transform: isCollapsed ? "rotate(0deg)" : "rotate(180deg)" }} />
 					</Flex>
 				)}
+				<Flex justifyContent="flex-end" padding="10px 12px">
+					<Flex>
+						<IconCloud
+							className={
+								connectionState === "Connected"
+									? "tracking-card-cloud-icon connected"
+									: "tracking-card-cloud-icon connecting"
+							}
+							data-tooltip-id="notification-services"
+							data-tooltip-place="top"
+							data-tooltip-content={
+								connectionState === "Connected"
+									? "You are connected to the notification services"
+									: "Connection to the notification services was lost, Reconnecting..."
+							}
+						/>
+						<Tooltip id="notification-services" />
+					</Flex>
+				</Flex>
 			</Card>
 			{renderGeofenceMarkers}
 			{renderGeofences}
