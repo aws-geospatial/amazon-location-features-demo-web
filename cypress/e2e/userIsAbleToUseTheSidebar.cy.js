@@ -3,7 +3,7 @@
 
 describe("Sidebar", () => {
 	it("should allow user to access the sidebar via hamburger menu", { scrollBehavior: false }, () => {
-		cy.visitDomain(`${Cypress.env("WEB_DOMAIN")}`);
+		cy.visitDomain(`${Cypress.env("WEB_DOMAIN")}/demo`);
 		cy.get('[id="Icon"]').click();
 		cy.wait(2000);
 		cy.get("div").should("contain", "Demo");
