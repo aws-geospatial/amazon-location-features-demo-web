@@ -271,8 +271,8 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	const mapStyles = useMemo(
 		() => (
 			<Flex
-				direction={"column"}
 				className={onlyMapStyles ? "map-styles-wrapper only-map-styles" : "map-styles-wrapper"}
+				direction={"column"}
 			>
 				<Flex direction={"column"} gap={0}>
 					<Flex
@@ -335,12 +335,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 				</Flex>
 				{(!showFilter || onlyMapStyles) && (
 					<Flex gap={0} direction="column" className="maps-container">
-						<Flex
-							data-testid="esri-map-styles"
-							gap={0}
-							padding={onlyMapStyles ? "0 0 1.23rem" : "0 0.7rem 1.23rem 0.5rem"}
-							wrap="wrap"
-						>
+						<Flex gap={0} padding={onlyMapStyles ? "0 0 1.23rem" : "0 0.7rem 1.23rem 0.5rem"} wrap="wrap">
 							{!searchAndFilteredResults.length && (
 								<Flex width={"80%"} margin={"0 auto"}>
 									<NotFoundCard
