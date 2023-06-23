@@ -3,29 +3,31 @@
 
 describe("Switch data provider and map styles", () => {
 	beforeEach(() => {
-		cy.visitDomain(`${Cypress.env("WEB_DOMAIN")}`);
+		cy.visitDomain(`${Cypress.env("WEB_DOMAIN")}/demo`);
 	});
 
-	it("should allow user to switch between map styles from right side menu", { scrollBehavior: false }, () => {
+	it("should allow user to view and switch between map styles from right side menu", { scrollBehavior: false }, () => {
 		cy.get('[data-testid="map-styles-button"]').click();
+		cy.get('[data-testid="map-styles-card"]').should("be.visible");
 
-		cy.get('[data-testid="map-data-provider-esri"]').should("have.class", "selected-map-data-provider");
-		cy.get('[data-testid="map-style-item-Streets"]').click();
-		cy.wait(5000);
-		cy.get('[data-testid="map-style-item-Streets"]').should("have.class", "selected");
+		cy.get('[data-testid="map-style-item-location.aws.com.demo.maps.Esri.Light"]').should(
+			"have.class",
+			"mb-style-container selected"
+		);
 
-		cy.get('[data-testid="map-data-provider-here"]').click();
-		cy.get('[data-testid="map-data-provider-here"]').should("have.class", "selected-map-data-provider");
-		cy.get('[data-testid="map-style-item-Contrast"]').click();
+		cy.get('[data-testid="map-style-item-location.aws.com.demo.maps.HERE.Explore"]').click({ force: true });
 		cy.wait(5000);
-		cy.get('[data-testid="map-style-item-Contrast"]').should("have.class", "selected");
+		cy.get('[data-testid="map-style-item-location.aws.com.demo.maps.HERE.Explore"]').should(
+			"have.class",
+			"mb-style-container selected"
+		);
 
-		cy.get('[data-testid="map-data-provider-grab"]').click();
-		cy.get('[data-testid="confirmation-button"]').click();
+		cy.get('[data-testid="map-style-item-location.aws.com.demo.maps.Grab.StandardLight"]').click({ force: true });
+		cy.get('[data-testid="confirmation-button"]').click({ force: true });
 		cy.wait(5000);
-		cy.get('[data-testid="map-data-provider-grab"]').should("have.class", "selected-map-data-provider");
-		cy.get('[data-testid="map-style-item-Dark"]').click();
-		cy.wait(5000);
-		cy.get('[data-testid="map-style-item-Dark"]').should("have.class", "selected");
+		cy.get('[data-testid="map-style-item-location.aws.com.demo.maps.Grab.StandardLight"]').should(
+			"have.class",
+			"mb-style-container selected"
+		);
 	});
 });

@@ -150,7 +150,7 @@ const appConfig = {
 					id: EsriMapEnum.ESRI_LIGHT_GRAY_CANVAS,
 					image: EsriLightGray,
 					name: "Light Gray",
-					filters: { provider: MapProviderEnum.ESRI, attribute: [AttributeEnum.Dark], type: [TypeEnum.Vector] }
+					filters: { provider: MapProviderEnum.ESRI, attribute: [AttributeEnum.Light], type: [TypeEnum.Vector] }
 				},
 				{
 					id: EsriMapEnum.ESRI_IMAGERY,
