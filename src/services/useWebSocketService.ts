@@ -11,8 +11,8 @@ import { Amplify, Hub, PubSub } from "aws-amplify";
 
 const RETRY_INTERVAL = 100;
 
-const useWebSocketService = (): { subscription: ZenObservable.Subscription | null; connectionState: string } => {
-	const [connectionState, setConnectionState] = useState("Disconnected");
+const useWebSocketService = (): { subscription: ZenObservable.Subscription | null; connectionState: string | null } => {
+	const [connectionState, setConnectionState] = useState<string | null>("Disconnected");
 	const [subscription, setSubscription] = useState<ZenObservable.Subscription | null>(null);
 
 	const { region, webSocketUrl, credentials } = useAmplifyAuth();
@@ -22,6 +22,10 @@ const useWebSocketService = (): { subscription: ZenObservable.Subscription | nul
 		Hub.listen("pubsub", ({ payload: { data } }) => {
 			if (connectionState !== data.connectionState) {
 				setConnectionState(data.connectionState);
+				const connectionFlushed = () => setTimeout(() => setConnectionState(null), 3000);
+
+				if (data.connectionState === "Connected") connectionFlushed();
+				else clearTimeout(connectionFlushed());
 			}
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -59,7 +63,7 @@ const useWebSocketService = (): { subscription: ZenObservable.Subscription | nul
 	}, [region, url, credentials?.identityId]);
 
 	useEffect(() => {
-		if (["Disconnected", "ConnectionDisrupted"].includes(connectionState)) {
+		if (connectionState && ["Disconnected", "ConnectionDisrupted"].includes(connectionState)) {
 			connect();
 		}
 	}, [connect, connectionState]);

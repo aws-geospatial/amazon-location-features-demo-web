@@ -7,8 +7,8 @@ import { Button, Card, Flex, Loader, Text, View } from "@aws-amplify/ui-react";
 import {
 	IconArrow,
 	IconCar,
+	IconCheckMarkCircle,
 	IconClose,
-	IconCloud,
 	IconDroneSolid,
 	IconInfoSolid,
 	IconSegment,
@@ -57,6 +57,7 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 		setTrackerPoints
 	} = useAwsTracker();
 	const { subscription, connectionState } = useWebSocketService();
+	const isConnected = useMemo(() => connectionState === "Connected", [connectionState]);
 
 	const isDesktop = useMediaQuery("(min-width: 1024px)");
 
@@ -266,6 +267,20 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 						</Flex>
 					</Flex>
 				</Flex>
+				<Flex
+					className={`tracking-connection-alert slide-up ${
+						!connectionState ? "hide" : isConnected ? "success" : "info"
+					}`}
+				>
+					<Flex className="connection-alert-icon">
+						{isConnected ? <IconCheckMarkCircle width={20} height={20} /> : <IconClose width={20} height={20} />}
+					</Flex>
+					<Flex className="connection-alert-text">
+						{isConnected
+							? "Connected successfully, you will be able to receive Enter/Exit notifications"
+							: "Connecting to socket, you will not be able to receive Enter/Exit notifications meanwhile"}
+					</Flex>
+				</Flex>
 				<Flex gap={0} alignItems="center" padding="1.23rem">
 					<IconInfoSolid className="icon-plus-rounded" />
 					<TextEl
@@ -346,22 +361,6 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 						<IconArrow style={{ transform: isCollapsed ? "rotate(0deg)" : "rotate(180deg)" }} />
 					</Flex>
 				)}
-				<Flex justifyContent="flex-end" padding="10px 12px">
-					<IconCloud
-						className={
-							connectionState === "Connected"
-								? "tracking-card-cloud-icon connected"
-								: "tracking-card-cloud-icon connecting"
-						}
-						data-tooltip-id="notification-services"
-						data-tooltip-place="bottom"
-						data-tooltip-content={
-							connectionState === "Connected"
-								? "Connected successfully, you will be able to receive Enter/Exit notifications"
-								: "Connecting to socket, you will not be able to receive Enter/Exit notifications meanwhile"
-						}
-					/>
-				</Flex>
 			</Card>
 			<Tooltip id="notification-services" />
 			{renderGeofenceMarkers}
