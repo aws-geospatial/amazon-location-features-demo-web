@@ -45,6 +45,7 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 	const [routeData, setRouteData] = useState<RouteDataType | undefined>(undefined);
 	const [points, setPoints] = useState<Position[] | undefined>(undefined);
 	const [trackerPos, setTrackerPos] = useState<Position | undefined>(undefined);
+	const [hideConnectionAlert, setHideConnectionAlert] = useState(false);
 	const [isCollapsed, setIsCollapsed] = useState(true);
 	const { isFetchingRoute } = useAwsRoute();
 	const { geofences, getGeofencesList } = useAwsGeofence();
@@ -59,14 +60,22 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 	const { subscription, connectionState } = useWebSocketService();
 	const isConnected = useMemo(() => connectionState === "Connected", [connectionState]);
 
-	const isDesktop = useMediaQuery("(min-width: 1024px)");
-
 	useEffect(() => {
+		setHideConnectionAlert(false);
+		let flushTimeoutId: NodeJS.Timeout;
+
+		if (isConnected) {
+			flushTimeoutId = setTimeout(() => {
+				setHideConnectionAlert(true);
+			}, 3000);
+		}
+
 		return () => {
-			subscription?.unsubscribe();
-			PubSub.removePluggable("AWSIoTProvider");
+			clearTimeout(flushTimeoutId);
 		};
-	}, [subscription]);
+	}, [isConnected]);
+
+	const isDesktop = useMediaQuery("(min-width: 1024px)");
 
 	const fetchGeofencesList = useCallback(async () => getGeofencesList(), [getGeofencesList]);
 
@@ -92,6 +101,8 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 		setIsEditingRoute(false);
 		setTrackerPoints(undefined);
 		setShowTrackingBox(false);
+		subscription?.unsubscribe();
+		PubSub.removePluggable("AWSIoTProvider");
 	};
 
 	const onTrackerMarkerChange = (type: TrackerType) => {
@@ -269,7 +280,7 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 				</Flex>
 				<Flex
 					className={`tracking-connection-alert slide-up ${
-						!connectionState ? "hide" : isConnected ? "success" : "info"
+						hideConnectionAlert ? "hide" : isConnected ? "success" : "info"
 					}`}
 				>
 					<Flex className="connection-alert-icon">

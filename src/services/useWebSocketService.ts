@@ -3,6 +3,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import { HubPayload } from "@aws-amplify/core";
 import { AWSIoTProvider } from "@aws-amplify/pubsub";
 import { showToast } from "@demo/core/Toast";
 import { useAmplifyAuth } from "@demo/hooks";
@@ -12,20 +13,16 @@ import { Amplify, Hub, PubSub } from "aws-amplify";
 const RETRY_INTERVAL = 100;
 
 const useWebSocketService = (): { subscription: ZenObservable.Subscription | null; connectionState: string | null } => {
-	const [connectionState, setConnectionState] = useState<string | null>("Disconnected");
+	const [connectionState, setConnectionState] = useState<string>("Disconnected");
 	const [subscription, setSubscription] = useState<ZenObservable.Subscription | null>(null);
 
 	const { region, webSocketUrl, credentials } = useAmplifyAuth();
 	const url = useMemo(() => webSocketUrl?.split("//")[1]?.replace("/", "") || webSocketUrl, [webSocketUrl]);
 
 	useEffect(() => {
-		Hub.listen("pubsub", ({ payload: { data } }) => {
+		Hub.listen("pubsub", ({ payload: { data } }: { payload: HubPayload }) => {
 			if (connectionState !== data.connectionState) {
 				setConnectionState(data.connectionState);
-				const connectionFlushed = () => setTimeout(() => setConnectionState(null), 3000);
-
-				if (data.connectionState === "Connected") connectionFlushed();
-				else clearTimeout(connectionFlushed());
 			}
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -39,7 +36,6 @@ const useWebSocketService = (): { subscription: ZenObservable.Subscription | nul
 				clientId: credentials?.identityId
 			})
 		);
-
 		setSubscription(
 			PubSub.subscribe(`${credentials?.identityId}/tracker`, {
 				provider: "AWSIoTProvider"
@@ -60,15 +56,21 @@ const useWebSocketService = (): { subscription: ZenObservable.Subscription | nul
 				complete: () => console.info("complete")
 			})
 		);
-	}, [region, url, credentials?.identityId]);
+	}, [credentials?.identityId, region, url]);
 
 	useEffect(() => {
-		if (connectionState && ["Disconnected", "ConnectionDisrupted"].includes(connectionState)) {
+		if (["Disconnected", "ConnectionDisrupted", "ConnectedPendingDisconnect"].includes(connectionState)) {
 			connect();
 		}
 	}, [connect, connectionState]);
 
-	return { subscription, connectionState };
+	return useMemo(
+		() => ({
+			subscription,
+			connectionState
+		}),
+		[subscription, connectionState]
+	);
 };
 
 export default useWebSocketService;
