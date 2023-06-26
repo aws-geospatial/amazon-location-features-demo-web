@@ -303,7 +303,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 								onClick={() => setShowFilter(show => !show)}
 								data-testid="filter-icon-wrapper"
 							>
-								<IconFilterFunnel className={hasAnyFilterSelected ? "filter-icon live" : "filter-icon"} />
+								<IconFilterFunnel className={showFilter || hasAnyFilterSelected ? "filter-icon live" : "filter-icon"} />
 								<span className={hasAnyFilterSelected ? "filter-bubble live" : "filter-bubble"} />
 							</Flex>
 						</Flex>
@@ -315,26 +315,33 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 									<Text as="strong" fontWeight={700} fontSize="1em">
 										{key}
 									</Text>
-									{value.map((item: string, i) => (
-										<CheckboxField
-											className="filters-checkbox"
-											size={"large"}
-											key={i}
-											label={item === GRAB ? `${item}Maps` : item}
-											name={item}
-											value={item}
-											checked={selectedFilters[key as keyof MapStyleFilterTypes].includes(item)}
-											onChange={e => handleFilterChange(e, key)}
-											data-testid={`filter-checkbox-${item}`}
-										/>
-									))}
+									{value.map((item: string, i) => {
+										if (item === GRAB && !isGrabVisible) return null;
+										return (
+											<CheckboxField
+												className="filters-checkbox"
+												size={"large"}
+												key={i}
+												label={item === GRAB ? `${item}Maps` : item}
+												name={item}
+												value={item}
+												checked={selectedFilters[key as keyof MapStyleFilterTypes].includes(item)}
+												onChange={e => handleFilterChange(e, key)}
+												data-testid={`filter-checkbox-${item}`}
+											/>
+										);
+									})}
 								</Flex>
 							))}
 						</Flex>
 					)}
 				</Flex>
 				{(!showFilter || onlyMapStyles) && (
-					<Flex gap={0} direction="column" className="maps-container">
+					<Flex
+						gap={0}
+						direction="column"
+						className={isGrabVisible ? "maps-container grab-visible" : "maps-container "}
+					>
 						<Flex gap={0} padding={onlyMapStyles ? "0 0 1.23rem" : "0 0.7rem 1.23rem 0.5rem"} wrap="wrap">
 							{!searchAndFilteredResults.length && (
 								<Flex width={"80%"} margin={"0 auto"}>

@@ -38,3 +38,9 @@ body:has(.disable-body-scroll) {
 		display: none !important;
 	}
 }
+
+.amplify-flex.amplify-checkbox__button.amplify-checkbox__button--focused {
+	&:before{
+		box-shadow: none;
+	}
+}
