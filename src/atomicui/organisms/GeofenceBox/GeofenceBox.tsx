@@ -9,6 +9,7 @@ import {
 	IconBackArrow,
 	IconClose,
 	IconGeofenceMarker,
+	IconGeofenceMarkerDisabled,
 	IconPin,
 	IconPlus,
 	IconSearch,
@@ -17,17 +18,29 @@ import {
 import { TextEl } from "@demo/atomicui/atoms";
 import { GeofenceMarker, InputField, NotFoundCard } from "@demo/atomicui/molecules";
 import { showToast } from "@demo/core";
+import { appConfig } from "@demo/core/constants";
 import { useAmplifyMap, useAwsGeofence, useAwsPlace, useMediaQuery } from "@demo/hooks";
-import { CircleDrawEventType, DistanceUnitEnum, MapUnitEnum, RadiusInM, SuggestionType, ToastType } from "@demo/types";
+import {
+	CircleDrawEventType,
+	DistanceUnitEnum,
+	MapProviderEnum,
+	MapUnitEnum,
+	RadiusInM,
+	SuggestionType,
+	ToastType
+} from "@demo/types";
 import { ListGeofenceResponseEntry, Place, Position } from "aws-sdk/clients/location";
 import { LngLat, MapRef } from "react-map-gl";
+import { Tooltip } from "react-tooltip";
 
 import CircleDrawControl from "./CircleDrawControl";
-
 import "./styles.scss";
 
 const { IMPERIAL, METRIC } = MapUnitEnum;
 const { MILES, MILES_SHORT, FEET, FEET_SHORT, KILOMETERS, KILOMETERS_SHORT, METERS, METERS_SHORT } = DistanceUnitEnum;
+const {
+	MAP_RESOURCES: { MAX_BOUNDS }
+} = appConfig;
 
 interface GeofenceBoxProps {
 	mapRef: MapRef | null;
@@ -39,7 +52,7 @@ const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox })
 	const [isEditing, setIsEditing] = useState(false);
 	const [value, setValue] = useState("");
 	const [name, setName] = useState("");
-	const { mapUnit: currentMapUnit } = useAmplifyMap();
+	const { mapUnit: currentMapUnit, mapProvider: currentMapProvider } = useAmplifyMap();
 	const [unit, setUnit] = useState(currentMapUnit === METRIC ? METERS_SHORT : FEET_SHORT);
 	/* Radius must be greater than 0 and not greater than 100,000 m (API requirement) */
 	const [radiusInM, setRadiusInM] = useState(RadiusInM.DEFAULT);
@@ -441,24 +454,37 @@ const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox })
 		({ GeofenceId, Geometry: { Circle } }: ListGeofenceResponseEntry, idx: number) => {
 			if (Circle) {
 				const { Center, Radius } = Circle;
+				const [westBound, southBound, eastBound, northBound] = MAX_BOUNDS.GRAB;
+				const isWithinGrabBounds =
+					Center[1] >= southBound && Center[1] <= northBound && Center[0] >= westBound && Center[0] <= eastBound;
+				const isDisabled = currentMapProvider === MapProviderEnum.GRAB && !isWithinGrabBounds;
 
 				return (
 					<Flex
 						key={idx}
 						className={idx !== geofences!.length - 1 ? "geofence-item border-bottom" : "geofence-item"}
+						style={isDisabled ? { opacity: 0.3 } : {}}
 						gap={0}
 						padding="10px 0px 10px 10px"
 						alignItems="center"
-						onClick={() => onClickGeofenceItem(GeofenceId, Center, Radius)}
+						onClick={isDisabled ? () => {} : () => onClickGeofenceItem(GeofenceId, Center, Radius)}
+						data-tooltip-id="geofence-item"
+						data-tooltip-place="bottom"
+						data-tooltip-content={
+							isDisabled
+								? "This geofence is not available in the Grab map provider. Please switch to another map provider to view and manage this geofence."
+								: ""
+						}
 					>
-						<IconGeofenceMarker />
+						<Tooltip id="geofence-item" />
+						{isDisabled ? <IconGeofenceMarkerDisabled style={{ margin: "0rem 0.5rem" }} /> : <IconGeofenceMarker />}
 						<Flex gap={0} direction="column">
 							<TextEl text={GeofenceId} />
 						</Flex>
 						<div
 							data-testid={`icon-trash-${GeofenceId}`}
-							className="icon-trash-container"
-							onClick={e => onDelete(e, GeofenceId)}
+							className={isDisabled ? "icon-trash-container-diabled" : "icon-trash-container"}
+							onClick={isDisabled ? () => {} : e => onDelete(e, GeofenceId)}
 						>
 							<IconTrash />
 						</div>
@@ -466,7 +492,7 @@ const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox })
 				);
 			}
 		},
-		[geofences, onClickGeofenceItem, onDelete]
+		[geofences, onClickGeofenceItem, currentMapProvider, onDelete]
 	);
 
 	const renderGeofencesList = useMemo(() => {
