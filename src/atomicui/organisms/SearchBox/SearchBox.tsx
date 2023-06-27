@@ -44,6 +44,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	isSettingsOpen,
 	isStylesCardOpen
 }) => {
+	const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const [value, setValue] = useState<string>("");
 	const [isFocused, setIsFocused] = useState(false);
 	const autocompleteRef = useRef<HTMLInputElement | null>(null);
@@ -76,10 +77,24 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 			const { lng: longitude, lat: latitude } = mapRef?.getCenter() as LngLat;
 			const vp = { longitude, latitude };
 
-			await search(value, { longitude: vp.longitude, latitude: vp.latitude }, exact);
+			if (timeoutIdRef.current) {
+				clearTimeout(timeoutIdRef.current);
+			}
+
+			timeoutIdRef.current = setTimeout(async () => {
+				await search(value, { longitude: vp.longitude, latitude: vp.latitude }, exact);
+			}, 200);
 		},
 		[mapRef, search]
 	);
+
+	useEffect(() => {
+		return () => {
+			if (timeoutIdRef.current) {
+				clearTimeout(timeoutIdRef.current);
+			}
+		};
+	}, []);
 
 	const selectSuggestion = async ({ text, label, placeid }: ComboBoxOption) => {
 		if (!placeid) {
