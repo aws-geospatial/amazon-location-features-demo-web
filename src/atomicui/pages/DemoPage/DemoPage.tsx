@@ -275,7 +275,9 @@ const DemoPage: React.FC = () => {
 
 	useEffect(() => {
 		if (suggestions && bound) {
-			mapViewRef.current?.fitBounds(bound as [number, number, number, number]);
+			mapViewRef.current?.fitBounds(bound as [number, number, number, number], {
+				padding: suggestions.length > 2 ? 50 : 150
+			});
 		} else if (show.routeBox && routeData?.Summary.RouteBBox) {
 			const boundingBox = routeData.Summary.RouteBBox;
 			const options = isDesktop
