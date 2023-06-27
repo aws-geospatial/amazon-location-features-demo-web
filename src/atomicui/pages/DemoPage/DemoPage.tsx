@@ -469,10 +469,10 @@ const DemoPage: React.FC = () => {
 					/* If current location data exists */
 					const { latitude, longitude } = currentLocationData.currentLocation;
 					const [westBound, southBound, eastBound, northBound] = MAX_BOUNDS.GRAB;
-					const isWithinBounds =
+					const isWithinGrabBounds =
 						latitude >= southBound && latitude <= northBound && longitude >= westBound && longitude <= eastBound;
 
-					if (!isWithinBounds) {
+					if (!isWithinGrabBounds) {
 						/* If current location lies outside Grab MAX_BOUNDS */
 						setIsCurrentLocationDisabled(true);
 						setViewpoint({ latitude: AMAZON_HQ.SG.latitude, longitude: AMAZON_HQ.SG.longitude });

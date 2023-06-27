@@ -213,6 +213,20 @@
 				}
 			}
 		}
+
+		.icon-trash-container-diabled {
+			display: flex;
+			align-items: center;
+
+			svg {
+				fill: var(--grey-color);
+				width: 16px;
+				height: 16px;
+				cursor: pointer;
+				position: absolute;
+				right: 16px;
+			}
+		}
 	}
 
 	.show-hide-details-container {
