@@ -109,7 +109,10 @@
 .amplify-flex.map-styles-wrapper {
 	&:not(.only-map-styles) {
 		.maps-container {
-			height: 40rem;
+			height: 31.1rem;
+			&.grab-visible {
+				height: 33.66rem;
+			}
 			overflow-y: scroll;
 			overflow-x: hidden;
 		}
@@ -138,6 +141,9 @@
 			border-bottom-left-radius: 0.6rem;
 			border-right: none;
 			width: 100%;
+			::placeholder {
+				color: var(--grey-color);
+			}
 			.search-icon-container {
 				display: flex;
 				align-items: center;
@@ -231,7 +237,7 @@
 			.amplify-flex.amplify-checkbox__button {
 				&:before {
 					background: var(--light-color-2);
-					border: 1px solid var(--grey-color-2)
+					border: 1px solid var(--grey-color-2);
 				}
 				span {
 					display: flex;
