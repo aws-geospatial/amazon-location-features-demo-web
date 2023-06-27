@@ -19,7 +19,7 @@ import { Tooltip } from "react-tooltip";
 import "./styles.scss";
 
 const { METRIC } = MapUnitEnum;
-const { KILOMETERS, KILOMETERS_SHORT, METERS_SHORT, MILES, MILES_SHORT, FEET_SHORT } = DistanceUnitEnum;
+const { KILOMETERS, KILOMETERS_SHORT, MILES, MILES_SHORT } = DistanceUnitEnum;
 
 interface SearchBoxProps {
 	mapRef: MapRef | null;
@@ -149,11 +149,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 			: undefined;
 		const geodesicDistanceWithUnit = geodesicDistance
 			? currentMapUnit === METRIC
-				? geodesicDistance < 1
-					? `${geodesicDistance * 1000} ${METERS_SHORT}`
-					: `${geodesicDistance.toFixed(2)} ${KILOMETERS_SHORT}`
-				: geodesicDistance < 1
-				? `${parseInt((geodesicDistance * 5280).toString())} ${FEET_SHORT}`
+				? `${geodesicDistance.toFixed(2)} ${KILOMETERS_SHORT}`
 				: `${geodesicDistance.toFixed(2)} ${MILES_SHORT}`
 			: undefined;
 
