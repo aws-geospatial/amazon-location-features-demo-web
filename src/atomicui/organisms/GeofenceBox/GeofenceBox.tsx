@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button, Card, Flex, Loader, SelectField, SliderField, Text, View } from "@aws-amplify/ui-react";
 import {
@@ -35,6 +35,7 @@ interface GeofenceBoxProps {
 }
 
 const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox }) => {
+	const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const [isEditing, setIsEditing] = useState(false);
 	const [value, setValue] = useState("");
 	const [name, setName] = useState("");
@@ -100,11 +101,26 @@ const GeofenceBox: React.FC<GeofenceBoxProps> = ({ mapRef, setShowGeofenceBox })
 		async (value: string, exact = false) => {
 			if (value.length >= 3) {
 				const { lng: longitude, lat: latitude } = mapRef?.getCenter() as LngLat;
-				await search(value, { longitude, latitude }, exact, sg => setSuggestions(sg));
+
+				if (timeoutIdRef.current) {
+					clearTimeout(timeoutIdRef.current);
+				}
+
+				timeoutIdRef.current = setTimeout(async () => {
+					await search(value, { longitude, latitude }, exact, sg => setSuggestions(sg));
+				}, 200);
 			}
 		},
 		[mapRef, search]
 	);
+
+	useEffect(() => {
+		return () => {
+			if (timeoutIdRef.current) {
+				clearTimeout(timeoutIdRef.current);
+			}
+		};
+	}, []);
 
 	const onChange = useCallback(
 		async ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
