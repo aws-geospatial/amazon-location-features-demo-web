@@ -251,12 +251,12 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 
 	const hideBorderRadius = useMemo(() => {
 		return (
-			!!document.getElementsByClassName("amplify-autocomplete__menu").length &&
-			!!value &&
-			!!suggestions?.length &&
+			((!!document.getElementsByClassName("amplify-autocomplete__menu").length && !!value) ||
+				!!suggestions?.length ||
+				isSearching) &&
 			isFocused
 		);
-	}, [value, suggestions, isFocused]);
+	}, [value, suggestions?.length, isFocused, isSearching]);
 
 	return (
 		<>
