@@ -3,7 +3,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { Card, CheckboxField, Divider, Flex, Placeholder, SearchField, Text } from "@aws-amplify/ui-react";
+import { Button, Card, CheckboxField, Divider, Flex, Placeholder, SearchField, Text } from "@aws-amplify/ui-react";
 import { IconClose, IconFilterFunnel, IconGeofencePlusSolid, IconMapSolid, IconSearch } from "@demo/assets";
 import { TextEl } from "@demo/atomicui/atoms";
 import { appConfig } from "@demo/core/constants";
@@ -147,6 +147,14 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 		}
 	};
 
+	const resetFilters = useCallback(() => {
+		setSelectedFilters({
+			Providers: [],
+			Attribute: [],
+			Type: []
+		});
+	}, [setSelectedFilters]);
+
 	// const _handleMapProviderChange = (mapProvider: MapProviderEnum) => {
 	// 	if (mapProvider !== currentMapProvider) {
 	// 		// setIsLoadingImg(true);
@@ -181,6 +189,12 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 			}, []);
 		},
 		[]
+	);
+
+	const noFilters = !(
+		!selectedFilters.Providers.length &&
+		!selectedFilters.Attribute.length &&
+		!selectedFilters.Type.length
 	);
 
 	/**
@@ -337,18 +351,27 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 					)}
 				</Flex>
 				{(!showFilter || onlyMapStyles) && (
-					<Flex
-						gap={0}
-						direction="column"
-						className={isGrabVisible ? "maps-container grab-visible" : "maps-container "}
-					>
+					<Flex gap={0} direction="column" className={isGrabVisible ? "maps-container grab-visible" : "maps-container"}>
 						<Flex gap={0} padding={onlyMapStyles ? "0 0 1.23rem" : "0 0.7rem 1.23rem 0.5rem"} wrap="wrap">
 							{!searchAndFilteredResults.length && (
-								<Flex width={"80%"} margin={"0 auto"}>
+								<Flex width={"80%"} margin={"0 auto"} direction="column">
 									<NotFoundCard
 										title="No matching styles found"
-										text="Make sure your search is spelled correctly and try again"
-										textFontSize="0.95rem"
+										text={`Make sure your search is spelled correctly and try again${
+											noFilters
+												? ", make sure you have applied the appropriate filter or remove the filter and try again"
+												: ""
+										}`}
+										textFontSize="0.93rem"
+										textMargin={"0.5rem 0"}
+										textPadding={noFilters ? "0" : undefined}
+										actionButton={
+											noFilters && (
+												<Button className="clear-filters-button" variation="link" onClick={resetFilters}>
+													Clear filters
+												</Button>
+											)
+										}
 									/>
 								</Flex>
 							)}
@@ -404,7 +427,9 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 			selectedFilters,
 			setSearchValue,
 			showFilter,
-			onlyMapStyles
+			onlyMapStyles,
+			noFilters,
+			resetFilters
 		]
 	);
 
