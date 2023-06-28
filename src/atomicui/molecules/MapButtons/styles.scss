@@ -115,6 +115,11 @@
 			}
 			overflow-y: scroll;
 			overflow-x: hidden;
+
+			.clear-filters-button {
+				color: var(--primary-color);
+				font-weight: 600;
+			}
 		}
 	}
 	.maps-styles-search {
