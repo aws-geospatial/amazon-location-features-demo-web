@@ -15,7 +15,7 @@
 	.tracking-connection-alert {
 		display: flex;
 		align-items: center;
-		padding: 12px 16px;
+		padding: 6px 9px 6px 16px;
 		font-size: 14px;
 
 		&.slide-up {
@@ -32,18 +32,23 @@
 			}
 		}
 
-		// &.hide-on-success {
-		// 	display: none;
-		// }
+		.notification-text {
+			color: var(--white-colors)
+		}
+		.close-icon {
+			cursor: pointer;
+			padding: 2px;
+		}
+
 		svg {
 			fill: white;
 		}
 		&.success {
-			background-color: #00b016;
+			background-color: var(--success);
 			color: var(--primary-text-color);
 		}
 		&.info {
-			background-color: #ffa500;
+			background-color: var(--warning);
 			color: var(--primary-text-color);
 		}
 		.connection-alert-icon {

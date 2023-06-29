@@ -4,16 +4,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button, Card, Flex, Loader, Text, View } from "@aws-amplify/ui-react";
-import {
-	IconArrow,
-	IconCar,
-	IconCheckMarkCircle,
-	IconClose,
-	IconDroneSolid,
-	IconInfoSolid,
-	IconSegment,
-	IconWalking
-} from "@demo/assets";
+import { IconArrow, IconCar, IconClose, IconDroneSolid, IconInfoSolid, IconSegment, IconWalking } from "@demo/assets";
 import { TextEl } from "@demo/atomicui/atoms";
 import { GeofenceMarker } from "@demo/atomicui/molecules";
 import { useAwsGeofence, useAwsRoute, useAwsTracker, useMediaQuery } from "@demo/hooks";
@@ -61,7 +52,6 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 	const isConnected = useMemo(() => connectionState === "Connected", [connectionState]);
 
 	useEffect(() => {
-		setHideConnectionAlert(false);
 		let flushTimeoutId: NodeJS.Timeout;
 
 		if (isConnected) {
@@ -281,15 +271,14 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 				<Flex
 					className={`tracking-connection-alert slide-up ${
 						hideConnectionAlert ? "hide" : isConnected ? "success" : "info"
-					}`}
+					}
+					`}
 				>
-					<Flex className="connection-alert-icon">
-						{isConnected ? <IconCheckMarkCircle width={20} height={20} /> : <IconClose width={20} height={20} />}
-					</Flex>
-					<Flex className="connection-alert-text">
-						{isConnected
-							? "Connected successfully, you will be able to receive Enter/Exit notifications"
-							: "Connecting to socket, you will not be able to receive Enter/Exit notifications meanwhile"}
+					<Flex width="100%" justifyContent="space-between" alignItems="center">
+						<Text className="notification-text">
+							{isConnected ? "Notification socket connection restored" : "Notification socket is reconnecting"}{" "}
+						</Text>
+						<IconClose className="close-icon" onClick={() => setHideConnectionAlert(true)} />
 					</Flex>
 				</Flex>
 				<Flex gap={0} alignItems="center" padding="1.23rem">
