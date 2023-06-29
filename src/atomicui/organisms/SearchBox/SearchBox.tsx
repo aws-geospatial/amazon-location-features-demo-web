@@ -251,12 +251,12 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 
 	const hideBorderRadius = useMemo(() => {
 		return (
-			!!document.getElementsByClassName("amplify-autocomplete__menu").length &&
-			!!value &&
-			!!suggestions?.length &&
+			((!!document.getElementsByClassName("amplify-autocomplete__menu").length && !!value) ||
+				!!suggestions?.length ||
+				isSearching) &&
 			isFocused
 		);
-	}, [value, suggestions, isFocused]);
+	}, [value, suggestions?.length, isFocused, isSearching]);
 
 	return (
 		<>
@@ -272,7 +272,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 			>
 				<Flex gap={0} width="100%" height="100%" alignItems="center">
 					<Autocomplete
-						className="search-complete"
+						className={!value && !suggestions?.length ? "search-complete noEmpty" : "search-complete"}
 						ref={autocompleteRef}
 						inputMode="search"
 						hasSearchIcon={false}
@@ -295,6 +295,21 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 						renderOption={renderOption}
 						optionFilter={() => true}
 						onSelect={selectSuggestion}
+						menuSlots={{
+							LoadingIndicator: (
+								<Flex className="search-loader-container">
+									<Loader />
+									<TextEl margin="15px 0px 30px 0px" text="Searching for suggestions..." />
+								</Flex>
+							),
+							Empty:
+								!!value && !suggestions?.length ? (
+									<Flex className="not-found-container">
+										<NotFoundCard />
+									</Flex>
+								) : null
+						}}
+						isLoading={isSearching}
 						innerEndComponent={
 							<Flex className="inner-end-components">
 								<Flex className="icon inner-end-component" onClick={onSearch}>
@@ -326,14 +341,6 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 						}
 					/>
 				</Flex>
-				{isSearching ? (
-					<Flex className="search-loader-container">
-						<Loader />
-						<TextEl margin="15px 0px 30px 0px" text="Searching for suggestions..." />
-					</Flex>
-				) : !!value && !suggestions?.length ? (
-					<NotFoundCard />
-				) : null}
 			</Flex>
 			{markers}
 			{mapMarker}
