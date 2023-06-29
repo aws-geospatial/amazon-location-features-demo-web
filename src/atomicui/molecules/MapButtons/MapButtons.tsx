@@ -251,9 +251,14 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 			});
 
 			// Add the filtered group to the result if it's not empty
-			return filteredGroup.length > 0
-				? [{ title: provider === GRAB ? `${GRAB}Maps` : provider }, ...filteredGroup]
-				: [];
+			return (
+				filteredGroup.length > 0 ? [{ title: provider === GRAB ? `${GRAB}Maps` : provider }, ...filteredGroup] : []
+			) as (
+				| MapStyle
+				| {
+						title: string;
+				  }
+			)[];
 		});
 	};
 
