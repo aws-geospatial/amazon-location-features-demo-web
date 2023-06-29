@@ -275,7 +275,9 @@ const DemoPage: React.FC = () => {
 
 	useEffect(() => {
 		if (suggestions && bound) {
-			mapViewRef.current?.fitBounds(bound as [number, number, number, number]);
+			mapViewRef.current?.fitBounds(bound as [number, number, number, number], {
+				padding: suggestions.length > 2 ? 50 : 150
+			});
 		} else if (show.routeBox && routeData?.Summary.RouteBBox) {
 			const boundingBox = routeData.Summary.RouteBBox;
 			const options = isDesktop
@@ -469,10 +471,10 @@ const DemoPage: React.FC = () => {
 					/* If current location data exists */
 					const { latitude, longitude } = currentLocationData.currentLocation;
 					const [westBound, southBound, eastBound, northBound] = MAX_BOUNDS.GRAB;
-					const isWithinBounds =
+					const isWithinGrabBounds =
 						latitude >= southBound && latitude <= northBound && longitude >= westBound && longitude <= eastBound;
 
-					if (!isWithinBounds) {
+					if (!isWithinGrabBounds) {
 						/* If current location lies outside Grab MAX_BOUNDS */
 						setIsCurrentLocationDisabled(true);
 						setViewpoint({ latitude: AMAZON_HQ.SG.latitude, longitude: AMAZON_HQ.SG.longitude });

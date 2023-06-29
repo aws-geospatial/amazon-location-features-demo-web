@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
+import React, { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Card, CheckboxField, Flex, Text, View } from "@aws-amplify/ui-react";
 import {
@@ -63,6 +63,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 	const [isSearching, setIsSearching] = useState(false);
 	const [stepsData, setStepsData] = useState<Place[]>([]);
 	const [isCollapsed, setIsCollapsed] = useState(true);
+	const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const {
 		currentLocationData,
 		viewpoint,
@@ -240,16 +241,30 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 			if (value.length >= 3) {
 				const { lng: longitude, lat: latitude } = mapRef?.getCenter() as LngLat;
 
-				await search(value, { longitude, latitude }, exact, sg => {
-					type === InputType.FROM
-						? setSuggestions({ ...suggestions, from: sg })
-						: setSuggestions({ ...suggestions, to: sg });
-				});
+				if (timeoutIdRef.current) {
+					clearTimeout(timeoutIdRef.current);
+				}
+
+				timeoutIdRef.current = setTimeout(async () => {
+					await search(value, { longitude, latitude }, exact, sg => {
+						type === InputType.FROM
+							? setSuggestions({ ...suggestions, from: sg })
+							: setSuggestions({ ...suggestions, to: sg });
+					});
+				}, 200);
 			}
 			setIsSearching(false);
 		},
 		[mapRef, search, suggestions]
 	);
+
+	useEffect(() => {
+		return () => {
+			if (timeoutIdRef.current) {
+				clearTimeout(timeoutIdRef.current);
+			}
+		};
+	}, []);
 
 	const onFocus = (type: InputType) => {
 		if (type === InputType.FROM) {
