@@ -119,6 +119,9 @@
 			.clear-filters-button {
 				color: var(--primary-color);
 				font-weight: 600;
+				&:hover {
+					color: var(--primary-contrast-color);
+				}
 			}
 		}
 	}
