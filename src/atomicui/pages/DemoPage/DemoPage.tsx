@@ -129,7 +129,7 @@ const DemoPage: React.FC = () => {
 		setCurrentLocation,
 		viewpoint,
 		setViewpoint,
-		isAutomaticMapUnit,
+		autoMapUnit,
 		setAutomaticMapUnit,
 		setAttributionText
 	} = useAmplifyMap();
@@ -147,11 +147,8 @@ const DemoPage: React.FC = () => {
 	);
 
 	useEffect(() => {
-		if (isAutomaticMapUnit) {
-			setAutomaticMapUnit();
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isAutomaticMapUnit]);
+		autoMapUnit.selected && setAutomaticMapUnit();
+	}, [autoMapUnit.selected, setAutomaticMapUnit]);
 
 	const handleResetCallback = useCallback(
 		function handleReset() {

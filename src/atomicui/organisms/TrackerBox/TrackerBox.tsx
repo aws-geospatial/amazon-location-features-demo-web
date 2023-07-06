@@ -52,6 +52,7 @@ const TrackerBox: React.FC<TrackerBoxProps> = ({ mapRef, setShowTrackingBox }) =
 	const isConnected = useMemo(() => connectionState === "Connected", [connectionState]);
 
 	useEffect(() => {
+		setHideConnectionAlert(false);
 		let flushTimeoutId: NodeJS.Timeout;
 
 		if (isConnected) {

@@ -51,14 +51,12 @@ const useAmplifyMap = () => {
 			setViewpoint: (viewpoint: ViewPointType) => {
 				setState({ viewpoint });
 			},
-			setIsAutomaticMapUnit: (isAutomaticMapUnit: boolean) => {
-				setState({ isAutomaticMapUnit });
+			setIsAutomaticMapUnit: (selected: boolean) => {
+				setState(s => ({ autoMapUnit: { ...s.autoMapUnit, selected } }));
 			},
 			setAutomaticMapUnit: () => {
-				if (store.isAutomaticMapUnit) {
-					const isMetric = !IMPERIAL_COUNTRIES.includes(navigator.language.split("-")[1]);
-					isMetric ? setState({ mapUnit: METRIC }) : setState({ mapUnit: IMPERIAL });
-				}
+				const isMetric = !IMPERIAL_COUNTRIES.includes(navigator.language.split("-")[1]);
+				setState(s => ({ autoMapUnit: { ...s.autoMapUnit, system: isMetric ? METRIC : IMPERIAL } }));
 			},
 			setMapUnit: (mapUnit: MapUnitEnum) => {
 				setState({ mapUnit });
@@ -82,7 +80,7 @@ const useAmplifyMap = () => {
 				setInitial();
 			}
 		}),
-		[mapsService, setState, store.isAutomaticMapUnit, setInitial]
+		[mapsService, setState, setInitial]
 	);
 
 	return useMemo(() => ({ ...methods, ...store }), [methods, store]);
