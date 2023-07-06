@@ -69,7 +69,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 }) => {
 	const [selectedOption, setSelectedOption] = useState<SettingOptionEnum>(SettingOptionEnum.UNITS);
 	const {
-		isAutomaticMapUnit,
+		autoMapUnit,
 		setIsAutomaticMapUnit,
 		mapUnit: currentMapUnit,
 		setMapUnit,
@@ -211,7 +211,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 			{
 				id: SettingOptionEnum.UNITS,
 				title: SettingOptionEnum.UNITS,
-				defaultValue: isAutomaticMapUnit ? "Automatic" : currentMapUnit,
+				defaultValue: autoMapUnit.selected ? "Automatic" : currentMapUnit,
 				icon: <IconPeopleArrows />,
 				detailsComponent: (
 					<Flex
@@ -224,7 +224,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 							<Radio
 								data-testid="unit-automatic-radio"
 								value={"Automatic"}
-								checked={isAutomaticMapUnit}
+								checked={autoMapUnit.selected}
 								onChange={handleAutoMapUnitChange}
 							>
 								<TextEl marginLeft="1.23rem" text={"Automatic"} />
@@ -232,7 +232,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 									variation="tertiary"
 									marginLeft="1.23rem"
 									text={
-										currentMapUnit === IMPERIAL
+										autoMapUnit.system === IMPERIAL
 											? "Based on your browser settings (Miles, pounds)"
 											: "Based on your browser settings (Kilometers, kilograms)"
 									}
@@ -243,7 +243,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 							<Radio
 								data-testid="unit-imperial-radio"
 								value={IMPERIAL}
-								checked={!isAutomaticMapUnit && currentMapUnit === IMPERIAL}
+								checked={!autoMapUnit.selected && currentMapUnit === IMPERIAL}
 								onChange={() => onMapUnitChange(IMPERIAL)}
 							>
 								<TextEl marginLeft="1.23rem" text={IMPERIAL} />
@@ -254,7 +254,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 							<Radio
 								data-testid="unit-metric-radio"
 								value={METRIC}
-								checked={!isAutomaticMapUnit && currentMapUnit === METRIC}
+								checked={!autoMapUnit.selected && currentMapUnit === METRIC}
 								onChange={() => onMapUnitChange(METRIC)}
 							>
 								<TextEl marginLeft="1.23rem" text={METRIC} />
@@ -491,7 +491,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 		],
 		[
 			currentMapUnit,
-			isAutomaticMapUnit,
+			autoMapUnit,
 			isGrabVisible,
 			handleAutoMapUnitChange,
 			onMapUnitChange,
