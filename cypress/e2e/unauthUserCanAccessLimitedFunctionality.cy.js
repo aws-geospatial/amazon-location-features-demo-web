@@ -3,7 +3,7 @@
 
 describe("Unauthorized users have limited permissions", () => {
 	it("shouldn't allow unauth users to user tracker and geofence", { scrollBehavior: false }, () => {
-		cy.visitDomain(`${Cypress.env("WEB_DOMAIN")}`);
+		cy.visitDomain(`${Cypress.env("WEB_DOMAIN")}/demo`);
 		cy.get('[class="amplify-flex geofence-button"]').click();
 		cy.wait(2000);
 		cy.get("div").should("contain", "Connect AWS Account");

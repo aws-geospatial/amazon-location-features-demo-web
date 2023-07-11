@@ -70,13 +70,12 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 	const keyArr = Object.keys(formValues);
 
 	useEffect(() => {
-		const newUrl = transformCloudFormationLink(REGION_ASIA);
-
-		if (currentMapProvider === MapProviderEnum.GRAB && cloudFormationLink !== newUrl) {
+		if (currentMapProvider === MapProviderEnum.GRAB) {
+			const newUrl = transformCloudFormationLink(REGION_ASIA);
 			setCloudFormationLink(newUrl);
 			setStackRegion(defaultRegionAsia);
 		}
-	}, [currentMapProvider, cloudFormationLink]);
+	}, [currentMapProvider]);
 
 	const _onClose = () => {
 		onClose();

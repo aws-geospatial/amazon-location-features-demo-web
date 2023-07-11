@@ -3,7 +3,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { Card, CheckboxField, Divider, Flex, Placeholder, SearchField, Text } from "@aws-amplify/ui-react";
+import { Card, CheckboxField, Divider, Flex, Link, Placeholder, SearchField, Text } from "@aws-amplify/ui-react";
 import { IconClose, IconFilterFunnel, IconGeofencePlusSolid, IconMapSolid, IconSearch } from "@demo/assets";
 import { TextEl } from "@demo/atomicui/atoms";
 import { appConfig } from "@demo/core/constants";
@@ -147,6 +147,14 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 		}
 	};
 
+	const resetFilters = useCallback(() => {
+		setSelectedFilters({
+			Providers: [],
+			Attribute: [],
+			Type: []
+		});
+	}, [setSelectedFilters]);
+
 	// const _handleMapProviderChange = (mapProvider: MapProviderEnum) => {
 	// 	if (mapProvider !== currentMapProvider) {
 	// 		// setIsLoadingImg(true);
@@ -181,6 +189,12 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 			}, []);
 		},
 		[]
+	);
+
+	const noFilters = !(
+		!selectedFilters.Providers.length &&
+		!selectedFilters.Attribute.length &&
+		!selectedFilters.Type.length
 	);
 
 	/**
@@ -237,9 +251,14 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 			});
 
 			// Add the filtered group to the result if it's not empty
-			return filteredGroup.length > 0
-				? [{ title: provider === GRAB ? `${GRAB}Maps` : provider }, ...filteredGroup]
-				: [];
+			return (
+				filteredGroup.length > 0 ? [{ title: provider === GRAB ? `${GRAB}Maps` : provider }, ...filteredGroup] : []
+			) as (
+				| MapStyle
+				| {
+						title: string;
+				  }
+			)[];
 		});
 	};
 
@@ -271,8 +290,8 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	const mapStyles = useMemo(
 		() => (
 			<Flex
-				direction={"column"}
 				className={onlyMapStyles ? "map-styles-wrapper only-map-styles" : "map-styles-wrapper"}
+				direction={"column"}
 			>
 				<Flex direction={"column"} gap={0}>
 					<Flex
@@ -303,7 +322,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 								onClick={() => setShowFilter(show => !show)}
 								data-testid="filter-icon-wrapper"
 							>
-								<IconFilterFunnel className={hasAnyFilterSelected ? "filter-icon live" : "filter-icon"} />
+								<IconFilterFunnel className={showFilter || hasAnyFilterSelected ? "filter-icon live" : "filter-icon"} />
 								<span className={hasAnyFilterSelected ? "filter-bubble live" : "filter-bubble"} />
 							</Flex>
 						</Flex>
@@ -315,38 +334,49 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 									<Text as="strong" fontWeight={700} fontSize="1em">
 										{key}
 									</Text>
-									{value.map((item: string, i) => (
-										<CheckboxField
-											className="filters-checkbox"
-											size={"large"}
-											key={i}
-											label={item === GRAB ? `${item}Maps` : item}
-											name={item}
-											value={item}
-											checked={selectedFilters[key as keyof MapStyleFilterTypes].includes(item)}
-											onChange={e => handleFilterChange(e, key)}
-											data-testid={`filter-checkbox-${item}`}
-										/>
-									))}
+									{value.map((item: string, i) => {
+										if (item === GRAB && !isGrabVisible) return null;
+										return (
+											<CheckboxField
+												className="filters-checkbox"
+												size={"large"}
+												key={i}
+												label={item === GRAB ? `${item}Maps` : item}
+												name={item}
+												value={item}
+												checked={selectedFilters[key as keyof MapStyleFilterTypes].includes(item)}
+												onChange={e => handleFilterChange(e, key)}
+												data-testid={`filter-checkbox-${item}`}
+											/>
+										);
+									})}
 								</Flex>
 							))}
 						</Flex>
 					)}
 				</Flex>
 				{(!showFilter || onlyMapStyles) && (
-					<Flex gap={0} direction="column" className="maps-container">
-						<Flex
-							data-testid="esri-map-styles"
-							gap={0}
-							padding={onlyMapStyles ? "0 0 1.23rem" : "0 0.7rem 1.23rem 0.5rem"}
-							wrap="wrap"
-						>
+					<Flex gap={0} direction="column" className={isGrabVisible ? "maps-container grab-visible" : "maps-container"}>
+						<Flex gap={0} padding={onlyMapStyles ? "0 0 1.23rem" : "0 0.7rem 1.23rem 0.5rem"} wrap="wrap">
 							{!searchAndFilteredResults.length && (
-								<Flex width={"80%"} margin={"0 auto"}>
+								<Flex width={"80%"} margin={"0 auto"} direction="column">
 									<NotFoundCard
 										title="No matching styles found"
-										text="Make sure your search is spelled correctly and try again"
-										textFontSize="0.95rem"
+										text={`Make sure your search is spelled correctly and try again${
+											noFilters
+												? ", make sure you have applied the appropriate filter or remove the filter and try again"
+												: ""
+										}`}
+										textFontSize="0.93rem"
+										textMargin={"0.6rem 0 0.9rem"}
+										textPadding={noFilters ? "0" : undefined}
+										actionButton={
+											noFilters && (
+												<Link className="clear-filters-button" onClick={resetFilters}>
+													Clear filters
+												</Link>
+											)
+										}
 									/>
 								</Flex>
 							)}
@@ -402,7 +432,9 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 			selectedFilters,
 			setSearchValue,
 			showFilter,
-			onlyMapStyles
+			onlyMapStyles,
+			noFilters,
+			resetFilters
 		]
 	);
 

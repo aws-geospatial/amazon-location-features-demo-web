@@ -19,7 +19,7 @@ import { Tooltip } from "react-tooltip";
 import "./styles.scss";
 
 const { METRIC } = MapUnitEnum;
-const { KILOMETERS, KILOMETERS_SHORT, METERS_SHORT, MILES, MILES_SHORT, FEET_SHORT } = DistanceUnitEnum;
+const { KILOMETERS, KILOMETERS_SHORT, MILES, MILES_SHORT } = DistanceUnitEnum;
 
 interface SearchBoxProps {
 	mapRef: MapRef | null;
@@ -44,6 +44,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	isSettingsOpen,
 	isStylesCardOpen
 }) => {
+	const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const [value, setValue] = useState<string>("");
 	const [isFocused, setIsFocused] = useState(false);
 	const autocompleteRef = useRef<HTMLInputElement | null>(null);
@@ -76,10 +77,24 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 			const { lng: longitude, lat: latitude } = mapRef?.getCenter() as LngLat;
 			const vp = { longitude, latitude };
 
-			await search(value, { longitude: vp.longitude, latitude: vp.latitude }, exact);
+			if (timeoutIdRef.current) {
+				clearTimeout(timeoutIdRef.current);
+			}
+
+			timeoutIdRef.current = setTimeout(async () => {
+				await search(value, { longitude: vp.longitude, latitude: vp.latitude }, exact);
+			}, 200);
 		},
 		[mapRef, search]
 	);
+
+	useEffect(() => {
+		return () => {
+			if (timeoutIdRef.current) {
+				clearTimeout(timeoutIdRef.current);
+			}
+		};
+	}, []);
 
 	const selectSuggestion = async ({ text, label, placeid }: ComboBoxOption) => {
 		if (!placeid) {
@@ -149,11 +164,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 			: undefined;
 		const geodesicDistanceWithUnit = geodesicDistance
 			? currentMapUnit === METRIC
-				? geodesicDistance < 1
-					? `${geodesicDistance * 1000} ${METERS_SHORT}`
-					: `${geodesicDistance.toFixed(2)} ${KILOMETERS_SHORT}`
-				: geodesicDistance < 1
-				? `${parseInt((geodesicDistance * 5280).toString())} ${FEET_SHORT}`
+				? `${geodesicDistance.toFixed(2)} ${KILOMETERS_SHORT}`
 				: `${geodesicDistance.toFixed(2)} ${MILES_SHORT}`
 			: undefined;
 
@@ -240,12 +251,12 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 
 	const hideBorderRadius = useMemo(() => {
 		return (
-			!!document.getElementsByClassName("amplify-autocomplete__menu").length &&
-			!!value &&
-			!!suggestions?.length &&
+			((!!document.getElementsByClassName("amplify-autocomplete__menu").length && !!value) ||
+				!!suggestions?.length ||
+				isSearching) &&
 			isFocused
 		);
-	}, [value, suggestions, isFocused]);
+	}, [value, suggestions?.length, isFocused, isSearching]);
 
 	return (
 		<>
@@ -261,7 +272,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 			>
 				<Flex gap={0} width="100%" height="100%" alignItems="center">
 					<Autocomplete
-						className="search-complete"
+						className={!value && !suggestions?.length ? "search-complete noEmpty" : "search-complete"}
 						ref={autocompleteRef}
 						inputMode="search"
 						hasSearchIcon={false}
@@ -284,6 +295,21 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 						renderOption={renderOption}
 						optionFilter={() => true}
 						onSelect={selectSuggestion}
+						menuSlots={{
+							LoadingIndicator: (
+								<Flex className="search-loader-container">
+									<Loader />
+									<TextEl margin="15px 0px 30px 0px" text="Searching for suggestions..." />
+								</Flex>
+							),
+							Empty:
+								!!value && !suggestions?.length ? (
+									<Flex className="not-found-container">
+										<NotFoundCard />
+									</Flex>
+								) : null
+						}}
+						isLoading={isSearching}
 						innerEndComponent={
 							<Flex className="inner-end-components">
 								<Flex className="icon inner-end-component" onClick={onSearch}>
@@ -315,14 +341,6 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 						}
 					/>
 				</Flex>
-				{isSearching ? (
-					<Flex className="search-loader-container">
-						<Loader />
-						<TextEl margin="15px 0px 30px 0px" text="Searching for suggestions..." />
-					</Flex>
-				) : !!value && !suggestions?.length ? (
-					<NotFoundCard />
-				) : null}
 			</Flex>
 			{markers}
 			{mapMarker}

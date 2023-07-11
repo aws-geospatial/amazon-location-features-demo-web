@@ -33,6 +33,7 @@ export { ReactComponent as IconFilterFunnel } from "./icon-filter-funnel.svg";
 export { ReactComponent as IconFire } from "./icon-fire.svg";
 export { ReactComponent as IconGear } from "./icon-gear.svg";
 export { ReactComponent as IconGeofenceColor } from "./icon-geofence-color.svg";
+export { ReactComponent as IconGeofenceMarkerDisabled } from "./icon-geofence-marker-disabled.svg";
 export { ReactComponent as IconGeofenceMarker } from "./icon-geofence-marker.svg";
 export { ReactComponent as IconGeofencePlusSolid } from "./icon-geofence-plus-solid.svg";
 export { ReactComponent as IconGeofence } from "./icon-geofence.svg";
