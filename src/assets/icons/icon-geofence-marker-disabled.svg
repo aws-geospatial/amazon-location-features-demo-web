@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <rect id="path-1" x="3.52081528" y="3.52081528" width="17" height="17" rx="3.5"></rect>
+        <filter x="-88.2%" y="-88.2%" width="276.5%" height="276.5%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="UI-Kit" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Map-markers" transform="translate(-240, -316)">
+            <g id="Map/Blip/Geofence-Copy-2" transform="translate(240, 316)">
+                <g id="Shadow" transform="translate(12.0208, 12.0208) rotate(-45) translate(-12.0208, -12.0208)" fill="black" fill-opacity="1">
+                    <use filter="url(#filter-2)" xlink:href="#path-1"></use>
+                </g>
+                <rect id="Border" fill="#636366" transform="translate(12.0208, 12.0208) rotate(-45) translate(-12.0208, -12.0208)" x="3.52081528" y="3.52081528" width="17" height="17" rx="4"></rect>
+                <rect id="Fill" fill="#8E8E93" transform="translate(12.0016, 12.0016) rotate(-45) translate(-12.0016, -12.0016)" x="4.50160172" y="4.50160172" width="15" height="15" rx="3"></rect>
+                <circle id="Middle" fill="#FFFFFF" cx="12" cy="12" r="4"></circle>
+            </g>
+        </g>
+    </g>
+</svg>

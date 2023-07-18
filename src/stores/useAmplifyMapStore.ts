@@ -26,7 +26,10 @@ const localStorageKey = `${LOCAL_STORAGE_PREFIX}${AMPLIFY_MAP_DATA}`;
 interface AmplifyMapStoreProps {
 	currentLocationData?: CurrentLocationDataType;
 	viewpoint: ViewPointType;
-	isAutomaticMapUnit: boolean;
+	autoMapUnit: {
+		selected: boolean;
+		system: MapUnitEnum;
+	};
 	mapUnit: MapUnitEnum;
 	mapProvider: MapProviderEnum;
 	mapStyle: EsriMapEnum | HereMapEnum | GrabMapEnum;
@@ -36,7 +39,10 @@ interface AmplifyMapStoreProps {
 
 const initialState: IStateProps<AmplifyMapStoreProps> = {
 	viewpoint: US,
-	isAutomaticMapUnit: true,
+	autoMapUnit: {
+		selected: true,
+		system: MapUnitEnum.IMPERIAL
+	},
 	mapUnit: MapUnitEnum.IMPERIAL,
 	mapProvider: MapProviderEnum.ESRI,
 	mapStyle: EsriMapEnum.ESRI_LIGHT,

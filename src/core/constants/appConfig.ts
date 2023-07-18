@@ -60,7 +60,7 @@ const appConfig = {
 		SAMPLE_DETAILS: "/sample/:sampleId",
 		HELP: "/demo/help",
 		TERMS: "/demo/terms",
-		SOFTWARE_ATTRIBUTIONS: "/showcase/software-attributions",
+		SOFTWARE_ATTRIBUTIONS: "/demo/software-attributions",
 		BLOG: "/blog",
 		NEW: "/new",
 		UNAUTHORIZED: "/401",
@@ -150,7 +150,7 @@ const appConfig = {
 					id: EsriMapEnum.ESRI_LIGHT_GRAY_CANVAS,
 					image: EsriLightGray,
 					name: "Light Gray",
-					filters: { provider: MapProviderEnum.ESRI, attribute: [AttributeEnum.Dark], type: [TypeEnum.Vector] }
+					filters: { provider: MapProviderEnum.ESRI, attribute: [AttributeEnum.Light], type: [TypeEnum.Vector] }
 				},
 				{
 					id: EsriMapEnum.ESRI_IMAGERY,
@@ -180,7 +180,11 @@ const appConfig = {
 					id: HereMapEnum.HERE_EXPLORE_TRUCK,
 					image: HereExploreTruck,
 					name: "Explore Truck",
-					filters: { provider: MapProviderEnum.HERE, attribute: [AttributeEnum.Truck], type: [TypeEnum.Vector] }
+					filters: {
+						provider: MapProviderEnum.HERE,
+						attribute: [AttributeEnum.Truck, AttributeEnum.Light],
+						type: [TypeEnum.Vector]
+					}
 				},
 				{
 					id: HereMapEnum.HERE_HYBRID,
