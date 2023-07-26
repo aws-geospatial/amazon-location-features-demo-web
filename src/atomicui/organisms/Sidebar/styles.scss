@@ -15,7 +15,7 @@
 	flex-direction: column;
 	justify-items: flex-start;
 	align-items: center;
-	z-index: 6;
+	z-index: 4;
 	padding: 0;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 	font-family: var(--regular-font-family);
@@ -49,6 +49,7 @@
 		width: auto;
 		max-width: none;
 		right: 8px;
+		z-index: 6;
 
 		.title-bar {
 			border-bottom: 1px solid var(--border-separator-color);

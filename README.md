@@ -12,13 +12,14 @@
 #### Env keys required in `.env` file, see `.env.example` for reference
 
 > VITE_AWS_COGNITO_IDENTITY_POOL_ID<br />
+VITE_PINPOINT_APPLICATION_ID<br />
+VITE_AWS_WEB_SOCKET_URL<br />
 VITE_AWS_REGION<br />
 VITE_AWS_COGNITO_IDENTITY_POOL_ID_ASIA<br />
 VITE_AWS_REGION_ASIA<br />
 VITE_AWS_CF_TEMPLATE<br />
 VITE_APPLE_APP_STORE_LINK<br />
 VITE_GOOGLE_PLAY_STORE_LINK<br />
-
 ## Configure
 
 > git clone https://github.com/aws-geospatial/amazon-location-features-demo-web.git<br />

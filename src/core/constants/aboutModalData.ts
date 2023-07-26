@@ -3,20 +3,20 @@
 
 const aboutModalData = {
 	ABOUT: {
-		VERSION: "Version",
+		VERSION: "about_modal__version.text",
 		VERSION_VALUE: "1.0.0",
 		BUILD: "",
-		COPYRIGHT: `© ${new Date().getFullYear()}, Amazon Web Services, Inc. or its affiliates. All rights reserved.`
+		COPYRIGHT: "copyright.text"
 	},
 	TERMS: {
-		TERMS_PREFIX: "By downloading, installing, or using the Amazon Location Demo App, you agree to the App's ",
-		TERMS_LINK_LABEL: "Terms & Conditions",
-		TERMS_SUFFIX: " for use. "
+		TERMS_PREFIX: "about_modal__terms__prefix.text",
+		TERMS_LINK_LABEL: "t&c.text",
+		TERMS_SUFFIX: "about_modal__terms__suffix.text"
 	},
 	ATTRIBUTIONS: {
-		PARTNER_ATTRIBUTION_TITLE: "Partner Attribution",
-		SOFTWARE_ATTRIBUTION_TITLE: "Software Attribution",
-		SOFTWARE_ATTRIBUTION_DESC: " Click 'learn more' button to view software attributions. "
+		PARTNER_ATTRIBUTION_TITLE: "about_modal__attributions__pa.text",
+		SOFTWARE_ATTRIBUTION_TITLE: "about_modal__attributions__sa.text",
+		SOFTWARE_ATTRIBUTION_DESC: "about_modal__sa_desc.text"
 	}
 };
 

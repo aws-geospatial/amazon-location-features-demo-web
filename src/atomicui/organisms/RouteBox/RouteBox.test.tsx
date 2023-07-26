@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { View } from "@aws-amplify/ui-react";
+import i18n from "@demo/locales/i18n";
 import { faker } from "@faker-js/faker";
 import { RenderResult, act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { I18nextProvider } from "react-i18next";
 
 import RouteBox from "./RouteBox";
 
-const useAmplifyMap = () => ({});
-jest.mock("hooks/useAmplifyMap", () => useAmplifyMap);
+jest.mock("hooks/useAmplifyMap", () => () => ({}));
 
 const useAwsPlaceReturnValue = {
 	getPlaceDataByCoordinates: () => ({
@@ -147,25 +148,27 @@ describe("<RouteBox />", () => {
 
 	const renderComponent = async (props?: {}): Promise<RenderResult> => {
 		const renderedComponent = render(
-			<RouteBox
-				mapRef={
-					{
-						getCenter: () => ({
-							lng: Number(faker.address.longitude()),
-							lat: Number(faker.address.latitude()),
-							wrap: jest.fn(),
-							toArray: jest.fn(),
-							toString: jest.fn(),
-							distanceTo: jest.fn(),
-							toBounds: jest.fn()
-						}),
-						getStyle: () => ({ layers: [] } as any)
-					} as any
-				}
-				setShowRouteBox={jest.fn()}
-				isSideMenuExpanded={false}
-				{...props}
-			/>
+			<I18nextProvider i18n={i18n}>
+				<RouteBox
+					mapRef={
+						{
+							getCenter: () => ({
+								lng: Number(faker.address.longitude()),
+								lat: Number(faker.address.latitude()),
+								wrap: jest.fn(),
+								toArray: jest.fn(),
+								toString: jest.fn(),
+								distanceTo: jest.fn(),
+								toBounds: jest.fn()
+							}),
+							getStyle: () => ({ layers: [] } as any)
+						} as any
+					}
+					setShowRouteBox={jest.fn()}
+					isSideMenuExpanded={false}
+					{...props}
+				/>
+			</I18nextProvider>
 		);
 
 		routeCard = await screen.findByTestId("route-card");

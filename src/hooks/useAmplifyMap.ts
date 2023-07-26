@@ -17,6 +17,7 @@ import {
 } from "@demo/types";
 
 import { errorHandler } from "@demo/utils/errorHandler";
+import { useTranslation } from "react-i18next";
 
 const {
 	MAP_RESOURCES: { IMPERIAL_COUNTRIES }
@@ -28,6 +29,7 @@ const useAmplifyMap = () => {
 	const { setInitial } = store;
 	const { setState } = useAmplifyMapStore;
 	const mapsService = useAmplifyMapService();
+	const { t } = useTranslation();
 
 	const methods = useMemo(
 		() => ({
@@ -35,14 +37,14 @@ const useAmplifyMap = () => {
 				try {
 					return mapsService.getDefaultMap();
 				} catch (error) {
-					errorHandler(error, "Failed to fetch default map");
+					errorHandler(error, t("error_handler__failed_fetch_default_map.text") as string);
 				}
 			},
 			getAvailableMaps: () => {
 				try {
 					return mapsService.getAvailableMaps();
 				} catch (error) {
-					errorHandler(error, "Failed to fetch available maps");
+					errorHandler(error, t("error_handler__failed_fetch_available_map.text") as string);
 				}
 			},
 			setCurrentLocation: (currentLocationData: CurrentLocationDataType) => {
@@ -80,7 +82,7 @@ const useAmplifyMap = () => {
 				setInitial();
 			}
 		}),
-		[mapsService, setState, setInitial]
+		[mapsService, setState, setInitial, t]
 	);
 
 	return useMemo(() => ({ ...methods, ...store }), [methods, store]);

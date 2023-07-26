@@ -48,7 +48,8 @@ const main = async () => {
 		const credentialsAuth = await fetchCredentials();
 		const iamClientAuth = new AWS.IAM({
 			credentials: credentialsAuth,
-			region
+			region,
+			signatureCache: false
 		});
 
 		// List authenticated role policies

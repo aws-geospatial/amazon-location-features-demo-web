@@ -3,9 +3,7 @@
 
 import React from "react";
 
-import { Flex } from "@aws-amplify/ui-react";
-
-import { TextEl } from "@demo/atomicui/atoms";
+import { Flex, Text } from "@aws-amplify/ui-react";
 import "./styles.scss";
 
 interface InputFieldProps {
@@ -19,6 +17,7 @@ interface InputFieldProps {
 	innerEndComponent?: React.ReactNode;
 	type?: React.HTMLInputTypeAttribute;
 	disabled?: boolean;
+	dir?: "rtl" | "ltr";
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -31,19 +30,26 @@ const InputField: React.FC<InputFieldProps> = ({
 	onChange,
 	innerEndComponent,
 	type = "text",
-	disabled = false
+	disabled = false,
+	dir = "ltr"
 }) => {
 	return (
 		<Flex gap={0} direction="column" width="100%" margin={containerMargin}>
-			{label && <TextEl fontFamily="AmazonEmber-Bold" margin={labelMargin} text={label} />}
+			{label && (
+				<Text className="bold" margin={labelMargin} textAlign={dir === "ltr" ? "start" : "end"}>
+					{label}
+				</Text>
+			)}
 			<Flex className={disabled ? "input-container disabled" : "input-container"} gap={0} alignContent="center">
 				<input
 					data-testid={dataTestId || "input-field"}
+					style={{ order: dir === "ltr" ? 0 : 1 }}
 					placeholder={placeholder}
 					value={value}
 					onChange={onChange}
 					type={type}
 					disabled={disabled}
+					dir={dir}
 				/>
 				{innerEndComponent && innerEndComponent}
 			</Flex>

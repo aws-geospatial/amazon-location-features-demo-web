@@ -3,17 +3,18 @@
 
 import React, { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { Autocomplete, ComboBoxOption, Flex, Loader, View } from "@aws-amplify/ui-react";
+import { Autocomplete, ComboBoxOption, Flex, Loader, Text, View } from "@aws-amplify/ui-react";
 import { IconActionMenu, IconClose, IconDirections, IconPin, IconSearch } from "@demo/assets";
-import { TextEl } from "@demo/atomicui/atoms";
 import { Marker, NotFoundCard, SuggestionMarker } from "@demo/atomicui/molecules";
 import { useAmplifyMap, useAwsPlace } from "@demo/hooks";
 import { DistanceUnitEnum, MapUnitEnum, SuggestionType } from "@demo/types";
+import { AnalyticsEventActionsEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { calculateGeodesicDistance } from "@demo/utils/geoCalculation";
 import { uuid } from "@demo/utils/uuid";
 import { Units } from "@turf/turf";
 import { Location } from "aws-sdk";
 import { LngLat } from "mapbox-gl";
+import { useTranslation } from "react-i18next";
 import { MapRef } from "react-map-gl";
 import { Tooltip } from "react-tooltip";
 import "./styles.scss";
@@ -27,8 +28,8 @@ interface SearchBoxProps {
 	onToggleSideMenu: () => void;
 	setShowRouteBox: (b: boolean) => void;
 	isRouteBoxOpen: boolean;
-	isGeofenceBoxOpen: boolean;
-	isTrackingBoxOpen: boolean;
+	isAuthGeofenceBoxOpen: boolean;
+	isAuthTrackerBoxOpen: boolean;
 	isSettingsOpen: boolean;
 	isStylesCardOpen: boolean;
 }
@@ -39,8 +40,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	onToggleSideMenu,
 	setShowRouteBox,
 	isRouteBoxOpen,
-	isGeofenceBoxOpen,
-	isTrackingBoxOpen,
+	isAuthGeofenceBoxOpen,
+	isAuthTrackerBoxOpen,
 	isSettingsOpen,
 	isStylesCardOpen
 }) => {
@@ -60,20 +61,30 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		setSelectedMarker,
 		setHoveredMarker
 	} = useAwsPlace();
+	const { t, i18n } = useTranslation();
+	const langDir = i18n.dir();
 
 	useEffect(() => {
 		if (!value) {
 			clearPoiList();
 		}
 
-		if (isRouteBoxOpen || isGeofenceBoxOpen || isTrackingBoxOpen || isSettingsOpen || isStylesCardOpen) {
+		if (isRouteBoxOpen || isAuthGeofenceBoxOpen || isAuthTrackerBoxOpen || isSettingsOpen || isStylesCardOpen) {
 			setValue("");
 			clearPoiList();
 		}
-	}, [value, clearPoiList, isRouteBoxOpen, isGeofenceBoxOpen, isTrackingBoxOpen, isSettingsOpen, isStylesCardOpen]);
+	}, [
+		value,
+		clearPoiList,
+		isRouteBoxOpen,
+		isAuthGeofenceBoxOpen,
+		isAuthTrackerBoxOpen,
+		isSettingsOpen,
+		isStylesCardOpen
+	]);
 
 	const handleSearch = useCallback(
-		async (value: string, exact = false) => {
+		async (value: string, exact = false, action: string) => {
 			const { lng: longitude, lat: latitude } = mapRef?.getCenter() as LngLat;
 			const vp = { longitude, latitude };
 
@@ -82,7 +93,14 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 			}
 
 			timeoutIdRef.current = setTimeout(async () => {
-				await search(value, { longitude: vp.longitude, latitude: vp.latitude }, exact);
+				await search(
+					value,
+					{ longitude: vp.longitude, latitude: vp.latitude },
+					exact,
+					undefined,
+					TriggeredByEnum.PLACES_SEARCH,
+					action
+				);
 			}, 200);
 		},
 		[mapRef, search]
@@ -98,7 +116,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 
 	const selectSuggestion = async ({ text, label, placeid }: ComboBoxOption) => {
 		if (!placeid) {
-			await handleSearch(text || label, true);
+			await handleSearch(text || label, true, AnalyticsEventActionsEnum.SUGGESTION_SELECTED);
 		} else {
 			const selectedMarker = suggestions?.find(
 				(i: SuggestionType) => i.PlaceId === placeid || i.Place?.Label === placeid
@@ -123,13 +141,13 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	const onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
 		clearPoiList();
 		setValue(value);
-		handleSearch(value);
+		handleSearch(value, false, AnalyticsEventActionsEnum.AUTOCOMPLETE);
 	};
 
 	const onSearch = () => {
 		if (!!value) {
 			clearPoiList();
-			handleSearch(value);
+			handleSearch(value, false, AnalyticsEventActionsEnum.SEARCH_ICON_CLICK);
 			autocompleteRef?.current?.focus();
 		}
 	};
@@ -172,15 +190,15 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 			<Flex key={id} className="option-container" onMouseOver={() => setHover(option)}>
 				{!placeid ? <IconSearch /> : <IconPin />}
 				<View className="option-details">
-					<TextEl text={title} />
+					<Text>{title}</Text>
 					{geodesicDistanceWithUnit ? (
 						<Flex gap={0} alignItems="center">
-							<TextEl variation="tertiary" text={geodesicDistanceWithUnit} />
+							<Text variation="tertiary">{geodesicDistanceWithUnit}</Text>
 							<View className="separator" />
-							<TextEl variation="tertiary" text={`${region}, ${country}`} />
+							<Text variation="tertiary">{`${region}, ${country}`}</Text>
 						</Flex>
 					) : (
-						<TextEl variation="tertiary" text={placeid && address ? address : "Search nearby"} />
+						<Text variation="tertiary">{placeid && address ? address : t("search_nearby.text")}</Text>
 					)}
 				</View>
 			</Flex>
@@ -276,7 +294,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 						ref={autocompleteRef}
 						inputMode="search"
 						hasSearchIcon={false}
-						label="Search"
+						label={t("search.text")}
+						dir={langDir}
 						innerStartComponent={
 							<Flex className="inner-start-component" onClick={onToggleSideMenu}>
 								<IconActionMenu />
@@ -285,11 +304,11 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 						size="large"
 						onFocus={() => setIsFocused(true)}
 						onBlur={() => setIsFocused(false)}
-						onSubmit={e => handleSearch(e, true)}
+						onSubmit={e => handleSearch(e, true, AnalyticsEventActionsEnum.ENTER_BUTTON)}
 						value={value}
 						onChange={onChange}
 						onClear={clearPoiList}
-						placeholder="Search"
+						placeholder={t("search.text") as string}
 						options={options || []}
 						results={options?.length || 0}
 						renderOption={renderOption}
@@ -299,7 +318,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 							LoadingIndicator: (
 								<Flex className="search-loader-container">
 									<Loader />
-									<TextEl margin="15px 0px 30px 0px" text="Searching for suggestions..." />
+									<Text margin="1.15rem 0rem 2.31rem 0rem">{t("search_box__searching_for_suggestions.text")}</Text>
 								</Flex>
 							),
 							Empty:
@@ -316,7 +335,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 									<IconSearch
 										data-tooltip-id="search-button"
 										data-tooltip-place="bottom"
-										data-tooltip-content="Search"
+										data-tooltip-content={t("search.text")}
 									/>
 									<Tooltip id="search-button" />
 								</Flex>
@@ -331,7 +350,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 											<IconDirections
 												data-tooltip-id="directions-button"
 												data-tooltip-place="bottom"
-												data-tooltip-content="Routes"
+												data-tooltip-content={t("routes.text")}
 											/>
 											<Tooltip id="directions-button" />
 										</>

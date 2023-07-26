@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 import { Card, CheckboxField, Divider, Flex, Link, Placeholder, SearchField, Text } from "@aws-amplify/ui-react";
 import { IconClose, IconFilterFunnel, IconGeofencePlusSolid, IconMapSolid, IconSearch } from "@demo/assets";
-import { TextEl } from "@demo/atomicui/atoms";
+import { NotFoundCard } from "@demo/atomicui/molecules";
 import { appConfig } from "@demo/core/constants";
 import { useAmplifyAuth, useAmplifyMap, useAwsGeofence } from "@demo/hooks";
 import {
@@ -18,10 +18,11 @@ import {
 	MapStyleFilterTypes,
 	TypeEnum
 } from "@demo/types";
+import { EventTypeEnum, TriggeredByEnum } from "@demo/types/Enums";
+import { record } from "@demo/utils/analyticsUtils";
+import { useTranslation } from "react-i18next";
 import { Tooltip } from "react-tooltip";
-
 import "./styles.scss";
-import { NotFoundCard } from "../NotFoundCard";
 
 const { GRAB } = MapProviderEnum;
 const {
@@ -39,6 +40,7 @@ const filters = {
 };
 
 export interface MapButtonsProps {
+	renderedUpon: string;
 	openStylesCard: boolean;
 	setOpenStylesCard: (b: boolean) => void;
 	onCloseSidebar: () => void;
@@ -59,6 +61,7 @@ export interface MapButtonsProps {
 }
 
 const MapButtons: React.FC<MapButtonsProps> = ({
+	renderedUpon,
 	openStylesCard,
 	setOpenStylesCard,
 	onCloseSidebar,
@@ -89,6 +92,9 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	const { mapStyle: currentMapStyle } = useAmplifyMap();
 	const { isAddingGeofence, setIsAddingGeofence } = useAwsGeofence();
 	const isAuthenticated = !!credentials?.authenticated;
+	const { t, i18n } = useTranslation();
+	const langDir = i18n.dir();
+	const isLtr = langDir === "ltr";
 
 	const handleClickOutside = useCallback(
 		(ev: MouseEvent) => {
@@ -142,6 +148,15 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 			onCloseSidebar();
 			onShowGeofenceBox();
 			setIsAddingGeofence(!isAddingGeofence);
+			record(
+				[
+					{
+						EventType: EventTypeEnum.GEOFENCE_CREATION_STARTED,
+						Attributes: { triggeredBy: TriggeredByEnum.MAP_BUTTONS }
+					}
+				],
+				["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
+			);
 		} else {
 			onPrompt();
 		}
@@ -155,21 +170,31 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 		});
 	}, [setSelectedFilters]);
 
-	// const _handleMapProviderChange = (mapProvider: MapProviderEnum) => {
-	// 	if (mapProvider !== currentMapProvider) {
-	// 		// setIsLoadingImg(true);
-	// 		handleMapProviderChange(mapProvider);
-	// 	}
-	// };
-
 	const onChangeStyle = useCallback(
 		(id: EsriMapEnum | HereMapEnum | GrabMapEnum) => {
 			if (id !== currentMapStyle) {
 				onShowGridLoader();
 				handleMapStyleChange(id);
 			}
+
+			let mapProvider = "Unknown";
+
+			if (Object.values(EsriMapEnum).includes(id as EsriMapEnum)) {
+				mapProvider = MapProviderEnum.ESRI;
+			} else if (Object.values(HereMapEnum).includes(id as HereMapEnum)) {
+				mapProvider = MapProviderEnum.HERE;
+			} else if (Object.values(GrabMapEnum).includes(id as GrabMapEnum)) {
+				mapProvider = MapProviderEnum.GRAB;
+			}
+
+			record([
+				{
+					EventType: EventTypeEnum.MAP_STYLE_CHANGE,
+					Attributes: { id, provider: String(mapProvider), triggeredBy: renderedUpon }
+				}
+			]);
 		},
-		[currentMapStyle, handleMapStyleChange, onShowGridLoader]
+		[currentMapStyle, handleMapStyleChange, onShowGridLoader, renderedUpon]
 	);
 
 	const addProviderTitle = useCallback(
@@ -299,8 +324,11 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 						marginBottom={showFilter ? 0 : "0.6rem"}
 					>
 						<SearchField
-							label="Search"
-							placeholder="Search styles"
+							data-testid="map-styles-search-field"
+							className="map-styles-search-field"
+							dir={langDir}
+							label={t("search.text")}
+							placeholder={t("map_buttons__search_placeholder.text") as string}
 							hasSearchButton={false}
 							hasSearchIcon={true}
 							size={"large"}
@@ -310,11 +338,9 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 								</Flex>
 							}
 							value={searchValue}
-							className="map-styles-search-field"
 							onChange={e => setSearchValue(e.target.value)}
 							onClear={() => setSearchValue("")}
 							onClick={() => !!showFilter && setShowFilter(false)}
-							data-testid="map-styles-search-field"
 						/>
 						<Flex className="filter-container">
 							<Flex
@@ -338,7 +364,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 										if (item === GRAB && !isGrabVisible) return null;
 										return (
 											<CheckboxField
-												className="filters-checkbox"
+												className="custom-checkbox"
 												size={"large"}
 												key={i}
 												label={item === GRAB ? `${item}Maps` : item}
@@ -361,11 +387,9 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 							{!searchAndFilteredResults.length && (
 								<Flex width={"80%"} margin={"0 auto"} direction="column">
 									<NotFoundCard
-										title="No matching styles found"
-										text={`Make sure your search is spelled correctly and try again${
-											noFilters
-												? ", make sure you have applied the appropriate filter or remove the filter and try again"
-												: ""
+										title={t("map_buttons__no_styles_found_title.text") as string}
+										text={`${t("map_buttons__no_styles_found_desc_1.text")}${
+											noFilters ? t("map_buttons__no_styles_found_desc_2.text") : ""
 										}`}
 										textFontSize="0.93rem"
 										textMargin={"0.6rem 0 0.9rem"}
@@ -373,7 +397,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 										actionButton={
 											noFilters && (
 												<Link className="clear-filters-button" onClick={resetFilters}>
-													Clear filters
+													{t("map_buttons__clear_filters.text")}
 												</Link>
 											)
 										}
@@ -394,7 +418,11 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 											<Flex
 												data-testid={`map-style-item-${item.id}`}
 												className={item.id === currentMapStyle ? "mb-style-container selected" : "mb-style-container"}
-												onClick={() => onChangeStyle(item.id)}
+												onClick={e => {
+													e.preventDefault();
+													e.stopPropagation();
+													onChangeStyle(item.id);
+												}}
 												width="100%"
 											>
 												<Flex gap={0} position="relative">
@@ -408,7 +436,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 														onLoad={() => setIsLoadingImg(false)}
 													/>
 												</Flex>
-												{!isLoading && <TextEl marginTop="0.62rem" text={item.name} />}
+												{!isLoading && <Text marginTop="0.62rem">{t(item.name)}</Text>}
 											</Flex>
 										</Flex>
 									)
@@ -434,7 +462,9 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 			showFilter,
 			onlyMapStyles,
 			noFilters,
-			resetFilters
+			resetFilters,
+			t,
+			langDir
 		]
 	);
 
@@ -450,7 +480,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 					onClick={toggleMapStyles}
 					data-tooltip-id="map-styles-button"
 					data-tooltip-place="left"
-					data-tooltip-content="Map provider and styles"
+					data-tooltip-content={t("tooltip__mps.text")}
 				>
 					<IconMapSolid />
 				</Flex>
@@ -462,7 +492,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 					onClick={onClickGeofence}
 					data-tooltip-id="geofence-control-button"
 					data-tooltip-place="left"
-					data-tooltip-content="Geofence"
+					data-tooltip-content={t("geofence.text")}
 				>
 					<IconGeofencePlusSolid />
 				</Flex>
@@ -471,13 +501,17 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 			{openStylesCard && (
 				<Card data-testid="map-styles-card" ref={stylesCardRef} className="map-styles-card">
 					<Flex className="map-styles-header">
-						<TextEl margin="1.23rem 0rem" fontFamily="AmazonEmber-Bold" fontSize="1.23rem" text="Map style" />
+						<Text margin="1.23rem 0rem" fontFamily="AmazonEmber-Bold" fontSize="1.23rem">
+							{t("map_style.text")}
+						</Text>
 						<Flex className="map-styles-icon-close-container" onClick={() => setOpenStylesCard(false)}>
 							<IconClose />
 						</Flex>
 					</Flex>
 					<Flex className="ms-info-container">
-						<TextEl variation="tertiary" text={"Changing data provider also affects Places & Routes API"} />
+						<Text variation="tertiary" textAlign={isLtr ? "start" : "end"}>
+							{t("map_buttons__info.text")}
+						</Text>
 					</Flex>
 					{mapStyles}
 				</Card>

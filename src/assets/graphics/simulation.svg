@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="332px" height="320px" viewBox="0 0 332 320" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Graphics/Big</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="332" height="320"></rect>
+        <rect id="path-3" x="3.52081528" y="3.52081528" width="17" height="17" rx="3.5"></rect>
+        <filter x="-88.2%" y="-88.2%" width="276.5%" height="276.5%" filterUnits="objectBoundingBox" id="filter-4">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.202633304 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-5" x="3.52081528" y="3.52081528" width="17" height="17" rx="3.5"></rect>
+        <filter x="-88.2%" y="-88.2%" width="276.5%" height="276.5%" filterUnits="objectBoundingBox" id="filter-6">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.202633304 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-7" x="3.52081528" y="3.52081528" width="17" height="17" rx="3.5"></rect>
+        <filter x="-88.2%" y="-88.2%" width="276.5%" height="276.5%" filterUnits="objectBoundingBox" id="filter-8">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.202633304 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <linearGradient x1="35.5220683%" y1="-7.81843337e-15%" x2="73.9054229%" y2="73.1741676%" id="linearGradient-9">
+            <stop stop-color="#008296" offset="0%"></stop>
+            <stop stop-color="#008296" stop-opacity="0.202250874" offset="55.1331418%"></stop>
+            <stop stop-color="#008296" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-10">
+            <stop stop-color="#008296" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#008296" stop-opacity="0.506364729" offset="100%"></stop>
+        </linearGradient>
+        <circle id="path-11" cx="12" cy="12" r="12"></circle>
+        <filter x="-62.5%" y="-62.5%" width="225.0%" height="225.0%" filterUnits="objectBoundingBox" id="filter-12">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.202633304 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="UI-Kit" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Graphics" transform="translate(-24, -272)">
+            <g id="Graphics/Big" transform="translate(24, 272)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <use id="Rectangle" fill="#FFFFFF" xlink:href="#path-1"></use>
+                <g id="Group-2" mask="url(#mask-2)">
+                    <g transform="translate(0, 0)">
+                        <circle id="Oval-Copy-2" fill="#008296" opacity="0.239999995" cx="74" cy="44" r="44"></circle>
+                        <g id="Map/Blip/Geofence-Copy" stroke-width="1" fill="none" transform="translate(62, 32)">
+                            <g id="Shadow" transform="translate(12.0208, 12.0208) rotate(-45) translate(-12.0208, -12.0208)" fill="black" fill-opacity="1">
+                                <use filter="url(#filter-4)" xlink:href="#path-3"></use>
+                            </g>
+                            <rect id="Border" fill="#DB7A00" transform="translate(12.0208, 12.0208) rotate(-45) translate(-12.0208, -12.0208)" x="3.52081528" y="3.52081528" width="17" height="17" rx="4"></rect>
+                            <rect id="Fill" fill="#FF9900" transform="translate(12.0016, 12.0016) rotate(-45) translate(-12.0016, -12.0016)" x="4.50160172" y="4.50160172" width="15" height="15" rx="3"></rect>
+                            <circle id="Middle" fill="#FFFFFF" cx="12" cy="12" r="4"></circle>
+                        </g>
+                        <g id="Map/Blip/Geofence-Copy-2" opacity="0.800000012" stroke-width="1" fill="none" transform="translate(308, 121)">
+                            <g id="Shadow" transform="translate(12.0208, 12.0208) rotate(-45) translate(-12.0208, -12.0208)" fill="black" fill-opacity="1">
+                                <use filter="url(#filter-6)" xlink:href="#path-5"></use>
+                            </g>
+                            <rect id="Border" fill="#DB7A00" transform="translate(12.0208, 12.0208) rotate(-45) translate(-12.0208, -12.0208)" x="3.52081528" y="3.52081528" width="17" height="17" rx="4"></rect>
+                            <rect id="Fill" fill="#FF9900" transform="translate(12.0016, 12.0016) rotate(-45) translate(-12.0016, -12.0016)" x="4.50160172" y="4.50160172" width="15" height="15" rx="3"></rect>
+                            <circle id="Middle" fill="#FFFFFF" cx="12" cy="12" r="4"></circle>
+                        </g>
+                        <g id="Map/Blip/Geofence-Copy-3" opacity="0.400000006" stroke-width="1" fill="none" transform="translate(-0, 181)">
+                            <g id="Shadow" transform="translate(12.0208, 12.0208) rotate(-45) translate(-12.0208, -12.0208)" fill="black" fill-opacity="1">
+                                <use filter="url(#filter-8)" xlink:href="#path-7"></use>
+                            </g>
+                            <rect id="Border" fill="#DB7A00" transform="translate(12.0208, 12.0208) rotate(-45) translate(-12.0208, -12.0208)" x="3.52081528" y="3.52081528" width="17" height="17" rx="4"></rect>
+                            <rect id="Fill" fill="#FF9900" transform="translate(12.0016, 12.0016) rotate(-45) translate(-12.0016, -12.0016)" x="4.50160172" y="4.50160172" width="15" height="15" rx="3"></rect>
+                            <circle id="Middle" fill="#FFFFFF" cx="12" cy="12" r="4"></circle>
+                        </g>
+                    </g>
+                </g>
+                <g id="Group" mask="url(#mask-2)">
+                    <g transform="translate(212.7438, 214.4071) rotate(11) translate(-212.7438, -214.4071)translate(141.124, 94.5061)">
+                        <path d="M101.068581,239.801806 C146.392595,202.662323 155.18198,170.984262 127.436736,144.767621 C85.8188696,105.44266 75.3110602,150.139073 41.5999324,134.61398 C19.1258472,124.263917 12.5511929,96.5870467 21.8759696,51.5833691" id="Path-4" stroke="url(#linearGradient-9)" stroke-width="8" stroke-linecap="round" stroke-dasharray="0,14"></path>
+                        <g id="Map/Blip/User" stroke="none" stroke-width="1" fill-rule="evenodd" transform="translate(24.4468, 32.7593) rotate(-351) translate(-24.4468, -32.7593)translate(4.4468, 2.7593)">
+                            <polygon id="Rectangle" fill="url(#linearGradient-10)" points="6.10622664e-15 -1.72670835e-14 40 -1.72670835e-14 32 48 8 48"></polygon>
+                            <g id="Group-3" transform="translate(8, 36)">
+                                <g id="Oval">
+                                    <use fill="black" fill-opacity="1" filter="url(#filter-12)" xlink:href="#path-11"></use>
+                                    <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-11"></use>
+                                </g>
+                                <circle id="Oval" fill="#008296" cx="12" cy="12" r="8"></circle>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

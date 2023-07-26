@@ -32,7 +32,13 @@ export {
 	TravelMode,
 	UserAgentEnum,
 	AttributeEnum,
-	TypeEnum
+	TypeEnum,
+	MenuItemEnum,
+	TrackingHistoryTypeEnum,
+	EventTypeEnum,
+	AnalyticsSessionStatus,
+	TriggeredByEnum,
+	AnalyticsEventActionsEnum
 } from "./Enums";
 export type { RouteDataType } from "./RouteDataType";
 export type { CirclePropertiesType, CircleDrawEventType, CircleFeatureType } from "./CircleDrawControlTypes";
@@ -40,3 +46,9 @@ export type { SettingOptionItemType } from "./SettingOptionItemType";
 export type { RouteOptionsType } from "./RouteOptionsType";
 export type { HelpAccordionType } from "./HelpType";
 export type { ShowStateType } from "./ShowStateType";
+export type { SelectOption } from "./SelectOption";
+export type {
+	TrackingHistoryItemtype,
+	TrackingHistoryType,
+	NotificationHistoryItemtype
+} from "./UnauthSimulationTypes";

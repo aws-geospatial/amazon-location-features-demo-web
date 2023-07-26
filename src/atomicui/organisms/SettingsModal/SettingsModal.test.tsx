@@ -1,6 +1,8 @@
 import { MapButtons } from "@demo/atomicui/molecules";
+import i18n from "@demo/locales/i18n";
 import { SettingOptionEnum } from "@demo/types";
 import { RenderResult, act, fireEvent, render, screen } from "@testing-library/react";
+import { I18nextProvider } from "react-i18next";
 
 import SettingsModal from "./SettingsModal";
 
@@ -10,11 +12,11 @@ describe("<SettingsModal />", () => {
 	const onClose = jest.fn();
 	const resetAppState = jest.fn();
 	const handleMapProviderChange = jest.fn();
-	const handleMapStyleChange = jest.fn();
 	const handleCurrentLocationAndViewpoint = jest.fn();
 	const resetSearchAndFilters = jest.fn();
 
 	const props = {
+		renderedUpon: "",
 		openStylesCard: false,
 		isGrabVisible: true,
 		showGrabDisclaimerModal: false,
@@ -40,17 +42,18 @@ describe("<SettingsModal />", () => {
 
 	const renderComponent = async (): Promise<RenderResult> => {
 		const renderedComponent = render(
-			<SettingsModal
-				open
-				onClose={onClose}
-				resetAppState={resetAppState}
-				isGrabVisible={false}
-				handleMapProviderChange={handleMapProviderChange}
-				handleMapStyleChange={handleMapStyleChange}
-				handleCurrentLocationAndViewpoint={handleCurrentLocationAndViewpoint}
-				resetSearchAndFilters={resetSearchAndFilters}
-				mapButtons={<MapButtons {...props} />}
-			/>
+			<I18nextProvider i18n={i18n}>
+				<SettingsModal
+					open
+					onClose={onClose}
+					resetAppState={resetAppState}
+					isGrabVisible={false}
+					handleMapProviderChange={handleMapProviderChange}
+					handleCurrentLocationAndViewpoint={handleCurrentLocationAndViewpoint}
+					resetSearchAndFilters={resetSearchAndFilters}
+					mapButtons={<MapButtons {...props} />}
+				/>
+			</I18nextProvider>
 		);
 		settingsModal = await screen.findByTestId("settings-modal");
 

@@ -24,10 +24,9 @@ import {
 	GrabMapStyleEnum,
 	HereMapEnum,
 	HereMapStyleEnum,
-	MapProviderEnum
+	MapProviderEnum,
+	TypeEnum
 } from "@demo/types";
-
-import { TypeEnum } from "../../types/Enums";
 
 const getEnv = (key: string) => {
 	return import.meta.env[key];
@@ -36,6 +35,8 @@ const getEnv = (key: string) => {
 const appConfig = {
 	ENV: {
 		IDENTITY_POOL_ID: getEnv("VITE_AWS_COGNITO_IDENTITY_POOL_ID"),
+		PINPOINT_APPLICATION_ID: getEnv("VITE_PINPOINT_APPLICATION_ID"),
+		WEB_SOCKET_URL: getEnv("VITE_AWS_WEB_SOCKET_URL"),
 		REGION: getEnv("VITE_AWS_REGION"),
 		IDENTITY_POOL_ID_ASIA: getEnv("VITE_AWS_COGNITO_IDENTITY_POOL_ID_ASIA"),
 		REGION_ASIA: getEnv("VITE_AWS_REGION_ASIA"),
@@ -49,7 +50,9 @@ const appConfig = {
 		AMPLIFY_MAP_DATA: "AmplifyMapData",
 		PERSISTED_DATA: "PersistedData",
 		GEO_LOCATION_ALLOWED: "GeoLocationAllowed",
-		SHOULD_CLEAR_CREDENTIALS: "ShouldClearCredentials"
+		SHOULD_CLEAR_CREDENTIALS: "ShouldClearCredentials",
+		ANALYTICS_ENDPOINT_ID: "analyticsEndpointId",
+		ANALYTICS_CREDS: "analyticsCreds"
 	},
 	ROUTES: {
 		DEFAULT: "/",
@@ -77,7 +80,11 @@ const appConfig = {
 		},
 		MAX_BOUNDS: {
 			DEFAULT: [-210, -80, 290, 85],
-			GRAB: [90.0, -21.943045533438166, 146.25, 31.952162238024968]
+			GRAB: [90.0, -21.943045533438166, 146.25, 31.952162238024968],
+			VANCOUVER: [
+				[-123.185777, 49.258543], // southwest corner
+				[-123.061047, 49.303531] // northeast corner
+			]
 		},
 		MAP_ITEMS: {
 			[EsriMapEnum.ESRI_DARK_GRAY_CANVAS]: {
@@ -125,37 +132,37 @@ const appConfig = {
 				{
 					id: EsriMapEnum.ESRI_LIGHT,
 					image: EsriLight,
-					name: "Light",
+					name: "map_buttons__light.text",
 					filters: { provider: MapProviderEnum.ESRI, attribute: [AttributeEnum.Light], type: [TypeEnum.Vector] }
 				},
 				{
 					id: EsriMapEnum.ESRI_STREET_MAP,
 					image: EsriStreets,
-					name: "Streets",
+					name: "map_buttons__streets.text",
 					filters: { provider: MapProviderEnum.ESRI, attribute: [AttributeEnum.Light], type: [TypeEnum.Vector] }
 				},
 				{
 					id: EsriMapEnum.ESRI_NAVIGATION,
 					image: EsriNavigation,
-					name: "Navigation",
+					name: "map_buttons__navigation.text",
 					filters: { provider: MapProviderEnum.ESRI, attribute: [AttributeEnum.Light], type: [TypeEnum.Vector] }
 				},
 				{
 					id: EsriMapEnum.ESRI_DARK_GRAY_CANVAS,
 					image: EsriDarkGray,
-					name: "Dark Gray",
+					name: "map_buttons__dark_gray.text",
 					filters: { provider: MapProviderEnum.ESRI, attribute: [AttributeEnum.Dark], type: [TypeEnum.Vector] }
 				},
 				{
 					id: EsriMapEnum.ESRI_LIGHT_GRAY_CANVAS,
 					image: EsriLightGray,
-					name: "Light Gray",
+					name: "map_buttons__light_gray.text",
 					filters: { provider: MapProviderEnum.ESRI, attribute: [AttributeEnum.Light], type: [TypeEnum.Vector] }
 				},
 				{
 					id: EsriMapEnum.ESRI_IMAGERY,
 					image: EsriImagery,
-					name: "Imagery",
+					name: "map_buttons__imagery.text",
 					filters: { provider: MapProviderEnum.ESRI, attribute: [AttributeEnum.Satellite], type: [TypeEnum.Raster] }
 				}
 			],
@@ -163,13 +170,13 @@ const appConfig = {
 				{
 					id: HereMapEnum.HERE_EXPLORE,
 					image: HereExplore,
-					name: "Explore",
+					name: "map_buttons__explore.text",
 					filters: { provider: MapProviderEnum.HERE, attribute: [AttributeEnum.Light], type: [TypeEnum.Vector] }
 				},
 				{
 					id: HereMapEnum.HERE_CONTRAST,
 					image: HereConrast,
-					name: "Contrast",
+					name: "map_buttons__contrast.text",
 					filters: {
 						provider: MapProviderEnum.HERE,
 						attribute: [AttributeEnum.Dark, AttributeEnum.ThreeD],
@@ -179,7 +186,7 @@ const appConfig = {
 				{
 					id: HereMapEnum.HERE_EXPLORE_TRUCK,
 					image: HereExploreTruck,
-					name: "Explore Truck",
+					name: "map_buttons__explore_truck.text",
 					filters: {
 						provider: MapProviderEnum.HERE,
 						attribute: [AttributeEnum.Truck, AttributeEnum.Light],
@@ -189,7 +196,7 @@ const appConfig = {
 				{
 					id: HereMapEnum.HERE_HYBRID,
 					image: HereHybrid,
-					name: "Hybrid",
+					name: "map_buttons__hybrid.text",
 					filters: {
 						provider: MapProviderEnum.HERE,
 						attribute: [AttributeEnum.Satellite],
@@ -199,7 +206,7 @@ const appConfig = {
 				{
 					id: HereMapEnum.HERE_IMAGERY,
 					image: HereImagery,
-					name: "Imagery",
+					name: "map_buttons__imagery.text",
 					filters: { provider: MapProviderEnum.HERE, attribute: [AttributeEnum.Satellite], type: [TypeEnum.Raster] }
 				}
 			],
@@ -207,13 +214,13 @@ const appConfig = {
 				{
 					id: GrabMapEnum.GRAB_STANDARD_LIGHT,
 					image: GrabStandardLight,
-					name: "Light",
+					name: "map_buttons__light.text",
 					filters: { provider: MapProviderEnum.GRAB, attribute: [AttributeEnum.Light], type: [TypeEnum.Vector] }
 				},
 				{
 					id: GrabMapEnum.GRAB_STANDARD_DARK,
 					image: GrabStandardDark,
-					name: "Dark",
+					name: "map_buttons__dark.text",
 					filters: { provider: MapProviderEnum.GRAB, attribute: [AttributeEnum.Dark], type: [TypeEnum.Vector] }
 				}
 			]
@@ -246,7 +253,104 @@ const appConfig = {
 		AWS_PRIVACY_NOTICE: "https://aws.amazon.com/privacy/",
 		ESRI_ATTRIBUTION_LINK: "https://www.esri.com/en-us/legal/terms/data-attributions",
 		HERE_ATTRIBUTION_LINK: "https://legal.here.com/en-gb/terms/general-content-supplier-terms-and-notices",
-		GRAB_DEVELOPER_GUIDE: "https://docs.aws.amazon.com/location/latest/developerguide/grab.html"
+		GRAB_DEVELOPER_GUIDE: "https://docs.aws.amazon.com/location/latest/developerguide/grab.html",
+		LEARN_MORE_URL: "https://aws.amazon.com/location/?trk=b1ff9204-1ee6-4d04-9cd7-812e06d51e72&sc_channel=el",
+		DEVELOPER_GUIDE_URL:
+			"https://docs.aws.amazon.com/location/latest/developerguide/welcome.html?trk=67d34d8b-8ad3-4125-a65f-892564657dc4&sc_channel=el",
+		CONSOLE_URL:
+			"https://console.aws.amazon.com/location/home?nc2=h_ct&src=location.aws.com-signin&trk=40b56f71-8696-41ee-9745-731eab90fee8&sc_channel=el",
+		LEARN_MAPS_URL:
+			"https://docs.aws.amazon.com/location/latest/developerguide/map-concepts.html?trk=5ec46857-62ef-490c-b300-312f3232a3f2&sc_channel=el",
+		LEARN_PLACES_URL:
+			"https://docs.aws.amazon.com/location/latest/developerguide/places-concepts.html?trk=9fca7120-d68b-4a37-9796-376ddff93112&sc_channel=el",
+		LEARN_ROUTES_URL:
+			"https://docs.aws.amazon.com/location/latest/developerguide/route-concepts.html?trk=39f77bb8-13c6-48fd-873f-15e3762304a6&sc_channel=el",
+		LEARN_GEOFENCES_URL:
+			"https://docs.aws.amazon.com/location/latest/developerguide/geofence-tracker-concepts.html?trk=7f30cc2d-283d-4be7-acae-eece3c2402f3&sc_channel=el",
+		LEARN_TRACKERS_URL:
+			"https://docs.aws.amazon.com/location/latest/developerguide/geofence-tracker-concepts.html?trk=7f30cc2d-283d-4be7-acae-eece3c2402f3&sc_channel=el",
+		AWS_GETTING_STARTED_URL:
+			"https://aws.amazon.com/location/getting-started/?trk=62cbda11-92dc-4aee-9a53-23befa82aaf3&sc_channel=el",
+		AWS_FAQ_URL: "https://aws.amazon.com/location/faqs/?trk=facff0d6-d5ee-4a47-be74-006c8c1bedfc&sc_channel=el",
+		AWS_PRICING_URL: "https://aws.amazon.com/location/pricing/?trk=ca946f21-94e1-400e-820e-c59227469836&sc_channel=el",
+		AWS_WORKSHOP_URL:
+			"https://catalog.workshops.aws/amazon-location-101/en-US?trk=15f09edb-8ab2-4645-9f9c-30f9e53afc8f&sc_channel=el",
+		AWS_MAPS_API_URL:
+			"https://docs.aws.amazon.com/location/latest/APIReference/API_Operations-Maps.html?trk=294f115e-c817-4d1a-8e51-e269fb79692b&sc_channel=el",
+		AWS_PLACES_API_URL:
+			"https://docs.aws.amazon.com/location/latest/APIReference/API_Operations-Places.html?trk=9fa9fa0b-8431-45c1-80c4-92ae7850ced3&sc_channel=el",
+		AWS_ROUTES_API_URL:
+			"https://docs.aws.amazon.com/location/latest/APIReference/API_Operations-Routes.html?trk=60151c30-2d15-47e6-a0c0-17a557761b60&sc_channel=el",
+		AWS_GEOFENCES_API_URL:
+			"https://docs.aws.amazon.com/location/latest/APIReference/API_Operations-Geofences.html?trk=2c28d9c8-e83a-4f7b-9c97-58d6f589bdb6&sc_channel=el",
+		AWS_TRACKERS_API_URL:
+			"https://docs.aws.amazon.com/location/latest/APIReference/API_Operations-Trackers.html?trk=3567840b-c12f-4f60-b1c6-7cdad9794d6c&sc_channel=el",
+		AWS_CONTACT_US_URL: "https://aws.amazon.com/contact-us/?trk=a500323b-ad80-4622-ab11-c920bfde8948&sc_channel=el",
+		CONNECT_AWS_IQ_URL:
+			"https://iq.aws.amazon.com/?utm=docs&service=Amazon+Location+Service&trk=21d6523f-f7f1-4c67-b89c-678e12a6bccf&sc_channel=el",
+		AWS_REPOST_URL:
+			"https://repost.aws/tags/TA3QLKBvr1TkCkuNIIqrUBHA/amazon-location-service?trk=d9baa9e4-1776-474d-b50b-a9a8bd95f21f&sc_channel=el",
+		AWS_STACKOVERFLOW_URL:
+			"https://stackoverflow.com/questions/tagged/amazon-location-service?trk=da4b9cb6-eee9-40cd-a4c9-e0a19eaacccd&sc_channel=el",
+		AWS_HOME_URL: "https://aws.amazon.com/",
+		AWS_TWITTER_URL: "https://twitter.com/awscloud",
+		AWS_YOUTUBE_URL: "https://www.youtube.com/@amazonwebservices/search?query=%22Amazon%20Location%22",
+		AWS_TWITCH_URL: "https://www.twitch.tv/search?term=%22Amazon%20Location%22",
+		AWS_PRIVACY_URL: "https://aws.amazon.com/privacy/",
+		OVERVIEW_PRICING_URL: "https://aws.amazon.com/location/pricing/?loc=ft#Pricing_examples",
+		OVERVIEW_PRIVACY_URL: "https://aws.amazon.com/location/features/#Data_Security_and_Control",
+		OVERVIEW_INTEGRATIONS_URL: "https://aws.amazon.com/location/features/#Management_and_Developer_Tools",
+		SEARCH_PLACE_INDEX_FOR_TEXT_URL:
+			"https://docs.aws.amazon.com/location/latest/APIReference/API_SearchPlaceIndexForText.html",
+		SEARCH_PLACE_INDEX_FOR_POSITION_URL:
+			"https://docs.aws.amazon.com/location/latest/APIReference/API_SearchPlaceIndexForPosition.html",
+		SEARCH_PLACE_INDEX_FOR_SUGGESTIONS_URL:
+			"https://docs.aws.amazon.com/location/latest/APIReference/API_SearchPlaceIndexForSuggestions.html",
+		GET_PLACE_URL: "https://docs.aws.amazon.com/location/latest/APIReference/API_GetPlace.html",
+		GET_MAP_GLYPHS_URL: "https://docs.aws.amazon.com/location/latest/APIReference/API_GetMapGlyphs.html",
+		GET_MAP_SPRITES_URL: "https://docs.aws.amazon.com/location/latest/APIReference/API_GetMapSprites.html",
+		GET_MAP_STYLE_DESCRIPTOR_URL:
+			"https://docs.aws.amazon.com/location/latest/APIReference/API_GetMapStyleDescriptor.html",
+		GET_MAP_TILE_URL: "https://docs.aws.amazon.com/location/latest/APIReference/API_GetMapTile.html",
+		CALCULATE_ROUTE_URL: "https://docs.aws.amazon.com/location/latest/APIReference/API_CalculateRoute.html",
+		CALCULATE_ROUTE_MATRIX_URL:
+			"https://docs.aws.amazon.com/location/latest/APIReference/API_CalculateRouteMatrix.html",
+		CREATE_GEOFENCE_COLLECTION_URL:
+			"https://docs.aws.amazon.com/location/latest/APIReference/API_CreateGeofenceCollection.html",
+		UPDATE_GEOFENCE_COLLECTION_URL:
+			"https://docs.aws.amazon.com/location/latest/APIReference/API_UpdateGeofenceCollection.html",
+		DELETE_GEOFENCE_COLLECTION_URL:
+			"https://docs.aws.amazon.com/location/latest/APIReference/API_DeleteGeofenceCollection.html",
+		DESCRIBE_GEOFENCE_COLLECTION_URL:
+			"https://docs.aws.amazon.com/location/latest/APIReference/API_DescribeGeofenceCollection.html",
+		PUT_GEOFENCE_URL: "https://docs.aws.amazon.com/location/latest/APIReference/API_PutGeofence.html",
+		GET_GEOFENCE_URL: "https://docs.aws.amazon.com/location/latest/APIReference/API_GetGeofence.html",
+		LIST_GEOFENCES_URL: "https://docs.aws.amazon.com/location/latest/APIReference/API_ListGeofences.html",
+		BATCH_PUT_GEOFENCE_URL: "https://docs.aws.amazon.com/location/latest/APIReference/API_BatchPutGeofence.html",
+		BATCH_DELETE_GEOFENCE_URL: "https://docs.aws.amazon.com/location/latest/APIReference/API_BatchDeleteGeofence.html",
+		BATCH_EVALUATE_GEOFENCES_URL:
+			"https://docs.aws.amazon.com/location/latest/APIReference/API_BatchEvaluateGeofences.html",
+		CREATE_TRACKER_URL: "https://docs.aws.amazon.com/location/latest/APIReference/API_CreateTracker.html",
+		DESCRIBE_TRACKER_URL: "https://docs.aws.amazon.com/location/latest/APIReference/API_DescribeTracker.html",
+		UPDATE_TRACKER_URL: "https://docs.aws.amazon.com/location/latest/APIReference/API_UpdateTracker.html",
+		DELETE_TRACKER_URL: "https://docs.aws.amazon.com/location/latest/APIReference/API_DeleteTracker.html",
+		LIST_TRACKERS_URL: "https://docs.aws.amazon.com/location/latest/APIReference/API_ListTrackers.html",
+		ASSOCIATE_TRACKER_CONSUMER_URL:
+			"https://docs.aws.amazon.com/location/latest/APIReference/API_AssociateTrackerConsumer.html",
+		DISASSOCIATE_TRACKER_CONSUMER_URL:
+			"https://docs.aws.amazon.com/location/latest/APIReference/API_DisassociateTrackerConsumer.html",
+		LIST_TRACKER_CONSUMERS_URL:
+			"https://docs.aws.amazon.com/location/latest/APIReference/API_ListTrackerConsumers.html",
+		GET_DEVICE_POSITION_URL: "https://docs.aws.amazon.com/location/latest/APIReference/API_GetDevicePosition.html",
+		BATCH_GET_DEVICE_POSITION_URL:
+			"https://docs.aws.amazon.com/location/latest/APIReference/API_BatchGetDevicePosition.html",
+		BATCH_UPDATE_DEVICE_POSITION_URL:
+			"https://docs.aws.amazon.com/location/latest/APIReference/API_BatchUpdateDevicePosition.html",
+		LIST_DEVICE_POSITIONS_URL: "https://docs.aws.amazon.com/location/latest/APIReference/API_ListDevicePositions.html",
+		GET_DEVICE_POSITION_HISTORY_URL:
+			"https://docs.aws.amazon.com/location/latest/APIReference/API_GetDevicePositionHistory.html",
+		BATCH_DELETE_DEVICE_POSITION_HISTORY_URL:
+			"https://docs.aws.amazon.com/location/latest/APIReference/API_BatchDeleteDevicePositionHistory.html"
 	}
 };
 

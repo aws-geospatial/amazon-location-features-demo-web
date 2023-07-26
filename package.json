@@ -1,11 +1,12 @@
 {
-	"name": "amazon-location-web-demo",
+	"name": "amazon-location-features-demo-web",
 	"private": true,
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc && vite build",
+		"translate": "node extra/translation-script/translate.js",
 		"preview": "vite preview",
 		"stylelint-check": "stylelint-config-prettier-check",
 		"cypress": "cypress run --browser chrome --headed",
@@ -19,19 +20,24 @@
 	},
 	"dependencies": {
 		"@aws-amplify/ui-react": "^3.5.11",
+		"@aws-sdk/credential-providers": "^3.370.0",
 		"@turf/turf": "^6.5.0",
 		"aws-amplify": "^4.3.43",
 		"aws-sdk": "^2.1248.0",
 		"date-fns": "^2.29.3",
+		"i18next": "^23.2.8",
+		"i18next-browser-languagedetector": "^7.1.0",
 		"mapbox-gl-draw-circle": "^1.1.2",
 		"ngeohash": "^0.6.3",
 		"ramda": "^0.28.0",
 		"react": "^18.2.0",
+		"react-device-detect": "^2.2.3",
 		"react-dom": "^18.2.0",
+		"react-i18next": "^13.0.1",
 		"react-router-dom": "^6.4.3",
 		"react-toastify": "^9.1.1",
 		"react-tooltip": "^5.10.0",
-		"zustand": "^4.1.4"
+		"zustand": "^4.3.9"
 	},
 	"devDependencies": {
 		"@faker-js/faker": "^7.6.0",
@@ -78,7 +84,8 @@
 	},
 	"jest": {
 		"moduleNameMapper": {
-			"^@demo/(.*)$": "<rootDir>/src/$1"
+			"^@demo/(.*)$": "<rootDir>/src/$1",
+			"\\.(css|scss)$": "<rootDir>/__mocks__/styleMock.ts"
 		},
 		"collectCoverageFrom": [
 			"**/*.{js,jsx,ts,tsx}",

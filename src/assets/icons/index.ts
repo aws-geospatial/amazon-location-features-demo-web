@@ -38,6 +38,7 @@ export { ReactComponent as IconGeofenceMarker } from "./icon-geofence-marker.svg
 export { ReactComponent as IconGeofencePlusSolid } from "./icon-geofence-plus-solid.svg";
 export { ReactComponent as IconGeofence } from "./icon-geofence.svg";
 export { ReactComponent as IconGithub } from "./icon-github.svg";
+export { ReactComponent as IconGlobe } from "./icon-globe.svg";
 export { ReactComponent as IconHamburger } from "./icon-hamburger.svg";
 export { ReactComponent as IconHelp } from "./icon-help.svg";
 export { ReactComponent as IconInfoSolid } from "./icon-info-solid.svg";
@@ -89,3 +90,5 @@ export { ReactComponent as LogoSmall } from "./logo.svg";
 export { ReactComponent as LogoDark } from "./LogoDark.svg";
 export { ReactComponent as LogoLight } from "./LogoLight.svg";
 export { ReactComponent as IconTickCircle } from "./tick-circle.svg";
+export { ReactComponent as IconBellSolid } from "./icon-bell-solid.svg";
+export { ReactComponent as IconRadar } from "./icon-radar.svg";

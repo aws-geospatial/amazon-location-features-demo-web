@@ -3,8 +3,17 @@ import React from "react";
 import { Divider, Flex, View } from "@aws-amplify/ui-react";
 import { IconLocateMe, IconMinus, IconZoomPlus, LogoLight } from "@demo/assets";
 import { MapButtons } from "@demo/atomicui/molecules";
-import { GeofenceBox, RouteBox, SearchBox, SettingsModal, Sidebar, TrackingBox } from "@demo/atomicui/organisms";
-import { MapStyleFilterTypes, ShowStateType } from "@demo/types";
+import {
+	AuthGeofenceBox,
+	AuthTrackerBox,
+	RouteBox,
+	SearchBox,
+	SettingsModal,
+	Sidebar,
+	UnauthSimulation
+} from "@demo/atomicui/organisms";
+import { useRecordViewPage } from "@demo/hooks";
+import { MapStyleFilterTypes, MenuItemEnum, ShowStateType } from "@demo/types";
 import "./styles.scss";
 
 interface DemoPlaceholderPageProps {
@@ -22,6 +31,8 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 	searchValue,
 	selectedFilters
 }) => {
+	const {} = useRecordViewPage("DemoPlaceholderPage");
+
 	return (
 		<View style={{ height }}>
 			<View className={"loader-container"}>
@@ -30,19 +41,30 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 						onCloseSidebar={() => {}}
 						onOpenConnectAwsAccountModal={() => {}}
 						onOpenSignInModal={() => {}}
-						onShowGeofenceBox={() => {}}
-						onShowTrackingBox={() => {}}
+						onShowAuthGeofenceBox={() => {}}
+						onShowAuthTrackerBox={() => {}}
 						onShowSettings={() => {}}
 						onShowTrackingDisclaimerModal={() => {}}
 						onShowAboutModal={() => {}}
+						onShowUnauthGeofenceBox={() => {}}
+						onShowUnauthTrackerBox={() => {}}
+						onshowUnauthSimulationDisclaimerModal={() => {}}
 					/>
 				)}
 				{show.routeBox ? (
 					<RouteBox mapRef={null} setShowRouteBox={() => {}} isSideMenuExpanded={show.sidebar} />
-				) : show.geofenceBox ? (
-					<GeofenceBox mapRef={null} setShowGeofenceBox={() => {}} />
-				) : show.trackingBox ? (
-					<TrackingBox mapRef={null} setShowTrackingBox={() => {}} />
+				) : show.authGeofenceBox ? (
+					<AuthGeofenceBox mapRef={null} setShowAuthGeofenceBox={() => {}} />
+				) : show.authTrackerBox ? (
+					<AuthTrackerBox mapRef={null} setShowAuthTrackerBox={() => {}} />
+				) : show.unauthGeofenceBox || show.unauthTrackerBox ? (
+					<UnauthSimulation
+						mapRef={null}
+						from={show.unauthGeofenceBox ? MenuItemEnum.GEOFENCE : MenuItemEnum.TRACKER}
+						setShowUnauthGeofenceBox={() => {}}
+						setShowUnauthTrackerBox={() => {}}
+						setShowConnectAwsAccountModal={() => {}}
+					/>
 				) : (
 					<SearchBox
 						mapRef={null}
@@ -50,13 +72,14 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 						onToggleSideMenu={() => {}}
 						setShowRouteBox={() => {}}
 						isRouteBoxOpen={show.routeBox}
-						isGeofenceBoxOpen={show.geofenceBox}
-						isTrackingBoxOpen={show.trackingBox}
+						isAuthGeofenceBoxOpen={show.authGeofenceBox}
+						isAuthTrackerBoxOpen={show.authTrackerBox}
 						isSettingsOpen={show.settings}
 						isStylesCardOpen={show.stylesCard}
 					/>
 				)}
 				<MapButtons
+					renderedUpon={"Demo Page"}
 					openStylesCard={show.stylesCard}
 					setOpenStylesCard={() => {}}
 					onCloseSidebar={() => {}}
@@ -88,10 +111,10 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 				resetAppState={() => {}}
 				isGrabVisible={isGrabVisible}
 				handleMapProviderChange={() => {}}
-				handleMapStyleChange={() => {}}
 				handleCurrentLocationAndViewpoint={() => {}}
 				mapButtons={
 					<MapButtons
+						renderedUpon={"Settings Modal"}
 						openStylesCard={show.stylesCard}
 						setOpenStylesCard={() => {}}
 						onCloseSidebar={() => {}}
