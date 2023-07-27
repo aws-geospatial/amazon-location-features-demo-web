@@ -6,7 +6,6 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc && vite build",
-		"translate": "node extra/translation-script/translate.js",
 		"preview": "vite preview",
 		"stylelint-check": "stylelint-config-prettier-check",
 		"cypress": "cypress run --browser chrome --headed",
@@ -16,7 +15,8 @@
 		"test": "react-scripts test",
 		"coverage": "react-scripts test --coverage --watchAll",
 		"ci-test": "CI=true react-scripts test",
-		"prepare": "husky install"
+		"prepare": "husky install",
+		"translate": "cd extra/translation-script && node translate.js"
 	},
 	"dependencies": {
 		"@aws-amplify/ui-react": "^3.5.11",

@@ -336,10 +336,11 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({ mapRef, setShowAuthGe
 										className="geofence-radius-slider"
 										width="100%"
 										margin="0rem 1.23rem 0.62rem 0rem"
-										label="Radius"
+										label={t("geofence_box__radius.text")}
 										fontFamily="AmazonEmber-Bold"
 										fontSize="1rem"
 										lineHeight="1.38rem"
+										alignItems={isLtr ? "start" : "end"}
 										isValueHidden
 										min={RadiusInM.MIN}
 										max={RadiusInM.MAX}

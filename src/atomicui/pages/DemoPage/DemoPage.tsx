@@ -263,11 +263,11 @@ const DemoPage: React.FC = () => {
 		if (credentials) {
 			if (!!credentials.authenticated && !!authTokens) {
 				await attachPolicy(credentials.identityId);
-			} else if (currentMapProvider !== MapProviderEnum.GRAB) {
+			} else if (!isUserAwsAccountConnected && currentMapProvider !== MapProviderEnum.GRAB) {
 				await attachPolicy(credentials.identityId, true);
 			}
 		}
-	}, [credentials, authTokens, currentMapProvider, attachPolicy]);
+	}, [credentials, authTokens, attachPolicy, isUserAwsAccountConnected, currentMapProvider]);
 
 	/* Attach IoT policy to authenticated user to ensure successful websocket connection */
 	useEffect(() => {
@@ -437,9 +437,6 @@ const DemoPage: React.FC = () => {
 			}
 
 			mapViewRef?.current?.flyTo({ center: lngLat });
-		} else {
-			const mb = mapViewRef.current?.getMaxBounds();
-			console.log({ mb });
 		}
 	};
 

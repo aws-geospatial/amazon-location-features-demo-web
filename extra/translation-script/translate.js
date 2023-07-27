@@ -8,7 +8,7 @@ import * as dotenv from "dotenv";
 
 import { excludedPhrases } from "./exclude-phrases.js";
 
-dotenv.config();
+dotenv.config({ path: "./.env" });
 
 const region = process.env.AWS_REGION;
 const identityPoolId = process.env.IDENTITY_POOL_ID;
@@ -37,18 +37,29 @@ const divideJsonIntoBatches = json => {
 	return batches;
 };
 
+let credentials;
+let translate;
+
 const main = async () => {
 	try {
-		const credentials = await fetchCredentials();
-		const translate = new AWS.Translate({
+		credentials = await fetchCredentials();
+		translate = new AWS.Translate({
 			credentials,
 			region
 		});
 
+		const initCredsAndTranslate = async () => {
+			credentials = await fetchCredentials();
+			translate = new AWS.Translate({
+				credentials,
+				region
+			});
+		};
+
 		const localesDirectory = "src/locales";
 		const translationFilePath = `${localesDirectory}/en/en.json`;
 		const languages = ["ar", "de", "es", "fr", "he", "hi", "it", "ja", "ko", "pt-BR", "zh-CN", "zh-TW"];
-		const jsonFilePath = path.join("../", translationFilePath);
+		const jsonFilePath = path.join("../../", translationFilePath);
 		const json = JSON.parse(fs.readFileSync(jsonFilePath, "utf8"));
 
 		// Function to translate text
@@ -67,7 +78,8 @@ const main = async () => {
 				const response = await translate.translateText(params).promise();
 				return response.TranslatedText;
 			} catch (error) {
-				console.error(error);
+				console.error("translateText()", { error });
+				error?.code === "ExpiredTokenException" && initCredsAndTranslate();
 			}
 		};
 
@@ -93,7 +105,7 @@ const main = async () => {
 				console.log(`Translating batch ${i + 1}/16 for language ${lang}.....`);
 				const translatedJson = await translateJson(jsonBatches[i], lang);
 
-				const dirPath = path.join("../", `${localesDirectory}/${lang}`);
+				const dirPath = path.join("../../", `${localesDirectory}/${lang}`);
 				const outputPath = path.join(dirPath, `${lang}.json`);
 
 				// Ensure directory exists
@@ -114,8 +126,8 @@ const main = async () => {
 				console.log(`Translation batch ${i + 1}/16 for the language ${lang} completed.`);
 			}
 		}
-	} catch (e) {
-		console.log(e);
+	} catch (error) {
+		console.error("main()", { error });
 	}
 };
 

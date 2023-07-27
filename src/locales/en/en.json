@@ -755,45 +755,6 @@
 	"help__item_3__content_6": {
 		"text": "A confirmation popup would appear asking if you'd like to retain resources, without checking anything, click on Delete stack, after a few minutes the stack should be deleted successfully."
 	},
-	"terms__heading": {
-		"text": "Demo Terms & Conditions"
-	},
-	"terms__subheading": {
-		"text": "Terms & Conditions for Amazon Location Demo App (the “App”)"
-	},
-	"terms__point_1": {
-		"text": "The App is provided solely as a demonstration for what AWS customers can build using Amazon Location Service. It is intended only for your internal testing and evaluation of Amazon Location Service. Do not use the App for any other purposes, including but not limited to navigation, and you are solely responsible for all liability that may arise from any such use."
-	},
-	"terms__point_2": {
-		"text": "By downloading, installing, or using the App, you agree to the AWS Customer Agreement, AWS Acceptable Use Policy, and the AWS Privacy Notice.  If you already have an AWS Customer Agreement or Enterprise Agreement, you agree that the terms of that agreement govern your download, installation, and use of this App. These Terms & Conditions supplement those Agreements."
-	},
-	"terms__point_3": {
-		"text": "The App is AWS Content as defined in the Customer Agreement. Your use of Amazon Location Service through the App is governed by the AWS Service Terms."
-	},
-	"terms__point_4": {
-		"text": "When using the App, you consent to AWS's collection and use of your request parameters (e.g. location searches), including your device location if you consent to share it with us, for the purpose of providing the App’s geolocation features. You authorize AWS to transmit your request parameters to our third-party geolocation data provider(s) for processing.  Your device’s location is only used while we process your results in near real-time. We do not store or retain your device’s location, and you may stop our processing by exiting the App."
-	},
-	"terms__point_5": {
-		"text": "Unless you connect your AWS Account, your request parameters will be processed in the US East (Northern Virginia) Region if using the web version of the App, or in the US West (Oregon) Region if using the mobile version of the App. You are responsible for verifying the adequacy of these Regions for the processing of request parameters."
-	},
-	"terms__point_6": {
-		"text": "We may generate unique identifiers and store them on your device to help us measure use of and improve the App. You can delete these identifiers by deleting the App from your device."
-	},
-	"terms__point_7": {
-		"text": "To keep the App up-to-date, we may offer automatic or manual updates at any time and without notice to you. If we elect to provide maintenance or support of any kind, we may terminate that maintenance or support at any time without notice to you."
-	},
-	"terms__keyword_1": {
-		"text": "AWS Customer Agreement"
-	},
-	"terms__keyword_2": {
-		"text": "AWS Acceptable Use Policy"
-	},
-	"terms__keyword_3": {
-		"text": "AWS Privacy Notice"
-	},
-	"terms__keyword_4": {
-		"text": "AWS Service Terms"
-	},
 	"sa__heading": {
 		"text": "Demo Software Attributions"
 	},
@@ -2965,6 +2926,9 @@
 	},
 	"geofence_box__m": {
 		"text": "Meters"
+	},
+	"geofence_box__radius": {
+		"text": "Radius"
 	},
 	"tracker_box__click_any_point": {
 		"text": "Click at any point on the map to start creating a tracking route"

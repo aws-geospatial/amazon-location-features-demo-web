@@ -305,8 +305,7 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 												],
 												["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
 											);
-
-											_onLogin();
+											await _onLogin();
 										}}
 									>
 										{t("sign_in.text")}
@@ -317,7 +316,7 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 									width="100%"
 									height="3.08rem"
 									onClick={async () => {
-										await record(
+										record(
 											[
 												{
 													EventType: EventTypeEnum.CONTINUE_TO_DEMO_CLICKED,
