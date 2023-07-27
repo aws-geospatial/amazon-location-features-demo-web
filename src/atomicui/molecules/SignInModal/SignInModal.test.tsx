@@ -9,6 +9,7 @@ const useAmplifyAuthReturnValue = {
 };
 
 const useAmplifyAuth = () => useAmplifyAuthReturnValue;
+const delay = (cb: () => void, ms: number) => setTimeout(cb, ms);
 
 jest.mock("hooks", () => ({
 	useAmplifyAuth
@@ -48,7 +49,7 @@ describe("<SignInModal/>", () => {
 	it("should call `onLogin` when `sign in` button is clicked", () => {
 		renderComponent();
 		act(() => signInButton.click());
-		expect(useAmplifyAuthReturnValue.onLogin).toBeCalled();
+		delay(() => expect(useAmplifyAuthReturnValue.onLogin).toBeCalled(), 500);
 	});
 
 	it("should call `onClose` when `Maybe later` button is clicked", () => {

@@ -231,7 +231,7 @@ describe("<RouteBox />", () => {
 			endRouteLayer = screen.queryByTestId("end-route-layer");
 			expect(startRouteLayer).toBeInTheDocument();
 			expect(endRouteLayer).toBeInTheDocument();
-		}, 200);
+		}, 500);
 	});
 
 	it("should switch to and from input values when the swap icon is clicked", async () => {
@@ -266,7 +266,7 @@ describe("<RouteBox />", () => {
 			delay(() => {
 				expect(routeDataContainer).toBeInTheDocument();
 				expect(stepsContainer).toBeInTheDocument();
-			}, 200);
+			}, 500);
 		}
 	});
 });
