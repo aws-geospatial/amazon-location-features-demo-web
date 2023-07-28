@@ -52,7 +52,8 @@ const appConfig = {
 		GEO_LOCATION_ALLOWED: "GeoLocationAllowed",
 		SHOULD_CLEAR_CREDENTIALS: "ShouldClearCredentials",
 		ANALYTICS_ENDPOINT_ID: "analyticsEndpointId",
-		ANALYTICS_CREDS: "analyticsCreds"
+		ANALYTICS_CREDS: "analyticsCreds",
+		PAGE_VIEW_IDENTIFIER: "pageViewIdentifier"
 	},
 	ROUTES: {
 		DEFAULT: "/",

@@ -20,11 +20,18 @@ import { uuid } from "./uuid";
 
 const {
 	ENV: { REGION, IDENTITY_POOL_ID, PINPOINT_APPLICATION_ID },
-	PERSIST_STORAGE_KEYS: { LOCAL_STORAGE_PREFIX, AMPLIFY_AUTH_DATA, ANALYTICS_ENDPOINT_ID, ANALYTICS_CREDS }
+	PERSIST_STORAGE_KEYS: {
+		LOCAL_STORAGE_PREFIX,
+		AMPLIFY_AUTH_DATA,
+		ANALYTICS_ENDPOINT_ID,
+		ANALYTICS_CREDS,
+		PAGE_VIEW_IDENTIFIER
+	}
 } = appConfig;
 const amplifyAuthDataLocalStorageKey = `${LOCAL_STORAGE_PREFIX}${AMPLIFY_AUTH_DATA}`;
 const endpointIdKey = `${LOCAL_STORAGE_PREFIX}${ANALYTICS_ENDPOINT_ID}`;
 const analyticsCredsKey = `${LOCAL_STORAGE_PREFIX}${ANALYTICS_CREDS}`;
+const pageViewIdentifierKey = `${LOCAL_STORAGE_PREFIX}${PAGE_VIEW_IDENTIFIER}`;
 
 let endpointId = localStorage.getItem(endpointIdKey);
 
@@ -111,6 +118,8 @@ export const record: (input: RecordInput[], excludeAttributes?: string[]) => voi
 	input,
 	excludeAttributes = []
 ) => {
+	const pageViewIdentifier = localStorage.getItem(pageViewIdentifierKey);
+
 	const eventTypes = input.map(x => x.EventType);
 
 	if (!eventTypes.includes(EventTypeEnum.SESSION_START) && !eventTypes.includes(EventTypeEnum.SESSION_STOP)) {
@@ -137,13 +146,18 @@ export const record: (input: RecordInput[], excludeAttributes?: string[]) => voi
 		await createOrUpdateEndpoint();
 	}
 
+	if (!pageViewIdentifier) {
+		excludeAttributes.push("pageViewIdentifier");
+	}
+
 	const defaultOptions = omit(excludeAttributes, {
 		userAWSAccountConnectionStatus: isUserAwsAccountConnected ? "Connected" : "Not connected",
-		userAuthenticationStatus: credentials?.authenticated ? "Authenticated" : "Unauthenticated"
+		userAuthenticationStatus: credentials?.authenticated ? "Authenticated" : "Unauthenticated",
+		pageViewIdentifier
 	});
 
 	const events = input.reduce((result, value) => {
-		const extValue = {
+		const extValue: Event = {
 			...value,
 			Attributes: {
 				...defaultOptions,
@@ -172,7 +186,7 @@ const startSession = async () => {
 	await createOrUpdateEndpoint();
 	session.id = uuid.randomUUID();
 	session.startTimestamp = new Date().toISOString();
-	await record([{ EventType: EventTypeEnum.SESSION_START, Attributes: {} }]);
+	await record([{ EventType: EventTypeEnum.SESSION_START, Attributes: {} }], ["pageViewIdentifier"]);
 	stopSessionIn30Minutes();
 	session.creationStatus = AnalyticsSessionStatus.CREATED;
 };
