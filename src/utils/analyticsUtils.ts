@@ -14,7 +14,7 @@ import { omit } from "ramda";
 import { browserName, fullBrowserVersion, isAndroid, isDesktop, isIOS } from "react-device-detect";
 
 import { getCountryCodeByIp } from "./countryUtil";
-import debounce from "./debounce";
+import { debounce } from "./debounce";
 import sleep from "./sleep";
 import { uuid } from "./uuid";
 

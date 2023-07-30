@@ -8,7 +8,7 @@ import { uuid } from "@demo/utils/uuid";
 
 const {
 	PERSIST_STORAGE_KEYS: { LOCAL_STORAGE_PREFIX, PAGE_VIEW_IDENTIFIER }
-} = appConfig;
+} = appConfig.default;
 const pageViewIdentifierKey = `${LOCAL_STORAGE_PREFIX}${PAGE_VIEW_IDENTIFIER}`;
 
 let pageViewDateTime: Date;

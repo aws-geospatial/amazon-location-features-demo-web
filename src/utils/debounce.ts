@@ -9,4 +9,4 @@ const debounce = (func: any, timeout: number) => {
 	};
 };
 
-export default debounce;
+export { debounce };

@@ -316,7 +316,7 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 									width="100%"
 									height="3.08rem"
 									onClick={async () => {
-										record(
+										await record(
 											[
 												{
 													EventType: EventTypeEnum.CONTINUE_TO_DEMO_CLICKED,

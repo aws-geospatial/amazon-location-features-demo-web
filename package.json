@@ -2,7 +2,23 @@
 	"name": "amazon-location-features-demo-web",
 	"private": true,
 	"version": "0.0.0",
+	"files": [
+		"lib"
+	],
 	"type": "module",
+	"main": "./lib/demo-page.es.js",
+	"module": "./lib/demo-page.es.js",
+	"types": "./lib/index.d.ts",
+	"exports": {
+		".": {
+			"import": "./lib/demo-page.es.js",
+			"require": "./lib/demo-page.es.js"
+		},
+		"./lib/style.css": {
+			"import": "./lib/style.css",
+			"require": "./lib/style.css"
+		}
+	},
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc && vite build",
@@ -16,7 +32,9 @@
 		"coverage": "react-scripts test --coverage --watchAll",
 		"ci-test": "CI=true react-scripts test",
 		"prepare": "husky install",
-		"translate": "cd extra/translation-script && node translate.js"
+		"translate": "cd extra/translation-script && node index.js",
+		"lib": "tsc && vite build --config vite.library.ts",
+		"local-lib": "tsc && vite build --config vite.library.ts && node extra/prepare-local-lib/index.js"
 	},
 	"dependencies": {
 		"@aws-amplify/ui-react": "^3.5.11",
@@ -76,6 +94,7 @@
 		"stylelint-prettier": "^2.0.0",
 		"typescript": "^4.9.3",
 		"vite": "^3.1.0",
+		"vite-plugin-dts": "^2.3.0",
 		"vite-plugin-eslint": "^1.7.0",
 		"vite-plugin-svgr": "^2.2.1"
 	},

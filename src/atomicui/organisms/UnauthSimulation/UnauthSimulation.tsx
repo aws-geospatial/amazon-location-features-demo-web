@@ -38,7 +38,7 @@ const {
 	MAP_RESOURCES: {
 		AMAZON_HQ: { US }
 	}
-} = appConfig;
+} = appConfig.default;
 const initialTrackingHistory: TrackingHistoryType = {
 	bus_route_01: [],
 	bus_route_02: [],

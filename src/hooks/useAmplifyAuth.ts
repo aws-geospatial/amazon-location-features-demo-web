@@ -19,7 +19,7 @@ import { useTranslation } from "react-i18next";
 const {
 	ENV: { IDENTITY_POOL_ID, REGION, IDENTITY_POOL_ID_ASIA, REGION_ASIA },
 	ROUTES: { DEMO, ERROR_BOUNDARY }
-} = appConfig;
+} = appConfig.default;
 
 const useAmplifyAuth = () => {
 	const store = useAmplifyAuthStore();

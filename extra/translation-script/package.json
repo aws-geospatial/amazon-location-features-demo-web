@@ -1,18 +1,18 @@
 {
-    "name": "translate",
-    "version": "1.0.0",
-    "license": "MIT",
-    "type": "module",
-    "main": "translate.js",
-    "scripts": {
-        "run-translate": "yarn install && node translate.js",
-        "translate": "node translate.js"
-    },
-    "dependencies": {
-        "aws-amplify": "^5.3.5",
-        "aws-sdk": "^2.1420.0",
-        "dotenv": "^16.3.1",
-        "stream-chain": "^2.2.5",
-        "stream-json": "^1.8.0"
-    }
+	"name": "translate",
+	"version": "1.0.0",
+	"license": "MIT",
+	"type": "module",
+	"main": "index.js",
+	"scripts": {
+		"run-translate": "yarn install && node index.js",
+		"translate": "node index.js"
+	},
+	"dependencies": {
+		"aws-amplify": "^5.3.5",
+		"aws-sdk": "^2.1420.0",
+		"dotenv": "^16.3.1",
+		"stream-chain": "^2.2.5",
+		"stream-json": "^1.8.0"
+	}
 }
