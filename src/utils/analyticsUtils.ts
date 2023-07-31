@@ -118,7 +118,7 @@ export const record: (input: RecordInput[], excludeAttributes?: string[]) => voi
 	input,
 	excludeAttributes = []
 ) => {
-	const pageViewIdentifier = localStorage.getItem(pageViewIdentifierKey);
+	const pageViewIdentifier = localStorage.getItem(pageViewIdentifierKey + location.pathname.replaceAll("/", "_"));
 
 	const eventTypes = input.map(x => x.EventType);
 
