@@ -22,7 +22,7 @@ VITE_APPLE_APP_STORE_LINK<br />
 VITE_GOOGLE_PLAY_STORE_LINK<br />
 ## Configure
 
-> git clone https://github.com/aws-geospatial/amazon-location-features-demo-web.git<br />
+> git clone <REPO_URL><br />
 cd amazon-location-features-demo-web/<br />
 yarn install<br />
 yarn vite
