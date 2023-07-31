@@ -283,7 +283,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 				className="search-bar"
 				style={{
 					flexDirection: "column",
-					left: isSideMenuExpanded ? 245 : 20,
+					left: isSideMenuExpanded ? 252 : 20,
 					borderBottomLeftRadius: hideBorderRadius ? "0px" : "8px",
 					borderBottomRightRadius: hideBorderRadius ? "0px" : "8px"
 				}}

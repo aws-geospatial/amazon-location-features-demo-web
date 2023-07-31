@@ -275,30 +275,32 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({ mapRef, setShowAuthTrac
 						{t("tracker_box__click_any_point.text")}
 					</Text>
 				</Flex>
-				<Flex className="marker-container">
-					{trackerTypes.map(({ type, icon }, idx) => (
-						<View key={`${type}-${idx}`}>
-							<View
-								className={selectedTrackerType === type ? "icon-container selected" : "icon-container"}
-								data-tooltip-id={type}
-								data-tooltip-place="top"
-								data-tooltip-content={
-									type === TrackerType.CAR
-										? t("tooltip__simulate_tracking_car.text")
-										: type === TrackerType.WALK
-										? t("tooltip__simulate_tracking_walk.text")
-										: t("tooltip__simulate_tracking_drone.text")
-								}
-								marginLeft={!!idx ? "0.62rem" : "0rem"}
-								onClick={() => onTrackerMarkerChange(type)}
-							>
-								{icon}
+				<Flex className="marker-container" justifyContent="space-between">
+					<Flex gap="0">
+						{trackerTypes.map(({ type, icon }, idx) => (
+							<View key={`${type}-${idx}`}>
+								<View
+									className={selectedTrackerType === type ? "icon-container selected" : "icon-container"}
+									data-tooltip-id={type}
+									data-tooltip-place="top"
+									data-tooltip-content={
+										type === TrackerType.CAR
+											? t("tooltip__simulate_tracking_car.text")
+											: type === TrackerType.WALK
+											? t("tooltip__simulate_tracking_walk.text")
+											: t("tooltip__simulate_tracking_drone.text")
+									}
+									marginLeft={!!idx ? "0.62rem" : "0rem"}
+									onClick={() => onTrackerMarkerChange(type)}
+								>
+									{icon}
+								</View>
+								<Tooltip id={type} />
 							</View>
-							<Tooltip id={type} />
-						</View>
-					))}
+						))}
+					</Flex>
 					{!!trackerPoints?.length && (
-						<Flex className="buttons-container" width={isEditingRoute ? "6.14rem" : ""}>
+						<Flex className="buttons-container" width={isEditingRoute ? "" : ""}>
 							{isEditingRoute ? (
 								<>
 									<View className="button" onClick={onClear}>
@@ -311,6 +313,7 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({ mapRef, setShowAuthTrac
 											fontFamily="AmazonEmber-Bold"
 											color={trackerPoints.length >= 2 ? "var(--primary-color)" : "var(--tertiary-color)"}
 											opacity={trackerPoints.length >= 2 ? 1 : 0.3}
+											marginLeft="1.9rem"
 										>
 											{t("save.text")}
 										</Text>

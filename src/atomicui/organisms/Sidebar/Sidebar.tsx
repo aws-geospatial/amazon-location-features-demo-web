@@ -53,6 +53,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 	const navigate = useNavigate();
 	const isAuthenticated = !!credentials?.authenticated;
 	const { t } = useTranslation();
+	const disconnectButtonText = t("disconnect_aws_account.text");
 
 	const sidebarData = marketingMenuOptionsData.filter(v => t(v.label) !== t("demo.text"));
 
@@ -219,8 +220,9 @@ const Sidebar: React.FC<SidebarProps> = ({
 						marginTop="8px"
 						textAlign="center"
 						onClick={onDisconnectAwsAccount}
+						fontSize={disconnectButtonText.length > 22 ? "0.92rem" : "1rem"}
 					>
-						{t("disconnect_aws_account.text")}
+						{disconnectButtonText}
 					</Button>
 				)}
 			</View>

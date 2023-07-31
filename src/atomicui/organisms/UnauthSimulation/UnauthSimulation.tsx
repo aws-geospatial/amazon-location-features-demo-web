@@ -17,6 +17,7 @@ import { DropdownEl } from "@demo/atomicui/atoms";
 import { ConfirmationModal, IconicInfoCard, NotificationsBox, WebsocketBanner } from "@demo/atomicui/molecules";
 import { appConfig, busRoutesData } from "@demo/core";
 import { useAmplifyMap } from "@demo/hooks";
+import i18n from "@demo/locales/i18n";
 import {
 	MenuItemEnum,
 	NotificationHistoryItemtype,
@@ -104,6 +105,8 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 		}, [])
 	);
 	const { t } = useTranslation();
+	const currentLanguage = i18n.language;
+	const unauthSimulationCtaText = t("unauth_simulation__cta.text");
 	const trackingHistoryRef: Ref<HTMLDivElement> = useRef<HTMLDivElement>(null);
 	const selectedRoutesIds = useMemo(() => selectedRoutes.map(route => route.value), [selectedRoutes]);
 
@@ -160,7 +163,12 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 
 	const StartSimulation = useCallback(() => {
 		return (
-			<Flex position="relative" height="47rem">
+			<Flex
+				position="relative"
+				height={`${
+					!["en"].includes(currentLanguage) ? `${currentLanguage === "pt-BR" ? "51.5rem" : "50rem"}` : "47rem"
+				}`}
+			>
 				<Flex className="start-simulation-container">
 					<Flex justifyContent="center">
 						<Simulation className="simulation-icon" />
@@ -199,7 +207,7 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 				</Flex>
 			</Flex>
 		);
-	}, [t]);
+	}, [t, currentLanguage]);
 
 	const renderGeofences = useMemo(
 		() =>
@@ -236,7 +244,12 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 	return (
 		<>
 			{!showStartUnauthSimulation ? (
-				<Card data-testid="unauth-simulation-card" className="unauth-simulation-card" left={21}>
+				<Card
+					data-testid="unauth-simulation-card"
+					className="unauth-simulation-card"
+					left={21}
+					width={unauthSimulationCtaText.length > 42 ? `${currentLanguage === "pt-BR" ? "34rem" : "29rem"}` : ""}
+				>
 					<Flex
 						data-testid="unauth-simulation-card-header-close"
 						className="unauth-simulation-card-header"
@@ -261,7 +274,7 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 							isFullWidth
 							onClick={handleCta}
 						>
-							{t("unauth_simulation__cta.text")}
+							{unauthSimulationCtaText}
 						</Button>
 					</Flex>
 					<Flex className="unauth-simulation-card-footer">
