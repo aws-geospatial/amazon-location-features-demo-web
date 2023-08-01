@@ -12,7 +12,6 @@ import {
 	Sidebar,
 	UnauthSimulation
 } from "@demo/atomicui/organisms";
-import { useRecordViewPage } from "@demo/hooks";
 import { MapStyleFilterTypes, MenuItemEnum, ShowStateType } from "@demo/types";
 import "./styles.scss";
 
@@ -31,8 +30,6 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 	searchValue,
 	selectedFilters
 }) => {
-	const {} = useRecordViewPage("DemoPlaceholderPage");
-
 	return (
 		<View style={{ height }}>
 			<View className={"loader-container"}>

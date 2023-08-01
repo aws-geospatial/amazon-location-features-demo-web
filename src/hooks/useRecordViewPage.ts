@@ -17,7 +17,10 @@ let pageViewIdentifier: string;
 const useRecordViewPage = (pageName: string) => {
 	useEffect(() => {
 		pageViewIdentifier = uuid.randomUUID();
-		localStorage.setItem(pageViewIdentifierKey + location.pathname.replaceAll("/", "_"), pageViewIdentifier);
+		localStorage.setItem(
+			pageViewIdentifierKey + location.pathname.replaceAll("/", "_"),
+			`${pageViewIdentifier}__${pageName}`
+		);
 
 		const path = location.pathname;
 		pageViewDateTime = new Date();
