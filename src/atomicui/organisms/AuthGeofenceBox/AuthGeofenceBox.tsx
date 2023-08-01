@@ -264,7 +264,10 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({ mapRef, setShowAuthGe
 	);
 
 	const renderAddGeofence = useMemo(() => {
-		const validName = /^[A-Za-z_-][A-Za-z0-9_-]*$/.test(name);
+		const validName =
+			/^[A-Za-z\u0600-\u06FF\u0750-\u077F\u0590-\u05FF\u0900-\u097F_-][A-Za-z0-9\u0600-\u06FF\u0750-\u077F\u0590-\u05FF\u0900-\u097F_-]*$/.test(
+				name
+			);
 		const nameExists = !!name && !!geofences?.find(({ GeofenceId }) => GeofenceId === name);
 		const errorMsg =
 			!!name && !isEditing
