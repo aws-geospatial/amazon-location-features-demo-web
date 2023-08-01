@@ -6,7 +6,8 @@
 	"main": "index.js",
 	"scripts": {
 		"run-translate": "yarn install && node index.js",
-		"translate": "node index.js"
+		"translate": "node index.js",
+		"update-translate": "node update-translation.js"
 	},
 	"dependencies": {
 		"aws-amplify": "^5.3.5",
