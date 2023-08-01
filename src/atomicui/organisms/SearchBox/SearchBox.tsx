@@ -63,6 +63,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	} = useAwsPlace();
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
+	const currentLang = i18n.language;
 
 	useEffect(() => {
 		if (!value) {
@@ -180,10 +181,15 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 					currentMapUnit === METRIC ? (KILOMETERS.toLowerCase() as Units) : (MILES.toLowerCase() as Units)
 			  )
 			: undefined;
+		const localizeGeodesicDistance = () => {
+			const formatter = new Intl.NumberFormat(currentLang, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+			return formatter.format(geodesicDistance || 0);
+		};
+
 		const geodesicDistanceWithUnit = geodesicDistance
 			? currentMapUnit === METRIC
-				? `${geodesicDistance.toFixed(2)} ${KILOMETERS_SHORT}`
-				: `${geodesicDistance.toFixed(2)} ${MILES_SHORT}`
+				? `${localizeGeodesicDistance()} ${KILOMETERS_SHORT}`
+				: `${localizeGeodesicDistance()} ${MILES_SHORT}`
 			: undefined;
 
 		return (

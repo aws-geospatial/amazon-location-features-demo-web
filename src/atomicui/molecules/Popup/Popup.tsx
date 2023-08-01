@@ -41,6 +41,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 	const [longitude, latitude] = info.Place?.Geometry.Point as Position;
 	const isDesktop = useMediaQuery("(min-width: 1024px)");
 	const { t, i18n } = useTranslation();
+	const currentLang = i18n.language;
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
 
@@ -59,14 +60,19 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 		[isCurrentLocationDisabled, viewpoint, currentLocationData, longitude, latitude, currentMapUnit]
 	);
 
+	const localizeGeodesicDistance = useMemo(() => {
+		const formatter = new Intl.NumberFormat(currentLang, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+		return formatter.format(geodesicDistance || 0);
+	}, [geodesicDistance, currentLang]);
+
 	const geodesicDistanceWithUnit = useMemo(
 		() =>
-			geodesicDistance
+			localizeGeodesicDistance
 				? currentMapUnit === METRIC
-					? `${geodesicDistance.toFixed(2)} ${KILOMETERS_SHORT}`
-					: `${geodesicDistance.toFixed(2)} ${MILES_SHORT}`
+					? `${localizeGeodesicDistance} ${KILOMETERS_SHORT}`
+					: `${localizeGeodesicDistance} ${MILES_SHORT}`
 				: "",
-		[geodesicDistance, currentMapUnit]
+		[localizeGeodesicDistance, currentMapUnit]
 	);
 
 	/* Esri route can't be calculated when distance is greater than 400 km or 248.55 mi */
@@ -170,7 +176,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 					<IconCar />
 					{!isFetchingRoute && timeInSeconds ? (
 						<Text className="bold" variation="secondary">
-							{humanReadableTime(timeInSeconds * 1000)}
+							{humanReadableTime(timeInSeconds * 1000, currentLang)}
 						</Text>
 					) : (
 						<Placeholder width={30} display="inline-block" />
@@ -187,7 +193,8 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 		routeData,
 		isFetchingRoute,
 		t,
-		isLtr
+		isLtr,
+		currentLang
 	]);
 
 	const address = useMemo(() => {

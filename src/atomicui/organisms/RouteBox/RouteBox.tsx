@@ -91,6 +91,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
+	const currentLang = i18n.language;
 
 	const clearRoutePosition = useCallback((type: InputType) => setRoutePositions(undefined, type), [setRoutePositions]);
 
@@ -777,7 +778,9 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 								}`}</Text>
 							</View>
 							<View className="duration">
-								<Text className="regular-text">{humanReadableTime(routeData.Summary.DurationSeconds * 1000)}</Text>
+								<Text className="regular-text">
+									{humanReadableTime(routeData.Summary.DurationSeconds * 1000, currentLang)}
+								</Text>
 							</View>
 						</View>
 						{!isCollapsed && renderSteps}
