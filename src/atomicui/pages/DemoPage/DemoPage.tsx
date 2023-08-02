@@ -736,7 +736,7 @@ const DemoPage: React.FC = () => {
 							onShowUnauthGeofenceBox={() => setShow(s => ({ ...s, unauthGeofenceBox: true }))}
 							onShowUnauthTrackerBox={() => setShow(s => ({ ...s, unauthTrackerBox: true }))}
 							onShowAuthGeofenceBox={() => setShow(s => ({ ...s, authGeofenceBox: true }))}
-							onShowAuthTrackerBox={() => setShow(s => ({ ...s, authTrackingBox: true }))}
+							onShowAuthTrackerBox={() => setShow(s => ({ ...s, authTrackerBox: true }))}
 							onshowUnauthSimulationDisclaimerModal={() =>
 								setShow(s => ({ ...s, unauthSimulationDisclaimerModal: true }))
 							}
