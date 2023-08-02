@@ -260,37 +260,37 @@ Resources:
           - AmazonLocationDemoCognitoIdentityPoolUnauthRole
           - Arn
 
-      AmazonLocationDemoMapsOpenDataLight:
-            Type: AWS::Location::Map
-            Properties:
-                  Configuration:
-                        Style: VectorOpenDataStandardLight
-                  Description: You created this resource by running Amazon Location Demo's CloudFormation template.
-                  MapName: location.aws.com.demo.maps.OpenData.StandardLight
+  AmazonLocationDemoMapsOpenDataLight:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorOpenDataStandardLight
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.OpenData.StandardLight
 
-      AmazonLocationDemoMapsOpenDataDark:
-            Type: AWS::Location::Map
-            Properties:
-                  Configuration:
-                        Style: VectorOpenDataStandardDark
-                  Description: You created this resource by running Amazon Location Demo's CloudFormation template.
-                  MapName: location.aws.com.demo.maps.OpenData.StandardDark
+  AmazonLocationDemoMapsOpenDataDark:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorOpenDataStandardDark
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.OpenData.StandardDark
 
-      AmazonLocationDemoMapsOpenDataVisualizationLight:
-            Type: AWS::Location::Map
-            Properties:
-                  Configuration:
-                        Style: VectorOpenDataVisualizationLight
-                  Description: You created this resource by running Amazon Location Demo's CloudFormation template.
-                  MapName: location.aws.com.demo.maps.OpenData.VisualizationLight
+  AmazonLocationDemoMapsOpenDataVisualizationLight:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorOpenDataVisualizationLight
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.OpenData.VisualizationLight
 
-      AmazonLocationDemoMapsOpenDataVisualizationDark:
-            Type: AWS::Location::Map
-            Properties:
-                  Configuration:
-                        Style: VectorOpenDataVisualizationDark
-                  Description: You created this resource by running Amazon Location Demo's CloudFormation template.
-                  MapName: location.aws.com.demo.maps.OpenData.VisualizationDark
+  AmazonLocationDemoMapsOpenDataVisualizationDark:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorOpenDataVisualizationDark
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.OpenData.VisualizationDark  
 
   AmazonLocationDemoMapsEsriLight:
     Type: AWS::Location::Map
