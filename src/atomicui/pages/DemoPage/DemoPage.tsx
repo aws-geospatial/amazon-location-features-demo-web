@@ -437,9 +437,6 @@ const DemoPage: React.FC = () => {
 			}
 
 			mapViewRef?.current?.flyTo({ center: lngLat });
-		} else {
-			const mb = mapViewRef.current?.getMaxBounds();
-			console.log({ mb });
 		}
 	};
 
