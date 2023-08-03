@@ -17,3 +17,4 @@ export * from "./GrabConfirmationModal";
 export * from "./IconicInfoCard";
 export * from "./NotificationsBox";
 export * from "./WebsocketBanner";
+export * from "./OpenDataConfirmationModal";

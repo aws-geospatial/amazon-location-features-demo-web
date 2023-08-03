@@ -18,7 +18,7 @@ import {
 	MapStyleFilterTypes,
 	TypeEnum
 } from "@demo/types";
-import { EventTypeEnum, TriggeredByEnum } from "@demo/types/Enums";
+import { EventTypeEnum, OpenDataMapEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
 import { useTranslation } from "react-i18next";
 import { Tooltip } from "react-tooltip";
@@ -27,11 +27,11 @@ import "./styles.scss";
 const { GRAB } = MapProviderEnum;
 const {
 	MAP_RESOURCES: {
-		MAP_STYLES: { ESRI_STYLES, HERE_STYLES, GRAB_STYLES }
+		MAP_STYLES: { ESRI_STYLES, HERE_STYLES, GRAB_STYLES, OPEN_DATA_STYLES }
 	}
 } = appConfig;
 
-const MAP_STYLES = [...ESRI_STYLES, ...HERE_STYLES, ...GRAB_STYLES] as MapStyle[];
+const MAP_STYLES = [...ESRI_STYLES, ...HERE_STYLES, ...GRAB_STYLES, ...OPEN_DATA_STYLES] as MapStyle[];
 
 const filters = {
 	Providers: Object.values(MapProviderEnum).map(value => value),
@@ -50,7 +50,7 @@ export interface MapButtonsProps {
 	isGrabVisible: boolean;
 	showGrabDisclaimerModal: boolean;
 	onShowGridLoader: () => void;
-	handleMapStyleChange: (id: EsriMapEnum | HereMapEnum | GrabMapEnum) => void;
+	handleMapStyleChange: (id: EsriMapEnum | HereMapEnum | GrabMapEnum | OpenDataMapEnum) => void;
 	searchValue: string;
 	setSearchValue: (s: string) => void;
 	selectedFilters: MapStyleFilterTypes;
@@ -58,6 +58,7 @@ export interface MapButtonsProps {
 	isLoading?: boolean;
 	onlyMapStyles?: boolean;
 	resetSearchAndFilters?: () => void;
+	showOpenDataDisclaimerModal: boolean;
 }
 
 const MapButtons: React.FC<MapButtonsProps> = ({
@@ -82,7 +83,8 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	setSelectedFilters,
 	isLoading = false,
 	onlyMapStyles = false,
-	resetSearchAndFilters
+	resetSearchAndFilters,
+	showOpenDataDisclaimerModal
 }) => {
 	const [isLoadingImg, setIsLoadingImg] = useState(true);
 	const [showFilter, setShowFilter] = useState(false);
@@ -103,14 +105,15 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 				!stylesCardRef.current.contains(ev.target as Node) &&
 				stylesCardTogglerRef.current &&
 				!stylesCardTogglerRef.current.contains(ev.target as Node) &&
-				!showGrabDisclaimerModal
+				!showGrabDisclaimerModal &&
+				!showOpenDataDisclaimerModal
 			) {
 				setOpenStylesCard(false);
 				resetSearchAndFilters && resetSearchAndFilters();
 				setShowFilter(false);
 			}
 		},
-		[showGrabDisclaimerModal, setOpenStylesCard, resetSearchAndFilters]
+		[showGrabDisclaimerModal, showOpenDataDisclaimerModal, setOpenStylesCard, resetSearchAndFilters]
 	);
 
 	useEffect(() => {
@@ -171,7 +174,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	}, [setSelectedFilters]);
 
 	const onChangeStyle = useCallback(
-		(id: EsriMapEnum | HereMapEnum | GrabMapEnum) => {
+		(id: EsriMapEnum | HereMapEnum | GrabMapEnum | OpenDataMapEnum) => {
 			if (id !== currentMapStyle) {
 				onShowGridLoader();
 				handleMapStyleChange(id);
@@ -185,6 +188,8 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 				mapProvider = MapProviderEnum.HERE;
 			} else if (Object.values(GrabMapEnum).includes(id as GrabMapEnum)) {
 				mapProvider = MapProviderEnum.GRAB;
+			} else if (Object.values(OpenDataMapEnum).includes(id as OpenDataMapEnum)) {
+				mapProvider = MapProviderEnum.OPEN_DATA;
 			}
 
 			record([

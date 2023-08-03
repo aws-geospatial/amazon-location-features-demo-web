@@ -30,7 +30,7 @@ const useAwsPlaceService = () => {
 	const config = useMemo(
 		() => ({
 			IndexName:
-				currentMapProvider === MapProviderEnum.ESRI
+				currentMapProvider === MapProviderEnum.ESRI || currentMapProvider === MapProviderEnum.OPEN_DATA
 					? ESRI
 					: currentMapProvider === MapProviderEnum.HERE
 					? HERE

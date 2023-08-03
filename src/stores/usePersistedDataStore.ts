@@ -15,6 +15,7 @@ interface PersistedDataStoreProps {
 	showAppDownloadNotification: boolean;
 	showWelcomeModal: boolean;
 	doNotAskGrabDisclaimerModal: boolean;
+	doNotAskOpenDataDisclaimerModal: boolean;
 	defaultRouteOptions: RouteOptionsType;
 	settingsOptions: SettingOptionEnum;
 }
@@ -23,6 +24,7 @@ const initialState: IStateProps<PersistedDataStoreProps> = {
 	showAppDownloadNotification: true,
 	showWelcomeModal: true,
 	doNotAskGrabDisclaimerModal: true,
+	doNotAskOpenDataDisclaimerModal: true,
 	defaultRouteOptions: { avoidFerries: true, avoidTolls: true },
 	settingsOptions: SettingOptionEnum.UNITS
 };

@@ -3349,5 +3349,23 @@
   },
   "geofence_box__radius": {
     "text": "半徑"
+  },
+  "map_buttons__standard_light": {
+    "text": "Standard Light"
+  },
+  "map_buttons__standard_dark": {
+    "text": "Standard Dark"
+  },
+  "map_buttons__visualization_light": {
+    "text": "Visualization Light"
+  },
+  "map_buttons__visualization_dark": {
+    "text": "Visualization Dark"
+  },
+  "open_data_cm__heading": {
+    "text": "啟用開啟資料"
+  },
+  "open_data_cm__desc": {
+    "text": "OpenData 使用 Esri 進行路線和地點搜尋功能來增強您的使用體驗。"
   }
 }

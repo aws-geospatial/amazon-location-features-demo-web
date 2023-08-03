@@ -16,6 +16,7 @@ import {
 	ViewPointType
 } from "@demo/types";
 
+import { OpenDataMapEnum } from "@demo/types/Enums";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { useTranslation } from "react-i18next";
 
@@ -66,7 +67,7 @@ const useAmplifyMap = () => {
 			setMapProvider: (mapProvider: MapProviderEnum) => {
 				setState({ mapProvider });
 			},
-			setMapStyle: (mapStyle: EsriMapEnum | HereMapEnum | GrabMapEnum) => {
+			setMapStyle: (mapStyle: EsriMapEnum | HereMapEnum | GrabMapEnum | OpenDataMapEnum) => {
 				setState({ mapStyle });
 			},
 			setAttributionText: (attributionText: string) => {

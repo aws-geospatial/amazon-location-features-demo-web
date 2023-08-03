@@ -3349,5 +3349,23 @@
   },
   "tooltip__disabled_geofence": {
     "text": "This geofence is not available in the Grab map provider. Please switch to another map provider to view and manage this geofence."
+  },
+  "map_buttons__standard_light": {
+    "text": "Standard Light"
+  },
+  "map_buttons__standard_dark": {
+    "text": "Standard Dark"
+  },
+  "map_buttons__visualization_light": {
+    "text": "Visualization Light"
+  },
+  "map_buttons__visualization_dark": {
+    "text": "Visualization Dark"
+  },
+  "open_data_cm__heading": {
+    "text": "Enable OpenData"
+  },
+  "open_data_cm__desc": {
+    "text": "OpenData uses Esri for Routes and Places search functionality to enhance your experience."
   }
 }

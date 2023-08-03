@@ -43,7 +43,7 @@ const {
 const defaultRegion = regionsData.find(option => option.value === REGION) as { value: string; label: string };
 const defaultRegionAsia = regionsData.find(option => option.value === REGION_ASIA) as { value: string; label: string };
 const { IMPERIAL, METRIC } = MapUnitEnum;
-const { ESRI, HERE, GRAB } = MapProviderEnum;
+const { ESRI, HERE, GRAB, OPEN_DATA } = MapProviderEnum;
 
 interface SettingsModalProps {
 	open: boolean;
@@ -350,6 +350,17 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								</Radio>
 							</Flex>
 						)}
+						{/* OpenData */}
+						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
+							<Radio
+								data-testid="data-provider-openData-radio"
+								value={OPEN_DATA}
+								checked={currentMapProvider === OPEN_DATA}
+								onChange={() => handleMapProviderChange(OPEN_DATA, TriggeredByEnum.SETTINGS_MODAL)}
+							>
+								<Text marginLeft="1.23rem">{OPEN_DATA}</Text>
+							</Radio>
+						</Flex>
 					</Flex>
 				)
 			},

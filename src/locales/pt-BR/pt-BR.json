@@ -3349,5 +3349,23 @@
   },
   "geofence_box__radius": {
     "text": "Raio"
+  },
+  "map_buttons__standard_light": {
+    "text": "Standard Light"
+  },
+  "map_buttons__standard_dark": {
+    "text": "Standard Dark"
+  },
+  "map_buttons__visualization_light": {
+    "text": "Visualization Light"
+  },
+  "map_buttons__visualization_dark": {
+    "text": "Visualization Dark"
+  },
+  "open_data_cm__heading": {
+    "text": "Habilitar o OpenData"
+  },
+  "open_data_cm__desc": {
+    "text": "O OpenData usa a funcionalidade de pesquisa Esri for Routes and Places para aprimorar sua experiência."
   }
 }

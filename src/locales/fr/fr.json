@@ -3349,5 +3349,23 @@
   },
   "geofence_box__radius": {
     "text": "Rayon"
+  },
+  "map_buttons__standard_light": {
+    "text": "Standard Light"
+  },
+  "map_buttons__standard_dark": {
+    "text": "Standard Dark"
+  },
+  "map_buttons__visualization_light": {
+    "text": "Visualization Light"
+  },
+  "map_buttons__visualization_dark": {
+    "text": "Visualization Dark"
+  },
+  "open_data_cm__heading": {
+    "text": "Activer OpenData"
+  },
+  "open_data_cm__desc": {
+    "text": "OpenData utilise la fonctionnalité de recherche d'itinéraires et de lieux d'Esri pour améliorer votre expérience."
   }
 }

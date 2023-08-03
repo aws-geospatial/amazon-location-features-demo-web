@@ -1,5 +1,5 @@
 {
-  "grab_cm__checkbox": {
-		"text": "Don't ask me again"
-	}
+    "open_data_cm__desc": {
+        "text": "OpenData uses Esri for Routes and Places search functionality to enhance your experience."
+    }
 }

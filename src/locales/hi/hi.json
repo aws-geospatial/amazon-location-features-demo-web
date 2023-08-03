@@ -3349,5 +3349,23 @@
   },
   "geofence_box__radius": {
     "text": "रेडियस"
+  },
+  "map_buttons__standard_light": {
+    "text": "Standard Light"
+  },
+  "map_buttons__standard_dark": {
+    "text": "Standard Dark"
+  },
+  "map_buttons__visualization_light": {
+    "text": "Visualization Light"
+  },
+  "map_buttons__visualization_dark": {
+    "text": "Visualization Dark"
+  },
+  "open_data_cm__heading": {
+    "text": "OpenData चालू करें"
+  },
+  "open_data_cm__desc": {
+    "text": "OpenData आपके अनुभव को बेहतर बनाने के लिए रूट और स्थान खोज कार्यक्षमता के लिए Esri का उपयोग करता है।"
   }
 }

@@ -9,6 +9,7 @@ import {
 	ConnectAwsAccountModal,
 	GrabConfirmationModal,
 	MapButtons,
+	OpenDataConfirmationModal,
 	SignInModal,
 	ConfirmationModal as TrackerInformationModal,
 	ConfirmationModal as UnauthSimulationDisclaimerModal,
@@ -51,7 +52,7 @@ import {
 	ShowStateType,
 	ToastType
 } from "@demo/types";
-import { EventTypeEnum, TriggeredByEnum } from "@demo/types/Enums";
+import { EventTypeEnum, OpenDataMapEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { getCurrentLocation } from "@demo/utils/getCurrentLocation";
@@ -71,6 +72,7 @@ import {
 	MapRef,
 	NavigationControl
 } from "react-map-gl";
+
 import "./styles.scss";
 
 const {
@@ -92,6 +94,7 @@ const initShow = {
 	trackingDisclaimerModal: false,
 	about: false,
 	grabDisclaimerModal: false,
+	openDataDisclaimerModal: false,
 	mapStyle: undefined,
 	unauthGeofenceBox: false,
 	unauthTrackerBox: false,
@@ -107,6 +110,7 @@ const DemoPage: React.FC = () => {
 	const [height, setHeight] = React.useState(window.innerHeight);
 	const [searchValue, setSearchValue] = React.useState("");
 	const [doNotAskGrabDisclaimer, setDoNotAskGrabDisclaimer] = React.useState(false);
+	const [doNotAskOpenDataDisclaimer, setDoNotAskOpenDataDisclaimer] = React.useState(false);
 	const [selectedFilters, setSelectedFilters] = React.useState<MapStyleFilterTypes>({
 		Providers: [],
 		Attribute: [],
@@ -149,8 +153,14 @@ const DemoPage: React.FC = () => {
 	const { routeData, directions, resetStore: resetAwsRouteStore, setRouteData } = useAwsRoute();
 	const { resetStore: resetAwsGeofenceStore } = useAwsGeofence();
 	const { isEditingRoute, trackerPoints, setTrackerPoints, resetStore: resetAwsTrackingStore } = useAwsTracker();
-	const { showWelcomeModal, setShowWelcomeModal, doNotAskGrabDisclaimerModal, setDoNotAskGrabDisclaimerModal } =
-		usePersistedData();
+	const {
+		showWelcomeModal,
+		setShowWelcomeModal,
+		doNotAskGrabDisclaimerModal,
+		setDoNotAskGrabDisclaimerModal,
+		doNotAskOpenDataDisclaimerModal,
+		setDoNotAskOpenDataDisclaimerModal
+	} = usePersistedData();
 	const isDesktop = useMediaQuery("(min-width: 1024px)");
 	const { t } = useTranslation();
 	const shouldClearCredentials = localStorage.getItem(SHOULD_CLEAR_CREDENTIALS) === "true";
@@ -335,7 +345,7 @@ const DemoPage: React.FC = () => {
 						options
 				  );
 		}
-	}, [suggestions, bound, show.routeBox, routeData, isDesktop, currentMapProvider]);
+	}, [suggestions, bound, show.routeBox, routeData, isDesktop, currentMapProvider, currentMapStyle]);
 
 	useEffect(() => {
 		if (directions) setShow(s => ({ ...s, routeBox: true }));
@@ -529,6 +539,39 @@ const DemoPage: React.FC = () => {
 		[currentLocationData, setViewpoint, setZoom, setIsCurrentLocationDisabled, isCurrentLocationDisabled]
 	);
 
+	const handleOpenDataMapChange = useCallback(
+		(mapStyle?: OpenDataMapEnum) => {
+			if (doNotAskOpenDataDisclaimerModal) setDoNotAskOpenDataDisclaimerModal(!doNotAskOpenDataDisclaimer);
+
+			setShow(s => ({ ...s, openDataDisclaimerModal: false, gridLoader: true }));
+
+			if (currentMapProvider === MapProviderEnum.GRAB && !isUserAwsAccountConnected) {
+				switchToDefaultRegionStack();
+				resetAwsStore();
+				setIsCurrentLocationDisabled(false);
+			}
+
+			setMapProvider(MapProviderEnum.OPEN_DATA);
+			setMapStyle(
+				(typeof mapStyle === "string" ? mapStyle : undefined) ||
+					(show.mapStyle ? show.mapStyle : OpenDataMapEnum.OPEN_DATA_STANDARD_LIGHT)
+			);
+		},
+		[
+			currentMapProvider,
+			doNotAskOpenDataDisclaimerModal,
+			isUserAwsAccountConnected,
+			resetAwsStore,
+			setDoNotAskOpenDataDisclaimerModal,
+			setIsCurrentLocationDisabled,
+			setMapProvider,
+			setMapStyle,
+			show.mapStyle,
+			switchToDefaultRegionStack,
+			doNotAskOpenDataDisclaimer
+		]
+	);
+
 	const handleGrabMapChange = useCallback(
 		(mapStyle?: GrabMapEnum) => {
 			if (doNotAskGrabDisclaimerModal) setDoNotAskGrabDisclaimerModal(!doNotAskGrabDisclaimer);
@@ -567,7 +610,12 @@ const DemoPage: React.FC = () => {
 		(mapProvider: MapProviderEnum, triggeredBy: TriggeredByEnum) => {
 			setShow(s => ({ ...s, gridLoader: true }));
 
-			if (mapProvider === MapProviderEnum.GRAB) {
+			if (mapProvider === MapProviderEnum.OPEN_DATA) {
+				if (doNotAskOpenDataDisclaimerModal) {
+					/* Switching from different map provider and style to OpenData map provider and style */
+					setShow(s => ({ ...s, openDataDisclaimerModal: true }));
+				} else handleOpenDataMapChange();
+			} else if (mapProvider === MapProviderEnum.GRAB) {
 				if (doNotAskGrabDisclaimerModal) {
 					/* Switching from different map provider and style to Grab map provider and style */
 					setShow(s => ({ ...s, grabDisclaimerModal: true }));
@@ -608,6 +656,8 @@ const DemoPage: React.FC = () => {
 			}, 3000);
 		},
 		[
+			doNotAskOpenDataDisclaimerModal,
+			handleOpenDataMapChange,
 			doNotAskGrabDisclaimerModal,
 			handleGrabMapChange,
 			currentMapProvider,
@@ -624,7 +674,7 @@ const DemoPage: React.FC = () => {
 	);
 
 	const onMapStyleChange = useCallback(
-		(mapStyle: EsriMapEnum | HereMapEnum | GrabMapEnum) => {
+		(mapStyle: EsriMapEnum | HereMapEnum | GrabMapEnum | OpenDataMapEnum) => {
 			const splitArr = mapStyle.split(".");
 			const mapProviderFromStyle = splitArr[splitArr.length - 2] as MapProviderEnum;
 			setShow(s => ({ ...s, gridLoader: true }));
@@ -632,10 +682,21 @@ const DemoPage: React.FC = () => {
 			if (
 				(currentMapProvider === MapProviderEnum.ESRI && mapProviderFromStyle === MapProviderEnum.ESRI) ||
 				(currentMapProvider === MapProviderEnum.HERE && mapProviderFromStyle === MapProviderEnum.HERE) ||
-				(currentMapProvider === MapProviderEnum.GRAB && mapProviderFromStyle === MapProviderEnum.GRAB)
+				(currentMapProvider === MapProviderEnum.GRAB && mapProviderFromStyle === MapProviderEnum.GRAB) ||
+				(currentMapProvider === MapProviderEnum.OPEN_DATA && mapProviderFromStyle === MapProviderEnum.OPEN_DATA)
 			) {
 				/* No map provider switch required */
 				setMapStyle(mapStyle);
+			} else if (mapProviderFromStyle === MapProviderEnum.OPEN_DATA) {
+				/* Switching from OpenData map provider to different map provider and style */
+				if (doNotAskOpenDataDisclaimerModal) {
+					setTimeout(
+						() => setShow(s => ({ ...s, openDataDisclaimerModal: true, mapStyle: mapStyle as OpenDataMapEnum })),
+						0
+					);
+				} else {
+					handleOpenDataMapChange(mapStyle as OpenDataMapEnum);
+				}
 			} else {
 				if (currentMapProvider === MapProviderEnum.GRAB) {
 					/* Switching from Grab map provider to different map provider and style */
@@ -676,23 +737,28 @@ const DemoPage: React.FC = () => {
 		},
 		[
 			currentMapProvider,
-			isUserAwsAccountConnected,
 			setMapStyle,
+			doNotAskOpenDataDisclaimerModal,
+			handleOpenDataMapChange,
+			show.unauthGeofenceBox,
+			show.unauthTrackerBox,
+			resetAppState,
+			isUserAwsAccountConnected,
+			setMapProvider,
+			handleCurrentLocationAndViewpoint,
 			switchToDefaultRegionStack,
 			resetAwsStore,
 			setIsCurrentLocationDisabled,
-			handleCurrentLocationAndViewpoint,
-			setMapProvider,
-			resetAppState,
 			doNotAskGrabDisclaimerModal,
-			handleGrabMapChange,
-			show.unauthGeofenceBox,
-			show.unauthTrackerBox
+			handleGrabMapChange
 		]
 	);
 
 	return !!credentials?.identityId ? (
-		<View style={{ height }}>
+		<View
+			style={{ height }}
+			className={`${currentMapStyle.toLowerCase().includes("dark") ? "dark-mode" : "light-mode"}`}
+		>
 			<Map
 				style={{ width: "100%", height: "100%" }}
 				ref={mapViewRef}
@@ -786,6 +852,7 @@ const DemoPage: React.FC = () => {
 						onShowGeofenceBox={() => setShow(s => ({ ...s, authGeofenceBox: true }))}
 						isGrabVisible={isGrabVisible}
 						showGrabDisclaimerModal={show.grabDisclaimerModal}
+						showOpenDataDisclaimerModal={show.openDataDisclaimerModal}
 						onShowGridLoader={() => setShow(s => ({ ...s, gridLoader: true }))}
 						handleMapStyleChange={onMapStyleChange}
 						searchValue={searchValue}
@@ -876,6 +943,7 @@ const DemoPage: React.FC = () => {
 						onShowGeofenceBox={() => setShow(s => ({ ...s, authGeofenceBox: true }))}
 						isGrabVisible={isGrabVisible}
 						showGrabDisclaimerModal={show.grabDisclaimerModal}
+						showOpenDataDisclaimerModal={show.openDataDisclaimerModal}
 						onShowGridLoader={() => setShow(s => ({ ...s, gridLoader: true }))}
 						handleMapStyleChange={onMapStyleChange}
 						searchValue={searchValue}
@@ -912,6 +980,13 @@ const DemoPage: React.FC = () => {
 				}
 				onConfirm={onEnableTracking}
 				hideCancelButton
+			/>
+			<OpenDataConfirmationModal
+				open={show.openDataDisclaimerModal}
+				onClose={() => setShow(s => ({ ...s, openDataDisclaimerModal: false, mapStyle: undefined }))}
+				onConfirm={() => setTimeout(() => handleOpenDataMapChange(), 0)}
+				showDoNotAskAgainCheckbox
+				onConfirmationCheckboxOnChange={setDoNotAskOpenDataDisclaimer}
 			/>
 			<GrabConfirmationModal
 				open={show.grabDisclaimerModal}

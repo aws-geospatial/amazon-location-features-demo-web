@@ -3349,5 +3349,23 @@
   },
   "geofence_box__radius": {
     "text": "반지름"
+  },
+  "map_buttons__standard_light": {
+    "text": "Standard Light"
+  },
+  "map_buttons__standard_dark": {
+    "text": "Standard Dark"
+  },
+  "map_buttons__visualization_light": {
+    "text": "Visualization Light"
+  },
+  "map_buttons__visualization_dark": {
+    "text": "Visualization Dark"
+  },
+  "open_data_cm__heading": {
+    "text": "오픈 데이터 활성화"
+  },
+  "open_data_cm__desc": {
+    "text": "OpenData는 Esri의 경로 및 장소 검색 기능을 사용하여 사용자 환경을 개선합니다."
   }
 }

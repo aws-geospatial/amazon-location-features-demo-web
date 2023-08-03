@@ -28,5 +28,10 @@ export const excludedPhrases = [
 	"iOS",
 	"Android",
 	"JavaScript",
-	"React"
+	"React",
+	"Standard Light",
+	"Standard Dark",
+	"Visualization Light",
+	"Visualization Dark",
+	"OpenData"
 ];
