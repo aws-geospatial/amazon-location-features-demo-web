@@ -13,7 +13,7 @@ import RecordInput from "@demo/types/RecordInput";
 import { omit } from "ramda";
 import { browserName, fullBrowserVersion, isAndroid, isDesktop, isIOS } from "react-device-detect";
 
-import { getCountryCodeByIp } from "./countryUtil";
+import { getCountryCode } from "./countryUtil";
 import { debounce } from "./debounce";
 import sleep from "./sleep";
 import { uuid } from "./uuid";
@@ -88,7 +88,7 @@ const sendEvent = async (command: any, shouldRetryAfterFailure = true) => {
 };
 
 const createOrUpdateEndpoint = async () => {
-	const country = await getCountryCodeByIp();
+	const country = await getCountryCode();
 
 	let platformType = "Other";
 
@@ -197,6 +197,15 @@ export const record: (input: RecordInput[], excludeAttributes?: string[]) => voi
 	await sendEvent(putEventsCommand);
 };
 
+const handleClick = () => {
+	// create session whenever user becomes active
+	if (session.creationStatus === AnalyticsSessionStatus.NOT_CREATED) {
+		startSession();
+	} else {
+		stopSessionIn30Minutes();
+	}
+};
+
 const startSession = async () => {
 	session.creationStatus = AnalyticsSessionStatus.IN_PROGRESS;
 	await createOrUpdateEndpoint();
@@ -204,6 +213,8 @@ const startSession = async () => {
 	session.startTimestamp = new Date().toISOString();
 	await record([{ EventType: EventTypeEnum.SESSION_START, Attributes: {} }], ["pageViewIdentifier"]);
 	stopSessionIn30Minutes();
+	removeEventListener("mousedown", handleClick);
+	addEventListener("mousedown", handleClick);
 	session.creationStatus = AnalyticsSessionStatus.CREATED;
 };
 
@@ -226,16 +237,3 @@ const stopSession = async () => {
 };
 
 const stopSessionIn30Minutes = debounce(stopSession, 1000 * 60 * 30);
-
-export const initiateAnalytics = async () => {
-	await startSession();
-
-	addEventListener("mousedown", () => {
-		// create session whenever user becomes active
-		if (session.creationStatus === AnalyticsSessionStatus.NOT_CREATED) {
-			startSession();
-		} else {
-			stopSessionIn30Minutes();
-		}
-	});
-};
