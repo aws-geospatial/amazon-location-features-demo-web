@@ -27,7 +27,8 @@ describe("<MapButtons/>", () => {
 		},
 		setSelectedFilters: jest.fn(),
 		isLoading: false,
-		resetSearchAndFilters: jest.fn()
+		resetSearchAndFilters: jest.fn(),
+		showOpenDataDisclaimerModal: false
 	};
 
 	const renderComponent = () => {

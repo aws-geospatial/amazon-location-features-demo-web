@@ -92,6 +92,7 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 					selectedFilters={selectedFilters}
 					setSelectedFilters={() => {}}
 					isLoading={true}
+					showOpenDataDisclaimerModal={false}
 				/>
 				<Flex className="location-disabled">
 					<IconLocateMe />
@@ -127,6 +128,7 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 						selectedFilters={selectedFilters}
 						setSelectedFilters={() => {}}
 						isLoading={true}
+						showOpenDataDisclaimerModal={false}
 					/>
 				}
 				resetSearchAndFilters={() => {}}

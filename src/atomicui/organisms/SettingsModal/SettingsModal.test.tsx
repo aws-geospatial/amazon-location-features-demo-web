@@ -37,7 +37,8 @@ describe("<SettingsModal />", () => {
 		handleMapStyleChange: jest.fn(),
 		setSearchValue: jest.fn(),
 		setSelectedFilters: jest.fn(),
-		resetSearchAndFilters: jest.fn()
+		resetSearchAndFilters: jest.fn(),
+		showOpenDataDisclaimerModal: false
 	};
 
 	const renderComponent = async (): Promise<RenderResult> => {

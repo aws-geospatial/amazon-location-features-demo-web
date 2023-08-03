@@ -32,9 +32,10 @@
 		"coverage": "react-scripts test --coverage --watchAll",
 		"ci-test": "CI=true react-scripts test",
 		"prepare": "husky install",
-		"translate": "cd extra/translation-script && node index.js",
 		"lib": "tsc && vite build --config vite.library.ts",
-		"local-lib": "tsc && vite build --config vite.library.ts && node extra/prepare-local-lib/index.js"
+		"local-lib": "tsc && vite build --config vite.library.ts && node extra/prepare-local-lib/index.js",
+		"run-translate-content": "cd extra/translation-script-content && yarn install && node index.js && cd ../../",
+		"run-translate-content-update": "cd extra/translation-script-content && yarn install && node update-translation.js && cd ../../"
 	},
 	"dependencies": {
 		"@aws-amplify/ui-react": "^3.5.11",
