@@ -25,13 +25,13 @@ const {
 		AMPLIFY_AUTH_DATA,
 		ANALYTICS_ENDPOINT_ID,
 		ANALYTICS_CREDS,
-		PAGE_VIEW_IDENTIFIER
+		PAGE_VIEW_IDENTIFIERS
 	}
 } = appConfig;
 const amplifyAuthDataLocalStorageKey = `${LOCAL_STORAGE_PREFIX}${AMPLIFY_AUTH_DATA}`;
 const endpointIdKey = `${LOCAL_STORAGE_PREFIX}${ANALYTICS_ENDPOINT_ID}`;
 const analyticsCredsKey = `${LOCAL_STORAGE_PREFIX}${ANALYTICS_CREDS}`;
-const pageViewIdentifierKey = `${LOCAL_STORAGE_PREFIX}${PAGE_VIEW_IDENTIFIER}`;
+const pageViewIdentifiersKey = `${LOCAL_STORAGE_PREFIX}${PAGE_VIEW_IDENTIFIERS}`;
 
 let endpointId = localStorage.getItem(endpointIdKey);
 
@@ -118,11 +118,15 @@ export const record: (input: RecordInput[], excludeAttributes?: string[]) => voi
 	input,
 	excludeAttributes = []
 ) => {
-	const pageViewIdentifier = localStorage.getItem(pageViewIdentifierKey + location.pathname.replaceAll("/", "_"));
+	const { [location.pathname.replaceAll("/", "_")]: pageViewIdentifier } = JSON.parse(
+		localStorage.getItem(pageViewIdentifiersKey) || "{}"
+	);
 
 	const eventTypes = input.map(x => x.EventType);
+	const hasSessionStartEvent = eventTypes.includes(EventTypeEnum.SESSION_START);
+	const sessionStopEvent = input.find(x => x.EventType === EventTypeEnum.SESSION_STOP);
 
-	if (!eventTypes.includes(EventTypeEnum.SESSION_START) && !eventTypes.includes(EventTypeEnum.SESSION_STOP)) {
+	if (!hasSessionStartEvent && !sessionStopEvent) {
 		while (session.creationStatus !== AnalyticsSessionStatus.CREATED) {
 			if (session.creationStatus === AnalyticsSessionStatus.NOT_CREATED) {
 				await startSession();
@@ -133,7 +137,6 @@ export const record: (input: RecordInput[], excludeAttributes?: string[]) => voi
 		}
 	}
 
-	const eventId = uuid.randomUUID();
 	const authLocalStorageKeyString = localStorage.getItem(amplifyAuthDataLocalStorageKey) as string;
 	const authLocalStorage = JSON.parse(authLocalStorageKeyString || "{}");
 	const { credentials, isUserAwsAccountConnected } = authLocalStorage?.state || {};
@@ -148,6 +151,9 @@ export const record: (input: RecordInput[], excludeAttributes?: string[]) => voi
 
 	if (!pageViewIdentifier) {
 		excludeAttributes.push("pageViewIdentifier");
+	} else if (!pageViewIdentifier.split("__")[1]) {
+		// reload to regenerate this identifier if it's corrupt (edge case)
+		window.location.reload();
 	}
 
 	const defaultOptions = omit(excludeAttributes, {
@@ -156,7 +162,17 @@ export const record: (input: RecordInput[], excludeAttributes?: string[]) => voi
 		pageViewIdentifier
 	});
 
+	if (sessionStopEvent) {
+		// adding a separate session end event because aws pinpoint does not show "_session.stop" event on dashboard, neither stream it.
+		input.push({
+			...sessionStopEvent,
+			EventType: EventTypeEnum.SESSION_END
+		});
+	}
+
 	const events = input.reduce((result, value) => {
+		const eventId = uuid.randomUUID();
+
 		const extValue: Event = {
 			...value,
 			Attributes: {
@@ -192,17 +208,20 @@ const startSession = async () => {
 };
 
 const stopSession = async () => {
-	await record([
-		{
-			EventType: EventTypeEnum.SESSION_STOP,
-			Attributes: {},
-			Session: {
-				Id: session.id!,
-				StartTimestamp: session.startTimestamp!,
-				StopTimestamp: new Date().toISOString()
+	await record(
+		[
+			{
+				EventType: EventTypeEnum.SESSION_STOP,
+				Attributes: {},
+				Session: {
+					Id: session.id!,
+					StartTimestamp: session.startTimestamp!,
+					StopTimestamp: new Date().toISOString()
+				}
 			}
-		}
-	]);
+		],
+		["pageViewIdentifier"]
+	);
 	session = { creationStatus: AnalyticsSessionStatus.NOT_CREATED };
 };
 

@@ -53,7 +53,7 @@ const appConfig = {
 		SHOULD_CLEAR_CREDENTIALS: "ShouldClearCredentials",
 		ANALYTICS_ENDPOINT_ID: "analyticsEndpointId",
 		ANALYTICS_CREDS: "analyticsCreds",
-		PAGE_VIEW_IDENTIFIER: "pageViewIdentifier"
+		PAGE_VIEW_IDENTIFIERS: "pageViewIdentifiers"
 	},
 	ROUTES: {
 		DEFAULT: "/",

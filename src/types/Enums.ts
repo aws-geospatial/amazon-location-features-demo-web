@@ -4,6 +4,7 @@
 export enum EventTypeEnum {
 	// Session
 	SESSION_START = "_session.start",
+	SESSION_END = "SESSION_END",
 	SESSION_STOP = "_session.stop",
 
 	// Page
