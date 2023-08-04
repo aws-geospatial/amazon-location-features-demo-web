@@ -19,7 +19,7 @@ import sleep from "./sleep";
 import { uuid } from "./uuid";
 
 const {
-	ENV: { REGION, IDENTITY_POOL_ID, PINPOINT_APPLICATION_ID },
+	ENV: { REGION_EAST, IDENTITY_POOL_ID_EAST, PINPOINT_APPLICATION_ID },
 	PERSIST_STORAGE_KEYS: {
 		LOCAL_STORAGE_PREFIX,
 		AMPLIFY_AUTH_DATA,
@@ -58,15 +58,15 @@ const validateAndSetAnalyticsCreds = async (forceRefreshCreds = false) => {
 
 	if (isExpired || forceRefreshCreds) {
 		analyticsCreds = await fromCognitoIdentityPool({
-			identityPoolId: IDENTITY_POOL_ID,
-			clientConfig: { region: REGION }
+			identityPoolId: IDENTITY_POOL_ID_EAST,
+			clientConfig: { region: REGION_EAST }
 		})();
 		localStorage.setItem(analyticsCredsKey, JSON.stringify(analyticsCreds));
-		pinClient = new PinpointClient({ credentials: analyticsCreds, region: REGION });
+		pinClient = new PinpointClient({ credentials: analyticsCreds, region: REGION_EAST });
 	}
 
 	if (!pinClient) {
-		pinClient = new PinpointClient({ credentials: analyticsCreds, region: REGION });
+		pinClient = new PinpointClient({ credentials: analyticsCreds, region: REGION_EAST });
 	}
 };
 

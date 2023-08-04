@@ -32,15 +32,18 @@ import { useTranslation } from "react-i18next";
 import "./styles.scss";
 
 const {
-	ENV: { CF_TEMPLATE, REGION, REGION_ASIA },
+	ENV: { CF_TEMPLATE, REGION_EAST, REGION_ASIA },
 	ROUTES: { HELP },
 	MAP_RESOURCES: {
 		MAP_STYLES: { ESRI_STYLES, HERE_STYLES },
 		GRAB_SUPPORTED_AWS_REGIONS
 	},
-	LINKS: { AWS_TERMS_AND_CONDITIONS }
+	LINKS: { AWS_TERMS_AND_CONDITIONS },
+	PERSIST_STORAGE_KEYS: { DEFAULT_REGION }
 } = appConfig;
-const defaultRegion = regionsData.find(option => option.value === REGION) as { value: string; label: string };
+
+const region = localStorage.getItem(DEFAULT_REGION) || REGION_EAST;
+const defaultRegion = regionsData.find(option => option.value === region) as { value: string; label: string };
 const defaultRegionAsia = regionsData.find(option => option.value === REGION_ASIA) as { value: string; label: string };
 const { IMPERIAL, METRIC } = MapUnitEnum;
 const { ESRI, HERE, GRAB, OPEN_DATA } = MapProviderEnum;

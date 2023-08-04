@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 import { appConfig, showToast } from "@demo/core";
 import { useAmplifyMap, useAws } from "@demo/hooks";
@@ -12,13 +12,15 @@ import { EventTypeEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { clearStorage } from "@demo/utils/localstorageUtils";
+import { getPoolByRegion, setClosestRegion } from "@demo/utils/regionUtils";
 import { Amplify, Auth } from "aws-amplify";
 import AWS from "aws-sdk";
 import { useTranslation } from "react-i18next";
 
 const {
-	ENV: { IDENTITY_POOL_ID, REGION, IDENTITY_POOL_ID_ASIA, REGION_ASIA },
-	ROUTES: { DEMO, ERROR_BOUNDARY }
+	ENV: { REGION_EAST, IDENTITY_POOL_ID_ASIA, REGION_ASIA },
+	ROUTES: { DEMO, ERROR_BOUNDARY },
+	PERSIST_STORAGE_KEYS: { DEFAULT_REGION }
 } = appConfig.default;
 
 const useAmplifyAuth = () => {
@@ -29,6 +31,17 @@ const useAmplifyAuth = () => {
 	const { resetStore: resetAwsStore } = useAws();
 	const { resetStore: resetAmplifyMapStore } = useAmplifyMap();
 	const { t } = useTranslation();
+
+	useEffect(() => {
+		if (!store.identityPoolId) {
+			(async () => {
+				await setClosestRegion();
+				const region = localStorage.getItem(DEFAULT_REGION) || REGION_EAST;
+				const identityPoolId = getPoolByRegion(region);
+				setState({ identityPoolId, region });
+			})();
+		}
+	}, [store.identityPoolId, setState]);
 
 	const methods = useMemo(
 		() => ({
@@ -80,10 +93,7 @@ const useAmplifyAuth = () => {
 						successCb && successCb();
 					} else {
 						console.error({ error: res });
-						showToast({
-							content: t("failed_to_connect_ud_up.text"),
-							type: ToastType.ERROR
-						});
+						showToast({ content: t("failed_to_connect_ud_up.text"), type: ToastType.ERROR });
 					}
 				} catch (error) {
 					console.error({ error });
@@ -228,9 +238,7 @@ const useAmplifyAuth = () => {
 				methods.resetStore();
 				resetAwsStore();
 				resetAmplifyMapStore();
-				setTimeout(() => {
-					window.location.reload();
-				}, 3000);
+				setTimeout(() => window.location.reload(), 3000);
 			},
 			handleCurrentSession: async (resetAwsStore: () => void) => {
 				try {
@@ -242,18 +250,12 @@ const useAmplifyAuth = () => {
 				}
 			},
 			switchToAsiaRegionStack: () => {
-				setState({
-					identityPoolId: IDENTITY_POOL_ID_ASIA,
-					region: REGION_ASIA,
-					credentials: undefined
-				});
+				setState({ identityPoolId: IDENTITY_POOL_ID_ASIA, region: REGION_ASIA, credentials: undefined });
 			},
 			switchToDefaultRegionStack: () => {
-				setState({
-					identityPoolId: IDENTITY_POOL_ID,
-					region: REGION,
-					credentials: undefined
-				});
+				const region = localStorage.getItem(DEFAULT_REGION) || REGION_EAST;
+				const identityPoolId = getPoolByRegion(region);
+				setState({ identityPoolId, region, credentials: undefined });
 			},
 			resetStore: () => {
 				setState({

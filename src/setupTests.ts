@@ -12,12 +12,14 @@ jest.mock("@demo/utils/analyticsUtils", () => ({
 
 jest.mock("@demo/core/constants/appConfig", () => ({
 	ENV: {
-		IDENTITY_POOL_ID: "",
 		PINPOINT_APPLICATION_ID: "",
 		WEB_SOCKET_URL: "",
-		REGION: "",
+		IDENTITY_POOL_ID_EAST: "",
+		REGION_EAST: "",
 		IDENTITY_POOL_ID_ASIA: "",
 		REGION_ASIA: "",
+		IDENTITY_POOL_ID_WEST: "",
+		REGION_WEST: "",
 		CF_TEMPLATE: "",
 		APPLE_APP_STORE_LINK: "",
 		GOOGLE_PLAY_STORE_LINK: ""

@@ -35,6 +35,10 @@ const useWebSocketService = (
 	}, []);
 
 	const connect = useCallback(() => {
+		if (!region) {
+			return;
+		}
+
 		Amplify.addPluggable(
 			new AWSIoTProvider({
 				aws_pubsub_region: region,

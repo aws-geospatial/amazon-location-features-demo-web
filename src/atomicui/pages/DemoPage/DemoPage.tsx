@@ -164,9 +164,12 @@ const DemoPage: React.FC = () => {
 	const isDesktop = useMediaQuery("(min-width: 1024px)");
 	const { t } = useTranslation();
 	const shouldClearCredentials = localStorage.getItem(SHOULD_CLEAR_CREDENTIALS) === "true";
+
+	const isGrabAvailableInRegion = useMemo(() => !!region && GRAB_SUPPORTED_AWS_REGIONS.includes(region), [region]);
+
 	const isGrabVisible = useMemo(
-		() => !isUserAwsAccountConnected || (isUserAwsAccountConnected && GRAB_SUPPORTED_AWS_REGIONS.includes(region)),
-		[isUserAwsAccountConnected, region]
+		() => !isUserAwsAccountConnected || (isUserAwsAccountConnected && isGrabAvailableInRegion),
+		[isUserAwsAccountConnected, isGrabAvailableInRegion]
 	);
 
 	useEffect(() => {
@@ -176,11 +179,7 @@ const DemoPage: React.FC = () => {
 	const handleResetCallback = useCallback(
 		function handleReset() {
 			setSearchValue("");
-			setSelectedFilters({
-				Providers: [],
-				Attribute: [],
-				Type: []
-			});
+			setSelectedFilters({ Providers: [], Attribute: [], Type: [] });
 		},
 		[setSearchValue, setSelectedFilters]
 	);
@@ -229,12 +228,9 @@ const DemoPage: React.FC = () => {
 
 	/* Instantiate location and iot client from aws-sdk whenever the credentials change */
 	useEffect(() => {
-		if (credentials && !locationClient) {
-			createLocationClient(credentials, region);
-		}
-
-		if (credentials && !iotClient) {
-			createIotClient(credentials, region);
+		if (credentials && region) {
+			!locationClient && createLocationClient(credentials, region);
+			!iotClient && createIotClient(credentials, region);
 		}
 	}, [credentials, locationClient, createLocationClient, region, iotClient, createIotClient]);
 
@@ -358,7 +354,11 @@ const DemoPage: React.FC = () => {
 	}, [clearPoiList, isCurrentLocationDisabled, routeData, setRouteData]);
 
 	const getCurrentGeoLocation = useCallback(() => {
-		if (GRAB_SUPPORTED_AWS_REGIONS.includes(region)) {
+		if (!region) {
+			return;
+		}
+
+		if (isGrabAvailableInRegion) {
 			if (isCurrentLocationDisabled) {
 				showToast({
 					content: t("show_toast__grab_not_supported.text"),
@@ -373,6 +373,7 @@ const DemoPage: React.FC = () => {
 		}
 	}, [
 		region,
+		isGrabAvailableInRegion,
 		isCurrentLocationDisabled,
 		t,
 		setCurrentLocation,
@@ -382,7 +383,7 @@ const DemoPage: React.FC = () => {
 	]);
 
 	useEffect(() => {
-		if ("permissions" in navigator) {
+		if ("permissions" in navigator && region) {
 			navigator.permissions.query({ name: "geolocation" }).then(({ state }) => {
 				const permissionAllowed = localStorage.getItem(GEO_LOCATION_ALLOWED) || "no";
 
@@ -392,7 +393,7 @@ const DemoPage: React.FC = () => {
 				}
 			});
 		}
-	}, [getCurrentGeoLocation]);
+	}, [getCurrentGeoLocation, region]);
 
 	const onGeoLocate = ({ coords: { latitude, longitude } }: GeolocateResultEvent) => {
 		if (routeData) {
@@ -464,7 +465,7 @@ const DemoPage: React.FC = () => {
 		(url: string, resourceType: string) => {
 			let newUrl = url;
 
-			if (resourceType === "Style" && !newUrl.includes("://")) {
+			if (resourceType === "Style" && !newUrl.includes("://") && region) {
 				newUrl = `https://maps.geo.${region}.amazonaws.com/maps/v0/maps/${newUrl}/style-descriptor`;
 			}
 
@@ -577,7 +578,7 @@ const DemoPage: React.FC = () => {
 			if (doNotAskGrabDisclaimerModal) setDoNotAskGrabDisclaimerModal(!doNotAskGrabDisclaimer);
 			else setShow(s => ({ ...s, grabDisclaimerModal: false }));
 
-			if (!isUserAwsAccountConnected) {
+			if (!isUserAwsAccountConnected && !isGrabAvailableInRegion) {
 				switchToAsiaRegionStack();
 				resetAwsStore();
 			}
@@ -592,6 +593,7 @@ const DemoPage: React.FC = () => {
 			handleCurrentLocationAndViewpoint();
 		},
 		[
+			isGrabAvailableInRegion,
 			doNotAskGrabDisclaimerModal,
 			setDoNotAskGrabDisclaimerModal,
 			doNotAskGrabDisclaimer,

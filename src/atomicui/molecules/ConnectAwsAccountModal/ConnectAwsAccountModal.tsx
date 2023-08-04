@@ -17,12 +17,12 @@ import { useTranslation } from "react-i18next";
 import "./styles.scss";
 
 const {
-	ENV: { CF_TEMPLATE, REGION, REGION_ASIA },
+	ENV: { CF_TEMPLATE, REGION_ASIA },
 	ROUTES: { HELP },
 	MAP_RESOURCES: { GRAB_SUPPORTED_AWS_REGIONS },
 	LINKS: { AWS_TERMS_AND_CONDITIONS }
 } = appConfig;
-const defaultRegion = regionsData.find(option => option.value === REGION) as { value: string; label: string };
+
 const defaultRegionAsia = regionsData.find(option => option.value === REGION_ASIA) as { value: string; label: string };
 let scrollTimeout: NodeJS.Timer | undefined;
 
@@ -45,8 +45,9 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 		WebSocketUrl: ""
 	});
 	const [cloudFormationLink, setCloudFormationLink] = useState(CF_TEMPLATE);
-	const [stackRegion, setStackRegion] = useState<{ value: string; label: string }>(defaultRegion);
+	const [stackRegion, setStackRegion] = useState<{ value: string; label: string }>();
 	const {
+		region,
 		isUserAwsAccountConnected,
 		setConnectFormValues,
 		setIsUserAwsAccountConnected,
@@ -68,8 +69,11 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 			const newUrl = transformCloudFormationLink(REGION_ASIA);
 			setCloudFormationLink(newUrl);
 			setStackRegion(defaultRegionAsia);
+		} else if (region) {
+			const regionOption = regionsData.find(option => option.value === region);
+			regionOption && setStackRegion(regionOption);
 		}
-	}, [currentMapProvider]);
+	}, [currentMapProvider, region]);
 
 	useEffect(() => {
 		if (isOverflowing && isDesktop) {
