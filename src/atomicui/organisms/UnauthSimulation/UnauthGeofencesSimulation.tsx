@@ -37,18 +37,6 @@ const UnauthGeofencesSimulation: React.FC<UnauthGeofencesSimulationProps> = ({
 		fetchGeofencesList();
 	}, [fetchGeofencesList]);
 
-	// const renderGeofenceMarkers = useMemo(() => {
-	// 	if (geofences?.length) {
-	// 		return geofences.map(({ GeofenceId, Geometry: { Circle } }, idx) => {
-	// 			if (Circle) {
-	// 				const { Center } = Circle;
-
-	// 				return <GeofenceMarker key={idx} lng={Center[0]} lat={Center[1]} description={GeofenceId} hideDescription />;
-	// 			}
-	// 		});
-	// 	}
-	// }, [geofences]);
-
 	const renderGeofences = useMemo(() => {
 		if (geofences?.length) {
 			return geofences.map(({ GeofenceId, Geometry: { Circle } }, idx) => {
@@ -75,8 +63,8 @@ const UnauthGeofencesSimulation: React.FC<UnauthGeofencesSimulationProps> = ({
 									type="line"
 									layout={{ "line-cap": "round", "line-join": "round" }}
 									paint={{
-										"line-color": "#008296",
-										"line-width": 3
+										"line-color": "transparent",
+										"line-width": 0
 									}}
 								/>
 							</Source>

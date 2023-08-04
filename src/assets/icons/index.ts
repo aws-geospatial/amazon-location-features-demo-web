@@ -92,3 +92,6 @@ export { ReactComponent as LogoLight } from "./LogoLight.svg";
 export { ReactComponent as IconTickCircle } from "./tick-circle.svg";
 export { ReactComponent as IconBellSolid } from "./icon-bell-solid.svg";
 export { ReactComponent as IconRadar } from "./icon-radar.svg";
+export { ReactComponent as IconSegmentDisabled } from "./icon-segment-disabled.svg";
+export { ReactComponent as IconBusActive } from "./icon-bus-active.svg";
+export { ReactComponent as IconBusInactive } from "./icon-bus-inactive.svg";

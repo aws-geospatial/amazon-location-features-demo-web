@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import { View } from "@aws-amplify/ui-react";
-import { IconCar } from "@demo/assets";
+import { IconBusActive, IconBusInactive, IconSegment, IconSegmentDisabled } from "@demo/assets";
 import { useAwsGeofence } from "@demo/hooks";
 import { TrackingHistoryItemtype, TrackingHistoryTypeEnum } from "@demo/types";
 import { Layer, LayerProps, Marker, Source } from "react-map-gl";
@@ -51,7 +51,7 @@ const UnauthRouteSimulation: React.FC<UnauthRouteSimulationProps> = ({
 					subDescription: new Date().toISOString()
 				});
 				// increment idx after 1 second
-				timeoutId.current = setTimeout(() => setIdx(idx + 1), 1000);
+				timeoutId.current = setTimeout(() => setIdx(idx + 1), 2000);
 			} else {
 				// Reset index to 0 when end of coordinates array is reached
 				setIdx(0);
@@ -81,7 +81,7 @@ const UnauthRouteSimulation: React.FC<UnauthRouteSimulationProps> = ({
 			properties: {},
 			geometry: {
 				type: "LineString",
-				coordinates: coordinates.slice(0, idx)
+				coordinates
 			}
 		};
 		const passedLayerProps: LayerProps = {
@@ -92,66 +92,47 @@ const UnauthRouteSimulation: React.FC<UnauthRouteSimulationProps> = ({
 				"line-cap": "round"
 			},
 			paint: {
-				"line-color": disabled ? "#8E8E93" : idx > 0 ? "#008296" : "#8E8E93",
+				"line-color": disabled ? "#8E8E93" : "#008296",
 				"line-width": 4,
 				"line-dasharray": [0.0001, 2]
 			}
 		};
-		const pendingLineJson:
-			| GeoJSON.Feature<GeoJSON.Geometry>
-			| GeoJSON.FeatureCollection<GeoJSON.Geometry>
-			| GeoJSON.Geometry
-			| string
-			| undefined = {
-			id: `${id}-pending-tracking-route-source`,
-			type: "Feature",
-			properties: {},
-			geometry: {
-				type: "LineString",
-				coordinates: coordinates.slice(idx, coordinates.length)
-			}
-		};
-		const pendingLayerProps: LayerProps = {
-			id: `${id}pending-tracking-route-layer`,
-			type: "line",
-			layout: {
-				"line-join": "round",
-				"line-cap": "round"
-			},
-			paint: { "line-color": "#8E8E93", "line-width": 4, "line-dasharray": [0.0001, 2] }
-		};
 
 		return (
-			<>
-				<Source type="geojson" data={passedLineJson}>
-					<Layer {...passedLayerProps} />
-				</Source>
-				<Source type="geojson" data={pendingLineJson}>
-					<Layer {...pendingLayerProps} />
-				</Source>
-			</>
+			<Source type="geojson" data={passedLineJson}>
+				<Layer {...passedLayerProps} />
+			</Source>
 		);
-	}, [id, idx, disabled, coordinates]);
+	}, [id, disabled, coordinates]);
+
+	const renderRouteMarkers = useMemo(() => {
+		return coordinates.map(coordinate => (
+			<Marker
+				key={`${id}-route-marker`}
+				style={{
+					zIndex: 1,
+					width: "1.15rem",
+					height: "1.15rem"
+				}}
+				longitude={coordinate[0]}
+				latitude={coordinate[1]}
+			>
+				{disabled ? <IconSegmentDisabled /> : <IconSegment />}
+			</Marker>
+		));
+	}, [coordinates, id, disabled]);
 
 	const renderRouteTracker = useMemo(() => {
 		return (
 			<Marker
 				key={`${id}-tracker`}
 				style={{
-					display: "flex",
-					justifyContent: "center",
-					alignItems: "center",
-					zIndex: disabled ? 1 : 2,
-					borderRadius: "1.23rem",
-					backgroundColor: disabled ? "var(--grey-color)" : "var(--white-color)",
-					width: "2.46rem",
-					height: "2.46rem",
-					boxShadow: "0 0 10px rgba(0, 0, 0, 0.202633)"
+					zIndex: 2
 				}}
 				longitude={trackerPos[0]}
 				latitude={trackerPos[1]}
 			>
-				<IconCar width="1.54rem" height="1.54rem" />
+				{disabled ? <IconBusInactive /> : <IconBusActive />}
 			</Marker>
 		);
 	}, [disabled, trackerPos, id]);
@@ -159,6 +140,7 @@ const UnauthRouteSimulation: React.FC<UnauthRouteSimulationProps> = ({
 	return (
 		<View key={id}>
 			{renderRoute}
+			{renderRouteMarkers}
 			{renderRouteTracker}
 		</View>
 	);
