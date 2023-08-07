@@ -2,22 +2,18 @@
 
 ## Requirements
 
-1. Run the [CF template](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create?stackName=amazon-location-resources-setup&templateURL=https://amazon-location-resources-setup.s3.amazonaws.com/location-services.yaml) or run the CF template from  `/extra/cloudformation/default-resources-template.yaml` on AWS in `us-east-1` region, using your own AWS account and get `IdentityPoolId` and `Region` from stack output.
-2. Values from above stack output will be added to `.env` file against the following keys `VITE_AWS_COGNITO_IDENTITY_POOL_ID_EAST` and `VITE_AWS_REGION_EAST` respectively.
-3. Run the CF template from  `/extra/cloudformation/default-grab-resources-template.yaml` on AWS in `ap-southeast-1` region, using your own AWS account and get `IdentityPoolId` and `Region` from stack output.
-4. Values from above stack output will be added to `.env` file against the following keys `VITE_AWS_COGNITO_IDENTITY_POOL_ID_ASIA` and `VITE_AWS_REGION_ASIA` respectively.
+1. Run the [CF template](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create?stackName=amazon-location-resources-setup&templateURL=https://amazon-location-resources-setup.s3.amazonaws.com/location-services.yaml) or run the CF template from  `/extra/cloudformation/default-resources-template.yaml` on AWS in `us-east-1` region, using your own AWS account and get `IdentityPoolId` from stack output.
+2. Values from above stack output will be added to `.env` file against `VITE_AWS_COGNITO_IDENTITY_POOL_IDS`.
+3. Run the CF template from  `/extra/cloudformation/default-grab-resources-template.yaml` on AWS in `ap-southeast-1` region, using your own AWS account and get `IdentityPoolId` from stack output.
+4. Values from above stack output will be added to `.env` file against `VITE_AWS_COGNITO_IDENTITY_POOL_IDS`.
 5. Upload the CF template from `/extra/cloudformation/main-cf-template.yaml` to the same region as step 1 (`us-east-1`) and add the link to the key `VITE_AWS_CF_TEMPLATE` in `.env` file.
 6. Add the keys `VITE_APPLE_APP_STORE_LINK` and `VITE_GOOGLE_PLAY_STORE_LINK` in `.env` file with the links pointing to respective stores.
 
 #### Env keys required in `.env` file, see `.env.example` for reference
 
-> VITE_AWS_COGNITO_IDENTITY_POOL_ID_EAST<br />
-VITE_AWS_REGION_EAST<br />
-VITE_AWS_COGNITO_IDENTITY_POOL_ID_ASIA<br />
-VITE_AWS_REGION_ASIA<br />
-VITE_AWS_COGNITO_IDENTITY_POOL_ID_WEST<br />
-VITE_AWS_REGION_WEST<br />
+> VITE_AWS_COGNITO_IDENTITY_POOL_IDS<br />
 VITE_AWS_WEB_SOCKET_URL<br />
+VITE_PINPOINT_IDENTITY_POOL_ID<br />
 VITE_PINPOINT_APPLICATION_ID<br />
 VITE_AWS_CF_TEMPLATE<br />
 VITE_APPLE_APP_STORE_LINK<br />

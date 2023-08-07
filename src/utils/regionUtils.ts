@@ -1,14 +1,11 @@
 import { appConfig } from "@demo/core/constants";
 
-const {
-	ENV: { REGION_EAST, REGION_ASIA, REGION_WEST, IDENTITY_POOL_ID_EAST, IDENTITY_POOL_ID_ASIA, IDENTITY_POOL_ID_WEST },
-	PERSIST_STORAGE_KEYS
-} = appConfig;
+const { POOLS, PERSIST_STORAGE_KEYS } = appConfig;
 
-export const setClosestRegion = async (regions = [REGION_EAST, REGION_WEST, REGION_ASIA]) => {
-	let fastestRegion = localStorage.getItem(PERSIST_STORAGE_KEYS.DEFAULT_REGION!);
+export const setClosestRegion = async (regions = Object.keys(POOLS)) => {
+	let fastestRegion = localStorage.getItem(PERSIST_STORAGE_KEYS.FASTEST_REGION!);
 
-	if (!regions.includes(fastestRegion)) {
+	if (!regions.includes(fastestRegion!)) {
 		fastestRegion = null;
 	}
 
@@ -40,16 +37,5 @@ export const setClosestRegion = async (regions = [REGION_EAST, REGION_WEST, REGI
 		}
 	}
 
-	fastestRegion && localStorage.setItem(PERSIST_STORAGE_KEYS.DEFAULT_REGION, fastestRegion);
-};
-
-export const getPoolByRegion = (region: string) => {
-	switch (region) {
-		case REGION_WEST:
-			return IDENTITY_POOL_ID_WEST;
-		case REGION_ASIA:
-			return IDENTITY_POOL_ID_ASIA;
-		case REGION_EAST:
-			return IDENTITY_POOL_ID_EAST;
-	}
+	fastestRegion && localStorage.setItem(PERSIST_STORAGE_KEYS.FASTEST_REGION, fastestRegion);
 };

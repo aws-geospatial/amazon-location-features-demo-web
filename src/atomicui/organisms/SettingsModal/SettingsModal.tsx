@@ -32,19 +32,20 @@ import { useTranslation } from "react-i18next";
 import "./styles.scss";
 
 const {
-	ENV: { CF_TEMPLATE, REGION_EAST, REGION_ASIA },
+	ENV: { CF_TEMPLATE },
+	POOLS,
 	ROUTES: { HELP },
 	MAP_RESOURCES: {
 		MAP_STYLES: { ESRI_STYLES, HERE_STYLES },
 		GRAB_SUPPORTED_AWS_REGIONS
 	},
 	LINKS: { AWS_TERMS_AND_CONDITIONS },
-	PERSIST_STORAGE_KEYS: { DEFAULT_REGION }
+	PERSIST_STORAGE_KEYS: { FASTEST_REGION }
 } = appConfig;
 
-const region = localStorage.getItem(DEFAULT_REGION) || REGION_EAST;
+const fallbackRegion = Object.values(POOLS)[0];
+const region = localStorage.getItem(FASTEST_REGION) ?? fallbackRegion;
 const defaultRegion = regionsData.find(option => option.value === region) as { value: string; label: string };
-const defaultRegionAsia = regionsData.find(option => option.value === REGION_ASIA) as { value: string; label: string };
 const { IMPERIAL, METRIC } = MapUnitEnum;
 const { ESRI, HERE, GRAB, OPEN_DATA } = MapProviderEnum;
 
@@ -110,12 +111,14 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 	const isLtr = langDir === "ltr";
 
 	useEffect(() => {
-		if (currentMapProvider === MapProviderEnum.GRAB) {
-			const newUrl = transformCloudFormationLink(REGION_ASIA);
+		const regionOption = region && regionsData.find(option => option.value === region);
+
+		if (regionOption) {
+			const newUrl = transformCloudFormationLink(region);
 			setCloudFormationLink(newUrl);
-			setStackRegion(defaultRegionAsia);
+			setStackRegion(regionOption);
 		}
-	}, [currentMapProvider]);
+	}, []);
 
 	const handleAutoMapUnitChange = useCallback(() => {
 		setIsAutomaticMapUnit(true);

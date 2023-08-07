@@ -76,7 +76,7 @@ import {
 import "./styles.scss";
 
 const {
-	PERSIST_STORAGE_KEYS: { SHOULD_CLEAR_CREDENTIALS, GEO_LOCATION_ALLOWED },
+	PERSIST_STORAGE_KEYS: { SHOULD_CLEAR_CREDENTIALS, GEO_LOCATION_ALLOWED, FASTEST_REGION },
 	ROUTES: { DEMO },
 	MAP_RESOURCES: { MAX_BOUNDS, AMAZON_HQ, GRAB_SUPPORTED_AWS_REGIONS },
 	LINKS: { AMAZON_LOCATION_TERMS_AND_CONDITIONS }
@@ -127,7 +127,7 @@ const DemoPage: React.FC = () => {
 		setAuthTokens,
 		onLogout,
 		handleCurrentSession,
-		switchToAsiaRegionStack,
+		switchToGrabMapRegionStack,
 		isUserAwsAccountConnected,
 		switchToDefaultRegionStack
 	} = useAmplifyAuth();
@@ -579,7 +579,7 @@ const DemoPage: React.FC = () => {
 			else setShow(s => ({ ...s, grabDisclaimerModal: false }));
 
 			if (!isUserAwsAccountConnected && !isGrabAvailableInRegion) {
-				switchToAsiaRegionStack();
+				switchToGrabMapRegionStack();
 				resetAwsStore();
 			}
 
@@ -603,7 +603,7 @@ const DemoPage: React.FC = () => {
 			show.mapStyle,
 			resetAppState,
 			handleCurrentLocationAndViewpoint,
-			switchToAsiaRegionStack,
+			switchToGrabMapRegionStack,
 			resetAwsStore
 		]
 	);
@@ -703,9 +703,13 @@ const DemoPage: React.FC = () => {
 				if (currentMapProvider === MapProviderEnum.GRAB) {
 					/* Switching from Grab map provider to different map provider and style */
 					if (!isUserAwsAccountConnected) {
-						switchToDefaultRegionStack();
-						resetAwsStore();
-						setIsCurrentLocationDisabled(false);
+						const fastestRegion = localStorage.getItem(FASTEST_REGION);
+
+						if (fastestRegion !== region) {
+							switchToDefaultRegionStack();
+							resetAwsStore();
+							setIsCurrentLocationDisabled(false);
+						}
 					}
 
 					setMapProvider(mapProviderFromStyle);
@@ -738,6 +742,7 @@ const DemoPage: React.FC = () => {
 			}
 		},
 		[
+			region,
 			currentMapProvider,
 			setMapStyle,
 			doNotAskOpenDataDisclaimerModal,

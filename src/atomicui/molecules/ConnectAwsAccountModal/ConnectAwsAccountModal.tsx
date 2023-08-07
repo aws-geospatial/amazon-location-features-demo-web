@@ -17,13 +17,12 @@ import { useTranslation } from "react-i18next";
 import "./styles.scss";
 
 const {
-	ENV: { CF_TEMPLATE, REGION_ASIA },
+	ENV: { CF_TEMPLATE },
 	ROUTES: { HELP },
 	MAP_RESOURCES: { GRAB_SUPPORTED_AWS_REGIONS },
 	LINKS: { AWS_TERMS_AND_CONDITIONS }
 } = appConfig;
 
-const defaultRegionAsia = regionsData.find(option => option.value === REGION_ASIA) as { value: string; label: string };
 let scrollTimeout: NodeJS.Timer | undefined;
 
 interface ConnectAwsAccountModalProps {
@@ -65,15 +64,14 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 	const isDesktop = useMediaQuery("(min-width: 1024px)");
 
 	useEffect(() => {
-		if (currentMapProvider === MapProviderEnum.GRAB) {
-			const newUrl = transformCloudFormationLink(REGION_ASIA);
+		const regionOption = region && regionsData.find(option => option.value === region);
+
+		if (regionOption) {
+			const newUrl = transformCloudFormationLink(region);
 			setCloudFormationLink(newUrl);
-			setStackRegion(defaultRegionAsia);
-		} else if (region) {
-			const regionOption = regionsData.find(option => option.value === region);
-			regionOption && setStackRegion(regionOption);
+			setStackRegion(regionOption);
 		}
-	}, [currentMapProvider, region]);
+	}, [region]);
 
 	useEffect(() => {
 		if (isOverflowing && isDesktop) {

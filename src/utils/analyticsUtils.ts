@@ -19,7 +19,7 @@ import sleep from "./sleep";
 import { uuid } from "./uuid";
 
 const {
-	ENV: { REGION_EAST, IDENTITY_POOL_ID_EAST, PINPOINT_APPLICATION_ID },
+	ENV: { PINPOINT_IDENTITY_POOL_ID, PINPOINT_APPLICATION_ID },
 	PERSIST_STORAGE_KEYS: {
 		LOCAL_STORAGE_PREFIX,
 		AMPLIFY_AUTH_DATA,
@@ -28,6 +28,9 @@ const {
 		PAGE_VIEW_IDENTIFIERS
 	}
 } = appConfig;
+
+const region = PINPOINT_IDENTITY_POOL_ID.split(":")[0];
+
 const amplifyAuthDataLocalStorageKey = `${LOCAL_STORAGE_PREFIX}${AMPLIFY_AUTH_DATA}`;
 const endpointIdKey = `${LOCAL_STORAGE_PREFIX}${ANALYTICS_ENDPOINT_ID}`;
 const analyticsCredsKey = `${LOCAL_STORAGE_PREFIX}${ANALYTICS_CREDS}`;
@@ -58,15 +61,14 @@ const validateAndSetAnalyticsCreds = async (forceRefreshCreds = false) => {
 
 	if (isExpired || forceRefreshCreds) {
 		analyticsCreds = await fromCognitoIdentityPool({
-			identityPoolId: IDENTITY_POOL_ID_EAST,
-			clientConfig: { region: REGION_EAST }
+			identityPoolId: PINPOINT_IDENTITY_POOL_ID,
+			clientConfig: { region }
 		})();
 		localStorage.setItem(analyticsCredsKey, JSON.stringify(analyticsCreds));
-		pinClient = new PinpointClient({ credentials: analyticsCreds, region: REGION_EAST });
 	}
 
-	if (!pinClient) {
-		pinClient = new PinpointClient({ credentials: analyticsCreds, region: REGION_EAST });
+	if (!pinClient || isExpired || forceRefreshCreds) {
+		pinClient = new PinpointClient({ credentials: analyticsCreds, region });
 	}
 };
 
@@ -114,7 +116,7 @@ const createOrUpdateEndpoint = async () => {
 	await sendEvent(putEventsCommand);
 };
 
-export const record: (input: RecordInput[], excludeAttributes?: string[]) => void = async (
+export const record: (input: RecordInput[], excludeAttributes?: string[]) => Promise<void> = async (
 	input,
 	excludeAttributes = []
 ) => {

@@ -12,16 +12,19 @@ import { EventTypeEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { clearStorage } from "@demo/utils/localstorageUtils";
-import { getPoolByRegion, setClosestRegion } from "@demo/utils/regionUtils";
+import { setClosestRegion } from "@demo/utils/regionUtils";
 import { Amplify, Auth } from "aws-amplify";
 import AWS from "aws-sdk";
 import { useTranslation } from "react-i18next";
 
 const {
-	ENV: { REGION_EAST, IDENTITY_POOL_ID_ASIA, REGION_ASIA },
+	POOLS,
 	ROUTES: { DEMO, ERROR_BOUNDARY },
-	PERSIST_STORAGE_KEYS: { DEFAULT_REGION }
+	PERSIST_STORAGE_KEYS: { FASTEST_REGION },
+	MAP_RESOURCES: { GRAB_SUPPORTED_AWS_REGIONS }
 } = appConfig.default;
+
+const fallbackRegion = POOLS[Object.keys(POOLS)[0]];
 
 const useAmplifyAuth = () => {
 	const store = useAmplifyAuthStore();
@@ -36,8 +39,9 @@ const useAmplifyAuth = () => {
 		if (!store.identityPoolId) {
 			(async () => {
 				await setClosestRegion();
-				const region = localStorage.getItem(DEFAULT_REGION) || REGION_EAST;
-				const identityPoolId = getPoolByRegion(region);
+				const region = localStorage.getItem(FASTEST_REGION) ?? fallbackRegion;
+				const identityPoolId = POOLS[region];
+
 				setState({ identityPoolId, region });
 			})();
 		}
@@ -249,12 +253,20 @@ const useAmplifyAuth = () => {
 					console.error("HANDLE_CURRENT_SESSION_ERROR:", JSON.stringify(error));
 				}
 			},
-			switchToAsiaRegionStack: () => {
-				setState({ identityPoolId: IDENTITY_POOL_ID_ASIA, region: REGION_ASIA, credentials: undefined });
+			switchToGrabMapRegionStack: () => {
+				for (const region of GRAB_SUPPORTED_AWS_REGIONS) {
+					const identityPoolId = POOLS[region];
+
+					if (identityPoolId) {
+						setState({ identityPoolId, region, credentials: undefined });
+						return;
+					}
+				}
 			},
 			switchToDefaultRegionStack: () => {
-				const region = localStorage.getItem(DEFAULT_REGION) || REGION_EAST;
-				const identityPoolId = getPoolByRegion(region);
+				const region = localStorage.getItem(FASTEST_REGION) ?? fallbackRegion;
+				const identityPoolId = POOLS[region];
+
 				setState({ identityPoolId, region, credentials: undefined });
 			},
 			resetStore: () => {

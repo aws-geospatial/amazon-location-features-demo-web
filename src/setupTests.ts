@@ -13,16 +13,14 @@ jest.mock("@demo/utils/analyticsUtils", () => ({
 jest.mock("@demo/core/constants/appConfig", () => ({
 	ENV: {
 		PINPOINT_APPLICATION_ID: "",
+		PINPOINT_IDENTITY_POOL_ID: "",
 		WEB_SOCKET_URL: "",
-		IDENTITY_POOL_ID_EAST: "",
-		REGION_EAST: "",
-		IDENTITY_POOL_ID_ASIA: "",
-		REGION_ASIA: "",
-		IDENTITY_POOL_ID_WEST: "",
-		REGION_WEST: "",
-		CF_TEMPLATE: "",
+		CF_TEMPLATE: "https://www.example.com?region=us-east-1",
 		APPLE_APP_STORE_LINK: "",
 		GOOGLE_PLAY_STORE_LINK: ""
+	},
+	POOLS: {
+		"XX-XXXX-X": "XX-XXXX-X:XXXXXXXX-XXXX-1234-abcd-1234567890ab"
 	},
 	PERSIST_STORAGE_KEYS: {
 		LOCAL_STORAGE_PREFIX: "amazon-location-web-demo_",
@@ -127,6 +125,13 @@ jest.mock("@demo/core/constants/appConfig", () => ({
 			GRAB_STYLES: [
 				{ id: "location.aws.com.demo.maps.Grab.StandardLight", image: "", name: "Light" },
 				{ id: "location.aws.com.demo.maps.Grab.StandardDark", image: "", name: "Dark" }
+			],
+			OPEN_DATA_STYLES: [
+				{
+					id: "location.aws.com.demo.maps.OpenData.StandardLight",
+					image: "OpenDataStandardLight",
+					name: "Light"
+				}
 			]
 		},
 		PLACE_INDEXES: {

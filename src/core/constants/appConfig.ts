@@ -40,18 +40,22 @@ const getEnv = (key: string) => {
 const appConfig = {
 	ENV: {
 		PINPOINT_APPLICATION_ID: getEnv("VITE_PINPOINT_APPLICATION_ID"),
+		PINPOINT_IDENTITY_POOL_ID: getEnv("VITE_PINPOINT_IDENTITY_POOL_ID"),
 		WEB_SOCKET_URL: getEnv("VITE_AWS_WEB_SOCKET_URL"),
-		IDENTITY_POOL_ID_EAST: getEnv("VITE_AWS_COGNITO_IDENTITY_POOL_ID_EAST"),
-		REGION_EAST: getEnv("VITE_AWS_REGION_EAST"),
-		IDENTITY_POOL_ID_ASIA: getEnv("VITE_AWS_COGNITO_IDENTITY_POOL_ID_ASIA"),
-		REGION_ASIA: getEnv("VITE_AWS_REGION_ASIA"),
-		IDENTITY_POOL_ID_WEST: getEnv("VITE_AWS_COGNITO_IDENTITY_POOL_ID_WEST"),
-		REGION_WEST: getEnv("VITE_AWS_REGION_WEST"),
 		CF_TEMPLATE: getEnv("VITE_AWS_CF_TEMPLATE"),
 		APPLE_APP_STORE_LINK: getEnv("VITE_APPLE_APP_STORE_LINK"),
 		GOOGLE_PLAY_STORE_LINK: getEnv("VITE_GOOGLE_PLAY_STORE_LINK"),
 		COUNTRY_EVALUATION_URL: getEnv("VITE_COUNTRY_EVALUATION_URL") || "assets/doNotDelete.txt"
 	},
+	POOLS: (getEnv("VITE_AWS_COGNITO_IDENTITY_POOL_IDS") || "")
+		.split(",")
+		.reduce((result: { [key: string]: string }, value: string) => {
+			const poolId = value.trim();
+			const region = poolId.split(":")[0];
+			result[region] = poolId;
+
+			return result;
+		}, {}) as { [key: string]: string },
 	PERSIST_STORAGE_KEYS: {
 		LOCAL_STORAGE_PREFIX: "amazon-location-web-demo_",
 		AMPLIFY_AUTH_DATA: "AmplifyAuthData",
@@ -62,7 +66,7 @@ const appConfig = {
 		ANALYTICS_ENDPOINT_ID: "analyticsEndpointId",
 		ANALYTICS_CREDS: "analyticsCreds",
 		PAGE_VIEW_IDENTIFIERS: "pageViewIdentifiers",
-		DEFAULT_REGION: "defaultRegion"
+		FASTEST_REGION: "fastestRegion"
 	},
 	ROUTES: {
 		DEFAULT: "/",

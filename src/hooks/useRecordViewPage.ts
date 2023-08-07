@@ -23,7 +23,9 @@ const useRecordViewPage = (pageName: string) => {
 		const path = location.pathname;
 		record([{ EventType: EventTypeEnum.VIEW_PAGE, Attributes: { path, pageName, pageViewIdentifier } }]);
 
-		return () => record([{ EventType: EventTypeEnum.LEAVE_PAGE, Attributes: { path, pageName, pageViewIdentifier } }]);
+		return () => {
+			record([{ EventType: EventTypeEnum.LEAVE_PAGE, Attributes: { path, pageName, pageViewIdentifier } }]);
+		};
 	}, [pageName]);
 
 	return {};
