@@ -85,7 +85,7 @@
 			justify-content: center;
 			flex-direction: column;
 			gap: 0.8rem;
-			padding: 0 2rem;
+			padding: 0 1.84rem;
 
 			.primary-icon {
 				path {
@@ -97,6 +97,9 @@
 	.simulation-container {
 		.simulation-header {
 			border-bottom: 1px solid var(--grey-color-3);
+		}
+		.tracking-history-container {
+			overflow-y: scroll;
 		}
 		.back-icon {
 			fill: var(--grey-color);

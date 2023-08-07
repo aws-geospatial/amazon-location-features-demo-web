@@ -10,6 +10,7 @@ interface IconicInfoCardProps {
 	cardMargin?: string;
 	cardAlignItems?: string;
 	subDescription?: string;
+	gap?: string;
 }
 
 const IconicInfoCard: React.FC<IconicInfoCardProps> = ({
@@ -19,10 +20,11 @@ const IconicInfoCard: React.FC<IconicInfoCardProps> = ({
 	textContainerMarginLeft = "0.7rem",
 	cardMargin = "1rem 0",
 	cardAlignItems = "flex-start",
-	subDescription = ""
+	subDescription = "",
+	gap = "large"
 }) => {
 	return (
-		<Flex direction="row" gap="large" margin={cardMargin} alignItems={cardAlignItems} justifyContent="flex-start">
+		<Flex direction="row" gap={gap} margin={cardMargin} alignItems={cardAlignItems} justifyContent="flex-start">
 			{IconComponent}
 			<Flex direction="column" gap={subDescription ? 0 : "3px"} marginLeft={textContainerMarginLeft}>
 				<Text fontSize="1rem" variation="secondary">

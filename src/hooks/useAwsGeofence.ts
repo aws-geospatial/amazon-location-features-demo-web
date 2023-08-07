@@ -94,11 +94,7 @@ const useAwsGeofence = () => {
 			setUnauthNotifications: (n: NotificationHistoryItemtype | undefined) => {
 				setState(prevState => {
 					if (n) {
-						const exists = prevState.unauthNotifications.find(item => item.coordinates === n.coordinates);
-
-						return !exists
-							? { ...prevState, unauthNotifications: [...prevState.unauthNotifications, n] }
-							: { ...prevState };
+						return { ...prevState, unauthNotifications: [...prevState.unauthNotifications, n] };
 					} else {
 						return { ...prevState, unauthNotifications: [] };
 					}

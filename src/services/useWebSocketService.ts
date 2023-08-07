@@ -16,7 +16,8 @@ import { Amplify, Hub, PubSub } from "aws-amplify";
 const RETRY_INTERVAL = 100;
 
 const useWebSocketService = (
-	updateTrackingHistory?: (n: NotificationHistoryItemtype) => void
+	updateTrackingHistory?: (n: NotificationHistoryItemtype) => void,
+	startSocketConnection = true
 ): { subscription: ZenObservable.Subscription | null; connectionState: string | null } => {
 	const [connectionState, setConnectionState] = useState<string>("Disconnected");
 	const [subscription, setSubscription] = useState<ZenObservable.Subscription | null>(null);
@@ -144,10 +145,13 @@ const useWebSocketService = (
 	}, [credentials?.identityId, region, url]);
 
 	useEffect(() => {
-		if (["Disconnected", "ConnectionDisrupted", "ConnectedPendingDisconnect"].includes(connectionState)) {
+		if (
+			["Disconnected", "ConnectionDisrupted", "ConnectedPendingDisconnect"].includes(connectionState) &&
+			startSocketConnection
+		) {
 			connect();
 		}
-	}, [connect, connectionState]);
+	}, [connect, connectionState, startSocketConnection]);
 
 	return useMemo(
 		() => ({

@@ -7,10 +7,14 @@ import { NotificationHistoryItemtype } from "@demo/types";
 import { t } from "i18next";
 import "./styles.scss";
 
-const WebsocketBanner = (updateTrackingHistory?: (n: NotificationHistoryItemtype) => void) => {
+const WebsocketBanner = (
+	updateTrackingHistory?: (n: NotificationHistoryItemtype) => void,
+	startSocketConnection = true
+) => {
 	const [hideConnectionAlert, setHideConnectionAlert] = useState(false);
 	const { subscription, connectionState } = useWebSocketService(
-		(n: NotificationHistoryItemtype) => updateTrackingHistory && updateTrackingHistory(n)
+		(n: NotificationHistoryItemtype) => updateTrackingHistory && updateTrackingHistory(n),
+		startSocketConnection
 	);
 	const isConnected = useMemo(() => connectionState === "Connected", [connectionState]);
 
@@ -33,6 +37,7 @@ const WebsocketBanner = (updateTrackingHistory?: (n: NotificationHistoryItemtype
 		() => ({
 			subscription,
 			isHidden: hideConnectionAlert,
+			isConnected,
 			Connection: (
 				<Flex
 					className={`tracking-connection-alert slide-up ${

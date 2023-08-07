@@ -2829,7 +2829,7 @@
     "text": "場所に出入りするときにジオフェンスメッセージを受け取る"
   },
   "start_unauth_simulation__start_simulation": {
-    "text": "[シミュレーションを開始]"
+    "text": "シミュレーションを開始する"
   },
   "start_unauth_simulation__t&g_simulation": {
     "text": "トラッキングとジオフェンスシミュレーション"

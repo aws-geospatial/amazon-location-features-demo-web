@@ -3,7 +3,7 @@ import React from "react";
 import { Flex, Text } from "@aws-amplify/ui-react";
 import { IconBellSolid, IconGeofenceMarkerDisabled } from "@demo/assets";
 import { IconicInfoCard } from "@demo/atomicui/molecules";
-import { useAwsGeofence } from "@demo/hooks";
+import { NotificationHistoryItemtype } from "@demo/types";
 import { format } from "date-fns";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
@@ -11,10 +11,16 @@ import "./styles.scss";
 interface NotificationsBoxProps {
 	maxHeight?: number;
 	selectedRoutesIds: string[];
+	unauthNotifications: NotificationHistoryItemtype[];
+	setUnauthNotifications: (n: NotificationHistoryItemtype | undefined) => void;
 }
 
-const NotificationsBox: React.FC<NotificationsBoxProps> = ({ maxHeight = 30, selectedRoutesIds }) => {
-	const { unauthNotifications, setUnauthNotifications } = useAwsGeofence();
+const NotificationsBox: React.FC<NotificationsBoxProps> = ({
+	maxHeight = 30,
+	selectedRoutesIds,
+	unauthNotifications,
+	setUnauthNotifications
+}) => {
 	const { t } = useTranslation();
 
 	return (
@@ -48,10 +54,13 @@ const NotificationsBox: React.FC<NotificationsBoxProps> = ({ maxHeight = 30, sel
 							<Flex key={idx} direction="column" width="100%" gap="0">
 								<IconicInfoCard
 									IconComponent={
-										<IconGeofenceMarkerDisabled
-											className={isEnabled ? "primary-active-icon" : "primary-icon"}
-											width={24}
-										/>
+										<Flex>
+											<IconGeofenceMarkerDisabled
+												className={isEnabled ? "primary-active-icon" : "primary-icon"}
+												width={24}
+												height={24}
+											/>
+										</Flex>
 									}
 									title={title}
 									description={`${format(new Date(createdAt), "p")}`.toLowerCase()}

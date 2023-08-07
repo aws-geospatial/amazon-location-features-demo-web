@@ -88,10 +88,10 @@ const appTheme: Theme = {
 					},
 					_hover: {
 						backgroundColor: {
-							value: "var(--primary-light-color)"
+							value: "var(--primary-contrast-color)"
 						},
 						borderColor: {
-							value: "var(--primary-light-color)"
+							value: "var(--primary-contrast-color)"
 						}
 					},
 					_loading: {

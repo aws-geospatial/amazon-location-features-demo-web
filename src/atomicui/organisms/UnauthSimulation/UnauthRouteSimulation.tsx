@@ -106,13 +106,16 @@ const UnauthRouteSimulation: React.FC<UnauthRouteSimulationProps> = ({
 	}, [id, disabled, coordinates]);
 
 	const renderRouteMarkers = useMemo(() => {
-		return coordinates.map(coordinate => (
+		return coordinates.map((coordinate, i) => (
 			<Marker
-				key={`${id}-route-marker`}
+				key={`${i}-route-marker`}
 				style={{
 					zIndex: 1,
-					width: "1.15rem",
-					height: "1.15rem"
+					width: "0.7rem",
+					height: "0.7rem",
+					display: "flex",
+					justifyContent: "center",
+					alignItems: "center"
 				}}
 				longitude={coordinate[0]}
 				latitude={coordinate[1]}
@@ -120,7 +123,7 @@ const UnauthRouteSimulation: React.FC<UnauthRouteSimulationProps> = ({
 				{disabled ? <IconSegmentDisabled /> : <IconSegment />}
 			</Marker>
 		));
-	}, [coordinates, id, disabled]);
+	}, [coordinates, disabled]);
 
 	const renderRouteTracker = useMemo(() => {
 		return (

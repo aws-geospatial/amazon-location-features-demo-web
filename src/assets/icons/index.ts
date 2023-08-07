@@ -7,6 +7,7 @@ export { ReactComponent as IconArrow } from "./icon-arrow.svg";
 export { ReactComponent as IconAwsCloudFormation } from "./icon-aws-cloudformation.svg";
 export { ReactComponent as IconBackArrow } from "./icon-back-arrow.svg";
 export { ReactComponent as IconBell } from "./icon-bell.svg";
+export { ReactComponent as IconNotificationBell } from "./icon-notification-bell.svg";
 export { ReactComponent as IconBicycleSolid } from "./icon-bicycle-solid.svg";
 export { ReactComponent as IconBookOpen } from "./icon-book-open.svg";
 export { ReactComponent as IconBook } from "./icon-book.svg";
