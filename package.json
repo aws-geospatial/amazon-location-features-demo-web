@@ -6,13 +6,13 @@
 		"lib"
 	],
 	"type": "module",
-	"main": "./lib/demo-page.es.js",
-	"module": "./lib/demo-page.es.js",
+	"main": "./lib/demo-page.cjs.js",
+	"module": "./lib/demo-page.cjs.js",
 	"types": "./lib/index.d.ts",
 	"exports": {
 		".": {
-			"import": "./lib/demo-page.es.js",
-			"require": "./lib/demo-page.es.js"
+			"import": "./lib/demo-page.cjs.js",
+			"require": "./lib/demo-page.cjs.js"
 		},
 		"./lib/style.css": {
 			"import": "./lib/style.css",

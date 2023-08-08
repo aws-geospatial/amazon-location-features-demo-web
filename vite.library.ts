@@ -79,7 +79,7 @@ export default defineConfig(() => {
 					"demo-page": path.resolve(__dirname, "src/index.ts")
 				},
 				name: "DemoPage",
-				formats: ["es"],
+				formats: ["cjs"],
 				fileName: (format, name) => `${name}.${format}.js`
 			},
 			rollupOptions: {
