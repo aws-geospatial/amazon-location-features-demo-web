@@ -2,23 +2,26 @@
 
 ## Requirements
 
-1. Run the [CF template](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create?stackName=amazon-location-resources-setup&templateURL=https://amazon-location-resources-setup.s3.amazonaws.com/location-services.yaml) or run the CF template from  `/extra/cloudformation/default-resources-template.yaml` on AWS in `us-east-1` region, using your own AWS account and get `IdentityPoolId` from stack output.
-2. Values from above stack output will be added to `.env` file against `VITE_AWS_COGNITO_IDENTITY_POOL_IDS`.
-3. Run the CF template from  `/extra/cloudformation/default-grab-resources-template.yaml` on AWS in `ap-southeast-1` region, using your own AWS account and get `IdentityPoolId` from stack output.
-4. Values from above stack output will be added to `.env` file against `VITE_AWS_COGNITO_IDENTITY_POOL_IDS`.
-5. Upload the CF template from `/extra/cloudformation/main-cf-template.yaml` to the same region as step 1 (`us-east-1`) and add the link to the key `VITE_AWS_CF_TEMPLATE` in `.env` file.
-6. Add the keys `VITE_APPLE_APP_STORE_LINK` and `VITE_GOOGLE_PLAY_STORE_LINK` in `.env` file with the links pointing to respective stores.
+1. Run the [CF template](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create?stackName=amazon-location-default-unauth-resources&templateURL=https://amazon-location-resources-setup.s3.amazonaws.com/dev/default-unauth-resources-template.yaml) using your own AWS account and get `IdentityPoolId`, `PinPointAppId`, `WebSocketUrl` from stack output's tab.
+	- `IdentityPoolId` value will be added to `.env` file against `VITE_AWS_COGNITO_IDENTITY_POOL_IDS` and `VITE_PINPOINT_IDENTITY_POOL_ID`.
+	- `PinPointAppId` value will be added to `.env` file against `VITE_PINPOINT_APPLICATION_ID`.
+	- `WebSocketUrl` value will be added to `.env` file against `VITE_AWS_WEB_SOCKET_URLS`.
+2. Run the [CF template](https://ap-southeast-1.console.aws.amazon.com/cloudformation/home?region=ap-southeast-1#/stacks/create?stackName=amazon-location-default-unauth-resources&templateURL=https://amazon-location-resources-setup.s3.amazonaws.com/dev/default-unauth-resources-template.yaml) using your own AWS account and get `IdentityPoolId`, `PinPointAppId`, `WebSocketUrl` from stack output's tab [Necessary if you want *GrabMaps* to be enabled].
+	- `IdentityPoolId` value will be added to `.env` file against `VITE_AWS_COGNITO_IDENTITY_POOL_IDS` (comma separated for multiple values).
+	- `WebSocketUrl` value will be added to `.env` file against `VITE_AWS_WEB_SOCKET_URLS` (comma separated for multiple values).
+5. Value for `VITE_AWS_CF_TEMPLATE`, `VITE_APPLE_APP_STORE_LINK`, `VITE_GOOGLE_PLAY_STORE_LINK` and `VITE_COUNTRY_EVALUATION_URL` can be added as it is to `.env` file from `.env.examples`.
 
 #### Env keys required in `.env` file, see `.env.example` for reference
 
 > VITE_AWS_COGNITO_IDENTITY_POOL_IDS<br />
-VITE_AWS_WEB_SOCKET_URL<br />
+VITE_AWS_WEB_SOCKET_URLS<br />
 VITE_PINPOINT_IDENTITY_POOL_ID<br />
 VITE_PINPOINT_APPLICATION_ID<br />
 VITE_AWS_CF_TEMPLATE<br />
 VITE_APPLE_APP_STORE_LINK<br />
 VITE_GOOGLE_PLAY_STORE_LINK<br />
 VITE_COUNTRY_EVALUATION_URL<br />
+
 ## Configure
 
 > git clone <REPO_URL><br />
@@ -99,6 +102,10 @@ Run all the test cases for all the components within the repo and provides a cov
 - location.aws.com.demo.maps.HERE.Imagery - RasterHereExploreSatellite
 - location.aws.com.demo.maps.Grab.StandardLight - VectorGrabStandardLight
 - location.aws.com.demo.maps.Grab.StandardDark - VectorGrabStandardDark
+- location.aws.com.demo.maps.OpenData.StandardLight - VectorOpenDataStandardLight
+- location.aws.com.demo.maps.OpenData.StandardDark - VectorOpenDataStandardDark
+- location.aws.com.demo.maps.OpenData.VisualizationLight - VectorOpenDataVisualizationLight
+- location.aws.com.demo.maps.OpenData.VisualizationDark - VectorOpenDataVisualizationDark
 
 > Place indexes (Name)
 

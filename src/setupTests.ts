@@ -11,16 +11,19 @@ jest.mock("@demo/utils/analyticsUtils", () => ({
 }));
 
 jest.mock("@demo/core/constants/appConfig", () => ({
-	ENV: {
-		PINPOINT_APPLICATION_ID: "",
-		PINPOINT_IDENTITY_POOL_ID: "",
-		WEB_SOCKET_URL: "",
-		CF_TEMPLATE: "https://www.example.com?region=us-east-1",
-		APPLE_APP_STORE_LINK: "",
-		GOOGLE_PLAY_STORE_LINK: ""
-	},
 	POOLS: {
 		"XX-XXXX-X": "XX-XXXX-X:XXXXXXXX-XXXX-1234-abcd-1234567890ab"
+	},
+	WEB_SOCKET_URLS: {
+		"XX-XXXX-X": "XXXXXXXXXXXXXX-ats.iot.XX-XXXX-X.amazonaws.com"
+	},
+	ENV: {
+		PINPOINT_IDENTITY_POOL_ID: "",
+		PINPOINT_APPLICATION_ID: "",
+		CF_TEMPLATE: "https://www.example.com?region=us-east-1",
+		APPLE_APP_STORE_LINK: "",
+		GOOGLE_PLAY_STORE_LINK: "",
+		COUNTRY_EVALUATION_URL: ""
 	},
 	PERSIST_STORAGE_KEYS: {
 		LOCAL_STORAGE_PREFIX: "amazon-location-web-demo_",

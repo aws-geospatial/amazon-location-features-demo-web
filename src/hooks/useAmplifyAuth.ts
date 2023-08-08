@@ -19,6 +19,7 @@ import { useTranslation } from "react-i18next";
 
 const {
 	POOLS,
+	WEB_SOCKET_URLS,
 	ROUTES: { DEMO, ERROR_BOUNDARY },
 	PERSIST_STORAGE_KEYS: { FASTEST_REGION },
 	MAP_RESOURCES: { GRAB_SUPPORTED_AWS_REGIONS }
@@ -41,8 +42,9 @@ const useAmplifyAuth = () => {
 				await setClosestRegion();
 				const region = localStorage.getItem(FASTEST_REGION) ?? fallbackRegion;
 				const identityPoolId = POOLS[region];
-
-				setState({ identityPoolId, region });
+				const webSocketUrl = WEB_SOCKET_URLS[region];
+				setState({ identityPoolId, region, webSocketUrl });
+				window.location.reload();
 			})();
 		}
 	}, [store.identityPoolId, setState]);
@@ -256,9 +258,10 @@ const useAmplifyAuth = () => {
 			switchToGrabMapRegionStack: () => {
 				for (const region of GRAB_SUPPORTED_AWS_REGIONS) {
 					const identityPoolId = POOLS[region];
+					const webSocketUrl = WEB_SOCKET_URLS[region];
 
 					if (identityPoolId) {
-						setState({ identityPoolId, region, credentials: undefined });
+						setState({ identityPoolId, region, webSocketUrl, credentials: undefined });
 						return;
 					}
 				}
@@ -266,8 +269,9 @@ const useAmplifyAuth = () => {
 			switchToDefaultRegionStack: () => {
 				const region = localStorage.getItem(FASTEST_REGION) ?? fallbackRegion;
 				const identityPoolId = POOLS[region];
+				const webSocketUrl = WEB_SOCKET_URLS[region];
 
-				setState({ identityPoolId, region, credentials: undefined });
+				setState({ identityPoolId, region, webSocketUrl, credentials: undefined });
 			},
 			resetStore: () => {
 				setState({

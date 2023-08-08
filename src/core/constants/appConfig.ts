@@ -38,15 +38,6 @@ const getEnv = (key: string) => {
 };
 
 const appConfig = {
-	ENV: {
-		PINPOINT_APPLICATION_ID: getEnv("VITE_PINPOINT_APPLICATION_ID"),
-		PINPOINT_IDENTITY_POOL_ID: getEnv("VITE_PINPOINT_IDENTITY_POOL_ID"),
-		WEB_SOCKET_URL: getEnv("VITE_AWS_WEB_SOCKET_URL"),
-		CF_TEMPLATE: getEnv("VITE_AWS_CF_TEMPLATE"),
-		APPLE_APP_STORE_LINK: getEnv("VITE_APPLE_APP_STORE_LINK"),
-		GOOGLE_PLAY_STORE_LINK: getEnv("VITE_GOOGLE_PLAY_STORE_LINK"),
-		COUNTRY_EVALUATION_URL: getEnv("VITE_COUNTRY_EVALUATION_URL") || "assets/doNotDelete.txt"
-	},
 	POOLS: (getEnv("VITE_AWS_COGNITO_IDENTITY_POOL_IDS") || "")
 		.split(",")
 		.reduce((result: { [key: string]: string }, value: string) => {
@@ -56,6 +47,23 @@ const appConfig = {
 
 			return result;
 		}, {}) as { [key: string]: string },
+	WEB_SOCKET_URLS: (getEnv("VITE_AWS_WEB_SOCKET_URLS") || "")
+		.split(",")
+		.reduce((result: { [key: string]: string }, value: string) => {
+			const webSocketUrl = value.trim();
+			const region = webSocketUrl.split(".")[2];
+			result[region] = webSocketUrl;
+
+			return result;
+		}, {}) as { [key: string]: string },
+	ENV: {
+		PINPOINT_IDENTITY_POOL_ID: getEnv("VITE_PINPOINT_IDENTITY_POOL_ID"),
+		PINPOINT_APPLICATION_ID: getEnv("VITE_PINPOINT_APPLICATION_ID"),
+		CF_TEMPLATE: getEnv("VITE_AWS_CF_TEMPLATE"),
+		APPLE_APP_STORE_LINK: getEnv("VITE_APPLE_APP_STORE_LINK"),
+		GOOGLE_PLAY_STORE_LINK: getEnv("VITE_GOOGLE_PLAY_STORE_LINK"),
+		COUNTRY_EVALUATION_URL: getEnv("VITE_COUNTRY_EVALUATION_URL") || "assets/doNotDelete.txt"
+	},
 	PERSIST_STORAGE_KEYS: {
 		LOCAL_STORAGE_PREFIX: "amazon-location-web-demo_",
 		AMPLIFY_AUTH_DATA: "AmplifyAuthData",

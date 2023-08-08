@@ -9,7 +9,6 @@ import { AuthTokensType, IStateProps } from "@demo/types";
 import createStore from "./createStore";
 
 const {
-	ENV: { WEB_SOCKET_URL },
 	PERSIST_STORAGE_KEYS: { LOCAL_STORAGE_PREFIX, AMPLIFY_AUTH_DATA }
 } = appConfig;
 const localStorageKey = `${LOCAL_STORAGE_PREFIX}${AMPLIFY_AUTH_DATA}`;
@@ -24,13 +23,12 @@ export interface AmplifyAuthStoreProps {
 	userDomain?: string;
 	userPoolClientId?: string;
 	userPoolId?: string;
-	webSocketUrl: string;
+	webSocketUrl?: string;
 }
 
 export const initialState: IStateProps<AmplifyAuthStoreProps> = {
 	isLoading: false,
-	isUserAwsAccountConnected: false,
-	webSocketUrl: WEB_SOCKET_URL
+	isUserAwsAccountConnected: false
 };
 
 export default createStore<AmplifyAuthStoreProps>(initialState, true, localStorageKey);

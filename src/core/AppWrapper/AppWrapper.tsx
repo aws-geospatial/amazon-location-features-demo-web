@@ -26,6 +26,7 @@ interface AppWrapperProps {
 
 const AppWrapper: React.FC<AppWrapperProps> = ({ children }) => {
 	const { identityPoolId, region, userPoolId, userPoolClientId, userDomain, configureAmplify } = useAmplifyAuth();
+	console.log({ identityPoolId, region });
 
 	const amplifyConfig = useMemo(
 		() => ({
