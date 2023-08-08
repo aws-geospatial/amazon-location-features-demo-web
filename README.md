@@ -9,7 +9,7 @@
 2. Run the [CF template](https://ap-southeast-1.console.aws.amazon.com/cloudformation/home?region=ap-southeast-1#/stacks/create?stackName=amazon-location-default-unauth-resources&templateURL=https://amazon-location-resources-setup.s3.amazonaws.com/dev/default-unauth-resources-template.yaml) using your own AWS account and get `IdentityPoolId`, `PinPointAppId`, `WebSocketUrl` from stack output's tab [Necessary if you want *GrabMaps* to be enabled].
 	- `IdentityPoolId` value will be added to `.env` file against `VITE_AWS_COGNITO_IDENTITY_POOL_IDS` (comma separated for multiple values).
 	- `WebSocketUrl` value will be added to `.env` file against `VITE_AWS_WEB_SOCKET_URLS` (comma separated for multiple values).
-5. Value for `VITE_AWS_CF_TEMPLATE`, `VITE_APPLE_APP_STORE_LINK`, `VITE_GOOGLE_PLAY_STORE_LINK` and `VITE_COUNTRY_EVALUATION_URL` can be added as it is to `.env` file from `.env.examples`.
+5. Value for `VITE_AWS_CF_TEMPLATE`, `VITE_APPLE_APP_STORE_LINK`, `VITE_GOOGLE_PLAY_STORE_LINK` can be added as it is to `.env` file from `.env.examples`.
 
 #### Env keys required in `.env` file, see `.env.example` for reference
 

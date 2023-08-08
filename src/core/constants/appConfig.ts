@@ -62,7 +62,7 @@ const appConfig = {
 		CF_TEMPLATE: getEnv("VITE_AWS_CF_TEMPLATE"),
 		APPLE_APP_STORE_LINK: getEnv("VITE_APPLE_APP_STORE_LINK"),
 		GOOGLE_PLAY_STORE_LINK: getEnv("VITE_GOOGLE_PLAY_STORE_LINK"),
-		COUNTRY_EVALUATION_URL: getEnv("VITE_COUNTRY_EVALUATION_URL") || "assets/doNotDelete.txt"
+		COUNTRY_EVALUATION_URL: import.meta.env.MODE === "development" ? "/doNotDelete.txt" : "assets/doNotDelete.txt"
 	},
 	PERSIST_STORAGE_KEYS: {
 		LOCAL_STORAGE_PREFIX: "amazon-location-web-demo_",
