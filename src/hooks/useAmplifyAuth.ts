@@ -8,7 +8,7 @@ import { useAmplifyMap, useAws } from "@demo/hooks";
 import { useAmplifyAuthService } from "@demo/services";
 import { useAmplifyAuthStore } from "@demo/stores";
 import { AuthTokensType, ConnectFormValuesType, ToastType } from "@demo/types";
-import { EventTypeEnum } from "@demo/types/Enums";
+import { EventTypeEnum, RegionEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { clearStorage } from "@demo/utils/localstorageUtils";
@@ -273,13 +273,40 @@ const useAmplifyAuth = () => {
 
 				setState({ identityPoolId, region, webSocketUrl, credentials: undefined });
 			},
+			setAutoRegion: (autoRegion: boolean, region: "Automatic" | RegionEnum) => {
+				if (autoRegion) {
+					(async () => {
+						await setClosestRegion();
+						const region = localStorage.getItem(FASTEST_REGION) ?? fallbackRegion;
+						const identityPoolId = POOLS[region];
+						const webSocketUrl = WEB_SOCKET_URLS[region];
+						setState({ identityPoolId, region, webSocketUrl, autoRegion, credentials: undefined });
+					})();
+				} else {
+					!!POOLS[region] &&
+						!!WEB_SOCKET_URLS[region] &&
+						setState({
+							identityPoolId: POOLS[region],
+							region,
+							webSocketUrl: WEB_SOCKET_URLS[region],
+							autoRegion,
+							credentials: undefined
+						});
+				}
+			},
+			setIdentityPoolIdRegionAndWebSocketUrl: (identityPoolId?: string, region?: string, webSocketUrl?: string) => {
+				setState({ identityPoolId, region, webSocketUrl });
+			},
 			resetStore: () => {
 				setState({
 					credentials: undefined,
 					authTokens: undefined,
+					identityPoolId: undefined,
+					region: undefined,
 					userDomain: undefined,
 					userPoolClientId: undefined,
-					userPoolId: undefined
+					userPoolId: undefined,
+					webSocketUrl: undefined
 				});
 				setInitial();
 			}

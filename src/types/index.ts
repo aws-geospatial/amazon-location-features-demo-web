@@ -39,7 +39,8 @@ export {
 	AnalyticsSessionStatus,
 	TriggeredByEnum,
 	AnalyticsEventActionsEnum,
-	OpenDataMapEnum
+	OpenDataMapEnum,
+	RegionEnum
 } from "./Enums";
 export type { RouteDataType } from "./RouteDataType";
 export type { CirclePropertiesType, CircleDrawEventType, CircleFeatureType } from "./CircleDrawControlTypes";

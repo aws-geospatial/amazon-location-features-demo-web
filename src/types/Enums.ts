@@ -219,6 +219,7 @@ export enum SettingOptionEnum {
 	MAP_STYLE = "Map style",
 	LANGUAGE = "Language",
 	ROUTE_OPTIONS = "Default route options",
+	REGION = "Region",
 	AWS_CLOUD_FORMATION = "Connect AWS Account"
 }
 
@@ -273,4 +274,10 @@ export enum MenuItemEnum {
 export enum TrackingHistoryTypeEnum {
 	TRACKER = "tracker",
 	BUS_STOP = "bus_stop"
+}
+
+export enum RegionEnum {
+	US_EAST_1 = "us-east-1",
+	EU_WEST_1 = "eu-west-1",
+	AP_SOUTHEAST_1 = "ap-southeast-1"
 }

@@ -1,5 +1,5 @@
 {
-	 "start_unauth_simulation__start_simulation": {
-    "text": "Start simulation"
-  }
+	"settings_modal__region": {
+		"text": "Region"
+	}
 }

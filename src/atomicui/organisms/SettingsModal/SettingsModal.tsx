@@ -7,7 +7,7 @@ import { Button, CheckboxField, Divider, Flex, Link, Radio, Text, View } from "@
 import {
 	IconAwsCloudFormation,
 	IconCloud,
-	// IconGlobe,
+	IconGlobe,
 	IconLanguage,
 	IconMapOutlined,
 	IconPaintroller,
@@ -23,6 +23,7 @@ import {
 	EsriMapEnum,
 	MapProviderEnum,
 	MapUnitEnum,
+	RegionEnum,
 	SettingOptionEnum,
 	SettingOptionItemType
 } from "@demo/types";
@@ -33,8 +34,8 @@ import { useTranslation } from "react-i18next";
 import "./styles.scss";
 
 const {
-	ENV: { CF_TEMPLATE },
 	POOLS,
+	ENV: { CF_TEMPLATE },
 	ROUTES: { HELP },
 	MAP_RESOURCES: {
 		MAP_STYLES: { ESRI_STYLES, HERE_STYLES },
@@ -101,7 +102,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 		credentials,
 		onLogin,
 		setAuthTokens,
-		onLogout
+		onLogout,
+		autoRegion,
+		region: currentRegion,
+		setAutoRegion
 	} = useAmplifyAuth();
 	const { resetStore: resetAwsStore } = useAws();
 	const { detachPolicy } = useAwsIot();
@@ -246,6 +250,15 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 			]);
 		},
 		[defaultRouteOptions, setDefaultRouteOptions]
+	);
+
+	const handleRegionChange = useCallback(
+		(region: "Automatic" | RegionEnum) => {
+			setAutoRegion(region === "Automatic", region);
+			resetAwsStore();
+			resetAppState();
+		},
+		[setAutoRegion, resetAwsStore, resetAppState]
 	);
 
 	const optionItems: Array<SettingOptionItemType> = useMemo(
@@ -444,6 +457,61 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 							checked={defaultRouteOptions.avoidFerries}
 							onChange={e => handleRouteOptionChange(e, "avoidFerries")}
 						/>
+					</Flex>
+				)
+			},
+			{
+				id: SettingOptionEnum.REGION,
+				title: t("settings_modal__region.text"),
+				defaultValue: autoRegion ? (t("settings_modal__automatic.text") as string) : currentRegion,
+				icon: <IconGlobe />,
+				detailsComponent: (
+					<Flex
+						data-testid={`${SettingOptionEnum.REGION}-details-component`}
+						gap={0}
+						direction="column"
+						padding="0rem 1.15rem"
+					>
+						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
+							<Radio
+								data-testid="region-automatic-radio"
+								value={"Automatic"}
+								checked={autoRegion}
+								onChange={() => handleRegionChange("Automatic")}
+							>
+								<Text marginLeft="1.23rem">{t("settings_modal__automatic.text")}</Text>
+							</Radio>
+						</Flex>
+						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
+							<Radio
+								data-testid={`region-${RegionEnum.US_EAST_1}-radio`}
+								value={RegionEnum.US_EAST_1}
+								checked={!autoRegion && currentRegion === RegionEnum.US_EAST_1}
+								onChange={() => handleRegionChange(RegionEnum.US_EAST_1)}
+							>
+								<Text marginLeft="1.23rem">{t("regions__us_east_1.text")}</Text>
+							</Radio>
+						</Flex>
+						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
+							<Radio
+								data-testid={`region-${RegionEnum.EU_WEST_1}-radio`}
+								value={RegionEnum.EU_WEST_1}
+								checked={!autoRegion && currentRegion === RegionEnum.EU_WEST_1}
+								onChange={() => handleRegionChange(RegionEnum.EU_WEST_1)}
+							>
+								<Text marginLeft="1.23rem">{t("regions__eu_west_1.text")}</Text>
+							</Radio>
+						</Flex>
+						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
+							<Radio
+								data-testid={`region-${RegionEnum.AP_SOUTHEAST_1}-radio`}
+								value={RegionEnum.AP_SOUTHEAST_1}
+								checked={!autoRegion && currentRegion === RegionEnum.AP_SOUTHEAST_1}
+								onChange={() => handleRegionChange(RegionEnum.AP_SOUTHEAST_1)}
+							>
+								<Text marginLeft="1.23rem">{t("regions__ap_southeast_1.text")}</Text>
+							</Radio>
+						</Flex>
 					</Flex>
 				)
 			},
@@ -653,12 +721,23 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 			isLtr,
 			mapButtons,
 			handleLanguageChange,
-			handleRouteOptionChange
+			handleRouteOptionChange,
+			autoRegion,
+			currentRegion,
+			handleRegionChange
 		]
 	);
 
 	const renderOptionItems = useMemo(() => {
-		return optionItems.map(({ id, title, defaultValue, icon }) => (
+		const filtered = optionItems.filter(({ id }) => {
+			if (isUserAwsAccountConnected) {
+				return id !== SettingOptionEnum.REGION;
+			} else {
+				return id;
+			}
+		});
+
+		return filtered.map(({ id, title, defaultValue, icon }) => (
 			<Flex
 				data-testid={`option-item-${id}`}
 				key={id}
@@ -712,7 +791,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 				</Flex>
 			</Flex>
 		));
-	}, [optionItems, settingsOptions, resetSearchAndFilters, setSettingsOptions, formValues]);
+	}, [optionItems, isUserAwsAccountConnected, settingsOptions, resetSearchAndFilters, setSettingsOptions, formValues]);
 
 	const renderOptionDetails = useMemo(() => {
 		const [optionItem] = optionItems.filter(({ id }) => settingsOptions === id);

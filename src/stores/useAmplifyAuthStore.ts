@@ -24,11 +24,13 @@ export interface AmplifyAuthStoreProps {
 	userPoolClientId?: string;
 	userPoolId?: string;
 	webSocketUrl?: string;
+	autoRegion: boolean;
 }
 
 export const initialState: IStateProps<AmplifyAuthStoreProps> = {
 	isLoading: false,
-	isUserAwsAccountConnected: false
+	isUserAwsAccountConnected: false,
+	autoRegion: true
 };
 
 export default createStore<AmplifyAuthStoreProps>(initialState, true, localStorageKey);
