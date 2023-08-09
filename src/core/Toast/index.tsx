@@ -39,24 +39,24 @@ export const UnauthSimulationToastContainer = () => (
 	/>
 );
 
-export const showToast = (params: { content: string; type: ToastType; containerId?: string }) => {
-	const { type, content, containerId = "toast-container" } = params;
+export const showToast = (params: { content: string; type: ToastType; containerId?: string; className?: string }) => {
+	const { type, content, containerId = "toast-container", className } = params;
 
 	switch (type) {
 		case "info":
-			toast.info(content, { containerId });
+			toast.info(content, { containerId, className });
 			break;
 		case "success":
-			toast.success(content, { containerId });
+			toast.success(content, { containerId, className });
 			break;
 		case "warning":
-			toast.warn(content, { containerId });
+			toast.warn(content, { containerId, className });
 			break;
 		case "error":
-			toast.error(content, { containerId });
+			toast.error(content, { containerId, className });
 			break;
 		default:
-			toast(content, { containerId });
+			toast(content, { containerId, className });
 			break;
 	}
 };

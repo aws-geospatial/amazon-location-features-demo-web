@@ -100,7 +100,8 @@ const useWebSocketService = (
 													: i18n.t("show_toast__exited.text")
 										  } :${busRouteId.split("_")[2]} Bus`,
 								type: ToastType.INFO,
-								containerId: "unauth-simulation-toast-container"
+								containerId: "unauth-simulation-toast-container",
+								className: `${String(trackerEventType).toLowerCase()}-geofence`
 							});
 						} else {
 							showToast({
@@ -117,7 +118,8 @@ const useWebSocketService = (
 													: i18n.t("show_toast__exited.text")
 										  }`,
 								type: ToastType.INFO,
-								containerId: "toast-container"
+								containerId: "toast-container",
+								className: `${String(trackerEventType).toLowerCase()}-geofence`
 							});
 						}
 
