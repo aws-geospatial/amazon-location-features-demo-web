@@ -3367,5 +3367,8 @@
   },
   "open_data_cm__desc": {
     "text": "OpenData utilise la fonctionnalité de recherche d'itinéraires et de lieux d'Esri pour améliorer votre expérience."
+  },
+  "settings_modal__region": {
+    "text": "Région"
   }
 }

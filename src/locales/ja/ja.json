@@ -3367,5 +3367,8 @@
   },
   "open_data_cm__desc": {
     "text": "OpenData は Esri の「ルートと場所」の検索機能を使用してユーザーの利便性を高めています。"
+  },
+  "settings_modal__region": {
+    "text": "地域"
   }
 }

@@ -3367,5 +3367,8 @@
   },
   "open_data_cm__desc": {
     "text": "OpenData는 Esri의 경로 및 장소 검색 기능을 사용하여 사용자 환경을 개선합니다."
+  },
+  "settings_modal__region": {
+    "text": "지역"
   }
 }

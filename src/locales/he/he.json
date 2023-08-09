@@ -3367,5 +3367,8 @@
   },
   "open_data_cm__desc": {
     "text": "OpenData משתמש בפונקציונליות החיפוש של Esri עבור נתיבים ומקומות כדי לשפר את החוויה שלך."
+  },
+  "settings_modal__region": {
+    "text": "אזור"
   }
 }

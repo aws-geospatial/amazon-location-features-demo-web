@@ -3363,5 +3363,8 @@
   },
   "open_data_cm__desc": {
     "text": "OpenData 使用 Esri for Routes and Places 搜索功能来增强您的体验。"
+  },
+  "settings_modal__region": {
+    "text": "区域"
   }
 }

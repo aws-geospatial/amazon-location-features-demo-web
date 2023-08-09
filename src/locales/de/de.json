@@ -3367,5 +3367,8 @@
   },
   "open_data_cm__desc": {
     "text": "OpenData verwendet die Suchfunktionen von Esri for Routes and Places, um Ihr Erlebnis zu verbessern."
+  },
+  "settings_modal__region": {
+    "text": "Region"
   }
 }

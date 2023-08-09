@@ -3367,5 +3367,8 @@
   },
   "open_data_cm__desc": {
     "text": "تستخدم OpenData وظيفة Esri للبحث عن المسارات والأماكن لتحسين تجربتك."
+  },
+  "settings_modal__region": {
+    "text": "المنطقة"
   }
 }

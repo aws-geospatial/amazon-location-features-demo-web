@@ -3367,5 +3367,8 @@
   },
   "open_data_cm__desc": {
     "text": "OpenData 使用 Esri 進行路線和地點搜尋功能來增強您的使用體驗。"
+  },
+  "settings_modal__region": {
+    "text": "地區"
   }
 }
