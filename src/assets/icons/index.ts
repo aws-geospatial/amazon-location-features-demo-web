@@ -96,3 +96,4 @@ export { ReactComponent as IconRadar } from "./icon-radar.svg";
 export { ReactComponent as IconSegmentDisabled } from "./icon-segment-disabled.svg";
 export { ReactComponent as IconBusActive } from "./icon-bus-active.svg";
 export { ReactComponent as IconBusInactive } from "./icon-bus-inactive.svg";
+export { ReactComponent as IconLanguage } from "./icon-language.svg";

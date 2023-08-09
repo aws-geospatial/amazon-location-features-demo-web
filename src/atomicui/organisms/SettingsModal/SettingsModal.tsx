@@ -7,7 +7,8 @@ import { Button, CheckboxField, Divider, Flex, Link, Radio, Text, View } from "@
 import {
 	IconAwsCloudFormation,
 	IconCloud,
-	IconGlobe,
+	// IconGlobe,
+	IconLanguage,
 	IconMapOutlined,
 	IconPaintroller,
 	IconPeopleArrows,
@@ -390,7 +391,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 				id: SettingOptionEnum.LANGUAGE,
 				title: t("language.text"),
 				defaultValue: languageSwitcherData.find(({ value }) => value === i18n.language)?.label as string,
-				icon: <IconGlobe />,
+				icon: <IconLanguage />,
 				detailsComponent: (
 					<Flex
 						data-testid={`${SettingOptionEnum.UNITS}-details-component`}
