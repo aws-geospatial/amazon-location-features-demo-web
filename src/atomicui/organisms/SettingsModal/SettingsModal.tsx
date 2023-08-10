@@ -463,7 +463,13 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 			{
 				id: SettingOptionEnum.REGION,
 				title: t("settings_modal__region.text"),
-				defaultValue: autoRegion ? (t("settings_modal__automatic.text") as string) : currentRegion,
+				defaultValue: autoRegion
+					? (t("settings_modal__automatic.text") as string)
+					: currentRegion === RegionEnum.EU_WEST_1
+					? t("regions__eu_west__region.text")
+					: currentRegion === RegionEnum.AP_SOUTHEAST_1
+					? t("regions__ap_southeast__region.text")
+					: t("regions__us_east__region.text"),
 				icon: <IconGlobe />,
 				detailsComponent: (
 					<Flex
@@ -484,16 +490,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 						</Flex>
 						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
 							<Radio
-								data-testid={`region-${RegionEnum.US_EAST_1}-radio`}
-								value={RegionEnum.US_EAST_1}
-								checked={!autoRegion && currentRegion === RegionEnum.US_EAST_1}
-								onChange={() => handleRegionChange(RegionEnum.US_EAST_1)}
-							>
-								<Text marginLeft="1.23rem">{t("regions__us_east_1.text")}</Text>
-							</Radio>
-						</Flex>
-						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
-							<Radio
 								data-testid={`region-${RegionEnum.EU_WEST_1}-radio`}
 								value={RegionEnum.EU_WEST_1}
 								checked={!autoRegion && currentRegion === RegionEnum.EU_WEST_1}
@@ -510,6 +506,16 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								onChange={() => handleRegionChange(RegionEnum.AP_SOUTHEAST_1)}
 							>
 								<Text marginLeft="1.23rem">{t("regions__ap_southeast_1.text")}</Text>
+							</Radio>
+						</Flex>
+						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
+							<Radio
+								data-testid={`region-${RegionEnum.US_EAST_1}-radio`}
+								value={RegionEnum.US_EAST_1}
+								checked={!autoRegion && currentRegion === RegionEnum.US_EAST_1}
+								onChange={() => handleRegionChange(RegionEnum.US_EAST_1)}
+							>
+								<Text marginLeft="1.23rem">{t("regions__us_east_1.text")}</Text>
 							</Radio>
 						</Flex>
 					</Flex>

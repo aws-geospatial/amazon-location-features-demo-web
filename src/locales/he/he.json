@@ -3385,5 +3385,14 @@
   },
   "popup__place_time": {
     "text": "פחות מדקה"
+  },
+  "regions__us_east__region": {
+    "text": "מזרח ארה\"ב"
+  },
+  "regions__eu_west__region": {
+    "text": "אירופה"
+  },
+  "regions__ap_southeast__region": {
+    "text": "אסיה פסיפיק"
   }
 }

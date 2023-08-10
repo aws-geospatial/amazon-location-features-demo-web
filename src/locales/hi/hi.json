@@ -3385,5 +3385,14 @@
   },
   "popup__place_time": {
     "text": "एक मिनट से भी कम"
+  },
+  "regions__us_east__region": {
+    "text": "यूएस ईस्ट"
+  },
+  "regions__eu_west__region": {
+    "text": "यूरोप"
+  },
+  "regions__ap_southeast__region": {
+    "text": "एशिया पैसिफिक"
   }
 }

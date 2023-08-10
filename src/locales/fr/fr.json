@@ -3385,5 +3385,14 @@
   },
   "popup__place_time": {
     "text": "Moins d'une minute"
+  },
+  "regions__us_east__region": {
+    "text": "Est des États-Unis"
+  },
+  "regions__eu_west__region": {
+    "text": "L'Europe"
+  },
+  "regions__ap_southeast__region": {
+    "text": "Asie-Pacifique"
   }
 }

@@ -94,6 +94,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 						fontFamily="AmazonEmber-Bold"
 						marginTop={showConfirmationCheckbox ? "2rem" : "2.46rem"}
 						onClick={onConfirm}
+						height="3.08rem"
 					>
 						{confirmationText || t("continue.text")}
 					</Button>
