@@ -19,7 +19,7 @@ import { Tooltip } from "react-tooltip";
 import "./styles.scss";
 
 const { METRIC } = MapUnitEnum;
-const { KILOMETERS, KILOMETERS_SHORT, MILES, MILES_SHORT } = DistanceUnitEnum;
+const { KILOMETERS, MILES } = DistanceUnitEnum;
 
 interface Props {
 	active: boolean;
@@ -44,6 +44,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 	const currentLang = i18n.language;
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
+	const isLanguageRTL = ["ar", "he"].includes(currentLang);
 
 	const geodesicDistance = useMemo(
 		() =>
@@ -65,14 +66,14 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 		return formatter.format(geodesicDistance || 0);
 	}, [geodesicDistance, currentLang]);
 
-	const geodesicDistanceWithUnit = useMemo(
+	const geodesicDistanceUnit = useMemo(
 		() =>
 			localizeGeodesicDistance
 				? currentMapUnit === METRIC
-					? `${localizeGeodesicDistance} ${KILOMETERS_SHORT}`
-					: `${localizeGeodesicDistance} ${MILES_SHORT}`
+					? t("geofence_box__km__short.text")
+					: t("geofence_box__mi__short.text")
 				: "",
-		[localizeGeodesicDistance, currentMapUnit]
+		[localizeGeodesicDistance, currentMapUnit, t]
 	);
 
 	/* Esri route can't be calculated when distance is greater than 400 km or 248.55 mi */
@@ -141,9 +142,14 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 		} else if (isEsriLimitation) {
 			return (
 				<Flex data-testid="esri-limitation-message-container" gap={0} direction={"column"}>
-					<Text className="bold" variation="secondary">
-						{geodesicDistanceWithUnit}
-					</Text>
+					<Flex className="localize-geofence-distance" gap="0.3rem" direction={isLanguageRTL ? "row-reverse" : "row"}>
+						<Text className="bold" variation="secondary" marginRight="0.3rem">
+							{localizeGeodesicDistance}
+						</Text>
+						<Text className="bold" variation="secondary">
+							{geodesicDistanceUnit}
+						</Text>
+					</Flex>
 					<Text style={{ marginTop: "0px" }} variation="info" textAlign={isLtr ? "start" : "end"}>
 						{currentMapUnit === METRIC ? t("popup__esri_limitation_1.text") : t("popup__esri_limitation_2.text")}
 					</Text>
@@ -152,9 +158,14 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 		} else if (!isFetchingRoute && !routeData) {
 			return (
 				<Flex data-testid="here-message-container" gap={0} direction={"column"}>
-					<Text className="bold" variation="secondary">
-						{geodesicDistanceWithUnit}
-					</Text>
+					<Flex className="localize-geofence-distance" gap="0.3rem" direction={isLanguageRTL ? "row-reverse" : "row"}>
+						<Text className="bold" variation="secondary" marginRight="0.3rem">
+							{localizeGeodesicDistance}
+						</Text>
+						<Text className="bold" variation="secondary">
+							{geodesicDistanceUnit}
+						</Text>
+					</Flex>
 					<Text style={{ marginTop: "0px" }} variation="info">
 						{t("popup__route_not_found.text")}
 					</Text>
@@ -165,10 +176,15 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 
 			return (
 				<View data-testid="route-info-container" className="route-info">
-					{!isFetchingRoute && geodesicDistanceWithUnit ? (
-						<Text className="bold" variation="secondary">
-							{geodesicDistanceWithUnit}
-						</Text>
+					{!isFetchingRoute && geodesicDistanceUnit ? (
+						<Flex className="localize-geofence-distance" gap="0.3rem" direction={isLanguageRTL ? "row-reverse" : "row"}>
+							<Text className="bold" variation="secondary">
+								{localizeGeodesicDistance}
+							</Text>
+							<Text className="bold" variation="secondary">
+								{geodesicDistanceUnit}
+							</Text>
+						</Flex>
 					) : (
 						<Placeholder width={30} display="inline-block" />
 					)}
@@ -176,7 +192,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 					<IconCar />
 					{!isFetchingRoute && timeInSeconds ? (
 						<Text className="bold" variation="secondary">
-							{humanReadableTime(timeInSeconds * 1000, currentLang)}
+							{humanReadableTime(timeInSeconds * 1000, currentLang, t)}
 						</Text>
 					) : (
 						<Placeholder width={30} display="inline-block" />
@@ -185,16 +201,18 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 			);
 		}
 	}, [
-		currentLocationData,
+		currentLocationData?.error,
 		isCurrentLocationDisabled,
-		geodesicDistanceWithUnit,
-		currentMapUnit,
 		isEsriLimitation,
-		routeData,
 		isFetchingRoute,
-		t,
+		routeData,
 		isLtr,
-		currentLang
+		t,
+		localizeGeodesicDistance,
+		geodesicDistanceUnit,
+		currentMapUnit,
+		currentLang,
+		isLanguageRTL
 	]);
 
 	const address = useMemo(() => {

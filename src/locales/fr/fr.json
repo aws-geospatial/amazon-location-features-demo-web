@@ -2814,7 +2814,7 @@
     "text": "Passez à Esri"
   },
   "start_unauth_simulation__heading": {
-    "text": "Trackers et géofences"
+    "text": "Traceurs et géofences"
   },
   "start_unauth_simulation__desc": {
     "text": "Participez à la simulation de suivi pour voir le chemin qui traverse les rues de Vancouver qui franchissent Geofence"
@@ -3370,5 +3370,20 @@
   },
   "settings_modal__region": {
     "text": "Région"
+  },
+  "geofence_box__mi__short": {
+    "text": "mi"
+  },
+  "geofence_box__ft__short": {
+    "text": "pieds"
+  },
+  "geofence_box__km__short": {
+    "text": "km"
+  },
+  "geofence_box__m__short": {
+    "text": "m"
+  },
+  "popup__place_time": {
+    "text": "Moins d'une minute"
   }
 }

@@ -2814,7 +2814,7 @@
     "text": "Passa a Esri"
   },
   "start_unauth_simulation__heading": {
-    "text": "Tackers e Geofences"
+    "text": "Localizzatori e geofence"
   },
   "start_unauth_simulation__desc": {
     "text": "Entra nella simulazione di tracciamento per visualizzare il percorso che attraversa le strade di Vancouver che attraversa il geofence"
@@ -3370,5 +3370,20 @@
   },
   "settings_modal__region": {
     "text": "Regione"
+  },
+  "geofence_box__mi__short": {
+    "text": "mi"
+  },
+  "geofence_box__ft__short": {
+    "text": "piedi"
+  },
+  "geofence_box__km__short": {
+    "text": "km"
+  },
+  "geofence_box__m__short": {
+    "text": "m"
+  },
+  "popup__place_time": {
+    "text": "Meno di un minuto"
   }
 }

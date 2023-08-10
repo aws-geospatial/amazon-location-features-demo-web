@@ -2814,7 +2814,7 @@
     "text": "Esri पर स्विच करें"
   },
   "start_unauth_simulation__heading": {
-    "text": "टैकर्स और जियोफेंस"
+    "text": "ट्रैकर्स और जियोफेंस"
   },
   "start_unauth_simulation__desc": {
     "text": "जियोफेंस को पार करने वाली वैंकूवर सड़कों पर पथ देखने के लिए ट्रैकिंग सिमुलेशन दर्ज करें"
@@ -3370,5 +3370,20 @@
   },
   "settings_modal__region": {
     "text": "रीजन"
+  },
+  "geofence_box__mi__short": {
+    "text": "मील"
+  },
+  "geofence_box__ft__short": {
+    "text": "फुट"
+  },
+  "geofence_box__km__short": {
+    "text": "किमी"
+  },
+  "geofence_box__m__short": {
+    "text": "मी"
+  },
+  "popup__place_time": {
+    "text": "एक मिनट से भी कम"
   }
 }

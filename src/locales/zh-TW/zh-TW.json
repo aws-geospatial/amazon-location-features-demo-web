@@ -2814,7 +2814,7 @@
     "text": "切換到埃斯里"
   },
   "start_unauth_simulation__heading": {
-    "text": "追踪器和地理圍欄"
+    "text": "跟踪器和地理圍欄"
   },
   "start_unauth_simulation__desc": {
     "text": "進入跟踪模擬以查看穿過地理圍欄的溫哥華街道的路徑"
@@ -3370,5 +3370,20 @@
   },
   "settings_modal__region": {
     "text": "地區"
+  },
+  "geofence_box__mi__short": {
+    "text": "英哩"
+  },
+  "geofence_box__ft__short": {
+    "text": "英呎"
+  },
+  "geofence_box__km__short": {
+    "text": "公里"
+  },
+  "geofence_box__m__short": {
+    "text": "米"
+  },
+  "popup__place_time": {
+    "text": "少於一分鐘"
   }
 }

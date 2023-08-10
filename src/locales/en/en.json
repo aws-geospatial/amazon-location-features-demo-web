@@ -2814,7 +2814,7 @@
     "text": "Switch to Esri"
   },
   "start_unauth_simulation__heading": {
-    "text": "Tackers and Geofences"
+    "text": "Trackers and Geofences"
   },
   "start_unauth_simulation__desc": {
     "text": "Enter the tracking simulation to view the path across Vancouver streets that crosses geofence"
@@ -3370,5 +3370,20 @@
   },
   "settings_modal__region": {
     "text": "Region"
+  },
+  "geofence_box__mi__short": {
+    "text": "miles"
+  },
+  "geofence_box__ft__short": {
+    "text": "feet"
+  },
+  "geofence_box__km__short": {
+    "text": "kilometers"
+  },
+  "geofence_box__m__short": {
+    "text": "meters"
+  },
+  "popup__place_time": {
+    "text": "Less than a minute"
   }
 }

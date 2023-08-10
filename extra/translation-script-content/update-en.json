@@ -1,5 +1,5 @@
 {
-	"settings_modal__region": {
-		"text": "Region"
-	}
+  "start_unauth_simulation__heading": {
+    "text": "Trackers and Geofences"
+  }
 }

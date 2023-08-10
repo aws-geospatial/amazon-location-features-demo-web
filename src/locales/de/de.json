@@ -2814,7 +2814,7 @@
     "text": "Zu Esri wechseln"
   },
   "start_unauth_simulation__heading": {
-    "text": "Tacker und Geofences"
+    "text": "Tracker und Geofences"
   },
   "start_unauth_simulation__desc": {
     "text": "Rufen Sie die Tracking-Simulation auf, um den Pfad über die Straßen von Vancouver zu sehen, der den Geofence überquert"
@@ -3370,5 +3370,20 @@
   },
   "settings_modal__region": {
     "text": "Region"
+  },
+  "geofence_box__mi__short": {
+    "text": "mi"
+  },
+  "geofence_box__ft__short": {
+    "text": "ft"
+  },
+  "geofence_box__km__short": {
+    "text": "km"
+  },
+  "geofence_box__m__short": {
+    "text": "m"
+  },
+  "popup__place_time": {
+    "text": "Weniger als eine Minute"
   }
 }

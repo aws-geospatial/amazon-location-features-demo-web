@@ -2814,7 +2814,7 @@
     "text": "Esri に切り替え"
   },
   "start_unauth_simulation__heading": {
-    "text": "タッカーとジオフェンス"
+    "text": "トラッカーとジオフェンス"
   },
   "start_unauth_simulation__desc": {
     "text": "追跡シミュレーションを開始すると、ジオフェンスを横切るバンクーバーの道路を横切る経路が表示されます"
@@ -3370,5 +3370,20 @@
   },
   "settings_modal__region": {
     "text": "地域"
+  },
+  "geofence_box__mi__short": {
+    "text": "mi"
+  },
+  "geofence_box__ft__short": {
+    "text": "フィート"
+  },
+  "geofence_box__km__short": {
+    "text": "キロ"
+  },
+  "geofence_box__m__short": {
+    "text": "m"
+  },
+  "popup__place_time": {
+    "text": "1 分未満"
   }
 }

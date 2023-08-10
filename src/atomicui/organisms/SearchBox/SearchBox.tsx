@@ -20,7 +20,7 @@ import { Tooltip } from "react-tooltip";
 import "./styles.scss";
 
 const { METRIC } = MapUnitEnum;
-const { KILOMETERS, KILOMETERS_SHORT, MILES, MILES_SHORT } = DistanceUnitEnum;
+const { KILOMETERS, MILES } = DistanceUnitEnum;
 
 interface SearchBoxProps {
 	mapRef: MapRef | null;
@@ -64,6 +64,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
 	const currentLang = i18n.language;
+	const isLanguageRTL = ["ar", "he"].includes(currentLang);
 
 	useEffect(() => {
 		if (!value) {
@@ -186,10 +187,10 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 			return formatter.format(geodesicDistance || 0);
 		};
 
-		const geodesicDistanceWithUnit = geodesicDistance
+		const geodesicDistanceUnit = geodesicDistance
 			? currentMapUnit === METRIC
-				? `${localizeGeodesicDistance()} ${KILOMETERS_SHORT}`
-				: `${localizeGeodesicDistance()} ${MILES_SHORT}`
+				? t("geofence_box__km__short.text")
+				: t("geofence_box__mi__short.text")
 			: undefined;
 
 		return (
@@ -197,9 +198,12 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 				{!placeid ? <IconSearch /> : <IconPin />}
 				<View className="option-details">
 					<Text>{title}</Text>
-					{geodesicDistanceWithUnit ? (
+					{geodesicDistanceUnit ? (
 						<Flex gap={0} alignItems="center">
-							<Text variation="tertiary">{geodesicDistanceWithUnit}</Text>
+							<Flex gap="0.3rem" direction={isLanguageRTL ? "row-reverse" : "row"}>
+								<Text variation="tertiary">{localizeGeodesicDistance()}</Text>
+								<Text variation="tertiary">{geodesicDistanceUnit}</Text>
+							</Flex>
 							<View className="separator" />
 							<Text variation="tertiary">{`${region}, ${country}`}</Text>
 						</Flex>

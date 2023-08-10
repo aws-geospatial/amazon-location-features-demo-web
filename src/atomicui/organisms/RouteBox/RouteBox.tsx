@@ -40,7 +40,7 @@ import { Tooltip } from "react-tooltip";
 import "./styles.scss";
 
 const { METRIC } = MapUnitEnum;
-const { KILOMETERS, KILOMETERS_SHORT, MILES, MILES_SHORT } = DistanceUnitEnum;
+const { KILOMETERS, MILES } = DistanceUnitEnum;
 
 interface RouteBoxProps {
 	mapRef: MapRef | null;
@@ -92,6 +92,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
 	const currentLang = i18n.language;
+	const isLanguageRTL = ["ar", "he"].includes(currentLang);
 
 	const clearRoutePosition = useCallback((type: InputType) => setRoutePositions(undefined, type), [setRoutePositions]);
 
@@ -773,13 +774,20 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 									<View className="separator" />
 									<Text className="grey-text">{t("route_box__selected.text")}</Text>
 								</View>
-								<Text className="grey-text">{`${routeData.Summary.Distance.toFixed(2)} ${
-									currentMapUnit === METRIC ? KILOMETERS_SHORT : MILES_SHORT
-								}`}</Text>
+								<Flex
+									gap="0.3rem"
+									direction={isLanguageRTL ? "row-reverse" : "row"}
+									justifyContent={isLanguageRTL ? "flex-end" : "flex-start"}
+								>
+									<Text className="distance">{routeData.Summary.Distance.toFixed(2)}</Text>
+									<Text className="distance">
+										{currentMapUnit === METRIC ? t("geofence_box__km__short.text") : t("geofence_box__mi__short.text")}
+									</Text>
+								</Flex>
 							</View>
 							<View className="duration">
 								<Text className="regular-text">
-									{humanReadableTime(routeData.Summary.DurationSeconds * 1000, currentLang)}
+									{humanReadableTime(routeData.Summary.DurationSeconds * 1000, currentLang, t)}
 								</Text>
 							</View>
 						</View>

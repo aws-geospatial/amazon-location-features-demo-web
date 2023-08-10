@@ -136,7 +136,6 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 				routes = routes.length === 1 ? routes : routes.filter(route => route.value !== selectedRoute.value);
 			} else {
 				routes.push(selectedRoute);
-				setIsPlaying(false);
 			}
 
 			setSelectedRoutes(routes);

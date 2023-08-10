@@ -3370,5 +3370,20 @@
   },
   "settings_modal__region": {
     "text": "지역"
+  },
+  "geofence_box__mi__short": {
+    "text": "mi"
+  },
+  "geofence_box__ft__short": {
+    "text": "피트"
+  },
+  "geofence_box__km__short": {
+    "text": "km"
+  },
+  "geofence_box__m__short": {
+    "text": "m"
+  },
+  "popup__place_time": {
+    "text": "1분 미만"
   }
 }

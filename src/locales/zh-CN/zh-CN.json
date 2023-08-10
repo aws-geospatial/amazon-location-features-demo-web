@@ -2810,7 +2810,7 @@
     "text": "切换到 Esri"
   },
   "start_unauth_simulation__heading": {
-    "text": "Tackers 和 Geofence"
+    "text": "追踪器和地理围栏"
   },
   "start_unauth_simulation__desc": {
     "text": "进入追踪模拟，查看穿过温哥华街道的路径，穿过地理围栏"
@@ -3366,5 +3366,20 @@
   },
   "settings_modal__region": {
     "text": "区域"
+  },
+  "geofence_box__mi__short": {
+    "text": "mi"
+  },
+  "geofence_box__ft__short": {
+    "text": "英尺"
+  },
+  "geofence_box__km__short": {
+    "text": "公里"
+  },
+  "geofence_box__m__short": {
+    "text": "m"
+  },
+  "popup__place_time": {
+    "text": "不到一分钟"
   }
 }

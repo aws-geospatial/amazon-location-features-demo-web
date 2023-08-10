@@ -22,6 +22,13 @@ Amplify.configure({
 
 const fetchCredentials = async () => await Auth.currentUserCredentials();
 
+const fixTranslation = (rawTranslation, targetLang) => {
+	if (["ar", "he"].includes(targetLang) && rawTranslation.endsWith(".")) {
+		return "\u002E" + rawTranslation.slice(0, rawTranslation.length - 1);
+	}
+	return rawTranslation; // no change
+};
+
 // Function to divide the JSON object into four parts
 const divideJsonIntoBatches = json => {
 	const keys = Object.keys(json);
@@ -58,7 +65,7 @@ const main = async () => {
 
 		const localesDirectory = "src/locales";
 		const translationFilePath = `${localesDirectory}/en/en.json`;
-		const languages = ["ar", "de", "es", "fr", "he", "hi", "it", "ja", "ko", "pt-BR", "zh-CN", "zh-TW"];
+		const languages = ["ar", "he", "es", "fr", "he", "hi", "it", "ja", "ko", "pt-BR", "zh-CN", "zh-TW"];
 		const jsonFilePath = path.join("../../", translationFilePath);
 		const json = JSON.parse(fs.readFileSync(jsonFilePath, "utf8"));
 
@@ -76,7 +83,7 @@ const main = async () => {
 
 			try {
 				const response = await translate.translateText(params).promise();
-				return response.TranslatedText;
+				return fixTranslation(response.TranslatedText, targetLang);
 			} catch (error) {
 				console.error("translateText()", { error });
 				error?.code === "ExpiredTokenException" && initCredsAndTranslate();
