@@ -115,6 +115,81 @@ Resources:
       Roles:
         - !Ref CognitoIdentityPoolUnauthRole
 
+  AmazonLocationKinesisDeliveryRole:
+    Condition: EnablePinTranslate
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: ''
+            Effect: Allow
+            Principal:
+              Service: firehose.amazonaws.com
+            Action: 'sts:AssumeRole'
+            Condition:
+              StringEquals:
+                'sts:ExternalId': !Ref 'AWS::AccountId'
+      Path: "/"
+      Policies:
+        - PolicyName: firehose_delivery_policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 's3:AbortMultipartUpload'
+                  - 's3:GetBucketLocation'
+                  - 's3:GetObject'
+                  - 's3:ListBucket'
+                  - 's3:ListBucketMultipartUploads'
+                  - 's3:PutObject'
+                Resource:
+                  - !Join 
+                    - ''
+                    - - 'arn:aws:s3:::'
+                      - !Ref AmazonLocationDemoKinesisBucket
+                  - !Join 
+                    - ''
+                    - - 'arn:aws:s3:::'
+                      - !Ref AmazonLocationDemoKinesisBucket
+                      - '/*'
+              - Effect: Allow
+                Action: 'logs:PutLogEvents'
+                Resource: 
+                - !Join 
+                    - ''
+                    - - 'arn:aws:logs:'
+                      - !Ref 'AWS::Region'
+                      - ':'
+                      - !Ref 'AWS::AccountId'
+                      - 'log-group:/aws/kinesisfirehose/KDF-'
+
+  AmazonLocationDemoPinpointStreamRole:
+    Condition: EnablePinTranslate
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: ''
+            Effect: Allow
+            Principal:
+              Service: pinpoint.amazonaws.com
+            Action: 'sts:AssumeRole'
+      Path: "/"
+      Policies:
+        - PolicyName: pinpoint_stream_policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - kinesis:PutRecords
+                  - kinesis:DescribeStream
+                Resource:
+                  - !GetAtt AmazonLocationDemoKinesisStream.Arn
+
   CognitoIdentityPool:
     Type: "AWS::Cognito::IdentityPool"
     Properties:
@@ -130,12 +205,44 @@ Resources:
           - CognitoIdentityPoolUnauthRole
           - Arn
 
+  AmazonLocationDemoKinesisBucket:
+    Condition: EnablePinTranslate
+    Type: 'AWS::S3::Bucket'
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: !Sub "location.aws.com.demo.kinesis.${AWS::AccountId}"
+
+  AmazonLocationDemoKinesisStream:
+    Condition: EnablePinTranslate
+    Type: AWS::Kinesis::Stream
+    Properties: 
+      Name: location.aws.com.demo.app
+      RetentionPeriodHours: 24
+      ShardCount: 1
+
+  AmazonLocationDemoKinesisFirehose:
+    Condition: EnablePinTranslate
+    Type: AWS::KinesisFirehose::DeliveryStream
+    Properties: 
+      DeliveryStreamName: location.aws.com.demo.app
+      S3DestinationConfiguration: 
+          BucketARN: !GetAtt AmazonLocationDemoKinesisBucket.Arn
+          RoleARN: !GetAtt AmazonLocationKinesisDeliveryRole.Arn
+
   AmazonLocationDemoPinpointApp:
     Condition: EnablePinTranslate
     Type: AWS::Pinpoint::App
     Properties:
       Name: location.aws.com.demo.app
 
+  AmazonLocationDemoPinpointAppStream:
+    Condition: EnablePinTranslate
+    Type: AWS::Pinpoint::EventStream
+    Properties: 
+      ApplicationId: !Ref AmazonLocationDemoPinpointApp
+      DestinationStreamArn: !GetAtt AmazonLocationDemoKinesisStream.Arn
+      RoleArn: !GetAtt AmazonLocationDemoPinpointStreamRole.Arn
+          
   AmazonLocationDemoMapsOpenDataLight:
     Type: AWS::Location::Map
     Properties:
