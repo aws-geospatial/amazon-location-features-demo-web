@@ -47,19 +47,6 @@ const busRoutesData = [
 				type: "Feature",
 				geometry: {
 					type: "Point",
-					coordinates: [-123.116055, 49.285523]
-				},
-				properties: {
-					id: 549628619,
-					stop_id: "97",
-					stop_name: "Westbound W Pender St @ Howe St"
-				},
-				id: 549628619
-			},
-			{
-				type: "Feature",
-				geometry: {
-					type: "Point",
 					coordinates: [-123.120503, 49.284688]
 				},
 				properties: {
@@ -94,19 +81,6 @@ const busRoutesData = [
 					stop_name: "Southbound Denman St @ Barclay St"
 				},
 				id: 549626288
-			},
-			{
-				type: "Feature",
-				geometry: {
-					type: "Point",
-					coordinates: [-123.141124, 49.286705]
-				},
-				properties: {
-					id: 549626316,
-					stop_id: "639",
-					stop_name: "Eastbound Davie St @ Denman St"
-				},
-				id: 549626316
 			}
 		]
 	},
@@ -141,19 +115,6 @@ const busRoutesData = [
 			[-123.111557, 49.280488]
 		],
 		stopCoordinates: [
-			{
-				type: "Feature",
-				geometry: {
-					type: "Point",
-					coordinates: [-123.13847, 49.285009]
-				},
-				properties: {
-					id: 549626319,
-					stop_id: "640",
-					stop_name: "Eastbound Davie St @ Cardero St"
-				},
-				id: 549626319
-			},
 			{
 				type: "Feature",
 				geometry: {
@@ -263,19 +224,6 @@ const busRoutesData = [
 				type: "Feature",
 				geometry: {
 					type: "Point",
-					coordinates: [-123.093904, 49.281321]
-				},
-				properties: {
-					id: 549625168,
-					stop_id: "510",
-					stop_name: "Westbound E Hastings St @ Jackson Ave"
-				},
-				id: 549625168
-			},
-			{
-				type: "Feature",
-				geometry: {
-					type: "Point",
 					coordinates: [-123.110279, 49.283085]
 				},
 				properties: {
@@ -333,19 +281,6 @@ const busRoutesData = [
 					stop_name: "Eastbound Venables St @ Vernon Dr"
 				},
 				id: 549622045
-			},
-			{
-				type: "Feature",
-				geometry: {
-					type: "Point",
-					coordinates: [-123.087659, 49.276481]
-				},
-				properties: {
-					id: 549622035,
-					stop_id: "1291",
-					stop_name: "Eastbound Prior St @ Hawks Ave"
-				},
-				id: 549622035
 			},
 			{
 				type: "Feature",
@@ -439,19 +374,6 @@ const busRoutesData = [
 					stop_name: "Southbound Burrard St @ W 3rd Ave"
 				},
 				id: 549622581
-			},
-			{
-				type: "Feature",
-				geometry: {
-					type: "Point",
-					coordinates: [-123.155847, 49.268242]
-				},
-				properties: {
-					id: 549621956,
-					stop_id: "12815",
-					stop_name: "Westbound W 4th Ave @ Yew St"
-				},
-				id: 549621956
 			}
 		]
 	}

@@ -260,23 +260,25 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 
 	const renderRoutes = useMemo(
 		() =>
-			busRoutesData.map(({ id, name, geofenceCollection, coordinates }) => (
-				<UnauthRouteSimulation
-					key={id}
-					id={id}
-					name={name}
-					geofenceCollection={geofenceCollection}
-					coordinates={coordinates}
-					isPlaying={isPlaying}
-					disabled={!selectedRoutesIds.includes(id)}
-					updateTrackingHistory={(id: string, newTrackingHistory: TrackingHistoryItemtype) =>
-						setTrackingHistory(prevState => ({
-							...prevState,
-							[id]: [...prevState[id], newTrackingHistory]
-						}))
-					}
-				/>
-			)),
+			busRoutesData
+				.filter(({ id }) => selectedRoutesIds.includes(id))
+				.map(({ id, name, geofenceCollection, coordinates }) => (
+					<UnauthRouteSimulation
+						key={id}
+						id={id}
+						name={name}
+						geofenceCollection={geofenceCollection}
+						coordinates={coordinates}
+						isPlaying={isPlaying}
+						disabled={!selectedRoutesIds.includes(id)}
+						updateTrackingHistory={(id: string, newTrackingHistory: TrackingHistoryItemtype) =>
+							setTrackingHistory(prevState => ({
+								...prevState,
+								[id]: [...prevState[id], newTrackingHistory]
+							}))
+						}
+					/>
+				)),
 		[isPlaying, selectedRoutesIds]
 	);
 
