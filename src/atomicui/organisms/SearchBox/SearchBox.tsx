@@ -372,6 +372,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 								</Flex>
 							</Flex>
 						}
+						crossOrigin={undefined}
 					/>
 				</Flex>
 			</Flex>

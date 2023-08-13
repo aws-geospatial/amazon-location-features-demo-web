@@ -346,6 +346,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 							onChange={e => setSearchValue(e.target.value)}
 							onClear={() => setSearchValue("")}
 							onClick={() => !!showFilter && setShowFilter(false)}
+							crossOrigin={undefined}
 						/>
 						<Flex className="filter-container">
 							<Flex
@@ -378,6 +379,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 												checked={selectedFilters[key as keyof MapStyleFilterTypes].includes(item)}
 												onChange={e => handleFilterChange(e, key)}
 												data-testid={`filter-checkbox-${item}`}
+												crossOrigin={undefined}
 											/>
 										);
 									})}

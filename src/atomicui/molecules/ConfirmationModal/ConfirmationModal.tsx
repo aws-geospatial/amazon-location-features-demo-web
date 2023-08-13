@@ -86,6 +86,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 								confirmationCheckboxOnChange(e.target.checked);
 							}}
 							marginTop="2rem"
+							crossOrigin={undefined}
 						/>
 					)}
 					<Button

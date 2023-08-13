@@ -285,6 +285,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								value={"Automatic"}
 								checked={autoMapUnit.selected}
 								onChange={handleAutoMapUnitChange}
+								crossOrigin={undefined}
 							>
 								<Text marginLeft="1.23rem">{t("settings_modal__automatic.text")}</Text>
 								<Text variation="tertiary" marginLeft="1.23rem">
@@ -300,6 +301,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								value={IMPERIAL}
 								checked={!autoMapUnit.selected && currentMapUnit === IMPERIAL}
 								onChange={() => onMapUnitChange(IMPERIAL)}
+								crossOrigin={undefined}
 							>
 								<Text marginLeft="1.23rem">{t("settings_modal__imperial.text")}</Text>
 								<Text variation="tertiary" marginLeft="1.23rem">
@@ -313,6 +315,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								value={METRIC}
 								checked={!autoMapUnit.selected && currentMapUnit === METRIC}
 								onChange={() => onMapUnitChange(METRIC)}
+								crossOrigin={undefined}
 							>
 								<Text marginLeft="1.23rem">{t("settings_modal__metric.text")}</Text>
 								<Text variation="tertiary" marginLeft="1.23rem">
@@ -342,6 +345,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								value={ESRI}
 								checked={currentMapProvider === ESRI}
 								onChange={() => handleMapProviderChange(ESRI, TriggeredByEnum.SETTINGS_MODAL)}
+								crossOrigin={undefined}
 							>
 								<Text marginLeft="1.23rem">{ESRI}</Text>
 							</Radio>
@@ -353,6 +357,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								value={HERE}
 								checked={currentMapProvider === HERE}
 								onChange={() => handleMapProviderChange(HERE, TriggeredByEnum.SETTINGS_MODAL)}
+								crossOrigin={undefined}
 							>
 								<Text marginLeft="1.23rem">{HERE}</Text>
 							</Radio>
@@ -365,6 +370,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 									value={GRAB}
 									checked={currentMapProvider === GRAB}
 									onChange={() => handleMapProviderChange(GRAB, TriggeredByEnum.SETTINGS_MODAL)}
+									crossOrigin={undefined}
 								>
 									<Text marginLeft="1.23rem">{`${GRAB}Maps`}</Text>
 								</Radio>
@@ -377,6 +383,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								value={OPEN_DATA}
 								checked={currentMapProvider === OPEN_DATA}
 								onChange={() => handleMapProviderChange(OPEN_DATA, TriggeredByEnum.SETTINGS_MODAL)}
+								crossOrigin={undefined}
 							>
 								<Text marginLeft="1.23rem">{OPEN_DATA}</Text>
 							</Radio>
@@ -420,6 +427,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 									value={value}
 									checked={i18n.language === value}
 									onChange={handleLanguageChange}
+									crossOrigin={undefined}
 								>
 									<Text marginLeft="1.23rem">{label}</Text>
 								</Radio>
@@ -447,6 +455,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 							value="Avoid tolls"
 							checked={defaultRouteOptions.avoidTolls}
 							onChange={e => handleRouteOptionChange(e, "avoidTolls")}
+							crossOrigin={undefined}
 						/>
 						<CheckboxField
 							data-testid="avoid-ferries"
@@ -456,6 +465,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 							value="Avoid ferries"
 							checked={defaultRouteOptions.avoidFerries}
 							onChange={e => handleRouteOptionChange(e, "avoidFerries")}
+							crossOrigin={undefined}
 						/>
 					</Flex>
 				)
@@ -484,6 +494,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								value={"Automatic"}
 								checked={autoRegion}
 								onChange={() => handleRegionChange("Automatic")}
+								crossOrigin={undefined}
 							>
 								<Text marginLeft="1.23rem">{t("settings_modal__automatic.text")}</Text>
 							</Radio>
@@ -494,6 +505,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								value={RegionEnum.EU_WEST_1}
 								checked={!autoRegion && currentRegion === RegionEnum.EU_WEST_1}
 								onChange={() => handleRegionChange(RegionEnum.EU_WEST_1)}
+								crossOrigin={undefined}
 							>
 								<Text marginLeft="1.23rem">{t("regions__eu_west_1.text")}</Text>
 							</Radio>
@@ -504,6 +516,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								value={RegionEnum.AP_SOUTHEAST_1}
 								checked={!autoRegion && currentRegion === RegionEnum.AP_SOUTHEAST_1}
 								onChange={() => handleRegionChange(RegionEnum.AP_SOUTHEAST_1)}
+								crossOrigin={undefined}
 							>
 								<Text marginLeft="1.23rem">{t("regions__ap_southeast_1.text")}</Text>
 							</Radio>
@@ -514,6 +527,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								value={RegionEnum.US_EAST_1}
 								checked={!autoRegion && currentRegion === RegionEnum.US_EAST_1}
 								onChange={() => handleRegionChange(RegionEnum.US_EAST_1)}
+								crossOrigin={undefined}
 							>
 								<Text marginLeft="1.23rem">{t("regions__us_east_1.text")}</Text>
 							</Radio>
