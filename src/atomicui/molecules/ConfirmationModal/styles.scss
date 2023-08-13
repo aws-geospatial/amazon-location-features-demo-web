@@ -26,6 +26,19 @@
 			margin-top: 1.54rem;
 			cursor: pointer;
 		}
+		.confirmation-checkbox {
+			.amplify-flex.amplify-checkbox__button {
+				.amplify-icon.amplify-checkbox__icon {
+					width: 20px !important;
+					height: 20px !important;
+				}
+			}
+			.amplify-text.amplify-checkbox__label {
+				font-size: 14px;
+				font-weight: 500;
+				font-family: "AmazonEmber-Medium";
+			}
+		}
 	}
 }
 

@@ -3,6 +3,7 @@
 
 import { Text, View } from "@aws-amplify/ui-react";
 import { IconSearch } from "@demo/assets";
+import { useTranslation } from "react-i18next";
 import "./styles.scss";
 
 interface IProps {
@@ -15,21 +16,25 @@ interface IProps {
 }
 
 const NotFoundCard: React.FC<IProps> = ({
-	title = "No matching places found",
-	text = "Make sure your search is spelled correctly. Try adding a city, postcode, or country.",
+	title,
+	text,
 	textFontSize,
 	textMargin,
 	actionButton,
-	textPadding
-}) => (
-	<View className="not-found-card">
-		<IconSearch className="nfc-search-icon" />
-		<Text className="nfc-title">{title}</Text>
-		<Text padding={textPadding} margin={textMargin} className="nfc-text" variation="tertiary" fontSize={textFontSize}>
-			{text}
-		</Text>
-		{actionButton}
-	</View>
-);
+	textPadding = "1.23rem"
+}) => {
+	const { t } = useTranslation();
+
+	return (
+		<View className="not-found-card">
+			<IconSearch className="nfc-search-icon" />
+			<Text className="nfc-title">{title || t("not_found_card__title.text")}</Text>
+			<Text padding={textPadding} margin={textMargin} className="nfc-text" variation="tertiary" fontSize={textFontSize}>
+				{text || t("not_found_card__desc.text")}
+			</Text>
+			{actionButton}
+		</View>
+	);
+};
 
 export default NotFoundCard;

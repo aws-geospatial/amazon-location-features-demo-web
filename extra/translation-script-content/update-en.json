@@ -1,0 +1,11 @@
+{
+	"regions__us_east__region": {
+		"text": "US East"
+	},
+	"regions__eu_west__region": {
+		"text": "Europe"
+	},
+	"regions__ap_southeast__region": {
+		"text": "Asia Pacific"
+	}
+}

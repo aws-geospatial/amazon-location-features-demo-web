@@ -1,37 +1,39 @@
-import React from "react";
-
+import i18n from "@demo/locales/i18n";
 import { fireEvent, render } from "@testing-library/react";
+import { I18nextProvider } from "react-i18next";
 
 import GrabConfirmationModal from "./GrabConfirmationModal";
 
-const defaultProps = {
-	open: true,
-	onClose: jest.fn(),
-	onConfirm: jest.fn()
-};
-
 describe("GrabConfirmationModal", () => {
+	const props = {
+		open: true,
+		onClose: jest.fn(),
+		onConfirm: jest.fn(),
+		isUnauthSimulationOpen: false
+	};
+
+	const renderComponent = () => {
+		return render(
+			<I18nextProvider i18n={i18n}>
+				<GrabConfirmationModal {...props} />
+			</I18nextProvider>
+		);
+	};
+
 	it("renders GrabConfirmationModal with expected content", () => {
-		const { getByTestId } = render(<GrabConfirmationModal {...defaultProps} />);
+		const { getByTestId } = renderComponent();
 		expect(getByTestId("confirmation-modal-container")).toBeInTheDocument();
 	});
 
 	it("triggers onClose when Cancel button is clicked", () => {
-		const { getByText } = render(<GrabConfirmationModal {...defaultProps} />);
+		const { getByText } = renderComponent();
 		fireEvent.click(getByText("Cancel"));
-		expect(defaultProps.onClose).toHaveBeenCalled();
+		expect(props.onClose).toHaveBeenCalled();
 	});
 
 	it("triggers onConfirm when Enable Grab button is clicked", () => {
-		const { getByTestId } = render(<GrabConfirmationModal {...defaultProps} />);
+		const { getByTestId } = renderComponent();
 		fireEvent.click(getByTestId("confirmation-button"));
-		expect(defaultProps.onConfirm).toHaveBeenCalled();
+		expect(props.onConfirm).toHaveBeenCalled();
 	});
-
-	// it("opens external link when Learn more is clicked", () => {
-	// 	window.open = jest.fn();
-	// 	const { getByText } = render(<GrabConfirmationModal {...defaultProps} />);
-	// 	fireEvent.click(getByText("Learn more"));
-	// 	expect(window.open).toHaveBeenCalledWith(expect.stringContaining("https://"), "_blank");
-	// });
 });

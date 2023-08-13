@@ -52,8 +52,10 @@
 				background-color: var(--secondary-button-bg-color);
 				border: 1px solid var(--primary-color);
 				color: var(--primary-color);
-				font-size: 1.23rem;
-				font-family: "AmazonEmber-Bold";
+				font-size: 1.069rem;
+				font-family: "AmazonEmber-Medium";
+				height: 3rem;
+				line-height: 1.143rem;
 			}
 
 			.powered-by-aws-1-icon {
@@ -61,9 +63,16 @@
 				align-self: center;
 			}
 
+			.amplify-text.more-tertiary-text {
+				font-family: "AmazonEmber-Regular";
+				font-size: 1.22rem;
+				line-height: 2rem;
+				color: var(--tertiary-color);
+			}
+
 			.amplify-text.more-secondary-text {
 				font-family: "AmazonEmber-Regular";
-				font-size: 1rem;
+				font-size: 1.22rem;
 				line-height: 1.38rem;
 				color: var(--grey-color);
 				margin-top: 0.31rem;

@@ -7,51 +7,56 @@ import { Button, CheckboxField, Divider, Flex, Link, Radio, Text, View } from "@
 import {
 	IconAwsCloudFormation,
 	IconCloud,
+	IconGlobe,
+	IconLanguage,
 	IconMapOutlined,
 	IconPaintroller,
 	IconPeopleArrows,
 	IconShuffle
 } from "@demo/assets";
-import { DropdownEl, Modal, TextEl } from "@demo/atomicui/atoms";
+import { DropdownEl, Modal } from "@demo/atomicui/atoms";
 import { InputField } from "@demo/atomicui/molecules";
-import { appConfig, connectAwsAccountData } from "@demo/core/constants";
+import { appConfig, languageSwitcherData, regionsData } from "@demo/core/constants";
 import { useAmplifyAuth, useAmplifyMap, useAws, useAwsIot, usePersistedData } from "@demo/hooks";
 import {
 	ConnectFormValuesType,
 	EsriMapEnum,
-	GrabMapEnum,
-	HereMapEnum,
 	MapProviderEnum,
 	MapUnitEnum,
+	RegionEnum,
 	SettingOptionEnum,
 	SettingOptionItemType
 } from "@demo/types";
+import { AnalyticsEventActionsEnum, EventTypeEnum, TriggeredByEnum } from "@demo/types/Enums";
+import { record } from "@demo/utils/analyticsUtils";
 import { transformCloudFormationLink } from "@demo/utils/transformCloudFormationLink";
+import { useTranslation } from "react-i18next";
 import "./styles.scss";
 
 const {
-	ENV: { CF_TEMPLATE, REGION, REGION_ASIA },
+	POOLS,
+	ENV: { CF_TEMPLATE },
 	ROUTES: { HELP },
 	MAP_RESOURCES: {
 		MAP_STYLES: { ESRI_STYLES, HERE_STYLES },
 		GRAB_SUPPORTED_AWS_REGIONS
 	},
-	LINKS: { AWS_TERMS_AND_CONDITIONS }
+	LINKS: { AWS_TERMS_AND_CONDITIONS },
+	PERSIST_STORAGE_KEYS: { FASTEST_REGION }
 } = appConfig;
-const { TITLE, TITLE_DESC, HOW_TO, STEP1, STEP1_DESC, STEP2, STEP2_DESC, STEP3, STEP3_DESC, AGREE, OPTIONS } =
-	connectAwsAccountData;
-const defaultRegion = OPTIONS.find(option => option.value === REGION) as { value: string; label: string };
-const defaultRegionAsia = OPTIONS.find(option => option.value === REGION_ASIA) as { value: string; label: string };
+
+const fallbackRegion = Object.values(POOLS)[0];
+const region = localStorage.getItem(FASTEST_REGION) ?? fallbackRegion;
+const defaultRegion = regionsData.find(option => option.value === region) as { value: string; label: string };
 const { IMPERIAL, METRIC } = MapUnitEnum;
-const { ESRI, HERE, GRAB } = MapProviderEnum;
+const { ESRI, HERE, GRAB, OPEN_DATA } = MapProviderEnum;
 
 interface SettingsModalProps {
 	open: boolean;
 	onClose: () => void;
 	resetAppState: () => void;
 	isGrabVisible: boolean;
-	handleMapProviderChange: (mapProvider: MapProviderEnum) => void;
-	handleMapStyleChange: (mapStyle: EsriMapEnum | HereMapEnum | GrabMapEnum) => void;
+	handleMapProviderChange: (mapProvider: MapProviderEnum, triggeredBy: TriggeredByEnum) => void;
 	handleCurrentLocationAndViewpoint: (b: boolean) => void;
 	mapButtons: JSX.Element;
 	resetSearchAndFilters: () => void;
@@ -67,7 +72,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 	mapButtons,
 	resetSearchAndFilters
 }) => {
-	const [selectedOption, setSelectedOption] = useState<SettingOptionEnum>(SettingOptionEnum.UNITS);
 	const {
 		autoMapUnit,
 		setIsAutomaticMapUnit,
@@ -78,7 +82,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 		setMapProvider,
 		setMapStyle
 	} = useAmplifyMap();
-	const { defaultRouteOptions, setDefaultRouteOptions } = usePersistedData();
+	const { defaultRouteOptions, setDefaultRouteOptions, setSettingsOptions, settingsOptions } = usePersistedData();
 	const [formValues, setFormValues] = useState<ConnectFormValuesType>({
 		IdentityPoolId: "",
 		UserDomain: "",
@@ -98,24 +102,33 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 		credentials,
 		onLogin,
 		setAuthTokens,
-		onLogout
+		onLogout,
+		autoRegion,
+		region: currentRegion,
+		setAutoRegion
 	} = useAmplifyAuth();
 	const { resetStore: resetAwsStore } = useAws();
 	const { detachPolicy } = useAwsIot();
 	const keyArr = Object.keys(formValues);
 	const isAuthenticated = !!credentials?.authenticated;
+	const { t, i18n } = useTranslation();
+	const langDir = i18n.dir();
+	const isLtr = langDir === "ltr";
 
 	useEffect(() => {
-		if (currentMapProvider === MapProviderEnum.GRAB) {
-			const newUrl = transformCloudFormationLink(REGION_ASIA);
+		const regionOption = region && regionsData.find(option => option.value === region);
+
+		if (regionOption) {
+			const newUrl = transformCloudFormationLink(region);
 			setCloudFormationLink(newUrl);
-			setStackRegion(defaultRegionAsia);
+			setStackRegion(regionOption);
 		}
-	}, [currentMapProvider]);
+	}, []);
 
 	const handleAutoMapUnitChange = useCallback(() => {
 		setIsAutomaticMapUnit(true);
 		resetAppState();
+		record([{ EventType: EventTypeEnum.MAP_UNIT_CHANGE, Attributes: { type: "Automatic" } }]);
 	}, [setIsAutomaticMapUnit, resetAppState]);
 
 	const onMapUnitChange = useCallback(
@@ -123,6 +136,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 			setIsAutomaticMapUnit(false);
 			setMapUnit(mapUnit);
 			resetAppState();
+
+			record([{ EventType: EventTypeEnum.MAP_UNIT_CHANGE, Attributes: { type: String(mapUnit) } }]);
 		},
 		[setIsAutomaticMapUnit, setMapUnit, resetAppState]
 	);
@@ -206,12 +221,56 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 		setStackRegion(option);
 	};
 
+	const handleLanguageChange = useCallback(
+		(e: { target: { value: string } }) => {
+			record([
+				{
+					EventType: EventTypeEnum.LANGUAGE_CHANGED,
+					Attributes: { language: e.target.value, triggeredBy: TriggeredByEnum.SETTINGS_MODAL }
+				}
+			]);
+			i18n.changeLanguage(e.target.value);
+		},
+		[i18n]
+	);
+
+	const handleRouteOptionChange = useCallback(
+		(e: { target: { checked: boolean } }, routeOption: string) => {
+			setDefaultRouteOptions({ ...defaultRouteOptions, [routeOption]: e.target.checked });
+
+			record([
+				{
+					EventType: EventTypeEnum.ROUTE_OPTION_CHANGED,
+					Attributes: {
+						option: routeOption,
+						status: e.target.checked ? "on" : "off",
+						triggeredBy: TriggeredByEnum.SETTINGS_MODAL
+					}
+				}
+			]);
+		},
+		[defaultRouteOptions, setDefaultRouteOptions]
+	);
+
+	const handleRegionChange = useCallback(
+		(region: "Automatic" | RegionEnum) => {
+			setAutoRegion(region === "Automatic", region);
+			resetAwsStore();
+			resetAppState();
+		},
+		[setAutoRegion, resetAwsStore, resetAppState]
+	);
+
 	const optionItems: Array<SettingOptionItemType> = useMemo(
 		() => [
 			{
 				id: SettingOptionEnum.UNITS,
-				title: SettingOptionEnum.UNITS,
-				defaultValue: autoMapUnit.selected ? "Automatic" : currentMapUnit,
+				title: t("settings_modal__units.text"),
+				defaultValue: autoMapUnit.selected
+					? (t("settings_modal__automatic.text") as string)
+					: currentMapUnit === MapUnitEnum.IMPERIAL
+					? (t("settings_modal__imperial.text") as string)
+					: (t("settings_modal__metric.text") as string),
 				icon: <IconPeopleArrows />,
 				detailsComponent: (
 					<Flex
@@ -226,17 +285,14 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								value={"Automatic"}
 								checked={autoMapUnit.selected}
 								onChange={handleAutoMapUnitChange}
+								crossOrigin={undefined}
 							>
-								<TextEl marginLeft="1.23rem" text={"Automatic"} />
-								<TextEl
-									variation="tertiary"
-									marginLeft="1.23rem"
-									text={
-										autoMapUnit.system === IMPERIAL
-											? "Based on your browser settings (Miles, pounds)"
-											: "Based on your browser settings (Kilometers, kilograms)"
-									}
-								/>
+								<Text marginLeft="1.23rem">{t("settings_modal__automatic.text")}</Text>
+								<Text variation="tertiary" marginLeft="1.23rem">
+									{autoMapUnit.system === IMPERIAL
+										? t("settings_modal__auto_desc_1.text")
+										: t("settings_modal__auto_desc_2.text")}
+								</Text>
 							</Radio>
 						</Flex>
 						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
@@ -245,9 +301,12 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								value={IMPERIAL}
 								checked={!autoMapUnit.selected && currentMapUnit === IMPERIAL}
 								onChange={() => onMapUnitChange(IMPERIAL)}
+								crossOrigin={undefined}
 							>
-								<TextEl marginLeft="1.23rem" text={IMPERIAL} />
-								<TextEl variation="tertiary" marginLeft="1.23rem" text={"Miles, pounds"} />
+								<Text marginLeft="1.23rem">{t("settings_modal__imperial.text")}</Text>
+								<Text variation="tertiary" marginLeft="1.23rem">
+									{t("settings_modal__imperial_units.text")}
+								</Text>
 							</Radio>
 						</Flex>
 						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
@@ -256,9 +315,12 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								value={METRIC}
 								checked={!autoMapUnit.selected && currentMapUnit === METRIC}
 								onChange={() => onMapUnitChange(METRIC)}
+								crossOrigin={undefined}
 							>
-								<TextEl marginLeft="1.23rem" text={METRIC} />
-								<TextEl variation="tertiary" marginLeft="1.23rem" text={"Kilometers, kilograms"} />
+								<Text marginLeft="1.23rem">{t("settings_modal__metric.text")}</Text>
+								<Text variation="tertiary" marginLeft="1.23rem">
+									{t("settings_modal__metric_units.text")}
+								</Text>
 							</Radio>
 						</Flex>
 					</Flex>
@@ -266,7 +328,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 			},
 			{
 				id: SettingOptionEnum.DATA_PROVIDER,
-				title: SettingOptionEnum.DATA_PROVIDER,
+				title: t("settings_modal__data_provider.text"),
 				defaultValue: currentMapProvider,
 				icon: <IconMapOutlined />,
 				detailsComponent: (
@@ -282,9 +344,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								data-testid="data-provider-esri-radio"
 								value={ESRI}
 								checked={currentMapProvider === ESRI}
-								onChange={() => handleMapProviderChange(ESRI)}
+								onChange={() => handleMapProviderChange(ESRI, TriggeredByEnum.SETTINGS_MODAL)}
+								crossOrigin={undefined}
 							>
-								<TextEl marginLeft="1.23rem" text={ESRI} />
+								<Text marginLeft="1.23rem">{ESRI}</Text>
 							</Radio>
 						</Flex>
 						{/* HERE */}
@@ -293,9 +356,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								data-testid="data-provider-here-radio"
 								value={HERE}
 								checked={currentMapProvider === HERE}
-								onChange={() => handleMapProviderChange(HERE)}
+								onChange={() => handleMapProviderChange(HERE, TriggeredByEnum.SETTINGS_MODAL)}
+								crossOrigin={undefined}
 							>
-								<TextEl marginLeft="1.23rem" text={HERE} />
+								<Text marginLeft="1.23rem">{HERE}</Text>
 							</Radio>
 						</Flex>
 						{/* Grab */}
@@ -305,19 +369,32 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 									data-testid="data-provider-grab-radio"
 									value={GRAB}
 									checked={currentMapProvider === GRAB}
-									onChange={() => handleMapProviderChange(GRAB)}
+									onChange={() => handleMapProviderChange(GRAB, TriggeredByEnum.SETTINGS_MODAL)}
+									crossOrigin={undefined}
 								>
-									<TextEl marginLeft="1.23rem" text={`${GRAB}Maps`} />
+									<Text marginLeft="1.23rem">{`${GRAB}Maps`}</Text>
 								</Radio>
 							</Flex>
 						)}
+						{/* OpenData */}
+						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
+							<Radio
+								data-testid="data-provider-openData-radio"
+								value={OPEN_DATA}
+								checked={currentMapProvider === OPEN_DATA}
+								onChange={() => handleMapProviderChange(OPEN_DATA, TriggeredByEnum.SETTINGS_MODAL)}
+								crossOrigin={undefined}
+							>
+								<Text marginLeft="1.23rem">{OPEN_DATA}</Text>
+							</Radio>
+						</Flex>
 					</Flex>
 				)
 			},
 			{
 				id: SettingOptionEnum.MAP_STYLE,
-				title: SettingOptionEnum.MAP_STYLE,
-				defaultValue: selectedMapStyle,
+				title: t("map_style.text"),
+				defaultValue: t(selectedMapStyle as string) as string,
 				icon: <IconPaintroller />,
 				detailsComponent: (
 					<Flex
@@ -331,8 +408,37 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 				)
 			},
 			{
+				id: SettingOptionEnum.LANGUAGE,
+				title: t("language.text"),
+				defaultValue: languageSwitcherData.find(({ value }) => value === i18n.language)?.label as string,
+				icon: <IconLanguage />,
+				detailsComponent: (
+					<Flex
+						data-testid={`${SettingOptionEnum.UNITS}-details-component`}
+						gap={0}
+						direction="column"
+						padding="0rem 1.15rem"
+						overflow="scroll"
+					>
+						{languageSwitcherData.map(({ value, label }, idx) => (
+							<Flex key={idx} style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
+								<Radio
+									data-testid="unit-automatic-radio"
+									value={value}
+									checked={i18n.language === value}
+									onChange={handleLanguageChange}
+									crossOrigin={undefined}
+								>
+									<Text marginLeft="1.23rem">{label}</Text>
+								</Radio>
+							</Flex>
+						))}
+					</Flex>
+				)
+			},
+			{
 				id: SettingOptionEnum.ROUTE_OPTIONS,
-				title: SettingOptionEnum.ROUTE_OPTIONS,
+				title: t("settings_modal__default_route_options.text"),
 				icon: <IconShuffle />,
 				detailsComponent: (
 					<Flex
@@ -344,27 +450,94 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 						<CheckboxField
 							data-testid="avoid-tolls"
 							className="sm-checkbox"
-							label="Avoid tolls"
-							name="Avoid tolls"
+							label={t("avoid_tolls.text")}
+							name={t("avoid_tolls.text")}
 							value="Avoid tolls"
 							checked={defaultRouteOptions.avoidTolls}
-							onChange={e => setDefaultRouteOptions({ ...defaultRouteOptions, avoidTolls: e.target.checked })}
+							onChange={e => handleRouteOptionChange(e, "avoidTolls")}
+							crossOrigin={undefined}
 						/>
 						<CheckboxField
 							data-testid="avoid-ferries"
 							className="sm-checkbox"
-							label="Avoid ferries"
-							name="Avoid ferries"
+							label={t("avoid_ferries.text")}
+							name={t("avoid_ferries.text")}
 							value="Avoid ferries"
 							checked={defaultRouteOptions.avoidFerries}
-							onChange={e => setDefaultRouteOptions({ ...defaultRouteOptions, avoidFerries: e.target.checked })}
+							onChange={e => handleRouteOptionChange(e, "avoidFerries")}
+							crossOrigin={undefined}
 						/>
 					</Flex>
 				)
 			},
 			{
+				id: SettingOptionEnum.REGION,
+				title: t("settings_modal__region.text"),
+				defaultValue: autoRegion
+					? (t("settings_modal__automatic.text") as string)
+					: currentRegion === RegionEnum.EU_WEST_1
+					? t("regions__eu_west__region.text")
+					: currentRegion === RegionEnum.AP_SOUTHEAST_1
+					? t("regions__ap_southeast__region.text")
+					: t("regions__us_east__region.text"),
+				icon: <IconGlobe />,
+				detailsComponent: (
+					<Flex
+						data-testid={`${SettingOptionEnum.REGION}-details-component`}
+						gap={0}
+						direction="column"
+						padding="0rem 1.15rem"
+					>
+						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
+							<Radio
+								data-testid="region-automatic-radio"
+								value={"Automatic"}
+								checked={autoRegion}
+								onChange={() => handleRegionChange("Automatic")}
+								crossOrigin={undefined}
+							>
+								<Text marginLeft="1.23rem">{t("settings_modal__automatic.text")}</Text>
+							</Radio>
+						</Flex>
+						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
+							<Radio
+								data-testid={`region-${RegionEnum.EU_WEST_1}-radio`}
+								value={RegionEnum.EU_WEST_1}
+								checked={!autoRegion && currentRegion === RegionEnum.EU_WEST_1}
+								onChange={() => handleRegionChange(RegionEnum.EU_WEST_1)}
+								crossOrigin={undefined}
+							>
+								<Text marginLeft="1.23rem">{t("regions__eu_west_1.text")}</Text>
+							</Radio>
+						</Flex>
+						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
+							<Radio
+								data-testid={`region-${RegionEnum.AP_SOUTHEAST_1}-radio`}
+								value={RegionEnum.AP_SOUTHEAST_1}
+								checked={!autoRegion && currentRegion === RegionEnum.AP_SOUTHEAST_1}
+								onChange={() => handleRegionChange(RegionEnum.AP_SOUTHEAST_1)}
+								crossOrigin={undefined}
+							>
+								<Text marginLeft="1.23rem">{t("regions__ap_southeast_1.text")}</Text>
+							</Radio>
+						</Flex>
+						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
+							<Radio
+								data-testid={`region-${RegionEnum.US_EAST_1}-radio`}
+								value={RegionEnum.US_EAST_1}
+								checked={!autoRegion && currentRegion === RegionEnum.US_EAST_1}
+								onChange={() => handleRegionChange(RegionEnum.US_EAST_1)}
+								crossOrigin={undefined}
+							>
+								<Text marginLeft="1.23rem">{t("regions__us_east_1.text")}</Text>
+							</Radio>
+						</Flex>
+					</Flex>
+				)
+			},
+			{
 				id: SettingOptionEnum.AWS_CLOUD_FORMATION,
-				title: TITLE,
+				title: t("connect_aws_account.text"),
 				icon: <IconCloud />,
 				detailsComponent: (
 					<Flex
@@ -382,68 +555,116 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								}}
 							/>
 							<Flex gap={0} direction="column" marginTop="1.23rem">
-								<Text marginTop="0.31rem" variation="tertiary" whiteSpace="pre-line">
-									{TITLE_DESC}
+								<Text
+									marginTop="0.31rem"
+									variation="tertiary"
+									whiteSpace="pre-line"
+									textAlign={isLtr ? "start" : "end"}
+								>
+									{t("caam__desc.text")}
 								</Text>
 							</Flex>
 						</Flex>
 						<Flex className="sm-aws-cloudformation-form">
 							<Flex
 								gap={0}
-								justifyContent="flex-start"
+								justifyContent={isLtr ? "flex-start" : "flex-end"}
 								alignItems="center"
 								margin="1.85rem 0rem 1.85rem 0rem"
 								width="100%"
 							>
-								<Text className="bold" fontSize="1.08rem">
-									{HOW_TO}
+								<Text className="bold" fontSize="1.08rem" textAlign={isLtr ? "start" : "end"} order={isLtr ? 1 : 2}>
+									{t("caam__htct.text")}
 								</Text>
-								<DropdownEl defaultOption={stackRegion} options={OPTIONS} onSelect={_onSelect} showSelected />
+								<View order={isLtr ? 2 : 1}>
+									<DropdownEl defaultOption={stackRegion} options={regionsData} onSelect={_onSelect} showSelected />
+								</View>
 							</Flex>
 							<Flex gap={0} marginBottom="1.85rem" alignSelf="flex-start">
-								<View className="step-number">
-									<TextEl fontFamily="AmazonEmber-Bold" text="1" />
+								<View
+									className="step-number"
+									margin={isLtr ? "0rem 1.23rem 0rem 0rem" : "0rem 0rem 0rem 1.23rem"}
+									order={isLtr ? 1 : 2}
+								>
+									<Text className="bold">1</Text>
 								</View>
-								<View>
+								<View order={isLtr ? 2 : 1}>
 									<Flex gap={5}>
-										<Text className="bold">
+										<Text className="bold" textAlign={isLtr ? "start" : "end"}>
 											<Link href={cloudFormationLink} target="_blank">
-												Click here
+												{t("caam__click_here.text")}
 											</Link>
-											{STEP1}
+											{t("caam__step_1__title.text")}
 										</Text>
 									</Flex>
-									<TextEl className="step-two-description" text={STEP1_DESC} />
+									<Text className="step-two-description" textAlign={isLtr ? "start" : "end"}>
+										{t("caam__step_1__desc.text")}
+									</Text>
 								</View>
 							</Flex>
 							<Flex gap={0} marginBottom="1.85rem" alignSelf="flex-start">
-								<View className="step-number">
-									<TextEl fontFamily="AmazonEmber-Bold" text="2" />
+								<View
+									className="step-number"
+									margin={isLtr ? "0rem 1.23rem 0rem 0rem" : "0rem 0rem 0rem 1.23rem"}
+									order={isLtr ? 1 : 2}
+								>
+									<Text className="bold" textAlign={isLtr ? "start" : "end"}>
+										2
+									</Text>
 								</View>
-								<View>
-									<TextEl fontFamily="AmazonEmber-Bold" text={STEP2} />
-									<Text className="step-two-description">
-										{STEP2_DESC}
+								<View order={isLtr ? 2 : 1}>
+									<Text className="bold" textAlign={isLtr ? "start" : "end"}>
+										{t("caam__step_2__title.text")}
+									</Text>
+									<Text className="step-two-description" textAlign={isLtr ? "start" : "end"}>
+										{t("caam__step_2__desc.text")}
 										<a href={HELP} target="_blank" rel="noreferrer">
-											Learn more
+											{t("learn_more.text")}
 										</a>
 									</Text>
 								</View>
 							</Flex>
 							<Flex gap={0} marginBottom="1.85rem" alignSelf="flex-start">
-								<View className="step-number">
-									<TextEl fontFamily="AmazonEmber-Bold" text="3" />
+								<View
+									className="step-number"
+									margin={isLtr ? "0rem 1.23rem 0rem 0rem" : "0rem 0rem 0rem 1.23rem"}
+									order={isLtr ? 1 : 2}
+								>
+									<Text className="bold" textAlign={isLtr ? "start" : "end"}>
+										3
+									</Text>
 								</View>
-								<View>
-									<TextEl fontFamily="AmazonEmber-Bold" text={STEP3} />
-									<TextEl className="step-two-description" text={STEP3_DESC} />
+								<View order={isLtr ? 2 : 1}>
+									<Text className="bold" textAlign={isLtr ? "start" : "end"}>
+										{t("caam__step_3__title.text")}
+									</Text>
+									<Text className="step-two-description" textAlign={isLtr ? "start" : "end"}>
+										{t("caam__step_3__desc.text")}
+									</Text>
 								</View>
 							</Flex>
 							{isUserAwsAccountConnected ? (
 								!isAuthenticated ? (
 									<>
-										<Button variation="primary" fontFamily="AmazonEmber-Bold" width="100%" onClick={_onLogin}>
-											Sign in
+										<Button
+											variation="primary"
+											fontFamily="AmazonEmber-Bold"
+											width="100%"
+											onClick={async () => {
+												await record(
+													[
+														{
+															EventType: EventTypeEnum.SIGN_IN_STARTED,
+															Attributes: { triggeredBy: TriggeredByEnum.SETTINGS_MODAL }
+														}
+													],
+													["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
+												);
+
+												_onLogin();
+											}}
+										>
+											{t("sign_in.text")}
 										</Button>
 										<Button
 											variation="primary"
@@ -453,12 +674,12 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 											marginTop="0.62rem"
 											onClick={onDisconnectAwsAccount}
 										>
-											Disconnect AWS Account
+											{t("disconnect_aws_account.text")}
 										</Button>
 									</>
 								) : (
 									<Button variation="primary" fontFamily="AmazonEmber-Bold" width="100%" onClick={_onLogout}>
-										Sign out
+										{t("sign_out.text")}
 									</Button>
 								)
 							) : (
@@ -469,18 +690,21 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 												key={key}
 												containerMargin="0rem 0rem 1.85rem 0rem"
 												label={key}
-												placeholder={`Enter ${key}`}
+												placeholder={`${t("caam__enter.text")} ${key}`}
 												value={formValues[key as keyof ConnectFormValuesType]}
 												onChange={e => onChangeFormValues(key, e.target.value.trim())}
+												dir={langDir}
 											/>
 										);
 									})}
 									<Button variation="primary" width="100%" isDisabled={!isBtnEnabled} onClick={onConnect}>
-										Connect
+										{t("caam__connect.text")}
 									</Button>
-									<TextEl marginTop="0.62rem" text={AGREE} />
+									<Text marginTop="0.62rem">{t("caam__agree.text")}</Text>
 									<View onClick={() => window.open(AWS_TERMS_AND_CONDITIONS, "_blank")}>
-										<TextEl className="hyperlink" fontFamily="AmazonEmber-Bold" text="Terms & Conditions" />
+										<Text className="hyperlink" fontFamily="AmazonEmber-Bold">
+											{t("t&c.text")}
+										</Text>
 									</View>
 								</>
 							)}
@@ -499,7 +723,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 			handleMapProviderChange,
 			selectedMapStyle,
 			defaultRouteOptions,
-			setDefaultRouteOptions,
 			isUserAwsAccountConnected,
 			onDisconnectAwsAccount,
 			onConnect,
@@ -512,58 +735,113 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 			_onLogout,
 			stackRegion,
 			cloudFormationLink,
-			mapButtons
+			t,
+			langDir,
+			i18n,
+			isLtr,
+			mapButtons,
+			handleLanguageChange,
+			handleRouteOptionChange,
+			autoRegion,
+			currentRegion,
+			handleRegionChange
 		]
 	);
 
 	const renderOptionItems = useMemo(() => {
-		return optionItems.map(({ id, title, defaultValue, icon }) => (
+		const filtered = optionItems.filter(({ id }) => {
+			if (isUserAwsAccountConnected) {
+				return id !== SettingOptionEnum.REGION;
+			} else {
+				return id;
+			}
+		});
+
+		return filtered.map(({ id, title, defaultValue, icon }) => (
 			<Flex
 				data-testid={`option-item-${id}`}
 				key={id}
-				className={selectedOption === id ? "option-item selected" : "option-item"}
+				className={settingsOptions === id ? "option-item selected" : "option-item"}
 				onClick={() => {
+					if (id === SettingOptionEnum.AWS_CLOUD_FORMATION) {
+						record(
+							[
+								{
+									EventType: EventTypeEnum.AWS_ACCOUNT_CONNECTION_STARTED,
+									Attributes: { triggeredBy: TriggeredByEnum.SETTINGS_MODAL }
+								}
+							],
+							["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
+						);
+					} else if (settingsOptions === SettingOptionEnum.AWS_CLOUD_FORMATION) {
+						const columnsHavingText = Object.keys(formValues)
+							.filter(key => !!formValues[key as keyof ConnectFormValuesType].trim())
+							.map(valueKey => valueKey)
+							.join(",");
+
+						record(
+							[
+								{
+									EventType: EventTypeEnum.AWS_ACCOUNT_CONNECTION_STOPPED,
+									Attributes: {
+										triggeredBy: TriggeredByEnum.SETTINGS_MODAL,
+										fieldsFilled: columnsHavingText,
+										action: AnalyticsEventActionsEnum.TAB_CHANGED
+									}
+								}
+							],
+							["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
+						);
+					}
+
 					resetSearchAndFilters();
-					setSelectedOption(id);
+					setSettingsOptions(id);
 				}}
 			>
 				{icon}
 				<Flex gap={0} direction="column">
-					<TextEl fontSize="1rem" lineHeight="1.38rem" text={title} />
-					{defaultValue && <TextEl fontSize="1rem" lineHeight="1.38rem" variation="tertiary" text={defaultValue} />}
+					<Text fontSize="1rem" lineHeight="1.38rem">
+						{title}
+					</Text>
+					{defaultValue && (
+						<Text fontSize="1rem" lineHeight="1.38rem" variation="tertiary">
+							{defaultValue}{" "}
+						</Text>
+					)}
 				</Flex>
 			</Flex>
 		));
-	}, [optionItems, selectedOption, resetSearchAndFilters]);
+	}, [optionItems, isUserAwsAccountConnected, settingsOptions, resetSearchAndFilters, setSettingsOptions, formValues]);
 
 	const renderOptionDetails = useMemo(() => {
-		const [optionItem] = optionItems.filter(({ id }) => selectedOption === id);
+		const [optionItem] = optionItems.filter(({ id }) => settingsOptions === id);
 
 		return (
 			<>
-				<TextEl fontSize="1rem" lineHeight="1.38rem" padding={"1.46rem 0rem 1.46rem 1.15rem"} text={optionItem.title} />
+				<Text fontSize="1rem" lineHeight="1.38rem" padding={"1.46rem 0rem 1.46rem 1.15rem"}>
+					{optionItem.title}
+				</Text>
 				<Divider className="title-divider" />
 				{optionItem.detailsComponent}
 			</>
 		);
-	}, [optionItems, selectedOption]);
+	}, [optionItems, settingsOptions]);
 
 	return (
 		<Modal
 			data-testid="settings-modal"
 			open={open}
-			onClose={onClose}
+			onClose={() => {
+				setSettingsOptions(SettingOptionEnum.UNITS);
+				onClose();
+			}}
 			className="settings-modal"
 			content={
 				<Flex className="settings-modal-content">
 					<Flex className="options-container">
-						<TextEl
-							fontFamily="AmazonEmber-Bold"
-							fontSize="1.23rem"
-							lineHeight="1.85rem"
-							padding={"1.23rem 0rem 1.23rem 1.23rem"}
-							text="Settings"
-						/>
+						<Text className="bold" fontSize="1.23rem" lineHeight="1.85rem" padding={"1.23rem 0rem 1.23rem 1.23rem"}>
+							{t("settings.text")}
+						</Text>
 						{renderOptionItems}
 					</Flex>
 					<Divider orientation="vertical" className="col-divider" />

@@ -1,5 +1,7 @@
+import i18n from "@demo/locales/i18n";
 import { faker } from "@faker-js/faker";
 import { RenderResult, render, screen } from "@testing-library/react";
+import { I18nextProvider } from "react-i18next";
 import { BrowserRouter } from "react-router-dom";
 
 import List from "./List";
@@ -20,10 +22,11 @@ describe("<List/>", () => {
 
 	const renderListComponent = (props?: { hideIcons?: boolean }) =>
 		render(
-			// using BrowserRouter because useLocation doesn't work without it and thus throws error
-			<BrowserRouter>
-				<List useDefaultStyles {...props} listArray={listArray} />
-			</BrowserRouter>
+			<I18nextProvider i18n={i18n}>
+				<BrowserRouter>
+					<List useDefaultStyles {...props} listArray={listArray} />
+				</BrowserRouter>
+			</I18nextProvider>
 		);
 
 	beforeEach(() => {

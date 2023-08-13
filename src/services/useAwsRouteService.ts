@@ -24,7 +24,7 @@ const useAwsRouteService = () => {
 					?.calculateRoute({
 						...params,
 						CalculatorName:
-							mapProvider === MapProviderEnum.ESRI
+							mapProvider === MapProviderEnum.ESRI || mapProvider === MapProviderEnum.OPEN_DATA
 								? ESRI
 								: mapProvider === MapProviderEnum.HERE
 								? HERE

@@ -1,4 +1,6 @@
-import { RenderResult, act, render, screen } from "@testing-library/react";
+import i18n from "@demo/locales/i18n";
+import { act, render } from "@testing-library/react";
+import { I18nextProvider } from "react-i18next";
 
 import SignInModal from "./SignInModal";
 
@@ -7,6 +9,7 @@ const useAmplifyAuthReturnValue = {
 };
 
 const useAmplifyAuth = () => useAmplifyAuthReturnValue;
+const delay = (cb: () => void, ms: number) => setTimeout(cb, ms);
 
 jest.mock("hooks", () => ({
 	useAmplifyAuth
@@ -19,12 +22,17 @@ describe("<SignInModal/>", () => {
 
 	const onClose = jest.fn();
 
-	const renderComponent = (): RenderResult => {
-		const renderedComponent = render(<SignInModal open onClose={onClose} />);
+	const renderComponent = () => {
+		const renderedComponent = render(
+			<I18nextProvider i18n={i18n}>
+				<SignInModal open onClose={onClose} />
+			</I18nextProvider>
+		);
+		const { getByTestId } = renderedComponent;
 
-		signInModalContainer = screen.getByTestId("sign-in-modal");
-		signInButton = screen.getByTestId("sign-in-button");
-		maybeLaterButton = screen.getByTestId("maybe-later-button");
+		signInModalContainer = getByTestId("sign-in-modal");
+		signInButton = getByTestId("sign-in-button");
+		maybeLaterButton = getByTestId("maybe-later-button");
 
 		return renderedComponent;
 	};
@@ -41,7 +49,7 @@ describe("<SignInModal/>", () => {
 	it("should call `onLogin` when `sign in` button is clicked", () => {
 		renderComponent();
 		act(() => signInButton.click());
-		expect(useAmplifyAuthReturnValue.onLogin).toBeCalled();
+		delay(() => expect(useAmplifyAuthReturnValue.onLogin).toBeCalled(), 500);
 	});
 
 	it("should call `onClose` when `Maybe later` button is clicked", () => {

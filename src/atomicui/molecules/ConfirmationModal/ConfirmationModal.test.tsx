@@ -1,48 +1,62 @@
+import i18n from "@demo/locales/i18n";
 import { act, render } from "@testing-library/react";
+import { I18nextProvider } from "react-i18next";
 
 import ConfirmationModal from "./ConfirmationModal";
 
-const onClose = jest.fn();
-const onConfirm = jest.fn();
-const handleLeanMore = jest.fn();
-
 describe("<ConfirmationModal />", () => {
+	const props: {
+		open: boolean;
+		onClose: () => void;
+		onConfirm: () => void;
+		description: string | React.ReactNode;
+		showLearnMore: boolean;
+		handleLearnMore: () => {};
+	} = {
+		open: false,
+		onClose: jest.fn(),
+		onConfirm: jest.fn(),
+		description: "description",
+		showLearnMore: true,
+		handleLearnMore: jest.fn()
+	};
+
+	const renderComponent = () => {
+		return render(
+			<I18nextProvider i18n={i18n}>
+				<ConfirmationModal {...props} />
+			</I18nextProvider>
+		);
+	};
+
 	it("should not render when open is false", () => {
-		const { queryByTestId } = render(<ConfirmationModal open={false} onClose={onClose} onConfirm={onConfirm} />);
+		const { queryByTestId } = renderComponent();
 		expect(queryByTestId("confirmation-modal-container")).not.toBeInTheDocument();
 	});
 
 	it("should render successfully when description is of type string", () => {
-		const { getByTestId } = render(<ConfirmationModal open={true} onClose={onClose} onConfirm={onConfirm} />);
+		props.open = true;
+		const { getByTestId } = renderComponent();
 		expect(getByTestId("confirmation-modal-container")).toBeInTheDocument();
 	});
 
 	it("should render successfully when description is of type node", () => {
-		const { getByTestId } = render(
-			<ConfirmationModal open={true} onClose={onClose} onConfirm={onConfirm} description={<></>} />
-		);
+		props.description = <div>description</div>;
+		const { getByTestId } = renderComponent();
 		expect(getByTestId("confirmation-modal-container")).toBeInTheDocument();
 	});
 
 	it("should trigger confirmation button", () => {
-		const { getByTestId } = render(<ConfirmationModal open={true} onClose={onClose} onConfirm={onConfirm} />);
+		const { getByTestId } = renderComponent();
 		const confirmButton = getByTestId("confirmation-button");
 		act(() => confirmButton.click());
-		expect(onConfirm).toBeCalled();
+		expect(props.onConfirm).toBeCalled();
 	});
 
 	it("should render with learn more button", () => {
-		const { getByTestId } = render(
-			<ConfirmationModal
-				open={true}
-				onClose={onClose}
-				onConfirm={onConfirm}
-				showLearnMore
-				handleLeanMore={handleLeanMore}
-			/>
-		);
+		const { getByTestId } = renderComponent();
 		const learnMoreButton = getByTestId("confirmation-learn-more-button");
 		act(() => learnMoreButton.click());
-		expect(handleLeanMore).toBeCalled();
+		expect(props.handleLearnMore).toBeCalled();
 	});
 });

@@ -1,0 +1,196 @@
+/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
+/* SPDX-License-Identifier: MIT-0 */
+
+.amplify-card.unauth-simulation-card {
+	width: 27.7rem;
+	position: absolute;
+	top: 1.62rem;
+	overflow: hidden;
+	z-index: 4;
+
+	.unauth-simulation-card-header {
+		gap: 0;
+		height: 3.08rem;
+		padding: 0.77rem;
+		justify-content: end;
+		align-items: center;
+
+		svg {
+			fill: #8e8e93;
+			width: 1.54rem;
+			height: 1.54rem;
+			cursor: pointer;
+
+			&:hover {
+				fill: #008296;
+			}
+		}
+	}
+
+	.unauth-simulation-card-body {
+		gap: 0;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		padding: 0.26rem 1.85rem 1.85rem 1.85rem;
+
+		svg {
+			width: 4.71rem;
+			height: 5.57rem;
+		}
+	}
+
+	.unauth-simulation-card-footer {
+		gap: 0;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		padding: 1.38rem 1.85rem;
+		background-color: var(--light-color-2);
+	}
+
+	@media only screen and (max-width: 480px) {
+		width: 75%;
+	}
+}
+
+.amplify-card.unauthSimulation-card {
+	width: 27.69rem;
+	position: absolute;
+	top: 1.62rem;
+	z-index: 4;
+	max-height: 90vh;
+
+	.card-close {
+		position: relative;
+		z-index: 1;
+		cursor: pointer;
+		fill: var(--grey-color);
+	}
+
+	.start-simulation-container {
+		position: absolute;
+		top: -6.3rem;
+		display: flex;
+		justify-content: center;
+		flex-direction: column;
+
+		.simulation-icon {
+			width: 80%;
+		}
+
+		.text-container {
+			position: relative;
+			top: -7rem;
+			justify-content: center;
+			flex-direction: column;
+			gap: 0.8rem;
+			padding: 0 1.84rem;
+
+			.primary-icon {
+				path {
+					fill: var(--primary-color);
+				}
+			}
+		}
+	}
+	.simulation-container {
+		.simulation-header {
+			border-bottom: 1px solid var(--grey-color-3);
+		}
+		.tracking-history-container {
+			overflow-y: scroll;
+		}
+		.back-icon {
+			fill: var(--grey-color);
+		}
+		.bell-icon-container {
+			cursor: pointer;
+			&.bell-active,
+			&:hover {
+				background-color: var(--primary-alpha-light-color);
+				path {
+					fill: var(--primary-color);
+				}
+			}
+			.notification-bubble {
+				width: 8px;
+				height: 8px;
+				background-color: orange;
+				border-radius: 50%;
+				display: flex;
+				position: absolute;
+				top: 6px;
+				right: 9px;
+			}
+		}
+		.bell-icon {
+			path {
+				fill: var(--grey-color);
+			}
+		}
+
+		.routes-notification-container {
+			> button {
+				width: 40%;
+			}
+		}
+		.no-tracking-history {
+			min-height: 20rem;
+			align-items: center;
+			padding: 0 4rem;
+			text-align: center;
+			color: var(--grey-color);
+		}
+		.tracking-icon-container {
+			flex-direction: column;
+			align-items: center;
+			gap: 6px;
+			> .geofence-icon {
+				rect {
+					fill: var(--primary-color);
+				}
+			}
+
+			.bubble-icon {
+				width: 4px;
+				height: 4px;
+				background-color: var(--primary-color);
+				border-radius: 50%;
+			}
+		}
+
+		.bus-container {
+			align-items: center;
+			margin-top: 1.5rem;
+			> p {
+				width: 80%;
+			}
+		}
+
+		.select-box {
+			.amplify-select-wrapper {
+				background-color: red;
+			}
+		}
+	}
+}
+
+.confirmation-modal-container {
+	.amplify-flex.modal-container {
+		.confirmation-modal {
+			height: 35% !important;
+		}
+	}
+
+	.amplify-text.amplify-text--tertiary.small-text {
+		padding: 0 1rem;
+		font-size: 13px;
+		font-family: "AmazonEmber-Regular";
+		font-weight: 400;
+	}
+
+	.amplify-button.amplify-field-group__control.amplify-button--primary {
+		height: 3rem;
+	}
+}

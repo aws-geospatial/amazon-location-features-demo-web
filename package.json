@@ -1,8 +1,24 @@
 {
-	"name": "amazon-location-web-demo",
+	"name": "amazon-location-features-demo-web",
 	"private": true,
 	"version": "0.0.0",
+	"files": [
+		"lib"
+	],
 	"type": "module",
+	"main": "./lib/demo-page.es.js",
+	"module": "./lib/demo-page.es.js",
+	"types": "./lib/index.d.ts",
+	"exports": {
+		".": {
+			"import": "./lib/demo-page.es.js",
+			"require": "./lib/demo-page.es.js"
+		},
+		"./lib/style.css": {
+			"import": "./lib/style.css",
+			"require": "./lib/style.css"
+		}
+	},
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc && vite build",
@@ -15,23 +31,32 @@
 		"test": "react-scripts test",
 		"coverage": "react-scripts test --coverage --watchAll",
 		"ci-test": "CI=true react-scripts test",
-		"prepare": "husky install"
+		"prepare": "husky install",
+		"lib": "tsc && vite build --config vite.library.ts",
+		"local-lib": "tsc && vite build --config vite.library.ts && node extra/prepare-local-lib/index.js",
+		"run-translate-content": "cd extra/translation-script-content && yarn install && node index.js && cd ../../",
+		"run-translate-content-update": "cd extra/translation-script-content && yarn install && node update-translation.js && cd ../../"
 	},
 	"dependencies": {
 		"@aws-amplify/ui-react": "^3.5.11",
+		"@aws-sdk/credential-providers": "^3.370.0",
 		"@turf/turf": "^6.5.0",
 		"aws-amplify": "^4.3.43",
 		"aws-sdk": "^2.1248.0",
 		"date-fns": "^2.29.3",
+		"i18next": "^23.2.8",
+		"i18next-browser-languagedetector": "^7.1.0",
 		"mapbox-gl-draw-circle": "^1.1.2",
 		"ngeohash": "^0.6.3",
 		"ramda": "^0.28.0",
 		"react": "^18.2.0",
+		"react-device-detect": "^2.2.3",
 		"react-dom": "^18.2.0",
+		"react-i18next": "^13.0.1",
 		"react-router-dom": "^6.4.3",
 		"react-toastify": "^9.1.1",
 		"react-tooltip": "^5.10.0",
-		"zustand": "^4.1.4"
+		"zustand": "^4.3.9"
 	},
 	"devDependencies": {
 		"@faker-js/faker": "^7.6.0",
@@ -70,6 +95,7 @@
 		"stylelint-prettier": "^2.0.0",
 		"typescript": "^4.9.3",
 		"vite": "^3.2.7",
+		"vite-plugin-dts": "^2.3.0",
 		"vite-plugin-eslint": "^1.7.0",
 		"vite-plugin-svgr": "^2.2.1"
 	},
@@ -78,7 +104,8 @@
 	},
 	"jest": {
 		"moduleNameMapper": {
-			"^@demo/(.*)$": "<rootDir>/src/$1"
+			"^@demo/(.*)$": "<rootDir>/src/$1",
+			"\\.(css|scss)$": "<rootDir>/__mocks__/styleMock.ts"
 		},
 		"collectCoverageFrom": [
 			"**/*.{js,jsx,ts,tsx}",

@@ -6,5 +6,4 @@ export * from "./List";
 export * from "./Loader";
 export * from "./Logo";
 export * from "./Modal";
-export * from "./TextEl";
 export * from "./DropdownEl";

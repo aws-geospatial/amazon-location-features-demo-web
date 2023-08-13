@@ -9,6 +9,8 @@ lerna-debug.log*
 
 # Non-editor directories
 node_modules
+lib
+demo-app-lib
 dist
 dist-ssr
 *.local

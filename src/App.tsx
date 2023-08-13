@@ -4,7 +4,7 @@
 import { StrictMode, Suspense } from "react";
 
 import { Loader } from "@aws-amplify/ui-react";
-import { AppWrapper, RouteChunks, ToastContainer } from "@demo/core";
+import { AppWrapper, RouteChunks, ToastContainer, UnauthSimulationToastContainer } from "@demo/core";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 const App = () => {
@@ -26,6 +26,7 @@ const App = () => {
 			>
 				<AppWrapper>
 					<ToastContainer />
+					<UnauthSimulationToastContainer />
 					<RouterProvider fallbackElement={<>OOPS!</>} router={router} />
 				</AppWrapper>
 			</Suspense>

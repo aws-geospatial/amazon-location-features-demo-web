@@ -3,9 +3,8 @@
 
 import React from "react";
 
-import { View } from "@aws-amplify/ui-react";
+import { Text, View } from "@aws-amplify/ui-react";
 import { IconGeofenceMarker } from "@demo/assets";
-import { TextEl } from "@demo/atomicui/atoms";
 import { Marker } from "react-map-gl";
 
 interface GeofenceMarkerProps {
@@ -14,6 +13,7 @@ interface GeofenceMarkerProps {
 	description: string;
 	showPointer?: boolean;
 	onClick?: () => void;
+	hideDescription?: boolean;
 }
 
 const GeofenceMarker: React.FC<GeofenceMarkerProps> = ({
@@ -21,7 +21,8 @@ const GeofenceMarker: React.FC<GeofenceMarkerProps> = ({
 	lat,
 	description,
 	showPointer = false,
-	onClick = () => {}
+	onClick = () => {},
+	hideDescription = false
 }) => {
 	return (
 		<Marker
@@ -38,16 +39,18 @@ const GeofenceMarker: React.FC<GeofenceMarkerProps> = ({
 			onClick={onClick}
 		>
 			<IconGeofenceMarker />
-			<View
-				style={{
-					position: "absolute",
-					width: "150px",
-					top: "10px",
-					left: "35px"
-				}}
-			>
-				<TextEl fontFamily="AmazonEmber-Bold" text={description} />
-			</View>
+			{!hideDescription && (
+				<View
+					style={{
+						position: "absolute",
+						width: "150px",
+						top: "10px",
+						left: "35px"
+					}}
+				>
+					<Text className="bold">{description}</Text>
+				</View>
+			)}
 		</Marker>
 	);
 };

@@ -11,17 +11,17 @@ const useAwsIotService = () => {
 
 	return useMemo(
 		() => ({
-			attachPolicy: async (identityId: string) => {
+			attachPolicy: async (identityId: string, unauthUser = false) => {
 				const params: Iot.AttachPolicyRequest = {
-					policyName: "AmazonLocationIotPolicy",
+					policyName: unauthUser ? "AmazonLocationIotPolicyUnauth" : "AmazonLocationIotPolicy",
 					target: identityId
 				};
 
 				return await iotClient?.attachPolicy(params).promise();
 			},
-			detachPolicy: async (identityId: string) => {
+			detachPolicy: async (identityId: string, unauthUser = false) => {
 				const params: Iot.AttachPolicyRequest = {
-					policyName: "AmazonLocationIotPolicy",
+					policyName: unauthUser ? "AmazonLocationIotPolicyUnauth" : "AmazonLocationIotPolicy",
 					target: identityId
 				};
 

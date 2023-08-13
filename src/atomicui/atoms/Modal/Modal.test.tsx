@@ -6,7 +6,6 @@ describe("<Modal/>", () => {
 	let modalContainer: HTMLElement | null;
 	let modalContent: HTMLElement | null;
 	let modalCloseIconContainer: HTMLElement | null;
-
 	let isOpen = true;
 
 	const onClose = () => {

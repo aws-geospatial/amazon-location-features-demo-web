@@ -76,7 +76,7 @@
 	position: absolute;
 	top: 1.54rem;
 	right: 5.38rem;
-	z-index: 4;
+	z-index: 3;
 	.amplify-flex.map-styles-header {
 		gap: 0;
 		padding: 0rem 1.23rem;
@@ -96,6 +96,12 @@
 					}
 				}
 			}
+		}
+	}
+
+	@media only screen and (max-width: 950px) {
+		& {
+			z-index: 4;
 		}
 	}
 
@@ -235,32 +241,6 @@
 		border-bottom-left-radius: 0.6rem;
 		border-bottom-right-radius: 0.6rem;
 		padding: 1rem 1.5rem;
-
-		.filters-checkbox {
-			.amplify-checkbox__label {
-				font-size: 1rem;
-				color: var(--tertiary-color);
-				margin-left: 0.4rem;
-			}
-			.amplify-flex.amplify-checkbox__button {
-				&:before {
-					background: var(--light-color-2);
-					border: 1px solid var(--grey-color-2);
-				}
-				span {
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					svg {
-						stroke-width: 4px;
-						stroke-linejoin: bevel;
-						stroke: var(--white-color);
-						width: 8px;
-						height: 8px;
-					}
-				}
-			}
-		}
 	}
 
 	.amplify-divider.amplify-divider--horizontal.mb-divider {
