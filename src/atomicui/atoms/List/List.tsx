@@ -6,6 +6,7 @@ import { ReactNode } from "react";
 import { Flex, Link, Text, View, ViewProps } from "@aws-amplify/ui-react";
 import { uuid } from "@demo/utils/uuid";
 import { omit } from "ramda";
+import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
 
 interface ListArr {
@@ -61,6 +62,7 @@ const List: React.FC<ListProps> = ({
 	hideIcons = false,
 	...props
 }) => {
+	const { t } = useTranslation();
 	let ulClass = props.className;
 	/* Download css only if the component useDefaultStyles prop is true */
 	const shouldUseDefaultStyles = Boolean(useDefaultStyles);
@@ -94,7 +96,7 @@ const List: React.FC<ListProps> = ({
 							isExternalLink={isExternalLink}
 							linkTo={item?.link || "#"}
 						>
-							{labelIsIcon ? <img loading="lazy" src={item.label} /> : item.label}
+							{labelIsIcon ? <img loading="lazy" src={item.label} /> : t(item.label)}
 						</LinkWrapper>
 
 						{item.subMenu?.length && (
@@ -106,7 +108,7 @@ const List: React.FC<ListProps> = ({
 										href={subMenuItem.link!}
 										isExternal={checkIfExternalLink(subMenuItem.link || "#")}
 									>
-										<Text className="sub-menu-item-label">{subMenuItem.label}</Text>
+										<Text className="sub-menu-item-label">{t(subMenuItem.label)}</Text>
 									</Link>
 								))}
 							</View>

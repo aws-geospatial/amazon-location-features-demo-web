@@ -8,74 +8,89 @@ import { IconClose, IconCompass, IconGear, IconGeofence, IconInfo, IconLockSolid
 import { List, Logo } from "@demo/atomicui/atoms";
 import { appConfig, marketingMenuOptionsData } from "@demo/core/constants";
 import { useAmplifyAuth, useAmplifyMap, useAwsIot } from "@demo/hooks";
-import { MapProviderEnum } from "@demo/types";
+import { AnalyticsEventActionsEnum, EventTypeEnum, MapProviderEnum, MenuItemEnum, TriggeredByEnum } from "@demo/types";
+import { record } from "@demo/utils/analyticsUtils";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { Tooltip } from "react-tooltip";
 import "./styles.scss";
-
-const sidebarData = marketingMenuOptionsData.filter(v => v.label !== "Demo");
-
-interface Props {
-	onCloseSidebar: () => void;
-	onOpenConnectAwsAccountModal: () => void;
-	onOpenSignInModal: () => void;
-	onShowGeofenceBox: () => void;
-	onShowTrackingBox: () => void;
-	onShowSettings: () => void;
-	onShowTrackingDisclaimerModal: () => void;
-	onShowAboutModal: () => void;
-}
 
 const {
 	ROUTES: { DEMO, OVERVIEW }
 } = appConfig;
 
-const Sidebar: React.FC<Props> = ({
+interface SidebarProps {
+	onCloseSidebar: () => void;
+	onOpenConnectAwsAccountModal: () => void;
+	onOpenSignInModal: () => void;
+	onShowAuthGeofenceBox: () => void;
+	onShowAuthTrackerBox: () => void;
+	onShowSettings: () => void;
+	onShowTrackingDisclaimerModal: () => void;
+	onShowAboutModal: () => void;
+	onShowUnauthGeofenceBox: () => void;
+	onShowUnauthTrackerBox: () => void;
+	onshowUnauthSimulationDisclaimerModal: () => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({
 	onCloseSidebar,
 	onOpenConnectAwsAccountModal,
 	onOpenSignInModal,
-	onShowGeofenceBox,
-	onShowTrackingBox,
+	onShowAuthGeofenceBox,
+	onShowAuthTrackerBox,
 	onShowSettings,
 	onShowTrackingDisclaimerModal,
-	onShowAboutModal
+	onShowAboutModal,
+	onShowUnauthGeofenceBox,
+	onShowUnauthTrackerBox,
+	onshowUnauthSimulationDisclaimerModal
 }) => {
 	const { isUserAwsAccountConnected, credentials, onLogin, onLogout, onDisconnectAwsAccount, setAuthTokens } =
 		useAmplifyAuth();
-	const { mapProvider } = useAmplifyMap();
+	const { mapProvider: currentMapProvider } = useAmplifyMap();
 	const { detachPolicy } = useAwsIot();
 	const navigate = useNavigate();
 	const isAuthenticated = !!credentials?.authenticated;
+	const { t } = useTranslation();
+	const disconnectButtonText = t("disconnect_aws_account.text");
 
-	const onConnectAwsAccount = () => {
+	const sidebarData = marketingMenuOptionsData.filter(v => t(v.label) !== t("demo.text"));
+
+	const onConnectAwsAccount = (action: AnalyticsEventActionsEnum) => {
 		onCloseSidebar();
 		onOpenConnectAwsAccountModal();
+
+		record(
+			[
+				{
+					EventType: EventTypeEnum.AWS_ACCOUNT_CONNECTION_STARTED,
+					Attributes: { triggeredBy: TriggeredByEnum.SIDEBAR, action }
+				}
+			],
+			["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
+		);
 	};
 
-	const onClickLockItem = () => {
+	const onClickMenuItem = (menuItem: MenuItemEnum) => {
+		onCloseSidebar();
+
 		if (isUserAwsAccountConnected) {
-			onCloseSidebar();
-			!isAuthenticated && onOpenSignInModal();
+			if (isAuthenticated) {
+				if (menuItem === MenuItemEnum.GEOFENCE) {
+					onShowAuthGeofenceBox();
+				} else {
+					currentMapProvider === MapProviderEnum.ESRI ? onShowTrackingDisclaimerModal() : onShowAuthTrackerBox();
+				}
+			} else {
+				onOpenSignInModal();
+			}
 		} else {
-			onConnectAwsAccount();
-		}
-	};
-
-	const onClickGeofence = () => {
-		if (isAuthenticated) {
-			onCloseSidebar();
-			onShowGeofenceBox();
-		} else {
-			onClickLockItem();
-		}
-	};
-
-	const onClickTracking = () => {
-		if (isAuthenticated) {
-			onCloseSidebar();
-			mapProvider === MapProviderEnum.ESRI ? onShowTrackingDisclaimerModal() : onShowTrackingBox();
-		} else {
-			onClickLockItem();
+			if (currentMapProvider === MapProviderEnum.GRAB) {
+				onshowUnauthSimulationDisclaimerModal();
+			} else {
+				menuItem === MenuItemEnum.GEOFENCE ? onShowUnauthGeofenceBox() : onShowUnauthTrackerBox();
+			}
 		}
 	};
 
@@ -123,33 +138,33 @@ const Sidebar: React.FC<Props> = ({
 					}}
 				>
 					<IconCompass className="menu-icon" />
-					<Text>Demo</Text>
+					<Text>{t("demo.text")}</Text>
 				</Flex>
-				<Flex className="link-item" onClick={onClickGeofence}>
+				<Flex className="link-item" onClick={() => onClickMenuItem(MenuItemEnum.GEOFENCE)}>
 					<IconGeofence className="menu-icon" />
-					<Text>Geofence</Text>
-					{!isAuthenticated && (
+					<Text>{t("geofence.text")}</Text>
+					{isUserAwsAccountConnected && !isAuthenticated && (
 						<Flex className="locked-item">
 							<IconLockSolid
 								className="lock-icon"
 								data-tooltip-id="geofence-lock"
 								data-tooltip-place="top"
-								data-tooltip-content="Sign in to your AWS account is required"
+								data-tooltip-content={t("tooltip__sign_in_required.text")}
 							/>
 							<Tooltip id="geofence-lock" />
 						</Flex>
 					)}
 				</Flex>
-				<Flex className="link-item" onClick={onClickTracking}>
+				<Flex className="link-item" onClick={() => onClickMenuItem(MenuItemEnum.TRACKER)}>
 					<IconRoute className="menu-icon" />
-					<Text>Tracker</Text>
-					{!isAuthenticated && (
+					<Text>{t("tracker.text")}</Text>
+					{isUserAwsAccountConnected && !isAuthenticated && (
 						<Flex className="locked-item">
 							<IconLockSolid
 								className="lock-icon"
 								data-tooltip-id="tracker-lock"
 								data-tooltip-place="top"
-								data-tooltip-content="Sign in to your AWS account is required"
+								data-tooltip-content={t("tooltip__sign_in_required.text")}
 							/>
 							<Tooltip id="tracker-lock" />
 						</Flex>
@@ -157,23 +172,44 @@ const Sidebar: React.FC<Props> = ({
 				</Flex>
 				<Flex className="link-item" onClick={onClickSettings}>
 					<IconGear className="menu-icon" />
-					<Text>Settings</Text>
+					<Text>{t("settings.text")}</Text>
 				</Flex>
 				<Flex className="link-item" onClick={onClickMore}>
 					<IconInfo className="menu-icon" />
-					<Text>About</Text>
+					<Text>{t("about.text")}</Text>
 				</Flex>
 			</View>
 			<List listArray={sidebarData} className="verticle-list side-bar__external-menu" hideIcons />
 			<View className="button-wrapper">
 				{isUserAwsAccountConnected && (
-					<Button variation="primary" fontFamily="AmazonEmber-Bold" onClick={isAuthenticated ? _onLogout : _onLogin}>
-						{isAuthenticated ? "Sign out" : "Sign in"}
+					<Button
+						variation="primary"
+						fontFamily="AmazonEmber-Bold"
+						textAlign="center"
+						onClick={async () => {
+							if (isAuthenticated) {
+								_onLogout();
+							} else {
+								await record(
+									[{ EventType: EventTypeEnum.SIGN_IN_STARTED, Attributes: { triggeredBy: TriggeredByEnum.SIDEBAR } }],
+									["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
+								);
+
+								_onLogin();
+							}
+						}}
+					>
+						{isAuthenticated ? t("sign_out.text") : t("sign_in.text")}
 					</Button>
 				)}
 				{!isUserAwsAccountConnected && (
-					<Button variation="primary" fontFamily="AmazonEmber-Bold" onClick={onConnectAwsAccount}>
-						Connect AWS Account
+					<Button
+						variation="primary"
+						fontFamily="AmazonEmber-Bold"
+						textAlign="center"
+						onClick={() => onConnectAwsAccount(AnalyticsEventActionsEnum.CONNECT_AWS_ACCOUNT_BUTTON_CLICKED)}
+					>
+						{t("connect_aws_account.text")}
 					</Button>
 				)}
 				{isUserAwsAccountConnected && !isAuthenticated && (
@@ -182,9 +218,11 @@ const Sidebar: React.FC<Props> = ({
 						fontFamily="AmazonEmber-Bold"
 						className="disconnect-button"
 						marginTop="8px"
+						textAlign="center"
 						onClick={onDisconnectAwsAccount}
+						fontSize={disconnectButtonText.length > 22 ? "0.92rem" : "1rem"}
 					>
-						Disconnect AWS Account
+						{disconnectButtonText}
 					</Button>
 				)}
 			</View>

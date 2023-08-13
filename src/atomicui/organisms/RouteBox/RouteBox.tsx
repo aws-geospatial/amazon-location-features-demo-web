@@ -31,15 +31,16 @@ import {
 	SuggestionType,
 	TravelMode
 } from "@demo/types";
-
+import { AnalyticsEventActionsEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { humanReadableTime } from "@demo/utils/dateTimeUtils";
 import { CalculateRouteRequest, LineString, Place, Position } from "aws-sdk/clients/location";
+import { useTranslation } from "react-i18next";
 import { Layer, LayerProps, LngLat, MapRef, Marker as ReactMapGlMarker, Source } from "react-map-gl";
 import { Tooltip } from "react-tooltip";
 import "./styles.scss";
 
 const { METRIC } = MapUnitEnum;
-const { KILOMETERS, KILOMETERS_SHORT, MILES, MILES_SHORT } = DistanceUnitEnum;
+const { KILOMETERS, MILES } = DistanceUnitEnum;
 
 interface RouteBoxProps {
 	mapRef: MapRef | null;
@@ -87,6 +88,11 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 	const [expandRouteOptions, setExpandRouteOptions] = useState(false);
 	const [routeOptions, setRouteOptions] = useState<RouteOptionsType>({ ...defaultRouteOptions });
 	const isDesktop = useMediaQuery("(min-width: 1024px)");
+	const { t, i18n } = useTranslation();
+	const langDir = i18n.dir();
+	const isLtr = langDir === "ltr";
+	const currentLang = i18n.language;
+	const isLanguageRTL = ["ar", "he"].includes(currentLang);
 
 	const clearRoutePosition = useCallback((type: InputType) => setRoutePositions(undefined, type), [setRoutePositions]);
 
@@ -110,7 +116,11 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 			directions && setDirections(undefined);
 		}
 
-		if (value.from !== "My Location" && value.to !== "My Location" && isCurrentLocationSelected) {
+		if (
+			value.from !== t("route_box__my_location.text") &&
+			value.to !== t("route_box__my_location.text") &&
+			isCurrentLocationSelected
+		) {
 			setIsCurrentLocationSelected(false);
 		}
 	}, [
@@ -124,7 +134,8 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 		clearRouteData,
 		stepsData,
 		directions,
-		setDirections
+		setDirections,
+		t
 	]);
 
 	useEffect(() => {
@@ -187,7 +198,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 						  }
 						: undefined
 			};
-			const rd = await getRoute(params as CalculateRouteRequest);
+			const rd = await getRoute(params as CalculateRouteRequest, TriggeredByEnum.ROUTE_MODULE);
 			rd && setRouteData({ ...rd, travelMode: travelMode as TravelMode });
 		}
 	}, [getDestDept, currentMapUnit, travelMode, routeOptions, getRoute, setRouteData]);
@@ -202,7 +213,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 				setValue({
 					from:
 						!currentLocationData?.error && !directions.isEsriLimitation && !isCurrentLocationDisabled
-							? "My Location"
+							? t("route_box__my_location.text")
 							: "",
 					to: directions.info.Place.Label
 						? directions.info.Place.Label
@@ -221,7 +232,8 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 		viewpoint,
 		currentLocationData?.error,
 		setRoutePositions,
-		calculateRouteData
+		calculateRouteData,
+		t
 	]);
 
 	const onClose = () => {
@@ -235,7 +247,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 	};
 
 	const handleSearch = useCallback(
-		async (value: string, exact = false, type: InputType) => {
+		async (value: string, exact = false, type: InputType, action: string) => {
 			setIsSearching(true);
 
 			if (value.length >= 3) {
@@ -246,11 +258,18 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 				}
 
 				timeoutIdRef.current = setTimeout(async () => {
-					await search(value, { longitude, latitude }, exact, sg => {
-						type === InputType.FROM
-							? setSuggestions({ ...suggestions, from: sg })
-							: setSuggestions({ ...suggestions, to: sg });
-					});
+					await search(
+						value,
+						{ longitude, latitude },
+						exact,
+						sg => {
+							type === InputType.FROM
+								? setSuggestions({ ...suggestions, from: sg })
+								: setSuggestions({ ...suggestions, to: sg });
+						},
+						TriggeredByEnum.ROUTE_MODULE,
+						action
+					);
 				}, 200);
 			}
 			setIsSearching(false);
@@ -279,10 +298,10 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 	const onChangeValue = (e: ChangeEvent<HTMLInputElement>, type: InputType) => {
 		if (type === InputType.FROM) {
 			setValue({ ...value, from: e.target.value });
-			handleSearch(e.target.value, false, InputType.FROM);
+			handleSearch(e.target.value, false, InputType.FROM, AnalyticsEventActionsEnum.FROM_SEARCH_AUTOCOMPLETE);
 		} else {
 			setValue({ ...value, to: e.target.value });
-			handleSearch(e.target.value, false, InputType.TO);
+			handleSearch(e.target.value, false, InputType.TO, AnalyticsEventActionsEnum.TO_SEARCH_AUTOCOMPLETE);
 		}
 	};
 
@@ -307,13 +326,13 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 			>
 				{!expandRouteOptions ? (
 					<Text className="collapsed-route-options-text" onClick={onClickRouteOptions}>
-						Route Options
+						{t("route_box__route_options.text")}
 					</Text>
 				) : (
 					<View className="expanded-route-options">
-						<Text className="text-1">Route Options</Text>
+						<Text className="text-1">{t("route_box__route_options.text")}</Text>
 						<Text className="text-2" onClick={onClickRouteOptions}>
-							Close
+							{t("route_box__close.text")}
 						</Text>
 					</View>
 				)}
@@ -321,8 +340,8 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 					<View className="route-option-items">
 						<CheckboxField
 							className="option-item"
-							label="Avoid tolls"
-							name="Avoid tolls"
+							label={t("avoid_tolls.text")}
+							name={t("avoid_tolls.text")}
 							value="Avoid tolls"
 							checked={routeOptions.avoidTolls}
 							onChange={e => {
@@ -332,8 +351,8 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 						/>
 						<CheckboxField
 							className="option-item"
-							label="Avoid ferries"
-							name="Avoid ferries"
+							label={t("avoid_ferries.text")}
+							name={t("avoid_ferries.text")}
 							value="Avoid ferries"
 							checked={routeOptions.avoidFerries}
 							onChange={e => {
@@ -345,20 +364,22 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 				)}
 			</View>
 		),
-		[inputFocused, routeData, expandRouteOptions, onClickRouteOptions, routeOptions, setRouteData]
+		[inputFocused, routeData, expandRouteOptions, onClickRouteOptions, routeOptions, setRouteData, t]
 	);
 
 	const onSelectCurrentLocaiton = (type: InputType) => {
-		type === InputType.FROM && setValue({ ...value, from: isCurrentLocationSelected ? "" : "My Location" });
-		type === InputType.TO && setValue({ ...value, to: isCurrentLocationSelected ? "" : "My Location" });
+		type === InputType.FROM &&
+			setValue({ ...value, from: isCurrentLocationSelected ? "" : t("route_box__my_location.text") });
+		type === InputType.TO &&
+			setValue({ ...value, to: isCurrentLocationSelected ? "" : t("route_box__my_location.text") });
 		setIsCurrentLocationSelected(!isCurrentLocationSelected);
 	};
 
 	const onSelectSuggestion = async ({ PlaceId, Text = "", Place }: SuggestionType, type: InputType) => {
 		if (!PlaceId && Text) {
 			type === InputType.FROM
-				? await handleSearch(Text, true, InputType.FROM)
-				: await handleSearch(Text, true, InputType.TO);
+				? await handleSearch(Text, true, InputType.FROM, AnalyticsEventActionsEnum.FROM_SUGGESTION_SELECT)
+				: await handleSearch(Text, true, InputType.TO, AnalyticsEventActionsEnum.TO_SUGGESTION_SELECT);
 		} else if (!PlaceId && !Text) {
 			if (type === InputType.FROM) {
 				if (suggestions.from) {
@@ -427,7 +448,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 					{PlaceId ? <IconPin /> : <IconSearch />}
 					<View className="description">
 						<span className="title">{title}</span>
-						<span className="address">{PlaceId && address ? address : "Search nearby"}</span>
+						<span className="address">{PlaceId && address ? address : t("search_nearby.text")}</span>
 					</View>
 				</View>
 			);
@@ -468,7 +489,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 					<IconDestination width="32px" height="32px" />
 				</ReactMapGlMarker>
 			);
-		} else if (currentLocationData?.currentLocation && value.to === "My Location") {
+		} else if (currentLocationData?.currentLocation && value.to === t("search_nearby.text")) {
 			const {
 				currentLocation: { longitude, latitude }
 			} = currentLocationData;
@@ -478,7 +499,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 				</ReactMapGlMarker>
 			);
 		}
-	}, [routePositions, currentLocationData, value]);
+	}, [routePositions, currentLocationData, value, t]);
 
 	const routeLayer = useMemo(() => {
 		if (routeData && routePositions) {
@@ -595,7 +616,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 						<IconCar
 							data-tooltip-id="icon-car-tooltip"
 							data-tooltip-place="top"
-							data-tooltip-content={'Calculate route with "Car" as travel mode'}
+							data-tooltip-content={t("tooltip__calculate_route_car.text")}
 						/>
 						<Tooltip id="icon-car-tooltip" />
 					</View>
@@ -607,7 +628,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 						<IconWalking
 							data-tooltip-id="icon-walking-tooltip"
 							data-tooltip-place="top"
-							data-tooltip-content={'Calculate route with "Walking" as travel mode'}
+							data-tooltip-content={t("tooltip__calculate_route_walk.text")}
 						/>
 						<Tooltip id="icon-walking-tooltip" />
 					</View>
@@ -621,7 +642,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 								<IconBicycleSolid
 									data-tooltip-id="icon-bicycle-tooltip"
 									data-tooltip-place="top"
-									data-tooltip-content={'Calculate route with "Bicycle" as travel mode'}
+									data-tooltip-content={t("tooltip__calculate_route_bicycle.text")}
 								/>
 								<Tooltip id="icon-bicycle-tooltip" />
 							</View>
@@ -633,7 +654,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 								<IconMotorcycleSolid
 									data-tooltip-id="icon-motorcycle-tooltip"
 									data-tooltip-place="top"
-									data-tooltip-content={'Calculate route with "Motorcycle" as travel mode'}
+									data-tooltip-content={t("tooltip__calculate_route_motorcycle.text")}
 								/>
 								<Tooltip id="icon-motorcycle-tooltip" />
 							</View>
@@ -647,38 +668,45 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 							<IconTruckSolid
 								data-tooltip-id="icon-truck-tooltip"
 								data-tooltip-place="top"
-								data-tooltip-content={'Calculate route with "Truck" as travel mode'}
+								data-tooltip-content={t("tooltip__calculate_route_truck.text")}
 							/>
 							<Tooltip id="icon-truck-tooltip" />
 						</View>
 					)}
 				</Flex>
 				<Flex className="from-to-container" gap={0}>
-					<Flex className="marker-container">
+					<Flex className="marker-container" order={isLtr ? 1 : 3}>
 						<IconMyLocation />
 						{[...Array(3)].map((_, index) => (
 							<View key={index} className="dashed-line" />
 						))}
 						<IconDestination />
 					</Flex>
-					<Flex className="inputs-container">
+					<Flex className="inputs-container" order={2}>
 						<input
 							data-testid="from-input"
-							placeholder="From"
+							placeholder={t("route_box__from.text") as string}
 							onFocus={() => onFocus(InputType.FROM)}
 							value={value.from}
 							onChange={e => onChangeValue(e, InputType.FROM)}
+							dir={langDir}
 						/>
 						<View className="divider" />
 						<input
 							data-testid="to-input"
-							placeholder="To"
+							placeholder={t("route_box__to.text") as string}
 							onFocus={() => onFocus(InputType.TO)}
 							value={value.to}
 							onChange={e => onChangeValue(e, InputType.TO)}
+							dir={langDir}
 						/>
 					</Flex>
-					<Flex data-testid="swap-icon-container" className="swap-icon-container" onClick={onSwap}>
+					<Flex
+						data-testid="swap-icon-container"
+						className="swap-icon-container"
+						onClick={onSwap}
+						order={isLtr ? 3 : 1}
+					>
 						<IconArrowDownUp />
 					</Flex>
 				</Flex>
@@ -696,7 +724,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 								onClick={() => onSelectCurrentLocaiton(inputFocused.from ? InputType.FROM : InputType.TO)}
 							>
 								<IconMyLocation />
-								<Text>Current location</Text>
+								<Text>{t("route_box__current_location.text")}</Text>
 							</View>
 						)}
 
@@ -704,14 +732,14 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 						? renderSuggestions(suggestions.from, InputType.FROM)
 						: !isSearching &&
 						  value.from?.length > 2 &&
-						  value.from !== "My Location" &&
+						  value.from !== t("route_box__my_location.text") &&
 						  !placeData.from &&
 						  inputFocused.from && <NotFoundCard />}
 					{!!suggestions.to?.length
 						? renderSuggestions(suggestions.to, InputType.TO)
 						: !isSearching &&
 						  value.to?.length > 2 &&
-						  value.to !== "My Location" &&
+						  value.to !== t("route_box__my_location.text") &&
 						  !placeData.to &&
 						  inputFocused.to && <NotFoundCard />}
 				</View>
@@ -740,18 +768,27 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 										travelMode === TravelMode.TRUCK ||
 										travelMode === TravelMode.BICYCLE ||
 										travelMode === TravelMode.MOTORCYCLE
-											? "Drive"
-											: "Walk"}
+											? t("route_box__drive.text")
+											: t("route_box__walk.text")}
 									</Text>
 									<View className="separator" />
-									<Text className="grey-text">Selected</Text>
+									<Text className="grey-text">{t("route_box__selected.text")}</Text>
 								</View>
-								<Text className="grey-text">{`${routeData.Summary.Distance.toFixed(2)} ${
-									currentMapUnit === METRIC ? KILOMETERS_SHORT : MILES_SHORT
-								}`}</Text>
+								<Flex
+									gap="0.3rem"
+									direction={isLanguageRTL ? "row-reverse" : "row"}
+									justifyContent={isLanguageRTL ? "flex-end" : "flex-start"}
+								>
+									<Text className="distance">{routeData.Summary.Distance.toFixed(2)}</Text>
+									<Text className="distance">
+										{currentMapUnit === METRIC ? t("geofence_box__km__short.text") : t("geofence_box__mi__short.text")}
+									</Text>
+								</Flex>
 							</View>
 							<View className="duration">
-								<Text className="regular-text">{humanReadableTime(routeData.Summary.DurationSeconds * 1000)}</Text>
+								<Text className="regular-text">
+									{humanReadableTime(routeData.Summary.DurationSeconds * 1000, currentLang, t)}
+								</Text>
 							</View>
 						</View>
 						{!isCollapsed && renderSteps}
@@ -759,7 +796,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 				)}
 				{routeData && (
 					<View className="show-hide-details-container bottom-border-radius" onClick={() => setIsCollapsed(s => !s)}>
-						<Text className="text">{isCollapsed ? "Route details" : "Hide details"}</Text>
+						<Text className="text">{isCollapsed ? t("route_box__route_details.text") : t("hide_details.text")}</Text>
 						<IconArrow style={{ transform: isCollapsed ? "rotate(0deg)" : "rotate(180deg)" }} />
 					</View>
 				)}

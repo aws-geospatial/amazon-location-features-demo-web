@@ -3,11 +3,13 @@
 
 import React from "react";
 
-import { Button, Flex, Text } from "@aws-amplify/ui-react";
+import { Button, CheckboxField, Flex, Text } from "@aws-amplify/ui-react";
 import { Modal } from "@demo/atomicui/atoms";
+import { useTranslation } from "react-i18next";
 import "./styles.scss";
 
 interface ConfirmationModalProps {
+	className?: string;
 	open: boolean;
 	onClose: () => void;
 	heading?: string;
@@ -15,34 +17,48 @@ interface ConfirmationModalProps {
 	onConfirm: () => void;
 	confirmationText?: string;
 	showLearnMore?: boolean;
-	handleLeanMore?: () => void;
+	handleLearnMore?: () => void;
 	hideCancelButton?: boolean;
 	cancelationText?: string;
+	showConfirmationCheckbox?: boolean;
+	confirmationCheckboxLabel?: string;
+	confirmationCheckboxValue?: string;
+	confirmationCheckboxName?: string;
+	confirmationCheckboxOnChange?: (e: boolean) => void;
 }
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
+	className = "",
 	open,
 	onClose,
-	heading = "Confirmation",
-	description = "Are you sure?",
+	heading,
+	description,
 	onConfirm,
-	confirmationText = "Continue",
+	confirmationText,
 	showLearnMore = false,
-	handleLeanMore = () => {},
+	handleLearnMore = () => {},
 	hideCancelButton = false,
-	cancelationText = "Cancel"
+	cancelationText,
+	showConfirmationCheckbox,
+	confirmationCheckboxLabel,
+	confirmationCheckboxValue,
+	confirmationCheckboxName,
+	confirmationCheckboxOnChange = () => {}
 }) => {
+	const { t } = useTranslation();
+	const [isConfirmationChecked, setIsConfirmationChecked] = React.useState(false);
+
 	return (
 		<Modal
 			data-testid="confirmation-modal-container"
 			open={open}
 			onClose={onClose}
-			className="confirmation-modal"
+			className={`confirmation-modal ${className}`}
 			hideCloseIcon
 			content={
 				<Flex className="confirmation-content">
 					<Text className="bold medium-text" textAlign="center">
-						{heading}
+						{heading || t("confirmation_modal__heading.text")}
 					</Text>
 					{typeof description === "string" ? (
 						<Text
@@ -52,35 +68,51 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 							textAlign="center"
 							whiteSpace="pre-line"
 						>
-							{description}
+							{description || t("confirmation_modal__desc.text")}
 						</Text>
 					) : (
 						description
+					)}
+					{showConfirmationCheckbox && (
+						<CheckboxField
+							className="custom-checkbox confirmation-checkbox"
+							size="large"
+							label={confirmationCheckboxLabel || ""}
+							name={confirmationCheckboxName || ""}
+							value={confirmationCheckboxValue || ""}
+							checked={isConfirmationChecked}
+							onChange={e => {
+								setIsConfirmationChecked(e.target.checked);
+								confirmationCheckboxOnChange(e.target.checked);
+							}}
+							marginTop="2rem"
+						/>
 					)}
 					<Button
 						data-testid="confirmation-button"
 						variation="primary"
 						fontFamily="AmazonEmber-Bold"
-						marginTop="2.46rem"
+						marginTop={showConfirmationCheckbox ? "2rem" : "2.46rem"}
 						onClick={onConfirm}
+						height="3.08rem"
 					>
-						{confirmationText}
+						{confirmationText || t("continue.text")}
 					</Button>
 					{showLearnMore && (
 						<Flex
 							data-testid="confirmation-learn-more-button"
 							className="confirmation-learn-more-button"
-							onClick={handleLeanMore}
+							onClick={handleLearnMore}
 						>
 							<Text className="bold" fontSize="1.08rem" textAlign="center">
-								Learn more
+								{t("learn_more.text")}
 							</Text>
 						</Flex>
 					)}
 					{!hideCancelButton && (
 						<Flex data-testid="confirmation-cancel-button" className="confirmation-cancel-button" onClick={onClose}>
 							<Text className="bold" fontSize="1.08rem" textAlign="center">
-								{cancelationText}
+								{cancelationText || t("confirmation_modal__cancel.text")}
 							</Text>
 						</Flex>
 					)}

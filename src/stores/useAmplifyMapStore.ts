@@ -10,6 +10,7 @@ import {
 	IStateProps,
 	MapProviderEnum,
 	MapUnitEnum,
+	OpenDataMapEnum,
 	ViewPointType
 } from "@demo/types";
 
@@ -32,7 +33,7 @@ interface AmplifyMapStoreProps {
 	};
 	mapUnit: MapUnitEnum;
 	mapProvider: MapProviderEnum;
-	mapStyle: EsriMapEnum | HereMapEnum | GrabMapEnum;
+	mapStyle: EsriMapEnum | HereMapEnum | GrabMapEnum | OpenDataMapEnum;
 	attributionText: string;
 	isCurrentLocationDisabled: boolean;
 }

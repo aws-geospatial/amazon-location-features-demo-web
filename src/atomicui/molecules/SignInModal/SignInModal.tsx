@@ -3,10 +3,13 @@
 
 import React from "react";
 
-import { Button, Flex } from "@aws-amplify/ui-react";
+import { Button, Flex, Text } from "@aws-amplify/ui-react";
 import { IconGeofence, IconRoute } from "@demo/assets";
-import { Modal, TextEl } from "@demo/atomicui/atoms";
+import { Modal } from "@demo/atomicui/atoms";
 import { useAmplifyAuth } from "@demo/hooks";
+import { EventTypeEnum, TriggeredByEnum } from "@demo/types/Enums";
+import { record } from "@demo/utils/analyticsUtils";
+import { useTranslation } from "react-i18next";
 import "./styles.scss";
 
 interface SignInModalProps {
@@ -16,6 +19,7 @@ interface SignInModalProps {
 
 const SignInModal: React.FC<SignInModalProps> = ({ open, onClose }) => {
 	const { onLogin } = useAmplifyAuth();
+	const { t } = useTranslation();
 
 	return (
 		<Modal
@@ -33,39 +37,37 @@ const SignInModal: React.FC<SignInModalProps> = ({ open, onClose }) => {
 							<IconGeofence />
 						</Flex>
 					</Flex>
-					<TextEl
-						fontFamily="AmazonEmber-Bold"
-						fontSize="20px"
-						lineHeight="28px"
-						marginTop="40px"
-						textAlign="center"
-						text="Sign in required"
-					/>
-					<TextEl
-						variation="tertiary"
-						marginTop="16px"
-						textAlign="center"
-						whiteSpace="pre-line"
-						text={"Sign in to access Tracking and Geofence features or\nproceed to Explore the map"}
-					/>
+					<Text className="bold" fontSize="1.54rem" marginTop="3.08rem" textAlign="center">
+						{t("sign_in_modal__1.text")}
+					</Text>
+					<Text variation="tertiary" marginTop="1.23rem" textAlign="center" whiteSpace="pre-line">
+						{t("sign_in_modal__2.text")}
+					</Text>
 					<Button
 						data-testid="sign-in-button"
 						variation="primary"
 						fontFamily="AmazonEmber-Bold"
-						marginTop="32px"
-						onClick={() => onLogin()}
+						marginTop="2.46rem"
+						onClick={async () => {
+							await record(
+								[
+									{
+										EventType: EventTypeEnum.SIGN_IN_STARTED,
+										Attributes: { triggeredBy: TriggeredByEnum.SIGN_IN_MODAL }
+									}
+								],
+								["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
+							);
+
+							onLogin();
+						}}
 					>
-						Sign in
+						{t("sign_in.text")}
 					</Button>
 					<Flex className="maybe-later-button" onClick={onClose}>
-						<TextEl
-							data-testid="maybe-later-button"
-							fontFamily="AmazonEmber-Bold"
-							fontSize="14px"
-							lineHeight="16px"
-							textAlign="center"
-							text="Maybe later"
-						/>
+						<Text data-testid="maybe-later-button" className="bold" fontSize="1.08rem" textAlign="center">
+							{t("sign_in_modal__maybe_later.text")}
+						</Text>
 					</Flex>
 				</Flex>
 			}

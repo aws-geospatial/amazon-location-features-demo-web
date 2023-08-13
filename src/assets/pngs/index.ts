@@ -35,3 +35,7 @@ export { default as ConfirmDeleteStack } from "./ConfirmDeleteStack.png";
 export { default as LaunchStack } from "./LaunchStack.png";
 export { default as GrabStandardLight } from "./GrabStandardLight.png";
 export { default as GrabStandardDark } from "./GrabStandardDark.png";
+export { default as OpenDataStandardLight } from "./OpenDataStandardLight.png";
+export { default as OpenDataStandardDark } from "./OpenDataStandardDark.png";
+export { default as OpenDataVisualizationLight } from "./OpenDataVisualizationLight.png";
+export { default as OpenDataVisualizationDark } from "./OpenDataVisualizationDark.png";

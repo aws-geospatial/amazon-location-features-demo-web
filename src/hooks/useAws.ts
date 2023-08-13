@@ -6,14 +6,15 @@ import { useMemo } from "react";
 import { ICredentials } from "@aws-amplify/core";
 import { useAwsService } from "@demo/services";
 import { useAwsStore } from "@demo/stores";
-
 import { errorHandler } from "@demo/utils/errorHandler";
+import { useTranslation } from "react-i18next";
 
 const useAws = () => {
 	const store = useAwsStore();
 	const { setInitial } = store;
 	const { setState } = useAwsStore;
 	const { createLocationClient, createIotClient } = useAwsService();
+	const { t } = useTranslation();
 
 	const methods = useMemo(
 		() => ({
@@ -22,7 +23,7 @@ const useAws = () => {
 					const locationClient = createLocationClient(credentials, region);
 					setState({ locationClient });
 				} catch (error) {
-					errorHandler(error, "Failed to create location client");
+					errorHandler(error, t("error_handler__failed_create_location_client.text") as string);
 				}
 			},
 			createIotClient: (credentials: ICredentials, region: string) => {
@@ -30,7 +31,7 @@ const useAws = () => {
 					const iotClient = createIotClient(credentials, region);
 					setState({ iotClient });
 				} catch (error) {
-					errorHandler(error, "Failed to create iot client");
+					errorHandler(error, t("error_handler__failed_create_iot_client.text") as string);
 				}
 			},
 			resetStore: () => {
@@ -38,7 +39,7 @@ const useAws = () => {
 				setInitial();
 			}
 		}),
-		[setInitial, setState, createLocationClient, createIotClient]
+		[setInitial, setState, createLocationClient, createIotClient, t]
 	);
 
 	return { ...methods, ...store };

@@ -80,7 +80,7 @@
 				display: flex;
 				align-items: center;
 
-				div {
+				div:not(.localize-geofence-distance) {
 					width: 0.23rem;
 					height: 0.23rem;
 					background-color: var(--grey-color);

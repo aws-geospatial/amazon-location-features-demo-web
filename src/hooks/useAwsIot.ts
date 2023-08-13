@@ -4,7 +4,6 @@
 import { useMemo } from "react";
 
 import { useAwsIotService } from "@demo/services";
-
 import { errorHandler } from "@demo/utils/errorHandler";
 
 const useAwsIot = () => {
@@ -12,16 +11,16 @@ const useAwsIot = () => {
 
 	const methods = useMemo(
 		() => ({
-			attachPolicy: async (identityId: string) => {
+			attachPolicy: async (identityId: string, unauthUser = false) => {
 				try {
-					await iotService.attachPolicy(identityId);
+					await iotService.attachPolicy(identityId, unauthUser);
 				} catch (error) {
 					errorHandler(error);
 				}
 			},
-			detachPolicy: async (identityId: string) => {
+			detachPolicy: async (identityId: string, unauthUser = false) => {
 				try {
-					await iotService.detachPolicy(identityId);
+					await iotService.detachPolicy(identityId, unauthUser);
 				} catch (error) {
 					errorHandler(error);
 				}

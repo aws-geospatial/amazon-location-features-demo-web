@@ -7,9 +7,12 @@ import { useAmplifyMap } from "@demo/hooks";
 import { useAwsPlaceService } from "@demo/services";
 import { useAwsPlaceStore } from "@demo/stores";
 import { ClustersType, SuggestionType, ViewPointType } from "@demo/types";
+import { EventTypeEnum, TriggeredByEnum } from "@demo/types/Enums";
+import { record } from "@demo/utils/analyticsUtils";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { calculateClusters, getHash, getPrecision, isGeoString } from "@demo/utils/geoCalculation";
 import { Position } from "aws-sdk/clients/location";
+import { useTranslation } from "react-i18next";
 
 const useAwsPlace = () => {
 	const store = useAwsPlaceStore();
@@ -17,6 +20,7 @@ const useAwsPlace = () => {
 	const { setState } = useAwsPlaceStore;
 	const { setViewpoint } = useAmplifyMap();
 	const placesService = useAwsPlaceService();
+	const { t } = useTranslation();
 
 	const methods = useMemo(
 		() => ({
@@ -34,7 +38,7 @@ const useAwsPlace = () => {
 					});
 					setViewpoint(viewpoint);
 				} catch (error) {
-					errorHandler(error, "Failed to search place suggestions");
+					errorHandler(error, t("error_handler__failed_search_place_suggestions.text") as string);
 				} finally {
 					setState({ isSearching: false });
 				}
@@ -45,7 +49,7 @@ const useAwsPlace = () => {
 					const data = await placesService.getPlaceById(placeId);
 					return data;
 				} catch (error) {
-					errorHandler(error, "Failed to fetch place by ID");
+					errorHandler(error, t("error_handler__failed_fetch_place_id.text") as string);
 				} finally {
 					setState({ isFetchingPlaceData: false });
 				}
@@ -71,7 +75,7 @@ const useAwsPlace = () => {
 					});
 					setViewpoint(viewpoint);
 				} catch (error) {
-					errorHandler(error, "Failed to search place by text");
+					errorHandler(error, t("error_handler__failed_search_place_text.text") as string);
 				} finally {
 					setState({ isSearching: false });
 				}
@@ -80,7 +84,7 @@ const useAwsPlace = () => {
 				try {
 					return await placesService.getPlaceByCoordinates(input);
 				} catch (error) {
-					errorHandler(error, "Failed to fetch place by coordinates");
+					errorHandler(error, t("error_handler__failed_fetch_place_coords.text") as string);
 				}
 			},
 			searchPlacesByCoordinates: async (
@@ -101,12 +105,19 @@ const useAwsPlace = () => {
 					setState({ bound: undefined });
 					setViewpoint(vPoint);
 				} catch (error) {
-					errorHandler(error, "Failed to search place by coordinates");
+					errorHandler(error, t("error_handler__failed_search_place_coords.text") as string);
 				} finally {
 					setState({ isSearching: false });
 				}
 			},
-			search: async (value: string, viewpoint: ViewPointType, exact?: boolean, cb?: (sg: SuggestionType[]) => void) => {
+			search: async (
+				value: string,
+				viewpoint: ViewPointType,
+				exact: boolean,
+				cb: ((sg: SuggestionType[]) => void) | undefined,
+				triggeredBy: TriggeredByEnum,
+				action: string
+			) => {
 				if (isGeoString(value)) {
 					await methods.searchPlacesByCoordinates(value, viewpoint, cb);
 				} else if (exact) {
@@ -114,6 +125,19 @@ const useAwsPlace = () => {
 				} else if (value?.length) {
 					await methods.searchPlaceSuggestions(value, viewpoint, cb);
 				}
+
+				record([
+					{
+						EventType: EventTypeEnum.PLACE_SEARCH,
+						Attributes: {
+							value,
+							exact: String(exact),
+							type: isGeoString(value) ? "Coordinates" : "Text",
+							triggeredBy,
+							action
+						}
+					}
+				]);
 			},
 			setZoom: (zoom: number) => {
 				setState(s => {
@@ -145,7 +169,7 @@ const useAwsPlace = () => {
 						const pd = await placesService.getPlaceById(selectedMarker.PlaceId);
 						coords = pd?.Place.Geometry.Point;
 					} catch (error) {
-						errorHandler(error, "Failed to fetch place by ID for marker");
+						errorHandler(error, t("error_handler__failed_fetch_place_id_marker.text") as string);
 					}
 				}
 
@@ -177,7 +201,7 @@ const useAwsPlace = () => {
 				setInitial();
 			}
 		}),
-		[placesService, setState, store.precision, setInitial, setViewpoint]
+		[placesService, setState, store.precision, setInitial, setViewpoint, t]
 	);
 	return useMemo(() => ({ ...methods, ...store }), [methods, store]);
 };

@@ -1,8 +1,10 @@
 import { View } from "@aws-amplify/ui-react";
 // import { MapProviderEnum } from "@demo/types";
 // import * as geoCalculationUtils from "@demo/utils/geoCalculation";
+import i18n from "@demo/locales/i18n";
 import { faker } from "@faker-js/faker";
-import { RenderResult, act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render } from "@testing-library/react";
+import { I18nextProvider } from "react-i18next";
 
 import Popup from "./Popup";
 
@@ -44,39 +46,34 @@ jest.mock("hooks", () => ({
 
 describe("<Popup/>", () => {
 	let popupContainer: HTMLElement;
-	let permissionDeniedErrorContainer: HTMLElement | null;
-	let esriLimitationMessageContainer: HTMLElement | null;
-	let hereMessageContainer: HTMLElement | null;
-	let routeInfoContainer: HTMLElement | null;
 	let directionsButton: HTMLElement | null;
 	let copyIcon: HTMLElement | null;
 
-	const renderComponent = async (): Promise<RenderResult> => {
+	const renderComponent = () => {
 		const renderedComponent = render(
-			<Popup
-				active
-				info={{
-					PlaceId: faker.random.word(),
-					Text: faker.random.words(3),
-					Distance: 11,
-					Relevance: 11,
-					Hash: faker.random.word(),
-					Place: {
-						Label: faker.random.words(3),
-						Geometry: { Point: [0, 0] }
-					}
-				}}
-				select={jest.fn()}
-			/>
+			<I18nextProvider i18n={i18n}>
+				<Popup
+					active
+					info={{
+						PlaceId: faker.random.word(),
+						Text: faker.random.words(3),
+						Distance: 11,
+						Relevance: 11,
+						Hash: faker.random.word(),
+						Place: {
+							Label: faker.random.words(3),
+							Geometry: { Point: [0, 0] }
+						}
+					}}
+					select={jest.fn()}
+				/>
+			</I18nextProvider>
 		);
+		const { queryByTestId } = renderedComponent;
 
-		popupContainer = await screen.findByTestId("popup-container");
-		permissionDeniedErrorContainer = screen.queryByTestId("permission-denied-error-container");
-		esriLimitationMessageContainer = screen.queryByTestId("esri-limitation-message-container");
-		hereMessageContainer = screen.queryByTestId("here-message-container");
-		routeInfoContainer = screen.queryByTestId("route-info-container");
-		copyIcon = screen.queryByTestId("copy-icon");
-		directionsButton = screen.queryByTestId("directions-button");
+		popupContainer = queryByTestId("popup-container") as HTMLElement;
+		copyIcon = queryByTestId("copy-icon");
+		directionsButton = queryByTestId("directions-button");
 
 		return renderedComponent;
 	};
@@ -85,37 +82,16 @@ describe("<Popup/>", () => {
 		jest.resetAllMocks();
 	});
 
-	it("should render successfully (popupContainer and copyIcon)", async () => {
-		await renderComponent();
+	it("should render successfully (popupContainer and copyIcon)", () => {
+		renderComponent();
 		expect(popupContainer).toBeInTheDocument();
 		expect(copyIcon).toBeInTheDocument();
 		expect(directionsButton).toBeInTheDocument();
 	});
 
-	it("should call copy icon onClick function when copy icon is clicked", async () => {
-		await renderComponent();
+	it("should call copy icon onClick function when copy icon is clicked", () => {
+		renderComponent();
 		act(() => fireEvent.click(copyIcon!));
 		expect(navigator.clipboard.writeText).toBeCalled();
 	});
-
-	// it("should render Route Info message per case", async () => {
-	// 	let renderedComponent = await renderComponent();
-	// 	expect(esriLimitationMessageContainer).toBeInTheDocument();
-	// 	renderedComponent.unmount();
-
-	// 	jest.spyOn(geoCalculationUtils, "calculateGeodesicDistance").mockReturnValue(123);
-	// 	renderedComponent = await renderComponent();
-	// 	expect(routeInfoContainer).toBeInTheDocument();
-	// 	renderedComponent.unmount();
-
-	// 	useAmplifyMapReturnValue["mapProvider"] = MapProviderEnum.HERE;
-	// 	renderedComponent = await renderComponent();
-	// 	expect(hereMessageContainer).toBeInTheDocument();
-	// 	renderedComponent.unmount();
-
-	// 	useAmplifyMapReturnValue["currentLocationData"]["error"] = "something";
-	// 	renderedComponent = await renderComponent();
-	// 	expect(permissionDeniedErrorContainer).toBeInTheDocument();
-	// 	renderedComponent.unmount();
-	// });
 });
