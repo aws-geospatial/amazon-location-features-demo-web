@@ -23,9 +23,9 @@ const useAwsGeofenceService = () => {
 
 	return useMemo(
 		() => ({
-			listGeofences: async () => {
+			listGeofences: async (geofenceCollection?: string) => {
 				const params: ListGeofencesRequest = {
-					CollectionName: GEOFENCE_COLLECTION
+					CollectionName: geofenceCollection || GEOFENCE_COLLECTION
 				};
 
 				return await locationClient?.listGeofences(params).promise();
@@ -47,9 +47,9 @@ const useAwsGeofenceService = () => {
 
 				return await locationClient?.batchDeleteGeofence(params).promise();
 			},
-			evaluateGeofence: async (Position: Position, IdentityId: string) => {
+			evaluateGeofence: async (Position: Position, IdentityId: string, geofenceCollection?: string) => {
 				const params: BatchEvaluateGeofencesRequest = {
-					CollectionName: GEOFENCE_COLLECTION,
+					CollectionName: geofenceCollection || GEOFENCE_COLLECTION,
 					DevicePositionUpdates: [
 						{
 							DeviceId: DEVICE_ID_WEB,

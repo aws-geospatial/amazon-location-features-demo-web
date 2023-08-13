@@ -39,3 +39,11 @@ body,
 	background: var(--scrollbar-color);
 	border-radius: 2px;
 }
+
+.hideScroll::-webkit-scrollbar {
+	display: none;
+}
+
+.hideScroll {
+	scrollbar-width: none !important;
+}

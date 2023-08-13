@@ -3,15 +3,15 @@
 
 import React, { memo, useCallback, useEffect, useState } from "react";
 
-import { Text, View } from "@aws-amplify/ui-react";
+import { Flex, Text, View } from "@aws-amplify/ui-react";
 import { IconDestination, IconSegment } from "@demo/assets";
 import { useAmplifyMap, useAwsPlace } from "@demo/hooks";
-import { DistanceUnitEnum, MapUnitEnum, SuggestionType, TravelMode } from "@demo/types";
+import { MapUnitEnum, SuggestionType, TravelMode } from "@demo/types";
 import { Position, Step } from "aws-sdk/clients/location";
+import { useTranslation } from "react-i18next";
 import "./styles.scss";
 
 const { METRIC } = MapUnitEnum;
-const { KILOMETERS_SHORT, MILES_SHORT } = DistanceUnitEnum;
 
 interface StepCardProps {
 	step: Step;
@@ -25,6 +25,9 @@ const StepCard: React.FC<StepCardProps> = ({ step, isFirst, isLast, travelMode }
 	const { mapUnit: currentMapUnit } = useAmplifyMap();
 	const { getPlaceDataByCoordinates } = useAwsPlace();
 	const onlyOneEl = isFirst && isLast;
+	const { t, i18n } = useTranslation();
+	const currentLang = i18n.language;
+	const isLanguageRTL = ["ar", "he"].includes(currentLang);
 
 	const fetchPlaceData = useCallback(
 		async (coords: Position) => {
@@ -78,9 +81,16 @@ const StepCard: React.FC<StepCardProps> = ({ step, isFirst, isLast, travelMode }
 				<Text className="address">
 					{placeData.Place?.Label || `${(placeData.Place?.Geometry.Point?.[1], placeData.Place?.Geometry.Point?.[0])}`}
 				</Text>
-				<Text className="distance">{`${step.Distance.toFixed(2)} ${
-					currentMapUnit === METRIC ? KILOMETERS_SHORT : MILES_SHORT
-				}`}</Text>
+				<Flex
+					gap="0.3rem"
+					direction={isLanguageRTL ? "row-reverse" : "row"}
+					justifyContent={isLanguageRTL ? "flex-end" : "flex-start"}
+				>
+					<Text className="distance">{step.Distance.toFixed(2)}</Text>
+					<Text className="distance">
+						{currentMapUnit === METRIC ? t("geofence_box__km__short.text") : t("geofence_box__mi__short.text")}
+					</Text>
+				</Flex>
 			</View>
 		</View>
 	) : null;

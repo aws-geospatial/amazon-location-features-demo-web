@@ -13,6 +13,7 @@ import {
 	SearchPlaceIndexForSuggestionsRequest,
 	SearchPlaceIndexForTextRequest
 } from "aws-sdk/clients/location";
+import { useTranslation } from "react-i18next";
 
 const {
 	MAP_RESOURCES: {
@@ -23,20 +24,22 @@ const {
 const useAwsPlaceService = () => {
 	const { locationClient } = useAws();
 	const { mapProvider: currentMapProvider, viewpoint } = useAmplifyMap();
+	const { i18n } = useTranslation();
+	const lang = i18n.language;
 
 	const config = useMemo(
 		() => ({
 			IndexName:
-				currentMapProvider === MapProviderEnum.ESRI
+				currentMapProvider === MapProviderEnum.ESRI || currentMapProvider === MapProviderEnum.OPEN_DATA
 					? ESRI
 					: currentMapProvider === MapProviderEnum.HERE
 					? HERE
 					: currentMapProvider === MapProviderEnum.GRAB
 					? GRAB
 					: "",
-			Language: "en"
+			Language: lang
 		}),
-		[currentMapProvider]
+		[currentMapProvider, lang]
 	);
 
 	return useMemo(

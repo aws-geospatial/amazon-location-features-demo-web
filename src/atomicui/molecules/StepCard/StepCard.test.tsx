@@ -1,10 +1,10 @@
 import { TravelMode } from "@demo/types";
 import { faker } from "@faker-js/faker";
-import { RenderResult, render, screen } from "@testing-library/react";
+import { render } from "@testing-library/react";
 
 import StepCard from "./StepCard";
 
-const useAwsPlaceReturnValue = {
+const useAwsPlace = () => ({
 	getPlaceDataByCoordinates: () => ({
 		Results: [
 			{
@@ -15,9 +15,8 @@ const useAwsPlaceReturnValue = {
 			}
 		]
 	})
-};
+});
 
-const useAwsPlace = () => useAwsPlaceReturnValue;
 jest.mock("hooks", () => ({ useAwsPlace, useAmplifyMap: () => ({ mapUnit: "Metric" }) }));
 
 describe("<StepCard/>", () => {
@@ -25,11 +24,7 @@ describe("<StepCard/>", () => {
 	let segmentIcon: HTMLElement | null;
 	let destinationIcon: HTMLElement | null;
 
-	const renderComponent = async (props: {
-		travelMode?: TravelMode;
-		isFirst: boolean;
-		isLast: boolean;
-	}): Promise<RenderResult> => {
+	const renderComponent = async (props: { travelMode?: TravelMode; isFirst: boolean; isLast: boolean }) => {
 		const renderedComponent = render(
 			<StepCard
 				step={{
@@ -43,10 +38,11 @@ describe("<StepCard/>", () => {
 				{...props}
 			/>
 		);
+		const { findByTestId, queryByTestId } = renderedComponent;
 
-		stepCardContainer = await screen.findByTestId("step-card-container");
-		segmentIcon = screen.queryByTestId("segment-icon");
-		destinationIcon = screen.queryByTestId("destination-icon");
+		stepCardContainer = await findByTestId("step-card-container");
+		segmentIcon = queryByTestId("segment-icon");
+		destinationIcon = queryByTestId("destination-icon");
 
 		return renderedComponent;
 	};

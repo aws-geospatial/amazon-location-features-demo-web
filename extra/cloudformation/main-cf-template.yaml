@@ -126,6 +126,10 @@ Resources:
               - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.Imagery"
               - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Grab.StandardLight"
               - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Grab.StandardDark"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.OpenData.StandardLight"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.OpenData.StandardDark"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.OpenData.VisualizationLight"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.OpenData.VisualizationDark"
               - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:place-index/location.aws.com.demo.places.Esri.PlaceIndex"
               - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:place-index/location.aws.com.demo.places.HERE.PlaceIndex"
               - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:place-index/location.aws.com.demo.places.Grab.PlaceIndex"
@@ -210,6 +214,10 @@ Resources:
               - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.Imagery"
               - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Grab.StandardLight"
               - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Grab.StandardDark"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.OpenData.StandardLight"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.OpenData.StandardDark"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.OpenData.VisualizationLight"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.OpenData.VisualizationDark"              
               - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:place-index/location.aws.com.demo.places.Esri.PlaceIndex"
               - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:place-index/location.aws.com.demo.places.HERE.PlaceIndex"
               - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:place-index/location.aws.com.demo.places.Grab.PlaceIndex"
@@ -251,6 +259,38 @@ Resources:
         unauthenticated: !GetAtt
           - AmazonLocationDemoCognitoIdentityPoolUnauthRole
           - Arn
+
+  AmazonLocationDemoMapsOpenDataLight:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorOpenDataStandardLight
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.OpenData.StandardLight
+
+  AmazonLocationDemoMapsOpenDataDark:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorOpenDataStandardDark
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.OpenData.StandardDark
+
+  AmazonLocationDemoMapsOpenDataVisualizationLight:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorOpenDataVisualizationLight
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.OpenData.VisualizationLight
+
+  AmazonLocationDemoMapsOpenDataVisualizationDark:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorOpenDataVisualizationDark
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.OpenData.VisualizationDark  
 
   AmazonLocationDemoMapsEsriLight:
     Type: AWS::Location::Map

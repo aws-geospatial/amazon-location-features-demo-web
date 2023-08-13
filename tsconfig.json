@@ -21,5 +21,6 @@
 		}
 	},
 	"references": [{ "path": "./tsconfig.node.json" }],
-	"exclude": ["cypress.config.ts"]
+	"include": ["src"],
+	"exclude": ["cypress.config.ts", "__mocks__/*"]
 }

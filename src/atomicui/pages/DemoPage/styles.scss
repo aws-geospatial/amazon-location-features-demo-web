@@ -47,6 +47,14 @@
 	z-index: 3;
 }
 
+.dark-mode {
+	.mapboxgl-ctrl-attrib-inner {
+		a {
+			color: white;
+		}
+	}
+}
+
 .mapboxgl-ctrl-group button,
 .maplibregl-ctrl-group button {
 	width: 2.46rem;

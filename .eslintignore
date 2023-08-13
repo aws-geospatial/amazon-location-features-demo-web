@@ -9,6 +9,7 @@ sample-projects
 node_modules
 extra
 dist
+lib
 dist-ssr
 *.local
 build

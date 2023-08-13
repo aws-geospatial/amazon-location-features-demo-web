@@ -7,6 +7,9 @@ import "./styles.scss";
 
 export const ToastContainer = () => (
 	<RTToastContainer
+		className={"toast-container"}
+		enableMultiContainer
+		containerId={"toast-container"}
 		position="top-center"
 		autoClose={10000}
 		hideProgressBar
@@ -19,24 +22,41 @@ export const ToastContainer = () => (
 	/>
 );
 
-export const showToast = (params: { content: string; type: ToastType }) => {
-	const { type, content } = params;
+export const UnauthSimulationToastContainer = () => (
+	<RTToastContainer
+		className={"unauth-simulation-toast-container"}
+		enableMultiContainer
+		containerId={"unauth-simulation-toast-container"}
+		position="top-center"
+		autoClose={3000}
+		hideProgressBar
+		newestOnTop={false}
+		closeOnClick
+		pauseOnFocusLoss
+		draggable={false}
+		pauseOnHover
+		theme="dark"
+	/>
+);
+
+export const showToast = (params: { content: string; type: ToastType; containerId?: string; className?: string }) => {
+	const { type, content, containerId = "toast-container", className } = params;
 
 	switch (type) {
 		case "info":
-			toast.info(content);
+			toast.info(content, { containerId, className });
 			break;
 		case "success":
-			toast.success(content);
+			toast.success(content, { containerId, className });
 			break;
 		case "warning":
-			toast.warn(content);
+			toast.warn(content, { containerId, className });
 			break;
 		case "error":
-			toast.error(content);
+			toast.error(content, { containerId, className });
 			break;
 		default:
-			toast(content);
+			toast(content, { containerId, className });
 			break;
 	}
 };

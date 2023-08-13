@@ -1,14 +1,18 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-.confirmation-modal {
+.grab-confirmation-modal {
 	max-width: 30rem;
 	max-height: 35rem;
 	padding: 2.77rem;
 }
 
+.increased-max-height {
+	max-height: 37rem;
+}
+
 @media screen and (max-width: 960px) {
-	.confirmation-modal {
+	.grab-confirmation-modal {
 		width: 90% !important;
 		height: 90% !important;
 	}

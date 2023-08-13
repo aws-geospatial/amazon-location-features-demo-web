@@ -1,4 +1,4 @@
-import { GrabMapEnum } from "@demo/types";
+import { GrabMapEnum, OpenDataMapEnum } from "@demo/types";
 
 export type ShowStateType = {
 	gridLoader: boolean;
@@ -6,12 +6,17 @@ export type ShowStateType = {
 	routeBox: boolean;
 	signInModal: boolean;
 	connectAwsAccount: boolean;
-	geofenceBox: boolean;
-	trackingBox: boolean;
+	authGeofenceBox: boolean;
+	authTrackerBox: boolean;
 	settings: boolean;
 	stylesCard: boolean;
 	trackingDisclaimerModal: boolean;
 	about: boolean;
 	grabDisclaimerModal: boolean;
-	mapStyle?: GrabMapEnum;
+	openDataDisclaimerModal: boolean;
+	mapStyle?: GrabMapEnum | OpenDataMapEnum;
+	unauthGeofenceBox: boolean;
+	unauthTrackerBox: boolean;
+	unauthSimulationDisclaimerModal: boolean;
+	unauthSimulationExitModal: boolean;
 };

@@ -1,0 +1,1 @@
+Don't delete this file, we are using this to detect user's country via cloudfront.
