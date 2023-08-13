@@ -348,6 +348,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 								setRouteOptions({ ...routeOptions, avoidTolls: e.target.checked });
 								setRouteData(undefined);
 							}}
+							crossOrigin={undefined}
 						/>
 						<CheckboxField
 							className="option-item"
@@ -359,6 +360,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 								setRouteOptions({ ...routeOptions, avoidFerries: e.target.checked });
 								setRouteData(undefined);
 							}}
+							crossOrigin={undefined}
 						/>
 					</View>
 				)}
