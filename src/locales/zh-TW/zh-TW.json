@@ -3057,43 +3057,43 @@
     "text": "選擇一個選項"
   },
   "regions__us_east_1": {
-    "text": "美國東部 (維吉尼亞北部) 東部 -1"
+    "text": "我們 東部 (N. 弗吉尼亞) us-east-1"
   },
   "regions__us_east_2": {
-    "text": "美國東部 (俄亥俄) 東 2"
+    "text": "我們 東部 (俄亥俄州) us-east-2"
   },
   "regions__us_west_2": {
-    "text": "美國西部 (奧勒岡)-西 2"
+    "text": "我們 西方 (俄勒岡州) us-west-2"
   },
   "regions__ap_south_1": {
-    "text": "亞太區域 (孟買) 南路 1 號"
+    "text": "Asia Pacific (Mumbai) ap-south-1"
   },
   "regions__ap_southeast_1": {
-    "text": "亞太區域 (新加坡) AP-東南部 -1"
+    "text": "亞洲 太平洋 (新加坡) ap-southeast-1"
   },
   "regions__ap_southeast_2": {
-    "text": "亞太區域 (雪梨) AP-東南區 -2"
+    "text": "亞洲 太平洋 (悉尼) ap-southeast-2"
   },
   "regions__ap_northeast_1": {
-    "text": "亞太區域 (東京) 地區東北 -1"
+    "text": "Asia Pacific (Tokyo) ap-northeast-1"
   },
   "regions__ca_central_1": {
-    "text": "加拿大（中部）CA-中部 -1"
+    "text": "加拿大 (中環) ca-central-1"
   },
   "regions__eu_central_1": {
-    "text": "歐洲 (法蘭克福) 歐洲中部 -1"
+    "text": "歐洲 (法蘭克福) eu-central-1"
   },
   "regions__eu_west_1": {
-    "text": "歐洲 (愛爾蘭) 歐洲-西部 -1"
+    "text": "歐洲 (愛爾蘭) eu-west-1"
   },
   "regions__eu_west_2": {
-    "text": "歐洲 (倫敦) 歐洲-西部 -2"
+    "text": "歐洲 (倫敦) eu-west-2"
   },
   "regions__eu_north_1": {
-    "text": "歐洲 (斯德哥爾摩) 歐洲北部 -1"
+    "text": "歐洲 (斯德哥爾摩) eu-north-1"
   },
   "regions__sa_east_1": {
-    "text": "南美洲（聖保羅）東 1"
+    "text": "南方 美國 (聖保羅 保羅) sa-east-1"
   },
   "sign_in_modal__1": {
     "text": "需要登入"

@@ -7,6 +7,7 @@ import AWS from "aws-sdk";
 import * as dotenv from "dotenv";
 
 import { excludedPhrases } from "./exclude-phrases.js";
+import { excludedKeys } from "./excluded-keys.js";
 
 dotenv.config({ path: "./.env" });
 
@@ -71,9 +72,14 @@ const main = async () => {
 			const translatedJson = {};
 
 			for (const key in json) {
-				translatedJson[key] = {
-					text: await translateText(json[key].text, targetLang)
-				};
+				// Check if key exists in the excluded-keys array
+				if (excludedKeys.includes(key)) {
+					translatedJson[key] = json[key]; // don't translate
+				} else {
+					translatedJson[key] = {
+						text: await translateText(json[key].text, targetLang)
+					};
+				}
 			}
 
 			return translatedJson;

@@ -3057,28 +3057,28 @@
     "text": "Seleziona un'opzione"
   },
   "regions__us_east_1": {
-    "text": "Stati Uniti orientali (Virginia del Nord) us-east-1"
+    "text": "NOI est (N. Virginia) us-east-1"
   },
   "regions__us_east_2": {
-    "text": "Stati Uniti orientali (Ohio) us-east-2"
+    "text": "NOI est (Ohio) us-east-2"
   },
   "regions__us_west_2": {
-    "text": "Stati Uniti occidentali (Oregon) us-west-2"
+    "text": "NOI ovest (Oregon) us-west-2"
   },
   "regions__ap_south_1": {
-    "text": "Asia Pacifico (Mumbai) ap-south-1"
+    "text": "Asia Pacific (Mumbai) ap-south-1"
   },
   "regions__ap_southeast_1": {
     "text": "Asia Pacifico (Singapore) ap-southeast-1"
   },
   "regions__ap_southeast_2": {
-    "text": "Asia Pacifico (Sydney) ap-southeast-2"
+    "text": "Asia Pacifico (Sidney) ap-southeast-2"
   },
   "regions__ap_northeast_1": {
-    "text": "Asia Pacifico (Tokyo) ap-northeast-1"
+    "text": "Asia Pacific (Tokyo) ap-northeast-1"
   },
   "regions__ca_central_1": {
-    "text": "Canada (centrale) ca-central-1"
+    "text": "Canada (Centrale) ca-central-1"
   },
   "regions__eu_central_1": {
     "text": "Europa (Francoforte) eu-central-1"
@@ -3093,7 +3093,7 @@
     "text": "Europa (Stoccolma) eu-north-1"
   },
   "regions__sa_east_1": {
-    "text": "America del Sud (San Paolo) sa-east-1"
+    "text": "Sud America (Sao Paolo) sa-east-1"
   },
   "sign_in_modal__1": {
     "text": "È necessario effettuare l'accesso"

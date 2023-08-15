@@ -3057,25 +3057,25 @@
     "text": "एक विकल्प चुनें"
   },
   "regions__us_east_1": {
-    "text": "यूएस ईस्ट (एन वर्जीनिया) us-east-1"
+    "text": "हमें पूर्व (एन। वर्जीनिया) us-east-1"
   },
   "regions__us_east_2": {
-    "text": "यूएस ईस्ट (ओहायो) यूएस-ईस्ट-2"
+    "text": "हमें पूर्व (ओहायो) us-east-2"
   },
   "regions__us_west_2": {
-    "text": "यूएस वेस्ट (ओरेगन) us-west -2"
+    "text": "हमें पश्चिम (ओरेगन) us-west-2"
   },
   "regions__ap_south_1": {
-    "text": "एशिया पैसिफिक (मुंबई) एपी-साउथ-1"
+    "text": "Asia Pacific (Mumbai) ap-south-1"
   },
   "regions__ap_southeast_1": {
-    "text": "एशिया पैसिफिक (सिंगापुर) एपी-साउथईस्ट-1"
+    "text": "एशिया प्रशांत (सिंगापुर) ap-southeast-1"
   },
   "regions__ap_southeast_2": {
-    "text": "एशिया पैसिफिक (सिडनी) एपी-साउथईस्ट-2"
+    "text": "एशिया प्रशांत (सिडनी) ap-southeast-2"
   },
   "regions__ap_northeast_1": {
-    "text": "एशिया पैसिफिक (टोक्यो) एपी-नॉर्थईस्ट-1"
+    "text": "Asia Pacific (Tokyo) ap-northeast-1"
   },
   "regions__ca_central_1": {
     "text": "कनाडा (सेंट्रल) ca-central-1"
@@ -3087,10 +3087,10 @@
     "text": "यूरोप (आयरलैंड) eu-west-1"
   },
   "regions__eu_west_2": {
-    "text": "यूरोप (लंदन) eu-पश्चिम-2"
+    "text": "यूरोप (लंदन) eu-west-2"
   },
   "regions__eu_north_1": {
-    "text": "यूरोप (स्टॉकहोम) eu-North-1"
+    "text": "यूरोप (स्टॉकहोम) eu-north-1"
   },
   "regions__sa_east_1": {
     "text": "दक्षिण अमेरिका (साओ पाउलो) sa-east-1"
