@@ -487,6 +487,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 						gap={0}
 						direction="column"
 						padding="0rem 1.15rem"
+						dir={langDir}
 					>
 						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
 							<Radio

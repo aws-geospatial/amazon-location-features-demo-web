@@ -3057,43 +3057,43 @@
     "text": "옵션 선택"
   },
   "regions__us_east_1": {
-    "text": "미국 동부 (버지니아 북부) 미국 동부-1"
+    "text": "우리 동쪽 (N. 버지니아) us-east-1"
   },
   "regions__us_east_2": {
-    "text": "미국 동부 (오하이오) 미국-동부-2"
+    "text": "우리 동쪽 (오하이오) us-east-2"
   },
   "regions__us_west_2": {
-    "text": "미국 서부 (오레곤) 미국-서부-2"
+    "text": "우리 서쪽 (오리건) us-west-2"
   },
   "regions__ap_south_1": {
-    "text": "아시아 태평양 (뭄바이) ap-남쪽-1"
+    "text": "Asia Pacific (Mumbai) ap-south-1"
   },
   "regions__ap_southeast_1": {
-    "text": "아시아 태평양 (싱가포르) ap-남동부-1"
+    "text": "아시아 태평양 (싱가포르) ap-southeast-1"
   },
   "regions__ap_southeast_2": {
-    "text": "아시아 태평양 (시드니) ap-남동부-2"
+    "text": "아시아 태평양 (시드니) ap-southeast-2"
   },
   "regions__ap_northeast_1": {
-    "text": "아시아 태평양 (도쿄) ap-북동부-1"
+    "text": "Asia Pacific (Tokyo) ap-northeast-1"
   },
   "regions__ca_central_1": {
-    "text": "캐나다 (중부) ca-센트럴-1"
+    "text": "캐나다 (중부) ca-central-1"
   },
   "regions__eu_central_1": {
-    "text": "유럽 (프랑크푸르트) EU-중앙-1"
+    "text": "유럽 (프랑크푸르트) eu-central-1"
   },
   "regions__eu_west_1": {
-    "text": "유럽 (아일랜드) EU-서부-1"
+    "text": "유럽 (아일랜드) eu-west-1"
   },
   "regions__eu_west_2": {
-    "text": "유럽 (런던) EU-서부-2"
+    "text": "유럽 (런던) eu-west-2"
   },
   "regions__eu_north_1": {
-    "text": "유럽 (스톡홀름) EU-북부-1"
+    "text": "유럽 (스톡홀름) eu-north-1"
   },
   "regions__sa_east_1": {
-    "text": "남미 (상파울루) sa-동쪽-1"
+    "text": "남쪽 미국 (상 파울로) sa-east-1"
   },
   "sign_in_modal__1": {
     "text": "로그인 필요"

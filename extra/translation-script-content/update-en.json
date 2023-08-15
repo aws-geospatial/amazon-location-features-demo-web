@@ -1,11 +1,8 @@
 {
-	"regions__us_east__region": {
-		"text": "US East"
-	},
-	"regions__eu_west__region": {
-		"text": "Europe"
-	},
-	"regions__ap_southeast__region": {
-		"text": "Asia Pacific"
-	}
+	"regions__ap_south_1": {
+    "text": "Asia Pacific (Mumbai) ap-south-1"
+  },
+	"regions__ap_northeast_1": {
+    "text": "Asia Pacific (Tokyo) ap-northeast-1"
+  }
 }

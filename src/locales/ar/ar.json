@@ -90,7 +90,7 @@
     "text": "قطع اتصال حساب AWS"
   },
   "copyright": {
-    "text": ".شركة أمازون ويب سيرفيسز، أو الشركات التابعة لها. جميع الحقوق محفوظة"
+    "text": "شركة أمازون ويب سيرفيسز، أو الشركات التابعة لها. جميع الحقوق محفوظة"
   },
   "failed_to_connect_ud_up": {
     "text": "فشل في توصيل حساب AWS أو نطاق مستخدم غير صالح أو معرف عميل UserPool/ClientID"
@@ -3057,28 +3057,28 @@
     "text": "حدد أحد الخيارات"
   },
   "regions__us_east_1": {
-    "text": "شرق الولايات المتحدة (فرجينيا الشمالية) us-east-1"
+    "text": "لنا الشرق (ن. فرجينيا) us-east-1"
   },
   "regions__us_east_2": {
-    "text": "شرق الولايات المتحدة (أوهايو) شرق الولايات المتحدة -2"
+    "text": "لنا الشرق (أوهايو) us-east-2"
   },
   "regions__us_west_2": {
-    "text": "غرب الولايات المتحدة (أوريغون) us-west-2"
+    "text": "لنا غرب (أوريغون) us-west-2"
   },
   "regions__ap_south_1": {
-    "text": "آسيا والمحيط الهادئ (مومباي) ap-south-1"
+    "text": "Asia Pacific (Mumbai) ap-south-1"
   },
   "regions__ap_southeast_1": {
-    "text": "آسيا والمحيط الهادئ (سنغافورة) في الجنوب الشرقي -1"
+    "text": "آسيا المحيط الهادي (سنغافورة) ap-southeast-1"
   },
   "regions__ap_southeast_2": {
-    "text": "آسيا والمحيط الهادئ (سيدني) في الجنوب الشرقي -2"
+    "text": "آسيا المحيط الهادي (سيدني) ap-southeast-2"
   },
   "regions__ap_northeast_1": {
-    "text": "آسيا والمحيط الهادئ (طوكيو) من الشمال الشرقي إلى الشمال الشرقي -1"
+    "text": "Asia Pacific (Tokyo) ap-northeast-1"
   },
   "regions__ca_central_1": {
-    "text": "وسط كندا (وسط) 1"
+    "text": "كندا (مركزي) ca-central-1"
   },
   "regions__eu_central_1": {
     "text": "أوروبا (فرانكفورت) eu-central-1"
@@ -3093,7 +3093,7 @@
     "text": "أوروبا (ستوكهولم) eu-north-1"
   },
   "regions__sa_east_1": {
-    "text": "أمريكا الجنوبية (ساو باولو) sa-east-1"
+    "text": "جنوب أمريكا (ساو باولو) sa-east-1"
   },
   "sign_in_modal__1": {
     "text": "تسجيل الدخول مطلوب"

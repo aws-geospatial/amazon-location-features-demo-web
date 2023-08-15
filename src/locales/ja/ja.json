@@ -3057,43 +3057,43 @@
     "text": "オプションを選択する"
   },
   "regions__us_east_1": {
-    "text": "米国東部 (バージニア北部) us-east-1"
+    "text": "私たち 東だ (N。 バージニア) us-east-1"
   },
   "regions__us_east_2": {
-    "text": "米国東部 (オハイオ) 米国東-2"
+    "text": "私たち 東だ (オハイオ) us-east-2"
   },
   "regions__us_west_2": {
-    "text": "米国西部 (オレゴン) 米国西部 2"
+    "text": "私たち 西 (オレゴン) us-west-2"
   },
   "regions__ap_south_1": {
-    "text": "アジアパシフィック (ムンバイ) AP-サウス-1"
+    "text": "Asia Pacific (Mumbai) ap-south-1"
   },
   "regions__ap_southeast_1": {
-    "text": "アジアパシフィック (シンガポール) AP-サウスイースト-1"
+    "text": "アジア パシフィック (シンガポール) ap-southeast-1"
   },
   "regions__ap_southeast_2": {
-    "text": "アジアパシフィック (シドニー) AP-サウスイースト-2"
+    "text": "アジア パシフィック (シドニー) ap-southeast-2"
   },
   "regions__ap_northeast_1": {
-    "text": "アジアパシフィック (東京) AP-ノースイースト-1"
+    "text": "Asia Pacific (Tokyo) ap-northeast-1"
   },
   "regions__ca_central_1": {
-    "text": "カナダ (セントラル) CA-セントラル-1"
+    "text": "カナダ (セントラル) ca-central-1"
   },
   "regions__eu_central_1": {
-    "text": "ヨーロッパ (フランクフルト) eu-セントラル-1"
+    "text": "ヨーロッパ (フランクフルト) eu-central-1"
   },
   "regions__eu_west_1": {
     "text": "ヨーロッパ (アイルランド) eu-west-1"
   },
   "regions__eu_west_2": {
-    "text": "ヨーロッパ (ロンドン) eu-西部 2"
+    "text": "ヨーロッパ (ロンドン) eu-west-2"
   },
   "regions__eu_north_1": {
     "text": "ヨーロッパ (ストックホルム) eu-north-1"
   },
   "regions__sa_east_1": {
-    "text": "南アメリカ (サンパウロ) sa-east-1"
+    "text": "南 アメリカ (サオ) パウロ) sa-east-1"
   },
   "sign_in_modal__1": {
     "text": "ログインが必要です"

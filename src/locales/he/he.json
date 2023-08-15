@@ -3057,43 +3057,43 @@
     "text": "בחר אפשרות"
   },
   "regions__us_east_1": {
-    "text": "מזרח ארה\"ב (נ 'וירג'יניה) us-מזרח-1"
+    "text": "לנו מזרח (נ. וירג'יניה) us-east-1"
   },
   "regions__us_east_2": {
-    "text": "מזרח ארה\"ב (אוהיו) ארה\"ב-מזרח-2"
+    "text": "לנו מזרח (אוהיו) us-east-2"
   },
   "regions__us_west_2": {
-    "text": "מערב ארה\"ב (אורגון) ארה\"ב-מערב -2"
+    "text": "לנו מערב (אורגון) us-west-2"
   },
   "regions__ap_south_1": {
-    "text": "אסיה פסיפיק (מומבאי) ap-דרום -1"
+    "text": "Asia Pacific (Mumbai) ap-south-1"
   },
   "regions__ap_southeast_1": {
-    "text": "אסיה פסיפיק (סינגפור) ap-דרום-מזרח-1"
+    "text": "אסיה האוקיינוס השקט (סינגפור) ap-southeast-1"
   },
   "regions__ap_southeast_2": {
-    "text": "אסיה פסיפיק (סידני) ap-דרום-מזרח -2"
+    "text": "אסיה האוקיינוס השקט (סידני) ap-southeast-2"
   },
   "regions__ap_northeast_1": {
-    "text": "אסיה פסיפיק (טוקיו) ap-צפון-מזרח-1"
+    "text": "Asia Pacific (Tokyo) ap-northeast-1"
   },
   "regions__ca_central_1": {
-    "text": "קנדה (מרכז) ca-מרכז-1"
+    "text": "קנדה (מרכזי) ca-central-1"
   },
   "regions__eu_central_1": {
-    "text": "אירופה (פרנקפורט) EU-מרכז-1"
+    "text": "אירופה (פרנקפורט) eu-central-1"
   },
   "regions__eu_west_1": {
-    "text": "אירופה (אירלנד) האיחוד האירופי-מערב -1"
+    "text": "אירופה (אירלנד) eu-west-1"
   },
   "regions__eu_west_2": {
-    "text": "אירופה (לונדון) האיחוד האירופי-מערב -2"
+    "text": "אירופה (לונדון) eu-west-2"
   },
   "regions__eu_north_1": {
-    "text": "אירופה (שטוקהולם) האיחוד האירופי-צפון-1"
+    "text": "אירופה (שטוקהולם) eu-north-1"
   },
   "regions__sa_east_1": {
-    "text": "דרום אמריקה (סאו פאולו) sa-מזרח -1"
+    "text": "דרום אמריקה (סאו פאולו) sa-east-1"
   },
   "sign_in_modal__1": {
     "text": "כניסה נדרשת"

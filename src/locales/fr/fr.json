@@ -3057,43 +3057,43 @@
     "text": "Sélectionnez une option"
   },
   "regions__us_east_1": {
-    "text": "USA Est (Virginie du Nord) us-east-1"
+    "text": "NOUS Est (N. Virginie) us-east-1"
   },
   "regions__us_east_2": {
-    "text": "USA Est (Ohio) us-east-2"
+    "text": "NOUS Est (Ohio) us-east-2"
   },
   "regions__us_west_2": {
-    "text": "USA Ouest (Oregon) us-west-2"
+    "text": "NOUS Ouest (Oregon) us-west-2"
   },
   "regions__ap_south_1": {
-    "text": "Asie-Pacifique (Mumbai) ap-south-1"
+    "text": "Asia Pacific (Mumbai) ap-south-1"
   },
   "regions__ap_southeast_1": {
-    "text": "Asie-Pacifique (Singapour) ap-southeast-1"
+    "text": "Asie Pacifique (Singapour) ap-southeast-1"
   },
   "regions__ap_southeast_2": {
-    "text": "Asie-Pacifique (Sydney) ap-southeast-2"
+    "text": "Asie Pacifique (Sydney) ap-southeast-2"
   },
   "regions__ap_northeast_1": {
-    "text": "Asie-Pacifique (Tokyo) ap-northeast-1"
+    "text": "Asia Pacific (Tokyo) ap-northeast-1"
   },
   "regions__ca_central_1": {
     "text": "Canada (Centre) ca-central-1"
   },
   "regions__eu_central_1": {
-    "text": "Europe (Francfort) eu-central-1"
+    "text": "L'Europe (Francfort) eu-central-1"
   },
   "regions__eu_west_1": {
-    "text": "Europe (Irlande) eu-west-1"
+    "text": "L'Europe (Irlande) eu-west-1"
   },
   "regions__eu_west_2": {
-    "text": "Europe (Londres) eu-west-2"
+    "text": "L'Europe (Londres) eu-west-2"
   },
   "regions__eu_north_1": {
-    "text": "Europe (Stockholm) eu-nord-1"
+    "text": "L'Europe (Stockholm) eu-north-1"
   },
   "regions__sa_east_1": {
-    "text": "Amérique du Sud (São Paulo) sa-east-1"
+    "text": "Sud Amérique (São Paulo) Paulo) sa-east-1"
   },
   "sign_in_modal__1": {
     "text": "Connexion requise"

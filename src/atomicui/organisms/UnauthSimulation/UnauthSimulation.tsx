@@ -289,7 +289,11 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 					data-testid="unauth-simulation-card"
 					className="unauth-simulation-card"
 					left={21}
-					width={unauthSimulationCtaText.length > 42 ? `${currentLanguage === "pt-BR" ? "34rem" : "29rem"}` : ""}
+					width={
+						unauthSimulationCtaText.length > 42 || "ja" === currentLanguage
+							? `${["pt-BR", "ja"].includes(currentLanguage) ? "37rem" : "31rem"}`
+							: ""
+					}
 				>
 					<Flex
 						data-testid="unauth-simulation-card-header-close"
