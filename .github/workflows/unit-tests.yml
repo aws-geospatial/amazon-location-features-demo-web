@@ -22,4 +22,7 @@ jobs:
         run: yarn install
 
       - name: Run Unit Tests
+        env:
+          VITE_PINPOINT_IDENTITY_POOL_ID: ${{ secrets.VITE_PINPOINT_IDENTITY_POOL_ID }}
+          VITE_PINPOINT_APPLICATION_ID: ${{ secrets.VITE_PINPOINT_APPLICATION_ID }}
         run: yarn test
