@@ -21,7 +21,7 @@
 	},
 	"scripts": {
 		"dev": "vite",
-		"build": "tsc && vite build",
+		"build": "tsc && vite build && cp -r ./public/.well-known/ ./build/",
 		"preview": "vite preview",
 		"stylelint-check": "stylelint-config-prettier-check",
 		"cypress": "cypress run --browser chrome --headed",
