@@ -19,10 +19,10 @@ jobs:
         uses: actions/setup-node@v3
 
       - name: Install Dependencies
-        run: yarn install
+        run: npm install
 
       - name: Run Unit Tests
         env:
           VITE_PINPOINT_IDENTITY_POOL_ID: ${{ secrets.VITE_PINPOINT_IDENTITY_POOL_ID }}
           VITE_PINPOINT_APPLICATION_ID: ${{ secrets.VITE_PINPOINT_APPLICATION_ID }}
-        run: yarn test
+        run: npm run test

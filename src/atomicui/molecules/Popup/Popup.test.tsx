@@ -89,9 +89,11 @@ describe("<Popup/>", () => {
 		expect(directionsButton).toBeInTheDocument();
 	});
 
-	it("should call copy icon onClick function when copy icon is clicked", () => {
+	it("should call copy icon onClick function when copy icon is clicked", async () => {
 		renderComponent();
-		act(() => fireEvent.click(copyIcon!));
+		await act(async () => {
+			fireEvent.click(copyIcon!);
+		});
 		expect(navigator.clipboard.writeText).toBeCalled();
 	});
 });
