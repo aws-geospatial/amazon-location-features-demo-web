@@ -222,6 +222,8 @@ Resources:
     DeletionPolicy: Delete
     Properties:
       BucketName: !Sub "location.aws.com.demo.kinesis.${AWS::AccountId}"
+      VersioningConfiguration:
+          Status: Enabled
       BucketEncryption:
           ServerSideEncryptionConfiguration:
            - ServerSideEncryptionByDefault:
