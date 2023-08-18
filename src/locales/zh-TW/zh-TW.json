@@ -3394,5 +3394,11 @@
   },
   "regions__ap_southeast__region": {
     "text": "亞太地區"
+  },
+  "explore__connect_aws_account": {
+    "text": "連接到 AWS"
+  },
+  "explore__connect_description": {
+    "text": "透過連線至 AWS 雲端架構，存取追蹤和地理圍欄功能 "
   }
 }

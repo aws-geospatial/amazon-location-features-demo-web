@@ -14,6 +14,33 @@
 	width: 100%;
 	max-width: 360px;
 
+	&.simple-search-bar {
+		width: -webkit-fill-available;
+		background-color: var(--light-color-2);
+		box-shadow: none;
+
+		@media only screen and (max-width: 480px) {
+			max-width: -webkit-fill-available;
+		}
+
+		.amplify-autocomplete__menu {
+			top: 38px !important;
+		}
+
+		.amplify-flex.not-found-container {
+			height: auto;
+		}
+
+		input {
+			margin-left: 0px;
+			width: 100%;
+		}
+
+		.search-complete {
+			text-align: left;
+		}
+	}
+
 	.amplify-flex.not-found-container {
 		height: 19rem;
 
@@ -25,6 +52,7 @@
 	.amplify-flex.search-loader-container {
 		flex-direction: column;
 		width: 100%;
+
 		.skeleton-container {
 			flex-direction: column;
 			margin: 0.5rem 0;
@@ -60,12 +88,12 @@
 		width: 83%;
 	}
 
-	.noEmpty{
+	.noEmpty {
 		.amplify-autocomplete__menu:has(div.amplify-autocomplete__menu--empty) {
 			display: none;
 			height: 0px;
 		}
-		
+
 		.amplify-autocomplete__menu--empty {
 			display: none;
 			height: 0px;
@@ -117,7 +145,7 @@
 	border-bottom: 1px solid var(--light-color-2);
 }
 
-.amplify-field-group__field-wrapper.amplify-field-group__field-wrapper--horizontal > input,
+.amplify-field-group__field-wrapper.amplify-field-group__field-wrapper--horizontal>input,
 input.amplify-input.amplify-field-group__control {
 	border: none;
 	height: 36px;
@@ -176,7 +204,7 @@ input.amplify-input.amplify-field-group__control {
 	background: rgba(142, 142, 147, 0.08);
 }
 
-.option-container-active > svg {
+.option-container-active>svg {
 	fill: #008296;
 }
 
@@ -203,18 +231,27 @@ input.amplify-input.amplify-field-group__control {
 			}
 		}
 	}
-	.inner-end-component {
-		svg {
-			fill: var(--grey-light-color);
-			outline: none;
-		}
-	}
 
 	.outter-end-component {
 		border-left: 1px solid var(--grey-color-3);
+
 		svg {
 			fill: var(--grey-color);
 			outline: none;
 		}
+	}
+}
+
+.inner-end-component {
+	svg {
+		fill: var(--grey-light-color);
+		outline: none;
+	}
+
+	&.simple-search {
+		align-items: center;
+		display: flex;
+		height: 100%;
+		margin-left: 0.5rem;
 	}
 }

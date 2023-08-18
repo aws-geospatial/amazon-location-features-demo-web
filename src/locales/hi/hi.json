@@ -3394,5 +3394,11 @@
   },
   "regions__ap_southeast__region": {
     "text": "एशिया पैसिफिक"
+  },
+  "explore__connect_aws_account": {
+    "text": "AWS से कनेक्ट करें"
+  },
+  "explore__connect_description": {
+    "text": "AWS CloudFormation से कनेक्ट करके ट्रैकिंग और जियोफेंस सुविधाओं तक पहुंचें "
   }
 }

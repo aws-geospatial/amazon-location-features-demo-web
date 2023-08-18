@@ -20,6 +20,7 @@ import {
 	AboutModal,
 	AuthGeofenceBox,
 	AuthTrackerBox,
+	ResponsiveBottomSheet,
 	RouteBox,
 	SearchBox,
 	SettingsModal,
@@ -72,8 +73,6 @@ import {
 	MapRef,
 	NavigationControl
 } from "react-map-gl";
-import { BottomSheet } from "react-spring-bottom-sheet";
-import "react-spring-bottom-sheet/dist/style.css";
 
 import "./styles.scss";
 
@@ -111,6 +110,7 @@ const DemoPage: React.FC = () => {
 	const [show, setShow] = React.useState<ShowStateType>(initShow);
 	const [height, setHeight] = React.useState(window.innerHeight);
 	const [searchValue, setSearchValue] = React.useState("");
+	const [searchBoxValue, setSearchBoxValue] = React.useState("");
 	const [doNotAskGrabDisclaimer, setDoNotAskGrabDisclaimer] = React.useState(false);
 	const [doNotAskOpenDataDisclaimer, setDoNotAskOpenDataDisclaimer] = React.useState(false);
 	const [selectedFilters, setSelectedFilters] = React.useState<MapStyleFilterTypes>({
@@ -164,10 +164,6 @@ const DemoPage: React.FC = () => {
 		setDoNotAskOpenDataDisclaimerModal
 	} = usePersistedData();
 	const isDesktop = useMediaQuery("(min-width: 1024px)");
-	const isMobile = useMediaQuery("(max-width: 425px)");
-	const isTablet = !isDesktop && !isMobile;
-
-	console.log({ isDesktop, isTablet, isMobile });
 
 	const { t } = useTranslation();
 	const shouldClearCredentials = localStorage.getItem(SHOULD_CLEAR_CREDENTIALS) === "true";
@@ -768,6 +764,23 @@ const DemoPage: React.FC = () => {
 		]
 	);
 
+	const searchBoxEl = (isSimpleSearch = false) => (
+		<SearchBox
+			mapRef={mapViewRef?.current}
+			isSideMenuExpanded={show.sidebar}
+			onToggleSideMenu={() => setShow(s => ({ ...s, sidebar: !s.sidebar }))}
+			setShowRouteBox={b => setShow(s => ({ ...s, routeBox: b }))}
+			isRouteBoxOpen={show.routeBox}
+			isAuthGeofenceBoxOpen={show.authGeofenceBox}
+			isAuthTrackerBoxOpen={show.authTrackerBox}
+			isSettingsOpen={show.settings}
+			isStylesCardOpen={show.stylesCard}
+			isSimpleSearch={isSimpleSearch}
+			value={searchBoxValue}
+			setValue={setSearchBoxValue}
+		/>
+	);
+
 	return !!credentials?.identityId ? (
 		<View
 			style={{ height }}
@@ -844,17 +857,7 @@ const DemoPage: React.FC = () => {
 							setShowConnectAwsAccountModal={b => setShow(s => ({ ...s, connectAwsAccount: b }))}
 						/>
 					) : (
-						<SearchBox
-							mapRef={mapViewRef?.current}
-							isSideMenuExpanded={show.sidebar}
-							onToggleSideMenu={() => setShow(s => ({ ...s, sidebar: !s.sidebar }))}
-							setShowRouteBox={b => setShow(s => ({ ...s, routeBox: b }))}
-							isRouteBoxOpen={show.routeBox}
-							isAuthGeofenceBoxOpen={show.authGeofenceBox}
-							isAuthTrackerBoxOpen={show.authTrackerBox}
-							isSettingsOpen={show.settings}
-							isStylesCardOpen={show.stylesCard}
-						/>
+						<>{isDesktop ? searchBoxEl() : <ResponsiveBottomSheet SearchBoxEl={searchBoxEl(true)} />}</>
 					)}
 					<MapButtons
 						renderedUpon={TriggeredByEnum.DEMO_PAGE}
@@ -1038,23 +1041,6 @@ const DemoPage: React.FC = () => {
 				cancelationText={t("start_unauth_simulation__stay_in_simulation.text")}
 			/>
 			<Flex className="logo-stroke-container">
-				{isMobile && (
-					<BottomSheet
-						open={true}
-						// onDismiss={() => setOpen(false)}
-						// onClick={handleBottomSheetClick}
-						blocking={false}
-						snapPoints={({ maxHeight }) => [maxHeight * 0.25, maxHeight * 0.5, maxHeight * 0.8, maxHeight * 0.25]}
-						header={<div style={{ padding: "1em 0", textAlign: "center", fontWeight: "600" }}>Header</div>}
-					>
-						<div style={{ padding: "1em", height: "100%", overflow: "auto" }}>
-							<p>
-								Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et libero vitae sem vulputate consequat.
-							</p>
-							{/* More content here */}
-						</div>
-					</BottomSheet>
-				)}
 				{currentMapStyle.toLowerCase().includes("dark") ? <LogoDark /> : <LogoLight />}
 			</Flex>
 		</View>

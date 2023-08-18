@@ -9,3 +9,4 @@ export * from "./AuthGeofenceBox";
 export * from "./SettingsModal";
 export * from "./AuthTrackerBox";
 export * from "./UnauthSimulation";
+export * from "./ResponsiveBottomSheet";

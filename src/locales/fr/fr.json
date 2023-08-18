@@ -3394,5 +3394,11 @@
   },
   "regions__ap_southeast__region": {
     "text": "Asie-Pacifique"
+  },
+  "explore__connect_aws_account": {
+    "text": "Connectez-vous à AWS"
+  },
+  "explore__connect_description": {
+    "text": "Accédez aux fonctionnalités de suivi et de géofence en vous connectant à AWS CloudFormation "
   }
 }

@@ -1,6 +1,7 @@
 import React, { ReactElement } from "react";
 
 import { Flex, Text } from "@aws-amplify/ui-react";
+import "./styles.scss";
 
 interface IconicInfoCardProps {
 	IconComponent?: ReactElement;
@@ -11,6 +12,7 @@ interface IconicInfoCardProps {
 	cardAlignItems?: string;
 	subDescription?: string;
 	gap?: string;
+	direction?: "row" | "row-reverse" | string;
 }
 
 const IconicInfoCard: React.FC<IconicInfoCardProps> = ({
@@ -21,10 +23,17 @@ const IconicInfoCard: React.FC<IconicInfoCardProps> = ({
 	cardMargin = "1rem 0",
 	cardAlignItems = "flex-start",
 	subDescription = "",
-	gap = "large"
+	gap = "large",
+	direction = "row"
 }) => {
 	return (
-		<Flex direction="row" gap={gap} margin={cardMargin} alignItems={cardAlignItems} justifyContent="flex-start">
+		<Flex
+			className={`iconic-container-${direction}`}
+			direction={direction}
+			gap={gap}
+			margin={cardMargin}
+			alignItems={cardAlignItems}
+		>
 			{IconComponent}
 			<Flex direction="column" gap={subDescription ? 0 : "3px"} marginLeft={textContainerMarginLeft}>
 				<Text fontSize="1rem" variation="secondary">

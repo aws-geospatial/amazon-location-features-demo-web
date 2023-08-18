@@ -3390,5 +3390,11 @@
   },
   "regions__ap_southeast__region": {
     "text": "亚太地区"
+  },
+  "explore__connect_aws_account": {
+    "text": "连接到 AWS"
+  },
+  "explore__connect_description": {
+    "text": "连接到 AWS CloudFormation 即可访问跟踪和地理围栏功能 "
   }
 }

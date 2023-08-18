@@ -3394,5 +3394,11 @@
   },
   "regions__ap_southeast__region": {
     "text": "آسيا والمحيط الهادئ"
+  },
+  "explore__connect_aws_account": {
+    "text": "الاتصال بـ AWS"
+  },
+  "explore__connect_description": {
+    "text": "الوصول إلى ميزات التتبع والسياج الجغرافي من خلال الاتصال بـ AWS CloudFormation "
   }
 }

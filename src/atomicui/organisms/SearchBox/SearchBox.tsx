@@ -32,6 +32,9 @@ interface SearchBoxProps {
 	isAuthTrackerBoxOpen: boolean;
 	isSettingsOpen: boolean;
 	isStylesCardOpen: boolean;
+	value: string;
+	setValue: React.Dispatch<React.SetStateAction<string>>;
+	isSimpleSearch?: boolean;
 }
 
 const SearchBox: React.FC<SearchBoxProps> = ({
@@ -43,10 +46,13 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	isAuthGeofenceBoxOpen,
 	isAuthTrackerBoxOpen,
 	isSettingsOpen,
-	isStylesCardOpen
+	isStylesCardOpen,
+	isSimpleSearch = false,
+	value,
+	setValue
 }) => {
 	const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-	const [value, setValue] = useState<string>("");
+	// const [value, setValue] = useState<string>("");
 	const [isFocused, setIsFocused] = useState(false);
 	const autocompleteRef = useRef<HTMLInputElement | null>(null);
 	const { mapUnit: currentMapUnit, isCurrentLocationDisabled, currentLocationData, viewpoint } = useAmplifyMap();
@@ -82,7 +88,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		isAuthGeofenceBoxOpen,
 		isAuthTrackerBoxOpen,
 		isSettingsOpen,
-		isStylesCardOpen
+		isStylesCardOpen,
+		setValue
 	]);
 
 	const handleSearch = useCallback(
@@ -150,8 +157,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		if (!!value) {
 			clearPoiList();
 			handleSearch(value, false, AnalyticsEventActionsEnum.SEARCH_ICON_CLICK);
-			autocompleteRef?.current?.focus();
 		}
+		autocompleteRef?.current?.focus();
 	};
 
 	const renderOption = (option: {
@@ -270,11 +277,11 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 				return acc;
 			}, [] as Array<JSX.Element>);
 		}
-	}, [suggestions, selectedMarker, clusters, value]);
+	}, [suggestions, selectedMarker, clusters, value, setValue]);
 
 	const mapMarker = useMemo(
 		() => marker && <Marker searchValue={value} setSearchValue={setValue} {...marker} />,
-		[value, marker]
+		[marker, value, setValue]
 	);
 
 	const hideBorderRadius = useMemo(() => {
@@ -290,12 +297,13 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		<>
 			<Flex
 				data-testid="search-bar-container"
-				className="search-bar"
+				className={`search-bar ${isSimpleSearch ? "simple-search-bar" : ""}`}
 				style={{
 					flexDirection: "column",
-					left: isSideMenuExpanded ? 252 : 20,
-					borderBottomLeftRadius: hideBorderRadius ? "0px" : "8px",
-					borderBottomRightRadius: hideBorderRadius ? "0px" : "8px"
+					left: isSimpleSearch ? 0 : isSideMenuExpanded ? 252 : 20,
+					margin: isSimpleSearch ? "0 1rem" : "",
+					borderBottomLeftRadius: isSimpleSearch ? "8px" : hideBorderRadius ? "0px" : "8px",
+					borderBottomRightRadius: isSimpleSearch ? "8px" : hideBorderRadius ? "0px" : "8px"
 				}}
 			>
 				<Flex gap={0} width="100%" height="100%" alignItems="center">
@@ -307,9 +315,24 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 						label={t("search.text")}
 						dir={langDir}
 						innerStartComponent={
-							<Flex className="inner-start-component" onClick={onToggleSideMenu}>
-								<IconActionMenu />
-							</Flex>
+							isSimpleSearch ? (
+								<Flex
+									className={`${isSimpleSearch ? "simple-search" : ""} icon inner-end-component`}
+									onClick={onSearch}
+								>
+									<IconSearch
+										data-tooltip-id="search-button"
+										data-tooltip-place="bottom"
+										data-tooltip-content={t("search.text")}
+										width="1.55rem"
+										height="1.55rem"
+									/>
+								</Flex>
+							) : (
+								<Flex className="inner-start-component" onClick={onToggleSideMenu}>
+									<IconActionMenu />
+								</Flex>
+							)
 						}
 						size="large"
 						onFocus={() => setIsFocused(true)}
@@ -319,6 +342,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 						onChange={onChange}
 						onClear={clearPoiList}
 						placeholder={t("search.text") as string}
+						fontSize={isSimpleSearch ? "1.07rem" : "1.25rem"}
 						options={options || []}
 						results={options?.length || 0}
 						renderOption={renderOption}
@@ -345,31 +369,35 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 						isLoading={isSearching}
 						innerEndComponent={
 							<Flex className="inner-end-components">
-								<Flex className="icon inner-end-component" onClick={onSearch}>
-									<IconSearch
-										data-tooltip-id="search-button"
-										data-tooltip-place="bottom"
-										data-tooltip-content={t("search.text")}
-									/>
-									<Tooltip id="search-button" />
-								</Flex>
-								<Flex
-									className="icon outter-end-component"
-									onClick={!!value ? onClearSearch : () => setShowRouteBox(true)}
-								>
-									{!!value ? (
-										<IconClose />
-									) : (
-										<>
-											<IconDirections
-												data-tooltip-id="directions-button"
+								{!isSimpleSearch && (
+									<>
+										<Flex className="icon inner-end-component" onClick={onSearch}>
+											<IconSearch
+												data-tooltip-id="search-button"
 												data-tooltip-place="bottom"
-												data-tooltip-content={t("routes.text")}
+												data-tooltip-content={t("search.text")}
 											/>
-											<Tooltip id="directions-button" />
-										</>
-									)}
-								</Flex>
+											<Tooltip id="search-button" />
+										</Flex>
+										<Flex
+											className="icon outter-end-component"
+											onClick={!!value ? onClearSearch : () => setShowRouteBox(true)}
+										>
+											{!!value ? (
+												<IconClose />
+											) : (
+												<>
+													<IconDirections
+														data-tooltip-id="directions-button"
+														data-tooltip-place="bottom"
+														data-tooltip-content={t("routes.text")}
+													/>
+													<Tooltip id="directions-button" />
+												</>
+											)}
+										</Flex>
+									</>
+								)}
 							</Flex>
 						}
 						crossOrigin={undefined}

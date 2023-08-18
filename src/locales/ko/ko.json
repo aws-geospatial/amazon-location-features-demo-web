@@ -3394,5 +3394,11 @@
   },
   "regions__ap_southeast__region": {
     "text": "아시아 태평양"
+  },
+  "explore__connect_aws_account": {
+    "text": "AWS에 연결"
+  },
+  "explore__connect_description": {
+    "text": "AWS CloudFormation에 연결하여 추적 및 지오펜스 기능에 액세스 "
   }
 }
