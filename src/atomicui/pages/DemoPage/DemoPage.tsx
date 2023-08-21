@@ -266,14 +266,29 @@ const DemoPage: React.FC = () => {
 	}, [setAuthTokens, clearCredsAndLocationClient, credentials, authTokens, _onLogout]);
 
 	const _attachPolicy = useCallback(async () => {
-		if (credentials) {
-			if (!!credentials.authenticated && !!authTokens) {
-				await attachPolicy(credentials.identityId);
-			} else if (!isUserAwsAccountConnected && currentMapProvider !== MapProviderEnum.GRAB) {
-				await attachPolicy(credentials.identityId, true);
+		if (credentials?.identityId && credentials?.expiration) {
+			const now = new Date();
+			const expiration = new Date(credentials.expiration);
+
+			if (now > expiration) {
+				/* If the credentials are expired, clear them and the location client */
+				clearCredsAndLocationClient();
+			} else {
+				if (!!credentials.authenticated && !!authTokens) {
+					await attachPolicy(credentials.identityId);
+				} else if (!isUserAwsAccountConnected && currentMapProvider !== MapProviderEnum.GRAB) {
+					await attachPolicy(credentials.identityId, true);
+				}
 			}
 		}
-	}, [credentials, authTokens, attachPolicy, isUserAwsAccountConnected, currentMapProvider]);
+	}, [
+		credentials,
+		clearCredsAndLocationClient,
+		authTokens,
+		attachPolicy,
+		isUserAwsAccountConnected,
+		currentMapProvider
+	]);
 
 	/* Attach IoT policy to authenticated user to ensure successful websocket connection */
 	useEffect(() => {

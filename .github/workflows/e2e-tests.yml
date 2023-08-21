@@ -19,10 +19,10 @@ jobs:
         uses: actions/setup-node@v3
 
       - name: Install Dependencies
-        run: yarn install
+        run: npm install
 
       - name: Setup Cypress
-        run: yarn add cypress --dev
+        run: npm install cypress --save-dev
 
       - name: Run Cypress test
         env:
@@ -36,4 +36,4 @@ jobs:
           CYPRESS_WEB_SOCKET_URL: ${{ secrets.WEB_SOCKET_URL }}
           CYPRESS_COGNITO_EMAIL: ${{ secrets.COGNITO_EMAIL }}
           CYPRESS_COGNITO_PASSWORD: ${{ secrets.COGNITO_PASSWORD }}
-        run: yarn cypress
+        run: npm run cypress

@@ -10,6 +10,10 @@ jest.mock("@demo/utils/analyticsUtils", () => ({
 	initiateAnalytics: () => {}
 }));
 
+jest.mock("@demo/utils/countryUtil", () => ({
+	getCountryCode: () => "PK"
+}));
+
 jest.mock("@demo/core/constants/appConfig", () => ({
 	POOLS: {
 		"XX-XXXX-X": "XX-XXXX-X:XXXXXXXX-XXXX-1234-abcd-1234567890ab"
@@ -18,8 +22,8 @@ jest.mock("@demo/core/constants/appConfig", () => ({
 		"XX-XXXX-X": "XXXXXXXXXXXXXX-ats.iot.XX-XXXX-X.amazonaws.com"
 	},
 	ENV: {
-		PINPOINT_IDENTITY_POOL_ID: "",
-		PINPOINT_APPLICATION_ID: "",
+		PINPOINT_IDENTITY_POOL_ID: process.env["VITE_PINPOINT_IDENTITY_POOL_ID"],
+		PINPOINT_APPLICATION_ID: process.env["VITE_PINPOINT_APPLICATION_ID"],
 		CF_TEMPLATE: "https://www.example.com?region=us-east-1",
 		APPLE_APP_STORE_LINK: "",
 		GOOGLE_PLAY_STORE_LINK: "",

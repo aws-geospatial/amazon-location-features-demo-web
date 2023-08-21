@@ -167,16 +167,17 @@ Resources:
 
   AmazonLocationDemoPinpointStreamRole:
     Condition: EnablePinTranslate
+    DependsOn: AmazonLocationDemoKinesisStream
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
-          - Sid: ''
+          - Sid: "pinpoint"
             Effect: Allow
             Principal:
               Service: pinpoint.amazonaws.com
-            Action: 'sts:AssumeRole'
+            Action: "sts:AssumeRole"
       Path: "/"
       Policies:
         - PolicyName: pinpoint_stream_policy
@@ -189,6 +190,16 @@ Resources:
                   - kinesis:DescribeStream
                 Resource:
                   - !GetAtt AmazonLocationDemoKinesisStream.Arn
+        - PolicyName: kms_decrypt_policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - kms:Decrypt
+                  - kms:GenerateDataKey
+                Resource:
+                  - !GetAtt AmazonLocationDemoKMS.Arn
 
   CognitoIdentityPool:
     Type: "AWS::Cognito::IdentityPool"
@@ -208,9 +219,77 @@ Resources:
   AmazonLocationDemoKinesisBucket:
     Condition: EnablePinTranslate
     Type: 'AWS::S3::Bucket'
-    DeletionPolicy: Retain
+    DeletionPolicy: Delete
     Properties:
       BucketName: !Sub "location.aws.com.demo.kinesis.${AWS::AccountId}"
+      VersioningConfiguration:
+          Status: Enabled
+      BucketEncryption:
+          ServerSideEncryptionConfiguration:
+           - ServerSideEncryptionByDefault:
+              SSEAlgorithm: aws:kms
+
+  AmazonLocationDemoKinesisBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref AmazonLocationDemoKinesisBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Id: PutObjPolicy
+        Statement:
+          - Sid: DenyIncorrectEncryptionHeader
+            Effect: Deny
+            Principal: "*"
+            Action: "s3:PutObject"
+            Resource: !Sub "arn:aws:s3:::${AmazonLocationDemoKinesisBucket}/*"
+            Condition:
+              'StringNotEquals':
+                s3:x-amz-server-side-encryption: 'aws:kms'
+          - Sid: DenyUnEncryptedObjectUploads
+            Effect: Deny
+            Principal: "*"
+            Action: "s3:PutObject"
+            Resource: !Sub "arn:aws:s3:::${AmazonLocationDemoKinesisBucket}/*"
+            Condition:
+              'Null':
+                s3:x-amz-server-side-encryption: 'true'
+
+  AmazonLocationDemoKMS:
+    Type: AWS::KMS::Key
+    Properties:
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      KeyPolicy:
+        Version: '2012-10-17'
+        Id: default-policy
+        Statement:
+          - Sid: Enable IAM User Permissions
+            Effect: Allow
+            Principal:
+              AWS: !Sub arn:aws:iam::${AWS::AccountId}:root
+            Action: kms:*
+            Resource: '*'
+          - Sid: Allow KMS Key Administrators to Manage Key
+            Effect: Allow
+            Principal:
+              AWS: 
+              - !GetAtt CognitoIdentityPoolUnauthRole.Arn
+              - !GetAtt AmazonLocationKinesisDeliveryRole.Arn
+            Action:
+              - kms:Create*
+              - kms:Describe*
+              - kms:Enable*
+              - kms:List*
+              - kms:Put*
+              - kms:Update*
+              - kms:Revoke*
+              - kms:Disable*
+              - kms:Get*
+              - kms:Delete*
+              - kms:TagResource
+              - kms:UntagResource
+              - kms:ScheduleKeyDeletion
+              - kms:CancelKeyDeletion
+            Resource: '*'                
 
   AmazonLocationDemoKinesisStream:
     Condition: EnablePinTranslate
@@ -219,6 +298,9 @@ Resources:
       Name: location.aws.com.demo.app
       RetentionPeriodHours: 24
       ShardCount: 1
+      StreamEncryption:
+          EncryptionType: KMS
+          KeyId: !Ref AmazonLocationDemoKMS
 
   AmazonLocationDemoKinesisFirehose:
     Condition: EnablePinTranslate
@@ -236,6 +318,7 @@ Resources:
       Name: location.aws.com.demo.app
 
   AmazonLocationDemoPinpointAppStream:
+    DependsOn: AmazonLocationDemoPinpointStreamRole
     Condition: EnablePinTranslate
     Type: AWS::Pinpoint::EventStream
     Properties: 

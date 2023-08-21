@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-node@v3
 
       - name: Install Dependencies
-        run: yarn install
+        run: npm install
 
       - name: Run Security test
         env:
@@ -31,4 +31,4 @@ jobs:
           VITE_AWS_COGNITO_PASSWORD_TEST: ${{ secrets.VITE_AWS_COGNITO_PASSWORD_TEST }}
           VITE_AWS_IAM_AUTH_ROLE_NAME_TEST: ${{ secrets.VITE_AWS_IAM_AUTH_ROLE_NAME_TEST }}
           VITE_AWS_IAM_UNAUTH_ROLE_NAME_TEST: ${{ secrets.VITE_AWS_IAM_UNAUTH_ROLE_NAME_TEST }}
-        run: cd security-tests/ ; yarn run-test
+        run: cd security-tests/ ; npm run test
