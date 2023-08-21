@@ -10,6 +10,10 @@ jest.mock("@demo/utils/analyticsUtils", () => ({
 	initiateAnalytics: () => {}
 }));
 
+jest.mock("@demo/utils/countryUtil", () => ({
+	getCountryCode: () => "PK"
+}));
+
 jest.mock("@demo/core/constants/appConfig", () => ({
 	POOLS: {
 		"XX-XXXX-X": "XX-XXXX-X:XXXXXXXX-XXXX-1234-abcd-1234567890ab"

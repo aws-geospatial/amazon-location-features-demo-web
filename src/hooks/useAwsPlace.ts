@@ -130,7 +130,6 @@ const useAwsPlace = () => {
 					{
 						EventType: EventTypeEnum.PLACE_SEARCH,
 						Attributes: {
-							value,
 							exact: String(exact),
 							type: isGeoString(value) ? "Coordinates" : "Text",
 							triggeredBy,
