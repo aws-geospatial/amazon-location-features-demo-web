@@ -21,7 +21,9 @@ import { errorHandler } from "@demo/utils/errorHandler";
 import { useTranslation } from "react-i18next";
 
 const {
-	MAP_RESOURCES: { IMPERIAL_COUNTRIES }
+	MAP_RESOURCES: { IMPERIAL_COUNTRIES },
+	ROUTES: { DEMO },
+	GET_PARAMS: { DATA_PROVIDER }
 } = appConfig;
 const { IMPERIAL, METRIC } = MapUnitEnum;
 
@@ -65,6 +67,11 @@ const useAmplifyMap = () => {
 				setState({ mapUnit });
 			},
 			setMapProvider: (mapProvider: MapProviderEnum) => {
+				if (DEMO === location.pathname) {
+					const newurl = `${location.protocol}//${location.host}${location.pathname}?${DATA_PROVIDER}=${mapProvider}`;
+					history.pushState({ path: newurl }, "", newurl);
+				}
+
 				setState({ mapProvider });
 			},
 			setMapStyle: (mapStyle: EsriMapEnum | HereMapEnum | GrabMapEnum | OpenDataMapEnum) => {
