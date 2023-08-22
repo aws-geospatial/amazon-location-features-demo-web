@@ -103,7 +103,8 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 					  }
 					: { ...prevState };
 			});
-		}, [])
+		}, []),
+		startSimulation
 	);
 	const { t } = useTranslation();
 	const currentLanguage = i18n.language;
