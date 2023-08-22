@@ -80,7 +80,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 		mapProvider: currentMapProvider,
 		mapStyle: currentMapStyle,
 		setMapProvider,
-		setMapStyle
+		setMapStyle,
+		resetStore: resetMapStore
 	} = useAmplifyMap();
 	const { defaultRouteOptions, setDefaultRouteOptions, setSettingsOptions, settingsOptions } = usePersistedData();
 	const [formValues, setFormValues] = useState<ConnectFormValuesType>({
@@ -257,8 +258,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 			setAutoRegion(region === "Automatic", region);
 			resetAwsStore();
 			resetAppState();
+			resetMapStore();
 		},
-		[setAutoRegion, resetAwsStore, resetAppState]
+		[setAutoRegion, resetAwsStore, resetAppState, resetMapStore]
 	);
 
 	const optionItems: Array<SettingOptionItemType> = useMemo(

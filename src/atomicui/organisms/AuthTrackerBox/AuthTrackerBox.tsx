@@ -81,6 +81,7 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({ mapRef, setShowAuthTrac
 		setShowAuthTrackerBox(false);
 		subscription?.unsubscribe();
 		PubSub.removePluggable("AWSIoTProvider");
+		window.location.reload();
 	};
 
 	const onTrackerMarkerChange = (type: TrackerType) => {
