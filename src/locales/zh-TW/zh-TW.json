@@ -3057,43 +3057,43 @@
     "text": "選擇一個選項"
   },
   "regions__us_east_1": {
-    "text": "我們 東部 (N. 弗吉尼亞) us-east-1"
+    "text": "US East (N. Virginia) us-east-1"
   },
   "regions__us_east_2": {
-    "text": "我們 東部 (俄亥俄州) us-east-2"
+    "text": "US East (Ohio) us-east-2"
   },
   "regions__us_west_2": {
-    "text": "我們 西方 (俄勒岡州) us-west-2"
+    "text": "US West (Oregon) us-west-2"
   },
   "regions__ap_south_1": {
     "text": "Asia Pacific (Mumbai) ap-south-1"
   },
   "regions__ap_southeast_1": {
-    "text": "亞洲 太平洋 (新加坡) ap-southeast-1"
+    "text": "Asia Pacific (Singapore) ap-southeast-1"
   },
   "regions__ap_southeast_2": {
-    "text": "亞洲 太平洋 (悉尼) ap-southeast-2"
+    "text": "Asia Pacific (Sydney) ap-southeast-2"
   },
   "regions__ap_northeast_1": {
     "text": "Asia Pacific (Tokyo) ap-northeast-1"
   },
   "regions__ca_central_1": {
-    "text": "加拿大 (中環) ca-central-1"
+    "text": "Canada (Central) ca-central-1"
   },
   "regions__eu_central_1": {
-    "text": "歐洲 (法蘭克福) eu-central-1"
+    "text": "Europe (Frankfurt) eu-central-1"
   },
   "regions__eu_west_1": {
-    "text": "歐洲 (愛爾蘭) eu-west-1"
+    "text": "Europe (Ireland) eu-west-1"
   },
   "regions__eu_west_2": {
-    "text": "歐洲 (倫敦) eu-west-2"
+    "text": "Europe (London) eu-west-2"
   },
   "regions__eu_north_1": {
-    "text": "歐洲 (斯德哥爾摩) eu-north-1"
+    "text": "Europe (Stockholm) eu-north-1"
   },
   "regions__sa_east_1": {
-    "text": "南方 美國 (聖保羅 保羅) sa-east-1"
+    "text": "South America (São Paulo) sa-east-1"
   },
   "sign_in_modal__1": {
     "text": "需要登入"
@@ -3394,5 +3394,164 @@
   },
   "regions__ap_southeast__region": {
     "text": "亞太地區"
+  },
+  "samples__js-map-style-change__title": {
+    "text": "切換地圖樣式"
+  },
+  "samples__js-map-style-change__bodyText": {
+    "text": "此示例應用程序向您展示如何在不同的地圖樣式之間切換。它使用亞馬遜定位服務的地圖作為基地圖提供商和 MapRebre GL JS 作為地圖渲染庫。"
+  },
+  "samples__js-map-style-change__configure": {
+    "text": "開啟 index.html 並使用雲形成堆疊輸出來輸入您的可認識身分集區識別碼。"
+  },
+  "samples__js-map-style-change__run": {
+    "text": "在瀏覽器中打開 index.html 文件。"
+  },
+  "samples__js-map-style-change__cleanUp": {
+    "text": "如果您想要移除本逐步解說中建立的所有資源，請刪除名為「地圖樣式變更」的 CloudFormation 堆疊。"
+  },
+  "samples__js-map-with-geojson-line__title": {
+    "text": "將地理 JSON 行添加到網絡地圖"
+  },
+  "samples__js-map-with-geojson-line__bodyText": {
+    "text": "此示例應用程序向您展示如何將 GeoJSON 行添加到網絡地圖。它使用亞馬遜定位服務的地圖作為基地圖提供商和 MapRebre GL JS 作為地圖渲染庫。"
+  },
+  "samples__js-map-with-geojson-line__configure": {
+    "text": "開啟 index.html 並使用雲形成堆疊輸出來輸入您的可認識身分集區識別碼。"
+  },
+  "samples__js-map-with-geojson-line__run": {
+    "text": "在瀏覽器中打開 index.html 文件。"
+  },
+  "samples__js-map-with-geojson-line__cleanUp": {
+    "text": "如果您想要移除本逐步解說中建立的所有資源，請刪除名為「地理資訊」與「範例」的 CloudFormation 堆疊。"
+  },
+  "samples__js-map-with-geojson-point__title": {
+    "text": "將地理 JSON 點添加到網絡地圖"
+  },
+  "samples__js-map-with-geojson-point__bodyText": {
+    "text": "此示例應用程序向您展示如何將 GeoJSON 點添加到網絡地圖。它使用亞馬遜定位服務的地圖作為基地圖提供商和 MapRebre GL JS 作為地圖渲染庫。"
+  },
+  "samples__js-map-with-geojson-point__configure": {
+    "text": "開啟 index.html 並使用雲形成堆疊輸出來輸入您的可認識身分集區識別碼。"
+  },
+  "samples__js-map-with-geojson-point__run": {
+    "text": "在瀏覽器中打開 index.html 文件。"
+  },
+  "samples__js-map-with-geojson-point__cleanUp": {
+    "text": "如果您想要移除本逐步解說中建立的所有資源，請刪除名為「地理點範例」的 CloudFormation 堆疊。"
+  },
+  "samples__js-map-with-geojson-polygon__title": {
+    "text": "將 GeoJSON 多邊形添加到網絡地圖"
+  },
+  "samples__js-map-with-geojson-polygon__bodyText": {
+    "text": "此示例應用程序向您展示如何將 GeoJSON 多邊形添加到網絡地圖。它使用亞馬遜定位服務的地圖作為基地圖提供商和 MapRebre GL JS 作為地圖渲染庫。"
+  },
+  "samples__js-map-with-geojson-polygon__configure": {
+    "text": "開啟 index.html 並使用雲形成堆疊輸出來輸入您的可認識身分集區識別碼。"
+  },
+  "samples__js-map-with-geojson-polygon__run": {
+    "text": "在瀏覽器中打開 index.html 文件。"
+  },
+  "samples__js-map-with-geojson-polygon__cleanUp": {
+    "text": "如果您想要移除本逐步解說中建立的所有資源，請刪除名為「地理多邊形範例」的 CloudFormation 堆疊。"
+  },
+  "samples__js-map-with-marker-and-popup__title": {
+    "text": "將帶有彈出窗口的標記添加到網絡地圖"
+  },
+  "samples__js-map-with-marker-and-popup__bodyText": {
+    "text": "此示例應用程序向您展示如何將帶有彈出窗口的標記添加到 Web 地圖。它使用亞馬遜定位服務的地圖作為基地圖提供商和 MapRebre GL JS 作為地圖渲染庫。"
+  },
+  "samples__js-map-with-marker-and-popup__configure": {
+    "text": "開啟 index.html 並使用雲形成堆疊輸出來輸入您的可認識身分集區識別碼。"
+  },
+  "samples__js-map-with-marker-and-popup__run": {
+    "text": "在瀏覽器中打開 index.html 文件。"
+  },
+  "samples__js-map-with-marker-and-popup__cleanUp": {
+    "text": "如果您想要移除本逐步解說中建立的所有資源，請刪除名為「標示具有彈出式範例」的 CloudFormation 堆疊。"
+  },
+  "samples__js-quick-start-using-cognito__title": {
+    "text": "使用亞馬遜 Cognito 進行身份驗證的快速啟動網頁"
+  },
+  "samples__js-quick-start-using-cognito__bodyText": {
+    "text": "此範例應用程式會顯示具有搜尋功能的地圖，並透過 Amazon Cognito 進行驗證"
+  },
+  "samples__js-quick-start-using-cognito__configure": {
+    "text": "開啟 main.js 並使用雲形成堆疊輸出來輸入您的可認識身分集區識別碼。"
+  },
+  "samples__js-quick-start-using-cognito__run": {
+    "text": "在瀏覽器中打開 quickstart.html 文件。"
+  },
+  "samples__js-quick-start-using-cognito__cleanUp": {
+    "text": "如果您想要移除本逐步解說中建立的所有資源，請刪除名為「使用認知範例快速啟動」的 CloudFormation 堆疊。"
+  },
+  "samples__js-simple-map__title": {
+    "text": "在網頁上顯示地圖"
+  },
+  "samples__js-simple-map__bodyText": {
+    "text": "此示例應用程序向您展示如何在網頁上顯示地圖。它使用亞馬遜定位服務的地圖作為基地圖提供商和 MapRebre GL JS 作為地圖渲染庫。"
+  },
+  "samples__js-simple-map__configure": {
+    "text": "開啟 index.html 並使用雲形成堆疊輸出來輸入您的可認識身分集區識別碼。"
+  },
+  "samples__js-simple-map__run": {
+    "text": "在瀏覽器中打開 index.html 文件。"
+  },
+  "samples__js-simple-map__cleanUp": {
+    "text": "如果您想要移除本逐步解說中建立的所有資源，請刪除名為簡單地圖範例的 CloudFormation 堆疊。"
+  },
+  "samples__react-map-with-amplify__title": {
+    "text": "使用反應和 AWS 放大顯示網頁地圖"
+  },
+  "samples__react-map-with-amplify__bodyText": {
+    "text": "這個例子演示如何使用反應和 AWS 放大 UI 顯示一個網絡地圖。"
+  },
+  "samples__react-map-with-amplify__tabsTitle": {
+    "text": "反應/顯示網頁地圖"
+  },
+  "samples__react-map-with-amplify__configure": {
+    "text": "將「.env.example` 複製到 .env`，並使用雲形成堆棧填充環境變量\n輸出。"
+  },
+  "samples__react-map-with-amplify__run": {
+    "text": "運行 `npm 開始 '來啟動一個本地網絡服務器 [`本地主機：3000`]（http://localhost:3000/）與此\n例如，並在瀏覽器中打開它。"
+  },
+  "samples__react-map-with-amplify__cleanUp": {
+    "text": "若要移除此逐步解說中建立的所有資源，請刪除名為的 CloudFormation 堆疊\n'反應圖-與放大'。"
+  },
+  "samples__react-map-with-geojson__title": {
+    "text": "使用反應在網絡地圖上顯示地理 JSON"
+  },
+  "samples__react-map-with-geojson__bodyText": {
+    "text": "這個例子演示了如何使用反應和反應地圖 GL 的網絡地圖上顯示 GeoJSON。"
+  },
+  "samples__react-map-with-geojson__tabsTitle": {
+    "text": "在網絡地圖上反應/顯示地理 JSON"
+  },
+  "samples__react-map-with-geojson__configure": {
+    "text": "將「.env.example` 複製到 .env`，並使用雲形成堆棧填充環境變量\n輸出。"
+  },
+  "samples__react-map-with-geojson__run": {
+    "text": "運行 `npm 開始 '來啟動一個本地網絡服務器 [`本地主機：3000`]（http://localhost:3000/）與此\n例如，並在瀏覽器中打開它。"
+  },
+  "samples__react-map-with-geojson__cleanUp": {
+    "text": "若要移除此逐步解說中建立的所有資源，請刪除名為的 CloudFormation 堆疊\n'反應地圖-與-地理信號'。"
+  },
+  "samples__react-map-with-markers__title": {
+    "text": "使用 React 在網路地圖上顯示標記"
+  },
+  "samples__react-map-with-markers__bodyText": {
+    "text": "這個例子演示了如何使用反應和反應地圖-GL 的網絡地圖上顯示標記。"
+  },
+  "samples__react-map-with-markers__tabsTitle": {
+    "text": "在網路地圖上顯示標記"
+  },
+  "samples__react-map-with-markers__configure": {
+    "text": "將「.env.example` 複製到 .env`，並使用雲形成堆棧填充環境變量\n輸出。"
+  },
+  "samples__react-map-with-markers__run": {
+    "text": "運行 `npm 開始 '來啟動一個本地網絡服務器 [`本地主機：3000`]（http://localhost:3000/）與此\n例如，並在瀏覽器中打開它。"
+  },
+  "samples__react-map-with-markers__cleanUp": {
+    "text": "若要移除此逐步解說中建立的所有資源，請刪除名為的 CloudFormation 堆疊\n'反應地圖-與-地理信號'。"
   }
 }
