@@ -3057,43 +3057,43 @@
     "text": "オプションを選択する"
   },
   "regions__us_east_1": {
-    "text": "私たち 東だ (N。 バージニア) us-east-1"
+    "text": "US East (N. Virginia) us-east-1"
   },
   "regions__us_east_2": {
-    "text": "私たち 東だ (オハイオ) us-east-2"
+    "text": "US East (Ohio) us-east-2"
   },
   "regions__us_west_2": {
-    "text": "私たち 西 (オレゴン) us-west-2"
+    "text": "US West (Oregon) us-west-2"
   },
   "regions__ap_south_1": {
     "text": "Asia Pacific (Mumbai) ap-south-1"
   },
   "regions__ap_southeast_1": {
-    "text": "アジア パシフィック (シンガポール) ap-southeast-1"
+    "text": "Asia Pacific (Singapore) ap-southeast-1"
   },
   "regions__ap_southeast_2": {
-    "text": "アジア パシフィック (シドニー) ap-southeast-2"
+    "text": "Asia Pacific (Sydney) ap-southeast-2"
   },
   "regions__ap_northeast_1": {
     "text": "Asia Pacific (Tokyo) ap-northeast-1"
   },
   "regions__ca_central_1": {
-    "text": "カナダ (セントラル) ca-central-1"
+    "text": "Canada (Central) ca-central-1"
   },
   "regions__eu_central_1": {
-    "text": "ヨーロッパ (フランクフルト) eu-central-1"
+    "text": "Europe (Frankfurt) eu-central-1"
   },
   "regions__eu_west_1": {
-    "text": "ヨーロッパ (アイルランド) eu-west-1"
+    "text": "Europe (Ireland) eu-west-1"
   },
   "regions__eu_west_2": {
-    "text": "ヨーロッパ (ロンドン) eu-west-2"
+    "text": "Europe (London) eu-west-2"
   },
   "regions__eu_north_1": {
-    "text": "ヨーロッパ (ストックホルム) eu-north-1"
+    "text": "Europe (Stockholm) eu-north-1"
   },
   "regions__sa_east_1": {
-    "text": "南 アメリカ (サオ) パウロ) sa-east-1"
+    "text": "South America (São Paulo) sa-east-1"
   },
   "sign_in_modal__1": {
     "text": "ログインが必要です"
@@ -3394,5 +3394,164 @@
   },
   "regions__ap_southeast__region": {
     "text": "アジアパシフィック"
+  },
+  "samples__js-map-style-change__title": {
+    "text": "マップスタイルを切り替える"
+  },
+  "samples__js-map-style-change__bodyText": {
+    "text": "このサンプルアプリでは、さまざまなマップスタイルを切り替える方法を示します。Amazon ロケーションサービスのマップをベースマッププロバイダとして使用し、MapLibre GL JS をマップレンダリングライブラリとして使用します。"
+  },
+  "samples__js-map-style-change__configure": {
+    "text": "index.html を開き、CloudFormation スタックの出力を使用してコグニートアイデンティティプール ID を入力します。"
+  },
+  "samples__js-map-style-change__run": {
+    "text": "ブラウザで index.html を開きます。"
+  },
+  "samples__js-map-style-change__cleanUp": {
+    "text": "このウォークスルーで作成したリソースをすべて削除したい場合は、`map-style-change` という名前の CloudFormation スタックを削除してください。"
+  },
+  "samples__js-map-with-geojson-line__title": {
+    "text": "GeoJSON ラインを Web マップに追加する"
+  },
+  "samples__js-map-with-geojson-line__bodyText": {
+    "text": "このサンプルアプリは、GeoJSON ラインを Web マップに追加する方法を示しています。Amazon ロケーションサービスのマップをベースマッププロバイダとして使用し、MapLibre GL JS をマップレンダリングライブラリとして使用します。"
+  },
+  "samples__js-map-with-geojson-line__configure": {
+    "text": "index.html を開き、CloudFormation スタックの出力を使用してコグニートアイデンティティプール ID を入力します。"
+  },
+  "samples__js-map-with-geojson-line__run": {
+    "text": "ブラウザで index.html を開きます。"
+  },
+  "samples__js-map-with-geojson-line__cleanUp": {
+    "text": "このウォークスルーで作成したリソースをすべて削除したい場合は、`geojson-line-example` という名前の CloudFormation スタックを削除してください。"
+  },
+  "samples__js-map-with-geojson-point__title": {
+    "text": "GeoJSON ポイントを Web マップに追加する"
+  },
+  "samples__js-map-with-geojson-point__bodyText": {
+    "text": "このサンプルアプリは、GeoJSON ポイントを Web マップに追加する方法を示しています。Amazon ロケーションサービスのマップをベースマッププロバイダとして使用し、MapLibre GL JS をマップレンダリングライブラリとして使用します。"
+  },
+  "samples__js-map-with-geojson-point__configure": {
+    "text": "index.html を開き、CloudFormation スタックの出力を使用してコグニートアイデンティティプール ID を入力します。"
+  },
+  "samples__js-map-with-geojson-point__run": {
+    "text": "ブラウザで index.html を開きます。"
+  },
+  "samples__js-map-with-geojson-point__cleanUp": {
+    "text": "このウォークスルーで作成したリソースをすべて削除したい場合は、`geojson-point-example` という名前の CloudFormation スタックを削除してください。"
+  },
+  "samples__js-map-with-geojson-polygon__title": {
+    "text": "GeoJSON ポリゴンをウェブマップに追加する"
+  },
+  "samples__js-map-with-geojson-polygon__bodyText": {
+    "text": "このサンプルアプリは、GeoJSON ポリゴンを Web マップに追加する方法を示しています。Amazon ロケーションサービスのマップをベースマッププロバイダとして使用し、MapLibre GL JS をマップレンダリングライブラリとして使用します。"
+  },
+  "samples__js-map-with-geojson-polygon__configure": {
+    "text": "index.html を開き、CloudFormation スタックの出力を使用してコグニートアイデンティティプール ID を入力します。"
+  },
+  "samples__js-map-with-geojson-polygon__run": {
+    "text": "ブラウザで index.html を開きます。"
+  },
+  "samples__js-map-with-geojson-polygon__cleanUp": {
+    "text": "このウォークスルーで作成したリソースをすべて削除したい場合は、`geojson-polyon-example` という名前の CloudFormation スタックを削除してください。"
+  },
+  "samples__js-map-with-marker-and-popup__title": {
+    "text": "Web マップへのポップアップ付きマーカーの追加"
+  },
+  "samples__js-map-with-marker-and-popup__bodyText": {
+    "text": "このサンプルアプリでは、ポップアップ付きのマーカーを Web マップに追加する方法を示します。Amazon ロケーションサービスのマップをベースマッププロバイダとして使用し、MapLibre GL JS をマップレンダリングライブラリとして使用します。"
+  },
+  "samples__js-map-with-marker-and-popup__configure": {
+    "text": "index.html を開き、CloudFormation スタックの出力を使用してコグニートアイデンティティプール ID を入力します。"
+  },
+  "samples__js-map-with-marker-and-popup__run": {
+    "text": "ブラウザで index.html を開きます。"
+  },
+  "samples__js-map-with-marker-and-popup__cleanUp": {
+    "text": "このウォークスルーで作成したリソースをすべて削除したい場合は、`marker-with-popup-example` という名前の CloudFormation スタックを削除してください。"
+  },
+  "samples__js-quick-start-using-cognito__title": {
+    "text": "Amazon Cognito によるクイックスタートウェブアプリケーション認証"
+  },
+  "samples__js-quick-start-using-cognito__bodyText": {
+    "text": "このサンプルアプリは、Amazon Cognito で認証される検索機能を備えたマップを表示します。"
+  },
+  "samples__js-quick-start-using-cognito__configure": {
+    "text": "main.js を開き、CloudFormation スタックの出力を使用してコグニートアイデンティティプール ID を入力します。"
+  },
+  "samples__js-quick-start-using-cognito__run": {
+    "text": "ブラウザで quickstart.html を開きます。"
+  },
+  "samples__js-quick-start-using-cognito__cleanUp": {
+    "text": "このウォークスルーで作成したリソースをすべて削除したい場合は、「クイックスタート-using-cognito-example`」という名前の CloudFormation スタックを削除してください。"
+  },
+  "samples__js-simple-map__title": {
+    "text": "Web ページにマップを表示する"
+  },
+  "samples__js-simple-map__bodyText": {
+    "text": "このサンプルアプリは、Web ページに地図を表示する方法を示しています。Amazon ロケーションサービスのマップをベースマッププロバイダとして使用し、MapLibre GL JS をマップレンダリングライブラリとして使用します。"
+  },
+  "samples__js-simple-map__configure": {
+    "text": "index.html を開き、CloudFormation スタックの出力を使用してコグニートアイデンティティプール ID を入力します。"
+  },
+  "samples__js-simple-map__run": {
+    "text": "ブラウザで index.html を開きます。"
+  },
+  "samples__js-simple-map__cleanUp": {
+    "text": "このウォークスルーで作成したリソースをすべて削除したい場合は、simple-map-example という名前の CloudFormation スタックを削除してください。"
+  },
+  "samples__react-map-with-amplify__title": {
+    "text": "React と AWS Amplify を使用してウェブマップを表示する"
+  },
+  "samples__react-map-with-amplify__bodyText": {
+    "text": "この例は、React と AWS Amplify UI を使用してウェブマップを表示する方法を示しています。"
+  },
+  "samples__react-map-with-amplify__tabsTitle": {
+    "text": "React/ウェブマップを表示する"
+  },
+  "samples__react-map-with-amplify__configure": {
+    "text": "`.env.example` を `.env` にコピーし、環境変数に CloudFormation スタックを設定します\n出力。"
+  },
+  "samples__react-map-with-amplify__run": {
+    "text": "これで `npm start` を実行して [`localhost: 3000`] (http://localhost:3000/) 上のローカルウェブサーバーを起動します\n例を挙げてブラウザで開きます。"
+  },
+  "samples__react-map-with-amplify__cleanUp": {
+    "text": "このウォークスルーで作成したリソースをすべて削除するには、という名前のCloudFormationスタックを削除します。\n`react-map-with-amplify`。"
+  },
+  "samples__react-map-with-geojson__title": {
+    "text": "React を使用してウェブマップに GeoJSON を表示する"
+  },
+  "samples__react-map-with-geojson__bodyText": {
+    "text": "この例は、React と react-map-gl を使用してウェブマップに GeoJSON を表示する方法を示しています。"
+  },
+  "samples__react-map-with-geojson__tabsTitle": {
+    "text": "React/ウェブマップに GeoJSON を表示する"
+  },
+  "samples__react-map-with-geojson__configure": {
+    "text": "`.env.example` を `.env` にコピーし、環境変数に CloudFormation スタックを設定します\n出力。"
+  },
+  "samples__react-map-with-geojson__run": {
+    "text": "これで `npm start` を実行して [`localhost: 3000`] (http://localhost:3000/) 上のローカルウェブサーバーを起動します\n例を挙げてブラウザで開きます。"
+  },
+  "samples__react-map-with-geojson__cleanUp": {
+    "text": "このウォークスルーで作成したリソースをすべて削除するには、という名前のCloudFormationスタックを削除します。\n`react-map-with-geojson`。"
+  },
+  "samples__react-map-with-markers__title": {
+    "text": "React を使用して Web マップにマーカーを表示する"
+  },
+  "samples__react-map-with-markers__bodyText": {
+    "text": "この例は、React と react-map-gl を使用して Web マップにマーカーを表示する方法を示しています。"
+  },
+  "samples__react-map-with-markers__tabsTitle": {
+    "text": "React/ウェブマップにマーカーを表示"
+  },
+  "samples__react-map-with-markers__configure": {
+    "text": "`.env.example` を `.env` にコピーし、環境変数に CloudFormation スタックを設定します\n出力。"
+  },
+  "samples__react-map-with-markers__run": {
+    "text": "これで `npm start` を実行して [`localhost: 3000`] (http://localhost:3000/) 上のローカルウェブサーバーを起動します\n例を挙げてブラウザで開きます。"
+  },
+  "samples__react-map-with-markers__cleanUp": {
+    "text": "このウォークスルーで作成したリソースをすべて削除するには、という名前のCloudFormationスタックを削除します。\n`react-map-with-geojson`。"
   }
 }

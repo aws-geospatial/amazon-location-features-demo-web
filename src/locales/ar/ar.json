@@ -3057,43 +3057,43 @@
     "text": "حدد أحد الخيارات"
   },
   "regions__us_east_1": {
-    "text": "لنا الشرق (ن. فرجينيا) us-east-1"
+    "text": "US East (N. Virginia) us-east-1"
   },
   "regions__us_east_2": {
-    "text": "لنا الشرق (أوهايو) us-east-2"
+    "text": "US East (Ohio) us-east-2"
   },
   "regions__us_west_2": {
-    "text": "لنا غرب (أوريغون) us-west-2"
+    "text": "US West (Oregon) us-west-2"
   },
   "regions__ap_south_1": {
     "text": "Asia Pacific (Mumbai) ap-south-1"
   },
   "regions__ap_southeast_1": {
-    "text": "آسيا المحيط الهادي (سنغافورة) ap-southeast-1"
+    "text": "Asia Pacific (Singapore) ap-southeast-1"
   },
   "regions__ap_southeast_2": {
-    "text": "آسيا المحيط الهادي (سيدني) ap-southeast-2"
+    "text": "Asia Pacific (Sydney) ap-southeast-2"
   },
   "regions__ap_northeast_1": {
     "text": "Asia Pacific (Tokyo) ap-northeast-1"
   },
   "regions__ca_central_1": {
-    "text": "كندا (مركزي) ca-central-1"
+    "text": "Canada (Central) ca-central-1"
   },
   "regions__eu_central_1": {
-    "text": "أوروبا (فرانكفورت) eu-central-1"
+    "text": "Europe (Frankfurt) eu-central-1"
   },
   "regions__eu_west_1": {
-    "text": "أوروبا (أيرلندا) eu-west-1"
+    "text": "Europe (Ireland) eu-west-1"
   },
   "regions__eu_west_2": {
-    "text": "أوروبا (لندن) eu-west-2"
+    "text": "Europe (London) eu-west-2"
   },
   "regions__eu_north_1": {
-    "text": "أوروبا (ستوكهولم) eu-north-1"
+    "text": "Europe (Stockholm) eu-north-1"
   },
   "regions__sa_east_1": {
-    "text": "جنوب أمريكا (ساو باولو) sa-east-1"
+    "text": "South America (São Paulo) sa-east-1"
   },
   "sign_in_modal__1": {
     "text": "تسجيل الدخول مطلوب"
@@ -3394,5 +3394,164 @@
   },
   "regions__ap_southeast__region": {
     "text": "آسيا والمحيط الهادئ"
+  },
+  "samples__js-map-style-change__title": {
+    "text": "تبديل أنماط الخريطة"
+  },
+  "samples__js-map-style-change__bodyText": {
+    "text": "يوضح لك نموذج التطبيق هذا كيفية التبديل بين أنماط الخرائط المختلفة. تستخدم خرائط خدمة Amazon Location Service كمزود الخرائط الأساسي و MapLibre GL JS كمكتبة لعرض الخرائط."
+  },
+  "samples__js-map-style-change__configure": {
+    "text": "افتح index.html واستخدم مخرجات مكدس CloudFormation لإدخال معرف تجمع هوية Cognito الخاص بك."
+  },
+  "samples__js-map-style-change__run": {
+    "text": "افتح index.html في متصفحك."
+  },
+  "samples__js-map-style-change__cleanUp": {
+    "text": "إذا كنت ترغب في إزالة جميع الموارد التي تم إنشاؤها في هذه الإرشادات التفصيلية، فاحذف مكدس CloudFormation المسمى «map-style-change\"."
+  },
+  "samples__js-map-with-geojson-line__title": {
+    "text": "إضافة خط GeoJSON إلى خريطة الويب"
+  },
+  "samples__js-map-with-geojson-line__bodyText": {
+    "text": "يوضح لك نموذج التطبيق هذا كيفية إضافة خط GeoJSON إلى خريطة الويب. تستخدم خرائط خدمة Amazon Location Service كمزود الخرائط الأساسي و MapLibre GL JS كمكتبة لعرض الخرائط."
+  },
+  "samples__js-map-with-geojson-line__configure": {
+    "text": "افتح index.html واستخدم مخرجات مكدس CloudFormation لإدخال معرف تجمع هوية Cognito الخاص بك."
+  },
+  "samples__js-map-with-geojson-line__run": {
+    "text": "افتح index.html في متصفحك."
+  },
+  "samples__js-map-with-geojson-line__cleanUp": {
+    "text": "إذا كنت ترغب في إزالة جميع الموارد التي تم إنشاؤها في هذه الإرشادات التفصيلية، فاحذف مكدس CloudFormation المسمى `geojson-line-example`."
+  },
+  "samples__js-map-with-geojson-point__title": {
+    "text": "إضافة نقطة GeoJSON إلى خريطة الويب"
+  },
+  "samples__js-map-with-geojson-point__bodyText": {
+    "text": "يوضح لك نموذج التطبيق هذا كيفية إضافة نقطة GeoJSON إلى خريطة الويب. تستخدم خرائط خدمة Amazon Location Service كمزود الخرائط الأساسي و MapLibre GL JS كمكتبة لعرض الخرائط."
+  },
+  "samples__js-map-with-geojson-point__configure": {
+    "text": "افتح index.html واستخدم مخرجات مكدس CloudFormation لإدخال معرف تجمع هوية Cognito الخاص بك."
+  },
+  "samples__js-map-with-geojson-point__run": {
+    "text": "افتح index.html في متصفحك."
+  },
+  "samples__js-map-with-geojson-point__cleanUp": {
+    "text": "إذا كنت ترغب في إزالة جميع الموارد التي تم إنشاؤها في هذه الإرشادات التفصيلية، فاحذف مكدس CloudFormation المسمى `geojson-point-example`."
+  },
+  "samples__js-map-with-geojson-polygon__title": {
+    "text": "إضافة مضلع GeoJSON إلى خريطة الويب"
+  },
+  "samples__js-map-with-geojson-polygon__bodyText": {
+    "text": "يوضح لك نموذج التطبيق هذا كيفية إضافة مضلع GeoJSON إلى خريطة الويب. تستخدم خرائط خدمة Amazon Location Service كمزود الخرائط الأساسي و MapLibre GL JS كمكتبة لعرض الخرائط."
+  },
+  "samples__js-map-with-geojson-polygon__configure": {
+    "text": "افتح index.html واستخدم مخرجات مكدس CloudFormation لإدخال معرف تجمع هوية Cognito الخاص بك."
+  },
+  "samples__js-map-with-geojson-polygon__run": {
+    "text": "افتح index.html في متصفحك."
+  },
+  "samples__js-map-with-geojson-polygon__cleanUp": {
+    "text": "إذا كنت ترغب في إزالة جميع الموارد التي تم إنشاؤها في هذه الإرشادات التفصيلية، فاحذف مكدس CloudFormation المسمى `geojson-polygon-example`."
+  },
+  "samples__js-map-with-marker-and-popup__title": {
+    "text": "إضافة علامة مع نافذة منبثقة إلى خريطة الويب"
+  },
+  "samples__js-map-with-marker-and-popup__bodyText": {
+    "text": "يوضح لك نموذج التطبيق هذا كيفية إضافة علامة مع نافذة منبثقة إلى خريطة الويب. تستخدم خرائط خدمة Amazon Location Service كمزود الخرائط الأساسي و MapLibre GL JS كمكتبة لعرض الخرائط."
+  },
+  "samples__js-map-with-marker-and-popup__configure": {
+    "text": "افتح index.html واستخدم مخرجات مكدس CloudFormation لإدخال معرف تجمع هوية Cognito الخاص بك."
+  },
+  "samples__js-map-with-marker-and-popup__run": {
+    "text": "افتح index.html في متصفحك."
+  },
+  "samples__js-map-with-marker-and-popup__cleanUp": {
+    "text": "إذا كنت ترغب في إزالة جميع الموارد التي تم إنشاؤها في هذه الإرشادات التفصيلية، فاحذف مكدس CloudFormation المسمى `marker-with-popup-example`."
+  },
+  "samples__js-quick-start-using-cognito__title": {
+    "text": "بدء سريع لمصادقة تطبيق الويب باستخدام Amazon Cognito"
+  },
+  "samples__js-quick-start-using-cognito__bodyText": {
+    "text": "يعرض نموذج التطبيق هذا خريطة بوظيفة البحث والمصادقة مع Amazon Cognito"
+  },
+  "samples__js-quick-start-using-cognito__configure": {
+    "text": "افتح main.js واستخدم مخرجات مكدس CloudFormation لإدخال معرف تجمع هوية Cognito الخاص بك."
+  },
+  "samples__js-quick-start-using-cognito__run": {
+    "text": "افتح quickstart.html في متصفحك."
+  },
+  "samples__js-quick-start-using-cognito__cleanUp": {
+    "text": "إذا كنت ترغب في إزالة جميع الموارد التي تم إنشاؤها في هذه الإرشادات التفصيلية، فاحذف مكدس CloudFormation المسمى «البدء السريع باستخدام cognito-example»."
+  },
+  "samples__js-simple-map__title": {
+    "text": "عرض خريطة على صفحة ويب"
+  },
+  "samples__js-simple-map__bodyText": {
+    "text": "يوضح لك نموذج التطبيق هذا كيفية عرض خريطة على صفحة ويب. تستخدم خرائط خدمة Amazon Location Service كمزود الخرائط الأساسي و MapLibre GL JS كمكتبة لعرض الخرائط."
+  },
+  "samples__js-simple-map__configure": {
+    "text": "افتح index.html واستخدم مخرجات مكدس CloudFormation لإدخال معرف تجمع هوية Cognito الخاص بك."
+  },
+  "samples__js-simple-map__run": {
+    "text": "افتح index.html في متصفحك."
+  },
+  "samples__js-simple-map__cleanUp": {
+    "text": "إذا كنت ترغب في إزالة جميع الموارد التي تم إنشاؤها في هذه الإرشادات التفصيلية، فاحذف مكدس CloudFormation المسمى simple-map-example."
+  },
+  "samples__react-map-with-amplify__title": {
+    "text": "عرض خريطة ويب باستخدام React وAWS Amplify"
+  },
+  "samples__react-map-with-amplify__bodyText": {
+    "text": "يوضح هذا المثال كيفية عرض خريطة الويب باستخدام React وAWS Amplify UI."
+  },
+  "samples__react-map-with-amplify__tabsTitle": {
+    "text": "React/عرض خريطة الويب"
+  },
+  "samples__react-map-with-amplify__configure": {
+    "text": "انسخ `.env.example` إلى `.env` وقم بتعبئة متغيرات البيئة باستخدام مكدس CloudFormation\nالمخرجات."
+  },
+  "samples__react-map-with-amplify__run": {
+    "text": "قم بتشغيل «npm start» لبدء خادم ويب محلي على [`المضيف المحلي: 3000`] (http://localhost:3000/) باستخدام هذا\nمثال وافتحه في متصفح."
+  },
+  "samples__react-map-with-amplify__cleanUp": {
+    "text": "لإزالة جميع الموارد التي تم إنشاؤها في هذه الإرشادات التفصيلية، احذف مكدس CloudFormation المسمى\n«خريطة التفاعل مع التضخيم»."
+  },
+  "samples__react-map-with-geojson__title": {
+    "text": "عرض GeoJSON على خريطة الويب باستخدام React"
+  },
+  "samples__react-map-with-geojson__bodyText": {
+    "text": "يوضح هذا المثال كيفية عرض GeoJSON على خريطة الويب باستخدام React و react-map-gl."
+  },
+  "samples__react-map-with-geojson__tabsTitle": {
+    "text": "React/ عرض GeoJSON على خريطة الويب"
+  },
+  "samples__react-map-with-geojson__configure": {
+    "text": "انسخ `.env.example` إلى `.env` وقم بتعبئة متغيرات البيئة باستخدام مكدس CloudFormation\nالمخرجات."
+  },
+  "samples__react-map-with-geojson__run": {
+    "text": "قم بتشغيل «npm start» لبدء خادم ويب محلي على [`المضيف المحلي: 3000`] (http://localhost:3000/) باستخدام هذا\nمثال وافتحه في متصفح."
+  },
+  "samples__react-map-with-geojson__cleanUp": {
+    "text": "لإزالة جميع الموارد التي تم إنشاؤها في هذه الإرشادات التفصيلية، احذف مكدس CloudFormation المسمى\n«خريطة التفاعل مع geojson»."
+  },
+  "samples__react-map-with-markers__title": {
+    "text": "عرض العلامات على خريطة الويب باستخدام React"
+  },
+  "samples__react-map-with-markers__bodyText": {
+    "text": "يوضح هذا المثال كيفية عرض العلامات على خريطة الويب باستخدام React و react-map-gl."
+  },
+  "samples__react-map-with-markers__tabsTitle": {
+    "text": "React/ علامات العرض على خريطة الويب"
+  },
+  "samples__react-map-with-markers__configure": {
+    "text": "انسخ `.env.example` إلى `.env` وقم بتعبئة متغيرات البيئة باستخدام مكدس CloudFormation\nالمخرجات."
+  },
+  "samples__react-map-with-markers__run": {
+    "text": "قم بتشغيل «npm start» لبدء خادم ويب محلي على [`المضيف المحلي: 3000`] (http://localhost:3000/) باستخدام هذا\nمثال وافتحه في متصفح."
+  },
+  "samples__react-map-with-markers__cleanUp": {
+    "text": "لإزالة جميع الموارد التي تم إنشاؤها في هذه الإرشادات التفصيلية، احذف مكدس CloudFormation المسمى\n«خريطة التفاعل مع geojson»."
   }
 }
