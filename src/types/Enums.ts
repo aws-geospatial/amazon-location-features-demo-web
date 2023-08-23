@@ -281,3 +281,12 @@ export enum RegionEnum {
 	EU_WEST_1 = "eu-west-1",
 	AP_SOUTHEAST_1 = "ap-southeast-1"
 }
+
+export enum ResponsiveUIEnum {
+	explore = "explore",
+	search = "search",
+	map_styles = "map_styles",
+	routes = "routes",
+	trackers = "trackers",
+	geofences = "geofences"
+}

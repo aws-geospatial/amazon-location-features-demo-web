@@ -14,10 +14,15 @@ import {
 } from "@demo/assets";
 import { ExploreButton } from "@demo/atomicui/atoms";
 import { IconicInfoCard } from "@demo/atomicui/molecules";
+import { ResponsiveUIEnum } from "@demo/types/Enums";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
 
-const Explore = () => {
+interface IProps {
+	updateUIInfo: (ui: ResponsiveUIEnum) => void;
+}
+
+const Explore: React.FC<IProps> = ({ updateUIInfo }) => {
 	const { t } = useTranslation();
 	return (
 		<Flex direction="column" className="explore-container" gap="0">
@@ -25,15 +30,22 @@ const Explore = () => {
 				<ExploreButton
 					text={t("routes.text")}
 					icon={<IconDirections width="1.53rem" height="1.53rem" fill="white" />}
+					onClick={() => updateUIInfo(ResponsiveUIEnum.routes)}
 				/>
 				<ExploreButton
 					text={t("map_style.text")}
 					icon={<IconMapSolid width="1.53rem" height="1.53rem" fill="white" />}
+					onClick={() => updateUIInfo(ResponsiveUIEnum.map_styles)}
 				/>
-				<ExploreButton text={t("trackers.text")} icon={<IconRadar width="1.53rem" height="1.53rem" />} />
+				<ExploreButton
+					text={t("trackers.text")}
+					icon={<IconRadar width="1.53rem" height="1.53rem" />}
+					onClick={() => updateUIInfo(ResponsiveUIEnum.trackers)}
+				/>
 				<ExploreButton
 					text={t("geofences.text")}
 					icon={<IconGeofencePlusSolid width="1.53rem" height="1.53rem" fill="white" />}
+					onClick={() => updateUIInfo(ResponsiveUIEnum.geofences)}
 				/>
 			</Flex>
 			<Flex direction="column" className="aws-connect-container">

@@ -3,7 +3,18 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { Card, CheckboxField, Divider, Flex, Link, Placeholder, SearchField, Text } from "@aws-amplify/ui-react";
+import {
+	Button,
+	Card,
+	CheckboxField,
+	Divider,
+	Flex,
+	Link,
+	Placeholder,
+	SearchField,
+	Text,
+	View
+} from "@aws-amplify/ui-react";
 import { IconClose, IconFilterFunnel, IconGeofencePlusSolid, IconMapSolid, IconSearch } from "@demo/assets";
 import { NotFoundCard } from "@demo/atomicui/molecules";
 import { appConfig } from "@demo/core/constants";
@@ -59,6 +70,10 @@ export interface MapButtonsProps {
 	onlyMapStyles?: boolean;
 	resetSearchAndFilters?: () => void;
 	showOpenDataDisclaimerModal: boolean;
+	isHandDevice?: boolean;
+	handleMapProviderChange?: (provider: MapProviderEnum, triggeredBy: TriggeredByEnum) => void;
+	currentMapProvider?: MapProviderEnum;
+	setBottomSheetMinHeight?: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const MapButtons: React.FC<MapButtonsProps> = ({
@@ -84,10 +99,18 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	isLoading = false,
 	onlyMapStyles = false,
 	resetSearchAndFilters,
-	showOpenDataDisclaimerModal
+	showOpenDataDisclaimerModal,
+	isHandDevice,
+	handleMapProviderChange,
+	currentMapProvider,
+	setBottomSheetMinHeight
 }) => {
+	const searchHandDeviceWidth = "36px";
+	const searchDesktopWidth = "100%";
+
 	const [isLoadingImg, setIsLoadingImg] = useState(true);
 	const [showFilter, setShowFilter] = useState(false);
+	const [searchWidth, setSearchWidth] = useState(isHandDevice ? searchHandDeviceWidth : searchDesktopWidth);
 	const stylesCardRef = useRef<HTMLDivElement | null>(null);
 	const stylesCardTogglerRef = useRef<HTMLDivElement | null>(null);
 	const { credentials, isUserAwsAccountConnected } = useAmplifyAuth();
@@ -97,6 +120,39 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
+
+	useEffect(() => {
+		setBottomSheetMinHeight && setBottomSheetMinHeight(150);
+
+		return () => {
+			setBottomSheetMinHeight && setBottomSheetMinHeight(80);
+		};
+	}, [setBottomSheetMinHeight]);
+
+	const filterIconWrapperRef = useRef<HTMLDivElement>(null);
+	const searchFieldRef = useRef<HTMLInputElement>(null);
+	const clearIconContainerRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		function handleClickOutside(event: MouseEvent) {
+			if (
+				!filterIconWrapperRef?.current?.contains(event.target as Node) &&
+				!searchFieldRef?.current?.contains(event.target as Node) &&
+				!clearIconContainerRef?.current?.contains(event.target as Node)
+			) {
+				if (!showFilter) {
+					isHandDevice && setSearchWidth(searchHandDeviceWidth);
+				}
+			}
+		}
+
+		// Bind the event listener
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => {
+			// Unbind the event listener on clean up
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, [isHandDevice, setSearchWidth, searchHandDeviceWidth, showFilter]);
 
 	const handleClickOutside = useCallback(
 		(ev: MouseEvent) => {
@@ -325,10 +381,14 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 			>
 				<Flex direction={"column"} gap={0}>
 					<Flex
-						className={showFilter ? "maps-styles-search with-filters" : "maps-styles-search"}
+						className={`maps-styles-search ${!!isHandDevice ? "responsive-search" : ""} ${
+							showFilter ? "with-filters" : ""
+						}`}
 						marginBottom={showFilter ? 0 : "0.6rem"}
+						padding={isHandDevice && searchWidth === searchHandDeviceWidth ? "0 0 0 1.2rem" : "0 1.2rem"}
 					>
 						<SearchField
+							ref={searchFieldRef}
 							data-testid="map-styles-search-field"
 							className="map-styles-search-field"
 							dir={langDir}
@@ -339,28 +399,66 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 							size={"large"}
 							innerStartComponent={
 								<Flex className="search-icon-container">
-									<IconSearch className="search-icon" />
+									<IconSearch className="search-bar-icon" />
 								</Flex>
 							}
+							innerEndComponent={null}
 							value={searchValue}
 							onChange={e => setSearchValue(e.target.value)}
-							onClear={() => setSearchValue("")}
-							onClick={() => !!showFilter && setShowFilter(false)}
+							onClick={() => {
+								isHandDevice && setSearchWidth(searchDesktopWidth);
+								!!showFilter && setShowFilter(false);
+							}}
 							crossOrigin={undefined}
+							width={searchWidth}
 						/>
-						<Flex className="filter-container">
-							<Flex
+						<Flex className="filter-container" gap="0">
+							{!!searchValue && searchWidth === searchDesktopWidth && (
+								<Flex
+									ref={clearIconContainerRef}
+									onClick={() => {
+										setSearchValue("");
+										setShowFilter(false);
+									}}
+									margin="0 0.4rem"
+								>
+									<IconClose className="search-bar-icon" />
+								</Flex>
+							)}
+							<View
+								ref={filterIconWrapperRef}
 								className="filter-icon-wrapper"
-								onClick={() => setShowFilter(show => !show)}
+								onClick={() => {
+									setShowFilter(show => {
+										isHandDevice && show ? setSearchWidth(searchHandDeviceWidth) : setSearchWidth(searchDesktopWidth);
+										return !show;
+									});
+								}}
 								data-testid="filter-icon-wrapper"
+								paddingRight={isHandDevice ? "0" : "0.7rem"}
 							>
 								<IconFilterFunnel className={showFilter || hasAnyFilterSelected ? "filter-icon live" : "filter-icon"} />
 								<span className={hasAnyFilterSelected ? "filter-bubble live" : "filter-bubble"} />
-							</Flex>
+							</View>
 						</Flex>
+						{searchWidth === searchHandDeviceWidth && (
+							<Flex gap="0.5rem" className="map-providers-container-mobile">
+								{Object.values(MapProviderEnum).map(provider => (
+									<Button
+										key={provider}
+										className={currentMapProvider === provider ? "active-button" : ""}
+										onClick={() =>
+											handleMapProviderChange && handleMapProviderChange(provider, TriggeredByEnum.SETTINGS_MODAL)
+										}
+									>
+										{provider === MapProviderEnum.GRAB ? `${MapProviderEnum.GRAB}Maps` : provider}
+									</Button>
+								))}
+							</Flex>
+						)}
 					</Flex>
 					{showFilter && (
-						<Flex className="maps-filter-container" direction="column">
+						<Flex className={`maps-filter-container ${isHandDevice ? "responsive-filter" : ""}`} direction="column">
 							{Object.entries(filters).map(([key, value]) => (
 								<Flex key={key} direction="column">
 									<Text as="strong" fontWeight={700} fontSize="1em">
@@ -388,7 +486,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 						</Flex>
 					)}
 				</Flex>
-				{(!showFilter || onlyMapStyles) && (
+				{(!showFilter || (onlyMapStyles && !isHandDevice)) && (
 					<Flex gap={0} direction="column" className={isGrabVisible ? "maps-container grab-visible" : "maps-container"}>
 						<Flex gap={0} padding={onlyMapStyles ? "0 0 1.23rem" : "0 0.7rem 1.23rem 0.5rem"} wrap="wrap">
 							{!searchAndFilteredResults.length && (
@@ -421,7 +519,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 									</Flex>
 								) : (
 									(item.filters?.provider !== GRAB || (item.filters?.provider === GRAB && isGrabVisible)) && (
-										<Flex key={i} marginBottom={"1.2rem"} width="33.33%">
+										<Flex key={i} width="33.33%" height="130px" alignItems="flex-start">
 											<Flex
 												data-testid={`map-style-item-${item.id}`}
 												className={item.id === currentMapStyle ? "mb-style-container selected" : "mb-style-container"}
@@ -437,13 +535,19 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 														<Placeholder position="absolute" width="100%" height="100%" />
 													)}
 													<img
-														className={onlyMapStyles ? "map-image only-map" : "map-image"}
+														className={`${isHandDevice ? "hand-device-img" : ""} ${
+															onlyMapStyles ? "only-map" : ""
+														} map-image`}
 														src={item.image}
 														alt={item.name}
 														onLoad={() => setIsLoadingImg(false)}
 													/>
 												</Flex>
-												{!isLoading && <Text marginTop="0.62rem">{t(item.name)}</Text>}
+												{!isLoading && (
+													<Text marginTop="0.62rem" textAlign="center">
+														{t(item.name)}
+													</Text>
+												)}
 											</Flex>
 										</Flex>
 									)
@@ -452,26 +556,38 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 						</Flex>
 					</Flex>
 				)}
+				{isHandDevice && showFilter && (
+					<Flex className="responsive-map-footer">
+						<Button variation="link" className="clear-selection-button">
+							Clear selections
+						</Button>
+						<Button variation="primary">Apply filters</Button>
+					</Flex>
+				)}
 			</Flex>
 		),
 		[
-			currentMapStyle,
-			handleFilterChange,
+			onlyMapStyles,
+			isHandDevice,
+			showFilter,
+			searchWidth,
+			langDir,
+			t,
+			searchValue,
 			hasAnyFilterSelected,
 			isGrabVisible,
-			isLoading,
-			isLoadingImg,
-			onChangeStyle,
 			searchAndFilteredResults,
-			searchValue,
-			selectedFilters,
-			setSearchValue,
-			showFilter,
-			onlyMapStyles,
 			noFilters,
 			resetFilters,
-			t,
-			langDir
+			setSearchValue,
+			currentMapProvider,
+			handleMapProviderChange,
+			selectedFilters,
+			handleFilterChange,
+			currentMapStyle,
+			isLoading,
+			isLoadingImg,
+			onChangeStyle
 		]
 	);
 

@@ -8,7 +8,7 @@ import { IconActionMenu, IconClose, IconDirections, IconPin, IconSearch } from "
 import { Marker, NotFoundCard, SuggestionMarker } from "@demo/atomicui/molecules";
 import { useAmplifyMap, useAwsPlace } from "@demo/hooks";
 import { DistanceUnitEnum, MapUnitEnum, SuggestionType } from "@demo/types";
-import { AnalyticsEventActionsEnum, TriggeredByEnum } from "@demo/types/Enums";
+import { AnalyticsEventActionsEnum, ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { calculateGeodesicDistance } from "@demo/utils/geoCalculation";
 import { uuid } from "@demo/utils/uuid";
 import { Units } from "@turf/turf";
@@ -35,6 +35,8 @@ interface SearchBoxProps {
 	value: string;
 	setValue: React.Dispatch<React.SetStateAction<string>>;
 	isSimpleSearch?: boolean;
+	setUI?: (ui: ResponsiveUIEnum) => void;
+	setBottomSheetMinHeight?: (height: number) => void;
 }
 
 const SearchBox: React.FC<SearchBoxProps> = ({
@@ -49,10 +51,11 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	isStylesCardOpen,
 	isSimpleSearch = false,
 	value,
-	setValue
+	setValue,
+	setUI,
+	setBottomSheetMinHeight
 }) => {
 	const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-	// const [value, setValue] = useState<string>("");
 	const [isFocused, setIsFocused] = useState(false);
 	const autocompleteRef = useRef<HTMLInputElement | null>(null);
 	const { mapUnit: currentMapUnit, isCurrentLocationDisabled, currentLocationData, viewpoint } = useAmplifyMap();
@@ -73,12 +76,17 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	const isLanguageRTL = ["ar", "he"].includes(currentLang);
 
 	useEffect(() => {
+		if (isFocused || !!value?.length) setUI && setUI(ResponsiveUIEnum.search);
+		else setUI && setUI(ResponsiveUIEnum.explore);
+	}, [setUI, isFocused, value]);
+
+	useEffect(() => {
 		if (!value) {
 			clearPoiList();
 		}
 
 		if (isRouteBoxOpen || isAuthGeofenceBoxOpen || isAuthTrackerBoxOpen || isSettingsOpen || isStylesCardOpen) {
-			setValue("");
+			setValue && setValue("");
 			clearPoiList();
 		}
 	}, [
@@ -157,6 +165,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		if (!!value) {
 			clearPoiList();
 			handleSearch(value, false, AnalyticsEventActionsEnum.SEARCH_ICON_CLICK);
+			setBottomSheetMinHeight && setBottomSheetMinHeight(80);
 		}
 		autocompleteRef?.current?.focus();
 	};
@@ -301,7 +310,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 				style={{
 					flexDirection: "column",
 					left: isSimpleSearch ? 0 : isSideMenuExpanded ? 252 : 20,
-					margin: isSimpleSearch ? "0 1rem" : "",
+					margin: isSimpleSearch ? "0 0.61rem" : "",
 					borderBottomLeftRadius: isSimpleSearch ? "8px" : hideBorderRadius ? "0px" : "8px",
 					borderBottomRightRadius: isSimpleSearch ? "8px" : hideBorderRadius ? "0px" : "8px"
 				}}
@@ -335,8 +344,14 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 							)
 						}
 						size="large"
-						onFocus={() => setIsFocused(true)}
-						onBlur={() => setIsFocused(false)}
+						onFocus={() => {
+							setIsFocused(true);
+							setBottomSheetMinHeight && setBottomSheetMinHeight(1000);
+						}}
+						onBlur={() => {
+							setIsFocused(false);
+							setBottomSheetMinHeight && setBottomSheetMinHeight(80);
+						}}
 						onSubmit={e => handleSearch(e, true, AnalyticsEventActionsEnum.ENTER_BUTTON)}
 						value={value}
 						onChange={onChange}

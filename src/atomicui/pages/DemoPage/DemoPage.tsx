@@ -53,7 +53,7 @@ import {
 	ShowStateType,
 	ToastType
 } from "@demo/types";
-import { EventTypeEnum, OpenDataMapEnum, TriggeredByEnum } from "@demo/types/Enums";
+import { EventTypeEnum, OpenDataMapEnum, ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { getCurrentLocation } from "@demo/utils/getCurrentLocation";
@@ -113,6 +113,7 @@ const DemoPage: React.FC = () => {
 	const [searchBoxValue, setSearchBoxValue] = React.useState("");
 	const [doNotAskGrabDisclaimer, setDoNotAskGrabDisclaimer] = React.useState(false);
 	const [doNotAskOpenDataDisclaimer, setDoNotAskOpenDataDisclaimer] = React.useState(false);
+	const [bottomSheetMinHeight, setBottomSheetMinHeight] = React.useState<number>(80);
 	const [selectedFilters, setSelectedFilters] = React.useState<MapStyleFilterTypes>({
 		Providers: [],
 		Attribute: [],
@@ -174,6 +175,10 @@ const DemoPage: React.FC = () => {
 		() => !isUserAwsAccountConnected || (isUserAwsAccountConnected && isGrabAvailableInRegion),
 		[isUserAwsAccountConnected, isGrabAvailableInRegion]
 	);
+
+	useEffect(() => {
+		setBottomSheetMinHeight(80);
+	}, [setBottomSheetMinHeight]);
 
 	useEffect(() => {
 		autoMapUnit.selected && setAutomaticMapUnit();
@@ -764,7 +769,10 @@ const DemoPage: React.FC = () => {
 		]
 	);
 
-	const searchBoxEl = (isSimpleSearch = false) => (
+	const searchBoxEl = (
+		isSimpleSearch = false,
+		setUI?: React.Dispatch<React.SetStateAction<ResponsiveUIEnum | undefined>>
+	) => (
 		<SearchBox
 			mapRef={mapViewRef?.current}
 			isSideMenuExpanded={show.sidebar}
@@ -778,6 +786,8 @@ const DemoPage: React.FC = () => {
 			isSimpleSearch={isSimpleSearch}
 			value={searchBoxValue}
 			setValue={setSearchBoxValue}
+			setBottomSheetMinHeight={setBottomSheetMinHeight}
+			setUI={setUI}
 		/>
 	);
 
@@ -857,7 +867,41 @@ const DemoPage: React.FC = () => {
 							setShowConnectAwsAccountModal={b => setShow(s => ({ ...s, connectAwsAccount: b }))}
 						/>
 					) : (
-						<>{isDesktop ? searchBoxEl() : <ResponsiveBottomSheet SearchBoxEl={searchBoxEl(true)} />}</>
+						<>
+							{isDesktop ? (
+								searchBoxEl()
+							) : (
+								<ResponsiveBottomSheet
+									SearchBoxEl={setUI => searchBoxEl(true, setUI)}
+									MapButtons={
+										<MapButtons
+											renderedUpon={TriggeredByEnum.SETTINGS_MODAL}
+											openStylesCard={show.stylesCard}
+											setOpenStylesCard={b => setShow(s => ({ ...s, stylesCard: b }))}
+											onCloseSidebar={() => setShow(s => ({ ...s, sidebar: false }))}
+											onOpenConnectAwsAccountModal={() => setShow(s => ({ ...s, connectAwsAccount: true }))}
+											onOpenSignInModal={() => setShow(s => ({ ...s, signInModal: true }))}
+											onShowGeofenceBox={() => setShow(s => ({ ...s, authGeofenceBox: true }))}
+											isGrabVisible={isGrabVisible}
+											showGrabDisclaimerModal={show.grabDisclaimerModal}
+											showOpenDataDisclaimerModal={show.openDataDisclaimerModal}
+											onShowGridLoader={() => setShow(s => ({ ...s, gridLoader: true }))}
+											handleMapStyleChange={onMapStyleChange}
+											searchValue={searchValue}
+											setSearchValue={setSearchValue}
+											selectedFilters={selectedFilters}
+											setSelectedFilters={setSelectedFilters}
+											handleMapProviderChange={onMapProviderChange}
+											currentMapProvider={currentMapProvider}
+											setBottomSheetMinHeight={setBottomSheetMinHeight}
+											onlyMapStyles
+											isHandDevice
+										/>
+									}
+									bottomSheetMinHeight={bottomSheetMinHeight}
+								/>
+							)}
+						</>
 					)}
 					<MapButtons
 						renderedUpon={TriggeredByEnum.DEMO_PAGE}

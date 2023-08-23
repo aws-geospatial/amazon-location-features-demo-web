@@ -6,11 +6,15 @@
 		[data-rsbs-overlay]{
 			width: 24.61rem;
 			margin-left: 0.8rem;
+			
 		}
+	}
+	[data-rsbs-overlay="true"] {
+		z-index: 9;
 	}
 
   [data-rsbs-header="true"] {
     box-shadow: none;
-    padding-bottom: 0;
+    padding: 0;
   }
 }
