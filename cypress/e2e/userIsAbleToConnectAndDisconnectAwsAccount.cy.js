@@ -37,8 +37,28 @@ describe("Connecting and Disconnecting AWS account", () => {
 		});
 		cy.wait(5000);
 		cy.get('[data-testid="hamburger-menu"]').click();
+
+		cy.get("#root").then($root => {
+			const root = $root.find('[class="amplify-button amplify-field-group__control amplify-button--primary"]');
+			root.length && root[0].innerText === "Sign in"
+				? root[0].click()
+				: cy.get('[data-testid="hamburger-menu"]').click();
+		});
+		cy.wait(5000);
+
+		cy.get('[data-testid="hamburger-menu"]').click();
 		cy.get('[data-testid="sign-out-button"]').click();
 		cy.wait(5000);
+		cy.get('[data-testid="hamburger-menu"]').click();
+
+		cy.get("#root").then($root => {
+			const root = $root.find('[class="amplify-button amplify-field-group__control amplify-button--primary"]');
+			root.length && root[0].innerText === "Sign out"
+				? root[0].click()
+				: cy.get('[data-testid="hamburger-menu"]').click();
+		});
+		cy.wait(5000);
+
 		cy.get('[data-testid="hamburger-menu"]').click();
 		cy.get('[data-testid="disconnect-aws-account-button"]').click();
 		cy.wait(10000);

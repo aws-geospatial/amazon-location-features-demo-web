@@ -54,21 +54,11 @@ describe("Tracker", () => {
 	});
 
 	it("should allow user to add a tracker and the user should see the notifications for Geofence enter and exit events", () => {
-		cy.get('[data-testid="hamburger-menu"]').click();
-		cy.wait(2000);
-
-		cy.contains("Tracker").click();
-		cy.wait(2000);
-
-		cy.contains("Continue").click();
-		cy.wait(2000);
-
 		cy.get('[class="amplify-flex geofence-button"]').click();
 		cy.wait(4000);
-
-		cy.get('[placeholder="Enter address or coordinates"]').type("Rio Tinto Perth Western Australia");
+		cy.get('[placeholder="Enter address or coordinates"]').type("Empire State Building");
 		cy.wait(4000);
-		cy.contains("Rio Tinto Operations Centre").click();
+		cy.contains("Empire State Building").click();
 		cy.wait(2000);
 		cy.get('[placeholder="Type unique Geofence Name"]').type(`${geofenceName}`);
 		cy.wait(2000);
@@ -79,16 +69,20 @@ describe("Tracker", () => {
 		cy.get('[class="amplify-flex geofence-card-close"]').click();
 		cy.wait(500);
 
+		cy.get('[data-testid="hamburger-menu"]').click();
+		cy.wait(2000);
+		cy.contains("Tracker").click();
+		cy.wait(2000);
+		cy.contains("Continue").click();
+		cy.wait(2000);
 		cy.get('[class="mapboxgl-canvas"]').click("left", { force: true });
 		cy.wait(2000);
 		cy.get('[class="mapboxgl-canvas"]').click("right", { force: true });
 		cy.wait(2000);
 		cy.get('[class="mapboxgl-canvas"]').click("right", { force: true });
 		cy.wait(2000);
-
 		cy.contains("Save").click();
 		cy.wait(2000);
-
 		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary play-pause-button"]').click();
 		cy.wait(2000);
 
@@ -108,8 +102,26 @@ describe("Tracker", () => {
 
 		cy.wait(2000);
 		cy.get('[data-testid="auth-tracker-box-close"]').click();
+
+		cy.get('[class="amplify-flex geofence-button"]').click();
+		cy.wait(2000);
+		cy.contains("Go Back").click();
+		cy.wait(2000);
+		cy.get(`[data-testid="icon-trash-${geofenceName}"]`).click({ force: true });
+		cy.get('[class="amplify-flex geofence-card-close"]').click();
+
 		cy.get('[data-testid="hamburger-menu"]').click();
 		cy.get('[data-testid="sign-out-button"]').click();
+		cy.get('[data-testid="hamburger-menu"]').click();
+
+		cy.get("#root").then($root => {
+			const root = $root.find('[class="amplify-button amplify-field-group__control amplify-button--primary"]');
+			root.length && root[0].innerText === "Sign out"
+				? root[0].click()
+				: cy.get('[data-testid="hamburger-menu"]').click();
+		});
+		cy.wait(5000);
+
 		cy.get('[data-testid="hamburger-menu"]').click();
 		cy.get('[data-testid="disconnect-aws-account-button"]').click();
 	});
