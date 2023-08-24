@@ -97,14 +97,14 @@ describe("Tracker", () => {
 			{ timeout: 50000 }
 		)
 			.should("be.visible")
-			.click({ multiple: true });
+			.click({ multiple: true, force: true });
 
 		cy.get(
 			'[class="Toastify__toast Toastify__toast-theme--dark Toastify__toast--info Toastify__toast--close-on-click exit-geofence"]',
 			{ timeout: 50000 }
 		)
 			.should("be.visible")
-			.click({ multiple: true });
+			.click({ multiple: true, force: true });
 
 		cy.wait(2000);
 		cy.get('[data-testid="auth-tracker-box-close"]').click();
