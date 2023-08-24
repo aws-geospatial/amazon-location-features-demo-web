@@ -29,5 +29,13 @@ describe("Switch data provider and map styles", () => {
 			"have.class",
 			"mb-style-container selected"
 		);
+
+		cy.get('[data-testid="map-style-item-location.aws.com.demo.maps.OpenData.StandardLight"]').click({ force: true });
+		cy.get('[data-testid="confirmation-button"]').click({ force: true });
+		cy.wait(5000);
+		cy.get('[data-testid="map-style-item-location.aws.com.demo.maps.OpenData.StandardLight"]').should(
+			"have.class",
+			"mb-style-container selected"
+		);
 	});
 });
