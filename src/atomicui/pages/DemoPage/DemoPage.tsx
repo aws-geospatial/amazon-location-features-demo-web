@@ -98,6 +98,7 @@ const initShow = {
 	mapStyle: undefined,
 	unauthGeofenceBox: false,
 	unauthTrackerBox: false,
+	startUnauthSimulation: false,
 	unauthSimulationDisclaimerModal: false,
 	unauthSimulationExitModal: false
 };
@@ -797,7 +798,7 @@ const DemoPage: React.FC = () => {
 				maxBounds={
 					currentMapProvider === MapProviderEnum.GRAB
 						? (MAX_BOUNDS.GRAB as LngLatBoundsLike)
-						: show.unauthGeofenceBox || show.unauthTrackerBox
+						: (show.unauthGeofenceBox || show.unauthTrackerBox) && show.startUnauthSimulation
 						? (MAX_BOUNDS.VANCOUVER as LngLatBoundsLike)
 						: (MAX_BOUNDS.DEFAULT as LngLatBoundsLike)
 				}
@@ -850,6 +851,8 @@ const DemoPage: React.FC = () => {
 							setShowUnauthGeofenceBox={b => setShow(s => ({ ...s, unauthGeofenceBox: b }))}
 							setShowUnauthTrackerBox={b => setShow(s => ({ ...s, unauthTrackerBox: b }))}
 							setShowConnectAwsAccountModal={b => setShow(s => ({ ...s, connectAwsAccount: b }))}
+							showStartUnauthSimulation={show.startUnauthSimulation}
+							setShowStartUnauthSimulation={b => setShow(s => ({ ...s, startUnauthSimulation: b }))}
 						/>
 					) : (
 						<SearchBox

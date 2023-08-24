@@ -61,6 +61,8 @@ interface UnauthGeofenceBoxProps {
 	setShowUnauthGeofenceBox: (b: boolean) => void;
 	setShowUnauthTrackerBox: (b: boolean) => void;
 	setShowConnectAwsAccountModal: (b: boolean) => void;
+	showStartUnauthSimulation: boolean;
+	setShowStartUnauthSimulation: (b: boolean) => void;
 }
 
 const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
@@ -68,9 +70,10 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 	from,
 	setShowUnauthGeofenceBox,
 	setShowUnauthTrackerBox,
-	setShowConnectAwsAccountModal
+	setShowConnectAwsAccountModal,
+	showStartUnauthSimulation,
+	setShowStartUnauthSimulation
 }) => {
-	const [showStartUnauthSimulation, setShowStartUnauthSimulation] = useState(false);
 	const [startSimulation, setStartSimulation] = useState(false);
 	const [trackingHistory, setTrackingHistory] = useState<TrackingHistoryType>(initialTrackingHistory);
 	const [selectedRoutes, setSelectedRoutes] = useState<SelectOption[]>([busRoutesDropdown[0]]);
@@ -113,7 +116,7 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 	const selectedRoutesIds = useMemo(() => selectedRoutes.map(route => route.value), [selectedRoutes]);
 
 	useEffect(() => {
-		mapRef?.zoomTo(2);
+		showStartUnauthSimulation && mapRef?.zoomTo(2);
 
 		return () => {
 			currentLocationData?.currentLocation
@@ -126,7 +129,7 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 						zoom: 15
 				  });
 		};
-	}, [mapRef, currentLocationData]);
+	}, [showStartUnauthSimulation, mapRef, currentLocationData]);
 
 	const updateSelectedRoutes = useCallback(
 		(selectedRoute: SelectOption) => {

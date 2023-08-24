@@ -115,6 +115,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
+	const fastestRegion = localStorage.getItem("fastestRegion") || "";
 
 	useEffect(() => {
 		const regionOption = region && regionsData.find(option => option.value === region);
@@ -499,7 +500,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								onChange={() => handleRegionChange("Automatic")}
 								crossOrigin={undefined}
 							>
-								<Text marginLeft="1.23rem">{t("settings_modal__automatic.text")}</Text>
+								<Text marginLeft="1.23rem">{`${t("settings_modal__automatic.text")} - ${fastestRegion}`}</Text>
 							</Radio>
 						</Flex>
 						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
@@ -747,7 +748,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 			handleRouteOptionChange,
 			autoRegion,
 			currentRegion,
-			handleRegionChange
+			handleRegionChange,
+			fastestRegion
 		]
 	);
 
