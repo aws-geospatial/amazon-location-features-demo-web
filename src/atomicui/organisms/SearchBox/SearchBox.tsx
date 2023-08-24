@@ -307,7 +307,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 						label={t("search.text")}
 						dir={langDir}
 						innerStartComponent={
-							<Flex className="inner-start-component" onClick={onToggleSideMenu}>
+							<Flex data-testid="hamburger-menu" className="inner-start-component" onClick={onToggleSideMenu}>
 								<IconActionMenu />
 							</Flex>
 						}

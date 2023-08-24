@@ -44,7 +44,7 @@ const WelcomeModal: React.FC<WelcomeModalProps> = ({ open, onClose }) => {
 						</a>{" "}
 						{t("welcome_modal__item_3.text")}
 					</Text>
-					<Button variation="primary" onClick={onClose}>
+					<Button data-testid="welcome-modal-continue-button" variation="primary" onClick={onClose}>
 						{t("continue.text")}
 					</Button>
 				</Flex>
