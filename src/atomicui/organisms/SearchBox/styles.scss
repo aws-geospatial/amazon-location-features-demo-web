@@ -14,52 +14,11 @@
 	width: 100%;
 	max-width: 360px;
 
-	&.simple-search-bar {
-		width: -webkit-fill-available;
-		background-color: var(--light-color-2);
-		box-shadow: none;
-
-		@media only screen and (max-width: 480px) {
-			max-width: -webkit-fill-available;
-		}
-
-		.amplify-autocomplete__menu {
-			top: 38px !important;
-		}
-
-		.amplify-flex.not-found-container {
-			height: auto;
-		}
-
-		input {
-			margin-left: 0px;
-			width: 100%;
-		}
-
-		.search-complete {
-			text-align: left;
-		}
-	}
-
 	.amplify-flex.not-found-container {
 		height: 19rem;
 
 		.nfc-text {
 			padding: 0;
-		}
-	}
-
-	.amplify-flex.search-loader-container {
-		flex-direction: column;
-		width: 100%;
-
-		.skeleton-container {
-			flex-direction: column;
-			margin: 0.5rem 0;
-
-			.amplify-placeholder {
-				height: 0.4rem;
-			}
 		}
 	}
 
@@ -103,6 +62,80 @@
 	@media only screen and (max-width: 480px) {
 		width: 75%;
 		max-width: 288.031px;
+	}
+}
+
+.amplify-flex.search-loader-container {
+	flex-direction: column;
+	width: 100%;
+
+	.skeleton-container {
+		flex-direction: column;
+		margin: 0.5rem 0;
+
+		.amplify-placeholder {
+			height: 0.4rem;
+		}
+	}
+}
+
+.simple-search-bar {
+	width: -webkit-fill-available;
+	position: relative;
+	top: 1.51rem;
+
+	.clear-button {
+		border: none;
+		color: var(--primary-color);
+
+		&:active, &:focus {
+			outline: none;
+			box-shadow: none;
+			background-color: transparent;
+		}
+	}
+
+	.search-loader-container{
+		padding: 0 0.61rem 0.61rem;
+	}
+
+	@media only screen and (max-width: 480px) {
+		max-width: -webkit-fill-available;
+	}
+
+	.amplify-flex.not-found-container {
+		height: auto;
+	}
+
+	.input-container {
+		border: none;
+		padding: 0;
+
+		.outter-end-component {
+			border: none;
+		}
+	}
+
+	input {
+		margin-left: 0px;
+		width: 100%;
+		background-color: var(--light-color-2);
+		width: -webkit-fill-available;
+		box-shadow: none;
+		font-family: "AmazonEmber-Medium";
+		font-size: 1.07rem;
+	}
+
+	.option-wrapper {
+		padding: 0.69rem 0.61rem 0.69rem 1.5rem;
+		border-bottom: 1px solid var(--light-color-2);
+		width: 100%;
+	}
+
+	.search-complete {
+		text-align: left;
+		align-items: flex-start;
+		overflow-y: scroll;
 	}
 }
 

@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
 	Button,
@@ -19,6 +19,7 @@ import { IconClose, IconFilterFunnel, IconGeofencePlusSolid, IconMapSolid, IconS
 import { NotFoundCard } from "@demo/atomicui/molecules";
 import { appConfig } from "@demo/core/constants";
 import { useAmplifyAuth, useAmplifyMap, useAwsGeofence } from "@demo/hooks";
+import useBottomSheet from "@demo/hooks/useBottomSheet";
 import {
 	AttributeEnum,
 	EsriMapEnum,
@@ -73,7 +74,6 @@ export interface MapButtonsProps {
 	isHandDevice?: boolean;
 	handleMapProviderChange?: (provider: MapProviderEnum, triggeredBy: TriggeredByEnum) => void;
 	currentMapProvider?: MapProviderEnum;
-	setBottomSheetMinHeight?: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const MapButtons: React.FC<MapButtonsProps> = ({
@@ -102,12 +102,12 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	showOpenDataDisclaimerModal,
 	isHandDevice,
 	handleMapProviderChange,
-	currentMapProvider,
-	setBottomSheetMinHeight
+	currentMapProvider
 }) => {
 	const searchHandDeviceWidth = "36px";
 	const searchDesktopWidth = "100%";
 
+	const [tempFilters, setTempFilters] = useState(selectedFilters);
 	const [isLoadingImg, setIsLoadingImg] = useState(true);
 	const [showFilter, setShowFilter] = useState(false);
 	const [searchWidth, setSearchWidth] = useState(isHandDevice ? searchHandDeviceWidth : searchDesktopWidth);
@@ -118,16 +118,17 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	const { isAddingGeofence, setIsAddingGeofence } = useAwsGeofence();
 	const isAuthenticated = !!credentials?.authenticated;
 	const { t, i18n } = useTranslation();
+	const { bottomSheetCurrentHeight = 0 } = useBottomSheet();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
 
-	useEffect(() => {
-		setBottomSheetMinHeight && setBottomSheetMinHeight(150);
+	// useEffect(() => {
+	// 	setBottomSheetMinHeight && setBottomSheetMinHeight(100);
 
-		return () => {
-			setBottomSheetMinHeight && setBottomSheetMinHeight(80);
-		};
-	}, [setBottomSheetMinHeight]);
+	// 	return () => {
+	// 		setBottomSheetMinHeight && setBottomSheetMinHeight(80);
+	// 	};
+	// }, []);
 
 	const filterIconWrapperRef = useRef<HTMLDivElement>(null);
 	const searchFieldRef = useRef<HTMLInputElement>(null);
@@ -354,19 +355,55 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	 * @param {React.ChangeEvent<HTMLInputElement>} e - The change event from the input element.
 	 * @param {string} filterCategory - The category of the filter being changed (e.g., 'Providers', 'Attribute', 'Type').
 	 */
+
 	const handleFilterChange = useCallback(
 		(e: React.ChangeEvent<HTMLInputElement>, filterCategory: string) => {
 			const { name, checked } = e.target;
-			setSelectedFilters(prevFilters => {
-				const key = filterCategory as keyof MapStyleFilterTypes;
-				return {
-					...prevFilters,
-					[key]: checked ? [...prevFilters[key], name] : prevFilters[key].filter(item => item !== name)
+			const key = filterCategory as keyof MapStyleFilterTypes;
+
+			const updatedFilters = {
+				...tempFilters,
+				[key]: checked ? [...tempFilters[key], name] : tempFilters[key].filter(item => item !== name)
+			};
+
+			if (isHandDevice) {
+				setTempFilters(updatedFilters);
+			} else {
+				const desktopUpdatedFilters = {
+					...selectedFilters,
+					[key]: checked ? [...selectedFilters[key], name] : selectedFilters[key].filter(item => item !== name)
 				};
-			});
+				setSelectedFilters(desktopUpdatedFilters);
+			}
 		},
-		[setSelectedFilters]
+		[tempFilters, isHandDevice, selectedFilters, setSelectedFilters]
 	);
+
+	const applyMobileFilters = useCallback(() => {
+		if (isHandDevice) {
+			setSelectedFilters(tempFilters);
+		}
+	}, [isHandDevice, setSelectedFilters, tempFilters]);
+
+	// Invoke this when dialog is closed without applying filters in mobile mode
+	const discardChanges = useCallback(() => {
+		if (isHandDevice) {
+			// revert tempFilters to the applied selectedFilters
+			setTempFilters(selectedFilters);
+		}
+	}, [selectedFilters, isHandDevice]);
+
+	const clearFilters = useCallback(() => {
+		if (isHandDevice) {
+			const initialFilterValues = {
+				Providers: [],
+				Attribute: [],
+				Type: []
+			};
+			setTempFilters(initialFilterValues);
+			setSelectedFilters(initialFilterValues);
+		}
+	}, [isHandDevice, setSelectedFilters]);
 
 	const stylesWithTitles = addProviderTitle(MAP_STYLES, isGrabVisible);
 	const searchAndFilteredResults = searchStyles(stylesWithTitles, searchValue, selectedFilters);
@@ -379,7 +416,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 				className={onlyMapStyles ? "map-styles-wrapper only-map-styles" : "map-styles-wrapper"}
 				direction={"column"}
 			>
-				<Flex direction={"column"} gap={0}>
+				<Flex direction={"column"} gap={0} marginBottom={isHandDevice && showFilter ? "5rem" : "0"}>
 					<Flex
 						className={`maps-styles-search ${!!isHandDevice ? "responsive-search" : ""} ${
 							showFilter ? "with-filters" : ""
@@ -433,6 +470,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 										isHandDevice && show ? setSearchWidth(searchHandDeviceWidth) : setSearchWidth(searchDesktopWidth);
 										return !show;
 									});
+									discardChanges();
 								}}
 								data-testid="filter-icon-wrapper"
 								paddingRight={isHandDevice ? "0" : "0.7rem"}
@@ -474,7 +512,11 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 												label={item === GRAB ? `${item}Maps` : item}
 												name={item}
 												value={item}
-												checked={selectedFilters[key as keyof MapStyleFilterTypes].includes(item)}
+												checked={
+													isHandDevice
+														? tempFilters[key as keyof MapStyleFilterTypes].includes(item)
+														: selectedFilters[key as keyof MapStyleFilterTypes].includes(item)
+												}
 												onChange={e => handleFilterChange(e, key)}
 												data-testid={`filter-checkbox-${item}`}
 												crossOrigin={undefined}
@@ -556,12 +598,14 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 						</Flex>
 					</Flex>
 				)}
-				{isHandDevice && showFilter && (
+				{isHandDevice && showFilter && bottomSheetCurrentHeight > 150 && (
 					<Flex className="responsive-map-footer">
-						<Button variation="link" className="clear-selection-button">
+						<Button variation="link" className="clear-selection-button" onClick={clearFilters}>
 							Clear selections
 						</Button>
-						<Button variation="primary">Apply filters</Button>
+						<Button variation="primary" onClick={applyMobileFilters}>
+							Apply filters
+						</Button>
 					</Flex>
 				)}
 			</Flex>
@@ -579,9 +623,14 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 			searchAndFilteredResults,
 			noFilters,
 			resetFilters,
+			bottomSheetCurrentHeight,
+			clearFilters,
+			applyMobileFilters,
 			setSearchValue,
+			discardChanges,
 			currentMapProvider,
 			handleMapProviderChange,
+			tempFilters,
 			selectedFilters,
 			handleFilterChange,
 			currentMapStyle,
@@ -643,4 +692,4 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	);
 };
 
-export default MapButtons;
+export default memo(MapButtons);

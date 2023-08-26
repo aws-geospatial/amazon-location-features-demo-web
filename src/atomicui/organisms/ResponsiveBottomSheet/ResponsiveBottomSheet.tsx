@@ -1,31 +1,68 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 
 import { Flex, Text } from "@aws-amplify/ui-react";
 import { IconClose } from "@demo/assets";
 import { useMediaQuery } from "@demo/hooks";
+import useBottomSheet from "@demo/hooks/useBottomSheet";
 import { ResponsiveUIEnum } from "@demo/types/Enums";
 import { useTranslation } from "react-i18next";
 import { BottomSheet } from "react-spring-bottom-sheet";
 
 import "react-spring-bottom-sheet/dist/style.css";
 import { Explore } from "../Explore";
+import { LocationPreview } from "../LocationPreview";
 import "./styles.scss";
 
 interface IProps {
 	SearchBoxEl: (ui: React.Dispatch<React.SetStateAction<ResponsiveUIEnum | undefined>>) => JSX.Element;
 	MapButtons: JSX.Element;
-	bottomSheetMinHeight: number;
+	searchValue: string;
+	setSearchValue: (s: string) => void;
 }
 
-const ResponsiveBottomSheet: React.FC<IProps> = ({ SearchBoxEl, MapButtons, bottomSheetMinHeight }) => {
+const ResponsiveBottomSheet: FC<IProps> = ({ SearchBoxEl, MapButtons, searchValue, setSearchValue }) => {
 	const isDesktop = useMediaQuery("(min-width: 1024px)");
 	const isMobile = useMediaQuery("(max-width: 425px)");
 	const isTablet = !isDesktop && !isMobile;
 	const { t } = useTranslation();
-	const [ui, setUI] = React.useState<ResponsiveUIEnum | undefined>(ResponsiveUIEnum.explore);
+	const [ui, setUI] = useState<ResponsiveUIEnum | undefined>(ResponsiveUIEnum.explore);
+	const {
+		bottomSheetMinHeight,
+		setBottomSheetMinHeight,
+		setBottomSheetHeight,
+		bottomSheetHeight,
+		setBottomSheetCurrentHeight
+	} = useBottomSheet();
+
+	useEffect(() => {
+		const resizeObserver = new ResizeObserver(entries => {
+			for (const entry of entries) {
+				setBottomSheetCurrentHeight(entry.contentRect.height);
+			}
+		});
+
+		const mutationObserver = new MutationObserver((mutationsList, observer) => {
+			for (const mutation of mutationsList) {
+				if (mutation.type === "childList") {
+					const element = document.querySelector('div[data-rsbs-overlay="true"]') as HTMLDivElement;
+					if (element) {
+						resizeObserver.observe(element);
+						observer.disconnect();
+					}
+				}
+			}
+		});
+
+		mutationObserver.observe(document.body, { childList: true, subtree: true });
+
+		return () => {
+			mutationObserver.disconnect();
+			resizeObserver.disconnect();
+		};
+	}, [setBottomSheetCurrentHeight, setBottomSheetHeight, setBottomSheetMinHeight]);
 
 	const bottomSheetHeader = (ui?: ResponsiveUIEnum) => {
 		switch (ui) {
@@ -52,11 +89,7 @@ const ResponsiveBottomSheet: React.FC<IProps> = ({ SearchBoxEl, MapButtons, bott
 				);
 			case ResponsiveUIEnum.explore:
 			case ResponsiveUIEnum.search:
-				return (
-					<Flex padding="8px 8px 50px" width="100%">
-						{SearchBoxEl(setUI)}
-					</Flex>
-				);
+				return <Flex width="100%">{SearchBoxEl(setUI)}</Flex>;
 			default:
 				return <></>;
 		}
@@ -68,31 +101,28 @@ const ResponsiveBottomSheet: React.FC<IProps> = ({ SearchBoxEl, MapButtons, bott
 				return MapButtons;
 			case ResponsiveUIEnum.explore:
 				return <Explore updateUIInfo={setUI} />;
+			// case ResponsiveUIEnum.location_preview:
+			// 	return <LocationPreview updateUIInfo={setUI} searchValue={searchValue} setSearchValue={setSearchValue} />;
 			default:
 				return <></>;
 		}
 	};
-	function calculatePixelValue(maxHeight: number, number: number) {
-		// Calculate the percentage of the max height
-		const percentage = number / 100;
+	const calculatePixelValue = useCallback(
+		(maxHeight: number, number: number) => {
+			const percentage = number / 100;
 
-		// Convert the percentage to pixels
-		let pixelValue = maxHeight * percentage;
+			let pixelValue = maxHeight * percentage;
 
-		// Ensure the pixel value is not less than the minimum
-		if (pixelValue < bottomSheetMinHeight) {
-			pixelValue = bottomSheetMinHeight;
-		}
+			if (pixelValue < bottomSheetMinHeight) {
+				pixelValue = bottomSheetMinHeight;
+			}
 
-		return pixelValue;
-	}
+			return pixelValue;
+		},
+		[bottomSheetMinHeight]
+	);
 
-	const heights = { headerHeight: 10, footerHeight: 50, height: 99, minHeight: 10 };
-
-	const headerHeight = (maxHeight: number) => calculatePixelValue(maxHeight, heights.headerHeight);
-	const footerHeight = (maxHeight: number) => calculatePixelValue(maxHeight, heights.footerHeight);
-	const height = (maxHeight: number) => calculatePixelValue(maxHeight, heights.height);
-	const minHeight = (maxHeight: number) => calculatePixelValue(maxHeight, heights.minHeight);
+	const footerHeight = useCallback((maxHeight: number) => calculatePixelValue(maxHeight, 50), [calculatePixelValue]);
 
 	return (
 		<>
@@ -101,11 +131,12 @@ const ResponsiveBottomSheet: React.FC<IProps> = ({ SearchBoxEl, MapButtons, bott
 					open
 					blocking={false}
 					snapPoints={({ maxHeight }) => [
-						headerHeight(maxHeight),
+						bottomSheetMinHeight,
 						footerHeight(maxHeight),
-						height(maxHeight),
-						minHeight(maxHeight)
+						bottomSheetHeight - 10,
+						bottomSheetMinHeight
 					]}
+					maxHeight={bottomSheetHeight}
 					header={<Flex>{bottomSheetHeader(ui)}</Flex>}
 					className={`bottom-sheet ${isTablet ? "tablet" : "mobile"}`}
 					data-amplify-theme="aws-location-theme"

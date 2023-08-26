@@ -113,12 +113,12 @@ const DemoPage: React.FC = () => {
 	const [searchBoxValue, setSearchBoxValue] = React.useState("");
 	const [doNotAskGrabDisclaimer, setDoNotAskGrabDisclaimer] = React.useState(false);
 	const [doNotAskOpenDataDisclaimer, setDoNotAskOpenDataDisclaimer] = React.useState(false);
-	const [bottomSheetMinHeight, setBottomSheetMinHeight] = React.useState<number>(80);
 	const [selectedFilters, setSelectedFilters] = React.useState<MapStyleFilterTypes>({
 		Providers: [],
 		Attribute: [],
 		Type: []
 	});
+
 	const mapViewRef = useRef<MapRef | null>(null);
 	const geolocateControlRef = useRef<GeolocateControlRef | null>(null);
 	const {
@@ -175,10 +175,6 @@ const DemoPage: React.FC = () => {
 		() => !isUserAwsAccountConnected || (isUserAwsAccountConnected && isGrabAvailableInRegion),
 		[isUserAwsAccountConnected, isGrabAvailableInRegion]
 	);
-
-	useEffect(() => {
-		setBottomSheetMinHeight(80);
-	}, [setBottomSheetMinHeight]);
 
 	useEffect(() => {
 		autoMapUnit.selected && setAutomaticMapUnit();
@@ -786,7 +782,6 @@ const DemoPage: React.FC = () => {
 			isSimpleSearch={isSimpleSearch}
 			value={searchBoxValue}
 			setValue={setSearchBoxValue}
-			setBottomSheetMinHeight={setBottomSheetMinHeight}
 			setUI={setUI}
 		/>
 	);
@@ -893,12 +888,12 @@ const DemoPage: React.FC = () => {
 											setSelectedFilters={setSelectedFilters}
 											handleMapProviderChange={onMapProviderChange}
 											currentMapProvider={currentMapProvider}
-											setBottomSheetMinHeight={setBottomSheetMinHeight}
 											onlyMapStyles
 											isHandDevice
 										/>
 									}
-									bottomSheetMinHeight={bottomSheetMinHeight}
+									searchValue={searchValue}
+									setSearchValue={setSearchValue}
 								/>
 							)}
 						</>

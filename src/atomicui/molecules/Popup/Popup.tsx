@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button, Flex, Placeholder, Text, View } from "@aws-amplify/ui-react";
 import { IconCar, IconClose, IconCopyPages, IconDirections, IconInfo } from "@demo/assets";
-import { useAmplifyMap, useAwsPlace, useAwsRoute, useMediaQuery } from "@demo/hooks";
+import { useAmplifyMap, useAwsPlace, useAwsRoute, useBottomSheet, useMediaQuery } from "@demo/hooks";
 import { DistanceUnitEnum, MapProviderEnum, MapUnitEnum, SuggestionType, TravelMode } from "@demo/types";
 
 import { TriggeredByEnum } from "@demo/types/Enums";
@@ -26,8 +26,10 @@ interface Props {
 	info: SuggestionType;
 	select: (id?: string) => Promise<void>;
 	onClosePopUp?: () => void;
+	POIOnly?: boolean;
 }
-const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
+const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, POIOnly }) => {
+	const { setShowPOI } = useBottomSheet();
 	const [routeData, setRouteData] = useState<CalculateRouteResponse>();
 	const {
 		currentLocationData,
@@ -115,13 +117,14 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 	const onClose = useCallback(async () => {
 		await select(undefined);
 		onClosePopUp && onClosePopUp();
-	}, [select, onClosePopUp]);
+		setShowPOI(false);
+	}, [select, onClosePopUp, setShowPOI]);
 
-	const onGetDirections = () => {
+	const onGetDirections = useCallback(() => {
 		setDirections({ info, isEsriLimitation });
-		onClose();
+		!isDesktop && onClose();
 		clearPoiList();
-	};
+	}, [clearPoiList, info, isDesktop, isEsriLimitation, onClose, setDirections]);
 
 	const renderRouteInfo = useMemo(() => {
 		if (currentLocationData?.error || isCurrentLocationDisabled) {
@@ -225,6 +228,56 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 		}
 	}, [info, latitude, longitude]);
 
+	useEffect(() => {
+		setShowPOI(!!info.Place?.Label);
+	}, [info.Place?.Label, setShowPOI]);
+
+	const POIBody = useMemo(
+		() => (
+			<Flex className={POIOnly ? "poi-only-container" : ""} direction="column">
+				<View className="popup-icon-close-container" onClick={onClose}>
+					<IconClose />
+				</View>
+				{isDesktop && (
+					<View className="triangle-container">
+						<View />
+					</View>
+				)}
+				<View className="info-container">
+					<Text className="bold" variation="secondary" fontSize="20px" lineHeight="28px">{`${
+						info.Place?.Label?.split(",")[0]
+					}`}</Text>
+					<View className="address-container">
+						<View>
+							<Text variation="tertiary">{address}</Text>
+						</View>
+						<IconCopyPages
+							data-testid="copy-icon"
+							className="copy-icon"
+							onClick={() => navigator.clipboard.writeText(`${info.Place?.Label?.split(",")[0]}` + ", " + address)}
+						/>
+					</View>
+					{renderRouteInfo}
+					<Button
+						data-testid="directions-button"
+						ref={r => r?.blur()}
+						className="directions-button"
+						variation="primary"
+						onClick={onGetDirections}
+					>
+						<IconDirections />
+						<Text className="bold" variation="primary" fontSize={"0.92rem"}>
+							{t("popup__directions.text")}
+						</Text>
+					</Button>
+				</View>
+			</Flex>
+		),
+		[address, info.Place?.Label, isDesktop, onClose, onGetDirections, renderRouteInfo, t]
+	);
+
+	if (POIOnly) return POIBody;
+
 	return (
 		<PopupGl
 			data-testid="popup-container"
@@ -236,42 +289,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 			longitude={longitude as number}
 			latitude={latitude as number}
 		>
-			<View className="popup-icon-close-container" onClick={onClose}>
-				<IconClose />
-			</View>
-			{isDesktop && (
-				<View className="triangle-container">
-					<View />
-				</View>
-			)}
-			<View className="info-container">
-				<Text className="bold" variation="secondary" fontSize="20px" lineHeight="28px">{`${
-					info.Place?.Label?.split(",")[0]
-				}`}</Text>
-				<View className="address-container">
-					<View>
-						<Text variation="tertiary">{address}</Text>
-					</View>
-					<IconCopyPages
-						data-testid="copy-icon"
-						className="copy-icon"
-						onClick={() => navigator.clipboard.writeText(`${info.Place?.Label?.split(",")[0]}` + ", " + address)}
-					/>
-				</View>
-				{renderRouteInfo}
-				<Button
-					data-testid="directions-button"
-					ref={r => r?.blur()}
-					className="directions-button"
-					variation="primary"
-					onClick={onGetDirections}
-				>
-					<IconDirections />
-					<Text className="bold" variation="primary" fontSize={"0.92rem"}>
-						{t("popup__directions.text")}
-					</Text>
-				</Button>
-			</View>
+			{POIBody}
 		</PopupGl>
 	);
 };
