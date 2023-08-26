@@ -292,6 +292,7 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 								</Text>
 								{isUserAwsAccountConnected && (
 									<Button
+										data-testid="sign-in-button"
 										marginTop="3.08rem"
 										width="100%"
 										height="3.08rem"

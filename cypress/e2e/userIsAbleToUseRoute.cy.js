@@ -14,13 +14,13 @@ describe("Route", () => {
 		() => {
 			cy.get('[placeholder="From"]').click();
 			cy.get("div").should("contain", "Current location");
-			cy.get('[placeholder="From"]').type("40.7485492, -73.9879522");
+			cy.get('[placeholder="From"]').type("Empire State Building");
 			cy.wait(2000);
-			cy.contains("Nycomputers, 1270 Broadway, New York, NY, 10001, USA").click();
+			cy.contains("Empire State Building").click();
 			cy.wait(2000);
-			cy.get('[placeholder="To"]').click().type("40.737941, -73.9881014");
+			cy.get('[placeholder="To"]').click().type("Gramercy Park");
 			cy.wait(2000);
-			cy.contains("232-250 Park Ave S, New York, NY, 10003, USA").click();
+			cy.contains("Gramercy Park").click();
 			cy.wait(2000);
 			cy.get('[class="mapboxgl-marker mapboxgl-marker-anchor-center"]').eq(0).should("be.visible");
 			cy.wait(2000);
@@ -29,13 +29,13 @@ describe("Route", () => {
 	);
 
 	it("should allow user to swap the departure and destination addresses", { scrollBehavior: false }, () => {
-		cy.get('[placeholder="From"]').type("40.7485492, -73.9879522");
+		cy.get('[placeholder="From"]').type("Empire State Building");
 		cy.wait(2000);
-		cy.contains("Nycomputers, 1270 Broadway, New York, NY, 10001, USA").click();
+		cy.contains("Empire State Building").click();
 		cy.wait(2000);
-		cy.get('[placeholder="To"]').click().type("40.737941, -73.9881014");
+		cy.get('[placeholder="To"]').click().type("Gramercy Park");
 		cy.wait(2000);
-		cy.contains("232-250 Park Ave S, New York, NY, 10003, USA").click();
+		cy.contains("Gramercy Park").click();
 		cy.wait(2000);
 		cy.get('[class="mapboxgl-marker mapboxgl-marker-anchor-center"]').eq(0).should("be.visible");
 		cy.wait(2000);

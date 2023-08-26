@@ -21,6 +21,6 @@ Cypress.Commands.add("visitDomain", domain => {
 			: cy.visit(domain);
 
 		cy.wait(20000);
-		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
+		cy.get('[data-testid="welcome-modal-continue-button"]').click();
 	}
 });

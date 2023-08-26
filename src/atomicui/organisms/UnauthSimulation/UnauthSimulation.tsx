@@ -61,6 +61,8 @@ interface UnauthGeofenceBoxProps {
 	setShowUnauthGeofenceBox: (b: boolean) => void;
 	setShowUnauthTrackerBox: (b: boolean) => void;
 	setShowConnectAwsAccountModal: (b: boolean) => void;
+	showStartUnauthSimulation: boolean;
+	setShowStartUnauthSimulation: (b: boolean) => void;
 }
 
 const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
@@ -68,9 +70,10 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 	from,
 	setShowUnauthGeofenceBox,
 	setShowUnauthTrackerBox,
-	setShowConnectAwsAccountModal
+	setShowConnectAwsAccountModal,
+	showStartUnauthSimulation,
+	setShowStartUnauthSimulation
 }) => {
-	const [showStartUnauthSimulation, setShowStartUnauthSimulation] = useState(false);
 	const [startSimulation, setStartSimulation] = useState(false);
 	const [trackingHistory, setTrackingHistory] = useState<TrackingHistoryType>(initialTrackingHistory);
 	const [selectedRoutes, setSelectedRoutes] = useState<SelectOption[]>([busRoutesDropdown[0]]);
@@ -103,7 +106,8 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 					  }
 					: { ...prevState };
 			});
-		}, [])
+		}, []),
+		startSimulation
 	);
 	const { t } = useTranslation();
 	const currentLanguage = i18n.language;
@@ -112,7 +116,7 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 	const selectedRoutesIds = useMemo(() => selectedRoutes.map(route => route.value), [selectedRoutes]);
 
 	useEffect(() => {
-		mapRef?.zoomTo(2);
+		showStartUnauthSimulation && mapRef?.zoomTo(2);
 
 		return () => {
 			currentLocationData?.currentLocation
@@ -125,7 +129,7 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 						zoom: 15
 				  });
 		};
-	}, [mapRef, currentLocationData]);
+	}, [showStartUnauthSimulation, mapRef, currentLocationData]);
 
 	const updateSelectedRoutes = useCallback(
 		(selectedRoute: SelectOption) => {
@@ -232,6 +236,7 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 							/>
 						</Flex>
 						<Button
+							data-testid="start-simulation-btn"
 							variation="primary"
 							padding="0.923rem 0"
 							onClick={() => setStartSimulation(true)}
@@ -359,6 +364,7 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 								<Flex className="simulation-header" justifyContent="space-between">
 									<Flex alignItems="center" padding="0.6rem 0 0.6rem 1.2rem">
 										<IconBackArrow
+											data-testid="unauth-simulation-back-arrow"
 											className="back-icon"
 											cursor="pointer"
 											width={20}
@@ -419,7 +425,11 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 													bordered
 													isCheckbox
 												/>
-												<Button variation="primary" onClick={() => setIsPlaying(!isPlaying)}>
+												<Button
+													data-testid={isPlaying ? "pause-button" : "simulate-button"}
+													variation="primary"
+													onClick={() => setIsPlaying(!isPlaying)}
+												>
 													{isPlaying ? t("tracker_box__pause.text") : t("tracker_box__simulate.text")}
 												</Button>
 											</Flex>

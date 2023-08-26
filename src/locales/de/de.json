@@ -3057,43 +3057,43 @@
     "text": "Wählen Sie eine Option"
   },
   "regions__us_east_1": {
-    "text": "UNS Osten (N). Virginia) us-east-1"
+    "text": "US East (N. Virginia) us-east-1"
   },
   "regions__us_east_2": {
-    "text": "UNS Osten (Ohio) us-east-2"
+    "text": "US East (Ohio) us-east-2"
   },
   "regions__us_west_2": {
-    "text": "UNS Westen (Oregon) us-west-2"
+    "text": "US West (Oregon) us-west-2"
   },
   "regions__ap_south_1": {
     "text": "Asia Pacific (Mumbai) ap-south-1"
   },
   "regions__ap_southeast_1": {
-    "text": "Asien Pazifik (Singapur) ap-southeast-1"
+    "text": "Asia Pacific (Singapore) ap-southeast-1"
   },
   "regions__ap_southeast_2": {
-    "text": "Asien Pazifik (Sydney) ap-southeast-2"
+    "text": "Asia Pacific (Sydney) ap-southeast-2"
   },
   "regions__ap_northeast_1": {
     "text": "Asia Pacific (Tokyo) ap-northeast-1"
   },
   "regions__ca_central_1": {
-    "text": "Kanada (Zentral) ca-central-1"
+    "text": "Canada (Central) ca-central-1"
   },
   "regions__eu_central_1": {
-    "text": "Europa (Frankfurt) eu-central-1"
+    "text": "Europe (Frankfurt) eu-central-1"
   },
   "regions__eu_west_1": {
-    "text": "Europa (Irland) eu-west-1"
+    "text": "Europe (Ireland) eu-west-1"
   },
   "regions__eu_west_2": {
-    "text": "Europa (Londres) eu-west-2"
+    "text": "Europe (London) eu-west-2"
   },
   "regions__eu_north_1": {
-    "text": "Europa (Stockholm) eu-north-1"
+    "text": "Europe (Stockholm) eu-north-1"
   },
   "regions__sa_east_1": {
-    "text": "Süden Amerika (Sao Paulo) sa-east-1"
+    "text": "South America (São Paulo) sa-east-1"
   },
   "sign_in_modal__1": {
     "text": "Anmeldung erforderlich"
@@ -3400,5 +3400,164 @@
   },
   "explore__connect_description": {
     "text": "Greifen Sie auf Tracking- und Geofence-Funktionen zu, indem Sie eine Verbindung zu AWS CloudFormation herstellen "
+  },
+  "samples__js-map-style-change__title": {
+    "text": "Kartenstile wechseln"
+  },
+  "samples__js-map-style-change__bodyText": {
+    "text": "Diese Beispiel-App zeigt Ihnen, wie Sie zwischen verschiedenen Kartenstilen wechseln können. Sie verwendet Maps von Amazon Location Service als Basiskartenanbieter und MapLibre GL JS als Bibliothek zum Rendern von Karten."
+  },
+  "samples__js-map-style-change__configure": {
+    "text": "Öffnen Sie index.html und geben Sie mithilfe der CloudFormation-Stack-Ausgaben Ihre Cognito Identity Pool-ID ein."
+  },
+  "samples__js-map-style-change__run": {
+    "text": "Öffnen Sie index.html in Ihrem Browser."
+  },
+  "samples__js-map-style-change__cleanUp": {
+    "text": "Wenn Sie alle in dieser exemplarischen Vorgehensweise erstellten Ressourcen entfernen möchten, löschen Sie den CloudFormation-Stack mit dem Namen `map-style-change`."
+  },
+  "samples__js-map-with-geojson-line__title": {
+    "text": "Eine GeoJSON-Linie zu einer Webkarte hinzufügen"
+  },
+  "samples__js-map-with-geojson-line__bodyText": {
+    "text": "Diese Beispiel-App zeigt Ihnen, wie Sie einer Webkarte eine GeoJSON-Linie hinzufügen. Sie verwendet Maps von Amazon Location Service als Basiskartenanbieter und MapLibre GL JS als Bibliothek zum Rendern von Karten."
+  },
+  "samples__js-map-with-geojson-line__configure": {
+    "text": "Öffnen Sie index.html und geben Sie mithilfe der CloudFormation-Stack-Ausgaben Ihre Cognito Identity Pool-ID ein."
+  },
+  "samples__js-map-with-geojson-line__run": {
+    "text": "Öffnen Sie index.html in Ihrem Browser."
+  },
+  "samples__js-map-with-geojson-line__cleanUp": {
+    "text": "Wenn Sie alle in dieser exemplarischen Vorgehensweise erstellten Ressourcen entfernen möchten, löschen Sie den CloudFormation-Stack mit dem Namen `geojson-line-example`."
+  },
+  "samples__js-map-with-geojson-point__title": {
+    "text": "Einen GeoJSON-Punkt zu einer Webkarte hinzufügen"
+  },
+  "samples__js-map-with-geojson-point__bodyText": {
+    "text": "Diese Beispiel-App zeigt Ihnen, wie Sie einer Webkarte einen GeoJSON-Punkt hinzufügen. Sie verwendet Maps von Amazon Location Service als Basiskartenanbieter und MapLibre GL JS als Bibliothek zum Rendern von Karten."
+  },
+  "samples__js-map-with-geojson-point__configure": {
+    "text": "Öffnen Sie index.html und geben Sie mithilfe der CloudFormation-Stack-Ausgaben Ihre Cognito Identity Pool-ID ein."
+  },
+  "samples__js-map-with-geojson-point__run": {
+    "text": "Öffnen Sie index.html in Ihrem Browser."
+  },
+  "samples__js-map-with-geojson-point__cleanUp": {
+    "text": "Wenn Sie alle in dieser exemplarischen Vorgehensweise erstellten Ressourcen entfernen möchten, löschen Sie den CloudFormation-Stack mit dem Namen `geojson-point-example`."
+  },
+  "samples__js-map-with-geojson-polygon__title": {
+    "text": "Hinzufügen eines GeoJSON-Polygons zu einer Webkarte"
+  },
+  "samples__js-map-with-geojson-polygon__bodyText": {
+    "text": "Diese Beispiel-App zeigt Ihnen, wie Sie einer Webkarte ein GeoJSON-Polygon hinzufügen. Sie verwendet Maps von Amazon Location Service als Basiskartenanbieter und MapLibre GL JS als Bibliothek zum Rendern von Karten."
+  },
+  "samples__js-map-with-geojson-polygon__configure": {
+    "text": "Öffnen Sie index.html und geben Sie mithilfe der CloudFormation-Stack-Ausgaben Ihre Cognito Identity Pool-ID ein."
+  },
+  "samples__js-map-with-geojson-polygon__run": {
+    "text": "Öffnen Sie index.html in Ihrem Browser."
+  },
+  "samples__js-map-with-geojson-polygon__cleanUp": {
+    "text": "Wenn Sie alle in dieser exemplarischen Vorgehensweise erstellten Ressourcen entfernen möchten, löschen Sie den CloudFormation-Stack mit dem Namen `geojson-polygon-example`."
+  },
+  "samples__js-map-with-marker-and-popup__title": {
+    "text": "Hinzufügen einer Markierung mit einem Popup zu einer Webkarte"
+  },
+  "samples__js-map-with-marker-and-popup__bodyText": {
+    "text": "Diese Beispiel-App zeigt Ihnen, wie Sie einer Webkarte eine Markierung mit einem Popup hinzufügen. Sie verwendet Maps von Amazon Location Service als Basiskartenanbieter und MapLibre GL JS als Bibliothek zum Rendern von Karten."
+  },
+  "samples__js-map-with-marker-and-popup__configure": {
+    "text": "Öffnen Sie index.html und geben Sie mithilfe der CloudFormation-Stack-Ausgaben Ihre Cognito Identity Pool-ID ein."
+  },
+  "samples__js-map-with-marker-and-popup__run": {
+    "text": "Öffnen Sie index.html in Ihrem Browser."
+  },
+  "samples__js-map-with-marker-and-popup__cleanUp": {
+    "text": "Wenn Sie alle in dieser exemplarischen Vorgehensweise erstellten Ressourcen entfernen möchten, löschen Sie den CloudFormation-Stack mit dem Namen `marker-with-popup-example`."
+  },
+  "samples__js-quick-start-using-cognito__title": {
+    "text": "Schnellstart-Web-App zur Authentifizierung mit Amazon Cognito"
+  },
+  "samples__js-quick-start-using-cognito__bodyText": {
+    "text": "Diese Beispiel-App zeigt eine Karte mit Suchfunktion und authentifiziert sich mit Amazon Cognito"
+  },
+  "samples__js-quick-start-using-cognito__configure": {
+    "text": "Öffnen Sie main.js und geben Sie mithilfe der CloudFormation-Stack-Ausgaben Ihre Cognito Identity Pool-ID ein."
+  },
+  "samples__js-quick-start-using-cognito__run": {
+    "text": "Öffnen Sie quickstart.html in Ihrem Browser."
+  },
+  "samples__js-quick-start-using-cognito__cleanUp": {
+    "text": "Wenn Sie alle in dieser exemplarischen Vorgehensweise erstellten Ressourcen entfernen möchten, löschen Sie den CloudFormation-Stack mit dem Namen `quick-start-using-cognito-example`."
+  },
+  "samples__js-simple-map__title": {
+    "text": "Eine Karte auf einer Webseite anzeigen"
+  },
+  "samples__js-simple-map__bodyText": {
+    "text": "Diese Beispiel-App zeigt Ihnen, wie Sie eine Karte auf einer Webseite anzeigen. Sie verwendet Maps von Amazon Location Service als Basiskartenanbieter und MapLibre GL JS als Bibliothek zum Rendern von Karten."
+  },
+  "samples__js-simple-map__configure": {
+    "text": "Öffnen Sie index.html und geben Sie mithilfe der CloudFormation-Stack-Ausgaben Ihre Cognito Identity Pool-ID ein."
+  },
+  "samples__js-simple-map__run": {
+    "text": "Öffnen Sie index.html in Ihrem Browser."
+  },
+  "samples__js-simple-map__cleanUp": {
+    "text": "Wenn Sie alle in dieser exemplarischen Vorgehensweise erstellten Ressourcen entfernen möchten, löschen Sie den CloudFormation-Stack mit dem Namen simple-map-example."
+  },
+  "samples__react-map-with-amplify__title": {
+    "text": "Zeigen Sie eine Webkarte mit React und AWS Amplify an"
+  },
+  "samples__react-map-with-amplify__bodyText": {
+    "text": "Dieses Beispiel zeigt, wie eine Webkarte mit React und AWS Amplify UI angezeigt wird."
+  },
+  "samples__react-map-with-amplify__tabsTitle": {
+    "text": "React//Eine Webkarte anzeigen"
+  },
+  "samples__react-map-with-amplify__configure": {
+    "text": "Kopieren Sie `.env.example` nach `.env` und füllen Sie die Umgebungsvariablen mit dem CloudFormation-Stack\ngibt aus."
+  },
+  "samples__react-map-with-amplify__run": {
+    "text": "Führe `npm start` aus, um einen lokalen Webserver auf [`localhost:3000`] (http://localhost:3000/) damit zu starten\nBeispiel und öffne es in einem Browser."
+  },
+  "samples__react-map-with-amplify__cleanUp": {
+    "text": "Um alle in dieser exemplarischen Vorgehensweise erstellten Ressourcen zu entfernen, löschen Sie den CloudFormation-Stack mit dem Namen\n`React-Map-mit-Verstärker`."
+  },
+  "samples__react-map-with-geojson__title": {
+    "text": "GeoJSON mit React auf einer Webkarte anzeigen"
+  },
+  "samples__react-map-with-geojson__bodyText": {
+    "text": "Dieses Beispiel zeigt, wie GeoJSON mit React und react-map-gl auf einer Webkarte angezeigt wird."
+  },
+  "samples__react-map-with-geojson__tabsTitle": {
+    "text": "React//GeoJSON auf einer Webkarte anzeigen"
+  },
+  "samples__react-map-with-geojson__configure": {
+    "text": "Kopieren Sie `.env.example` nach `.env` und füllen Sie die Umgebungsvariablen mit dem CloudFormation-Stack\ngibt aus."
+  },
+  "samples__react-map-with-geojson__run": {
+    "text": "Führe `npm start` aus, um einen lokalen Webserver auf [`localhost:3000`] (http://localhost:3000/) damit zu starten\nBeispiel und öffne es in einem Browser."
+  },
+  "samples__react-map-with-geojson__cleanUp": {
+    "text": "Um alle in dieser exemplarischen Vorgehensweise erstellten Ressourcen zu entfernen, löschen Sie den CloudFormation-Stack mit dem Namen\n`React-Map-mit-Geojson`."
+  },
+  "samples__react-map-with-markers__title": {
+    "text": "Markierungen auf einer Webkarte mit React anzeigen"
+  },
+  "samples__react-map-with-markers__bodyText": {
+    "text": "Dieses Beispiel zeigt, wie Markierungen auf einer Webkarte mit React und React-Map-GL angezeigt werden."
+  },
+  "samples__react-map-with-markers__tabsTitle": {
+    "text": "React//Markierungen auf einer Webkarte anzeigen"
+  },
+  "samples__react-map-with-markers__configure": {
+    "text": "Kopieren Sie `.env.example` nach `.env` und füllen Sie die Umgebungsvariablen mit dem CloudFormation-Stack\ngibt aus."
+  },
+  "samples__react-map-with-markers__run": {
+    "text": "Führe `npm start` aus, um einen lokalen Webserver auf [`localhost:3000`] (http://localhost:3000/) damit zu starten\nBeispiel und öffne es in einem Browser."
+  },
+  "samples__react-map-with-markers__cleanUp": {
+    "text": "Um alle in dieser exemplarischen Vorgehensweise erstellten Ressourcen zu entfernen, löschen Sie den CloudFormation-Stack mit dem Namen\n`React-Map-mit-Geojson`."
   }
 }

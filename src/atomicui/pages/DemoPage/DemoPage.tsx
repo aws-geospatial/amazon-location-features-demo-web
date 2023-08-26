@@ -99,6 +99,7 @@ const initShow = {
 	mapStyle: undefined,
 	unauthGeofenceBox: false,
 	unauthTrackerBox: false,
+	startUnauthSimulation: false,
 	unauthSimulationDisclaimerModal: false,
 	unauthSimulationExitModal: false
 };
@@ -270,14 +271,29 @@ const DemoPage: React.FC = () => {
 	}, [setAuthTokens, clearCredsAndLocationClient, credentials, authTokens, _onLogout]);
 
 	const _attachPolicy = useCallback(async () => {
-		if (credentials) {
-			if (!!credentials.authenticated && !!authTokens) {
-				await attachPolicy(credentials.identityId);
-			} else if (!isUserAwsAccountConnected && currentMapProvider !== MapProviderEnum.GRAB) {
-				await attachPolicy(credentials.identityId, true);
+		if (credentials?.identityId && credentials?.expiration) {
+			const now = new Date();
+			const expiration = new Date(credentials.expiration);
+
+			if (now > expiration) {
+				/* If the credentials are expired, clear them and the location client */
+				clearCredsAndLocationClient();
+			} else {
+				if (!!credentials.authenticated && !!authTokens) {
+					await attachPolicy(credentials.identityId);
+				} else if (!isUserAwsAccountConnected && currentMapProvider !== MapProviderEnum.GRAB) {
+					await attachPolicy(credentials.identityId, true);
+				}
 			}
 		}
-	}, [credentials, authTokens, attachPolicy, isUserAwsAccountConnected, currentMapProvider]);
+	}, [
+		credentials,
+		clearCredsAndLocationClient,
+		authTokens,
+		attachPolicy,
+		isUserAwsAccountConnected,
+		currentMapProvider
+	]);
 
 	/* Attach IoT policy to authenticated user to ensure successful websocket connection */
 	useEffect(() => {
@@ -807,7 +823,7 @@ const DemoPage: React.FC = () => {
 				maxBounds={
 					currentMapProvider === MapProviderEnum.GRAB
 						? (MAX_BOUNDS.GRAB as LngLatBoundsLike)
-						: show.unauthGeofenceBox || show.unauthTrackerBox
+						: (show.unauthGeofenceBox || show.unauthTrackerBox) && show.startUnauthSimulation
 						? (MAX_BOUNDS.VANCOUVER as LngLatBoundsLike)
 						: (MAX_BOUNDS.DEFAULT as LngLatBoundsLike)
 				}
@@ -860,6 +876,8 @@ const DemoPage: React.FC = () => {
 							setShowUnauthGeofenceBox={b => setShow(s => ({ ...s, unauthGeofenceBox: b }))}
 							setShowUnauthTrackerBox={b => setShow(s => ({ ...s, unauthTrackerBox: b }))}
 							setShowConnectAwsAccountModal={b => setShow(s => ({ ...s, connectAwsAccount: b }))}
+							showStartUnauthSimulation={show.startUnauthSimulation}
+							setShowStartUnauthSimulation={b => setShow(s => ({ ...s, startUnauthSimulation: b }))}
 						/>
 					) : (
 						<>

@@ -3057,43 +3057,43 @@
     "text": "בחר אפשרות"
   },
   "regions__us_east_1": {
-    "text": "לנו מזרח (נ. וירג'יניה) us-east-1"
+    "text": "US East (N. Virginia) us-east-1"
   },
   "regions__us_east_2": {
-    "text": "לנו מזרח (אוהיו) us-east-2"
+    "text": "US East (Ohio) us-east-2"
   },
   "regions__us_west_2": {
-    "text": "לנו מערב (אורגון) us-west-2"
+    "text": "US West (Oregon) us-west-2"
   },
   "regions__ap_south_1": {
     "text": "Asia Pacific (Mumbai) ap-south-1"
   },
   "regions__ap_southeast_1": {
-    "text": "אסיה האוקיינוס השקט (סינגפור) ap-southeast-1"
+    "text": "Asia Pacific (Singapore) ap-southeast-1"
   },
   "regions__ap_southeast_2": {
-    "text": "אסיה האוקיינוס השקט (סידני) ap-southeast-2"
+    "text": "Asia Pacific (Sydney) ap-southeast-2"
   },
   "regions__ap_northeast_1": {
     "text": "Asia Pacific (Tokyo) ap-northeast-1"
   },
   "regions__ca_central_1": {
-    "text": "קנדה (מרכזי) ca-central-1"
+    "text": "Canada (Central) ca-central-1"
   },
   "regions__eu_central_1": {
-    "text": "אירופה (פרנקפורט) eu-central-1"
+    "text": "Europe (Frankfurt) eu-central-1"
   },
   "regions__eu_west_1": {
-    "text": "אירופה (אירלנד) eu-west-1"
+    "text": "Europe (Ireland) eu-west-1"
   },
   "regions__eu_west_2": {
-    "text": "אירופה (לונדון) eu-west-2"
+    "text": "Europe (London) eu-west-2"
   },
   "regions__eu_north_1": {
-    "text": "אירופה (שטוקהולם) eu-north-1"
+    "text": "Europe (Stockholm) eu-north-1"
   },
   "regions__sa_east_1": {
-    "text": "דרום אמריקה (סאו פאולו) sa-east-1"
+    "text": "South America (São Paulo) sa-east-1"
   },
   "sign_in_modal__1": {
     "text": "כניסה נדרשת"
@@ -3400,5 +3400,164 @@
   },
   "explore__connect_description": {
     "text": "גש לתכונות מעקב וגיאופנס על ידי חיבור ל- AWS CloudFormation "
+  },
+  "samples__js-map-style-change__title": {
+    "text": "החלף סגנונות מפה"
+  },
+  "samples__js-map-style-change__bodyText": {
+    "text": "יישום לדוגמה זה מראה לך כיצד לעבור בין סגנונות מפה שונים. היא משתמשת במפות שירות המיקום של אמזון כספקית המפות הבסיסית וב- MapLibre GL JS כספריית עיבוד המפות."
+  },
+  "samples__js-map-style-change__configure": {
+    "text": "פתח את index.html והשתמש ביציאות הערימה של CloudFormation כדי להזין את מזהה מאגר הזהות של קוגניטו."
+  },
+  "samples__js-map-style-change__run": {
+    "text": "פתח את index.html בדפדפן שלך."
+  },
+  "samples__js-map-style-change__cleanUp": {
+    "text": "אם ברצונך להסיר את כל המשאבים שנוצרו בהדרכה זו, מחק את ערימת CloudFormation הנקראת 'שינוי סגנון מפה'."
+  },
+  "samples__js-map-with-geojson-line__title": {
+    "text": "הוסף קו GeoJSON למפת אינטרנט"
+  },
+  "samples__js-map-with-geojson-line__bodyText": {
+    "text": "יישום לדוגמה זה מראה לך כיצד להוסיף קו GeoJSON למפת אינטרנט. היא משתמשת במפות שירות המיקום של אמזון כספקית המפות הבסיסית וב- MapLibre GL JS כספריית עיבוד המפות."
+  },
+  "samples__js-map-with-geojson-line__configure": {
+    "text": "פתח את index.html והשתמש ביציאות הערימה של CloudFormation כדי להזין את מזהה מאגר הזהות של קוגניטו."
+  },
+  "samples__js-map-with-geojson-line__run": {
+    "text": "פתח את index.html בדפדפן שלך."
+  },
+  "samples__js-map-with-geojson-line__cleanUp": {
+    "text": "אם ברצונך להסיר את כל המשאבים שנוצרו בהדרכה זו, מחק את ערימת CloudFormation הנקראת 'geojson-line-example'."
+  },
+  "samples__js-map-with-geojson-point__title": {
+    "text": "הוסף נקודת GeoJSON למפת אינטרנט"
+  },
+  "samples__js-map-with-geojson-point__bodyText": {
+    "text": "יישום לדוגמה זה מראה לך כיצד להוסיף נקודת GeoJSON למפת אינטרנט. היא משתמשת במפות שירות המיקום של אמזון כספקית המפות הבסיסית וב- MapLibre GL JS כספריית עיבוד המפות."
+  },
+  "samples__js-map-with-geojson-point__configure": {
+    "text": "פתח את index.html והשתמש ביציאות הערימה של CloudFormation כדי להזין את מזהה מאגר הזהות של קוגניטו."
+  },
+  "samples__js-map-with-geojson-point__run": {
+    "text": "פתח את index.html בדפדפן שלך."
+  },
+  "samples__js-map-with-geojson-point__cleanUp": {
+    "text": "אם ברצונך להסיר את כל המשאבים שנוצרו בהדרכה זו, מחק את ערימת CloudFormation הנקראת 'geojson-point-example'."
+  },
+  "samples__js-map-with-geojson-polygon__title": {
+    "text": "הוסף מצולע GeoJSON למפת אינטרנט"
+  },
+  "samples__js-map-with-geojson-polygon__bodyText": {
+    "text": "יישום לדוגמה זה מראה לך כיצד להוסיף מצולע GeoJSON למפת אינטרנט. היא משתמשת במפות שירות המיקום של אמזון כספקית המפות הבסיסית וב- MapLibre GL JS כספריית עיבוד המפות."
+  },
+  "samples__js-map-with-geojson-polygon__configure": {
+    "text": "פתח את index.html והשתמש ביציאות הערימה של CloudFormation כדי להזין את מזהה מאגר הזהות של קוגניטו."
+  },
+  "samples__js-map-with-geojson-polygon__run": {
+    "text": "פתח את index.html בדפדפן שלך."
+  },
+  "samples__js-map-with-geojson-polygon__cleanUp": {
+    "text": "אם ברצונך להסיר את כל המשאבים שנוצרו בהדרכה זו, מחק את ערימת CloudFormation הנקראת 'geojson-polygon-example'."
+  },
+  "samples__js-map-with-marker-and-popup__title": {
+    "text": "הוסף סמן עם חלון קופץ למפת אינטרנט"
+  },
+  "samples__js-map-with-marker-and-popup__bodyText": {
+    "text": "יישום לדוגמה זה מראה לך כיצד להוסיף סמן עם חלון קופץ למפת אינטרנט. היא משתמשת במפות שירות המיקום של אמזון כספקית המפות הבסיסית וב- MapLibre GL JS כספריית עיבוד המפות."
+  },
+  "samples__js-map-with-marker-and-popup__configure": {
+    "text": "פתח את index.html והשתמש ביציאות הערימה של CloudFormation כדי להזין את מזהה מאגר הזהות של קוגניטו."
+  },
+  "samples__js-map-with-marker-and-popup__run": {
+    "text": "פתח את index.html בדפדפן שלך."
+  },
+  "samples__js-map-with-marker-and-popup__cleanUp": {
+    "text": "אם ברצונך להסיר את כל המשאבים שנוצרו בהדרכה זו, מחק את ערימת CloudFormation הנקראת 'marker-with-popup-example'."
+  },
+  "samples__js-quick-start-using-cognito__title": {
+    "text": "אימות אפליקציית אינטרנט להתחלה מהירה באמצעות Amazon Cognito"
+  },
+  "samples__js-quick-start-using-cognito__bodyText": {
+    "text": "אפליקציה לדוגמא זו מציגה מפה עם פונקציונליות חיפוש, המאמת באמצעות Amazon Cognito"
+  },
+  "samples__js-quick-start-using-cognito__configure": {
+    "text": "פתח את main.js והשתמש ביציאות הערימה של CloudFormation כדי להזין את מזהה מאגר הזהות של קוגניטו."
+  },
+  "samples__js-quick-start-using-cognito__run": {
+    "text": "פתח את quickstart.html בדפדפן שלך."
+  },
+  "samples__js-quick-start-using-cognito__cleanUp": {
+    "text": "אם ברצונך להסיר את כל המשאבים שנוצרו בהדרכה זו, מחק את ערימת CloudFormation הנקראת 'התחלה מהירה-באמצעות-באמצעות-קוגניטו-דוגמה'."
+  },
+  "samples__js-simple-map__title": {
+    "text": "הצגת מפה בדף אינטרנט"
+  },
+  "samples__js-simple-map__bodyText": {
+    "text": "יישום לדוגמה זה מראה לך כיצד להציג מפה בדף אינטרנט. היא משתמשת במפות שירות המיקום של אמזון כספקית המפות הבסיסית וב- MapLibre GL JS כספריית עיבוד המפות."
+  },
+  "samples__js-simple-map__configure": {
+    "text": "פתח את index.html והשתמש ביציאות הערימה של CloudFormation כדי להזין את מזהה מאגר הזהות של קוגניטו."
+  },
+  "samples__js-simple-map__run": {
+    "text": "פתח את index.html בדפדפן שלך."
+  },
+  "samples__js-simple-map__cleanUp": {
+    "text": "אם ברצונך להסיר את כל המשאבים שנוצרו בהדרכה זו, מחק את ערימת CloudFormation הנקראת דוגמה פשוטה של מפה."
+  },
+  "samples__react-map-with-amplify__title": {
+    "text": "הצגת מפת אינטרנט באמצעות React ו- AWS Amplify"
+  },
+  "samples__react-map-with-amplify__bodyText": {
+    "text": "דוגמה זו מדגימה כיצד להציג מפת אינטרנט באמצעות ממשק המשתמש של React ו- AWS Amplify."
+  },
+  "samples__react-map-with-amplify__tabsTitle": {
+    "text": "תגוב/ הצגת מפת אינטרנט"
+  },
+  "samples__react-map-with-amplify__configure": {
+    "text": "העתק את `.env.example` ל-`.env` ואכלס משתני סביבה עם ערימת CloudFormation\nפלטים."
+  },
+  "samples__react-map-with-amplify__run": {
+    "text": "הפעל את 'npm start' כדי להפעיל שרת אינטרנט מקומי ב- [`localhost:3000 '] (http://localhost:3000/) עם זה\nדוגמה ולפתוח אותו בדפדפן."
+  },
+  "samples__react-map-with-amplify__cleanUp": {
+    "text": "כדי להסיר את כל המשאבים שנוצרו בהדרכה זו, מחק את ערימת CloudFormation בשם\n`מפת תגובה-עם-הגברה`."
+  },
+  "samples__react-map-with-geojson__title": {
+    "text": "הצג את GeoJSON במפת אינטרנט באמצעות React"
+  },
+  "samples__react-map-with-geojson__bodyText": {
+    "text": "דוגמה זו מדגימה כיצד להציג את GeoJSON במפת אינטרנט באמצעות React ו- react-map-gl."
+  },
+  "samples__react-map-with-geojson__tabsTitle": {
+    "text": "תגוב/ הצג את GeoJSON במפת אינטרנט"
+  },
+  "samples__react-map-with-geojson__configure": {
+    "text": "העתק את `.env.example` ל-`.env` ואכלס משתני סביבה עם ערימת CloudFormation\nפלטים."
+  },
+  "samples__react-map-with-geojson__run": {
+    "text": "הפעל את 'npm start' כדי להפעיל שרת אינטרנט מקומי ב- [`localhost:3000 '] (http://localhost:3000/) עם זה\nדוגמה ולפתוח אותו בדפדפן."
+  },
+  "samples__react-map-with-geojson__cleanUp": {
+    "text": "כדי להסיר את כל המשאבים שנוצרו בהדרכה זו, מחק את ערימת CloudFormation בשם\n`תגובה-מפה-עם-geojson`."
+  },
+  "samples__react-map-with-markers__title": {
+    "text": "הצג סמנים במפת אינטרנט באמצעות React"
+  },
+  "samples__react-map-with-markers__bodyText": {
+    "text": "דוגמה זו מדגימה כיצד להציג סמנים במפת אינטרנט באמצעות React ו- react-map-gl."
+  },
+  "samples__react-map-with-markers__tabsTitle": {
+    "text": "React/הצג סמנים במפת אינטרנט"
+  },
+  "samples__react-map-with-markers__configure": {
+    "text": "העתק את `.env.example` ל-`.env` ואכלס משתני סביבה עם ערימת CloudFormation\nפלטים."
+  },
+  "samples__react-map-with-markers__run": {
+    "text": "הפעל את 'npm start' כדי להפעיל שרת אינטרנט מקומי ב- [`localhost:3000 '] (http://localhost:3000/) עם זה\nדוגמה ולפתוח אותו בדפדפן."
+  },
+  "samples__react-map-with-markers__cleanUp": {
+    "text": "כדי להסיר את כל המשאבים שנוצרו בהדרכה זו, מחק את ערימת CloudFormation בשם\n`תגובה-מפה-עם-geojson`."
   }
 }

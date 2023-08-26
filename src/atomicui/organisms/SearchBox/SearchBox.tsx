@@ -52,8 +52,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	isSimpleSearch = false,
 	value,
 	setValue,
-	setUI,
-	isMarkerOnly
+	setUI
 }) => {
 	const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const [isFocused, setIsFocused] = useState(false);
@@ -465,7 +464,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 					) : (
 						<Flex
 							data-testid="search-bar-container"
-							className={"search-bar"}
+							className="search-bar"
 							style={{
 								flexDirection: "column",
 								left: isSideMenuExpanded ? 252 : 20,
@@ -482,7 +481,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 									label={t("search.text")}
 									dir={langDir}
 									innerStartComponent={
-										<Flex className="inner-start-component" onClick={onToggleSideMenu}>
+										<Flex data-testid="hamburger-menu" className="inner-start-component" onClick={onToggleSideMenu}>
 											<IconActionMenu />
 										</Flex>
 									}
@@ -494,7 +493,6 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 									onChange={onChange}
 									onClear={clearPoiList}
 									placeholder={t("search.text") as string}
-									fontSize={"1.25rem"}
 									options={options || []}
 									results={options?.length || 0}
 									renderOption={renderOption}
