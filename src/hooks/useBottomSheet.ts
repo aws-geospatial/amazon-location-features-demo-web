@@ -4,6 +4,7 @@
 import { useMemo } from "react";
 
 import { useBottomSheetStore } from "@demo/stores";
+import { ResponsiveUIEnum } from "@demo/types/Enums";
 
 const useBottomSheet = () => {
 	const store = useBottomSheetStore();
@@ -20,8 +21,11 @@ const useBottomSheet = () => {
 			setBottomSheetMinHeight: (bottomSheetMinHeight: number) => {
 				setState({ bottomSheetMinHeight });
 			},
-			setShowPOI: (showPOI: boolean) => {
-				setState({ showPOI });
+			setPOICard: (POICard?: JSX.Element) => {
+				setState({ POICard });
+			},
+			setUI: (ui: ResponsiveUIEnum) => {
+				setState({ ui });
 			}
 		}),
 		[setState]

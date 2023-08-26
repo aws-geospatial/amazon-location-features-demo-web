@@ -1,40 +1,37 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect } from "react";
 
 import { Flex, Text } from "@aws-amplify/ui-react";
 import { IconClose } from "@demo/assets";
-import { useMediaQuery } from "@demo/hooks";
-import useBottomSheet from "@demo/hooks/useBottomSheet";
+import { useBottomSheet, useMediaQuery } from "@demo/hooks";
 import { ResponsiveUIEnum } from "@demo/types/Enums";
 import { useTranslation } from "react-i18next";
 import { BottomSheet } from "react-spring-bottom-sheet";
 
 import "react-spring-bottom-sheet/dist/style.css";
 import { Explore } from "../Explore";
-import { LocationPreview } from "../LocationPreview";
 import "./styles.scss";
 
 interface IProps {
-	SearchBoxEl: (ui: React.Dispatch<React.SetStateAction<ResponsiveUIEnum | undefined>>) => JSX.Element;
+	SearchBoxEl: () => JSX.Element;
 	MapButtons: JSX.Element;
-	searchValue: string;
-	setSearchValue: (s: string) => void;
 }
 
-const ResponsiveBottomSheet: FC<IProps> = ({ SearchBoxEl, MapButtons, searchValue, setSearchValue }) => {
+const ResponsiveBottomSheet: FC<IProps> = ({ SearchBoxEl, MapButtons }) => {
 	const isDesktop = useMediaQuery("(min-width: 1024px)");
 	const isMobile = useMediaQuery("(max-width: 425px)");
 	const isTablet = !isDesktop && !isMobile;
 	const { t } = useTranslation();
-	const [ui, setUI] = useState<ResponsiveUIEnum | undefined>(ResponsiveUIEnum.explore);
 	const {
-		bottomSheetMinHeight,
 		setBottomSheetMinHeight,
 		setBottomSheetHeight,
+		bottomSheetMinHeight,
 		bottomSheetHeight,
-		setBottomSheetCurrentHeight
+		setBottomSheetCurrentHeight,
+		ui,
+		setUI
 	} = useBottomSheet();
 
 	useEffect(() => {
@@ -64,49 +61,58 @@ const ResponsiveBottomSheet: FC<IProps> = ({ SearchBoxEl, MapButtons, searchValu
 		};
 	}, [setBottomSheetCurrentHeight, setBottomSheetHeight, setBottomSheetMinHeight]);
 
-	const bottomSheetHeader = (ui?: ResponsiveUIEnum) => {
-		switch (ui) {
-			case ResponsiveUIEnum.map_styles:
-				return (
-					<Flex direction="column" gap="0" padding="8px 12px 0 16px" width="100%">
-						<Flex justifyContent="flex-end">
-							<IconClose
-								width={20}
-								height={20}
-								fill="var(--grey-color)"
-								onClick={() => setUI(ResponsiveUIEnum.explore)}
-							/>
-						</Flex>
-						<Flex direction="column" alignItems="flex-start" gap="0">
-							<Text fontFamily="AmazonEmber-Bold" fontSize="1.23rem" textAlign="left">
-								{t("map_style.text")}
-							</Text>
-							<Text fontFamily="AmazonEmber-Regular" fontSize="1rem" color="var(--grey-color)" textAlign="left">
-								{t("map_buttons__info.text")}
-							</Text>
-						</Flex>
-					</Flex>
-				);
-			case ResponsiveUIEnum.explore:
-			case ResponsiveUIEnum.search:
-				return <Flex width="100%">{SearchBoxEl(setUI)}</Flex>;
-			default:
-				return <></>;
-		}
-	};
+	console.log(ui);
 
-	const bottomSheetBody = (ui?: ResponsiveUIEnum) => {
-		switch (ui) {
-			case ResponsiveUIEnum.map_styles:
-				return MapButtons;
-			case ResponsiveUIEnum.explore:
-				return <Explore updateUIInfo={setUI} />;
-			// case ResponsiveUIEnum.location_preview:
-			// 	return <LocationPreview updateUIInfo={setUI} searchValue={searchValue} setSearchValue={setSearchValue} />;
-			default:
-				return <></>;
-		}
-	};
+	const bottomSheetHeader = useCallback(
+		(ui?: ResponsiveUIEnum) => {
+			switch (ui) {
+				case ResponsiveUIEnum.map_styles:
+					return (
+						<Flex direction="column" gap="0" padding="8px 12px 0 16px" width="100%">
+							<Flex justifyContent="flex-end">
+								<IconClose
+									width={20}
+									height={20}
+									fill="var(--grey-color)"
+									onClick={() => setUI(ResponsiveUIEnum.explore)}
+								/>
+							</Flex>
+							<Flex direction="column" alignItems="flex-start" gap="0">
+								<Text fontFamily="AmazonEmber-Bold" fontSize="1.23rem" textAlign="left">
+									{t("map_style.text")}
+								</Text>
+								<Text fontFamily="AmazonEmber-Regular" fontSize="1rem" color="var(--grey-color)" textAlign="left">
+									{t("map_buttons__info.text")}
+								</Text>
+							</Flex>
+						</Flex>
+					);
+				case ResponsiveUIEnum.explore:
+				case ResponsiveUIEnum.poi_card:
+				case ResponsiveUIEnum.search:
+				default:
+					return <Flex width="100%">{SearchBoxEl()}</Flex>;
+			}
+		},
+		[SearchBoxEl, setUI, t]
+	);
+
+	const bottomSheetBody = useCallback(
+		(ui?: ResponsiveUIEnum) => {
+			switch (ui) {
+				case ResponsiveUIEnum.map_styles:
+					return MapButtons;
+				case ResponsiveUIEnum.poi_card:
+					return <></>;
+				case ResponsiveUIEnum.explore:
+					return <Explore updateUIInfo={setUI} />;
+				default:
+					return null;
+			}
+		},
+		[MapButtons, setUI]
+	);
+
 	const calculatePixelValue = useCallback(
 		(maxHeight: number, number: number) => {
 			const percentage = number / 100;

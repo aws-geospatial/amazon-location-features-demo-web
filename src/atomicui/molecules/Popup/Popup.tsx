@@ -8,7 +8,7 @@ import { IconCar, IconClose, IconCopyPages, IconDirections, IconInfo } from "@de
 import { useAmplifyMap, useAwsPlace, useAwsRoute, useBottomSheet, useMediaQuery } from "@demo/hooks";
 import { DistanceUnitEnum, MapProviderEnum, MapUnitEnum, SuggestionType, TravelMode } from "@demo/types";
 
-import { TriggeredByEnum } from "@demo/types/Enums";
+import { ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { humanReadableTime } from "@demo/utils/dateTimeUtils";
 import { calculateGeodesicDistance } from "@demo/utils/geoCalculation";
 import { Units } from "@turf/turf";
@@ -26,10 +26,10 @@ interface Props {
 	info: SuggestionType;
 	select: (id?: string) => Promise<void>;
 	onClosePopUp?: () => void;
-	POIOnly?: boolean;
+	setInfo: (info?: SuggestionType) => void;
 }
-const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, POIOnly }) => {
-	const { setShowPOI } = useBottomSheet();
+const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo }) => {
+	const { setPOICard, setBottomSheetMinHeight, setBottomSheetHeight, setUI } = useBottomSheet();
 	const [routeData, setRouteData] = useState<CalculateRouteResponse>();
 	const {
 		currentLocationData,
@@ -115,10 +115,14 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, POIOnly })
 	}, [routeData, active, isEsriLimitation, currentLocationData, isCurrentLocationDisabled, loadRouteData]);
 
 	const onClose = useCallback(async () => {
+		if (!isDesktop) {
+			setUI(ResponsiveUIEnum.explore);
+			setPOICard(undefined);
+			setInfo(undefined);
+		}
 		await select(undefined);
 		onClosePopUp && onClosePopUp();
-		setShowPOI(false);
-	}, [select, onClosePopUp, setShowPOI]);
+	}, [isDesktop, select, onClosePopUp, setUI, setPOICard, setInfo]);
 
 	const onGetDirections = useCallback(() => {
 		setDirections({ info, isEsriLimitation });
@@ -228,15 +232,11 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, POIOnly })
 		}
 	}, [info, latitude, longitude]);
 
-	useEffect(() => {
-		setShowPOI(!!info.Place?.Label);
-	}, [info.Place?.Label, setShowPOI]);
-
-	const POIBody = useMemo(
+	const POIBody = useCallback(
 		() => (
-			<Flex className={POIOnly ? "poi-only-container" : ""} direction="column">
-				<View className="popup-icon-close-container" onClick={onClose}>
-					<IconClose />
+			<Flex className={!isDesktop ? "poi-only-container" : ""} direction="column">
+				<View className="popup-icon-close-container">
+					<IconClose onClick={onClose} />
 				</View>
 				{isDesktop && (
 					<View className="triangle-container">
@@ -276,7 +276,14 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, POIOnly })
 		[address, info.Place?.Label, isDesktop, onClose, onGetDirections, renderRouteInfo, t]
 	);
 
-	if (POIOnly) return POIBody;
+	useEffect(() => {
+		if (!!info.Place?.Label && !isDesktop) {
+			setUI(ResponsiveUIEnum.poi_card);
+			setPOICard(<POIBody />);
+			setBottomSheetMinHeight(230);
+			setBottomSheetHeight(240);
+		}
+	}, [POIBody, latitude, longitude, info, isDesktop, setBottomSheetHeight, setBottomSheetMinHeight, setPOICard, setUI]);
 
 	return (
 		<PopupGl
@@ -289,7 +296,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, POIOnly })
 			longitude={longitude as number}
 			latitude={latitude as number}
 		>
-			{POIBody}
+			{isDesktop && <POIBody />}
 		</PopupGl>
 	);
 };

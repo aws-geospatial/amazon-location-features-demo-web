@@ -15,7 +15,6 @@ interface Props extends SuggestionType {
 	onClosePopUp?: () => void;
 	searchValue: string;
 	setSearchValue: (v: string) => void;
-	POIOnly?: boolean;
 }
 
 const SuggestionMarker: React.FC<Props> = ({
@@ -26,7 +25,6 @@ const SuggestionMarker: React.FC<Props> = ({
 	onClosePopUp,
 	searchValue,
 	setSearchValue,
-	POIOnly,
 	...rest
 }) => {
 	const [info, setInfo] = useState<SuggestionType | undefined>(undefined);
@@ -87,24 +85,7 @@ const SuggestionMarker: React.FC<Props> = ({
 		[setHoveredMarker]
 	);
 
-	if (POIOnly && active && info && info.Place?.Geometry.Point) {
-		return (
-			<Popup
-				active={active}
-				info={info}
-				select={select}
-				onClosePopUp={
-					suggestions?.length === 1
-						? () => {
-								clearPoiList();
-								setSearchValue("");
-						  }
-						: onClosePopUp
-				}
-				POIOnly={POIOnly}
-			/>
-		);
-	} else if (info && info.Place?.Geometry.Point) {
+	if (info && info.Place?.Geometry.Point) {
 		return (
 			<Marker
 				style={{
@@ -142,6 +123,7 @@ const SuggestionMarker: React.FC<Props> = ({
 								  }
 								: onClosePopUp
 						}
+						setInfo={setInfo}
 					/>
 				) : (
 					<View

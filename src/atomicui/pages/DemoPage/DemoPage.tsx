@@ -39,6 +39,7 @@ import {
 	useAwsPlace,
 	useAwsRoute,
 	useAwsTracker,
+	useBottomSheet,
 	useMediaQuery,
 	usePersistedData,
 	useRecordViewPage
@@ -58,7 +59,7 @@ import { record } from "@demo/utils/analyticsUtils";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { getCurrentLocation } from "@demo/utils/getCurrentLocation";
 import { Signer } from "aws-amplify";
-import { differenceInMilliseconds } from "date-fns";
+import { differenceInMilliseconds, set } from "date-fns";
 import { LngLatBoundsLike } from "mapbox-gl";
 import { omit } from "ramda";
 import { useTranslation } from "react-i18next";
@@ -781,10 +782,7 @@ const DemoPage: React.FC = () => {
 		]
 	);
 
-	const searchBoxEl = (
-		isSimpleSearch = false,
-		setUI?: React.Dispatch<React.SetStateAction<ResponsiveUIEnum | undefined>>
-	) => (
+	const searchBoxEl = (isSimpleSearch = false) => (
 		<SearchBox
 			mapRef={mapViewRef?.current}
 			isSideMenuExpanded={show.sidebar}
@@ -798,7 +796,6 @@ const DemoPage: React.FC = () => {
 			isSimpleSearch={isSimpleSearch}
 			value={searchBoxValue}
 			setValue={setSearchBoxValue}
-			setUI={setUI}
 		/>
 	);
 
@@ -885,7 +882,7 @@ const DemoPage: React.FC = () => {
 								searchBoxEl()
 							) : (
 								<ResponsiveBottomSheet
-									SearchBoxEl={setUI => searchBoxEl(true, setUI)}
+									SearchBoxEl={() => searchBoxEl(true)}
 									MapButtons={
 										<MapButtons
 											renderedUpon={TriggeredByEnum.SETTINGS_MODAL}
@@ -910,8 +907,6 @@ const DemoPage: React.FC = () => {
 											isHandDevice
 										/>
 									}
-									searchValue={searchValue}
-									setSearchValue={setSearchValue}
 								/>
 							)}
 						</>

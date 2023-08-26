@@ -286,7 +286,7 @@ export enum ResponsiveUIEnum {
 	explore = "explore",
 	search = "search",
 	map_styles = "map_styles",
-	location_preview = "location_preview",
+	poi_card = "poi_card",
 	routes = "routes",
 	trackers = "trackers",
 	geofences = "geofences"

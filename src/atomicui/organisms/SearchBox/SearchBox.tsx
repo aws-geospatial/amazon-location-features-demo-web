@@ -35,7 +35,6 @@ interface SearchBoxProps {
 	value: string;
 	setValue: React.Dispatch<React.SetStateAction<string>>;
 	isSimpleSearch?: boolean;
-	setUI?: (ui: ResponsiveUIEnum) => void;
 	isMarkerOnly?: boolean;
 }
 
@@ -51,8 +50,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	isStylesCardOpen,
 	isSimpleSearch = false,
 	value,
-	setValue,
-	setUI
+	setValue
 }) => {
 	const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const [isFocused, setIsFocused] = useState(false);
@@ -80,7 +78,9 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		setBottomSheetHeight,
 		bottomSheetHeight,
 		bottomSheetMinHeight,
-		showPOI
+		POICard,
+		setUI,
+		ui
 	} = useBottomSheet();
 	const searchContainerRef = useRef<HTMLDivElement>(null);
 	const searchInputRef = useRef<HTMLInputElement>(null);
@@ -144,18 +144,16 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 
 	useEffect(() => {
 		function handleClickOutside() {
-			if (!showPOI) {
-				searchInputRef?.current?.blur();
-				setBottomSheetHeight(window.innerHeight);
-				setBottomSheetMinHeight(80);
-			}
+			searchInputRef?.current?.blur();
+			setBottomSheetHeight(window.innerHeight);
+			setBottomSheetMinHeight(80);
 		}
 
 		document.addEventListener("touchmove", handleClickOutside);
 		return () => {
 			document.removeEventListener("touchmove", handleClickOutside);
 		};
-	}, [setBottomSheetHeight, setBottomSheetMinHeight, showPOI]);
+	}, [setBottomSheetHeight, setBottomSheetMinHeight]);
 
 	const selectSuggestion = useCallback(
 		async ({ text, label, placeid }: ComboBoxOption) => {
@@ -284,14 +282,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	const markers = useMemo(() => {
 		if (suggestions?.length === 1 && selectedMarker) {
 			return suggestions.map(s => (
-				<SuggestionMarker
-					key={s.Hash}
-					active={true}
-					searchValue={value}
-					setSearchValue={setValue}
-					{...s}
-					POIOnly={isSimpleSearch}
-				/>
+				<SuggestionMarker key={s.Hash} active={true} searchValue={value} setSearchValue={setValue} {...s} />
 			));
 		} else if (!clusters) {
 			return suggestions?.map((s, i) => {
@@ -301,7 +292,6 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 						active={s.PlaceId === selectedMarker?.PlaceId}
 						searchValue={value}
 						setSearchValue={setValue}
-						POIOnly={isSimpleSearch}
 						{...s}
 					/>
 				) : null;
@@ -318,14 +308,13 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 						active={s.Place?.Label === selectedMarker?.Place?.Label}
 						searchValue={value}
 						setSearchValue={setValue}
-						POIOnly={isSimpleSearch}
 						{...s}
 					/>
 				);
 				return acc;
 			}, [] as Array<JSX.Element>);
 		}
-	}, [suggestions, selectedMarker, clusters, value, setValue, isSimpleSearch]);
+	}, [suggestions, selectedMarker, clusters, value, setValue]);
 
 	const mapMarker = useMemo(
 		() => marker && <Marker searchValue={value} setSearchValue={setValue} {...marker} />,
@@ -345,20 +334,18 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		(e: React.FormEvent<HTMLFormElement>) => {
 			e.preventDefault();
 			handleSearch(value, true, AnalyticsEventActionsEnum.ENTER_BUTTON);
-			console.log(!!options?.length);
 			if (!!options?.length) {
 				setBottomSheetMinHeight(230);
 				setBottomSheetHeight(240);
 				searchInputRef?.current?.blur();
 			}
-			// setUI && value && setUI(ResponsiveUIEnum.location_preview);
 		},
 		[handleSearch, options, setBottomSheetHeight, setBottomSheetMinHeight, value]
 	);
 
 	return (
 		<>
-			{!showPOI && (
+			{ui !== ResponsiveUIEnum.poi_card && !POICard ? (
 				<>
 					{isSimpleSearch ? (
 						<Flex direction="column" gap="0" className="simple-search-bar" ref={searchContainerRef}>
@@ -554,6 +541,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 						</Flex>
 					)}
 				</>
+			) : (
+				POICard
 			)}
 			{markers}
 			{mapMarker}
