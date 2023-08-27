@@ -39,7 +39,6 @@ import {
 	useAwsPlace,
 	useAwsRoute,
 	useAwsTracker,
-	useBottomSheet,
 	useMediaQuery,
 	usePersistedData,
 	useRecordViewPage
@@ -54,12 +53,12 @@ import {
 	ShowStateType,
 	ToastType
 } from "@demo/types";
-import { EventTypeEnum, OpenDataMapEnum, ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
+import { EventTypeEnum, OpenDataMapEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { getCurrentLocation } from "@demo/utils/getCurrentLocation";
 import { Signer } from "aws-amplify";
-import { differenceInMilliseconds, set } from "date-fns";
+import { differenceInMilliseconds } from "date-fns";
 import { LngLatBoundsLike } from "mapbox-gl";
 import { omit } from "ramda";
 import { useTranslation } from "react-i18next";
@@ -940,8 +939,8 @@ const DemoPage: React.FC = () => {
 								width: "2.46rem",
 								height: "2.46rem",
 								position: "absolute",
-								top: "-9.5rem",
-								right: "0.75rem",
+								top: isDesktop ? "-9.5rem" : "-2.5rem",
+								right: isDesktop ? "0.75rem" : "0rem",
 								margin: 0,
 								borderRadius: "0.62rem"
 							}}
@@ -954,34 +953,38 @@ const DemoPage: React.FC = () => {
 							onError={onGeoLocateError}
 						/>
 					)}
-					<NavigationControl
-						style={{
-							width: "2.46rem",
-							height: "4.92rem",
-							position: "absolute",
-							top: "-6rem",
-							right: "0.75rem",
-							margin: 0,
-							borderRadius: "0.62rem"
-						}}
-						position="bottom-right"
-						showZoom
-						showCompass={false}
-					/>
+					{isDesktop && (
+						<NavigationControl
+							style={{
+								width: "2.46rem",
+								height: "4.92rem",
+								position: "absolute",
+								top: "-6rem",
+								right: "0.75rem",
+								margin: 0,
+								borderRadius: "0.62rem"
+							}}
+							position="bottom-right"
+							showZoom
+							showCompass={false}
+						/>
+					)}
 				</View>
-				<AttributionControl
-					style={{
-						fontSize: "0.77rem",
-						borderRadius: "0.62rem",
-						marginRight: "0.77rem",
-						marginBottom: !isDesktop ? "2.77rem" : "0rem",
-						backgroundColor: currentMapStyle.toLowerCase().includes("dark")
-							? "rgba(0, 0, 0, 0.2)"
-							: "var(--white-color)",
-						color: currentMapStyle.toLowerCase().includes("dark") ? "var(--white-color)" : "var(--black-color)"
-					}}
-					compact={!isDesktop}
-				/>
+				{isDesktop && (
+					<AttributionControl
+						style={{
+							fontSize: "0.77rem",
+							borderRadius: "0.62rem",
+							marginRight: "0.77rem",
+							marginBottom: !isDesktop ? "2.77rem" : "0rem",
+							backgroundColor: currentMapStyle.toLowerCase().includes("dark")
+								? "rgba(0, 0, 0, 0.2)"
+								: "var(--white-color)",
+							color: currentMapStyle.toLowerCase().includes("dark") ? "var(--white-color)" : "var(--black-color)"
+						}}
+						compact={!isDesktop}
+					/>
+				)}
 			</Map>
 			<WelcomeModal open={showWelcomeModal} onClose={() => setShowWelcomeModal(false)} />
 			<SignInModal open={show.signInModal} onClose={() => setShow(s => ({ ...s, signInModal: false }))} />

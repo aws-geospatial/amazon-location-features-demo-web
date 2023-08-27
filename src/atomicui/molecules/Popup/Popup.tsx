@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button, Flex, Placeholder, Text, View } from "@aws-amplify/ui-react";
 import { IconCar, IconClose, IconCopyPages, IconDirections, IconInfo } from "@demo/assets";
@@ -29,7 +29,7 @@ interface Props {
 	setInfo: (info?: SuggestionType) => void;
 }
 const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo }) => {
-	const { setPOICard, setBottomSheetMinHeight, setBottomSheetHeight, setUI } = useBottomSheet();
+	const { setPOICard, setBottomSheetMinHeight, setBottomSheetHeight, setUI, bottomSheetHeight } = useBottomSheet();
 	const [routeData, setRouteData] = useState<CalculateRouteResponse>();
 	const {
 		currentLocationData,
@@ -47,6 +47,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
 	const isLanguageRTL = ["ar", "he"].includes(currentLang);
+	const POICardRef = useRef<HTMLDivElement>(null);
 
 	const geodesicDistance = useMemo(
 		() =>
@@ -234,7 +235,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 
 	const POIBody = useCallback(
 		() => (
-			<Flex className={!isDesktop ? "poi-only-container" : ""} direction="column">
+			<Flex ref={POICardRef} className={!isDesktop ? "poi-only-container" : ""} direction="column">
 				<View className="popup-icon-close-container">
 					<IconClose onClick={onClose} />
 				</View>
@@ -280,10 +281,23 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 		if (!!info.Place?.Label && !isDesktop) {
 			setUI(ResponsiveUIEnum.poi_card);
 			setPOICard(<POIBody />);
-			setBottomSheetMinHeight(230);
-			setBottomSheetHeight(240);
+			if (bottomSheetHeight !== (POICardRef?.current?.clientHeight || 230) + 40) {
+				setBottomSheetMinHeight((POICardRef?.current?.clientHeight || 230) + 30);
+				setBottomSheetHeight((POICardRef?.current?.clientHeight || 230) + 40);
+			}
 		}
-	}, [POIBody, latitude, longitude, info, isDesktop, setBottomSheetHeight, setBottomSheetMinHeight, setPOICard, setUI]);
+	}, [
+		POIBody,
+		latitude,
+		longitude,
+		info,
+		isDesktop,
+		setBottomSheetHeight,
+		setBottomSheetMinHeight,
+		setPOICard,
+		setUI,
+		bottomSheetHeight
+	]);
 
 	return (
 		<PopupGl

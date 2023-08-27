@@ -61,8 +61,6 @@ const ResponsiveBottomSheet: FC<IProps> = ({ SearchBoxEl, MapButtons }) => {
 		};
 	}, [setBottomSheetCurrentHeight, setBottomSheetHeight, setBottomSheetMinHeight]);
 
-	console.log(ui);
-
 	const bottomSheetHeader = useCallback(
 		(ui?: ResponsiveUIEnum) => {
 			switch (ui) {
@@ -102,12 +100,12 @@ const ResponsiveBottomSheet: FC<IProps> = ({ SearchBoxEl, MapButtons }) => {
 			switch (ui) {
 				case ResponsiveUIEnum.map_styles:
 					return MapButtons;
+				case ResponsiveUIEnum.search:
 				case ResponsiveUIEnum.poi_card:
-					return <></>;
-				case ResponsiveUIEnum.explore:
-					return <Explore updateUIInfo={setUI} />;
-				default:
 					return null;
+				case ResponsiveUIEnum.explore:
+				default:
+					return <Explore updateUIInfo={setUI} />;
 			}
 		},
 		[MapButtons, setUI]

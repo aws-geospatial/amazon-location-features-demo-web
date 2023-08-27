@@ -10,5 +10,4 @@ export * from "./SettingsModal";
 export * from "./AuthTrackerBox";
 export * from "./UnauthSimulation";
 export * from "./ResponsiveBottomSheet";
-export * from "./LocationPreview";
 export * from "./Explore";

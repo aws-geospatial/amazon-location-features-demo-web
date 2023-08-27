@@ -88,14 +88,15 @@
 		border: none;
 		color: var(--primary-color);
 
-		&:active, &:focus {
+		&:active,
+		&:focus {
 			outline: none;
 			box-shadow: none;
 			background-color: transparent;
 		}
 	}
 
-	.search-loader-container{
+	.search-loader-container {
 		padding: 0 0.61rem 0.61rem;
 	}
 
@@ -148,9 +149,19 @@
 	align-items: center;
 	height: 100%;
 	width: 100%;
+	z-index: 20;
 
 	.amplify-flex.amplify-field.amplify-field--large.amplify-textfield.amplify-searchfield {
 		width: inherit;
+	}
+
+
+	.ReactVirtualized__Grid.ReactVirtualized__List {
+		width: 100% !important;
+
+		.ReactVirtualized__Grid__innerScrollContainer {
+			max-width: 100% !important;
+		}
 	}
 }
 

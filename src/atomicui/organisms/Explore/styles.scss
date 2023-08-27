@@ -2,6 +2,12 @@
 /* SPDX-License-Identifier: MIT-0 */
 
 .explore-container {
+	.feature-container {
+		justify-content: space-between;
+    margin: 2.46rem auto;
+    width: 100%;
+    padding: 0 2rem;
+	}
 	.aws-connect-container {
 		border-radius: 1.07rem;
 		background-color: var(--primary-light-color-2);

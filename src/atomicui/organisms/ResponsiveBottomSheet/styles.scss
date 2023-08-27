@@ -10,11 +10,18 @@
 		}
 	}
 	[data-rsbs-overlay="true"] {
-		z-index: 9;
+		z-index: 20;
+		opacity: 1;
 	}
 
   [data-rsbs-header="true"] {
     box-shadow: none;
     padding: 0;
+		z-index: 20;
+		opacity: 1;
   }
+
+	[data-rsbs-scroll="true"]{
+		margin-top: 1.5rem;
+	}
 }

@@ -17,6 +17,7 @@ import { LngLat } from "mapbox-gl";
 import { useTranslation } from "react-i18next";
 import { MapRef } from "react-map-gl";
 import { Tooltip } from "react-tooltip";
+import { List, ListRowProps } from "react-virtualized";
 import "./styles.scss";
 
 const { METRIC } = MapUnitEnum;
@@ -144,16 +145,18 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 
 	useEffect(() => {
 		function handleClickOutside() {
-			searchInputRef?.current?.blur();
-			setBottomSheetHeight(window.innerHeight);
-			setBottomSheetMinHeight(80);
+			if (!POICard) {
+				searchInputRef?.current?.blur();
+				setBottomSheetHeight(window.innerHeight);
+				setBottomSheetMinHeight(80);
+			}
 		}
 
 		document.addEventListener("touchmove", handleClickOutside);
 		return () => {
 			document.removeEventListener("touchmove", handleClickOutside);
 		};
-	}, [setBottomSheetHeight, setBottomSheetMinHeight]);
+	}, [POICard, setBottomSheetHeight, setBottomSheetMinHeight]);
 
 	const selectSuggestion = useCallback(
 		async ({ text, label, placeid }: ComboBoxOption) => {
@@ -343,6 +346,30 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		[handleSearch, options, setBottomSheetHeight, setBottomSheetMinHeight, value]
 	);
 
+	function rowRenderer({ key, index, style }: ListRowProps) {
+		if (!options?.length) return null;
+
+		return (
+			<div
+				key={key}
+				style={style}
+				onClick={() => {
+					selectSuggestion({
+						id: options[index].id,
+						text: value,
+						label: options[index].label,
+						placeid: options[index].placeid
+					});
+					setBottomSheetMinHeight(230);
+					setBottomSheetHeight(240);
+				}}
+				className="option-wrapper"
+			>
+				{renderOption(options[index])}
+			</div>
+		);
+	}
+
 	return (
 		<>
 			{ui !== ResponsiveUIEnum.poi_card && !POICard ? (
@@ -426,24 +453,16 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 										maxHeight={bottomSheetCurrentHeight}
 										paddingBottom={!!options?.length ? "5.1rem" : ""}
 									>
-										{options?.map((option, i) => (
-											<Flex
-												key={i}
-												onClick={() => {
-													selectSuggestion({
-														id: option.id,
-														text: value,
-														label: option.label,
-														placeid: option.placeid
-													});
-													setBottomSheetMinHeight(230);
-													setBottomSheetHeight(240);
-												}}
-												className="option-wrapper"
-											>
-												{renderOption(option)}
-											</Flex>
-										))}
+										{options?.length && (
+											<List
+												width={300}
+												height={bottomSheetCurrentHeight}
+												rowCount={options?.length || 0}
+												rowHeight={65}
+												rowRenderer={rowRenderer}
+												overscanRowCount={20}
+											/>
+										)}
 									</Flex>
 								)}
 							</Flex>

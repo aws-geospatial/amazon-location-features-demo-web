@@ -57,7 +57,7 @@
 		"react-spring-bottom-sheet": "3.5.0-alpha.0",
 		"react-toastify": "9.1.1",
 		"react-tooltip": "5.10.0",
-		"react-virtualized": "9.22.5",
+		"react-virtualized": "9.22.3",
 		"zustand": "4.3.9"
 	},
 	"devDependencies": {
@@ -71,6 +71,7 @@
 		"@types/ramda": "0.28.18",
 		"@types/react": "18.0.17",
 		"@types/react-dom": "18.0.6",
+		"@types/react-virtualized": "9.21.22",
 		"@types/zen-observable": "0.8.3",
 		"@typescript-eslint/eslint-plugin": "5.33.1",
 		"@typescript-eslint/parser": "5.33.1",

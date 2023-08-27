@@ -26,7 +26,7 @@ const Explore: React.FC<IProps> = ({ updateUIInfo }) => {
 	const { t } = useTranslation();
 	return (
 		<Flex direction="column" className="explore-container" gap="0">
-			<Flex justifyContent="center" gap="7%" margin="2.46rem 0" width="100%">
+			<Flex className="feature-container">
 				<ExploreButton
 					text={t("routes.text")}
 					icon={<IconDirections width="1.53rem" height="1.53rem" fill="white" />}
