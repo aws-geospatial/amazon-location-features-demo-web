@@ -29,7 +29,8 @@ interface AboutModalProps {
 
 const AboutModal: React.FC<AboutModalProps> = ({ open, onClose }) => {
 	const [selectedOption, setSelectedOption] = useState<AboutOptionEnum>(AboutOptionEnum.ATTRIBUTION);
-	const { attributionText, mapProvider } = useAmplifyMap();
+	const { mapProvider } = useAmplifyMap();
+	const attributeEl = document.querySelector<HTMLElement>(".mapboxgl-ctrl-attrib-inner");
 
 	const handlePartnerLearnMore = useCallback(() => {
 		mapProvider === MapProviderEnum.ESRI
@@ -49,7 +50,7 @@ const AboutModal: React.FC<AboutModalProps> = ({ open, onClose }) => {
 							{t(PARTNER_ATTRIBUTION_TITLE)}
 						</Text>
 						<Text className="more-tertiary-text" marginTop="1.15rem">
-							{attributionText}
+							{attributeEl?.innerText || ""}
 						</Text>
 						<Button
 							data-testid="learn-more-button-partner-attribution"
@@ -110,7 +111,7 @@ const AboutModal: React.FC<AboutModalProps> = ({ open, onClose }) => {
 				)
 			}
 		],
-		[attributionText, handlePartnerLearnMore, t]
+		[attributeEl?.innerText, handlePartnerLearnMore, t]
 	);
 
 	const renderOptionItems = useMemo(() => {

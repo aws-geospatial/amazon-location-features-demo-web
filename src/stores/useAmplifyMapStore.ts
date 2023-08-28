@@ -34,7 +34,6 @@ interface AmplifyMapStoreProps {
 	mapUnit: MapUnitEnum;
 	mapProvider: MapProviderEnum;
 	mapStyle: EsriMapEnum | HereMapEnum | GrabMapEnum | OpenDataMapEnum;
-	attributionText: string;
 	isCurrentLocationDisabled: boolean;
 }
 
@@ -47,7 +46,6 @@ const initialState: IStateProps<AmplifyMapStoreProps> = {
 	mapUnit: MapUnitEnum.IMPERIAL,
 	mapProvider: MapProviderEnum.ESRI,
 	mapStyle: EsriMapEnum.ESRI_LIGHT,
-	attributionText: "Esri, HERE, Garmin, FAO, NOAA, USGS, © OpenStreetMap contributors, and the GIS User Community",
 	isCurrentLocationDisabled: false
 };
 
