@@ -146,8 +146,7 @@ const DemoPage: React.FC = () => {
 		viewpoint,
 		setViewpoint,
 		autoMapUnit,
-		setAutomaticMapUnit,
-		setAttributionText
+		setAutomaticMapUnit
 	} = useAmplifyMap();
 	const { setMarker, marker, selectedMarker, suggestions, bound, clearPoiList, zoom, setZoom, setSelectedMarker } =
 		useAwsPlace();
@@ -662,16 +661,6 @@ const DemoPage: React.FC = () => {
 			record([
 				{ EventType: EventTypeEnum.MAP_PROVIDER_CHANGE, Attributes: { provider: String(mapProvider), triggeredBy } }
 			]);
-
-			setTimeout(() => {
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore: Unreachable code error
-				const el = document.getElementsByClassName("mapboxgl-ctrl-attrib-inner")[0]?.innerText || "";
-
-				if (!!el) {
-					setAttributionText(el);
-				}
-			}, 3000);
 		},
 		[
 			doNotAskOpenDataDisclaimerModal,
@@ -686,8 +675,7 @@ const DemoPage: React.FC = () => {
 			handleCurrentLocationAndViewpoint,
 			switchToDefaultRegionStack,
 			resetAwsStore,
-			setIsCurrentLocationDisabled,
-			setAttributionText
+			setIsCurrentLocationDisabled
 		]
 	);
 
