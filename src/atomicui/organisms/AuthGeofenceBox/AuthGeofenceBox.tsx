@@ -30,9 +30,10 @@ import {
 } from "@demo/types";
 import { AnalyticsEventActionsEnum, EventTypeEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
+import * as turf from "@turf/turf";
 import { ListGeofenceResponseEntry, Place, Position } from "aws-sdk/clients/location";
 import { useTranslation } from "react-i18next";
-import { LngLat, MapRef } from "react-map-gl";
+import { Layer, LngLat, MapRef, Source } from "react-map-gl";
 import { Tooltip } from "react-tooltip";
 
 import CircleDrawControl from "./CircleDrawControl";
@@ -491,6 +492,8 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({ mapRef, setShowAuthGe
 				const isWithinGrabBounds =
 					Center[1] >= southBound && Center[1] <= northBound && Center[0] >= westBound && Center[0] <= eastBound;
 				const isDisabled = currentMapProvider === MapProviderEnum.GRAB && !isWithinGrabBounds;
+				const circle = turf.circle(Center, Radius, { steps: 50, units: "meters" });
+				const line = turf.lineString(circle.geometry.coordinates[0]);
 
 				return (
 					<Flex
@@ -502,7 +505,8 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({ mapRef, setShowAuthGe
 						alignItems="center"
 						onClick={isDisabled ? () => {} : () => onClickGeofenceItem(GeofenceId, Center, Radius)}
 						data-tooltip-id="geofence-item"
-						data-tooltip-place="bottom"
+						data-tooltip-place="right"
+						data-tooltip-position-strategy="fixed"
 						data-tooltip-content={isDisabled ? t("tooltip__disabled_geofence.text") : ""}
 					>
 						<Tooltip id="geofence-item" />
@@ -517,6 +521,31 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({ mapRef, setShowAuthGe
 						>
 							<IconTrash />
 						</div>
+						{!isDisabled && (
+							<div key={GeofenceId}>
+								<Source id={`${GeofenceId}-circle-source-fill`} type="geojson" data={circle}>
+									<Layer
+										id={`${GeofenceId}-circle-layer-fill`}
+										type="fill"
+										paint={{
+											"fill-opacity": 0.4,
+											"fill-color": "#30b8c0"
+										}}
+									/>
+								</Source>
+								<Source id={`${GeofenceId}-circle-source-line`} type="geojson" data={line}>
+									<Layer
+										id={`${GeofenceId}-circle-layer-line`}
+										type="line"
+										layout={{ "line-cap": "round", "line-join": "round" }}
+										paint={{
+											"line-color": "#008296",
+											"line-width": 2
+										}}
+									/>
+								</Source>
+							</div>
+						)}
 					</Flex>
 				);
 			}

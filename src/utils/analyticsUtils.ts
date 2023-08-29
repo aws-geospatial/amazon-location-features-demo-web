@@ -89,7 +89,7 @@ const sendEvent = async (command: any, shouldRetryAfterFailure = true) => {
 	}
 };
 
-const createOrUpdateEndpoint = async () => {
+export const createOrUpdateEndpoint = async () => {
 	const country = await getCountryCode();
 
 	let platformType = "Other";

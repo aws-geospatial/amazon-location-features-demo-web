@@ -3057,43 +3057,43 @@
     "text": "옵션 선택"
   },
   "regions__us_east_1": {
-    "text": "미국 동부 (버지니아 북부) 미국 동부-1"
+    "text": "US East (N. Virginia) us-east-1"
   },
   "regions__us_east_2": {
-    "text": "미국 동부 (오하이오) 미국-동부-2"
+    "text": "US East (Ohio) us-east-2"
   },
   "regions__us_west_2": {
-    "text": "미국 서부 (오레곤) 미국-서부-2"
+    "text": "US West (Oregon) us-west-2"
   },
   "regions__ap_south_1": {
-    "text": "아시아 태평양 (뭄바이) ap-남쪽-1"
+    "text": "Asia Pacific (Mumbai) ap-south-1"
   },
   "regions__ap_southeast_1": {
-    "text": "아시아 태평양 (싱가포르) ap-남동부-1"
+    "text": "Asia Pacific (Singapore) ap-southeast-1"
   },
   "regions__ap_southeast_2": {
-    "text": "아시아 태평양 (시드니) ap-남동부-2"
+    "text": "Asia Pacific (Sydney) ap-southeast-2"
   },
   "regions__ap_northeast_1": {
-    "text": "아시아 태평양 (도쿄) ap-북동부-1"
+    "text": "Asia Pacific (Tokyo) ap-northeast-1"
   },
   "regions__ca_central_1": {
-    "text": "캐나다 (중부) ca-센트럴-1"
+    "text": "Canada (Central) ca-central-1"
   },
   "regions__eu_central_1": {
-    "text": "유럽 (프랑크푸르트) EU-중앙-1"
+    "text": "Europe (Frankfurt) eu-central-1"
   },
   "regions__eu_west_1": {
-    "text": "유럽 (아일랜드) EU-서부-1"
+    "text": "Europe (Ireland) eu-west-1"
   },
   "regions__eu_west_2": {
-    "text": "유럽 (런던) EU-서부-2"
+    "text": "Europe (London) eu-west-2"
   },
   "regions__eu_north_1": {
-    "text": "유럽 (스톡홀름) EU-북부-1"
+    "text": "Europe (Stockholm) eu-north-1"
   },
   "regions__sa_east_1": {
-    "text": "남미 (상파울루) sa-동쪽-1"
+    "text": "South America (São Paulo) sa-east-1"
   },
   "sign_in_modal__1": {
     "text": "로그인 필요"
@@ -3394,5 +3394,164 @@
   },
   "regions__ap_southeast__region": {
     "text": "아시아 태평양"
+  },
+  "samples__js-map-style-change__title": {
+    "text": "맵 스타일 전환"
+  },
+  "samples__js-map-style-change__bodyText": {
+    "text": "이 샘플 앱은 다양한 맵 스타일 간에 전환하는 방법을 보여줍니다.아마존 로케이션 서비스의 지도를 기본 지도 공급자로 사용하고 MapLibre GL JS를 지도 렌더링 라이브러리로 사용합니다."
+  },
+  "samples__js-map-style-change__configure": {
+    "text": "index.html 파일을 열고 클라우드포메이션 스택 출력을 사용하여 코그니토 자격 증명 풀 ID를 입력합니다."
+  },
+  "samples__js-map-style-change__run": {
+    "text": "브라우저에서 index.html 를 엽니다."
+  },
+  "samples__js-map-style-change__cleanUp": {
+    "text": "이 안내에서 생성된 모든 리소스를 제거하려면 `map-style-change`라는 CloudFormation 스택을 삭제하십시오."
+  },
+  "samples__js-map-with-geojson-line__title": {
+    "text": "웹맵에 GeoJSON 라인 추가"
+  },
+  "samples__js-map-with-geojson-line__bodyText": {
+    "text": "이 샘플 앱은 GeoJSON 라인을 웹 맵에 추가하는 방법을 보여줍니다.아마존 로케이션 서비스의 맵을 기본 맵 공급자로 사용하고 MapLibre GL JS를 맵 렌더링 라이브러리로 사용합니다."
+  },
+  "samples__js-map-with-geojson-line__configure": {
+    "text": "index.html 파일을 열고 클라우드포메이션 스택 출력을 사용하여 코그니토 자격 증명 풀 ID를 입력합니다."
+  },
+  "samples__js-map-with-geojson-line__run": {
+    "text": "브라우저에서 index.html 를 엽니다."
+  },
+  "samples__js-map-with-geojson-line__cleanUp": {
+    "text": "이 안내에서 생성된 모든 리소스를 삭제하려면 `geojson-line-example`이라는 CloudFormation 스택을 삭제하십시오."
+  },
+  "samples__js-map-with-geojson-point__title": {
+    "text": "GeoJSON 포인트를 웹 맵에 추가"
+  },
+  "samples__js-map-with-geojson-point__bodyText": {
+    "text": "이 샘플 앱은 GeoJSON 포인트를 웹 맵에 추가하는 방법을 보여줍니다.아마존 로케이션 서비스의 맵을 기본 맵 공급자로 사용하고 MapLibre GL JS를 맵 렌더링 라이브러리로 사용합니다."
+  },
+  "samples__js-map-with-geojson-point__configure": {
+    "text": "index.html 파일을 열고 클라우드포메이션 스택 출력을 사용하여 코그니토 자격 증명 풀 ID를 입력합니다."
+  },
+  "samples__js-map-with-geojson-point__run": {
+    "text": "브라우저에서 index.html 를 엽니다."
+  },
+  "samples__js-map-with-geojson-point__cleanUp": {
+    "text": "이 안내에서 생성된 모든 리소스를 삭제하려면 `geojson-point-example`이라는 CloudFormation 스택을 삭제하십시오."
+  },
+  "samples__js-map-with-geojson-polygon__title": {
+    "text": "GeoJSON 폴리곤을 웹 맵에 추가"
+  },
+  "samples__js-map-with-geojson-polygon__bodyText": {
+    "text": "이 샘플 앱은 GeoJSON 폴리곤을 웹 맵에 추가하는 방법을 보여줍니다.아마존 로케이션 서비스의 맵을 기본 맵 공급자로 사용하고 MapLibre GL JS를 맵 렌더링 라이브러리로 사용합니다."
+  },
+  "samples__js-map-with-geojson-polygon__configure": {
+    "text": "index.html 파일을 열고 클라우드포메이션 스택 출력을 사용하여 코그니토 자격 증명 풀 ID를 입력합니다."
+  },
+  "samples__js-map-with-geojson-polygon__run": {
+    "text": "브라우저에서 index.html 를 엽니다."
+  },
+  "samples__js-map-with-geojson-polygon__cleanUp": {
+    "text": "이 안내에서 생성된 모든 리소스를 삭제하려면 `geojson-polygon-example`이라는 CloudFormation 스택을 삭제하십시오."
+  },
+  "samples__js-map-with-marker-and-popup__title": {
+    "text": "팝업이 있는 마커를 웹 맵에 추가"
+  },
+  "samples__js-map-with-marker-and-popup__bodyText": {
+    "text": "이 샘플 앱은 팝업이 있는 마커를 웹 맵에 추가하는 방법을 보여줍니다.아마존 로케이션 서비스의 맵을 기본 맵 공급자로 사용하고 MapLibre GL JS를 맵 렌더링 라이브러리로 사용합니다."
+  },
+  "samples__js-map-with-marker-and-popup__configure": {
+    "text": "index.html 파일을 열고 클라우드포메이션 스택 출력을 사용하여 코그니토 자격 증명 풀 ID를 입력합니다."
+  },
+  "samples__js-map-with-marker-and-popup__run": {
+    "text": "브라우저에서 index.html 를 엽니다."
+  },
+  "samples__js-map-with-marker-and-popup__cleanUp": {
+    "text": "이 안내에서 생성된 모든 리소스를 삭제하려면 '마커 위드-팝업-예제'라는 CloudFormation 스택을 삭제하십시오."
+  },
+  "samples__js-quick-start-using-cognito__title": {
+    "text": "Amazon Cognito를 사용한 퀵 스타트 웹 앱 인증"
+  },
+  "samples__js-quick-start-using-cognito__bodyText": {
+    "text": "이 샘플 앱은 Amazon Cognito로 인증하는 검색 기능이 포함된 맵을 표시합니다."
+  },
+  "samples__js-quick-start-using-cognito__configure": {
+    "text": "main.js 파일을 열고 클라우드포메이션 스택 출력을 사용하여 코그니토 자격 증명 풀 ID를 입력합니다."
+  },
+  "samples__js-quick-start-using-cognito__run": {
+    "text": "브라우저에서 quickstart.html 를 엽니다."
+  },
+  "samples__js-quick-start-using-cognito__cleanUp": {
+    "text": "이 안내에서 생성된 모든 리소스를 삭제하려면 '퀵 스타트 사용-cognito-example'이라는 CloudFormation 스택을 삭제하십시오."
+  },
+  "samples__js-simple-map__title": {
+    "text": "웹 페이지에 지도 표시"
+  },
+  "samples__js-simple-map__bodyText": {
+    "text": "이 샘플 앱은 웹페이지에 맵을 표시하는 방법을 보여줍니다.아마존 로케이션 서비스의 지도를 기본 지도 공급자로 사용하고 MapLibre GL JS를 지도 렌더링 라이브러리로 사용합니다."
+  },
+  "samples__js-simple-map__configure": {
+    "text": "index.html 파일을 열고 클라우드포메이션 스택 출력을 사용하여 코그니토 자격 증명 풀 ID를 입력합니다."
+  },
+  "samples__js-simple-map__run": {
+    "text": "브라우저에서 index.html 를 엽니다."
+  },
+  "samples__js-simple-map__cleanUp": {
+    "text": "이 안내에서 생성한 모든 리소스를 제거하려면 심플 맵 예제라고 하는 CloudFormation 스택을 삭제하십시오."
+  },
+  "samples__react-map-with-amplify__title": {
+    "text": "React와 AWS Amplify를 사용하여 웹 맵을 표시합니다."
+  },
+  "samples__react-map-with-amplify__bodyText": {
+    "text": "이 예제는 React와 AWS Amplify UI를 사용하여 웹 맵을 표시하는 방법을 보여줍니다."
+  },
+  "samples__react-map-with-amplify__tabsTitle": {
+    "text": "리액트/ 웹맵 표시하기"
+  },
+  "samples__react-map-with-amplify__configure": {
+    "text": "`.env.example'을 `.env'에 복사하고 클라우드포메이션 스택으로 환경 변수를 채웁니다.\n출력."
+  },
+  "samples__react-map-with-amplify__run": {
+    "text": "'npm start'를 실행하여 다음과 같이 [`localhost:3000`] (http://localhost:3000/) 에서 로컬 웹 서버를 시작합니다.\n예를 들어 브라우저에서 여십시오."
+  },
+  "samples__react-map-with-amplify__cleanUp": {
+    "text": "이 안내에서 생성된 모든 리소스를 제거하려면 이름이 지정된 CloudFormation 스택을 삭제하십시오.\n'증폭을 통한 반응'."
+  },
+  "samples__react-map-with-geojson__title": {
+    "text": "React를 사용하여 웹맵에 GeoJSON을 표시하기"
+  },
+  "samples__react-map-with-geojson__bodyText": {
+    "text": "이 예제에서는 React와 react-map-gl을 사용하여 웹맵에 GeoJSON을 표시하는 방법을 보여줍니다."
+  },
+  "samples__react-map-with-geojson__tabsTitle": {
+    "text": "반응하기/ GeoJSON을 웹맵에 표시하기"
+  },
+  "samples__react-map-with-geojson__configure": {
+    "text": "`.env.example'을 `.env'에 복사하고 클라우드포메이션 스택으로 환경 변수를 채웁니다.\n출력."
+  },
+  "samples__react-map-with-geojson__run": {
+    "text": "'npm start'를 실행하여 다음과 같이 [`localhost:3000`] (http://localhost:3000/) 에서 로컬 웹 서버를 시작합니다.\n예를 들어 브라우저에서 여십시오."
+  },
+  "samples__react-map-with-geojson__cleanUp": {
+    "text": "이 안내에서 생성된 모든 리소스를 제거하려면 이름이 지정된 CloudFormation 스택을 삭제하십시오.\n`react-map-with-geojson`."
+  },
+  "samples__react-map-with-markers__title": {
+    "text": "React를 사용하여 웹 맵에 마커 표시하기"
+  },
+  "samples__react-map-with-markers__bodyText": {
+    "text": "이 예제에서는 React와 react-map-gl을 사용하여 웹 맵에 마커를 표시하는 방법을 보여줍니다."
+  },
+  "samples__react-map-with-markers__tabsTitle": {
+    "text": "React/ 웹 맵에 마커 표시하기"
+  },
+  "samples__react-map-with-markers__configure": {
+    "text": "`.env.example'을 `.env'에 복사하고 클라우드포메이션 스택으로 환경 변수를 채웁니다.\n출력."
+  },
+  "samples__react-map-with-markers__run": {
+    "text": "'npm start'를 실행하여 다음과 같이 [`localhost:3000`] (http://localhost:3000/) 에서 로컬 웹 서버를 시작합니다.\n예를 들어 브라우저에서 여십시오."
+  },
+  "samples__react-map-with-markers__cleanUp": {
+    "text": "이 안내에서 생성된 모든 리소스를 제거하려면 이름이 지정된 CloudFormation 스택을 삭제하십시오.\n`react-map-with-geojson`."
   }
 }

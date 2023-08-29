@@ -28,18 +28,14 @@ cd amazon-location-features-demo-web/<br />
 yarn install<br />
 yarn vite
 
-#### `yarn install`
+#### `npm install`
 
 Installs all the dependencies.
 
-#### `yarn vite`
+#### `npm run dev`
 
 Runs the app in the **development mode**.<br />
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-#### `yarn run build && npx http-server ./build -p 8080`
-
-Builds the app for **development** to the `build` folder locally and starts the local server.
 
 ## E2E Tests
 
@@ -58,27 +54,27 @@ COGNITO_PASSWORD<br />
 
 #### If you are configuring Github actions fo the e2e tests, make sure to add these keys to the secrets section of the repo with a `CYPRESS_` prefix.
 
-#### `yarn cypress run`
+#### `npm run cypress run`
 
 Runs Cypress tests to completion. By default, `cypress run` will run all tests headlessly. https://docs.cypress.io/guides/guides/command-line#cypress-run
 
-#### `yarn cypress open`
+#### `npm run cypress open`
 
 Runs Cypress tests to completion in a browser which can be specified in the `options`. https://docs.cypress.io/guides/guides/command-line#cypress-open
 
 ## Security Tests
 
-#### `yarn run-security-tests`
+#### `npm run security-tests`
 
 Runs Security tests insuring policies match the expected values.
 
 ## Unit Tests
 
-#### `yarn test`
+#### `npm run test`
 
 Run all the test cases for all the components within the repo.
 
-#### `yarn coverage`
+#### `npm run coverage`
 
 Run all the test cases for all the components within the repo and provides a coverage report.
 
