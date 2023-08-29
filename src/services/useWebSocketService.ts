@@ -24,7 +24,13 @@ const useWebSocketService = (
 	const { region, webSocketUrl, credentials } = useAmplifyAuth();
 	const { setUnauthNotifications } = useAwsGeofence();
 
-	const url = useMemo(() => webSocketUrl?.split("//")[1]?.replace("/", "") || webSocketUrl, [webSocketUrl]);
+	const url = useMemo(
+		() =>
+			webSocketUrl?.startsWith("http://") || webSocketUrl?.startsWith("https://")
+				? webSocketUrl.split("//")[1].replace("/", "")
+				: webSocketUrl,
+		[webSocketUrl]
+	);
 
 	useEffect(() => {
 		Hub.listen("pubsub", ({ payload: { data } }: { payload: HubPayload }) => {
