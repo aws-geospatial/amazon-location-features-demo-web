@@ -99,6 +99,7 @@ const initShow = {
 	mapStyle: undefined,
 	unauthGeofenceBox: false,
 	unauthTrackerBox: false,
+	startUnauthSimulation: false,
 	unauthSimulationDisclaimerModal: false,
 	unauthSimulationExitModal: false
 };
@@ -149,8 +150,7 @@ const DemoPage: React.FC = () => {
 		viewpoint,
 		setViewpoint,
 		autoMapUnit,
-		setAutomaticMapUnit,
-		setAttributionText
+		setAutomaticMapUnit
 	} = useAmplifyMap();
 	const { setMarker, marker, selectedMarker, suggestions, bound, clearPoiList, zoom, setZoom, setSelectedMarker } =
 		useAwsPlace();
@@ -665,16 +665,6 @@ const DemoPage: React.FC = () => {
 			record([
 				{ EventType: EventTypeEnum.MAP_PROVIDER_CHANGE, Attributes: { provider: String(mapProvider), triggeredBy } }
 			]);
-
-			setTimeout(() => {
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore: Unreachable code error
-				const el = document.getElementsByClassName("mapboxgl-ctrl-attrib-inner")[0]?.innerText || "";
-
-				if (!!el) {
-					setAttributionText(el);
-				}
-			}, 3000);
 		},
 		[
 			doNotAskOpenDataDisclaimerModal,
@@ -689,8 +679,7 @@ const DemoPage: React.FC = () => {
 			handleCurrentLocationAndViewpoint,
 			switchToDefaultRegionStack,
 			resetAwsStore,
-			setIsCurrentLocationDisabled,
-			setAttributionText
+			setIsCurrentLocationDisabled
 		]
 	);
 
@@ -810,7 +799,7 @@ const DemoPage: React.FC = () => {
 				maxBounds={
 					currentMapProvider === MapProviderEnum.GRAB
 						? (MAX_BOUNDS.GRAB as LngLatBoundsLike)
-						: show.unauthGeofenceBox || show.unauthTrackerBox
+						: (show.unauthGeofenceBox || show.unauthTrackerBox) && show.startUnauthSimulation
 						? (MAX_BOUNDS.VANCOUVER as LngLatBoundsLike)
 						: (MAX_BOUNDS.DEFAULT as LngLatBoundsLike)
 				}
@@ -863,6 +852,8 @@ const DemoPage: React.FC = () => {
 							setShowUnauthGeofenceBox={b => setShow(s => ({ ...s, unauthGeofenceBox: b }))}
 							setShowUnauthTrackerBox={b => setShow(s => ({ ...s, unauthTrackerBox: b }))}
 							setShowConnectAwsAccountModal={b => setShow(s => ({ ...s, connectAwsAccount: b }))}
+							showStartUnauthSimulation={show.startUnauthSimulation}
+							setShowStartUnauthSimulation={b => setShow(s => ({ ...s, startUnauthSimulation: b }))}
 						/>
 					) : (
 						<SearchBox
