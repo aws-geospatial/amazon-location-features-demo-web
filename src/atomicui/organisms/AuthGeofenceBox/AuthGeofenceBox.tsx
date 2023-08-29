@@ -502,7 +502,8 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({ mapRef, setShowAuthGe
 						alignItems="center"
 						onClick={isDisabled ? () => {} : () => onClickGeofenceItem(GeofenceId, Center, Radius)}
 						data-tooltip-id="geofence-item"
-						data-tooltip-place="bottom"
+						data-tooltip-place="right"
+						data-tooltip-position-strategy="fixed"
 						data-tooltip-content={isDisabled ? t("tooltip__disabled_geofence.text") : ""}
 					>
 						<Tooltip id="geofence-item" />
