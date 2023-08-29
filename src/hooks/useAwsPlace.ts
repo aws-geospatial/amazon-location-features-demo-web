@@ -188,6 +188,9 @@ const useAwsPlace = () => {
 					clusters: undefined
 				});
 			},
+			setIsSearching: (isSearching: boolean) => {
+				setState({ isSearching });
+			},
 			resetStore() {
 				setState({
 					bound: undefined,
