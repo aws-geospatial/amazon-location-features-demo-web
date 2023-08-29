@@ -122,14 +122,6 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
 
-	// useEffect(() => {
-	// 	setBottomSheetMinHeight && setBottomSheetMinHeight(100);
-
-	// 	return () => {
-	// 		setBottomSheetMinHeight && setBottomSheetMinHeight(80);
-	// 	};
-	// }, []);
-
 	const filterIconWrapperRef = useRef<HTMLDivElement>(null);
 	const searchFieldRef = useRef<HTMLInputElement>(null);
 	const clearIconContainerRef = useRef<HTMLDivElement>(null);
@@ -147,10 +139,8 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 			}
 		}
 
-		// Bind the event listener
 		document.addEventListener("mousedown", handleClickOutside);
 		return () => {
-			// Unbind the event listener on clean up
 			document.removeEventListener("mousedown", handleClickOutside);
 		};
 	}, [isHandDevice, setSearchWidth, searchHandDeviceWidth, showFilter]);

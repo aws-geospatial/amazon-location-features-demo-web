@@ -7,3 +7,4 @@ export { default as regionsData } from "./regionsData";
 export { default as marketingMenuOptionsData } from "./marketingMenuOptionsData";
 export { default as languageSwitcherData } from "./languageSwitcherData";
 export { default as busRoutesData } from "./busRoutesData";
+export { default as bottomSheetHeights } from "./bottomSheetHeights";

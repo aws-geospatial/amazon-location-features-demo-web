@@ -21,7 +21,8 @@ import {
 } from "@demo/assets";
 
 import { NotFoundCard, StepCard } from "@demo/atomicui/molecules";
-import { useAmplifyMap, useAwsPlace, useAwsRoute, useMediaQuery, usePersistedData } from "@demo/hooks";
+import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
+import { useAmplifyMap, useAwsPlace, useAwsRoute, useBottomSheet, useMediaQuery, usePersistedData } from "@demo/hooks";
 import {
 	DistanceUnitEnum,
 	InputType,
@@ -31,7 +32,7 @@ import {
 	SuggestionType,
 	TravelMode
 } from "@demo/types";
-import { AnalyticsEventActionsEnum, TriggeredByEnum } from "@demo/types/Enums";
+import { AnalyticsEventActionsEnum, ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { humanReadableTime } from "@demo/utils/dateTimeUtils";
 import { CalculateRouteRequest, LineString, Place, Position } from "aws-sdk/clients/location";
 import { useTranslation } from "react-i18next";
@@ -74,6 +75,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 		mapProvider: currentMapProvider
 	} = useAmplifyMap();
 	const { search, getPlaceData } = useAwsPlace();
+	const { setUI, setBottomSheetMinHeight, setBottomSheetHeight, ui } = useBottomSheet();
 	const {
 		setRoutePositions,
 		getRoute,
@@ -93,10 +95,35 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 	const isLtr = langDir === "ltr";
 	const currentLang = i18n.language;
 	const isLanguageRTL = ["ar", "he"].includes(currentLang);
+	const fromInputRef = useRef<HTMLInputElement>(null);
+	const toInputRef = useRef<HTMLInputElement>(null);
 
 	const clearRoutePosition = useCallback((type: InputType) => setRoutePositions(undefined, type), [setRoutePositions]);
 
 	const clearRouteData = useCallback(() => setRouteData(undefined), [setRouteData]);
+
+	useEffect(() => {
+		function handleClickOutside() {
+			if (ui === ResponsiveUIEnum.routes) {
+				fromInputRef?.current?.blur();
+				toInputRef?.current?.blur();
+				setBottomSheetHeight(BottomSheetHeights.search.max);
+				setBottomSheetMinHeight(BottomSheetHeights.search.min);
+			}
+		}
+
+		document.addEventListener("touchmove", handleClickOutside);
+		return () => {
+			document.removeEventListener("touchmove", handleClickOutside);
+		};
+	}, [ui, setBottomSheetHeight, setBottomSheetMinHeight]);
+
+	useEffect(() => {
+		if (!isDesktop || !!inputFocused.from || !!inputFocused.to) {
+			setBottomSheetMinHeight(BottomSheetHeights.routes.max - 10);
+			setBottomSheetHeight(BottomSheetHeights.routes.max);
+		}
+	}, [inputFocused.from, inputFocused.to, isDesktop, setBottomSheetHeight, setBottomSheetMinHeight]);
 
 	useEffect(() => {
 		if (!value.from) {
@@ -239,6 +266,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 	const onClose = () => {
 		resetAwsRouteStore();
 		setShowRouteBox(false);
+		setUI(ResponsiveUIEnum.explore);
 	};
 
 	const handleTravelModeChange = (travelMode: TravelMode) => {
@@ -605,77 +633,89 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 
 	return (
 		<>
-			<Card data-testid="route-card" className="route-card" left={isSideMenuExpanded ? 245 : 21}>
+			<Card
+				data-testid="route-card"
+				className={`route-card ${!isDesktop ? "route-card-mobile" : ""}`}
+				left={!isDesktop ? 0 : isSideMenuExpanded ? 245 : 21}
+			>
 				<View className="route-card-close" onClick={onClose}>
 					<IconClose />
 				</View>
-				<Flex className="travel-mode-button-container" gap={0}>
-					<View
-						data-testid="travel-mode-car-icon-container"
-						className={travelMode === TravelMode.CAR ? "travel-mode selected" : "travel-mode"}
-						onClick={() => handleTravelModeChange(TravelMode.CAR)}
-					>
-						<IconCar
-							data-tooltip-id="icon-car-tooltip"
-							data-tooltip-place="top"
-							data-tooltip-content={t("tooltip__calculate_route_car.text")}
-						/>
-						<Tooltip id="icon-car-tooltip" />
+				{!isDesktop && (
+					<View className="route-card-header">
+						<Text className="route-card-header-text">{t("popup__directions.text")}</Text>
 					</View>
-					<View
-						data-testid="travel-mode-walking-icon-container"
-						className={travelMode === TravelMode.WALKING ? "travel-mode selected" : "travel-mode"}
-						onClick={() => handleTravelModeChange(TravelMode.WALKING)}
-					>
-						<IconWalking
-							data-tooltip-id="icon-walking-tooltip"
-							data-tooltip-place="top"
-							data-tooltip-content={t("tooltip__calculate_route_walk.text")}
-						/>
-						<Tooltip id="icon-walking-tooltip" />
-					</View>
-					{currentMapProvider === MapProviderEnum.GRAB ? (
-						<>
-							<View
-								data-testid="travel-mode-bicycle-icon-container"
-								className={travelMode === TravelMode.BICYCLE ? "travel-mode selected" : "travel-mode"}
-								onClick={() => handleTravelModeChange(TravelMode.BICYCLE)}
-							>
-								<IconBicycleSolid
-									data-tooltip-id="icon-bicycle-tooltip"
-									data-tooltip-place="top"
-									data-tooltip-content={t("tooltip__calculate_route_bicycle.text")}
-								/>
-								<Tooltip id="icon-bicycle-tooltip" />
-							</View>
-							<View
-								data-testid="travel-mode-motorcycle-icon-container"
-								className={travelMode === TravelMode.MOTORCYCLE ? "travel-mode selected" : "travel-mode"}
-								onClick={() => handleTravelModeChange(TravelMode.MOTORCYCLE)}
-							>
-								<IconMotorcycleSolid
-									data-tooltip-id="icon-motorcycle-tooltip"
-									data-tooltip-place="top"
-									data-tooltip-content={t("tooltip__calculate_route_motorcycle.text")}
-								/>
-								<Tooltip id="icon-motorcycle-tooltip" />
-							</View>
-						</>
-					) : (
+				)}
+				{isDesktop && (
+					<Flex className="travel-mode-button-container" gap={0}>
 						<View
-							data-testid="travel-mode-truck-icon-container"
-							className={travelMode === TravelMode.TRUCK ? "travel-mode selected" : "travel-mode"}
-							onClick={() => handleTravelModeChange(TravelMode.TRUCK)}
+							data-testid="travel-mode-car-icon-container"
+							className={travelMode === TravelMode.CAR ? "travel-mode selected" : "travel-mode"}
+							onClick={() => handleTravelModeChange(TravelMode.CAR)}
 						>
-							<IconTruckSolid
-								data-tooltip-id="icon-truck-tooltip"
+							<IconCar
+								data-tooltip-id="icon-car-tooltip"
 								data-tooltip-place="top"
-								data-tooltip-content={t("tooltip__calculate_route_truck.text")}
+								data-tooltip-content={t("tooltip__calculate_route_car.text")}
 							/>
-							<Tooltip id="icon-truck-tooltip" />
+							<Tooltip id="icon-car-tooltip" />
 						</View>
-					)}
-				</Flex>
+						<View
+							data-testid="travel-mode-walking-icon-container"
+							className={travelMode === TravelMode.WALKING ? "travel-mode selected" : "travel-mode"}
+							onClick={() => handleTravelModeChange(TravelMode.WALKING)}
+						>
+							<IconWalking
+								data-tooltip-id="icon-walking-tooltip"
+								data-tooltip-place="top"
+								data-tooltip-content={t("tooltip__calculate_route_walk.text")}
+							/>
+							<Tooltip id="icon-walking-tooltip" />
+						</View>
+
+						{currentMapProvider === MapProviderEnum.GRAB ? (
+							<>
+								<View
+									data-testid="travel-mode-bicycle-icon-container"
+									className={travelMode === TravelMode.BICYCLE ? "travel-mode selected" : "travel-mode"}
+									onClick={() => handleTravelModeChange(TravelMode.BICYCLE)}
+								>
+									<IconBicycleSolid
+										data-tooltip-id="icon-bicycle-tooltip"
+										data-tooltip-place="top"
+										data-tooltip-content={t("tooltip__calculate_route_bicycle.text")}
+									/>
+									<Tooltip id="icon-bicycle-tooltip" />
+								</View>
+								<View
+									data-testid="travel-mode-motorcycle-icon-container"
+									className={travelMode === TravelMode.MOTORCYCLE ? "travel-mode selected" : "travel-mode"}
+									onClick={() => handleTravelModeChange(TravelMode.MOTORCYCLE)}
+								>
+									<IconMotorcycleSolid
+										data-tooltip-id="icon-motorcycle-tooltip"
+										data-tooltip-place="top"
+										data-tooltip-content={t("tooltip__calculate_route_motorcycle.text")}
+									/>
+									<Tooltip id="icon-motorcycle-tooltip" />
+								</View>
+							</>
+						) : (
+							<View
+								data-testid="travel-mode-truck-icon-container"
+								className={travelMode === TravelMode.TRUCK ? "travel-mode selected" : "travel-mode"}
+								onClick={() => handleTravelModeChange(TravelMode.TRUCK)}
+							>
+								<IconTruckSolid
+									data-tooltip-id="icon-truck-tooltip"
+									data-tooltip-place="top"
+									data-tooltip-content={t("tooltip__calculate_route_truck.text")}
+								/>
+								<Tooltip id="icon-truck-tooltip" />
+							</View>
+						)}
+					</Flex>
+				)}
 				<Flex className="from-to-container" gap={0}>
 					<Flex className="marker-container" order={isLtr ? 1 : 3}>
 						<IconMyLocation />
@@ -686,6 +726,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 					</Flex>
 					<Flex className="inputs-container" order={2}>
 						<input
+							ref={fromInputRef}
 							data-testid="from-input"
 							placeholder={t("route_box__from.text") as string}
 							onFocus={() => onFocus(InputType.FROM)}
@@ -695,6 +736,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 						/>
 						<View className="divider" />
 						<input
+							ref={toInputRef}
 							data-testid="to-input"
 							placeholder={t("route_box__to.text") as string}
 							onFocus={() => onFocus(InputType.TO)}

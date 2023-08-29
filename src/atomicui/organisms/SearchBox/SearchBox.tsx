@@ -6,6 +6,7 @@ import React, { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState }
 import { Autocomplete, Button, ComboBoxOption, Flex, Placeholder, Text, View } from "@aws-amplify/ui-react";
 import { IconActionMenu, IconClose, IconDirections, IconPin, IconSearch } from "@demo/assets";
 import { InputField, Marker, NotFoundCard, SuggestionMarker } from "@demo/atomicui/molecules";
+import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useAmplifyMap, useAwsPlace, useBottomSheet } from "@demo/hooks";
 import { DistanceUnitEnum, MapUnitEnum, SuggestionType } from "@demo/types";
 import { AnalyticsEventActionsEnum, ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
@@ -147,8 +148,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		function handleClickOutside() {
 			if (!POICard) {
 				searchInputRef?.current?.blur();
-				setBottomSheetHeight(window.innerHeight);
-				setBottomSheetMinHeight(80);
+				setBottomSheetHeight(BottomSheetHeights.search.max);
+				setBottomSheetMinHeight(BottomSheetHeights.search.min);
 			}
 		}
 
@@ -195,7 +196,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		if (!!value) {
 			clearPoiList();
 			handleSearch(value, false, AnalyticsEventActionsEnum.SEARCH_ICON_CLICK);
-			setBottomSheetMinHeight(80);
+			setBottomSheetMinHeight(BottomSheetHeights.search.min);
 		}
 		autocompleteRef?.current?.focus();
 	};
@@ -338,8 +339,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 			e.preventDefault();
 			handleSearch(value, true, AnalyticsEventActionsEnum.ENTER_BUTTON);
 			if (!!options?.length) {
-				setBottomSheetMinHeight(230);
-				setBottomSheetHeight(240);
+				setBottomSheetMinHeight(BottomSheetHeights.search.min);
+				setBottomSheetHeight(BottomSheetHeights.search.min);
 				searchInputRef?.current?.blur();
 			}
 		},
@@ -356,12 +357,12 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 				onClick={() => {
 					selectSuggestion({
 						id: options[index].id,
-						text: value,
+						text: !!options[index]?.placeid ? value : options[index].label,
 						label: options[index].label,
-						placeid: options[index].placeid
+						placeid: options[index]?.placeid
 					});
-					setBottomSheetMinHeight(230);
-					setBottomSheetHeight(240);
+					setBottomSheetMinHeight(BottomSheetHeights.search.min);
+					setBottomSheetHeight(BottomSheetHeights.search.min);
 				}}
 				className="option-wrapper"
 			>
@@ -389,15 +390,15 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 												e.key !== "Enter" &&
 												[bottomSheetMinHeight, bottomSheetHeight].every(r => r !== window.innerHeight)
 											) {
-												setBottomSheetMinHeight(window.innerHeight);
-												setBottomSheetHeight(window.innerHeight);
+												setBottomSheetMinHeight(BottomSheetHeights.search.max);
+												setBottomSheetHeight(BottomSheetHeights.search.max);
 											}
 										}}
 										onFocus={e => {
 											e.stopPropagation();
 											setIsFocused(true);
-											setBottomSheetMinHeight(window.innerHeight);
-											setBottomSheetHeight(window.innerHeight);
+											setBottomSheetMinHeight(BottomSheetHeights.search.max - 10);
+											setBottomSheetHeight(BottomSheetHeights.search.max);
 										}}
 										onBlur={e => {
 											e.stopPropagation();

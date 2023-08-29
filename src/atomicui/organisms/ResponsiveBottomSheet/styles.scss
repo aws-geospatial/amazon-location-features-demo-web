@@ -9,6 +9,7 @@
 			
 		}
 	}
+
 	[data-rsbs-overlay="true"] {
 		z-index: 20;
 		opacity: 1;
@@ -19,7 +20,14 @@
     padding: 0;
 		z-index: 20;
 		opacity: 1;
+		min-height: 1.4rem;
   }
+
+	&.bottom-sheet--collapsed{
+		[data-rsbs-scroll="true"]{
+			display: none;
+		}
+	}
 
 	[data-rsbs-scroll="true"]{
 		margin-top: 1.5rem;

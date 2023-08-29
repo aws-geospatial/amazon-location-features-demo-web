@@ -7,6 +7,25 @@
 	top: 21px !important;
 	z-index: 4;
 
+	&.route-card-mobile {
+		width: 100% !important;
+		box-shadow: none;
+		padding: 0 1.23rem;
+
+		.route-card-close {
+			top: -10px;
+		}
+
+		.route-card-header-text {
+			font-family: "AmazonEmber-Bold";
+			font-size: 1.23rem;
+		}
+
+		.from-to-container {
+			padding-left: 0 !important;
+		}
+	}
+
 	.route-card-close {
 		width: 20px;
 		height: 20px;

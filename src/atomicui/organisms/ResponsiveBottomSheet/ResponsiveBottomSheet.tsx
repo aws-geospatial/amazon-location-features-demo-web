@@ -17,13 +17,15 @@ import "./styles.scss";
 interface IProps {
 	SearchBoxEl: () => JSX.Element;
 	MapButtons: JSX.Element;
+	RouteBox: JSX.Element;
 }
 
-const ResponsiveBottomSheet: FC<IProps> = ({ SearchBoxEl, MapButtons }) => {
+const ResponsiveBottomSheet: FC<IProps> = ({ SearchBoxEl, MapButtons, RouteBox }) => {
 	const isDesktop = useMediaQuery("(min-width: 1024px)");
 	const isMobile = useMediaQuery("(max-width: 425px)");
 	const isTablet = !isDesktop && !isMobile;
 	const { t } = useTranslation();
+
 	const {
 		setBottomSheetMinHeight,
 		setBottomSheetHeight,
@@ -37,7 +39,31 @@ const ResponsiveBottomSheet: FC<IProps> = ({ SearchBoxEl, MapButtons }) => {
 	useEffect(() => {
 		const resizeObserver = new ResizeObserver(entries => {
 			for (const entry of entries) {
+				setBottomSheetHeight(entry.contentRect.height);
+
+				if (bottomSheetHeight > window.innerHeight) {
+					setBottomSheetHeight(window.innerHeight);
+				}
+			}
+		});
+
+		const handleWindowResize = () => {
+			resizeObserver.observe(document.body);
+		};
+
+		window.addEventListener("resize", handleWindowResize);
+
+		return () => {
+			window.removeEventListener("resize", handleWindowResize);
+			resizeObserver.disconnect();
+		};
+	}, [setBottomSheetCurrentHeight, setBottomSheetHeight, bottomSheetHeight]);
+
+	useEffect(() => {
+		const resizeObserver = new ResizeObserver(entries => {
+			for (const entry of entries) {
 				setBottomSheetCurrentHeight(entry.contentRect.height);
+				setBottomSheetHeight(window.innerHeight);
 			}
 		});
 
@@ -85,6 +111,8 @@ const ResponsiveBottomSheet: FC<IProps> = ({ SearchBoxEl, MapButtons }) => {
 							</Flex>
 						</Flex>
 					);
+				case ResponsiveUIEnum.routes:
+					return null;
 				case ResponsiveUIEnum.explore:
 				case ResponsiveUIEnum.poi_card:
 				case ResponsiveUIEnum.search:
@@ -100,6 +128,8 @@ const ResponsiveBottomSheet: FC<IProps> = ({ SearchBoxEl, MapButtons }) => {
 			switch (ui) {
 				case ResponsiveUIEnum.map_styles:
 					return MapButtons;
+				case ResponsiveUIEnum.routes:
+					return RouteBox;
 				case ResponsiveUIEnum.search:
 				case ResponsiveUIEnum.poi_card:
 					return null;
@@ -108,7 +138,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({ SearchBoxEl, MapButtons }) => {
 					return <Explore updateUIInfo={setUI} />;
 			}
 		},
-		[MapButtons, setUI]
+		[MapButtons, RouteBox, setUI]
 	);
 
 	const calculatePixelValue = useCallback(
@@ -142,7 +172,13 @@ const ResponsiveBottomSheet: FC<IProps> = ({ SearchBoxEl, MapButtons }) => {
 					]}
 					maxHeight={bottomSheetHeight}
 					header={<Flex>{bottomSheetHeader(ui)}</Flex>}
-					className={`bottom-sheet ${isTablet ? "tablet" : "mobile"}`}
+					className={`bottom-sheet ${isTablet ? "tablet" : "mobile"} 
+					`}
+					// ${
+					// 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// 	// @ts-ignore
+					// 	ui && BottomSheetHeights[ui].min === bottomSheetCurrentHeight ? "bottom-sheet--collapsed" : ""
+					// 	}
 					data-amplify-theme="aws-location-theme"
 				>
 					{bottomSheetBody(ui)}

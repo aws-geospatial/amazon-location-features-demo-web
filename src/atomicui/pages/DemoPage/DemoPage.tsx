@@ -39,6 +39,7 @@ import {
 	useAwsPlace,
 	useAwsRoute,
 	useAwsTracker,
+	useBottomSheet,
 	useMediaQuery,
 	usePersistedData,
 	useRecordViewPage
@@ -165,6 +166,7 @@ const DemoPage: React.FC = () => {
 		doNotAskOpenDataDisclaimerModal,
 		setDoNotAskOpenDataDisclaimerModal
 	} = usePersistedData();
+	const { setBottomSheetMinHeight, setBottomSheetHeight, bottomSheetCurrentHeight } = useBottomSheet();
 	const isDesktop = useMediaQuery("(min-width: 1024px)");
 
 	const { t } = useTranslation();
@@ -365,7 +367,7 @@ const DemoPage: React.FC = () => {
 
 	useEffect(() => {
 		if (directions) setShow(s => ({ ...s, routeBox: true }));
-	}, [directions, show]);
+	}, [directions]);
 
 	const onLoad = useCallback(() => {
 		clearPoiList();
@@ -570,6 +572,10 @@ const DemoPage: React.FC = () => {
 				switchToDefaultRegionStack();
 				resetAwsStore();
 				setIsCurrentLocationDisabled(false);
+				if (bottomSheetCurrentHeight) {
+					setBottomSheetMinHeight(bottomSheetCurrentHeight);
+					// setBottomSheetHeight(bottomSheetCurrentHeight);
+				}
 			}
 
 			setMapProvider(MapProviderEnum.OPEN_DATA);
@@ -579,17 +585,20 @@ const DemoPage: React.FC = () => {
 			);
 		},
 		[
-			currentMapProvider,
 			doNotAskOpenDataDisclaimerModal,
-			isUserAwsAccountConnected,
-			resetAwsStore,
 			setDoNotAskOpenDataDisclaimerModal,
-			setIsCurrentLocationDisabled,
+			doNotAskOpenDataDisclaimer,
+			currentMapProvider,
+			isUserAwsAccountConnected,
 			setMapProvider,
 			setMapStyle,
 			show.mapStyle,
 			switchToDefaultRegionStack,
-			doNotAskOpenDataDisclaimer
+			resetAwsStore,
+			setIsCurrentLocationDisabled,
+			bottomSheetCurrentHeight,
+			setBottomSheetMinHeight
+			// setBottomSheetHeight
 		]
 	);
 
@@ -849,7 +858,7 @@ const DemoPage: React.FC = () => {
 							}
 						/>
 					)}
-					{show.routeBox ? (
+					{isDesktop && show.routeBox ? (
 						<RouteBox
 							mapRef={mapViewRef?.current}
 							setShowRouteBox={b => setShow(s => ({ ...s, routeBox: b }))}
@@ -904,6 +913,13 @@ const DemoPage: React.FC = () => {
 											currentMapProvider={currentMapProvider}
 											onlyMapStyles
 											isHandDevice
+										/>
+									}
+									RouteBox={
+										<RouteBox
+											mapRef={mapViewRef?.current}
+											setShowRouteBox={b => setShow(s => ({ ...s, routeBox: b }))}
+											isSideMenuExpanded={show.sidebar}
 										/>
 									}
 								/>

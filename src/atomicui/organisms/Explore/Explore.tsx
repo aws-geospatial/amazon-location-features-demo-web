@@ -14,6 +14,8 @@ import {
 } from "@demo/assets";
 import { ExploreButton } from "@demo/atomicui/atoms";
 import { IconicInfoCard } from "@demo/atomicui/molecules";
+import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
+import { useBottomSheet } from "@demo/hooks";
 import { ResponsiveUIEnum } from "@demo/types/Enums";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
@@ -24,18 +26,27 @@ interface IProps {
 
 const Explore: React.FC<IProps> = ({ updateUIInfo }) => {
 	const { t } = useTranslation();
+	const { setBottomSheetMinHeight, setBottomSheetHeight } = useBottomSheet();
 	return (
 		<Flex direction="column" className="explore-container" gap="0">
 			<Flex className="feature-container">
 				<ExploreButton
 					text={t("routes.text")}
 					icon={<IconDirections width="1.53rem" height="1.53rem" fill="white" />}
-					onClick={() => updateUIInfo(ResponsiveUIEnum.routes)}
+					onClick={() => {
+						updateUIInfo(ResponsiveUIEnum.routes);
+						setBottomSheetMinHeight(BottomSheetHeights.routes.min);
+						setBottomSheetHeight(BottomSheetHeights.routes.max);
+					}}
 				/>
 				<ExploreButton
 					text={t("map_style.text")}
 					icon={<IconMapSolid width="1.53rem" height="1.53rem" fill="white" />}
-					onClick={() => updateUIInfo(ResponsiveUIEnum.map_styles)}
+					onClick={() => {
+						updateUIInfo(ResponsiveUIEnum.map_styles);
+						setBottomSheetMinHeight(BottomSheetHeights.map_styles.min);
+						setBottomSheetHeight(BottomSheetHeights.map_styles.max);
+					}}
 				/>
 				<ExploreButton
 					text={t("trackers.text")}

@@ -5,6 +5,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 import { Button, Flex, Placeholder, Text, View } from "@aws-amplify/ui-react";
 import { IconCar, IconClose, IconCopyPages, IconDirections, IconInfo } from "@demo/assets";
+import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useAmplifyMap, useAwsPlace, useAwsRoute, useBottomSheet, useMediaQuery } from "@demo/hooks";
 import { DistanceUnitEnum, MapProviderEnum, MapUnitEnum, SuggestionType, TravelMode } from "@demo/types";
 
@@ -115,21 +116,37 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 		}
 	}, [routeData, active, isEsriLimitation, currentLocationData, isCurrentLocationDisabled, loadRouteData]);
 
-	const onClose = useCallback(async () => {
-		if (!isDesktop) {
-			setUI(ResponsiveUIEnum.explore);
-			setPOICard(undefined);
-			setInfo(undefined);
-		}
-		await select(undefined);
-		onClosePopUp && onClosePopUp();
-	}, [isDesktop, select, onClosePopUp, setUI, setPOICard, setInfo]);
+	const onClose = useCallback(
+		async (ui: ResponsiveUIEnum) => {
+			if (!isDesktop) {
+				setUI(ui);
+				setPOICard(undefined);
+				setInfo(undefined);
+			}
+			await select(undefined);
+			onClosePopUp && onClosePopUp();
+		},
+		[isDesktop, select, onClosePopUp, setUI, setPOICard, setInfo]
+	);
 
 	const onGetDirections = useCallback(() => {
 		setDirections({ info, isEsriLimitation });
-		!isDesktop && onClose();
 		clearPoiList();
-	}, [clearPoiList, info, isDesktop, isEsriLimitation, onClose, setDirections]);
+		if (!isDesktop) {
+			setBottomSheetMinHeight(BottomSheetHeights.routes.min);
+			setBottomSheetHeight(BottomSheetHeights.routes.max);
+			onClose(ResponsiveUIEnum.routes);
+		}
+	}, [
+		clearPoiList,
+		info,
+		isDesktop,
+		isEsriLimitation,
+		onClose,
+		setBottomSheetHeight,
+		setBottomSheetMinHeight,
+		setDirections
+	]);
 
 	const renderRouteInfo = useMemo(() => {
 		if (currentLocationData?.error || isCurrentLocationDisabled) {
@@ -237,7 +254,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 		() => (
 			<Flex ref={POICardRef} className={!isDesktop ? "poi-only-container" : ""} direction="column">
 				<View className="popup-icon-close-container">
-					<IconClose onClick={onClose} />
+					<IconClose onClick={() => onClose(ResponsiveUIEnum.explore)} />
 				</View>
 				{isDesktop && (
 					<View className="triangle-container">
