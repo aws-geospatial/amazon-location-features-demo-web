@@ -275,13 +275,12 @@ Resources:
               - !GetAtt CognitoIdentityPoolUnauthRole.Arn
               - !GetAtt AmazonLocationKinesisDeliveryRole.Arn
             Action:
-              - kms:Describe*
-              - kms:Enable*
-              - kms:List*
-              - kms:Put*
-              - kms:Update*
-              - kms:Get*
-              - kms:Delete*
+              - kms:Encrypt
+              - kms:Decrypt
+              - kms:CreateGrant
+              - kms:DescribeKey
+              - kms:ListAliases
+              - kms:ListKeys
             Resource: '*'
 
   AmazonLocationDemoKinesisStream:

@@ -68,7 +68,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		clearPoiList,
 		setSelectedMarker,
 		setHoveredMarker,
-		setSearchingState
+		setSearchingState,
+		setIsSearching
 	} = useAwsPlace();
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
@@ -122,6 +123,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 				clearTimeout(timeoutIdRef.current);
 			}
 
+			setIsSearching(true);
 			timeoutIdRef.current = setTimeout(async () => {
 				await search(
 					value,
@@ -131,9 +133,10 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 					TriggeredByEnum.PLACES_SEARCH,
 					action
 				);
+				setIsSearching(false);
 			}, 200);
 		},
-		[mapRef, search, setSearchingState]
+		[mapRef, search, setSearchingState, setIsSearching]
 	);
 
 	useEffect(() => {
