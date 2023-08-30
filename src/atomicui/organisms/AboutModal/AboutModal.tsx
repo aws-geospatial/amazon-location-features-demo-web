@@ -104,7 +104,7 @@ const AboutModal: React.FC<AboutModalProps> = ({ open, onClose }) => {
 				title: t("t&c.text"),
 				detailsComponent: (
 					<Flex gap={0} direction="column" padding="0rem 1.15rem" alignItems="center">
-						<Text className="more-secondary-text">
+						<Text className={`more-secondary-text ${isLtr ? "ltr" : "rtl"}`}>
 							{t(TERMS_PREFIX)}
 							<a href={TERMS} target="_blank" rel="noreferrer">
 								{t(TERMS_LINK_LABEL)}
@@ -115,7 +115,7 @@ const AboutModal: React.FC<AboutModalProps> = ({ open, onClose }) => {
 				)
 			}
 		],
-		[attributeEl?.innerText, handlePartnerLearnMore, t]
+		[attributeEl?.innerText, handlePartnerLearnMore, isLtr, t]
 	);
 
 	const renderOptionItems = useMemo(() => {
