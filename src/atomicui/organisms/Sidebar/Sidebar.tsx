@@ -183,6 +183,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 			<View className="button-wrapper">
 				{isUserAwsAccountConnected && (
 					<Button
+						data-testid={isAuthenticated ? "sign-out-button" : "sign-in-button"}
 						variation="primary"
 						fontFamily="AmazonEmber-Bold"
 						textAlign="center"
@@ -204,6 +205,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 				)}
 				{!isUserAwsAccountConnected && (
 					<Button
+						data-testid="connect-aws-account-button"
 						variation="primary"
 						fontFamily="AmazonEmber-Bold"
 						textAlign="center"
@@ -214,6 +216,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 				)}
 				{isUserAwsAccountConnected && !isAuthenticated && (
 					<Button
+						data-testid="disconnect-aws-account-button"
 						variation="primary"
 						fontFamily="AmazonEmber-Bold"
 						className="disconnect-button"

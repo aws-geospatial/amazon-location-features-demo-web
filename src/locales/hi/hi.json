@@ -3057,43 +3057,43 @@
     "text": "एक विकल्प चुनें"
   },
   "regions__us_east_1": {
-    "text": "यूएस ईस्ट (एन वर्जीनिया) us-east-1"
+    "text": "US East (N. Virginia) us-east-1"
   },
   "regions__us_east_2": {
-    "text": "यूएस ईस्ट (ओहायो) यूएस-ईस्ट-2"
+    "text": "US East (Ohio) us-east-2"
   },
   "regions__us_west_2": {
-    "text": "यूएस वेस्ट (ओरेगन) us-west -2"
+    "text": "US West (Oregon) us-west-2"
   },
   "regions__ap_south_1": {
-    "text": "एशिया पैसिफिक (मुंबई) एपी-साउथ-1"
+    "text": "Asia Pacific (Mumbai) ap-south-1"
   },
   "regions__ap_southeast_1": {
-    "text": "एशिया पैसिफिक (सिंगापुर) एपी-साउथईस्ट-1"
+    "text": "Asia Pacific (Singapore) ap-southeast-1"
   },
   "regions__ap_southeast_2": {
-    "text": "एशिया पैसिफिक (सिडनी) एपी-साउथईस्ट-2"
+    "text": "Asia Pacific (Sydney) ap-southeast-2"
   },
   "regions__ap_northeast_1": {
-    "text": "एशिया पैसिफिक (टोक्यो) एपी-नॉर्थईस्ट-1"
+    "text": "Asia Pacific (Tokyo) ap-northeast-1"
   },
   "regions__ca_central_1": {
-    "text": "कनाडा (सेंट्रल) ca-central-1"
+    "text": "Canada (Central) ca-central-1"
   },
   "regions__eu_central_1": {
-    "text": "यूरोप (फ्रैंकफर्ट) eu-central-1"
+    "text": "Europe (Frankfurt) eu-central-1"
   },
   "regions__eu_west_1": {
-    "text": "यूरोप (आयरलैंड) eu-west-1"
+    "text": "Europe (Ireland) eu-west-1"
   },
   "regions__eu_west_2": {
-    "text": "यूरोप (लंदन) eu-पश्चिम-2"
+    "text": "Europe (London) eu-west-2"
   },
   "regions__eu_north_1": {
-    "text": "यूरोप (स्टॉकहोम) eu-North-1"
+    "text": "Europe (Stockholm) eu-north-1"
   },
   "regions__sa_east_1": {
-    "text": "दक्षिण अमेरिका (साओ पाउलो) sa-east-1"
+    "text": "South America (São Paulo) sa-east-1"
   },
   "sign_in_modal__1": {
     "text": "साइन इन करना ज़रूरी है"
@@ -3394,5 +3394,164 @@
   },
   "regions__ap_southeast__region": {
     "text": "एशिया पैसिफिक"
+  },
+  "samples__js-map-style-change__title": {
+    "text": "मानचित्र शैलियों को स्विच करें"
+  },
+  "samples__js-map-style-change__bodyText": {
+    "text": "यह नमूना ऐप आपको विभिन्न मानचित्र शैलियों के बीच स्विच करने का तरीका दिखाता है। यह बेस मैप प्रदाता के रूप में Amazon Location Service के मैप्स और मैप रेंडरिंग लाइब्रेरी के रूप में MapLibre GL JS का उपयोग करता है।"
+  },
+  "samples__js-map-style-change__configure": {
+    "text": "index.html खोलें और अपनी Cognito Identity Pool ID दर्ज करने के लिए CloudFormation स्टैक आउटपुट का उपयोग करें।"
+  },
+  "samples__js-map-style-change__run": {
+    "text": "अपने ब्राउज़र में index.html खोलें।"
+  },
+  "samples__js-map-style-change__cleanUp": {
+    "text": "यदि आप इस वॉकथ्रू में बनाए गए सभी संसाधनों को हटाना चाहते हैं, तो `map-style-change` नामक CloudFormation स्टैक को हटा दें।"
+  },
+  "samples__js-map-with-geojson-line__title": {
+    "text": "वेब मैप में GeoJSON लाइन जोड़ें"
+  },
+  "samples__js-map-with-geojson-line__bodyText": {
+    "text": "यह नमूना ऐप्लिकेशन आपको दिखाता है कि वेब मैप में GeoJSON लाइन कैसे जोड़ी जाती है। यह बेस मैप प्रदाता के रूप में Amazon Location Service के Maps और मैप रेंडरिंग लाइब्रेरी के रूप में MapLibre GL JS का उपयोग करता है।"
+  },
+  "samples__js-map-with-geojson-line__configure": {
+    "text": "index.html खोलें और अपनी Cognito Identity Pool ID दर्ज करने के लिए CloudFormation स्टैक आउटपुट का उपयोग करें।"
+  },
+  "samples__js-map-with-geojson-line__run": {
+    "text": "अपने ब्राउज़र में index.html खोलें।"
+  },
+  "samples__js-map-with-geojson-line__cleanUp": {
+    "text": "यदि आप इस वॉकथ्रू में बनाए गए सभी संसाधनों को हटाना चाहते हैं, तो `geojson-line-example` नामक CloudFormation स्टैक को हटा दें।"
+  },
+  "samples__js-map-with-geojson-point__title": {
+    "text": "किसी वेब मैप में GeoJSON पॉइंट जोड़ें"
+  },
+  "samples__js-map-with-geojson-point__bodyText": {
+    "text": "यह नमूना ऐप्लिकेशन आपको दिखाता है कि वेब मैप में GeoJSON पॉइंट कैसे जोड़ा जाता है। यह बेस मैप प्रदाता के रूप में Amazon Location Service के Maps और मैप रेंडरिंग लाइब्रेरी के रूप में MapLibre GL JS का उपयोग करता है।"
+  },
+  "samples__js-map-with-geojson-point__configure": {
+    "text": "index.html खोलें और अपनी Cognito Identity Pool ID दर्ज करने के लिए CloudFormation स्टैक आउटपुट का उपयोग करें।"
+  },
+  "samples__js-map-with-geojson-point__run": {
+    "text": "अपने ब्राउज़र में index.html खोलें।"
+  },
+  "samples__js-map-with-geojson-point__cleanUp": {
+    "text": "यदि आप इस वॉकथ्रू में बनाए गए सभी संसाधनों को हटाना चाहते हैं, तो `geojson-point-example` नामक CloudFormation स्टैक को हटा दें।"
+  },
+  "samples__js-map-with-geojson-polygon__title": {
+    "text": "वेब मैप में GeoJSON पॉलीगॉन जोड़ें"
+  },
+  "samples__js-map-with-geojson-polygon__bodyText": {
+    "text": "यह नमूना ऐप्लिकेशन आपको दिखाता है कि वेब मैप में GeoJSON पॉलीगॉन कैसे जोड़ा जाता है। यह बेस मैप प्रदाता के रूप में Amazon Location Service के Maps और मैप रेंडरिंग लाइब्रेरी के रूप में MapLibre GL JS का उपयोग करता है।"
+  },
+  "samples__js-map-with-geojson-polygon__configure": {
+    "text": "index.html खोलें और अपनी Cognito Identity Pool ID दर्ज करने के लिए CloudFormation स्टैक आउटपुट का उपयोग करें।"
+  },
+  "samples__js-map-with-geojson-polygon__run": {
+    "text": "अपने ब्राउज़र में index.html खोलें।"
+  },
+  "samples__js-map-with-geojson-polygon__cleanUp": {
+    "text": "यदि आप इस वॉकथ्रू में बनाए गए सभी संसाधनों को हटाना चाहते हैं, तो `geojson-polygon-example` नामक CloudFormation स्टैक को हटा दें।"
+  },
+  "samples__js-map-with-marker-and-popup__title": {
+    "text": "वेब मैप में पॉपअप वाला मार्कर जोड़ें"
+  },
+  "samples__js-map-with-marker-and-popup__bodyText": {
+    "text": "यह नमूना ऐप्लिकेशन आपको दिखाता है कि वेब मैप में पॉपअप वाला मार्कर कैसे जोड़ा जाता है। यह बेस मैप प्रदाता के रूप में Amazon Location Service के Maps और मैप रेंडरिंग लाइब्रेरी के रूप में MapLibre GL JS का उपयोग करता है।"
+  },
+  "samples__js-map-with-marker-and-popup__configure": {
+    "text": "index.html खोलें और अपनी Cognito Identity Pool ID दर्ज करने के लिए CloudFormation स्टैक आउटपुट का उपयोग करें।"
+  },
+  "samples__js-map-with-marker-and-popup__run": {
+    "text": "अपने ब्राउज़र में index.html खोलें।"
+  },
+  "samples__js-map-with-marker-and-popup__cleanUp": {
+    "text": "यदि आप इस वॉकथ्रू में बनाए गए सभी संसाधनों को हटाना चाहते हैं, तो `marker-with-popup-example` नामक CloudFormation स्टैक को हटा दें।"
+  },
+  "samples__js-quick-start-using-cognito__title": {
+    "text": "Amazon Cognito के साथ वेब ऐप को प्रमाणित करने के लिए क्विक स्टार्ट वेब ऐप"
+  },
+  "samples__js-quick-start-using-cognito__bodyText": {
+    "text": "यह नमूना ऐप खोज कार्यक्षमता के साथ एक नक्शा प्रदर्शित करता है, जो Amazon Cognito के साथ प्रमाणित होता है"
+  },
+  "samples__js-quick-start-using-cognito__configure": {
+    "text": "main.js खोलें और अपनी Cognito Identity Pool ID दर्ज करने के लिए CloudFormation स्टैक आउटपुट का उपयोग करें।"
+  },
+  "samples__js-quick-start-using-cognito__run": {
+    "text": "अपने ब्राउज़र में quickstart.html खोलें।"
+  },
+  "samples__js-quick-start-using-cognito__cleanUp": {
+    "text": "यदि आप इस वॉकथ्रू में बनाए गए सभी संसाधनों को हटाना चाहते हैं, तो `quick-start-using-cognito-example` नामक CloudFormation स्टैक को हटा दें।"
+  },
+  "samples__js-simple-map__title": {
+    "text": "वेबपेज पर मैप दिखाएं"
+  },
+  "samples__js-simple-map__bodyText": {
+    "text": "यह नमूना ऐप आपको दिखाता है कि वेबपेज पर नक्शा कैसे प्रदर्शित किया जाता है। यह बेस मैप प्रदाता के रूप में Amazon Location Service के मैप्स और मैप रेंडरिंग लाइब्रेरी के रूप में MapLibre GL JS का उपयोग करता है।"
+  },
+  "samples__js-simple-map__configure": {
+    "text": "index.html खोलें और अपनी Cognito Identity Pool ID दर्ज करने के लिए CloudFormation स्टैक आउटपुट का उपयोग करें।"
+  },
+  "samples__js-simple-map__run": {
+    "text": "अपने ब्राउज़र में index.html खोलें।"
+  },
+  "samples__js-simple-map__cleanUp": {
+    "text": "यदि आप इस वॉकथ्रू में बनाए गए सभी संसाधनों को हटाना चाहते हैं, तो simple-map-example नामक CloudFormation स्टैक को हटा दें।"
+  },
+  "samples__react-map-with-amplify__title": {
+    "text": "React और AWS Amplify का उपयोग करके एक वेब मैप प्रदर्शित करें"
+  },
+  "samples__react-map-with-amplify__bodyText": {
+    "text": "यह उदाहरण दर्शाता है कि React और AWS Amplify UI का उपयोग करके वेब मैप कैसे प्रदर्शित किया जाए।"
+  },
+  "samples__react-map-with-amplify__tabsTitle": {
+    "text": "वेब मैप पर प्रतिक्रिया दें/प्रदर्शित करें"
+  },
+  "samples__react-map-with-amplify__configure": {
+    "text": "`.env.example` को `.env` में कॉपी करें और CloudFormation स्टैक के साथ पर्यावरण चर को पॉप्युलेट करें\nआउटपुट।"
+  },
+  "samples__react-map-with-amplify__run": {
+    "text": "इसके साथ [`localhost:3000`] (http://localhost:3000/) पर एक स्थानीय वेब सर्वर शुरू करने के लिए `npm start` चलाएँ\nउदाहरण दें और इसे ब्राउज़र में खोलें।"
+  },
+  "samples__react-map-with-amplify__cleanUp": {
+    "text": "इस वॉकथ्रू में बनाए गए सभी संसाधनों को निकालने के लिए, नामित CloudFormation स्टैक को हटा दें\n`रिएक्ट-मैप-विद-एम्पलीफाई`।"
+  },
+  "samples__react-map-with-geojson__title": {
+    "text": "React का उपयोग करके वेब मैप पर GeoJSON प्रदर्शित करें"
+  },
+  "samples__react-map-with-geojson__bodyText": {
+    "text": "यह उदाहरण दर्शाता है कि React और react-map-gl का उपयोग करके वेब मैप पर GeoJSON को कैसे प्रदर्शित किया जाए।"
+  },
+  "samples__react-map-with-geojson__tabsTitle": {
+    "text": "वेब मैप पर GeoJSON को React/प्रदर्शित करें"
+  },
+  "samples__react-map-with-geojson__configure": {
+    "text": "`.env.example` को `.env` में कॉपी करें और CloudFormation स्टैक के साथ पर्यावरण चर को पॉप्युलेट करें\nआउटपुट।"
+  },
+  "samples__react-map-with-geojson__run": {
+    "text": "इसके साथ [`localhost:3000`] (http://localhost:3000/) पर एक स्थानीय वेब सर्वर शुरू करने के लिए `npm start` चलाएँ\nउदाहरण दें और इसे ब्राउज़र में खोलें।"
+  },
+  "samples__react-map-with-geojson__cleanUp": {
+    "text": "इस वॉकथ्रू में बनाए गए सभी संसाधनों को निकालने के लिए, नामित CloudFormation स्टैक को हटा दें\n`react-map-with-geojson`।"
+  },
+  "samples__react-map-with-markers__title": {
+    "text": "React का उपयोग करके वेब मैप पर मार्कर प्रदर्शित करें"
+  },
+  "samples__react-map-with-markers__bodyText": {
+    "text": "इस उदाहरण में React और react-map-gl का उपयोग करके वेब मैप पर मार्कर प्रदर्शित करने का तरीका बताया गया है।"
+  },
+  "samples__react-map-with-markers__tabsTitle": {
+    "text": "वेब मैप पर रिएक्ट/डिस्प्ले मार्कर"
+  },
+  "samples__react-map-with-markers__configure": {
+    "text": "`.env.example` को `.env` में कॉपी करें और CloudFormation स्टैक के साथ पर्यावरण चर को पॉप्युलेट करें\nआउटपुट।"
+  },
+  "samples__react-map-with-markers__run": {
+    "text": "इसके साथ [`localhost:3000`] (http://localhost:3000/) पर एक स्थानीय वेब सर्वर शुरू करने के लिए `npm start` चलाएँ\nउदाहरण दें और इसे ब्राउज़र में खोलें।"
+  },
+  "samples__react-map-with-markers__cleanUp": {
+    "text": "इस वॉकथ्रू में बनाए गए सभी संसाधनों को निकालने के लिए, नामित CloudFormation स्टैक को हटा दें\n`react-map-with-geojson`।"
   }
 }

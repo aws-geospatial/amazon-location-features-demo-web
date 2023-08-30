@@ -70,9 +70,6 @@ const useAmplifyMap = () => {
 			setMapStyle: (mapStyle: EsriMapEnum | HereMapEnum | GrabMapEnum | OpenDataMapEnum) => {
 				setState({ mapStyle });
 			},
-			setAttributionText: (attributionText: string) => {
-				setState({ attributionText });
-			},
 			setIsCurrentLocationDisabled: (isCurrentLocationDisabled: boolean) => {
 				setState({ isCurrentLocationDisabled });
 			},

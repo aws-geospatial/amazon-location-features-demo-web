@@ -3053,43 +3053,43 @@
     "text": "选择一个选项"
   },
   "regions__us_east_1": {
-    "text": "美国东部（弗吉尼亚北部）us-east-1"
+    "text": "US East (N. Virginia) us-east-1"
   },
   "regions__us_east_2": {
-    "text": "美国东部（俄亥俄州）美国东部-2"
+    "text": "US East (Ohio) us-east-2"
   },
   "regions__us_west_2": {
-    "text": "美国西部（俄勒冈）us-west-2"
+    "text": "US West (Oregon) us-west-2"
   },
   "regions__ap_south_1": {
-    "text": "亚太地区（孟买）ap-south-1"
+    "text": "Asia Pacific (Mumbai) ap-south-1"
   },
   "regions__ap_southeast_1": {
-    "text": "亚太地区（新加坡）ap-southeast-1"
+    "text": "Asia Pacific (Singapore) ap-southeast-1"
   },
   "regions__ap_southeast_2": {
-    "text": "亚太地区（悉尼）ap-southeast-2"
+    "text": "Asia Pacific (Sydney) ap-southeast-2"
   },
   "regions__ap_northeast_1": {
-    "text": "亚太地区（东京）ap-northeast-1"
+    "text": "Asia Pacific (Tokyo) ap-northeast-1"
   },
   "regions__ca_central_1": {
-    "text": "加拿大（中部）ca-central-1"
+    "text": "Canada (Central) ca-central-1"
   },
   "regions__eu_central_1": {
-    "text": "欧洲（法兰克福）eu-central-1"
+    "text": "Europe (Frankfurt) eu-central-1"
   },
   "regions__eu_west_1": {
-    "text": "欧洲（爱尔兰）eu-west-1"
+    "text": "Europe (Ireland) eu-west-1"
   },
   "regions__eu_west_2": {
-    "text": "欧洲（伦敦）eu-west-2"
+    "text": "Europe (London) eu-west-2"
   },
   "regions__eu_north_1": {
-    "text": "欧洲（斯德哥尔摩）欧盟-北部-1"
+    "text": "Europe (Stockholm) eu-north-1"
   },
   "regions__sa_east_1": {
-    "text": "南美洲（圣保罗）sa-east-1"
+    "text": "South America (São Paulo) sa-east-1"
   },
   "sign_in_modal__1": {
     "text": "需要登录"
@@ -3390,5 +3390,164 @@
   },
   "regions__ap_southeast__region": {
     "text": "亚太地区"
+  },
+  "samples__js-map-style-change__title": {
+    "text": "切换地图样式"
+  },
+  "samples__js-map-style-change__bodyText": {
+    "text": "此示例应用程序向您展示了如何在不同的地图样式之间切换。它使用亚马逊定位服务的地图作为底图提供商，使用MapLibre GL JS作为地图渲染库。"
+  },
+  "samples__js-map-style-change__configure": {
+    "text": "打开 index.html 并使用 CloudFormation 堆栈输出输入你的 Cognito 身份池 ID。"
+  },
+  "samples__js-map-style-change__run": {
+    "text": "在浏览器中打开 index.html。"
+  },
+  "samples__js-map-style-change__cleanUp": {
+    "text": "如果您想移除在本演练中创建的所有资源，请删除名为 “地图样式更改” 的 CloudFormation 堆栈。"
+  },
+  "samples__js-map-with-geojson-line__title": {
+    "text": "向 Web 地图添加 GeoJSON 线"
+  },
+  "samples__js-map-with-geojson-line__bodyText": {
+    "text": "此示例应用程序向您展示了如何向 Web 地图添加 GeoJSON 线。它使用亚马逊定位服务的地图作为底图提供商，使用MapLibre GL JS作为地图渲染库。"
+  },
+  "samples__js-map-with-geojson-line__configure": {
+    "text": "打开 index.html 并使用 CloudFormation 堆栈输出输入你的 Cognito 身份池 ID。"
+  },
+  "samples__js-map-with-geojson-line__run": {
+    "text": "在浏览器中打开 index.html。"
+  },
+  "samples__js-map-with-geojson-line__cleanUp": {
+    "text": "如果您想移除在本演练中创建的所有资源，请删除名为 “geojson-line-example” 的 CloudFormation 堆栈。"
+  },
+  "samples__js-map-with-geojson-point__title": {
+    "text": "向 Web 地图添加 GeoJSON 点"
+  },
+  "samples__js-map-with-geojson-point__bodyText": {
+    "text": "此示例应用程序向您展示了如何向 Web 地图添加 GeoJSON 点。它使用亚马逊定位服务的地图作为底图提供商，使用MapLibre GL JS作为地图渲染库。"
+  },
+  "samples__js-map-with-geojson-point__configure": {
+    "text": "打开 index.html 并使用 CloudFormation 堆栈输出输入你的 Cognito 身份池 ID。"
+  },
+  "samples__js-map-with-geojson-point__run": {
+    "text": "在浏览器中打开 index.html。"
+  },
+  "samples__js-map-with-geojson-point__cleanUp": {
+    "text": "如果您想移除在本演练中创建的所有资源，请删除名为 “geojson-point-example” 的 CloudFormation 堆栈。"
+  },
+  "samples__js-map-with-geojson-polygon__title": {
+    "text": "将 GeoJSON 多边形添加到 Web 地图"
+  },
+  "samples__js-map-with-geojson-polygon__bodyText": {
+    "text": "此示例应用程序向您展示了如何向 Web 地图添加 GeoJSON 多边形。它使用亚马逊定位服务的地图作为底图提供商，使用MapLibre GL JS作为地图渲染库。"
+  },
+  "samples__js-map-with-geojson-polygon__configure": {
+    "text": "打开 index.html 并使用 CloudFormation 堆栈输出输入你的 Cognito 身份池 ID。"
+  },
+  "samples__js-map-with-geojson-polygon__run": {
+    "text": "在浏览器中打开 index.html。"
+  },
+  "samples__js-map-with-geojson-polygon__cleanUp": {
+    "text": "如果您想移除在本演练中创建的所有资源，请删除名为 “geojson-polygon-example” 的 CloudFormation 堆栈。"
+  },
+  "samples__js-map-with-marker-and-popup__title": {
+    "text": "向 Web 地图添加带有弹出窗口的标记"
+  },
+  "samples__js-map-with-marker-and-popup__bodyText": {
+    "text": "此示例应用程序向您展示如何向 Web 地图添加带有弹出窗口的标记。它使用亚马逊定位服务的地图作为底图提供商，使用MapLibre GL JS作为地图渲染库。"
+  },
+  "samples__js-map-with-marker-and-popup__configure": {
+    "text": "打开 index.html 并使用 CloudFormation 堆栈输出输入你的 Cognito 身份池 ID。"
+  },
+  "samples__js-map-with-marker-and-popup__run": {
+    "text": "在浏览器中打开 index.html。"
+  },
+  "samples__js-map-with-marker-and-popup__cleanUp": {
+    "text": "如果您想移除在本演练中创建的所有资源，请删除名为 “marker-with-popup-example” 的 CloudFormation 堆栈。"
+  },
+  "samples__js-quick-start-using-cognito__title": {
+    "text": "快速入门 Web 应用程序使用亚马逊 Cognito 进行身份验证"
+  },
+  "samples__js-quick-start-using-cognito__bodyText": {
+    "text": "此示例应用程序显示了一张具有搜索功能的地图，该地图通过 Amazon Cognito 进行身份验证"
+  },
+  "samples__js-quick-start-using-cognito__configure": {
+    "text": "打开 main.js 并使用 CloudFormation 堆栈输出输入你的 Cognito 身份池 ID。"
+  },
+  "samples__js-quick-start-using-cognito__run": {
+    "text": "在浏览器中打开 quickstart.html。"
+  },
+  "samples__js-quick-start-using-cognito__cleanUp": {
+    "text": "如果您想删除本演练中创建的所有资源，请删除名为 “使用认知示例快速入门” 的 CloudFormation 堆栈。"
+  },
+  "samples__js-simple-map__title": {
+    "text": "在网页上显示地图"
+  },
+  "samples__js-simple-map__bodyText": {
+    "text": "此示例应用程序向您展示了如何在网页上显示地图。它使用亚马逊定位服务的地图作为底图提供商，使用MapLibre GL JS作为地图渲染库。"
+  },
+  "samples__js-simple-map__configure": {
+    "text": "打开 index.html 并使用 CloudFormation 堆栈输出输入你的 Cognito 身份池 ID。"
+  },
+  "samples__js-simple-map__run": {
+    "text": "在浏览器中打开 index.html。"
+  },
+  "samples__js-simple-map__cleanUp": {
+    "text": "如果您想移除在本演练中创建的所有资源，请删除名为 simple-map-example 的 CloudFormation 堆栈。"
+  },
+  "samples__react-map-with-amplify__title": {
+    "text": "使用 React 和 AWS Amplify 显示 Web 地图"
+  },
+  "samples__react-map-with-amplify__bodyText": {
+    "text": "此示例演示了如何使用 React 和 AWS Amplify 用户界面显示 Web 地图。"
+  },
+  "samples__react-map-with-amplify__tabsTitle": {
+    "text": "React/显示 Web 地图"
+  },
+  "samples__react-map-with-amplify__configure": {
+    "text": "将 “.env.example” 复制到 “.env”，然后用 CloudFormation 堆栈填充环境变量\n输出。"
+  },
+  "samples__react-map-with-amplify__run": {
+    "text": "运行 `npm start` 用这个在 [`localhost: 3000`] (http://localhost:3000/) 上启动本地 Web 服务器\n示例，然后在浏览器中将其打开。"
+  },
+  "samples__react-map-with-amplify__cleanUp": {
+    "text": "要移除在本演练中创建的所有资源，请删除名为的 CloudFormation 堆栈\n`使用放大器的反应地图`。"
+  },
+  "samples__react-map-with-geojson__title": {
+    "text": "使用 React 在网络地图上显示 GeoJSON"
+  },
+  "samples__react-map-with-geojson__bodyText": {
+    "text": "此示例演示了如何使用 React 和 react-map-gl 在 Web 地图上显示 GeoJSON。"
+  },
+  "samples__react-map-with-geojson__tabsTitle": {
+    "text": "React/在网络地图上显示 GeoJSON"
+  },
+  "samples__react-map-with-geojson__configure": {
+    "text": "将 “.env.example” 复制到 “.env”，然后用 CloudFormation 堆栈填充环境变量\n输出。"
+  },
+  "samples__react-map-with-geojson__run": {
+    "text": "运行 `npm start` 用这个在 [`localhost: 3000`] (http://localhost:3000/) 上启动本地 Web 服务器\n示例，然后在浏览器中将其打开。"
+  },
+  "samples__react-map-with-geojson__cleanUp": {
+    "text": "要移除在本演练中创建的所有资源，请删除名为的 CloudFormation 堆栈\n`用geojson反应地图`。"
+  },
+  "samples__react-map-with-markers__title": {
+    "text": "使用 React 在 Web 地图上显示标记"
+  },
+  "samples__react-map-with-markers__bodyText": {
+    "text": "此示例演示了如何使用 React 和 react-map-gl 在 Web 地图上显示标记。"
+  },
+  "samples__react-map-with-markers__tabsTitle": {
+    "text": "React/在 Web 地图上显示标记"
+  },
+  "samples__react-map-with-markers__configure": {
+    "text": "将 “.env.example” 复制到 “.env”，然后用 CloudFormation 堆栈填充环境变量\n输出。"
+  },
+  "samples__react-map-with-markers__run": {
+    "text": "运行 `npm start` 用这个在 [`localhost: 3000`] (http://localhost:3000/) 上启动本地 Web 服务器\n示例，然后在浏览器中将其打开。"
+  },
+  "samples__react-map-with-markers__cleanUp": {
+    "text": "要移除在本演练中创建的所有资源，请删除名为的 CloudFormation 堆栈\n`用geojson反应地图`。"
   }
 }

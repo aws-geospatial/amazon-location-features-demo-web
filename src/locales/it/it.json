@@ -3057,43 +3057,43 @@
     "text": "Seleziona un'opzione"
   },
   "regions__us_east_1": {
-    "text": "Stati Uniti orientali (Virginia del Nord) us-east-1"
+    "text": "US East (N. Virginia) us-east-1"
   },
   "regions__us_east_2": {
-    "text": "Stati Uniti orientali (Ohio) us-east-2"
+    "text": "US East (Ohio) us-east-2"
   },
   "regions__us_west_2": {
-    "text": "Stati Uniti occidentali (Oregon) us-west-2"
+    "text": "US West (Oregon) us-west-2"
   },
   "regions__ap_south_1": {
-    "text": "Asia Pacifico (Mumbai) ap-south-1"
+    "text": "Asia Pacific (Mumbai) ap-south-1"
   },
   "regions__ap_southeast_1": {
-    "text": "Asia Pacifico (Singapore) ap-southeast-1"
+    "text": "Asia Pacific (Singapore) ap-southeast-1"
   },
   "regions__ap_southeast_2": {
-    "text": "Asia Pacifico (Sydney) ap-southeast-2"
+    "text": "Asia Pacific (Sydney) ap-southeast-2"
   },
   "regions__ap_northeast_1": {
-    "text": "Asia Pacifico (Tokyo) ap-northeast-1"
+    "text": "Asia Pacific (Tokyo) ap-northeast-1"
   },
   "regions__ca_central_1": {
-    "text": "Canada (centrale) ca-central-1"
+    "text": "Canada (Central) ca-central-1"
   },
   "regions__eu_central_1": {
-    "text": "Europa (Francoforte) eu-central-1"
+    "text": "Europe (Frankfurt) eu-central-1"
   },
   "regions__eu_west_1": {
-    "text": "Europa (Irlanda) eu-west-1"
+    "text": "Europe (Ireland) eu-west-1"
   },
   "regions__eu_west_2": {
-    "text": "Europa (Londra) eu-west-2"
+    "text": "Europe (London) eu-west-2"
   },
   "regions__eu_north_1": {
-    "text": "Europa (Stoccolma) eu-north-1"
+    "text": "Europe (Stockholm) eu-north-1"
   },
   "regions__sa_east_1": {
-    "text": "America del Sud (San Paolo) sa-east-1"
+    "text": "South America (São Paulo) sa-east-1"
   },
   "sign_in_modal__1": {
     "text": "È necessario effettuare l'accesso"
@@ -3394,5 +3394,164 @@
   },
   "regions__ap_southeast__region": {
     "text": "Asia-Pacifico"
+  },
+  "samples__js-map-style-change__title": {
+    "text": "Cambia gli stili delle mappe"
+  },
+  "samples__js-map-style-change__bodyText": {
+    "text": "Questa app di esempio mostra come passare da uno stile di mappa all'altro. Utilizza Maps di Amazon Location Service come fornitore di mappe di base e MapLibre GL JS come libreria per il rendering delle mappe."
+  },
+  "samples__js-map-style-change__configure": {
+    "text": "Apri index.html e utilizza gli output dello stack CloudFormation per inserire il tuo ID Cognito Identity Pool."
+  },
+  "samples__js-map-style-change__run": {
+    "text": "Apri index.html nel tuo browser."
+  },
+  "samples__js-map-style-change__cleanUp": {
+    "text": "Se desideri rimuovere tutte le risorse create in questa procedura dettagliata, elimina lo stack CloudFormation chiamato `map-style-change`."
+  },
+  "samples__js-map-with-geojson-line__title": {
+    "text": "Aggiungere una riga GeoJSON a una mappa web"
+  },
+  "samples__js-map-with-geojson-line__bodyText": {
+    "text": "Questa app di esempio mostra come aggiungere una riga GeoJSON a una mappa web. Utilizza Maps di Amazon Location Service come fornitore di mappe di base e MapLibre GL JS come libreria per il rendering delle mappe."
+  },
+  "samples__js-map-with-geojson-line__configure": {
+    "text": "Apri index.html e utilizza gli output dello stack CloudFormation per inserire il tuo ID Cognito Identity Pool."
+  },
+  "samples__js-map-with-geojson-line__run": {
+    "text": "Apri index.html nel tuo browser."
+  },
+  "samples__js-map-with-geojson-line__cleanUp": {
+    "text": "Se desideri rimuovere tutte le risorse create in questa procedura dettagliata, elimina lo stack CloudFormation chiamato `geojson-line-example`."
+  },
+  "samples__js-map-with-geojson-point__title": {
+    "text": "Aggiungere un punto GeoJSON a una mappa web"
+  },
+  "samples__js-map-with-geojson-point__bodyText": {
+    "text": "Questa app di esempio mostra come aggiungere un punto GeoJSON a una mappa web. Utilizza Maps di Amazon Location Service come fornitore di mappe di base e MapLibre GL JS come libreria per il rendering delle mappe."
+  },
+  "samples__js-map-with-geojson-point__configure": {
+    "text": "Apri index.html e utilizza gli output dello stack CloudFormation per inserire il tuo ID Cognito Identity Pool."
+  },
+  "samples__js-map-with-geojson-point__run": {
+    "text": "Apri index.html nel tuo browser."
+  },
+  "samples__js-map-with-geojson-point__cleanUp": {
+    "text": "Se desideri rimuovere tutte le risorse create in questa procedura dettagliata, elimina lo stack CloudFormation chiamato `geojson-point-example`."
+  },
+  "samples__js-map-with-geojson-polygon__title": {
+    "text": "Aggiungere un poligono GeoJSON a una mappa web"
+  },
+  "samples__js-map-with-geojson-polygon__bodyText": {
+    "text": "Questa app di esempio mostra come aggiungere un poligono GeoJSON a una mappa web. Utilizza Maps di Amazon Location Service come fornitore di mappe di base e MapLibre GL JS come libreria per il rendering delle mappe."
+  },
+  "samples__js-map-with-geojson-polygon__configure": {
+    "text": "Apri index.html e utilizza gli output dello stack CloudFormation per inserire il tuo ID Cognito Identity Pool."
+  },
+  "samples__js-map-with-geojson-polygon__run": {
+    "text": "Apri index.html nel tuo browser."
+  },
+  "samples__js-map-with-geojson-polygon__cleanUp": {
+    "text": "Se desideri rimuovere tutte le risorse create in questa procedura dettagliata, elimina lo stack CloudFormation chiamato `geojson-polygon-example`."
+  },
+  "samples__js-map-with-marker-and-popup__title": {
+    "text": "Aggiungere un marker con un popup a una mappa web"
+  },
+  "samples__js-map-with-marker-and-popup__bodyText": {
+    "text": "Questa app di esempio mostra come aggiungere un marker con un popup a una mappa web. Utilizza Maps di Amazon Location Service come fornitore di mappe di base e MapLibre GL JS come libreria per il rendering delle mappe."
+  },
+  "samples__js-map-with-marker-and-popup__configure": {
+    "text": "Apri index.html e utilizza gli output dello stack CloudFormation per inserire il tuo ID Cognito Identity Pool."
+  },
+  "samples__js-map-with-marker-and-popup__run": {
+    "text": "Apri index.html nel tuo browser."
+  },
+  "samples__js-map-with-marker-and-popup__cleanUp": {
+    "text": "Se desideri rimuovere tutte le risorse create in questa procedura dettagliata, elimina lo stack CloudFormation chiamato `marker-with-popup-example`."
+  },
+  "samples__js-quick-start-using-cognito__title": {
+    "text": "Autenticazione rapida delle app Web con Amazon Cognito"
+  },
+  "samples__js-quick-start-using-cognito__bodyText": {
+    "text": "Questa app di esempio mostra una mappa con funzionalità di ricerca, autenticata con Amazon Cognito"
+  },
+  "samples__js-quick-start-using-cognito__configure": {
+    "text": "Apri main.js e utilizza gli output dello stack CloudFormation per inserire il tuo ID Cognito Identity Pool."
+  },
+  "samples__js-quick-start-using-cognito__run": {
+    "text": "Apri quickstart.html nel tuo browser."
+  },
+  "samples__js-quick-start-using-cognito__cleanUp": {
+    "text": "Se desideri rimuovere tutte le risorse create in questa procedura dettagliata, elimina lo stack CloudFormation chiamato `quick-start-using-cognito-example`."
+  },
+  "samples__js-simple-map__title": {
+    "text": "Visualizzare una mappa su una pagina Web"
+  },
+  "samples__js-simple-map__bodyText": {
+    "text": "Questa app di esempio mostra come visualizzare una mappa su una pagina web. Utilizza Maps di Amazon Location Service come fornitore di mappe di base e MapLibre GL JS come libreria per il rendering delle mappe."
+  },
+  "samples__js-simple-map__configure": {
+    "text": "Apri index.html e utilizza gli output dello stack CloudFormation per inserire il tuo ID Cognito Identity Pool."
+  },
+  "samples__js-simple-map__run": {
+    "text": "Apri index.html nel tuo browser."
+  },
+  "samples__js-simple-map__cleanUp": {
+    "text": "Se desideri rimuovere tutte le risorse create in questa procedura dettagliata, elimina lo stack CloudFormation chiamato simple-map-example."
+  },
+  "samples__react-map-with-amplify__title": {
+    "text": "Visualizza una mappa Web utilizzando React e AWS Amplify"
+  },
+  "samples__react-map-with-amplify__bodyText": {
+    "text": "Questo esempio dimostra come visualizzare una mappa Web utilizzando React e l'interfaccia utente di AWS Amplify."
+  },
+  "samples__react-map-with-amplify__tabsTitle": {
+    "text": "React//Visualizza una mappa web"
+  },
+  "samples__react-map-with-amplify__configure": {
+    "text": "Copia `.env.example` in `.env` e popola le variabili di ambiente con lo stack CloudFormation\nuscite."
+  },
+  "samples__react-map-with-amplify__run": {
+    "text": "Esegui `npm start` per avviare un server web locale su [`localhost:3000`] (http://localhost:3000/) con questo\nesempio e aprilo in un browser."
+  },
+  "samples__react-map-with-amplify__cleanUp": {
+    "text": "Per rimuovere tutte le risorse create in questa procedura dettagliata, elimina lo stack CloudFormation denominato\n`react-map-with-amplify`."
+  },
+  "samples__react-map-with-geojson__title": {
+    "text": "Visualizza GeoJSON su una mappa web usando React"
+  },
+  "samples__react-map-with-geojson__bodyText": {
+    "text": "Questo esempio dimostra come visualizzare GeoJSON su una mappa web usando React e react-map-gl."
+  },
+  "samples__react-map-with-geojson__tabsTitle": {
+    "text": "React//Visualizza GeoJSON su una mappa web"
+  },
+  "samples__react-map-with-geojson__configure": {
+    "text": "Copia `.env.example` in `.env` e popola le variabili di ambiente con lo stack CloudFormation\nuscite."
+  },
+  "samples__react-map-with-geojson__run": {
+    "text": "Esegui `npm start` per avviare un server web locale su [`localhost:3000`] (http://localhost:3000/) con questo\nesempio e aprilo in un browser."
+  },
+  "samples__react-map-with-geojson__cleanUp": {
+    "text": "Per rimuovere tutte le risorse create in questa procedura dettagliata, elimina lo stack CloudFormation denominato\n`react-map-with-geojson`."
+  },
+  "samples__react-map-with-markers__title": {
+    "text": "Visualizza i marker su una mappa web usando React"
+  },
+  "samples__react-map-with-markers__bodyText": {
+    "text": "Questo esempio dimostra come visualizzare i marker su una mappa web usando React e react-map-gl."
+  },
+  "samples__react-map-with-markers__tabsTitle": {
+    "text": "React//Visualizza i marker su una mappa web"
+  },
+  "samples__react-map-with-markers__configure": {
+    "text": "Copia `.env.example` in `.env` e popola le variabili di ambiente con lo stack CloudFormation\nuscite."
+  },
+  "samples__react-map-with-markers__run": {
+    "text": "Esegui `npm start` per avviare un server web locale su [`localhost:3000`] (http://localhost:3000/) con questo\nesempio e aprilo in un browser."
+  },
+  "samples__react-map-with-markers__cleanUp": {
+    "text": "Per rimuovere tutte le risorse create in questa procedura dettagliata, elimina lo stack CloudFormation denominato\n`react-map-with-geojson`."
   }
 }

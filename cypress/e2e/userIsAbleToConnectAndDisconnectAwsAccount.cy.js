@@ -4,21 +4,21 @@
 describe("Connecting and Disconnecting AWS account", () => {
 	beforeEach(() => {
 		cy.visitDomain(`${Cypress.env("WEB_DOMAIN")}/demo`);
-		cy.get('[id="Icon"]').click();
+		cy.get('[data-testid="hamburger-menu"]').click();
 	});
 
 	it("should allow user to connect, sign-in, sign-out and disconnect AWS account from sidebar", () => {
-		cy.contains("Connect AWS Account").click();
+		cy.get('[data-testid="connect-aws-account-button"]').click();
 		cy.wait(2000);
 		cy.get('[placeholder="Enter IdentityPoolId"]').type(`${Cypress.env("IDENTITY_POOL_ID")}`);
 		cy.get('[placeholder="Enter UserDomain"]').type(`${Cypress.env("USER_DOMAIN")}`);
 		cy.get('[placeholder="Enter UserPoolClientId"]').type(`${Cypress.env("USER_POOL_CLIENT_ID")}`);
 		cy.get('[placeholder="Enter UserPoolId"]').type(`${Cypress.env("USER_POOL_ID")}`);
 		cy.get('[placeholder="Enter WebSocketUrl"]').type(`${Cypress.env("WEB_SOCKET_URL")}`);
-		cy.get('[type="button"]').eq(3).click();
+		cy.get('[data-testid="connect-button"]').click();
 		cy.wait(5000);
 		cy.get("div").should("contain", "Your AWS account is now connected.");
-		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
+		cy.get('[data-testid="sign-in-button"]').click();
 		cy.wait(2000);
 		cy.origin(`${Cypress.env("USER_DOMAIN")}`, () => {
 			cy.get(".modal-content.background-customizable.modal-content-mobile.visible-md.visible-lg").then(els => {
@@ -36,17 +36,35 @@ describe("Connecting and Disconnecting AWS account", () => {
 			});
 		});
 		cy.wait(5000);
-		cy.get('[id="Icon"]').click();
-		cy.contains("Sign out").should("exist");
-		cy.contains("Sign out").click();
+		cy.get('[data-testid="hamburger-menu"]').click();
+
+		cy.get("#root").then($root => {
+			const root = $root.find('[class="amplify-button amplify-field-group__control amplify-button--primary"]');
+			root.length && root[0].innerText === "Sign in"
+				? root[0].click()
+				: cy.get('[data-testid="hamburger-menu"]').click();
+		});
 		cy.wait(5000);
-		cy.get('[id="Icon"]').click();
-		cy.contains("Disconnect AWS Account").should("exist");
-		cy.contains("Disconnect AWS Account").click();
+
+		cy.get('[data-testid="hamburger-menu"]').click();
+		cy.get('[data-testid="sign-out-button"]').click();
+		cy.wait(5000);
+		cy.get('[data-testid="hamburger-menu"]').click();
+
+		cy.get("#root").then($root => {
+			const root = $root.find('[class="amplify-button amplify-field-group__control amplify-button--primary"]');
+			root.length && root[0].innerText === "Sign out"
+				? root[0].click()
+				: cy.get('[data-testid="hamburger-menu"]').click();
+		});
+		cy.wait(5000);
+
+		cy.get('[data-testid="hamburger-menu"]').click();
+		cy.get('[data-testid="disconnect-aws-account-button"]').click();
 		cy.wait(10000);
-		cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary"]').click();
+		cy.get('[data-testid="welcome-modal-continue-button"]').click();
 		cy.wait(5000);
-		cy.get('[id="Icon"]').click();
-		cy.get("div").should("contain", "Connect AWS Account");
+		cy.get('[data-testid="hamburger-menu"]').click();
+		cy.get('[data-testid="connect-aws-account-button"]').should("exist");
 	});
 });

@@ -119,6 +119,7 @@ const DropdownEl: React.FC<DropdownElProps> = ({
 									style={{ display: "flex", justifyContent: isLtr ? "start" : "end" }}
 									onChange={() => isCheckbox && handleClick(option)}
 									onClick={() => !isCheckbox && handleClick(option)}
+									dir={langDir}
 								>
 									{isCheckbox ? (
 										<CheckboxField

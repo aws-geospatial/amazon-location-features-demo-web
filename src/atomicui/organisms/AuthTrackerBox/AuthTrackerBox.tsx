@@ -81,6 +81,7 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({ mapRef, setShowAuthTrac
 		setShowAuthTrackerBox(false);
 		subscription?.unsubscribe();
 		PubSub.removePluggable("AWSIoTProvider");
+		window.location.reload();
 	};
 
 	const onTrackerMarkerChange = (type: TrackerType) => {
@@ -263,7 +264,7 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({ mapRef, setShowAuthTrac
 						{t("tracker.text")}
 					</Text>
 					<Flex gap={0} alignItems="center">
-						<Flex className="tracking-card-close" onClick={onClose}>
+						<Flex data-testid="auth-tracker-box-close" className="tracking-card-close" onClick={onClose}>
 							<IconClose />
 						</Flex>
 					</Flex>
