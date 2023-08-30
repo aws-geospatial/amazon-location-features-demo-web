@@ -174,11 +174,6 @@ const ResponsiveBottomSheet: FC<IProps> = ({ SearchBoxEl, MapButtons, RouteBox }
 					header={<Flex>{bottomSheetHeader(ui)}</Flex>}
 					className={`bottom-sheet ${isTablet ? "tablet" : "mobile"} 
 					`}
-					// ${
-					// 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// 	// @ts-ignore
-					// 	ui && BottomSheetHeights[ui].min === bottomSheetCurrentHeight ? "bottom-sheet--collapsed" : ""
-					// 	}
 					data-amplify-theme="aws-location-theme"
 				>
 					{bottomSheetBody(ui)}

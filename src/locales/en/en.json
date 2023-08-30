@@ -3553,5 +3553,11 @@
 	},
 	"samples__react-map-with-markers__cleanUp": {
 		"text": "To remove all of the resources created in this walkthrough, delete the CloudFormation stack named\n`react-map-with-geojson`."
+	},
+	"explore__connect_aws_account": {
+		"text": "Connect to AWS"
+	},
+	"explore__connect_description": {
+		"text": "Access Tracking and Geofence features by connecting to AWS CloudFormation"
 	}
 }

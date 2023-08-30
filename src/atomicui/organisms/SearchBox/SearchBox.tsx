@@ -5,6 +5,7 @@ import React, { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState }
 
 import { Autocomplete, Button, ComboBoxOption, Flex, Placeholder, Text, View } from "@aws-amplify/ui-react";
 import { IconActionMenu, IconClose, IconDirections, IconPin, IconSearch } from "@demo/assets";
+import VirtualizedList from "@demo/atomicui/atoms/VirtualizedList/VirtualizedList";
 import { InputField, Marker, NotFoundCard, SuggestionMarker } from "@demo/atomicui/molecules";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useAmplifyMap, useAwsPlace, useBottomSheet } from "@demo/hooks";
@@ -18,7 +19,6 @@ import { LngLat } from "mapbox-gl";
 import { useTranslation } from "react-i18next";
 import { MapRef } from "react-map-gl";
 import { Tooltip } from "react-tooltip";
-import { List, ListRowProps } from "react-virtualized";
 import "./styles.scss";
 
 const { METRIC } = MapUnitEnum;
@@ -350,30 +350,6 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		[handleSearch, options, setBottomSheetHeight, setBottomSheetMinHeight, value]
 	);
 
-	function rowRenderer({ key, index, style }: ListRowProps) {
-		if (!options?.length) return null;
-
-		return (
-			<div
-				key={key}
-				style={style}
-				onClick={() => {
-					selectSuggestion({
-						id: options[index].id,
-						text: !!options[index]?.placeid ? value : options[index].label,
-						label: options[index].label,
-						placeid: options[index]?.placeid
-					});
-					setBottomSheetMinHeight(BottomSheetHeights.search.min);
-					setBottomSheetHeight(BottomSheetHeights.search.min);
-				}}
-				className="option-wrapper"
-			>
-				{renderOption(options[index])}
-			</div>
-		);
-	}
-
 	return (
 		<>
 			{ui !== ResponsiveUIEnum.poi_card && !POICard ? (
@@ -457,16 +433,26 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 										maxHeight={bottomSheetCurrentHeight}
 										paddingBottom={!!options?.length ? "5.1rem" : ""}
 									>
-										{options?.length && (
-											<List
-												width={300}
-												height={bottomSheetCurrentHeight}
-												rowCount={options?.length || 0}
-												rowHeight={65}
-												rowRenderer={rowRenderer}
-												overscanRowCount={20}
-											/>
-										)}
+										{/* <VirtualizedList listData={options?.map(o => renderOption(o)) || []} /> */}
+										{!!options?.length &&
+											options.map((option, i) => (
+												<div
+													key={i}
+													onClick={() => {
+														selectSuggestion({
+															id: option.id,
+															text: !!option?.placeid ? value : option.label,
+															label: option.label,
+															placeid: option?.placeid
+														});
+														setBottomSheetMinHeight(BottomSheetHeights.search.min);
+														setBottomSheetHeight(BottomSheetHeights.search.min);
+													}}
+													className="option-wrapper"
+												>
+													{renderOption(option)}
+												</div>
+											))}
 									</Flex>
 								)}
 							</Flex>
