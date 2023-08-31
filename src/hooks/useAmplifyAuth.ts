@@ -11,6 +11,7 @@ import { AuthTokensType, ConnectFormValuesType, ToastType } from "@demo/types";
 import { EventTypeEnum, RegionEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
 import { errorHandler } from "@demo/utils/errorHandler";
+import { getDomainName } from "@demo/utils/getDomainName";
 import { clearStorage } from "@demo/utils/localstorageUtils";
 import { setClosestRegion } from "@demo/utils/regionUtils";
 import { Amplify, Auth } from "aws-amplify";
@@ -160,7 +161,7 @@ const useAmplifyAuth = () => {
 								userPoolId,
 								userPoolWebClientId,
 								oauth: {
-									domain,
+									domain: getDomainName(domain),
 									scope: ["email", "openid", "profile"],
 									redirectSignIn: `${window.location.origin}${DEMO}`,
 									redirectSignOut: `${window.location.origin}${DEMO}`,
@@ -202,7 +203,7 @@ const useAmplifyAuth = () => {
 				setState({
 					identityPoolId: IdentityPoolId,
 					region: IdentityPoolId.split(":")[0],
-					userDomain: UserDomain.slice(8),
+					userDomain: getDomainName(UserDomain),
 					userPoolClientId: UserPoolClientId,
 					userPoolId: UserPoolId,
 					webSocketUrl: WebSocketUrl
