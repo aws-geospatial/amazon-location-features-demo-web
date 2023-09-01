@@ -15,7 +15,7 @@ import {
 	Text,
 	View
 } from "@aws-amplify/ui-react";
-import { IconClose, IconFilterFunnel, IconGeofencePlusSolid, IconMapSolid, IconSearch } from "@demo/assets";
+import { IconClose, IconFilterFunnel, IconGeofencePlusSolid, IconMapSolid, IconRadar, IconSearch } from "@demo/assets";
 import { NotFoundCard } from "@demo/atomicui/molecules";
 import { appConfig } from "@demo/core/constants";
 import { useAmplifyAuth, useAmplifyMap, useAwsGeofence } from "@demo/hooks";
@@ -74,6 +74,9 @@ export interface MapButtonsProps {
 	isHandDevice?: boolean;
 	handleMapProviderChange?: (provider: MapProviderEnum, triggeredBy: TriggeredByEnum) => void;
 	currentMapProvider?: MapProviderEnum;
+	isAuthTrackerDisclaimerModalOpen: boolean;
+	onShowAuthTrackerDisclaimerModal: () => void;
+	isAuthTrackerBoxOpen: boolean;
 }
 
 const MapButtons: React.FC<MapButtonsProps> = ({
@@ -102,7 +105,10 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	showOpenDataDisclaimerModal,
 	isHandDevice,
 	handleMapProviderChange,
-	currentMapProvider
+	currentMapProvider,
+	isAuthTrackerDisclaimerModalOpen,
+	onShowAuthTrackerDisclaimerModal,
+	isAuthTrackerBoxOpen
 }) => {
 	const searchHandDeviceWidth = "36px";
 	const searchDesktopWidth = "100%";
@@ -207,6 +213,15 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 				],
 				["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
 			);
+		} else {
+			onPrompt();
+		}
+	};
+
+	const onClickTracker = () => {
+		if (isAuthenticated) {
+			onCloseSidebar();
+			onShowAuthTrackerDisclaimerModal();
 		} else {
 			onPrompt();
 		}
@@ -634,7 +649,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 
 	return (
 		<>
-			<Flex data-testid="map-buttons-container" className="map-styles-and-geofence-container">
+			<Flex data-testid="map-buttons-container" className="map-styles-geofence-and-tracker-container">
 				<Flex
 					data-testid="map-styles-button"
 					ref={stylesCardTogglerRef}
@@ -659,6 +674,20 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 					<IconGeofencePlusSolid />
 				</Flex>
 				<Tooltip id="geofence-control-button" />
+				<Divider className="button-divider" />
+				<Flex
+					data-testid="tracker-control-button"
+					className={
+						isAuthTrackerDisclaimerModalOpen || isAuthTrackerBoxOpen ? "tracker-button active" : "tracker-button"
+					}
+					onClick={onClickTracker}
+					data-tooltip-id="tracker-control-button"
+					data-tooltip-place="left"
+					data-tooltip-content={t("tracker.text")}
+				>
+					<IconRadar />
+				</Flex>
+				<Tooltip id="tracker-control-button" />
 			</Flex>
 			{openStylesCard && (
 				<Card data-testid="map-styles-card" ref={stylesCardRef} className="map-styles-card">

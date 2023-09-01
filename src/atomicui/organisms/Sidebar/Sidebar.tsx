@@ -4,7 +4,7 @@
 import React from "react";
 
 import { Button, Card, Flex, Text, View } from "@aws-amplify/ui-react";
-import { IconClose, IconCompass, IconGear, IconGeofence, IconInfo, IconLockSolid, IconRoute } from "@demo/assets";
+import { IconClose, IconCompass, IconGear, IconGeofence, IconInfo, IconLockSolid, IconRadar } from "@demo/assets";
 import { List, Logo } from "@demo/atomicui/atoms";
 import { appConfig, marketingMenuOptionsData } from "@demo/core/constants";
 import { useAmplifyAuth, useAmplifyMap, useAwsIot, useBottomSheet } from "@demo/hooks";
@@ -163,7 +163,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 					)}
 				</Flex>
 				<Flex className="link-item" onClick={() => onClickMenuItem(MenuItemEnum.TRACKER)}>
-					<IconRoute className="menu-icon" />
+					<IconRadar className="menu-icon" />
 					<Text>{t("tracker.text")}</Text>
 					{isUserAwsAccountConnected && !isAuthenticated && (
 						<Flex className="locked-item">

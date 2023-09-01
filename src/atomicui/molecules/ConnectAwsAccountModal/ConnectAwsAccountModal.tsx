@@ -124,7 +124,7 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 			identityPoolId,
 			userPoolId,
 			userPoolWebClientId,
-			domain.slice(8),
+			domain,
 			webSocketUrl,
 			/* Success callback */
 			() => {

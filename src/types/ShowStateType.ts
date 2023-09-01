@@ -10,7 +10,7 @@ export type ShowStateType = {
 	authTrackerBox: boolean;
 	settings: boolean;
 	stylesCard: boolean;
-	trackingDisclaimerModal: boolean;
+	authTrackerDisclaimerModal: boolean;
 	about: boolean;
 	grabDisclaimerModal: boolean;
 	openDataDisclaimerModal: boolean;
