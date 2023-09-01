@@ -3,30 +3,30 @@
 ## Requirements
 
 1. Run the [CF template](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create?stackName=amazon-location-default-unauth-resources&templateURL=<LINK_TO_UPLOADED_CF_TEMPLATE>) or use the template from `/extra/cloudformation/default-unauth-resources-template.yaml` to create a cloudformation stack on AWS in `us-east-1` region using your own AWS account and get `IdentityPoolId`, `PinPointAppId`, `WebSocketUrl` from stack output's tab.
-	- `IdentityPoolId` value will be added to `.env` file against `VITE_AWS_COGNITO_IDENTITY_POOL_IDS` and `VITE_PINPOINT_IDENTITY_POOL_ID`.
-	- `PinPointAppId` value will be added to `.env` file against `VITE_PINPOINT_APPLICATION_ID`.
-	- `WebSocketUrl` value will be added to `.env` file against `VITE_AWS_WEB_SOCKET_URLS`.
+   - `IdentityPoolId` value will be added to `.env` file against `VITE_AWS_COGNITO_IDENTITY_POOL_IDS` and `VITE_PINPOINT_IDENTITY_POOL_ID`.
+   - `PinPointAppId` value will be added to `.env` file against `VITE_PINPOINT_APPLICATION_ID`.
+   - `WebSocketUrl` value will be added to `.env` file against `VITE_AWS_WEB_SOCKET_URLS`.
 2. Run the [CF template](https://ap-southeast-1.console.aws.amazon.com/cloudformation/home?region=ap-southeast-1#/stacks/create?stackName=amazon-location-default-unauth-resources&templateURL=<LINK_TO_UPLOADED_CF_TEMPLATE>) or use the template from `/extra/cloudformation/default-unauth-resources-template.yaml` to create a cloudformation stack on AWS in `ap-southeast-1` region using your own AWS account and get `IdentityPoolId`, `WebSocketUrl` from stack output's tab [Necessary if you want *GrabMaps* to be enabled].
-	- `IdentityPoolId` value will be added to `.env` file against `VITE_AWS_COGNITO_IDENTITY_POOL_IDS` (comma separated for multiple values).
-	- `WebSocketUrl` value will be added to `.env` file against `VITE_AWS_WEB_SOCKET_URLS` (comma separated for multiple values).
-5. Value for `VITE_AWS_CF_TEMPLATE`, `VITE_APPLE_APP_STORE_LINK`, `VITE_GOOGLE_PLAY_STORE_LINK` can be added as it is to `.env` file from `.env.examples`.
+   - `IdentityPoolId` value will be added to `.env` file against `VITE_AWS_COGNITO_IDENTITY_POOL_IDS` (comma separated for multiple values).
+   - `WebSocketUrl` value will be added to `.env` file against `VITE_AWS_WEB_SOCKET_URLS` (comma separated for multiple values).
+3. Value for `VITE_AWS_CF_TEMPLATE`, `VITE_APPLE_APP_STORE_LINK`, `VITE_GOOGLE_PLAY_STORE_LINK` can be added as it is to `.env` file from `.env.examples`.
 
 #### Env keys required in `.env` file, see `.env.example` for reference
 
 > VITE_AWS_COGNITO_IDENTITY_POOL_IDS<br />
-VITE_AWS_WEB_SOCKET_URLS<br />
-VITE_PINPOINT_IDENTITY_POOL_ID<br />
-VITE_PINPOINT_APPLICATION_ID<br />
-VITE_AWS_CF_TEMPLATE<br />
-VITE_APPLE_APP_STORE_LINK<br />
-VITE_GOOGLE_PLAY_STORE_LINK<br />
+> VITE_AWS_WEB_SOCKET_URLS<br />
+> VITE_PINPOINT_IDENTITY_POOL_ID<br />
+> VITE_PINPOINT_APPLICATION_ID<br />
+> VITE_AWS_CF_TEMPLATE<br />
+> VITE_APPLE_APP_STORE_LINK<br />
+> VITE_GOOGLE_PLAY_STORE_LINK<br />
 
 ## Configure
 
 > git clone <REPO_URL><br />
-cd amazon-location-features-demo-web/<br />
-yarn install<br />
-yarn vite
+> cd amazon-location-features-demo-web/<br />
+> npm install<br />
+> npm run dev
 
 #### `npm install`
 
@@ -41,16 +41,16 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 #### Env keys required in `cypress.env.json` file, see `cypress.env.json.example` for reference. This is only needed to run the e2e tests locally.
 
->WEB_DOMAIN<br />
-WEB_DOMAIN_USERNAME<br />
-WEB_DOMAIN_PASSWORD<br />
-IDENTITY_POOL_ID<br />
-USER_DOMAIN<br />
-USER_POOL_CLIENT_ID<br />
-USER_POOL_ID<br />
-WEB_SOCKET_URL<br />
-COGNITO_EMAIL<br />
-COGNITO_PASSWORD<br />
+> WEB_DOMAIN<br />
+> WEB_DOMAIN_USERNAME<br />
+> WEB_DOMAIN_PASSWORD<br />
+> IDENTITY_POOL_ID<br />
+> USER_DOMAIN<br />
+> USER_POOL_CLIENT_ID<br />
+> USER_POOL_ID<br />
+> WEB_SOCKET_URL<br />
+> COGNITO_EMAIL<br />
+> COGNITO_PASSWORD<br />
 
 #### If you are configuring Github actions fo the e2e tests, make sure to add these keys to the secrets section of the repo with a `CYPRESS_` prefix.
 
