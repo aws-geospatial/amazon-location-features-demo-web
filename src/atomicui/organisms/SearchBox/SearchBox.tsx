@@ -5,7 +5,6 @@ import React, { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState }
 
 import { Autocomplete, Button, ComboBoxOption, Flex, Placeholder, Text, View } from "@aws-amplify/ui-react";
 import { IconActionMenu, IconClose, IconDirections, IconPin, IconSearch } from "@demo/assets";
-import VirtualizedList from "@demo/atomicui/atoms/VirtualizedList/VirtualizedList";
 import { InputField, Marker, NotFoundCard, SuggestionMarker } from "@demo/atomicui/molecules";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useAmplifyMap, useAwsPlace, useBottomSheet } from "@demo/hooks";

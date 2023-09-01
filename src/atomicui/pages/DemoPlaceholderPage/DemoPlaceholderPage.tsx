@@ -84,49 +84,50 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 								setValue={() => {}}
 							/>
 						) : (
-							<ResponsiveBottomSheet
-								SearchBoxEl={() => (
-									<SearchBox
-										mapRef={null}
-										isSideMenuExpanded={show.sidebar}
-										onToggleSideMenu={() => {}}
-										setShowRouteBox={() => {}}
-										isRouteBoxOpen={show.routeBox}
-										isAuthGeofenceBoxOpen={show.authGeofenceBox}
-										isAuthTrackerBoxOpen={show.authTrackerBox}
-										isSettingsOpen={show.settings}
-										isStylesCardOpen={show.stylesCard}
-										value={searchValue}
-										setValue={() => {}}
-									/>
-								)}
-								MapButtons={
-									<MapButtons
-										renderedUpon={"Demo Page"}
-										openStylesCard={show.stylesCard}
-										setOpenStylesCard={() => {}}
-										onCloseSidebar={() => {}}
-										onOpenConnectAwsAccountModal={() => {}}
-										onOpenSignInModal={() => {}}
-										onShowGeofenceBox={() => {}}
-										isGrabVisible={isGrabVisible}
-										showGrabDisclaimerModal={show.grabDisclaimerModal}
-										onShowGridLoader={() => {}}
-										handleMapStyleChange={() => {}}
-										searchValue={searchValue}
-										setSearchValue={() => {}}
-										selectedFilters={selectedFilters}
-										setSelectedFilters={() => {}}
-										isLoading={true}
-										showOpenDataDisclaimerModal={false}
-										handleMapProviderChange={() => {}}
-										// currentMapProvider={}
-										onlyMapStyles
-										isHandDevice
-									/>
-								}
-								RouteBox={<RouteBox mapRef={null} setShowRouteBox={() => {}} isSideMenuExpanded={show.sidebar} />}
-							/>
+							<></>
+							// <ResponsiveBottomSheet
+							// 	SearchBoxEl={() => (
+							// 		<SearchBox
+							// 			mapRef={null}
+							// 			isSideMenuExpanded={show.sidebar}
+							// 			onToggleSideMenu={() => {}}
+							// 			setShowRouteBox={() => {}}
+							// 			isRouteBoxOpen={show.routeBox}
+							// 			isAuthGeofenceBoxOpen={show.authGeofenceBox}
+							// 			isAuthTrackerBoxOpen={show.authTrackerBox}
+							// 			isSettingsOpen={show.settings}
+							// 			isStylesCardOpen={show.stylesCard}
+							// 			value={searchValue}
+							// 			setValue={() => {}}
+							// 		/>
+							// 	)}
+							// 	MapButtons={
+							// 		<MapButtons
+							// 			renderedUpon={"Demo Page"}
+							// 			openStylesCard={show.stylesCard}
+							// 			setOpenStylesCard={() => {}}
+							// 			onCloseSidebar={() => {}}
+							// 			onOpenConnectAwsAccountModal={() => {}}
+							// 			onOpenSignInModal={() => {}}
+							// 			onShowGeofenceBox={() => {}}
+							// 			isGrabVisible={isGrabVisible}
+							// 			showGrabDisclaimerModal={show.grabDisclaimerModal}
+							// 			onShowGridLoader={() => {}}
+							// 			handleMapStyleChange={() => {}}
+							// 			searchValue={searchValue}
+							// 			setSearchValue={() => {}}
+							// 			selectedFilters={selectedFilters}
+							// 			setSelectedFilters={() => {}}
+							// 			isLoading={true}
+							// 			showOpenDataDisclaimerModal={false}
+							// 			handleMapProviderChange={() => {}}
+							// 			// currentMapProvider={}
+							// 			onlyMapStyles
+							// 			isHandDevice
+							// 		/>
+							// 	}
+							// 	RouteBox={<RouteBox mapRef={null} setShowRouteBox={() => {}} isSideMenuExpanded={show.sidebar} />}
+							// />
 						)}
 					</>
 				)}

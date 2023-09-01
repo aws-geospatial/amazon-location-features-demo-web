@@ -180,7 +180,7 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 			data-testid="connect-aws-account-modal-container"
 			open={open}
 			onClose={handleModalClose}
-			className="connect-aws-account-modal"
+			className={`connect-aws-account-modal ${!isDesktop ? "connect-aws-account-modal-mobile" : ""}`}
 			content={
 				<Flex className="content-container">
 					<Flex

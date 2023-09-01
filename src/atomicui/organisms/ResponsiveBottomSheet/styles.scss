@@ -2,6 +2,10 @@
 /* SPDX-License-Identifier: MIT-0 */
 
 .bottom-sheet {
+	&.desktop {
+		display: none;
+	}
+	
 	&.tablet{
 		[data-rsbs-overlay]{
 			width: 24.61rem;

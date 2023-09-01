@@ -5,6 +5,24 @@
 	max-width: 67.08rem;
 	max-height: 52.62rem;
 
+	&.connect-aws-account-modal-mobile {
+		width: 100% !important;
+		height: 100% !important;
+		max-height: 100% !important;
+		max-width: 100% !important;
+		padding: 8% 0;
+
+		.amplify-flex.left-col {
+			max-width: inherit !important;
+			justify-content: center !important;
+		}
+
+		.amplify-flex.right-col {
+			max-width: inherit !important;
+			justify-content: center !important;
+		}
+	}
+
 	.amplify-flex.content-container {
 		gap: 0;
 		height: 100%;

@@ -1,26 +1,72 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { FC, useCallback, useEffect } from "react";
+import React, { FC, memo, useCallback, useEffect } from "react";
 
 import { Flex, Text } from "@aws-amplify/ui-react";
 import { IconClose } from "@demo/assets";
+import { ConfirmationModal, NonStartUnauthSimulation } from "@demo/atomicui/molecules";
 import { useBottomSheet, useMediaQuery } from "@demo/hooks";
-import { ResponsiveUIEnum } from "@demo/types/Enums";
+import { MenuItemEnum, ResponsiveUIEnum } from "@demo/types/Enums";
 import { useTranslation } from "react-i18next";
+import { MapRef } from "react-map-gl";
 import { BottomSheet } from "react-spring-bottom-sheet";
 
 import "react-spring-bottom-sheet/dist/style.css";
 import { Explore } from "../Explore";
+
+import { UnauthSimulation } from "../UnauthSimulation";
 import "./styles.scss";
 
 interface IProps {
+	mapRef: MapRef | null;
 	SearchBoxEl: () => JSX.Element;
 	MapButtons: JSX.Element;
 	RouteBox: JSX.Element;
+	onCloseSidebar: () => void;
+	onOpenConnectAwsAccountModal: () => void;
+	onOpenSignInModal: () => void;
+	onShowAuthGeofenceBox: () => void;
+	onShowAuthTrackerBox: () => void;
+	onShowSettings: () => void;
+	onShowTrackingDisclaimerModal: () => void;
+	onShowAboutModal: () => void;
+	onShowUnauthGeofenceBox: () => void;
+	onShowUnauthTrackerBox: () => void;
+	onshowUnauthSimulationDisclaimerModal: () => void;
+	setShowUnauthGeofenceBox: (b: boolean) => void;
+	setShowUnauthTrackerBox: (b: boolean) => void;
+	setShowConnectAwsAccountModal: (b: boolean) => void;
+	setShowStartUnauthSimulation: (b: boolean) => void;
+	showStartUnauthSimulation: boolean;
+	from: MenuItemEnum;
+	UnauthSimulationUI: JSX.Element;
 }
 
-const ResponsiveBottomSheet: FC<IProps> = ({ SearchBoxEl, MapButtons, RouteBox }) => {
+const ResponsiveBottomSheet: FC<IProps> = ({
+	mapRef,
+	SearchBoxEl,
+	MapButtons,
+	RouteBox,
+	onCloseSidebar,
+	onOpenConnectAwsAccountModal,
+	onOpenSignInModal,
+	onShowAuthGeofenceBox,
+	onShowAuthTrackerBox,
+	onShowSettings,
+	onShowTrackingDisclaimerModal,
+	onShowAboutModal,
+	onShowUnauthGeofenceBox,
+	onShowUnauthTrackerBox,
+	onshowUnauthSimulationDisclaimerModal,
+	setShowUnauthGeofenceBox,
+	setShowUnauthTrackerBox,
+	setShowConnectAwsAccountModal,
+	setShowStartUnauthSimulation,
+	showStartUnauthSimulation,
+	UnauthSimulationUI,
+	from
+}) => {
 	const isDesktop = useMediaQuery("(min-width: 1024px)");
 	const isMobile = useMediaQuery("(max-width: 425px)");
 	const isTablet = !isDesktop && !isMobile;
@@ -112,7 +158,13 @@ const ResponsiveBottomSheet: FC<IProps> = ({ SearchBoxEl, MapButtons, RouteBox }
 						</Flex>
 					);
 				case ResponsiveUIEnum.routes:
+				case ResponsiveUIEnum.unauth_tracker:
+				case ResponsiveUIEnum.unauth_geofence:
+				case ResponsiveUIEnum.auth_tracker:
+				case ResponsiveUIEnum.auth_geofence:
 					return null;
+				case ResponsiveUIEnum.non_start_unauthorized_tracker:
+				case ResponsiveUIEnum.non_start_unauthorized_geofence:
 				case ResponsiveUIEnum.explore:
 				case ResponsiveUIEnum.poi_card:
 				case ResponsiveUIEnum.search:
@@ -133,12 +185,49 @@ const ResponsiveBottomSheet: FC<IProps> = ({ SearchBoxEl, MapButtons, RouteBox }
 				case ResponsiveUIEnum.search:
 				case ResponsiveUIEnum.poi_card:
 					return null;
+				case ResponsiveUIEnum.unauth_tracker:
+				case ResponsiveUIEnum.unauth_geofence:
+					return isDesktop ? null : UnauthSimulationUI;
 				case ResponsiveUIEnum.explore:
+				case ResponsiveUIEnum.non_start_unauthorized_tracker:
+				case ResponsiveUIEnum.non_start_unauthorized_geofence:
 				default:
-					return <Explore updateUIInfo={setUI} />;
+					return (
+						<Explore
+							updateUIInfo={setUI}
+							onCloseSidebar={onCloseSidebar}
+							onOpenConnectAwsAccountModal={onOpenConnectAwsAccountModal}
+							onOpenSignInModal={onOpenSignInModal}
+							onShowAuthGeofenceBox={onShowAuthGeofenceBox}
+							onShowAuthTrackerBox={onShowAuthTrackerBox}
+							onShowSettings={onShowSettings}
+							onShowTrackingDisclaimerModal={onShowTrackingDisclaimerModal}
+							onShowAboutModal={onShowAboutModal}
+							onShowUnauthGeofenceBox={onShowUnauthGeofenceBox}
+							onShowUnauthTrackerBox={onShowUnauthTrackerBox}
+							onshowUnauthSimulationDisclaimerModal={onshowUnauthSimulationDisclaimerModal}
+						/>
+					);
 			}
 		},
-		[MapButtons, RouteBox, setUI]
+		[
+			MapButtons,
+			RouteBox,
+			UnauthSimulationUI,
+			isDesktop,
+			onCloseSidebar,
+			onOpenConnectAwsAccountModal,
+			onOpenSignInModal,
+			onShowAboutModal,
+			onShowAuthGeofenceBox,
+			onShowAuthTrackerBox,
+			onShowSettings,
+			onShowTrackingDisclaimerModal,
+			onShowUnauthGeofenceBox,
+			onShowUnauthTrackerBox,
+			onshowUnauthSimulationDisclaimerModal,
+			setUI
+		]
 	);
 
 	const calculatePixelValue = useCallback(
@@ -158,29 +247,66 @@ const ResponsiveBottomSheet: FC<IProps> = ({ SearchBoxEl, MapButtons, RouteBox }
 
 	const footerHeight = useCallback((maxHeight: number) => calculatePixelValue(maxHeight, 50), [calculatePixelValue]);
 
+	// const ExitSimulation = () => (
+	// 	<Flex className="confirmation-modal-container">
+	// 		<ConfirmationModal
+	// 			open
+	// 			onClose={onCloseHandler}
+	// 			heading={t("start_unauth_simulation__exit_simulation.text") as string}
+	// 			description={
+	// 				<Text
+	// 					className="small-text"
+	// 					variation="tertiary"
+	// 					marginTop="1.23rem"
+	// 					textAlign="center"
+	// 					whiteSpace="pre-line"
+	// 				>
+	// 					{t("start_unauth_simulation__exit_simulation_desc.text")}
+	// 				</Text>
+	// 			}
+	// 			onConfirm={() => setConfirmCloseSimulation(false)}
+	// 			confirmationText={t("start_unauth_simulation__stay_in_simulation.text") as string}
+	// 			cancelationText={t("exit.text") as string}
+	// 		/>
+	// 	</Flex>
+	// );
 	return (
 		<>
-			{(isTablet || isMobile) && (
-				<BottomSheet
-					open
-					blocking={false}
-					snapPoints={({ maxHeight }) => [
-						bottomSheetMinHeight,
-						footerHeight(maxHeight),
-						bottomSheetHeight - 10,
-						bottomSheetMinHeight
-					]}
-					maxHeight={bottomSheetHeight}
-					header={<Flex>{bottomSheetHeader(ui)}</Flex>}
-					className={`bottom-sheet ${isTablet ? "tablet" : "mobile"} 
+			{!isDesktop &&
+				ui &&
+				[ResponsiveUIEnum.non_start_unauthorized_tracker, ResponsiveUIEnum.non_start_unauthorized_geofence].includes(
+					ui
+				) && (
+					<UnauthSimulation
+						mapRef={mapRef}
+						from={from}
+						setShowUnauthGeofenceBox={setShowUnauthGeofenceBox}
+						setShowUnauthTrackerBox={setShowUnauthTrackerBox}
+						setShowConnectAwsAccountModal={setShowConnectAwsAccountModal}
+						showStartUnauthSimulation={showStartUnauthSimulation}
+						setShowStartUnauthSimulation={setShowStartUnauthSimulation}
+					/>
+				)}
+
+			<BottomSheet
+				open
+				blocking={isDesktop}
+				snapPoints={({ maxHeight }) => [
+					bottomSheetMinHeight,
+					footerHeight(maxHeight),
+					bottomSheetHeight - 10,
+					bottomSheetMinHeight
+				]}
+				maxHeight={bottomSheetHeight}
+				header={<Flex>{bottomSheetHeader(ui)}</Flex>}
+				className={`bottom-sheet ${isDesktop ? "desktop" : isTablet ? "tablet" : "mobile"} 
 					`}
-					data-amplify-theme="aws-location-theme"
-				>
-					{bottomSheetBody(ui)}
-				</BottomSheet>
-			)}
+				data-amplify-theme="aws-location-theme"
+			>
+				{bottomSheetBody(ui)}
+			</BottomSheet>
 		</>
 	);
 };
 
-export default ResponsiveBottomSheet;
+export default memo(ResponsiveBottomSheet);
