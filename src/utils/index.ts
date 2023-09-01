@@ -9,3 +9,4 @@ export * from "./validationUtils";
 export * from "./analyticsUtils";
 export * from "./localstorageUtils";
 export * from "./debounce";
+export * from "./getDomainName";
