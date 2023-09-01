@@ -25,8 +25,8 @@
 
 > git clone <REPO_URL><br />
 > cd amazon-location-features-demo-web/<br />
-> yarn install<br />
-> yarn vite
+> npm install<br />
+> npm run dev
 
 #### `npm install`
 
