@@ -95,6 +95,9 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 					setSelectedFilters={() => {}}
 					isLoading={true}
 					showOpenDataDisclaimerModal={false}
+					isAuthTrackerDisclaimerModalOpen={show.authTrackerDisclaimerModal}
+					onShowAuthTrackerDisclaimerModal={() => {}}
+					isAuthTrackerBoxOpen={show.authTrackerBox}
 				/>
 				<Flex className="location-disabled">
 					<IconLocateMe />
@@ -131,6 +134,9 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 						setSelectedFilters={() => {}}
 						isLoading={true}
 						showOpenDataDisclaimerModal={false}
+						isAuthTrackerDisclaimerModalOpen={show.authTrackerDisclaimerModal}
+						onShowAuthTrackerDisclaimerModal={() => {}}
+						isAuthTrackerBoxOpen={show.authTrackerBox}
 					/>
 				}
 				resetSearchAndFilters={() => {}}

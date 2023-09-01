@@ -91,7 +91,7 @@ const initShow = {
 	authTrackerBox: false,
 	settings: false,
 	stylesCard: false,
-	trackingDisclaimerModal: false,
+	authTrackerDisclaimerModal: false,
 	about: false,
 	grabDisclaimerModal: false,
 	openDataDisclaimerModal: false,
@@ -471,7 +471,7 @@ const DemoPage: React.FC = () => {
 		resetAwsRouteStore();
 		resetAwsGeofenceStore();
 		resetAwsTrackingStore();
-		setShow(s => ({ ...s, trackingDisclaimerModal: false, authTrackerBox: true }));
+		setShow(s => ({ ...s, authTrackerDisclaimerModal: false, authTrackerBox: true }));
 	};
 
 	const locationError = useMemo(() => !!currentLocationData?.error, [currentLocationData]);
@@ -805,7 +805,7 @@ const DemoPage: React.FC = () => {
 							onOpenConnectAwsAccountModal={() => setShow(s => ({ ...s, connectAwsAccount: true }))}
 							onOpenSignInModal={() => setShow(s => ({ ...s, signInModal: true }))}
 							onShowSettings={() => setShow(s => ({ ...s, settings: true }))}
-							onShowTrackingDisclaimerModal={() => setShow(s => ({ ...s, trackingDisclaimerModal: true }))}
+							onShowTrackingDisclaimerModal={() => setShow(s => ({ ...s, authTrackerDisclaimerModal: true }))}
 							onShowAboutModal={() => setShow(s => ({ ...s, about: true }))}
 							onShowUnauthGeofenceBox={() => setShow(s => ({ ...s, unauthGeofenceBox: true }))}
 							onShowUnauthTrackerBox={() => setShow(s => ({ ...s, unauthTrackerBox: true }))}
@@ -873,6 +873,9 @@ const DemoPage: React.FC = () => {
 						selectedFilters={selectedFilters}
 						setSelectedFilters={setSelectedFilters}
 						resetSearchAndFilters={handleResetCallback}
+						isAuthTrackerDisclaimerModalOpen={show.authTrackerDisclaimerModal}
+						onShowAuthTrackerDisclaimerModal={() => setShow(s => ({ ...s, authTrackerDisclaimerModal: true }))}
+						isAuthTrackerBoxOpen={show.authTrackerBox}
 					/>
 					{locationError || isCurrentLocationDisabled ? (
 						<Flex className="location-disabled" onClick={() => getCurrentGeoLocation()}>
@@ -964,13 +967,16 @@ const DemoPage: React.FC = () => {
 						selectedFilters={selectedFilters}
 						setSelectedFilters={setSelectedFilters}
 						onlyMapStyles
+						isAuthTrackerDisclaimerModalOpen={show.authTrackerDisclaimerModal}
+						onShowAuthTrackerDisclaimerModal={() => setShow(s => ({ ...s, authTrackerDisclaimerModal: true }))}
+						isAuthTrackerBoxOpen={show.authTrackerBox}
 					/>
 				}
 			/>
 			<AboutModal open={show.about} onClose={() => setShow(s => ({ ...s, about: false }))} />
 			<TrackerInformationModal
-				open={show.trackingDisclaimerModal}
-				onClose={() => setShow(s => ({ ...s, trackingDisclaimerModal: false }))}
+				open={show.authTrackerDisclaimerModal}
+				onClose={() => setShow(s => ({ ...s, authTrackerDisclaimerModal: false }))}
 				heading={t("tracker_info_modal__heading.text") as string}
 				description={
 					<Text
