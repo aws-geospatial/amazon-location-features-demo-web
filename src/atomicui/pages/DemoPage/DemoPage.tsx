@@ -683,14 +683,24 @@ const DemoPage: React.FC = () => {
 		]
 	);
 
+	/* Handle search query params for map provider */
 	useEffect(() => {
 		if (switchToMapProvider && currentMapProvider !== switchToMapProvider) {
-			onMapProviderChange(switchToMapProvider as MapProviderEnum, TriggeredByEnum.DEMO_PAGE);
+			/* If search query param exist, update map provider based on search query param */
+			if (["Grab", "GrabMaps"].includes(switchToMapProvider)) {
+				isGrabVisible
+					? onMapProviderChange(MapProviderEnum.GRAB, TriggeredByEnum.DEMO_PAGE)
+					: setMapProvider(currentMapProvider);
+			} else {
+				onMapProviderChange(switchToMapProvider as MapProviderEnum, TriggeredByEnum.DEMO_PAGE);
+			}
+
 			switchToMapProvider = null;
 		} else if (!location.search.includes(`${DATA_PROVIDER}=`)) {
+			/* If search query param doesn't exist, update search query param based on current map provider */
 			setMapProvider(currentMapProvider);
 		}
-	}, [currentMapProvider, onMapProviderChange, setMapProvider]);
+	}, [currentMapProvider, isGrabVisible, setMapProvider, onMapProviderChange]);
 
 	const onMapStyleChange = useCallback(
 		(mapStyle: EsriMapEnum | HereMapEnum | GrabMapEnum | OpenDataMapEnum) => {
@@ -1009,7 +1019,10 @@ const DemoPage: React.FC = () => {
 			/>
 			<OpenDataConfirmationModal
 				open={show.openDataDisclaimerModal}
-				onClose={() => setShow(s => ({ ...s, openDataDisclaimerModal: false, mapStyle: undefined }))}
+				onClose={() => {
+					setShow(s => ({ ...s, openDataDisclaimerModal: false, mapStyle: undefined }));
+					setMapProvider(currentMapProvider);
+				}}
 				onConfirm={() => setTimeout(() => handleOpenDataMapChange(), 0)}
 				showDoNotAskAgainCheckbox
 				onConfirmationCheckboxOnChange={setDoNotAskOpenDataDisclaimer}
