@@ -122,14 +122,14 @@ Resources:
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
-          - Sid: ""
+          - Sid: ''
             Effect: Allow
             Principal:
               Service: firehose.amazonaws.com
-            Action: "sts:AssumeRole"
+            Action: 'sts:AssumeRole'
             Condition:
               StringEquals:
-                "sts:ExternalId": !Ref "AWS::AccountId"
+                'sts:ExternalId': !Ref 'AWS::AccountId'
       Path: "/"
       Policies:
         - PolicyName: firehose_delivery_policy
@@ -138,32 +138,32 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
-                  - "s3:AbortMultipartUpload"
-                  - "s3:GetBucketLocation"
-                  - "s3:GetObject"
-                  - "s3:ListBucket"
-                  - "s3:ListBucketMultipartUploads"
-                  - "s3:PutObject"
+                  - 's3:AbortMultipartUpload'
+                  - 's3:GetBucketLocation'
+                  - 's3:GetObject'
+                  - 's3:ListBucket'
+                  - 's3:ListBucketMultipartUploads'
+                  - 's3:PutObject'
                 Resource:
-                  - !Join
-                    - ""
-                    - - "arn:aws:s3:::"
+                  - !Join 
+                    - ''
+                    - - 'arn:aws:s3:::'
                       - !Ref AmazonLocationDemoKinesisBucket
-                  - !Join
-                    - ""
-                    - - "arn:aws:s3:::"
+                  - !Join 
+                    - ''
+                    - - 'arn:aws:s3:::'
                       - !Ref AmazonLocationDemoKinesisBucket
-                      - "/*"
+                      - '/*'
               - Effect: Allow
-                Action: "logs:PutLogEvents"
-                Resource:
-                  - !Join
-                    - ""
-                    - - "arn:aws:logs:"
-                      - !Ref "AWS::Region"
-                      - ":"
-                      - !Ref "AWS::AccountId"
-                      - "log-group:/aws/kinesisfirehose/KDF-"
+                Action: 'logs:PutLogEvents'
+                Resource: 
+                - !Join 
+                    - ''
+                    - - 'arn:aws:logs:'
+                      - !Ref 'AWS::Region'
+                      - ':'
+                      - !Ref 'AWS::AccountId'
+                      - 'log-group:/aws/kinesisfirehose/KDF-'
 
   AmazonLocationDemoPinpointStreamRole:
     Condition: EnablePinTranslate
@@ -218,15 +218,15 @@ Resources:
 
   AmazonLocationDemoKinesisBucket:
     Condition: EnablePinTranslate
-    Type: "AWS::S3::Bucket"
+    Type: 'AWS::S3::Bucket'
     DeletionPolicy: Delete
     Properties:
       BucketName: !Sub "location.aws.com.demo.kinesis.${AWS::AccountId}"
       VersioningConfiguration:
-        Status: Enabled
+          Status: Enabled
       BucketEncryption:
-        ServerSideEncryptionConfiguration:
-          - ServerSideEncryptionByDefault:
+          ServerSideEncryptionConfiguration:
+           - ServerSideEncryptionByDefault:
               SSEAlgorithm: aws:kms
 
   AmazonLocationDemoKinesisBucketPolicy:
@@ -243,23 +243,23 @@ Resources:
             Action: "s3:PutObject"
             Resource: !Sub "arn:aws:s3:::${AmazonLocationDemoKinesisBucket}/*"
             Condition:
-              "StringNotEquals":
-                s3:x-amz-server-side-encryption: "aws:kms"
+              'StringNotEquals':
+                s3:x-amz-server-side-encryption: 'aws:kms'
           - Sid: DenyUnEncryptedObjectUploads
             Effect: Deny
             Principal: "*"
             Action: "s3:PutObject"
             Resource: !Sub "arn:aws:s3:::${AmazonLocationDemoKinesisBucket}/*"
             Condition:
-              "Null":
-                s3:x-amz-server-side-encryption: "true"
+              'Null':
+                s3:x-amz-server-side-encryption: 'true'
 
   AmazonLocationDemoKMS:
     Type: AWS::KMS::Key
     Properties:
       Description: You created this resource by running Amazon Location Demo's CloudFormation template.
       KeyPolicy:
-        Version: "2012-10-17"
+        Version: '2012-10-17'
         Id: default-policy
         Statement:
           - Sid: Enable IAM User Permissions
@@ -267,42 +267,41 @@ Resources:
             Principal:
               AWS: !Sub arn:aws:iam::${AWS::AccountId}:root
             Action: kms:*
-            Resource: "*"
+            Resource: '*'
           - Sid: Allow KMS Key Administrators to Manage Key
             Effect: Allow
             Principal:
-              AWS:
-                - !GetAtt CognitoIdentityPoolUnauthRole.Arn
-                - !GetAtt AmazonLocationKinesisDeliveryRole.Arn
+              AWS: 
+              - !GetAtt CognitoIdentityPoolUnauthRole.Arn
+              - !GetAtt AmazonLocationKinesisDeliveryRole.Arn
             Action:
-              - kms:Describe*
-              - kms:Enable*
-              - kms:List*
-              - kms:Put*
-              - kms:Update*
-              - kms:Get*
-              - kms:Delete*
-            Resource: "*"
+              - kms:Encrypt
+              - kms:Decrypt
+              - kms:CreateGrant
+              - kms:DescribeKey
+              - kms:ListAliases
+              - kms:ListKeys
+            Resource: '*'
 
   AmazonLocationDemoKinesisStream:
     Condition: EnablePinTranslate
     Type: AWS::Kinesis::Stream
-    Properties:
+    Properties: 
       Name: location.aws.com.demo.app
       RetentionPeriodHours: 24
       ShardCount: 1
       StreamEncryption:
-        EncryptionType: KMS
-        KeyId: !Ref AmazonLocationDemoKMS
+          EncryptionType: KMS
+          KeyId: !Ref AmazonLocationDemoKMS
 
   AmazonLocationDemoKinesisFirehose:
     Condition: EnablePinTranslate
     Type: AWS::KinesisFirehose::DeliveryStream
-    Properties:
+    Properties: 
       DeliveryStreamName: location.aws.com.demo.app
-      S3DestinationConfiguration:
-        BucketARN: !GetAtt AmazonLocationDemoKinesisBucket.Arn
-        RoleARN: !GetAtt AmazonLocationKinesisDeliveryRole.Arn
+      S3DestinationConfiguration: 
+          BucketARN: !GetAtt AmazonLocationDemoKinesisBucket.Arn
+          RoleARN: !GetAtt AmazonLocationKinesisDeliveryRole.Arn
 
   AmazonLocationDemoPinpointApp:
     Condition: EnablePinTranslate
@@ -314,11 +313,11 @@ Resources:
     DependsOn: AmazonLocationDemoPinpointStreamRole
     Condition: EnablePinTranslate
     Type: AWS::Pinpoint::EventStream
-    Properties:
+    Properties: 
       ApplicationId: !Ref AmazonLocationDemoPinpointApp
       DestinationStreamArn: !GetAtt AmazonLocationDemoKinesisStream.Arn
       RoleArn: !GetAtt AmazonLocationDemoPinpointStreamRole.Arn
-
+          
   AmazonLocationDemoMapsOpenDataLight:
     Type: AWS::Location::Map
     Properties:
