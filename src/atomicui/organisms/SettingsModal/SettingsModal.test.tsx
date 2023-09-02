@@ -38,7 +38,10 @@ describe("<SettingsModal />", () => {
 		setSearchValue: jest.fn(),
 		setSelectedFilters: jest.fn(),
 		resetSearchAndFilters: jest.fn(),
-		showOpenDataDisclaimerModal: false
+		showOpenDataDisclaimerModal: false,
+		isAuthTrackerDisclaimerModalOpen: false,
+		onShowAuthTrackerDisclaimerModal: jest.fn(),
+		isAuthTrackerBoxOpen: false
 	};
 
 	const renderComponent = async (): Promise<RenderResult> => {

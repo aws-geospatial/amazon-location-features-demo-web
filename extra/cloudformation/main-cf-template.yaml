@@ -217,7 +217,7 @@ Resources:
               - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.OpenData.StandardLight"
               - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.OpenData.StandardDark"
               - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.OpenData.VisualizationLight"
-              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.OpenData.VisualizationDark"              
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.OpenData.VisualizationDark"
               - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:place-index/location.aws.com.demo.places.Esri.PlaceIndex"
               - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:place-index/location.aws.com.demo.places.HERE.PlaceIndex"
               - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:place-index/location.aws.com.demo.places.Grab.PlaceIndex"
@@ -290,7 +290,7 @@ Resources:
       Configuration:
         Style: VectorOpenDataVisualizationDark
       Description: You created this resource by running Amazon Location Demo's CloudFormation template.
-      MapName: location.aws.com.demo.maps.OpenData.VisualizationDark  
+      MapName: location.aws.com.demo.maps.OpenData.VisualizationDark
 
   AmazonLocationDemoMapsEsriLight:
     Type: AWS::Location::Map
@@ -700,7 +700,7 @@ Outputs:
     Value: !Ref AmazonLocationDemoUserPoolClient
 
   UserDomain:
-    Value: !Sub "https://${AWS::AccountId}.auth.${AWS::Region}.amazoncognito.com/"
+    Value: !Sub "${AWS::AccountId}.auth.${AWS::Region}.amazoncognito.com"
 
   IdentityPoolId:
     Value: !Ref AmazonLocationDemoCognitoIdentityPool

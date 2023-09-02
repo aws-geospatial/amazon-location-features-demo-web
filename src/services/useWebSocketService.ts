@@ -11,6 +11,7 @@ import { useAmplifyAuth, useAwsGeofence } from "@demo/hooks";
 import i18n from "@demo/locales/i18n";
 import { EventTypeEnum, NotificationHistoryItemtype, ToastType } from "@demo/types";
 import { record } from "@demo/utils/analyticsUtils";
+import { getDomainName } from "@demo/utils/getDomainName";
 import { Amplify, Hub, PubSub } from "aws-amplify";
 
 const RETRY_INTERVAL = 100;
@@ -24,13 +25,7 @@ const useWebSocketService = (
 	const { region, webSocketUrl, credentials } = useAmplifyAuth();
 	const { setUnauthNotifications } = useAwsGeofence();
 
-	const url = useMemo(
-		() =>
-			webSocketUrl?.startsWith("http://") || webSocketUrl?.startsWith("https://")
-				? webSocketUrl.split("//")[1].replace("/", "")
-				: webSocketUrl,
-		[webSocketUrl]
-	);
+	const url = getDomainName(webSocketUrl || "");
 
 	useEffect(() => {
 		Hub.listen("pubsub", ({ payload: { data } }: { payload: HubPayload }) => {

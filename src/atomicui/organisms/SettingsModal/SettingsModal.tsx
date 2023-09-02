@@ -177,7 +177,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 			identityPoolId,
 			userPoolId,
 			userPoolWebClientId,
-			domain.slice(8),
+			domain,
 			webSocketUrl,
 			/* Success callback */
 			() => {
