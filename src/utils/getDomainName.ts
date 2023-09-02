@@ -5,5 +5,5 @@ export const getDomainName = (url: string) => {
 		return string.slice(0, -1);
 	}
 
-	return url;
+	return string;
 };
