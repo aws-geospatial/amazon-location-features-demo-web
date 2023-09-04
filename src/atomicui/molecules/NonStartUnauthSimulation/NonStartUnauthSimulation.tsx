@@ -3,7 +3,7 @@ import React, { FC, useCallback } from "react";
 import { Button, Card, Flex, Text } from "@aws-amplify/ui-react";
 import { IconClose, IconGeofenceColor, IconTrackers } from "@demo/assets";
 import { Modal } from "@demo/atomicui/atoms";
-import { useBottomSheet, useMediaQuery } from "@demo/hooks";
+import { useBottomSheet, useDeviceMediaQuery } from "@demo/hooks";
 import { MenuItemEnum } from "@demo/types";
 import { ResponsiveUIEnum } from "@demo/types/Enums";
 import { useTranslation } from "react-i18next";
@@ -27,9 +27,7 @@ const NonStartUnauthSimulation: FC<IProps> = ({
 	const { setUI } = useBottomSheet();
 	const { t, i18n } = useTranslation();
 	const currentLanguage = i18n.language;
-	const isDesktop = useMediaQuery("(min-width: 1024px)");
-	const isMobile = useMediaQuery("(max-width: 425px)");
-	const isTablet = !isDesktop && !isMobile;
+	const { isDesktop, isTablet } = useDeviceMediaQuery();
 
 	const UnauthSimulationCard = useCallback(
 		() => (

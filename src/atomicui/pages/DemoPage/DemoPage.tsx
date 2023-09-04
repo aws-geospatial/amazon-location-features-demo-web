@@ -40,7 +40,7 @@ import {
 	useAwsRoute,
 	useAwsTracker,
 	useBottomSheet,
-	useMediaQuery,
+	useDeviceMediaQuery,
 	usePersistedData,
 	useRecordViewPage
 } from "@demo/hooks";
@@ -54,7 +54,7 @@ import {
 	ShowStateType,
 	ToastType
 } from "@demo/types";
-import { EventTypeEnum, OpenDataMapEnum, TriggeredByEnum } from "@demo/types/Enums";
+import { EventTypeEnum, OpenDataMapEnum, ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { getCurrentLocation } from "@demo/utils/getCurrentLocation";
@@ -120,6 +120,7 @@ const DemoPage: React.FC = () => {
 		Attribute: [],
 		Type: []
 	});
+	const [startSimulation, setStartSimulation] = React.useState(false);
 
 	const mapViewRef = useRef<MapRef | null>(null);
 	const geolocateControlRef = useRef<GeolocateControlRef | null>(null);
@@ -165,7 +166,8 @@ const DemoPage: React.FC = () => {
 		doNotAskOpenDataDisclaimerModal,
 		setDoNotAskOpenDataDisclaimerModal
 	} = usePersistedData();
-	const isDesktop = useMediaQuery("(min-width: 1024px)");
+	const { isDesktop } = useDeviceMediaQuery();
+	const { setUI } = useBottomSheet();
 
 	const { t } = useTranslation();
 	const shouldClearCredentials = localStorage.getItem(SHOULD_CLEAR_CREDENTIALS) === "true";
@@ -176,6 +178,28 @@ const DemoPage: React.FC = () => {
 		() => !isUserAwsAccountConnected || (isUserAwsAccountConnected && isGrabAvailableInRegion),
 		[isUserAwsAccountConnected, isGrabAvailableInRegion]
 	);
+
+	useEffect(() => {
+		let previousWidth = document.body.clientWidth;
+		const resizeObserver = new ResizeObserver(() => {
+			const currentWidth = document.body.clientWidth;
+			if ((previousWidth < 1024 && currentWidth >= 1024) || (previousWidth >= 1024 && currentWidth < 1024)) {
+				window.location.reload();
+			}
+			previousWidth = currentWidth;
+		});
+
+		const handleWindowResize = () => {
+			resizeObserver.observe(document.body);
+		};
+
+		window.addEventListener("resize", handleWindowResize);
+
+		return () => {
+			window.removeEventListener("resize", handleWindowResize);
+			resizeObserver.disconnect();
+		};
+	}, []);
 
 	useEffect(() => {
 		autoMapUnit.selected && setAutomaticMapUnit();
@@ -477,6 +501,7 @@ const DemoPage: React.FC = () => {
 		resetAwsGeofenceStore();
 		resetAwsTrackingStore();
 		setShow(s => ({ ...s, authTrackerDisclaimerModal: false, authTrackerBox: true }));
+		!isDesktop && setUI(ResponsiveUIEnum.auth_tracker);
 	};
 
 	const locationError = useMemo(() => !!currentLocationData?.error, [currentLocationData]);
@@ -808,9 +833,11 @@ const DemoPage: React.FC = () => {
 				setShowConnectAwsAccountModal={b => setShow(s => ({ ...s, connectAwsAccount: b }))}
 				showStartUnauthSimulation={show.startUnauthSimulation}
 				setShowStartUnauthSimulation={b => setShow(s => ({ ...s, startUnauthSimulation: b }))}
+				startSimulation={startSimulation}
+				setStartSimulation={setStartSimulation}
 			/>
 		),
-		[show.startUnauthSimulation, show.unauthGeofenceBox]
+		[show.startUnauthSimulation, show.unauthGeofenceBox, startSimulation]
 	);
 	return !!credentials?.identityId ? (
 		<View
@@ -854,7 +881,7 @@ const DemoPage: React.FC = () => {
 									onOpenConnectAwsAccountModal={() => setShow(s => ({ ...s, connectAwsAccount: true }))}
 									onOpenSignInModal={() => setShow(s => ({ ...s, signInModal: true }))}
 									onShowSettings={() => setShow(s => ({ ...s, settings: true }))}
-									onShowTrackingDisclaimerModal={() => setShow(s => ({ ...s, trackingDisclaimerModal: true }))}
+									onShowTrackingDisclaimerModal={() => setShow(s => ({ ...s, authTrackerDisclaimerModal: true }))}
 									onShowAboutModal={() => setShow(s => ({ ...s, about: true }))}
 									onShowUnauthGeofenceBox={() => setShow(s => ({ ...s, unauthGeofenceBox: true }))}
 									onShowUnauthTrackerBox={() => setShow(s => ({ ...s, unauthTrackerBox: true }))}
@@ -929,7 +956,7 @@ const DemoPage: React.FC = () => {
 						onOpenConnectAwsAccountModal={() => setShow(s => ({ ...s, connectAwsAccount: true }))}
 						onOpenSignInModal={() => setShow(s => ({ ...s, signInModal: true }))}
 						onShowSettings={() => setShow(s => ({ ...s, settings: true }))}
-						onShowTrackingDisclaimerModal={() => setShow(s => ({ ...s, trackingDisclaimerModal: true }))}
+						onShowTrackingDisclaimerModal={() => setShow(s => ({ ...s, authTrackerDisclaimerModal: true }))}
 						onShowAboutModal={() => setShow(s => ({ ...s, about: true }))}
 						onShowUnauthGeofenceBox={() => setShow(s => ({ ...s, unauthGeofenceBox: true }))}
 						onShowUnauthTrackerBox={() => setShow(s => ({ ...s, unauthTrackerBox: true }))}
@@ -945,6 +972,18 @@ const DemoPage: React.FC = () => {
 						setShowStartUnauthSimulation={b => setShow(s => ({ ...s, startUnauthSimulation: b }))}
 						from={show.unauthGeofenceBox ? MenuItemEnum.GEOFENCE : MenuItemEnum.TRACKER}
 						UnauthSimulationUI={UnauthSimulationUI}
+						AuthGeofenceBox={
+							<AuthGeofenceBox
+								mapRef={mapViewRef?.current}
+								setShowAuthGeofenceBox={b => setShow(s => ({ ...s, authGeofenceBox: b }))}
+							/>
+						}
+						AuthTrackerBox={
+							<AuthTrackerBox
+								mapRef={mapViewRef?.current}
+								setShowAuthTrackerBox={b => setShow(s => ({ ...s, authTrackerBox: b }))}
+							/>
+						}
 					/>
 					<MapButtons
 						renderedUpon={TriggeredByEnum.DEMO_PAGE}

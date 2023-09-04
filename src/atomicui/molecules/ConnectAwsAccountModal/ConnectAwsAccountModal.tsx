@@ -8,7 +8,7 @@ import { IconAwsCloudFormation, IconCheckMarkCircle } from "@demo/assets";
 import { DropdownEl, Modal } from "@demo/atomicui/atoms";
 import { InputField } from "@demo/atomicui/molecules";
 import { appConfig, regionsData } from "@demo/core/constants";
-import { useAmplifyAuth, useAmplifyMap, useAws, useMediaQuery } from "@demo/hooks";
+import { useAmplifyAuth, useAmplifyMap, useAws, useDeviceMediaQuery } from "@demo/hooks";
 import { ConnectFormValuesType, EsriMapEnum, MapProviderEnum } from "@demo/types";
 import { AnalyticsEventActionsEnum, EventTypeEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
@@ -61,7 +61,7 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
 	const isOverflowing = ["de", "es", "fr", "it", "pt-BR"].includes(i18n.language);
-	const isDesktop = useMediaQuery("(min-width: 1024px)");
+	const { isDesktop } = useDeviceMediaQuery();
 
 	useEffect(() => {
 		const regionOption = region && regionsData.find(option => option.value === region);

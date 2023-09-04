@@ -5,12 +5,10 @@ import {
 	IconBackArrow,
 	IconClose,
 	IconGeofence,
-	IconGeofenceColor,
 	IconGeofenceMarkerDisabled,
 	IconNotificationBell,
 	IconRadar,
 	IconSegment,
-	IconTrackers,
 	Simulation
 } from "@demo/assets";
 import { DropdownEl, Modal } from "@demo/atomicui/atoms";
@@ -23,7 +21,7 @@ import {
 } from "@demo/atomicui/molecules";
 import { appConfig, busRoutesData } from "@demo/core";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
-import { useAmplifyMap, useAwsGeofence, useBottomSheet, useMediaQuery } from "@demo/hooks";
+import { useAmplifyMap, useAwsGeofence, useBottomSheet, useDeviceMediaQuery, useUnauthSimulation } from "@demo/hooks";
 import i18n from "@demo/locales/i18n";
 import {
 	MenuItemEnum,
@@ -43,11 +41,6 @@ import UnauthGeofencesSimulation from "./UnauthGeofencesSimulation";
 import UnauthRouteSimulation from "./UnauthRouteSimulation";
 import "./styles.scss";
 
-const {
-	MAP_RESOURCES: {
-		AMAZON_HQ: { US }
-	}
-} = appConfig.default;
 const initialTrackingHistory: TrackingHistoryType = {
 	bus_route_01: [],
 	bus_route_02: [],
@@ -63,6 +56,11 @@ const busRoutesDropdown = [
 	{ value: "bus_route_05", label: "Bus 05 UBC" }
 ];
 
+const {
+	MAP_RESOURCES: {
+		AMAZON_HQ: { US }
+	}
+} = appConfig.default;
 interface UnauthGeofenceBoxProps {
 	mapRef: MapRef | null;
 	from: MenuItemEnum;
@@ -71,6 +69,8 @@ interface UnauthGeofenceBoxProps {
 	setShowConnectAwsAccountModal: (b: boolean) => void;
 	showStartUnauthSimulation: boolean;
 	setShowStartUnauthSimulation: (b: boolean) => void;
+	startSimulation: boolean;
+	setStartSimulation: (b: boolean) => void;
 }
 
 const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
@@ -80,9 +80,11 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 	setShowUnauthTrackerBox,
 	setShowConnectAwsAccountModal,
 	showStartUnauthSimulation,
-	setShowStartUnauthSimulation
+	setShowStartUnauthSimulation,
+	startSimulation,
+	setStartSimulation
 }) => {
-	const [startSimulation, setStartSimulation] = useState(false);
+	// const [startSimulation, setStartSimulation] = useState(false);
 	const [trackingHistory, setTrackingHistory] = useState<TrackingHistoryType>(initialTrackingHistory);
 	const [selectedRoutes, setSelectedRoutes] = useState<SelectOption[]>([busRoutesDropdown[0]]);
 	const [busSelectedValue, setBusSelectedValue] = useState<SelectOption>(busRoutesDropdown[0]);
@@ -117,20 +119,13 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 		}, []),
 		startSimulation
 	);
-	console.log(startSimulation);
 	const { ui, setUI, setBottomSheetHeight, setBottomSheetMinHeight } = useBottomSheet();
 	const { t } = useTranslation();
 	const currentLanguage = i18n.language;
 	const unauthSimulationCtaText = t("unauth_simulation__cta.text");
 	const trackingHistoryRef: Ref<HTMLDivElement> = useRef<HTMLDivElement>(null);
 	const selectedRoutesIds = useMemo(() => selectedRoutes.map(route => route.value), [selectedRoutes]);
-	const isDesktop = useMediaQuery("(min-width: 1024px)");
-	const isMobile = useMediaQuery("(max-width: 425px)");
-	const isTablet = !isDesktop && !isMobile;
-
-	// useEffect(() => {
-	// 	setIsPlaying(false);
-	// }, [isDesktop]);
+	const { isDesktop, isTablet } = useDeviceMediaQuery();
 
 	useEffect(() => {
 		showStartUnauthSimulation && mapRef?.zoomTo(2);
@@ -280,7 +275,7 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 				</Flex>
 			</Flex>
 		);
-	}, [currentLanguage, t, setBottomSheetHeight, setBottomSheetMinHeight, from, setUI]);
+	}, [currentLanguage, t, setStartSimulation, setBottomSheetMinHeight, setBottomSheetHeight, from, setUI]);
 
 	const renderGeofences = useMemo(
 		() =>
@@ -315,6 +310,14 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 				)),
 		[isPlaying, selectedRoutesIds]
 	);
+
+	const onBackHandler = useCallback(() => {
+		if (isNotifications) {
+			setIsNotifications(false);
+		} else {
+			setConfirmCloseSimulation(true);
+		}
+	}, [isNotifications]);
 
 	const BeforeStartSimulation = () => (
 		<>
@@ -398,13 +401,7 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 										cursor="pointer"
 										width={20}
 										height={20}
-										onClick={() => {
-											if (isNotifications) {
-												setIsNotifications(false);
-											} else {
-												setConfirmCloseSimulation(true);
-											}
-										}}
+										onClick={onBackHandler}
 									/>
 									<Text className="medium" fontSize="1.08rem" textAlign="center" marginLeft="0.5rem">
 										{t("start_unauth_simulation__t&g_simulation.text")}

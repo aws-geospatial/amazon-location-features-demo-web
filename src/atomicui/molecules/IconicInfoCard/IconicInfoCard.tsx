@@ -13,6 +13,7 @@ interface IconicInfoCardProps {
 	subDescription?: string;
 	gap?: string;
 	direction?: "row" | "row-reverse" | string;
+	onClickHandler?: () => void;
 }
 
 const IconicInfoCard: React.FC<IconicInfoCardProps> = ({
@@ -24,7 +25,8 @@ const IconicInfoCard: React.FC<IconicInfoCardProps> = ({
 	cardAlignItems = "flex-start",
 	subDescription = "",
 	gap = "large",
-	direction = "row"
+	direction = "row",
+	onClickHandler
 }) => {
 	return (
 		<Flex
@@ -33,6 +35,7 @@ const IconicInfoCard: React.FC<IconicInfoCardProps> = ({
 			gap={gap}
 			margin={cardMargin}
 			alignItems={cardAlignItems}
+			onClick={onClickHandler}
 		>
 			{IconComponent}
 			<Flex direction="column" gap={subDescription ? 0 : "3px"} marginLeft={textContainerMarginLeft}>

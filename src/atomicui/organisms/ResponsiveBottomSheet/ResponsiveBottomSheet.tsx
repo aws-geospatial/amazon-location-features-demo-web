@@ -1,12 +1,12 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { FC, memo, useCallback, useEffect } from "react";
+import React, { FC, useCallback, useEffect } from "react";
 
 import { Flex, Text } from "@aws-amplify/ui-react";
 import { IconClose } from "@demo/assets";
-import { ConfirmationModal, NonStartUnauthSimulation } from "@demo/atomicui/molecules";
-import { useBottomSheet, useMediaQuery } from "@demo/hooks";
+import { ConfirmationModal } from "@demo/atomicui/molecules";
+import { useBottomSheet, useDeviceMediaQuery } from "@demo/hooks";
 import { MenuItemEnum, ResponsiveUIEnum } from "@demo/types/Enums";
 import { useTranslation } from "react-i18next";
 import { MapRef } from "react-map-gl";
@@ -15,7 +15,6 @@ import { BottomSheet } from "react-spring-bottom-sheet";
 import "react-spring-bottom-sheet/dist/style.css";
 import { Explore } from "../Explore";
 
-import { UnauthSimulation } from "../UnauthSimulation";
 import "./styles.scss";
 
 interface IProps {
@@ -41,6 +40,8 @@ interface IProps {
 	showStartUnauthSimulation: boolean;
 	from: MenuItemEnum;
 	UnauthSimulationUI: JSX.Element;
+	AuthGeofenceBox: JSX.Element;
+	AuthTrackerBox: JSX.Element;
 }
 
 const ResponsiveBottomSheet: FC<IProps> = ({
@@ -65,13 +66,12 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	setShowStartUnauthSimulation,
 	showStartUnauthSimulation,
 	UnauthSimulationUI,
-	from
+	from,
+	AuthGeofenceBox,
+	AuthTrackerBox
 }) => {
-	const isDesktop = useMediaQuery("(min-width: 1024px)");
-	const isMobile = useMediaQuery("(max-width: 425px)");
-	const isTablet = !isDesktop && !isMobile;
+	const { isDesktop, isTablet } = useDeviceMediaQuery();
 	const { t } = useTranslation();
-
 	const {
 		setBottomSheetMinHeight,
 		setBottomSheetHeight,
@@ -81,6 +81,16 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 		ui,
 		setUI
 	} = useBottomSheet();
+
+	const isShortHeader = ui && [ResponsiveUIEnum.auth_tracker, ResponsiveUIEnum.auth_geofence].includes(ui);
+	const isNonStartedSimulation =
+		!isDesktop &&
+		ui &&
+		[ResponsiveUIEnum.non_start_unauthorized_tracker, ResponsiveUIEnum.non_start_unauthorized_geofence].includes(ui);
+	const isExitSimulation =
+		!isDesktop &&
+		ui &&
+		[ResponsiveUIEnum.exit_unauthorized_tracker, ResponsiveUIEnum.exit_unauthorized_geofence].includes(ui);
 
 	useEffect(() => {
 		const resizeObserver = new ResizeObserver(entries => {
@@ -187,7 +197,13 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 					return null;
 				case ResponsiveUIEnum.unauth_tracker:
 				case ResponsiveUIEnum.unauth_geofence:
-					return isDesktop ? null : UnauthSimulationUI;
+				case ResponsiveUIEnum.exit_unauthorized_tracker:
+				case ResponsiveUIEnum.exit_unauthorized_geofence:
+					return UnauthSimulationUI;
+				case ResponsiveUIEnum.auth_tracker:
+					return AuthTrackerBox;
+				case ResponsiveUIEnum.auth_geofence:
+					return AuthGeofenceBox;
 				case ResponsiveUIEnum.explore:
 				case ResponsiveUIEnum.non_start_unauthorized_tracker:
 				case ResponsiveUIEnum.non_start_unauthorized_geofence:
@@ -211,10 +227,11 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 			}
 		},
 		[
+			AuthGeofenceBox,
+			AuthTrackerBox,
 			MapButtons,
 			RouteBox,
 			UnauthSimulationUI,
-			isDesktop,
 			onCloseSidebar,
 			onOpenConnectAwsAccountModal,
 			onOpenSignInModal,
@@ -247,46 +264,37 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 
 	const footerHeight = useCallback((maxHeight: number) => calculatePixelValue(maxHeight, 50), [calculatePixelValue]);
 
-	// const ExitSimulation = () => (
-	// 	<Flex className="confirmation-modal-container">
-	// 		<ConfirmationModal
-	// 			open
-	// 			onClose={onCloseHandler}
-	// 			heading={t("start_unauth_simulation__exit_simulation.text") as string}
-	// 			description={
-	// 				<Text
-	// 					className="small-text"
-	// 					variation="tertiary"
-	// 					marginTop="1.23rem"
-	// 					textAlign="center"
-	// 					whiteSpace="pre-line"
-	// 				>
-	// 					{t("start_unauth_simulation__exit_simulation_desc.text")}
-	// 				</Text>
-	// 			}
-	// 			onConfirm={() => setConfirmCloseSimulation(false)}
-	// 			confirmationText={t("start_unauth_simulation__stay_in_simulation.text") as string}
-	// 			cancelationText={t("exit.text") as string}
-	// 		/>
-	// 	</Flex>
-	// );
+	const ExitSimulation = useCallback(
+		() => (
+			<Flex className="confirmation-modal-container">
+				<ConfirmationModal
+					open
+					onClose={() => {}}
+					heading={t("start_unauth_simulation__exit_simulation.text") as string}
+					description={
+						<Text
+							className="small-text"
+							variation="tertiary"
+							marginTop="1.23rem"
+							textAlign="center"
+							whiteSpace="pre-line"
+						>
+							{t("start_unauth_simulation__exit_simulation_desc.text")}
+						</Text>
+					}
+					onConfirm={() => {}}
+					confirmationText={t("start_unauth_simulation__stay_in_simulation.text") as string}
+					cancelationText={t("exit.text") as string}
+				/>
+			</Flex>
+		),
+		[t]
+	);
+
 	return (
 		<>
-			{!isDesktop &&
-				ui &&
-				[ResponsiveUIEnum.non_start_unauthorized_tracker, ResponsiveUIEnum.non_start_unauthorized_geofence].includes(
-					ui
-				) && (
-					<UnauthSimulation
-						mapRef={mapRef}
-						from={from}
-						setShowUnauthGeofenceBox={setShowUnauthGeofenceBox}
-						setShowUnauthTrackerBox={setShowUnauthTrackerBox}
-						setShowConnectAwsAccountModal={setShowConnectAwsAccountModal}
-						showStartUnauthSimulation={showStartUnauthSimulation}
-						setShowStartUnauthSimulation={setShowStartUnauthSimulation}
-					/>
-				)}
+			{isNonStartedSimulation && UnauthSimulationUI}
+			{isExitSimulation && <ExitSimulation />}
 
 			<BottomSheet
 				open
@@ -299,8 +307,9 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				]}
 				maxHeight={bottomSheetHeight}
 				header={<Flex>{bottomSheetHeader(ui)}</Flex>}
-				className={`bottom-sheet ${isDesktop ? "desktop" : isTablet ? "tablet" : "mobile"} 
-					`}
+				className={`bottom-sheet ${isDesktop ? "desktop" : isTablet ? "tablet" : "mobile"} ${
+					isShortHeader ? "short-header" : ""
+				}`}
 				data-amplify-theme="aws-location-theme"
 			>
 				{bottomSheetBody(ui)}
@@ -309,4 +318,4 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	);
 };
 
-export default memo(ResponsiveBottomSheet);
+export default ResponsiveBottomSheet;

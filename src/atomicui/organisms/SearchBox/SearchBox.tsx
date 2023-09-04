@@ -36,7 +36,6 @@ interface SearchBoxProps {
 	value: string;
 	setValue: React.Dispatch<React.SetStateAction<string>>;
 	isSimpleSearch?: boolean;
-	isMarkerOnly?: boolean;
 }
 
 const SearchBox: React.FC<SearchBoxProps> = ({

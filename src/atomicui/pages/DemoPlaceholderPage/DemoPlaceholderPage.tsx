@@ -6,14 +6,13 @@ import { MapButtons } from "@demo/atomicui/molecules";
 import {
 	AuthGeofenceBox,
 	AuthTrackerBox,
-	ResponsiveBottomSheet,
 	RouteBox,
 	SearchBox,
 	SettingsModal,
 	Sidebar,
 	UnauthSimulation
 } from "@demo/atomicui/organisms";
-import { useMediaQuery } from "@demo/hooks";
+import { useDeviceMediaQuery } from "@demo/hooks";
 import { MapStyleFilterTypes, MenuItemEnum, ShowStateType } from "@demo/types";
 import "./styles.scss";
 
@@ -32,7 +31,7 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 	searchValue,
 	selectedFilters
 }) => {
-	const isDesktop = useMediaQuery("(min-width: 1024px)");
+	const { isDesktop } = useDeviceMediaQuery();
 	return (
 		<View style={{ height }}>
 			<View className={"loader-container"}>
@@ -80,8 +79,6 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 								isAuthTrackerBoxOpen={show.authTrackerBox}
 								isSettingsOpen={show.settings}
 								isStylesCardOpen={show.stylesCard}
-								value={searchValue}
-								setValue={() => {}}
 							/>
 						) : (
 							<></>

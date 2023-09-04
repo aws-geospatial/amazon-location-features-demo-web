@@ -6,7 +6,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Button, Card, Flex, Loader, Text, View } from "@aws-amplify/ui-react";
 import { IconArrow, IconCar, IconClose, IconDroneSolid, IconInfoSolid, IconSegment, IconWalking } from "@demo/assets";
 import { GeofenceMarker, WebsocketBanner } from "@demo/atomicui/molecules";
-import { useAwsGeofence, useAwsRoute, useAwsTracker, useMediaQuery } from "@demo/hooks";
+import { useAwsGeofence, useAwsRoute, useAwsTracker, useDeviceMediaQuery } from "@demo/hooks";
 import { RouteDataType, TrackerType } from "@demo/types";
 import { EventTypeEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
@@ -53,8 +53,7 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({ mapRef, setShowAuthTrac
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
 
-	const isDesktop = useMediaQuery("(min-width: 1024px)");
-
+	const { isDesktop } = useDeviceMediaQuery();
 	const fetchGeofencesList = useCallback(async () => getGeofencesList(), [getGeofencesList]);
 
 	useEffect(() => {
@@ -64,6 +63,7 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({ mapRef, setShowAuthTrac
 
 	useEffect(() => {
 		isDesktop && isCollapsed && setIsCollapsed(false);
+		!isDesktop && setIsCollapsed(false);
 	}, [isDesktop, isCollapsed]);
 
 	const isSimulationEnbaled = useMemo(() => isSaved && routeData, [isSaved, routeData]);
@@ -258,13 +258,17 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({ mapRef, setShowAuthTrac
 
 	return (
 		<>
-			<Card className="tracking-card" left="1.62rem">
+			<Card className={`tracking-card ${!isDesktop ? "tracking-card-mobile" : ""}`} left="1.62rem">
 				<Flex className="tracking-card-header">
 					<Text fontFamily="AmazonEmber-Medium" fontSize="1.08rem">
 						{t("tracker.text")}
 					</Text>
 					<Flex gap={0} alignItems="center">
-						<Flex data-testid="auth-tracker-box-close" className="tracking-card-close" onClick={onClose}>
+						<Flex
+							data-testid="auth-tracker-box-close"
+							className={`tracking-card-close ${!isDesktop ? "tracking-card-close-mobile" : ""}`}
+							onClick={onClose}
+						>
 							<IconClose />
 						</Flex>
 					</Flex>
@@ -339,7 +343,7 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({ mapRef, setShowAuthTrac
 										)}
 									</Button>
 									<Button className="edit-button" variation="primary" onClick={onEdit}>
-										{t("tracker_box__edit.text")}
+										{isDesktop ? t("tracker_box__edit.text") : "Edit Pen"}
 									</Button>
 								</>
 							)}
@@ -347,7 +351,7 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({ mapRef, setShowAuthTrac
 					)}
 				</Flex>
 				{!isCollapsed && renderTrackerPointsList}
-				{!!trackerPoints?.length && (
+				{isDesktop && !!trackerPoints?.length && (
 					<Flex className="show-hide-details-container bottom-border-radius" onClick={() => setIsCollapsed(s => !s)}>
 						<Text className="text">
 							{isCollapsed ? t("tracker_box__tracker_details.text") : t("hide_details.text")}

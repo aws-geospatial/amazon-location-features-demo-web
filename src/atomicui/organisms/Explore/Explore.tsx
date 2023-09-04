@@ -14,6 +14,7 @@ import {
 } from "@demo/assets";
 import { ExploreButton } from "@demo/atomicui/atoms";
 import { IconicInfoCard } from "@demo/atomicui/molecules";
+import { appConfig } from "@demo/core/constants";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useAmplifyAuth, useAmplifyMap, useAwsIot, useBottomSheet } from "@demo/hooks";
 import {
@@ -26,6 +27,7 @@ import {
 } from "@demo/types/Enums";
 import { record } from "@demo/utils";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import "./styles.scss";
 
 interface IProps {
@@ -42,6 +44,10 @@ interface IProps {
 	onShowUnauthTrackerBox: () => void;
 	onshowUnauthSimulationDisclaimerModal: () => void;
 }
+
+const {
+	ROUTES: { SAMPLES, OVERVIEW }
+} = appConfig;
 
 const Explore: React.FC<IProps> = ({
 	updateUIInfo,
@@ -65,6 +71,7 @@ const Explore: React.FC<IProps> = ({
 	const { detachPolicy } = useAwsIot();
 	const isAuthenticated = !!credentials?.authenticated;
 	const disconnectButtonText = t("disconnect_aws_account.text");
+	const navigate = useNavigate();
 
 	const onConnectAwsAccount = (action: AnalyticsEventActionsEnum) => {
 		onCloseSidebar();
@@ -89,8 +96,14 @@ const Explore: React.FC<IProps> = ({
 			if (isAuthenticated) {
 				if (menuItem === MenuItemEnum.GEOFENCE) {
 					onShowAuthGeofenceBox();
+					updateUIInfo(ResponsiveUIEnum.auth_geofence);
 				} else {
-					currentMapProvider === MapProviderEnum.ESRI ? onShowTrackingDisclaimerModal() : onShowAuthTrackerBox();
+					if (currentMapProvider === MapProviderEnum.ESRI) {
+						onShowTrackingDisclaimerModal();
+					} else {
+						onShowAuthTrackerBox();
+						updateUIInfo(ResponsiveUIEnum.auth_tracker);
+					}
 				}
 			} else {
 				onOpenSignInModal();
@@ -118,136 +131,147 @@ const Explore: React.FC<IProps> = ({
 
 	const _onLogin = async () => await onLogin();
 
+	const onClickSettings = () => {
+		onCloseSidebar();
+		onShowSettings();
+	};
+
+	const onClickMore = () => {
+		onCloseSidebar();
+		onShowAboutModal();
+	};
+
+	const ConnectAccount = () => (
+		<>
+			<Flex alignItems="center">
+				<IconAwsCloudFormation width="1.2rem" height="1.38rem" />
+				<Text fontFamily="AmazonEmber-Bold" fontSize="1.23rem">
+					{t("explore__connect_aws_account.text")}
+				</Text>
+			</Flex>
+			<Text fontFamily="AmazonEmber-Regular" fontSize="1rem" color="var(--grey-color)">
+				{t("explore__connect_description.text")}
+			</Text>
+			<Button
+				variation="primary"
+				width="100%"
+				height="3.07rem"
+				onClick={() => onConnectAwsAccount(AnalyticsEventActionsEnum.CONNECT_AWS_ACCOUNT_BUTTON_CLICKED)}
+			>
+				{t("caam__connect.text")}
+			</Button>
+		</>
+	);
+
+	const AwsAccountButton = () => (
+		<Button
+			data-testid={isAuthenticated ? "sign-out-button" : "sign-in-button"}
+			variation="primary"
+			fontFamily="AmazonEmber-Bold"
+			textAlign="center"
+			onClick={async () => {
+				if (isAuthenticated) {
+					_onLogout();
+				} else {
+					await record(
+						[{ EventType: EventTypeEnum.SIGN_IN_STARTED, Attributes: { triggeredBy: TriggeredByEnum.SIDEBAR } }],
+						["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
+					);
+
+					_onLogin();
+				}
+			}}
+		>
+			{isAuthenticated ? t("sign_out.text") : t("sign_in.text")}
+		</Button>
+	);
+
+	const DisconnectButton = () => (
+		<Button
+			data-testid="disconnect-aws-account-button"
+			variation="primary"
+			fontFamily="AmazonEmber-Bold"
+			className="disconnect-button"
+			marginTop="8px"
+			textAlign="center"
+			onClick={onDisconnectAwsAccount}
+			fontSize={disconnectButtonText.length > 22 ? "0.92rem" : "1rem"}
+		>
+			{disconnectButtonText}
+		</Button>
+	);
+
+	const exploreMoreOptions = [
+		{
+			title: t("header__overview.text"),
+			description: "Description text will be there",
+			onClickHandler: () => navigate(OVERVIEW)
+		},
+		{
+			title: t("samples.text"),
+			description: "Description text will be there",
+			onClickHandler: () => navigate(SAMPLES)
+		},
+		{ title: t("settings.text"), description: "Description text will be there", onClickHandler: onClickSettings },
+		{ title: t("about.text"), description: "Description text will be there", onClickHandler: onClickMore }
+	];
+
+	const exploreButtons = [
+		{
+			text: t("routes.text"),
+			icon: <IconDirections width="1.53rem" height="1.53rem" fill="white" />,
+			onClick: () => {
+				updateUIInfo(ResponsiveUIEnum.routes);
+				setBottomSheetMinHeight(BottomSheetHeights.routes.min);
+				setBottomSheetHeight(BottomSheetHeights.routes.max);
+			}
+		},
+		{
+			text: t("map_style.text"),
+			icon: <IconMapSolid width="1.53rem" height="1.53rem" fill="white" />,
+			onClick: () => {
+				updateUIInfo(ResponsiveUIEnum.map_styles);
+				setBottomSheetMinHeight(BottomSheetHeights.map_styles.min);
+				setBottomSheetHeight(BottomSheetHeights.map_styles.max);
+			}
+		},
+		{
+			text: t("trackers.text"),
+			icon: <IconRadar width="1.53rem" height="1.53rem" />,
+			onClick: () => onClickMenuItem(MenuItemEnum.TRACKER)
+		},
+		{
+			text: t("geofences.text"),
+			icon: <IconGeofencePlusSolid width="1.53rem" height="1.53rem" fill="white" />,
+			onClick: () => onClickMenuItem(MenuItemEnum.GEOFENCE)
+		}
+	];
+
 	return (
 		<Flex direction="column" className="explore-container" gap="0">
 			<Flex className="feature-container">
-				<ExploreButton
-					text={t("routes.text")}
-					icon={<IconDirections width="1.53rem" height="1.53rem" fill="white" />}
-					onClick={() => {
-						updateUIInfo(ResponsiveUIEnum.routes);
-						setBottomSheetMinHeight(BottomSheetHeights.routes.min);
-						setBottomSheetHeight(BottomSheetHeights.routes.max);
-					}}
-				/>
-				<ExploreButton
-					text={t("map_style.text")}
-					icon={<IconMapSolid width="1.53rem" height="1.53rem" fill="white" />}
-					onClick={() => {
-						updateUIInfo(ResponsiveUIEnum.map_styles);
-						setBottomSheetMinHeight(BottomSheetHeights.map_styles.min);
-						setBottomSheetHeight(BottomSheetHeights.map_styles.max);
-					}}
-				/>
-				<ExploreButton
-					text={t("trackers.text")}
-					icon={<IconRadar width="1.53rem" height="1.53rem" />}
-					onClick={() => onClickMenuItem(MenuItemEnum.TRACKER)}
-				/>
-				<ExploreButton
-					text={t("geofences.text")}
-					icon={<IconGeofencePlusSolid width="1.53rem" height="1.53rem" fill="white" />}
-					onClick={() => onClickMenuItem(MenuItemEnum.GEOFENCE)}
-				/>
+				{exploreButtons.map((button, index) => (
+					<ExploreButton key={index} text={button.text} icon={button.icon} onClick={button.onClick} />
+				))}
 			</Flex>
 			<Flex direction="column" className="aws-connect-container button-wrapper">
-				{isUserAwsAccountConnected && (
-					<Button
-						data-testid={isAuthenticated ? "sign-out-button" : "sign-in-button"}
-						variation="primary"
-						fontFamily="AmazonEmber-Bold"
-						textAlign="center"
-						onClick={async () => {
-							if (isAuthenticated) {
-								_onLogout();
-							} else {
-								await record(
-									[{ EventType: EventTypeEnum.SIGN_IN_STARTED, Attributes: { triggeredBy: TriggeredByEnum.SIDEBAR } }],
-									["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
-								);
-
-								_onLogin();
-							}
-						}}
-					>
-						{isAuthenticated ? t("sign_out.text") : t("sign_in.text")}
-					</Button>
-				)}
-				{!isUserAwsAccountConnected && (
-					<>
-						<Flex alignItems="center">
-							<IconAwsCloudFormation width="1.2rem" height="1.38rem" />
-							<Text fontFamily="AmazonEmber-Bold" fontSize="1.23rem">
-								{t("explore__connect_aws_account.text")}
-							</Text>
-						</Flex>
-						<Text fontFamily="AmazonEmber-Regular" fontSize="1rem" color="var(--grey-color)">
-							{t("explore__connect_description.text")}
-						</Text>
-						<Button
-							variation="primary"
-							width="100%"
-							height="3.07rem"
-							onClick={() => onConnectAwsAccount(AnalyticsEventActionsEnum.CONNECT_AWS_ACCOUNT_BUTTON_CLICKED)}
-						>
-							{t("caam__connect.text")}
-						</Button>
-					</>
-				)}
-				{isUserAwsAccountConnected && !isAuthenticated && (
-					<>
-						<Button
-							data-testid="disconnect-aws-account-button"
-							variation="primary"
-							fontFamily="AmazonEmber-Bold"
-							className="disconnect-button"
-							marginTop="8px"
-							textAlign="center"
-							onClick={onDisconnectAwsAccount}
-							fontSize={disconnectButtonText.length > 22 ? "0.92rem" : "1rem"}
-						>
-							{disconnectButtonText}
-						</Button>
-					</>
-				)}
+				{isUserAwsAccountConnected ? <AwsAccountButton /> : <ConnectAccount />}
+				{isUserAwsAccountConnected && !isAuthenticated && <DisconnectButton />}
 			</Flex>
 			<Flex direction="column" gap="0" margin="0 1rem" className="explore-more-options">
-				<IconicInfoCard
-					gap="0"
-					IconComponent={<IconArrow className="reverse-icon" width={20} height={20} />}
-					title={t("header__overview.text")}
-					description={"Description text will be there"}
-					cardMargin={"2rem 0 0.923rem 0"}
-					direction="row-reverse"
-					cardAlignItems="center"
-				/>
-				<IconicInfoCard
-					gap="0"
-					IconComponent={<IconArrow className="reverse-icon" width={20} height={20} />}
-					title={t("samples.text")}
-					description={"Description text will be there"}
-					cardMargin={"0.923rem 0"}
-					direction="row-reverse"
-					cardAlignItems="center"
-				/>
-				<IconicInfoCard
-					gap="0"
-					IconComponent={<IconArrow className="reverse-icon" width={20} height={20} />}
-					title={t("settings.text")}
-					description={"Description text will be there"}
-					cardMargin={"0.923rem 0"}
-					direction="row-reverse"
-					cardAlignItems="center"
-				/>
-				<IconicInfoCard
-					gap="0"
-					IconComponent={<IconArrow className="reverse-icon" width={20} height={20} />}
-					title={t("about.text")}
-					description={"Description text will be there"}
-					cardMargin={"0.923rem 0"}
-					direction="row-reverse"
-					cardAlignItems="center"
-				/>
+				{exploreMoreOptions.map((option, index) => (
+					<IconicInfoCard
+						key={index}
+						gap="0"
+						IconComponent={<IconArrow className="reverse-icon" width={20} height={20} />}
+						title={option.title}
+						description={option.description}
+						cardMargin={index === 0 ? "2rem 0 0.923rem 0" : "0.923rem 0"}
+						direction="row-reverse"
+						cardAlignItems="center"
+						onClickHandler={option.onClickHandler}
+					/>
+				))}
 			</Flex>
 		</Flex>
 	);

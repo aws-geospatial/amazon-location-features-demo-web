@@ -22,7 +22,14 @@ import {
 
 import { NotFoundCard, StepCard } from "@demo/atomicui/molecules";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
-import { useAmplifyMap, useAwsPlace, useAwsRoute, useBottomSheet, useMediaQuery, usePersistedData } from "@demo/hooks";
+import {
+	useAmplifyMap,
+	useAwsPlace,
+	useAwsRoute,
+	useBottomSheet,
+	useDeviceMediaQuery,
+	usePersistedData
+} from "@demo/hooks";
 import {
 	DistanceUnitEnum,
 	InputType,
@@ -89,7 +96,8 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 	const { defaultRouteOptions } = usePersistedData();
 	const [expandRouteOptions, setExpandRouteOptions] = useState(false);
 	const [routeOptions, setRouteOptions] = useState<RouteOptionsType>({ ...defaultRouteOptions });
-	const isDesktop = useMediaQuery("(min-width: 1024px)");
+
+	const { isDesktop } = useDeviceMediaQuery();
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";

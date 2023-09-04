@@ -5,6 +5,14 @@
 	max-width: 45.69rem;
 	max-height: 49.23rem;
 
+	&.more-modal-mobile {
+		max-width: 100% !important;
+		max-height: 100% !important;
+		width: 100% !important;
+		height: 100% !important;
+		border-radius: 0;
+	}
+
 	.more-modal-content {
 		gap: 0;
 		height: 100%;

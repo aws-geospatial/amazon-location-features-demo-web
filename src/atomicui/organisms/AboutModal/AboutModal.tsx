@@ -7,7 +7,7 @@ import { Button, Divider, Flex, Text } from "@aws-amplify/ui-react";
 import { IconPoweredByAws1 } from "@demo/assets";
 import { Modal } from "@demo/atomicui/atoms";
 import { aboutModalData, appConfig } from "@demo/core/constants";
-import { useAmplifyMap } from "@demo/hooks";
+import { useAmplifyMap, useDeviceMediaQuery } from "@demo/hooks";
 import { AboutOptionEnum, MapProviderEnum } from "@demo/types/Enums";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
@@ -30,6 +30,7 @@ interface AboutModalProps {
 const AboutModal: React.FC<AboutModalProps> = ({ open, onClose }) => {
 	const [selectedOption, setSelectedOption] = useState<AboutOptionEnum>(AboutOptionEnum.ATTRIBUTION);
 	const { mapProvider } = useAmplifyMap();
+	const { isDesktop } = useDeviceMediaQuery();
 	const attributeEl = document.querySelector<HTMLElement>(".mapboxgl-ctrl-attrib-inner");
 
 	const handlePartnerLearnMore = useCallback(() => {
@@ -147,7 +148,7 @@ const AboutModal: React.FC<AboutModalProps> = ({ open, onClose }) => {
 			data-testid="about-modal-container"
 			open={open}
 			onClose={onClose}
-			className="more-modal"
+			className={`more-modal ${!isDesktop ? "more-modal-mobile" : ""} `}
 			content={
 				<Flex className="more-modal-content">
 					<Flex className="options-container">

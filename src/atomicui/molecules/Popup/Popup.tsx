@@ -6,7 +6,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Button, Flex, Placeholder, Text, View } from "@aws-amplify/ui-react";
 import { IconCar, IconClose, IconCopyPages, IconDirections, IconInfo } from "@demo/assets";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
-import { useAmplifyMap, useAwsPlace, useAwsRoute, useBottomSheet, useMediaQuery } from "@demo/hooks";
+import { useAmplifyMap, useAwsPlace, useAwsRoute, useBottomSheet, useDeviceMediaQuery } from "@demo/hooks";
 import { DistanceUnitEnum, MapProviderEnum, MapUnitEnum, SuggestionType, TravelMode } from "@demo/types";
 
 import { ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
@@ -42,7 +42,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 	const { clearPoiList } = useAwsPlace();
 	const { getRoute, setDirections, isFetchingRoute } = useAwsRoute();
 	const [longitude, latitude] = info.Place?.Geometry.Point as Position;
-	const isDesktop = useMediaQuery("(min-width: 1024px)");
+	const { isDesktop } = useDeviceMediaQuery();
 	const { t, i18n } = useTranslation();
 	const currentLang = i18n.language;
 	const langDir = i18n.dir();

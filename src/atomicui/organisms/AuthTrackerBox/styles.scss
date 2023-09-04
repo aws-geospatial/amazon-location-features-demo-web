@@ -8,7 +8,12 @@
 	overflow: hidden;
 	z-index: 4;
 
-	
+	&.tracking-card-mobile {
+		width: 100% !important;
+		box-shadow: none;
+		left: 0 !important;
+		overflow: initial;
+	}
 
 	.tracking-card-header {
 		gap: 0;
@@ -49,6 +54,13 @@
 				&:hover {
 					fill: var(--primary-color);
 				}
+			}
+
+			&.tracking-card-close-mobile {
+				position: relative;
+				top: -25px;
+				border: 0;
+				z-index: 26;
 			}
 		}
 	}

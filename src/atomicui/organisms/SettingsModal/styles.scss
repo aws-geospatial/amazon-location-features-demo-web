@@ -6,6 +6,14 @@
 	max-height: 49.23rem;
 	padding: 0 2px 2px 0;
 
+	&.settings-modal-mobile {
+		max-width: 100% !important;
+		max-height: 100% !important;
+		width: 100% !important;
+		height: 100% !important;
+		border-radius: 0;
+	}
+
 	.settings-modal-content {
 		gap: 0;
 		height: 100%;

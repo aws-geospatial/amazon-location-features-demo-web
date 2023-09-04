@@ -19,6 +19,12 @@
 		opacity: 1;
 	}
 
+	&.short-header {
+		 [data-rsbs-header="true"] {
+			width: 85% !important;
+  	}
+	}
+
   [data-rsbs-header="true"] {
     box-shadow: none;
     padding: 0;

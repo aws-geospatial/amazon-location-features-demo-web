@@ -17,7 +17,7 @@ import {
 import { DropdownEl, Modal } from "@demo/atomicui/atoms";
 import { InputField } from "@demo/atomicui/molecules";
 import { appConfig, languageSwitcherData, regionsData } from "@demo/core/constants";
-import { useAmplifyAuth, useAmplifyMap, useAws, useAwsIot, usePersistedData } from "@demo/hooks";
+import { useAmplifyAuth, useAmplifyMap, useAws, useAwsIot, useDeviceMediaQuery, usePersistedData } from "@demo/hooks";
 import {
 	ConnectFormValuesType,
 	EsriMapEnum,
@@ -116,7 +116,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
 	const fastestRegion = localStorage.getItem("fastestRegion") || "";
-
+	const { isDesktop } = useDeviceMediaQuery();
 	useEffect(() => {
 		const regionOption = region && regionsData.find(option => option.value === region);
 
@@ -840,7 +840,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 				setSettingsOptions(SettingOptionEnum.UNITS);
 				onClose();
 			}}
-			className="settings-modal"
+			className={`settings-modal ${!isDesktop ? "settings-modal-mobile" : ""} `}
 			content={
 				<Flex className="settings-modal-content">
 					<Flex className="options-container">
