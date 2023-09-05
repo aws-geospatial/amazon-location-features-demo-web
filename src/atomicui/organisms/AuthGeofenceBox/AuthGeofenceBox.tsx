@@ -178,7 +178,7 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({ mapRef, setShowAuthGe
 					setPlace(pd.Place);
 					setCirclePropertiesFromSuggestion(pd.Place);
 				}
-			} else if (!PlaceId && !Text && Place) {
+			} else if (!Text && Place) {
 				setPlace(Place);
 				setCirclePropertiesFromSuggestion(Place);
 			}
@@ -199,7 +199,9 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({ mapRef, setShowAuthGe
 						<Flex
 							key={`${PlaceId}-${idx}`}
 							className={idx === 0 ? "suggestion border-top" : "suggestion"}
-							onClick={() => onSelectSuggestion({ PlaceId, Text: text, Place })}
+							onClick={() => {
+								onSelectSuggestion({ PlaceId, Text: text, Place });
+							}}
 						>
 							{PlaceId ? <IconPin /> : <IconSearch />}
 							<Flex gap={0} direction="column" justifyContent="center" marginLeft="19px">
@@ -440,29 +442,28 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({ mapRef, setShowAuthGe
 			</Flex>
 		);
 	}, [
-		name,
-		geofences,
-		isEditing,
-		t,
-		current.value,
-		current.radiusInM,
-		value,
-		radiusInM,
-		geofenceCenter,
-		isDesktop,
-		isLtr,
-		onChange,
-		onSearch,
-		langDir,
-		renderSuggestions,
-		suggestions?.length,
-		isCollapsed,
-		currentMapUnit,
-		unit,
-		onSave,
 		isAddingGeofence,
 		resetAll,
-		onChangeRadius
+		geofences,
+		geofenceCenter,
+		value,
+		onChange,
+		onSearch,
+		renderSuggestions,
+		suggestions,
+		radiusInM,
+		name,
+		onSave,
+		isEditing,
+		unit,
+		onChangeRadius,
+		current,
+		currentMapUnit,
+		isCollapsed,
+		t,
+		langDir,
+		isLtr,
+		isDesktop
 	]);
 
 	const onDelete = useCallback(
