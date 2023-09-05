@@ -98,22 +98,20 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 			setTrackingHistory(prevState => {
 				const count = prevState[n.busRouteId].filter(({ title }) => title.includes("Bus stop number")).length;
 				const exists = prevState[n.busRouteId].find(({ description }) => description === n.coordinates);
-				const title = `Bus stop number ${count + 1}`;
+				const title = exists ? exists.title : `Bus stop number ${count + 1}`;
 
-				return !exists
-					? {
-							...prevState,
-							[n.busRouteId]: [
-								...prevState[n.busRouteId],
-								{
-									type: TrackingHistoryTypeEnum.BUS_STOP,
-									title,
-									description: n.coordinates,
-									subDescription: n.createdAt
-								}
-							]
-					  }
-					: { ...prevState };
+				return {
+					...prevState,
+					[n.busRouteId]: [
+						...prevState[n.busRouteId],
+						{
+							type: TrackingHistoryTypeEnum.BUS_STOP,
+							title,
+							description: n.coordinates,
+							subDescription: n.createdAt
+						}
+					]
+				};
 			});
 		}, []),
 		startSimulation

@@ -13,8 +13,10 @@ import { EventTypeEnum, NotificationHistoryItemtype, ToastType } from "@demo/typ
 import { record } from "@demo/utils/analyticsUtils";
 import { getDomainName } from "@demo/utils/getDomainName";
 import { Amplify, Hub, PubSub } from "aws-amplify";
+import { equals } from "ramda";
 
 const RETRY_INTERVAL = 100;
+const authEvents: unknown[] = [];
 
 const useWebSocketService = (
 	updateTrackingHistory?: (n: NotificationHistoryItemtype) => void,
@@ -48,102 +50,111 @@ const useWebSocketService = (
 				clientId: credentials?.identityId
 			})
 		);
-		setSubscription(
-			PubSub.subscribe(`${credentials?.identityId}/tracker`, {
-				provider: "AWSIoTProvider"
-			}).subscribe({
-				next: data => {
-					const {
-						value: {
-							eventTime = "",
-							source = "",
-							trackerEventType = "",
-							geofenceId = "",
-							geofenceCollection = "",
-							stopName = "",
-							coordinates = []
-						}
-					} = data;
+		!subscription &&
+			setSubscription(
+				PubSub.subscribe(`${credentials?.identityId}/tracker`, {
+					provider: "AWSIoTProvider"
+				}).subscribe({
+					next: data => {
+						const {
+							value: {
+								eventTime = "",
+								source = "",
+								trackerEventType = "",
+								geofenceId = "",
+								geofenceCollection = "",
+								stopName = "",
+								coordinates = []
+							}
+						} = data;
+						console.log({ event: { ...data.value } });
 
-					if (source === "aws.geo") {
-						if (stopName) {
-							const busRouteId = geofenceId.split("-")[0];
+						if (source === "aws.geo") {
+							if (stopName) {
+								/* Unauth simulation events */
+								const busRouteId = geofenceId.split("-")[0];
 
-							if (trackerEventType === "ENTER") {
-								setUnauthNotifications({
-									busRouteId,
-									geofenceCollection,
-									stopName,
-									coordinates: `${coordinates[1]}, ${coordinates[0]}`,
-									createdAt: eventTime
-								});
-								updateTrackingHistory &&
-									updateTrackingHistory({
+								if (trackerEventType === "ENTER") {
+									setUnauthNotifications({
 										busRouteId,
 										geofenceCollection,
 										stopName,
 										coordinates: `${coordinates[1]}, ${coordinates[0]}`,
 										createdAt: eventTime
 									});
+									updateTrackingHistory &&
+										updateTrackingHistory({
+											busRouteId,
+											geofenceCollection,
+											stopName,
+											coordinates: `${coordinates[1]}, ${coordinates[0]}`,
+											createdAt: eventTime
+										});
+								}
+
+								showToast({
+									content:
+										i18n.dir() === "ltr"
+											? `Bus ${busRouteId.split("_")[2]}: ${
+													trackerEventType === "ENTER"
+														? i18n.t("show_toast__entered.text")
+														: i18n.t("show_toast__exited.text")
+											  } ${stopName}`
+											: `${stopName} ${
+													trackerEventType === "ENTER"
+														? i18n.t("show_toast__entered.text")
+														: i18n.t("show_toast__exited.text")
+											  } :${busRouteId.split("_")[2]} Bus`,
+									type: ToastType.INFO,
+									containerId: "unauth-simulation-toast-container",
+									className: `${String(trackerEventType).toLowerCase()}-geofence`
+								});
+							} else {
+								/* Auth simulation events */
+								const authEvent = { ...data.value };
+
+								if (authEvents.length === 0 || !authEvents.some(equals(authEvent))) {
+									showToast({
+										content:
+											i18n.dir() === "ltr"
+												? `${
+														trackerEventType === "ENTER"
+															? i18n.t("show_toast__entered.text")
+															: i18n.t("show_toast__exited.text")
+												  } ${geofenceId} ${i18n.t("geofence.text")}`
+												: `${i18n.t("geofence.text")} ${geofenceId} ${
+														trackerEventType === "ENTER"
+															? i18n.t("show_toast__entered.text")
+															: i18n.t("show_toast__exited.text")
+												  }`,
+										type: ToastType.INFO,
+										containerId: "toast-container",
+										className: `${String(trackerEventType).toLowerCase()}-geofence`
+									});
+									authEvents.push(authEvent);
+								}
 							}
 
-							showToast({
-								content:
-									i18n.dir() === "ltr"
-										? `Bus ${busRouteId.split("_")[2]}: ${
-												trackerEventType === "ENTER"
-													? i18n.t("show_toast__entered.text")
-													: i18n.t("show_toast__exited.text")
-										  } ${stopName}`
-										: `${stopName} ${
-												trackerEventType === "ENTER"
-													? i18n.t("show_toast__entered.text")
-													: i18n.t("show_toast__exited.text")
-										  } :${busRouteId.split("_")[2]} Bus`,
-								type: ToastType.INFO,
-								containerId: "unauth-simulation-toast-container",
-								className: `${String(trackerEventType).toLowerCase()}-geofence`
-							});
-						} else {
-							showToast({
-								content:
-									i18n.dir() === "ltr"
-										? `${
-												trackerEventType === "ENTER"
-													? i18n.t("show_toast__entered.text")
-													: i18n.t("show_toast__exited.text")
-										  } ${geofenceId} ${i18n.t("geofence.text")}`
-										: `${i18n.t("geofence.text")} ${geofenceId} ${
-												trackerEventType === "ENTER"
-													? i18n.t("show_toast__entered.text")
-													: i18n.t("show_toast__exited.text")
-										  }`,
-								type: ToastType.INFO,
-								containerId: "toast-container",
-								className: `${String(trackerEventType).toLowerCase()}-geofence`
-							});
-						}
-
-						record(
-							[
-								{
-									EventType: EventTypeEnum.GEO_EVENT_TRIGGERED,
-									Attributes: {
-										eventType: trackerEventType,
-										geofenceId
+							record(
+								[
+									{
+										EventType: EventTypeEnum.GEO_EVENT_TRIGGERED,
+										Attributes: {
+											eventType: trackerEventType,
+											geofenceId
+										}
 									}
-								}
-							],
-							["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
-						);
-					}
-				},
-				error: () => {
-					setTimeout(connect, RETRY_INTERVAL);
-				},
-				complete: () => console.info("complete")
-			})
-		);
+								],
+								["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
+							);
+						}
+					},
+					error: () => {
+						setTimeout(connect, RETRY_INTERVAL);
+					},
+					complete: () => console.info("complete")
+				})
+			);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [credentials?.identityId, region, url]);
 
@@ -152,8 +163,21 @@ const useWebSocketService = (
 			["Disconnected", "ConnectionDisrupted", "ConnectedPendingDisconnect"].includes(connectionState) &&
 			startSocketConnection
 		) {
+			// Disconnect if there's an existing connection
+			if (subscription) {
+				console.info("Disconnecting from WebSocket");
+				subscription.unsubscribe();
+				setSubscription(null);
+			}
+
+			console.info("Connecting to WebSocket");
 			connect();
 		}
+
+		if (["Connected"].includes(connectionState) && startSocketConnection) {
+			console.info("Connected to WebSocket");
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connect, connectionState, startSocketConnection]);
 
 	return useMemo(
