@@ -239,7 +239,8 @@ export enum RadiusInM {
 export enum TrackerType {
 	CAR = "Car",
 	WALK = "Walk",
-	DRONE = "Drone"
+	DRONE = "Drone",
+	MOBILE = "Mobile"
 }
 
 export enum HelpAccordionEnum {

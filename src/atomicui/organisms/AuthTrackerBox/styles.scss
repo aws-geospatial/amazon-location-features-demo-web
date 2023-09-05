@@ -130,6 +130,12 @@
 				font-size: 0.92rem;
 				font-family: "AmazonEmber-Bold";
 				margin-left: 0.62rem;
+
+				.edit-icon {
+					g > g {
+						fill: var(--primary-color);
+					}
+				}
 			}
 		}
 	}
