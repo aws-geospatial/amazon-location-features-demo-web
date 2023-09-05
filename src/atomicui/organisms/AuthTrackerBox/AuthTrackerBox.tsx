@@ -90,7 +90,11 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({ mapRef, setShowAuthTrac
 		setSelectedTrackerType(type);
 	};
 
-	const onClear = () => setTrackerPoints(undefined);
+	const onClear = () => {
+		setRouteData(undefined);
+		setPoints(undefined);
+		setTrackerPoints(undefined);
+	};
 
 	const onSave = () => {
 		if (trackerPoints && trackerPoints.length >= 2) {
