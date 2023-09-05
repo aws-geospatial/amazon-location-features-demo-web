@@ -689,6 +689,9 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({ mapRef, setShowAuthGe
 									: t("geofence_box__add_geofence.text")
 								: t("geofence.text")}
 						</Text>
+						{!isDesktop && isAddingOrEditing && (
+							<IconClose onClick={resetAll} className={"close-icon geofence-close-mobile"} />
+						)}
 					</Flex>
 					<Flex gap={0} alignItems="center">
 						{isDesktop && !isAddingGeofence && (
@@ -699,10 +702,10 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({ mapRef, setShowAuthGe
 								</Text>
 							</Flex>
 						)}
-						{!isDesktop && (
+						{!isAddingOrEditing && (
 							<Flex
 								className={`geofence-card-close ${!isDesktop ? "geofence-card-close-mobile" : ""}`}
-								onClick={() => (!isAddingOrEditing ? onClose() : resetAll())}
+								onClick={onClose}
 							>
 								<IconClose />
 							</Flex>

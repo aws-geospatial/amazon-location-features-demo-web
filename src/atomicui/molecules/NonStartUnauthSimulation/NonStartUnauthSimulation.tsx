@@ -1,8 +1,7 @@
-import React, { FC, useCallback } from "react";
+import React, { FC } from "react";
 
 import { Button, Card, Flex, Text } from "@aws-amplify/ui-react";
 import { IconClose, IconGeofenceColor, IconTrackers } from "@demo/assets";
-import { Modal } from "@demo/atomicui/atoms";
 import { useBottomSheet, useDeviceMediaQuery } from "@demo/hooks";
 import { MenuItemEnum } from "@demo/types";
 import { ResponsiveUIEnum } from "@demo/types/Enums";

@@ -4,7 +4,7 @@
 import React, { FC, useCallback, useEffect } from "react";
 
 import { Flex, Text } from "@aws-amplify/ui-react";
-import { IconClose, IconLocateMe, LogoDark, LogoLight } from "@demo/assets";
+import { IconClose, LogoDark, LogoLight } from "@demo/assets";
 import { ConfirmationModal } from "@demo/atomicui/molecules";
 import { useAmplifyMap, useBottomSheet, useDeviceMediaQuery } from "@demo/hooks";
 import { MenuItemEnum, ResponsiveUIEnum } from "@demo/types/Enums";
@@ -46,7 +46,6 @@ interface IProps {
 }
 
 const ResponsiveBottomSheet: FC<IProps> = ({
-	mapRef,
 	SearchBoxEl,
 	MapButtons,
 	RouteBox,
@@ -63,9 +62,6 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	onshowUnauthSimulationDisclaimerModal,
 	setShowUnauthGeofenceBox,
 	setShowUnauthTrackerBox,
-	setShowConnectAwsAccountModal,
-	setShowStartUnauthSimulation,
-	showStartUnauthSimulation,
 	UnauthSimulationUI,
 	from,
 	AuthGeofenceBox,

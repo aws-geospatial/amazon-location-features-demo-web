@@ -14,6 +14,12 @@
 		left: 0 !important;
 		overflow: initial;
 
+		.geofence-close-mobile {
+			position: absolute;
+			top: -14px;
+			right: 10px;
+		}
+
 		.add-geofence-button-container-mobile {
 			margin: 1rem 0;
 			button {
