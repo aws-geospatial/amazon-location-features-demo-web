@@ -40,7 +40,7 @@ body:has(.disable-body-scroll) {
 }
 
 .amplify-flex.amplify-checkbox__button.amplify-checkbox__button--focused {
-	&:before{
+	&:before {
 		box-shadow: none;
 	}
 }
@@ -69,4 +69,16 @@ body:has(.disable-body-scroll) {
 			}
 		}
 	}
+}
+
+.amplify-radio__button {
+	min-width: 1.5rem;
+	min-height: 1.5rem;
+}
+
+
+.close-icon {
+	fill: var(--grey-color);
+	width: 1.5rem;
+	height: 1.5rem;
 }

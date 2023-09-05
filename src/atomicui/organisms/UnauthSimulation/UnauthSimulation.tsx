@@ -21,7 +21,7 @@ import {
 } from "@demo/atomicui/molecules";
 import { appConfig, busRoutesData } from "@demo/core";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
-import { useAmplifyMap, useAwsGeofence, useBottomSheet, useDeviceMediaQuery, useUnauthSimulation } from "@demo/hooks";
+import { useAmplifyMap, useAwsGeofence, useBottomSheet, useDeviceMediaQuery } from "@demo/hooks";
 import i18n from "@demo/locales/i18n";
 import {
 	MenuItemEnum,
@@ -84,7 +84,6 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 	startSimulation,
 	setStartSimulation
 }) => {
-	// const [startSimulation, setStartSimulation] = useState(false);
 	const [trackingHistory, setTrackingHistory] = useState<TrackingHistoryType>(initialTrackingHistory);
 	const [selectedRoutes, setSelectedRoutes] = useState<SelectOption[]>([busRoutesDropdown[0]]);
 	const [busSelectedValue, setBusSelectedValue] = useState<SelectOption>(busRoutesDropdown[0]);
@@ -119,13 +118,28 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 		}, []),
 		startSimulation
 	);
-	const { ui, setUI, setBottomSheetHeight, setBottomSheetMinHeight } = useBottomSheet();
+	const { ui, setUI, setBottomSheetHeight, setBottomSheetMinHeight, bottomSheetHeight } = useBottomSheet();
 	const { t } = useTranslation();
 	const currentLanguage = i18n.language;
 	const unauthSimulationCtaText = t("unauth_simulation__cta.text");
 	const trackingHistoryRef: Ref<HTMLDivElement> = useRef<HTMLDivElement>(null);
 	const selectedRoutesIds = useMemo(() => selectedRoutes.map(route => route.value), [selectedRoutes]);
 	const { isDesktop, isTablet } = useDeviceMediaQuery();
+	const isNotDesktop = !isDesktop && ui;
+	const nonStartRef = useRef<HTMLDivElement>(null);
+
+	const isNonStartUnauthSimulation =
+		(isNotDesktop &&
+			[ResponsiveUIEnum.non_start_unauthorized_geofence, ResponsiveUIEnum.non_start_unauthorized_tracker].includes(
+				ui
+			)) ||
+		!showStartUnauthSimulation;
+
+	const isBeforeStartSimulation =
+		isNotDesktop &&
+		[ResponsiveUIEnum.before_start_unauthorized_geofence, ResponsiveUIEnum.before_start_unauthorized_tracker].includes(
+			ui
+		);
 
 	useEffect(() => {
 		showStartUnauthSimulation && mapRef?.zoomTo(2);
@@ -142,6 +156,17 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 			// 	  });
 		};
 	}, [showStartUnauthSimulation, mapRef, currentLocationData]);
+
+	useEffect(() => {
+		if (
+			isNonStartUnauthSimulation &&
+			!isDesktop &&
+			bottomSheetHeight !== (nonStartRef?.current?.clientHeight || 230) + 10
+		) {
+			setBottomSheetMinHeight(nonStartRef?.current?.clientHeight || 230);
+			setBottomSheetHeight((nonStartRef?.current?.clientHeight || 230) + 10);
+		}
+	}, [bottomSheetHeight, isDesktop, isNonStartUnauthSimulation, setBottomSheetHeight, setBottomSheetMinHeight]);
 
 	const updateSelectedRoutes = useCallback(
 		(selectedRoute: SelectOption) => {
@@ -174,7 +199,6 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 	const onCloseHandler = () => {
 		subscription?.unsubscribe();
 		PubSub.removePluggable("AWSIoTProvider");
-		setShowStartUnauthSimulation(false);
 		handleClose();
 		window.location.reload();
 	};
@@ -316,8 +340,11 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 			setIsNotifications(false);
 		} else {
 			setConfirmCloseSimulation(true);
+			from === MenuItemEnum.GEOFENCE
+				? setUI(ResponsiveUIEnum.exit_unauthorized_geofence)
+				: setUI(ResponsiveUIEnum.exit_unauthorized_tracker);
 		}
-	}, [isNotifications]);
+	}, [from, isNotifications, setUI]);
 
 	const BeforeStartSimulation = () => (
 		<>
@@ -354,24 +381,28 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 		</Flex>
 	);
 
-	if (!showStartUnauthSimulation)
+	if (isNonStartUnauthSimulation)
 		return (
 			<NonStartUnauthSimulation
 				from={from}
 				handleClose={handleClose}
-				handleCta={handleCta}
+				handleCta={() => {
+					setUI(
+						from === MenuItemEnum.GEOFENCE
+							? ResponsiveUIEnum.before_start_unauthorized_geofence
+							: ResponsiveUIEnum.before_start_unauthorized_tracker
+					);
+					handleCta();
+				}}
 				handleEnableLive={handleEnableLive}
 				unauthSimulationCtaText={unauthSimulationCtaText}
+				startRef={nonStartRef}
 			/>
 		);
 
 	return (
 		<>
-			{!isDesktop &&
-			ui &&
-			[ResponsiveUIEnum.non_start_unauthorized_geofence, ResponsiveUIEnum.non_start_unauthorized_tracker].includes(
-				ui
-			) ? (
+			{isBeforeStartSimulation ? (
 				<Modal
 					open
 					onClose={() => {}}
@@ -385,7 +416,7 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 				<Card
 					className={`unauthSimulation-card ${!isDesktop ? "unauthSimulation-card-mobile" : ""}`}
 					left={isDesktop ? "1.62rem" : "0"}
-					overflow={startSimulation ? "inherit" : "hidden"}
+					overflow={startSimulation ? "initial" : "hidden"}
 				>
 					{!startSimulation &&
 					ui &&
@@ -393,19 +424,36 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 						<BeforeStartSimulation />
 					) : (
 						<Flex className="simulation-container" direction="column" gap="0">
-							<Flex className="simulation-header" justifyContent="space-between">
+							<Flex
+								className={`simulation-header ${!isDesktop ? "simulation-header-mobile" : ""}`}
+								justifyContent="space-between"
+								direction={isDesktop ? "row" : "row-reverse"}
+							>
 								<Flex alignItems="center" padding="0.6rem 0 0.6rem 1.2rem">
-									<IconBackArrow
-										data-testid="unauth-simulation-back-arrow"
-										className="back-icon"
-										cursor="pointer"
-										width={20}
-										height={20}
-										onClick={onBackHandler}
-									/>
-									<Text className="medium" fontSize="1.08rem" textAlign="center" marginLeft="0.5rem">
-										{t("start_unauth_simulation__t&g_simulation.text")}
-									</Text>
+									{isDesktop ? (
+										<IconBackArrow
+											data-testid="unauth-simulation-back-arrow"
+											className="back-icon"
+											cursor="pointer"
+											width={20}
+											height={20}
+											onClick={onBackHandler}
+										/>
+									) : (
+										<IconClose
+											style={{ marginRight: "0.5rem" }}
+											onClick={onBackHandler}
+											className="back-icon"
+											cursor="pointer"
+											width={20}
+											height={20}
+										/>
+									)}
+									{isDesktop && (
+										<Text className="medium" fontSize="1.08rem" textAlign="center" marginLeft="0.5rem">
+											{t("start_unauth_simulation__t&g_simulation.text")}
+										</Text>
+									)}
 								</Flex>
 								<Flex
 									padding="0.6rem"
@@ -417,7 +465,7 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 									{!isNotifications && !!unauthNotifications.length && <span className="notification-bubble" />}
 								</Flex>
 							</Flex>
-							<Flex gap="0" direction="column" width="100%">
+							<Flex gap="0" direction="column" width="100%" marginTop={!isDesktop ? "21px" : "0"}>
 								{Connection}
 								{!isNotifications ? (
 									<Flex
@@ -542,7 +590,8 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 					)}
 				</Card>
 			)}
-			<ExitSimulation />
+
+			{isDesktop && <ExitSimulation />}
 		</>
 	);
 };

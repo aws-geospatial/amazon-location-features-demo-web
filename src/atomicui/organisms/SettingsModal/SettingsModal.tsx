@@ -116,7 +116,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
 	const fastestRegion = localStorage.getItem("fastestRegion") || "";
-	const { isDesktop } = useDeviceMediaQuery();
+	const { isDesktop, isMobile } = useDeviceMediaQuery();
 	useEffect(() => {
 		const regionOption = region && regionsData.find(option => option.value === region);
 
@@ -766,7 +766,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 			<Flex
 				data-testid={`option-item-${id}`}
 				key={id}
-				className={settingsOptions === id ? "option-item selected" : "option-item"}
+				className={`option-item ${settingsOptions === id ? "selected" : ""} ${isMobile ? "option-item-mobile" : ""}`}
 				onClick={() => {
 					if (id === SettingOptionEnum.AWS_CLOUD_FORMATION) {
 						record(
@@ -816,7 +816,15 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 				</Flex>
 			</Flex>
 		));
-	}, [optionItems, isUserAwsAccountConnected, settingsOptions, resetSearchAndFilters, setSettingsOptions, formValues]);
+	}, [
+		optionItems,
+		isUserAwsAccountConnected,
+		settingsOptions,
+		isMobile,
+		resetSearchAndFilters,
+		setSettingsOptions,
+		formValues
+	]);
 
 	const renderOptionDetails = useMemo(() => {
 		const [optionItem] = optionItems.filter(({ id }) => settingsOptions === id);
@@ -842,7 +850,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 			}}
 			className={`settings-modal ${!isDesktop ? "settings-modal-mobile" : ""} `}
 			content={
-				<Flex className="settings-modal-content">
+				<Flex className={`settings-modal-content ${!isDesktop ? "settings-modal-content-mobile" : ""}`}>
 					<Flex className="options-container">
 						<Text className="bold" fontSize="1.23rem" lineHeight="1.85rem" padding={"1.23rem 0rem 1.23rem 1.23rem"}>
 							{t("settings.text")}

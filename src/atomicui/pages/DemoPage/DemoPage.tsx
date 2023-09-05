@@ -166,8 +166,11 @@ const DemoPage: React.FC = () => {
 		doNotAskOpenDataDisclaimerModal,
 		setDoNotAskOpenDataDisclaimerModal
 	} = usePersistedData();
-	const { isDesktop } = useDeviceMediaQuery();
-	const { setUI } = useBottomSheet();
+	const { isDesktop, isMobile } = useDeviceMediaQuery();
+	const { setUI, bottomSheetCurrentHeight } = useBottomSheet();
+	const peggedRemValue = 13;
+	const extraGeoLocateTop = 2.6;
+	const geoLocateTopValue = `-${(bottomSheetCurrentHeight || 0) / peggedRemValue + extraGeoLocateTop}rem`;
 
 	const { t } = useTranslation();
 	const shouldClearCredentials = localStorage.getItem(SHOULD_CLEAR_CREDENTIALS) === "true";
@@ -439,37 +442,43 @@ const DemoPage: React.FC = () => {
 		}
 	}, [getCurrentGeoLocation, region]);
 
-	const onGeoLocate = ({ coords: { latitude, longitude } }: GeolocateResultEvent) => {
-		if (routeData) {
-			resetAwsRouteStore();
-			setShow(s => ({ ...s, routeBox: false }));
+	const onGeoLocate = useCallback(
+		({ coords: { latitude, longitude } }: GeolocateResultEvent) => {
+			if (routeData) {
+				resetAwsRouteStore();
+				setShow(s => ({ ...s, routeBox: false }));
 
-			setTimeout(() => {
+				setTimeout(() => {
+					setViewpoint({ latitude, longitude });
+					setCurrentLocation({ currentLocation: { latitude, longitude }, error: undefined });
+				}, 0);
+			} else {
 				setViewpoint({ latitude, longitude });
 				setCurrentLocation({ currentLocation: { latitude, longitude }, error: undefined });
-			}, 0);
-		} else {
-			setViewpoint({ latitude, longitude });
-			setCurrentLocation({ currentLocation: { latitude, longitude }, error: undefined });
-		}
-	};
+			}
+		},
+		[resetAwsRouteStore, routeData, setCurrentLocation, setViewpoint]
+	);
 
-	const onGeoLocateError = (e: GeolocateErrorEvent) => {
-		setCurrentLocation({ currentLocation: undefined, error: { ...omit(["type", "target"], e) } });
+	const onGeoLocateError = useCallback(
+		(e: GeolocateErrorEvent) => {
+			setCurrentLocation({ currentLocation: undefined, error: { ...omit(["type", "target"], e) } });
 
-		if (e.code === e.PERMISSION_DENIED) {
-			localStorage.setItem(GEO_LOCATION_ALLOWED, "no");
-			showToast({
-				content: t("show_toast__lpd.text"),
-				type: ToastType.ERROR
-			});
-		} else if (e.code === e.POSITION_UNAVAILABLE) {
-			showToast({
-				content: t("show_toast__lpu.text"),
-				type: ToastType.ERROR
-			});
-		}
-	};
+			if (e.code === e.PERMISSION_DENIED) {
+				localStorage.setItem(GEO_LOCATION_ALLOWED, "no");
+				showToast({
+					content: t("show_toast__lpd.text"),
+					type: ToastType.ERROR
+				});
+			} else if (e.code === e.POSITION_UNAVAILABLE) {
+				showToast({
+					content: t("show_toast__lpu.text"),
+					type: ToastType.ERROR
+				});
+			}
+		},
+		[setCurrentLocation, t]
+	);
 
 	const handleMapClick = ({ lngLat }: MapLayerMouseEvent) => {
 		if (lngLat && !show.unauthGeofenceBox && !show.unauthTrackerBox) {
@@ -823,6 +832,53 @@ const DemoPage: React.FC = () => {
 		]
 	);
 
+	const GeoLocateIcon = useMemo(
+		() =>
+			locationError || isCurrentLocationDisabled ? (
+				<Flex
+					style={{
+						position: "absolute",
+						bottom: isMobile ? `${(bottomSheetCurrentHeight || 0) / 13 + 1.2}rem` : isDesktop ? "9.85rem" : "2rem",
+						right: isMobile ? "1rem" : isDesktop ? "2rem" : "2rem"
+					}}
+					className="location-disabled"
+					onClick={() => getCurrentGeoLocation()}
+				>
+					<IconLocateMe />
+				</Flex>
+			) : (
+				<GeolocateControl
+					style={{
+						width: "2.46rem",
+						height: "2.46rem",
+						position: "absolute",
+						top: isMobile ? geoLocateTopValue : isDesktop ? "-9.5rem" : "-2.5rem",
+						right: isMobile ? "-0.3rem" : isDesktop ? "0.75rem" : "0rem",
+						margin: 0,
+						borderRadius: "0.62rem"
+					}}
+					position="bottom-right"
+					ref={geolocateControlRef}
+					positionOptions={{ enableHighAccuracy: true }}
+					showUserLocation
+					showAccuracyCircle={false}
+					onGeolocate={onGeoLocate}
+					onError={onGeoLocateError}
+				/>
+			),
+		[
+			locationError,
+			isCurrentLocationDisabled,
+			isMobile,
+			bottomSheetCurrentHeight,
+			isDesktop,
+			geoLocateTopValue,
+			onGeoLocate,
+			onGeoLocateError,
+			getCurrentGeoLocation
+		]
+	);
+
 	const UnauthSimulationUI = useMemo(
 		() => (
 			<UnauthSimulation
@@ -1007,30 +1063,7 @@ const DemoPage: React.FC = () => {
 						onShowAuthTrackerDisclaimerModal={() => setShow(s => ({ ...s, authTrackerDisclaimerModal: true }))}
 						isAuthTrackerBoxOpen={show.authTrackerBox}
 					/>
-					{locationError || isCurrentLocationDisabled ? (
-						<Flex className="location-disabled" onClick={() => getCurrentGeoLocation()}>
-							<IconLocateMe />
-						</Flex>
-					) : (
-						<GeolocateControl
-							style={{
-								width: "2.46rem",
-								height: "2.46rem",
-								position: "absolute",
-								top: isDesktop ? "-9.5rem" : "-2.5rem",
-								right: isDesktop ? "0.75rem" : "0rem",
-								margin: 0,
-								borderRadius: "0.62rem"
-							}}
-							position="bottom-right"
-							ref={geolocateControlRef}
-							positionOptions={{ enableHighAccuracy: true }}
-							showUserLocation
-							showAccuracyCircle={false}
-							onGeolocate={onGeoLocate}
-							onError={onGeoLocateError}
-						/>
-					)}
+					{GeoLocateIcon}
 					{isDesktop && (
 						<NavigationControl
 							style={{
@@ -1176,9 +1209,11 @@ const DemoPage: React.FC = () => {
 				}}
 				cancelationText={t("start_unauth_simulation__stay_in_simulation.text")}
 			/>
-			<Flex className="logo-stroke-container">
-				{currentMapStyle.toLowerCase().includes("dark") ? <LogoDark /> : <LogoLight />}
-			</Flex>
+			{isDesktop && (
+				<Flex className="logo-stroke-container">
+					{currentMapStyle.toLowerCase().includes("dark") ? <LogoDark /> : <LogoLight />}
+				</Flex>
+			)}
 		</View>
 	) : (
 		<DemoPlaceholderPage

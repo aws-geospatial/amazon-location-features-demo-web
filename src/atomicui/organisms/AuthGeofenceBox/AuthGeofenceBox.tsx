@@ -287,12 +287,14 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({ mapRef, setShowAuthGe
 			<Flex gap={0} direction="column" padding={"0px 16px"}>
 				{!geofenceCenter && (
 					<Flex gap={0} justifyContent="center" alignItems="center" marginTop="14px">
-						<Flex className="icon-plus-rounded">
-							<IconPlus />
-						</Flex>
+						{isDesktop && (
+							<Flex className="icon-plus-rounded">
+								<IconPlus />
+							</Flex>
+						)}
 						<Text
 							variation="tertiary"
-							margin={isLtr ? "0rem 0rem 0rem 1.23rem" : "0rem 1.23rem 0rem 0rem"}
+							margin={isDesktop ? (isLtr ? "0rem 0rem 0rem 1.23rem" : "0rem 1.23rem 0rem 0rem") : "0"}
 							textAlign={isLtr ? "start" : "end"}
 						>
 							{t("geofence_box__click_any_point.text")}
@@ -423,7 +425,7 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({ mapRef, setShowAuthGe
 						)}
 					</>
 				)}
-				{isAddingGeofence && (
+				{isDesktop && isAddingGeofence && (
 					<Button
 						marginBottom="8px"
 						margin="8px 0px 24px 0px"
@@ -438,27 +440,29 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({ mapRef, setShowAuthGe
 			</Flex>
 		);
 	}, [
-		isAddingGeofence,
-		resetAll,
+		name,
 		geofences,
-		geofenceCenter,
+		isEditing,
+		t,
+		current.value,
+		current.radiusInM,
 		value,
+		radiusInM,
+		geofenceCenter,
+		isDesktop,
+		isLtr,
 		onChange,
 		onSearch,
-		renderSuggestions,
-		suggestions,
-		radiusInM,
-		name,
-		onSave,
-		isEditing,
-		unit,
-		onChangeRadius,
-		current,
-		currentMapUnit,
-		isCollapsed,
-		t,
 		langDir,
-		isLtr
+		renderSuggestions,
+		suggestions?.length,
+		isCollapsed,
+		currentMapUnit,
+		unit,
+		onSave,
+		isAddingGeofence,
+		resetAll,
+		onChangeRadius
 	]);
 
 	const onDelete = useCallback(
@@ -676,7 +680,7 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({ mapRef, setShowAuthGe
 			<Card className={`geofence-card ${!isDesktop ? "geofence-card-mobile" : ""}`} left={21}>
 				<Flex className={`geofence-card-header ${!isDesktop ? "geofence-card-header-mobile" : ""}`}>
 					<Flex alignItems={"center"}>
-						{isAddingOrEditing && <IconBackArrow className="back-icon" onClick={resetAll} />}
+						{isDesktop && isAddingOrEditing && <IconBackArrow className="back-icon" onClick={resetAll} />}
 						<Text fontFamily="AmazonEmber-Medium" fontSize="1.08rem" textAlign={isLtr ? "start" : "end"}>
 							{isAddingGeofence
 								? isEditing
@@ -694,10 +698,10 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({ mapRef, setShowAuthGe
 								</Text>
 							</Flex>
 						)}
-						{!isAddingOrEditing && (
+						{!isDesktop && (
 							<Flex
 								className={`geofence-card-close ${!isDesktop ? "geofence-card-close-mobile" : ""}`}
-								onClick={onClose}
+								onClick={() => (!isAddingOrEditing ? onClose() : resetAll())}
 							>
 								<IconClose />
 							</Flex>
@@ -714,7 +718,13 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({ mapRef, setShowAuthGe
 						</Button>
 					</Flex>
 				)}
-				{isAddingGeofence ? renderAddGeofence : <View className="geofences-list-container">{renderGeofencesList}</View>}
+				{isAddingGeofence ? (
+					renderAddGeofence
+				) : (
+					<View className="geofences-list-container" padding={!isDesktop ? "0 1rem" : ""}>
+						{renderGeofencesList}
+					</View>
+				)}
 				{renderShowHideContainer}
 			</Card>
 			{renderGeofenceMarkers}

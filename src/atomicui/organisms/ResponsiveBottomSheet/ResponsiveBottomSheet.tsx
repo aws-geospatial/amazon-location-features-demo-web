@@ -4,10 +4,11 @@
 import React, { FC, useCallback, useEffect } from "react";
 
 import { Flex, Text } from "@aws-amplify/ui-react";
-import { IconClose } from "@demo/assets";
+import { IconClose, IconLocateMe, LogoDark, LogoLight } from "@demo/assets";
 import { ConfirmationModal } from "@demo/atomicui/molecules";
-import { useBottomSheet, useDeviceMediaQuery } from "@demo/hooks";
+import { useAmplifyMap, useBottomSheet, useDeviceMediaQuery } from "@demo/hooks";
 import { MenuItemEnum, ResponsiveUIEnum } from "@demo/types/Enums";
+import { PubSub } from "aws-amplify";
 import { useTranslation } from "react-i18next";
 import { MapRef } from "react-map-gl";
 import { BottomSheet } from "react-spring-bottom-sheet";
@@ -70,23 +71,35 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	AuthGeofenceBox,
 	AuthTrackerBox
 }) => {
-	const { isDesktop, isTablet } = useDeviceMediaQuery();
+	const { isDesktop, isTablet, isMobile } = useDeviceMediaQuery();
 	const { t } = useTranslation();
 	const {
 		setBottomSheetMinHeight,
 		setBottomSheetHeight,
 		bottomSheetMinHeight,
 		bottomSheetHeight,
+		bottomSheetCurrentHeight,
 		setBottomSheetCurrentHeight,
 		ui,
 		setUI
 	} = useBottomSheet();
+	const { mapStyle } = useAmplifyMap();
 
-	const isShortHeader = ui && [ResponsiveUIEnum.auth_tracker, ResponsiveUIEnum.auth_geofence].includes(ui);
+	const isShortHeader =
+		ui &&
+		[
+			ResponsiveUIEnum.auth_tracker,
+			ResponsiveUIEnum.auth_geofence,
+			ResponsiveUIEnum.non_start_unauthorized_tracker,
+			ResponsiveUIEnum.non_start_unauthorized_geofence
+		].includes(ui);
 	const isNonStartedSimulation =
 		!isDesktop &&
 		ui &&
-		[ResponsiveUIEnum.non_start_unauthorized_tracker, ResponsiveUIEnum.non_start_unauthorized_geofence].includes(ui);
+		[ResponsiveUIEnum.before_start_unauthorized_tracker, ResponsiveUIEnum.before_start_unauthorized_geofence].includes(
+			ui
+		);
+
 	const isExitSimulation =
 		!isDesktop &&
 		ui &&
@@ -148,7 +161,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 			switch (ui) {
 				case ResponsiveUIEnum.map_styles:
 					return (
-						<Flex direction="column" gap="0" padding="8px 12px 0 16px" width="100%">
+						<Flex className="map-header-mobile">
 							<Flex justifyContent="flex-end">
 								<IconClose
 									width={20}
@@ -172,9 +185,9 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				case ResponsiveUIEnum.unauth_geofence:
 				case ResponsiveUIEnum.auth_tracker:
 				case ResponsiveUIEnum.auth_geofence:
-					return null;
 				case ResponsiveUIEnum.non_start_unauthorized_tracker:
 				case ResponsiveUIEnum.non_start_unauthorized_geofence:
+					return null;
 				case ResponsiveUIEnum.explore:
 				case ResponsiveUIEnum.poi_card:
 				case ResponsiveUIEnum.search:
@@ -199,14 +212,14 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				case ResponsiveUIEnum.unauth_geofence:
 				case ResponsiveUIEnum.exit_unauthorized_tracker:
 				case ResponsiveUIEnum.exit_unauthorized_geofence:
+				case ResponsiveUIEnum.non_start_unauthorized_tracker:
+				case ResponsiveUIEnum.non_start_unauthorized_geofence:
 					return UnauthSimulationUI;
 				case ResponsiveUIEnum.auth_tracker:
 					return AuthTrackerBox;
 				case ResponsiveUIEnum.auth_geofence:
 					return AuthGeofenceBox;
 				case ResponsiveUIEnum.explore:
-				case ResponsiveUIEnum.non_start_unauthorized_tracker:
-				case ResponsiveUIEnum.non_start_unauthorized_geofence:
 				default:
 					return (
 						<Explore
@@ -264,12 +277,18 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 
 	const footerHeight = useCallback((maxHeight: number) => calculatePixelValue(maxHeight, 50), [calculatePixelValue]);
 
+	const onCloseHandler = useCallback(() => {
+		PubSub.removePluggable("AWSIoTProvider");
+		from === MenuItemEnum.GEOFENCE ? setShowUnauthGeofenceBox(false) : setShowUnauthTrackerBox(false);
+		window.location.reload();
+	}, [from, setShowUnauthGeofenceBox, setShowUnauthTrackerBox]);
+
 	const ExitSimulation = useCallback(
 		() => (
 			<Flex className="confirmation-modal-container">
 				<ConfirmationModal
 					open
-					onClose={() => {}}
+					onClose={onCloseHandler}
 					heading={t("start_unauth_simulation__exit_simulation.text") as string}
 					description={
 						<Text
@@ -282,19 +301,21 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 							{t("start_unauth_simulation__exit_simulation_desc.text")}
 						</Text>
 					}
-					onConfirm={() => {}}
+					onConfirm={() =>
+						setUI(from === MenuItemEnum.GEOFENCE ? ResponsiveUIEnum.unauth_geofence : ResponsiveUIEnum.unauth_tracker)
+					}
 					confirmationText={t("start_unauth_simulation__stay_in_simulation.text") as string}
 					cancelationText={t("exit.text") as string}
 				/>
 			</Flex>
 		),
-		[t]
+		[from, onCloseHandler, setUI, t]
 	);
 
 	return (
 		<>
 			{isNonStartedSimulation && UnauthSimulationUI}
-			{isExitSimulation && <ExitSimulation />}
+			{isExitSimulation && ExitSimulation()}
 
 			<BottomSheet
 				open
@@ -306,10 +327,19 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 					bottomSheetMinHeight
 				]}
 				maxHeight={bottomSheetHeight}
-				header={<Flex>{bottomSheetHeader(ui)}</Flex>}
+				header={
+					<Flex>
+						{isMobile && (
+							<Flex className="logo-mobile">
+								{mapStyle.toLowerCase().includes("dark") ? <LogoDark /> : <LogoLight />}
+							</Flex>
+						)}
+						{bottomSheetHeader(ui)}
+					</Flex>
+				}
 				className={`bottom-sheet ${isDesktop ? "desktop" : isTablet ? "tablet" : "mobile"} ${
 					isShortHeader ? "short-header" : ""
-				}`}
+				} ${(bottomSheetCurrentHeight || 0) + 30 < window.innerHeight ? "add-overlay" : ""}`}
 				data-amplify-theme="aws-location-theme"
 			>
 				{bottomSheetBody(ui)}

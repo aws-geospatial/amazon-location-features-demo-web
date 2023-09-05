@@ -288,6 +288,8 @@ export enum ResponsiveUIEnum {
 	map_styles = "map_styles",
 	poi_card = "poi_card",
 	routes = "routes",
+	before_start_unauthorized_tracker = "before_start_unauthorized_tracker",
+	before_start_unauthorized_geofence = "before_start_unauthorized_geofence",
 	non_start_unauthorized_tracker = "non_start_unauthorized_tracker",
 	non_start_unauthorized_geofence = "non_start_unauthorized_geofence",
 	exit_unauthorized_tracker = "exit_unauthorized_tracker",

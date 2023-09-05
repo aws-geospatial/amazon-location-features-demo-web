@@ -71,6 +71,20 @@
 	.simulation-container {
 		.simulation-header {
 			border-bottom: 1px solid var(--grey-color-3);
+
+			&.simulation-header-mobile {
+				border: 0;
+				position: absolute;
+				top: -21px;
+				width: 100%;
+
+				.bell-icon-container {
+					&.bell-active,&:active, &:focus, &:hover {
+						background-color: transparent;
+						border-top-left-radius: 11px;
+					}
+				}
+			}
 		}
 		.tracking-history-container {
 			overflow-y: scroll;

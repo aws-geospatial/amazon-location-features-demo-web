@@ -19,6 +19,10 @@
 		height: 100%;
 		max-height: 49.23rem;
 
+		&.settings-modal-content {
+			max-height: fit-content;
+		}
+
 		.options-container {
 			gap: 0;
 			width: 33.67%;
@@ -33,6 +37,20 @@
 				border-left-width: 2px;
 				border-left-style: solid;
 				border-left-color: var(--white-color);
+
+				&.option-item-mobile {
+					flex-direction: column;
+					padding: 0.8rem 0;
+					height: auto;
+
+					svg {
+						margin: 0;
+					}
+
+					p {
+						text-align: center;
+					}
+				}
 
 				svg {
 					fill: var(--grey-light-color);

@@ -7,7 +7,7 @@ import { Autocomplete, Button, ComboBoxOption, Flex, Placeholder, Text, View } f
 import { IconActionMenu, IconClose, IconDirections, IconPin, IconSearch } from "@demo/assets";
 import { InputField, Marker, NotFoundCard, SuggestionMarker } from "@demo/atomicui/molecules";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
-import { useAmplifyMap, useAwsPlace, useBottomSheet } from "@demo/hooks";
+import { useAmplifyMap, useAwsPlace, useBottomSheet, useDeviceMediaQuery } from "@demo/hooks";
 import { DistanceUnitEnum, MapUnitEnum, SuggestionType } from "@demo/types";
 import { AnalyticsEventActionsEnum, ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { calculateGeodesicDistance } from "@demo/utils/geoCalculation";
@@ -18,6 +18,8 @@ import { LngLat } from "mapbox-gl";
 import { useTranslation } from "react-i18next";
 import { MapRef } from "react-map-gl";
 import { Tooltip } from "react-tooltip";
+import AutoSizer from "react-virtualized-auto-sizer";
+import { FixedSizeList as List } from "react-window";
 import "./styles.scss";
 
 const { METRIC } = MapUnitEnum;
@@ -83,12 +85,13 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		setUI,
 		ui
 	} = useBottomSheet();
+	const { isDesktop } = useDeviceMediaQuery();
 	const searchContainerRef = useRef<HTMLDivElement>(null);
 	const searchInputRef = useRef<HTMLInputElement>(null);
 
 	useEffect(() => {
-		if (isFocused || !!value?.length) setUI && setUI(ResponsiveUIEnum.search);
-		else setUI && setUI(ResponsiveUIEnum.explore);
+		if (isFocused || !!value?.length) setUI(ResponsiveUIEnum.search);
+		// else if (!value?.length) setUI(ResponsiveUIEnum.explore);
 	}, [setUI, isFocused, value]);
 
 	useEffect(() => {
@@ -348,6 +351,30 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		[handleSearch, options, setBottomSheetHeight, setBottomSheetMinHeight, value]
 	);
 
+	// const Row = ({ index, style }: { index: number; style: React.CSSProperties }) => {
+	// 	return !options?.length ? (
+	// 		<></>
+	// 	) : (
+	// 		<div
+	// 			key={index}
+	// 			// className={`option-wrapper ${index % 2 ? "ListItemOdd" : "ListItemEven"}`}
+	// 			style={style}
+	// 			onClick={() => {
+	// 				selectSuggestion({
+	// 					id: options[index]?.id,
+	// 					text: !!options[index]?.placeid ? value : options[index].label,
+	// 					label: options[index].label,
+	// 					placeid: options[index]?.placeid
+	// 				});
+	// 				setBottomSheetMinHeight(BottomSheetHeights.search.min);
+	// 				setBottomSheetHeight(BottomSheetHeights.search.min);
+	// 			}}
+	// 		>
+	// 			{renderOption(options[index])}
+	// 		</div>
+	// 	);
+	// };
+
 	return (
 		<>
 			{ui !== ResponsiveUIEnum.poi_card && !POICard ? (
@@ -380,6 +407,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 										onBlur={e => {
 											e.stopPropagation();
 											setIsFocused(false);
+											!value?.length && setUI(ResponsiveUIEnum.explore);
 										}}
 										placeholder={t("search.text") as string}
 										innerStartComponent={
@@ -427,11 +455,29 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 									<Flex
 										gap="0"
 										direction="column"
-										className="search-complete"
+										className={`search-complete ${!isDesktop ? "search-complete-mobile" : ""}`}
 										maxHeight={bottomSheetCurrentHeight}
 										paddingBottom={!!options?.length ? "5.1rem" : ""}
 									>
-										{/* <VirtualizedList listData={options?.map(o => renderOption(o)) || []} /> */}
+										{/* {!!options?.length && (
+											<AutoSizer>
+												{({ height, width }) => {
+													console.log("height", height);
+													console.log("width", width);
+													return (
+														<List
+															className="List"
+															height={height}
+															itemCount={options?.length || 0}
+															itemSize={100}
+															width={width}
+														>
+															{Row}
+														</List>
+													);
+												}}
+											</AutoSizer>
+										)} */}
 										{!!options?.length &&
 											options.map((option, i) => (
 												<div
