@@ -11,7 +11,6 @@ import { RouteDataType, TrackerType } from "@demo/types";
 import { EventTypeEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
 import * as turf from "@turf/turf";
-import { PubSub } from "aws-amplify";
 import { Position } from "aws-sdk/clients/location";
 import { useTranslation } from "react-i18next";
 import { Layer, MapRef, Marker, Source } from "react-map-gl";
@@ -20,18 +19,23 @@ import { Tooltip } from "react-tooltip";
 import AuthTrackerSimulation from "./AuthTrackerSimulation";
 import "./styles.scss";
 
-interface AuthTrackerBoxProps {
-	mapRef: MapRef | null;
-	setShowAuthTrackerBox: (b: boolean) => void;
-}
-
 export const trackerTypes = [
 	{ type: TrackerType.CAR, icon: <IconCar width="1.54rem" height="1.54rem" /> },
 	{ type: TrackerType.WALK, icon: <IconWalking width="1.54rem" height="1.54rem" /> },
 	{ type: TrackerType.DRONE, icon: <IconDroneSolid width="1.54rem" height="1.54rem" /> }
 ];
 
-const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({ mapRef, setShowAuthTrackerBox }) => {
+interface AuthTrackerBoxProps {
+	mapRef: MapRef | null;
+	setShowAuthTrackerBox: (b: boolean) => void;
+	clearCredsAndLocationClient?: () => void;
+}
+
+const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
+	mapRef,
+	setShowAuthTrackerBox,
+	clearCredsAndLocationClient
+}) => {
 	const [isSaved, setIsSaved] = useState(false);
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [routeData, setRouteData] = useState<RouteDataType | undefined>(undefined);
@@ -48,13 +52,11 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({ mapRef, setShowAuthTrac
 		trackerPoints,
 		setTrackerPoints
 	} = useAwsTracker();
-	const { subscription, Connection } = WebsocketBanner();
+	const { Connection } = WebsocketBanner();
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
-
 	const isDesktop = useMediaQuery("(min-width: 1024px)");
-
 	const fetchGeofencesList = useCallback(async () => getGeofencesList(), [getGeofencesList]);
 
 	useEffect(() => {
@@ -76,12 +78,10 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({ mapRef, setShowAuthTrac
 	};
 
 	const onClose = () => {
+		clearCredsAndLocationClient && clearCredsAndLocationClient();
 		setIsEditingRoute(false);
 		setTrackerPoints(undefined);
 		setShowAuthTrackerBox(false);
-		subscription?.unsubscribe();
-		PubSub.removePluggable("AWSIoTProvider");
-		window.location.reload();
 	};
 
 	const onTrackerMarkerChange = (type: TrackerType) => {

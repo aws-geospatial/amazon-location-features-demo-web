@@ -2,7 +2,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { HubPayload } from "@aws-amplify/core";
 import { AWSIoTProvider } from "@aws-amplify/pubsub";
@@ -12,7 +12,7 @@ import i18n from "@demo/locales/i18n";
 import { EventTypeEnum, NotificationHistoryItemtype, ToastType } from "@demo/types";
 import { record } from "@demo/utils/analyticsUtils";
 import { getDomainName } from "@demo/utils/getDomainName";
-import { Amplify, Hub, PubSub } from "aws-amplify";
+import { Hub, PubSub } from "aws-amplify";
 import { equals } from "ramda";
 
 const RETRY_INTERVAL = 100;
@@ -24,10 +24,32 @@ const useWebSocketService = (
 ): { subscription: ZenObservable.Subscription | null; connectionState: string | null } => {
 	const [connectionState, setConnectionState] = useState<string>("Disconnected");
 	const [subscription, setSubscription] = useState<ZenObservable.Subscription | null>(null);
+	const timeoutId = useRef<NodeJS.Timeout | null>(null);
 	const { region, webSocketUrl, credentials } = useAmplifyAuth();
 	const { setUnauthNotifications } = useAwsGeofence();
-
 	const url = getDomainName(webSocketUrl || "");
+	const provider = useMemo(
+		() =>
+			new AWSIoTProvider({
+				aws_pubsub_endpoint: `wss://${url}/mqtt`,
+				aws_pubsub_region: region,
+				clientId: credentials?.identityId
+			}),
+		[region, url, credentials]
+	);
+
+	useEffect(() => {
+		timeoutId.current && clearTimeout(timeoutId.current);
+
+		return () => {
+			timeoutId.current = setTimeout(() => {
+				subscription?.unsubscribe();
+				setSubscription(null);
+				PubSub.removePluggable(provider.getProviderName());
+			}, 1000);
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		Hub.listen("pubsub", ({ payload: { data } }: { payload: HubPayload }) => {
@@ -43,13 +65,7 @@ const useWebSocketService = (
 			return;
 		}
 
-		Amplify.addPluggable(
-			new AWSIoTProvider({
-				aws_pubsub_region: region,
-				aws_pubsub_endpoint: `wss://${url}/mqtt`,
-				clientId: credentials?.identityId
-			})
-		);
+		PubSub.addPluggable(provider);
 		!subscription &&
 			setSubscription(
 				PubSub.subscribe(`${credentials?.identityId}/tracker`, {
@@ -67,7 +83,6 @@ const useWebSocketService = (
 								coordinates = []
 							}
 						} = data;
-						console.log({ event: { ...data.value } });
 
 						if (source === "aws.geo") {
 							if (stopName) {
@@ -156,7 +171,7 @@ const useWebSocketService = (
 				})
 			);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [credentials?.identityId, region, url]);
+	}, [credentials?.identityId, region]);
 
 	useEffect(() => {
 		if (

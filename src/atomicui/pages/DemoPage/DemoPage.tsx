@@ -98,7 +98,7 @@ const initShow = {
 	mapStyle: undefined,
 	unauthGeofenceBox: false,
 	unauthTrackerBox: false,
-	startUnauthSimulation: false,
+	unauthSimulationBounds: false,
 	unauthSimulationDisclaimerModal: false,
 	unauthSimulationExitModal: false
 };
@@ -543,6 +543,9 @@ const DemoPage: React.FC = () => {
 					setViewpoint({ latitude, longitude });
 					setZoom(15);
 					mapViewRef.current?.flyTo({ center: [longitude, latitude] });
+					setTimeout(() => {
+						geolocateControlRef.current?.trigger();
+					}, 3000);
 				} else {
 					setViewpoint({ latitude: AMAZON_HQ.US.latitude, longitude: AMAZON_HQ.US.longitude });
 					setZoom(15);
@@ -786,7 +789,7 @@ const DemoPage: React.FC = () => {
 				maxBounds={
 					currentMapProvider === MapProviderEnum.GRAB
 						? (MAX_BOUNDS.GRAB as LngLatBoundsLike)
-						: (show.unauthGeofenceBox || show.unauthTrackerBox) && show.startUnauthSimulation
+						: (show.unauthGeofenceBox || show.unauthTrackerBox) && show.unauthSimulationBounds
 						? (MAX_BOUNDS.VANCOUVER as LngLatBoundsLike)
 						: (MAX_BOUNDS.DEFAULT as LngLatBoundsLike)
 				}
@@ -831,6 +834,7 @@ const DemoPage: React.FC = () => {
 						<AuthTrackerBox
 							mapRef={mapViewRef?.current}
 							setShowAuthTrackerBox={b => setShow(s => ({ ...s, authTrackerBox: b }))}
+							clearCredsAndLocationClient={clearCredsAndLocationClient}
 						/>
 					) : show.unauthGeofenceBox || show.unauthTrackerBox ? (
 						<UnauthSimulation
@@ -839,8 +843,8 @@ const DemoPage: React.FC = () => {
 							setShowUnauthGeofenceBox={b => setShow(s => ({ ...s, unauthGeofenceBox: b }))}
 							setShowUnauthTrackerBox={b => setShow(s => ({ ...s, unauthTrackerBox: b }))}
 							setShowConnectAwsAccountModal={b => setShow(s => ({ ...s, connectAwsAccount: b }))}
-							showStartUnauthSimulation={show.startUnauthSimulation}
-							setShowStartUnauthSimulation={b => setShow(s => ({ ...s, startUnauthSimulation: b }))}
+							setShowUnauthSimulationBounds={b => setShow(s => ({ ...s, unauthSimulationBounds: b }))}
+							clearCredsAndLocationClient={clearCredsAndLocationClient}
 						/>
 					) : (
 						<SearchBox
