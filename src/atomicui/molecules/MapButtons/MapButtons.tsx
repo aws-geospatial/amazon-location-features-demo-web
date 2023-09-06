@@ -18,7 +18,7 @@ import {
 import { IconClose, IconFilterFunnel, IconGeofencePlusSolid, IconMapSolid, IconRadar, IconSearch } from "@demo/assets";
 import { NotFoundCard } from "@demo/atomicui/molecules";
 import { appConfig } from "@demo/core/constants";
-import { useAmplifyAuth, useAmplifyMap, useAwsGeofence } from "@demo/hooks";
+import { useAmplifyAuth, useAmplifyMap, useAwsGeofence, useDeviceMediaQuery } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import {
 	AttributeEnum,
@@ -77,6 +77,7 @@ export interface MapButtonsProps {
 	isAuthTrackerDisclaimerModalOpen: boolean;
 	onShowAuthTrackerDisclaimerModal: () => void;
 	isAuthTrackerBoxOpen: boolean;
+	isSettingsModal?: boolean;
 }
 
 const MapButtons: React.FC<MapButtonsProps> = ({
@@ -108,7 +109,8 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	currentMapProvider,
 	isAuthTrackerDisclaimerModalOpen,
 	onShowAuthTrackerDisclaimerModal,
-	isAuthTrackerBoxOpen
+	isAuthTrackerBoxOpen,
+	isSettingsModal = false
 }) => {
 	const searchHandDeviceWidth = "36px";
 	const searchDesktopWidth = "100%";
@@ -123,10 +125,13 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	const { mapStyle: currentMapStyle } = useAmplifyMap();
 	const { isAddingGeofence, setIsAddingGeofence } = useAwsGeofence();
 	const isAuthenticated = !!credentials?.authenticated;
+	const { isTablet, isMobile } = useDeviceMediaQuery();
 	const { t, i18n } = useTranslation();
 	const { bottomSheetCurrentHeight = 0 } = useBottomSheet();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
+
+	const settingsTablet = isTablet && !!onlyMapStyles && isSettingsModal;
 
 	const filterIconWrapperRef = useRef<HTMLDivElement>(null);
 	const searchFieldRef = useRef<HTMLInputElement>(null);
@@ -566,7 +571,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 									</Flex>
 								) : (
 									(item.filters?.provider !== GRAB || (item.filters?.provider === GRAB && isGrabVisible)) && (
-										<Flex key={i} width="33.33%" height="130px" alignItems="flex-start">
+										<Flex key={i} width={settingsTablet ? "auto" : "33.33%"} height="130px" alignItems="flex-start">
 											<Flex
 												data-testid={`map-style-item-${item.id}`}
 												className={item.id === currentMapStyle ? "mb-style-container selected" : "mb-style-container"}
@@ -583,7 +588,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 													)}
 													<img
 														className={`${isHandDevice ? "hand-device-img" : ""} ${
-															onlyMapStyles ? "only-map" : ""
+															isMobile && onlyMapStyles ? "only-map" : ""
 														} map-image`}
 														src={item.image}
 														alt={item.name}
@@ -638,9 +643,11 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 			tempFilters,
 			selectedFilters,
 			handleFilterChange,
+			settingsTablet,
 			currentMapStyle,
 			isLoading,
 			isLoadingImg,
+			isMobile,
 			onChangeStyle
 		]
 	);

@@ -3555,5 +3555,17 @@
   },
   "samples__react-map-with-markers__cleanUp": {
     "text": "要移除在本演练中创建的所有资源，请删除名为的 CloudFormation 堆栈\n`用geojson反应地图`。"
+  },
+  "settings_modal_option__overview": {
+    "text": "探索亚马逊定位的力量"
+  },
+  "settings_modal_option__samples": {
+    "text": "我们在精心策划的代码示例中的功能"
+  },
+  "settings_modal_option__settings": {
+    "text": "配置您的体验"
+  },
+  "settings_modal_option__about": {
+    "text": "法律与归因"
   }
 }

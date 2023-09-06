@@ -1137,6 +1137,7 @@ const DemoPage: React.FC = () => {
 						isAuthTrackerDisclaimerModalOpen={show.authTrackerDisclaimerModal}
 						onShowAuthTrackerDisclaimerModal={() => setShow(s => ({ ...s, authTrackerDisclaimerModal: true }))}
 						isAuthTrackerBoxOpen={show.authTrackerBox}
+						isSettingsModal
 					/>
 				}
 			/>

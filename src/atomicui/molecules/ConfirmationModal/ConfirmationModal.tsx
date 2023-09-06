@@ -5,6 +5,7 @@ import React from "react";
 
 import { Button, CheckboxField, Flex, Text } from "@aws-amplify/ui-react";
 import { Modal } from "@demo/atomicui/atoms";
+import { useDeviceMediaQuery } from "@demo/hooks";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
 
@@ -47,13 +48,14 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 }) => {
 	const { t } = useTranslation();
 	const [isConfirmationChecked, setIsConfirmationChecked] = React.useState(false);
+	const { isMobile } = useDeviceMediaQuery();
 
 	return (
 		<Modal
 			data-testid="confirmation-modal-container"
 			open={open}
 			onClose={onClose}
-			className={`confirmation-modal ${className}`}
+			className={`confirmation-modal ${className} ${isMobile ? "confirmation-modal-mobile" : ""}`}
 			hideCloseIcon
 			content={
 				<Flex className="confirmation-content">

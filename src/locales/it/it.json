@@ -3559,5 +3559,17 @@
   },
   "samples__react-map-with-markers__cleanUp": {
     "text": "Per rimuovere tutte le risorse create in questa procedura dettagliata, elimina lo stack CloudFormation denominato\n`react-map-with-geojson`."
+  },
+  "settings_modal_option__overview": {
+    "text": "Scopri la potenza di Amazon Location"
+  },
+  "settings_modal_option__samples": {
+    "text": "Le nostre funzionalità in esempi di codice curati"
+  },
+  "settings_modal_option__settings": {
+    "text": "Configura la tua esperienza"
+  },
+  "settings_modal_option__about": {
+    "text": "Legale e attribuzione"
   }
 }

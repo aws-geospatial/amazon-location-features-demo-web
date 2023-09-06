@@ -125,6 +125,7 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 	const { isDesktop, isTablet } = useDeviceMediaQuery();
 	const isNotDesktop = !isDesktop && ui;
 	const nonStartRef = useRef<HTMLDivElement>(null);
+	const cardRef = useRef<HTMLDivElement>(null);
 
 	const isNonStartUnauthSimulation =
 		(isNotDesktop &&
@@ -164,7 +165,19 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 			setBottomSheetMinHeight(nonStartRef?.current?.clientHeight || 230);
 			setBottomSheetHeight((nonStartRef?.current?.clientHeight || 230) + 10);
 		}
-	}, [bottomSheetHeight, isDesktop, isNonStartUnauthSimulation, setBottomSheetHeight, setBottomSheetMinHeight]);
+
+		if (!isNonStartUnauthSimulation && !isBeforeStartSimulation && !isDesktop) {
+			setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+			setBottomSheetHeight(window.innerHeight - 50);
+		}
+	}, [
+		bottomSheetHeight,
+		isBeforeStartSimulation,
+		isDesktop,
+		isNonStartUnauthSimulation,
+		setBottomSheetHeight,
+		setBottomSheetMinHeight
+	]);
 
 	const updateSelectedRoutes = useCallback(
 		(selectedRoute: SelectOption) => {
@@ -348,7 +361,7 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 		<>
 			<Flex justifyContent="flex-end" padding="0.77rem">
 				<Flex className="card-close">
-					<IconClose className="close-icon" width={20} height={20} onClick={onCloseHandler} />
+					<IconClose className="grey-icon" width={20} height={20} onClick={onCloseHandler} />
 				</Flex>
 			</Flex>
 			<StartSimulation />
@@ -463,7 +476,7 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 									{!isNotifications && !!unauthNotifications.length && <span className="notification-bubble" />}
 								</Flex>
 							</Flex>
-							<Flex gap="0" direction="column" width="100%" marginTop={!isDesktop ? "21px" : "0"}>
+							<Flex gap="0" direction="column" width="100%" marginTop={!isDesktop ? "21px" : "0"} ref={cardRef}>
 								{Connection}
 								{!isNotifications ? (
 									<Flex

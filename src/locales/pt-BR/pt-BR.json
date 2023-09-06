@@ -3559,5 +3559,17 @@
   },
   "samples__react-map-with-markers__cleanUp": {
     "text": "Para remover todos os recursos criados neste passo a passo, exclua a pilha do CloudFormation chamada\n`mapa de reação com geojson`."
+  },
+  "settings_modal_option__overview": {
+    "text": "Explore o poder da localização na Amazon"
+  },
+  "settings_modal_option__samples": {
+    "text": "Nossos recursos em amostras de código selecionadas"
+  },
+  "settings_modal_option__settings": {
+    "text": "Configure sua experiência"
+  },
+  "settings_modal_option__about": {
+    "text": "Legal e atribuição"
   }
 }

@@ -1,10 +1,10 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button, Divider, Flex, Text } from "@aws-amplify/ui-react";
-import { IconPoweredByAws1 } from "@demo/assets";
+import { IconArrow, IconBackArrow, IconPoweredByAws1 } from "@demo/assets";
 import { Modal } from "@demo/atomicui/atoms";
 import { aboutModalData, appConfig } from "@demo/core/constants";
 import { useAmplifyMap, useDeviceMediaQuery } from "@demo/hooks";
@@ -28,10 +28,14 @@ interface AboutModalProps {
 }
 
 const AboutModal: React.FC<AboutModalProps> = ({ open, onClose }) => {
-	const [selectedOption, setSelectedOption] = useState<AboutOptionEnum>(AboutOptionEnum.ATTRIBUTION);
+	const [selectedOption, setSelectedOption] = useState<AboutOptionEnum | undefined>(AboutOptionEnum.ATTRIBUTION);
 	const { mapProvider } = useAmplifyMap();
-	const { isDesktop } = useDeviceMediaQuery();
+	const { isDesktop, isMobile } = useDeviceMediaQuery();
 	const attributeEl = document.querySelector<HTMLElement>(".mapboxgl-ctrl-attrib-inner");
+
+	useEffect(() => {
+		isMobile ? setSelectedOption(undefined) : setSelectedOption(AboutOptionEnum.ATTRIBUTION);
+	}, [isMobile, setSelectedOption]);
 
 	const handlePartnerLearnMore = useCallback(() => {
 		mapProvider === MapProviderEnum.ESRI
@@ -119,47 +123,79 @@ const AboutModal: React.FC<AboutModalProps> = ({ open, onClose }) => {
 		return optionItems.map(({ id, title }) => (
 			<Flex
 				key={id}
-				className={selectedOption === id ? "option-item selected" : "option-item"}
+				className={`option-item ${!isMobile && selectedOption === id ? "selected" : ""} ${
+					isMobile ? "option-item-mobile" : ""
+				}`}
 				onClick={() => setSelectedOption(id)}
 			>
-				<Flex gap={0} direction="column">
-					<Text className="small-text">{title}</Text>
+				<Flex gap="0" alignItems="center">
+					<Flex gap={0} direction="column">
+						<Text className="small-text">{title}</Text>
+					</Flex>
 				</Flex>
+				{isMobile && (
+					<Flex className="option-arrow">
+						<IconArrow className="grey-icon" />
+					</Flex>
+				)}
 			</Flex>
 		));
-	}, [optionItems, selectedOption]);
+	}, [optionItems, selectedOption, isMobile]);
 
 	const renderOptionDetails = useMemo(() => {
 		const [optionItem] = optionItems.filter(({ id }) => selectedOption === id);
 
+		if (!optionItem) return null;
 		return (
 			<>
-				<Text data-testid="details-heading" className="small-text" padding={"1.46rem 0rem 1.46rem 1.15rem"}>
+				<Text data-testid="details-heading" className="small-text option-item" padding={"1.25rem 0rem 1.25rem 1.15rem"}>
+					{isMobile && <IconBackArrow className="grey-icon back-arrow" onClick={() => setSelectedOption(undefined)} />}
 					{optionItem.title}
 				</Text>
 				<Divider className="title-divider" />
 				{optionItem.detailsComponent}
 			</>
 		);
-	}, [optionItems, selectedOption]);
+	}, [isMobile, optionItems, selectedOption]);
 
 	return (
 		<Modal
 			data-testid="about-modal-container"
 			open={open}
 			onClose={onClose}
-			className={`more-modal ${!isDesktop ? "more-modal-mobile" : ""} `}
+			className={`more-modal ${isMobile ? "more-modal-mobile" : ""} ${!isDesktop ? "more-modal-tablet" : ""} `}
 			content={
-				<Flex className="more-modal-content">
-					<Flex className="options-container">
-						<Text className="bold regular-text" padding={"1.23rem 0rem 1.23rem 1.23rem"}>
-							{t("about.text")}
-						</Text>
-						{renderOptionItems}
+				<>
+					{isMobile && !selectedOption && (
+						<Flex className="more-title-container-mobile">
+							<Text className="option-title">
+								<IconBackArrow
+									className="grey-icon back-arrow"
+									onClick={() => {
+										setSelectedOption(undefined);
+										onClose();
+									}}
+								/>
+								{t("about.text")}
+							</Text>
+							<Divider className="title-divider" />
+						</Flex>
+					)}
+					<Flex className={`more-modal-content ${isMobile ? "more-modal-content-mobile" : ""}`}>
+						{(!selectedOption || !isMobile) && (
+							<Flex className="options-container">
+								{!isMobile && (
+									<Text className="bold regular-text" padding={"1.23rem 0rem 1.23rem 1.23rem"}>
+										{t("about.text")}
+									</Text>
+								)}
+								{renderOptionItems}
+							</Flex>
+						)}
+						{!isMobile && <Divider orientation="vertical" className="col-divider" />}
+						{!!selectedOption && <Flex className="option-details-container">{renderOptionDetails}</Flex>}
 					</Flex>
-					<Divider orientation="vertical" className="col-divider" />
-					<Flex className="option-details-container">{renderOptionDetails}</Flex>
-				</Flex>
+				</>
 			}
 		/>
 	);

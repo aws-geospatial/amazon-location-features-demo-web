@@ -690,7 +690,7 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({ mapRef, setShowAuthGe
 								: t("geofence.text")}
 						</Text>
 						{!isDesktop && isAddingOrEditing && (
-							<IconClose onClick={resetAll} className={"close-icon geofence-close-mobile"} />
+							<IconClose onClick={resetAll} className={"grey-icon geofence-close-mobile"} />
 						)}
 					</Flex>
 					<Flex gap={0} alignItems="center">

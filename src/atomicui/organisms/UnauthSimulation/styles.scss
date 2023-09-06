@@ -74,9 +74,20 @@
 
 			&.simulation-header-mobile {
 				border: 0;
-				position: absolute;
-				top: -21px;
 				width: 100%;
+
+				.amplify-flex {
+					position: absolute !important;
+					top: -21px;
+				}
+
+				.amplify-flex:nth-child(1){
+					right: 0;
+				}
+
+				.amplify-flex:nth-child(2){
+					left: 0;
+				}
 
 				.bell-icon-container {
 					&.bell-active,&:active, &:focus, &:hover {

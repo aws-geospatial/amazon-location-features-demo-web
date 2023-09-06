@@ -3559,5 +3559,17 @@
   },
   "samples__react-map-with-markers__cleanUp": {
     "text": "Para eliminar todos los recursos creados en este tutorial, elimine la pila de CloudFormation llamada\n`react-map-with-geojson`."
+  },
+  "settings_modal_option__overview": {
+    "text": "Explora el poder de Amazon Location"
+  },
+  "settings_modal_option__samples": {
+    "text": "Nuestras funciones en ejemplos de código seleccionados"
+  },
+  "settings_modal_option__settings": {
+    "text": "Configura tu experiencia"
+  },
+  "settings_modal_option__about": {
+    "text": "Aspectos legales y atribución"
   }
 }

@@ -3559,5 +3559,17 @@
   },
   "samples__react-map-with-markers__cleanUp": {
     "text": "若要移除此逐步解說中建立的所有資源，請刪除名為的 CloudFormation 堆疊\n'反應地圖-與-地理信號'。"
+  },
+  "settings_modal_option__overview": {
+    "text": "探索亞馬遜位置的力量"
+  },
+  "settings_modal_option__samples": {
+    "text": "我們精選程式碼範例中的功能"
+  },
+  "settings_modal_option__settings": {
+    "text": "配置您的體驗"
+  },
+  "settings_modal_option__about": {
+    "text": "法律與歸因"
   }
 }

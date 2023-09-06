@@ -3,7 +3,7 @@
 
 import React from "react";
 
-import { Button, Flex, Text } from "@aws-amplify/ui-react";
+import { Button, Divider, Flex, Text } from "@aws-amplify/ui-react";
 import {
 	IconArrow,
 	IconAwsCloudFormation,
@@ -141,7 +141,7 @@ const Explore: React.FC<IProps> = ({
 		onShowAboutModal();
 	};
 
-	const ConnectAccount = () => (
+	const ConnectAccount = ({ isAuthenticated = false }) => (
 		<>
 			<Flex alignItems="center">
 				<IconAwsCloudFormation width="1.2rem" height="1.38rem" />
@@ -152,21 +152,25 @@ const Explore: React.FC<IProps> = ({
 			<Text fontFamily="AmazonEmber-Regular" fontSize="1rem" color="var(--grey-color)">
 				{t("explore__connect_description.text")}
 			</Text>
-			<Button
-				variation="primary"
-				width="100%"
-				height="3.07rem"
-				onClick={() => onConnectAwsAccount(AnalyticsEventActionsEnum.CONNECT_AWS_ACCOUNT_BUTTON_CLICKED)}
-			>
-				{t("caam__connect.text")}
-			</Button>
+			{isAuthenticated ? (
+				<AwsAccountButton />
+			) : (
+				<Button
+					variation="primary"
+					width="100%"
+					height="3.07rem"
+					onClick={() => onConnectAwsAccount(AnalyticsEventActionsEnum.CONNECT_AWS_ACCOUNT_BUTTON_CLICKED)}
+				>
+					{t("caam__connect.text")}
+				</Button>
+			)}
 		</>
 	);
 
-	const AwsAccountButton = () => (
+	const AwsAccountButton = ({ isFooter = false }) => (
 		<Button
 			data-testid={isAuthenticated ? "sign-out-button" : "sign-in-button"}
-			variation="primary"
+			variation={isFooter ? "link" : "primary"}
 			fontFamily="AmazonEmber-Bold"
 			textAlign="center"
 			onClick={async () => {
@@ -181,18 +185,19 @@ const Explore: React.FC<IProps> = ({
 					_onLogin();
 				}
 			}}
+			className={isFooter ? "auth-footer-button" : ""}
 		>
 			{isAuthenticated ? t("sign_out.text") : t("sign_in.text")}
 		</Button>
 	);
 
-	const DisconnectButton = () => (
+	const DisconnectButton = ({ isFooter = false }) => (
 		<Button
 			data-testid="disconnect-aws-account-button"
-			variation="primary"
+			variation={isFooter ? "link" : "primary"}
 			fontFamily="AmazonEmber-Bold"
-			className="disconnect-button"
-			marginTop="8px"
+			className={`disconnect-button ${isFooter ? "auth-footer-button" : ""}`}
+			marginTop={"1.84rem"}
 			textAlign="center"
 			onClick={onDisconnectAwsAccount}
 			fontSize={disconnectButtonText.length > 22 ? "0.92rem" : "1rem"}
@@ -204,16 +209,20 @@ const Explore: React.FC<IProps> = ({
 	const exploreMoreOptions = [
 		{
 			title: t("header__overview.text"),
-			description: "Description text will be there",
+			description: t("settings_modal_option__overview.text"),
 			onClickHandler: () => navigate(OVERVIEW)
 		},
 		{
 			title: t("samples.text"),
-			description: "Description text will be there",
+			description: t("settings_modal_option__samples.text"),
 			onClickHandler: () => navigate(SAMPLES)
 		},
-		{ title: t("settings.text"), description: "Description text will be there", onClickHandler: onClickSettings },
-		{ title: t("about.text"), description: "Description text will be there", onClickHandler: onClickMore }
+		{
+			title: t("settings.text"),
+			description: t("settings_modal_option__settings.text"),
+			onClickHandler: onClickSettings
+		},
+		{ title: t("about.text"), description: t("settings_modal_option__about.text"), onClickHandler: onClickMore }
 	];
 
 	const exploreButtons = [
@@ -254,10 +263,11 @@ const Explore: React.FC<IProps> = ({
 					<ExploreButton key={index} text={button.text} icon={button.icon} onClick={button.onClick} />
 				))}
 			</Flex>
-			<Flex direction="column" className="aws-connect-container button-wrapper">
-				{isUserAwsAccountConnected ? <AwsAccountButton /> : <ConnectAccount />}
-				{isUserAwsAccountConnected && !isAuthenticated && <DisconnectButton />}
-			</Flex>
+			{(!isUserAwsAccountConnected || !isAuthenticated) && (
+				<Flex direction="column" className="aws-connect-container button-wrapper">
+					<ConnectAccount isAuthenticated={isUserAwsAccountConnected} />
+				</Flex>
+			)}
 			<Flex direction="column" gap="0" margin="0 1rem" className="explore-more-options">
 				{exploreMoreOptions.map((option, index) => (
 					<IconicInfoCard
@@ -266,13 +276,28 @@ const Explore: React.FC<IProps> = ({
 						IconComponent={<IconArrow className="reverse-icon" width={20} height={20} />}
 						title={option.title}
 						description={option.description}
-						cardMargin={index === 0 ? "2rem 0 0.923rem 0" : "0.923rem 0"}
+						cardMargin={
+							index === 0 && (!isUserAwsAccountConnected || !isAuthenticated) ? "2rem 0 0.923rem 0" : "0.923rem 0"
+						}
 						direction="row-reverse"
 						cardAlignItems="center"
 						onClickHandler={option.onClickHandler}
 					/>
 				))}
 			</Flex>
+
+			{isUserAwsAccountConnected && isAuthenticated && (
+				<>
+					<Divider className="title-divider" />
+					<AwsAccountButton isFooter />
+				</>
+			)}
+			{isUserAwsAccountConnected && !isAuthenticated && (
+				<>
+					<Divider className="title-divider" />
+					<DisconnectButton isFooter />
+				</>
+			)}
 		</Flex>
 	);
 };

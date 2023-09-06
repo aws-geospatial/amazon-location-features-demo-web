@@ -3559,5 +3559,17 @@
   },
   "samples__react-map-with-markers__cleanUp": {
     "text": "Pour supprimer toutes les ressources créées lors de cette procédure pas à pas, supprimez la pile CloudFormation nommée\n`react-map-avec-geonson`."
+  },
+  "settings_modal_option__overview": {
+    "text": "Découvrez la puissance d'Amazon Location"
+  },
+  "settings_modal_option__samples": {
+    "text": "Nos fonctionnalités dans des exemples de code sélectionnés"
+  },
+  "settings_modal_option__settings": {
+    "text": "Configurez votre expérience"
+  },
+  "settings_modal_option__about": {
+    "text": "Juridique et attribution"
   }
 }

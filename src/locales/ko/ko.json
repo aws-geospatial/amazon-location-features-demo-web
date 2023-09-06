@@ -3559,5 +3559,17 @@
   },
   "samples__react-map-with-markers__cleanUp": {
     "text": "이 안내에서 생성된 모든 리소스를 제거하려면 이름이 지정된 CloudFormation 스택을 삭제하십시오.\n`react-map-with-geojson`."
+  },
+  "settings_modal_option__overview": {
+    "text": "아마존 로케이션의 힘을 살펴보세요"
+  },
+  "settings_modal_option__samples": {
+    "text": "엄선된 코드 샘플의 기능"
+  },
+  "settings_modal_option__settings": {
+    "text": "경험을 구성하세요"
+  },
+  "settings_modal_option__about": {
+    "text": "법률 및 저작자 표시"
   }
 }

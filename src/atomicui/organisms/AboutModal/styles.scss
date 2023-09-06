@@ -5,7 +5,7 @@
 	max-width: 45.69rem;
 	max-height: 49.23rem;
 
-	&.more-modal-mobile {
+	&.more-modal-tablet {
 		max-width: 100% !important;
 		max-height: 100% !important;
 		width: 100% !important;
@@ -13,10 +13,36 @@
 		border-radius: 0;
 	}
 
+	&.more-modal-mobile {
+		.modal-close {
+			display: none;
+		}
+	}
+
 	.more-modal-content {
 		gap: 0;
 		height: 100%;
 		max-height: 49.23rem;
+
+		&.more-modal-content-mobile {
+			.options-container,
+			.option-details-container {
+				width: 100%;
+			}
+
+			.option-details-container {
+				.option-item {
+					font-family: "AmazonEmber-Bold";
+					font-size: 1.23rem;
+					align-items: center;
+					display: flex;
+
+					.back-arrow {
+						margin-right: 1rem;
+					}
+				}
+			}
+		}
 
 		.options-container {
 			gap: 0;
@@ -32,6 +58,17 @@
 				border-left-width: 2px;
 				border-left-style: solid;
 				border-left-color: var(--white-color);
+
+				&.option-item-mobile {
+					padding: 0.77rem 1.23rem;
+					justify-content: space-between;
+					.option-arrow {
+						width: 16px;
+						svg {
+							transform: rotate(270deg);
+						}
+					}
+				}
 
 				@media only screen and (min-width: 1024px) {
 					&:hover {
@@ -92,10 +129,28 @@
 				}
 			}
 		}
+	}
+	.amplify-divider.amplify-divider--horizontal.title-divider {
+		border-bottom-width: 1px;
+		border-color: var(--light-color-2);
+	}
 
-		.amplify-divider.amplify-divider--horizontal.title-divider {
-			border-bottom-width: 1px;
-			border-color: var(--light-color-2);
+	.more-title-container-mobile {
+		flex-direction: column;
+		display: flex;
+		line-height: 1.38rem;
+		padding: 1.46rem 0 1.15rem;
+
+		.option-title {
+			display: flex;
+			font-family: "AmazonEmber-Bold";
+			font-size: 1.23rem;
+			align-items: center;
+			margin-left: 1.15rem;
+
+			svg {
+				margin-right: 1rem;
+			}
 		}
 	}
 

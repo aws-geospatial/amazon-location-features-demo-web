@@ -3559,5 +3559,17 @@
   },
   "samples__react-map-with-markers__cleanUp": {
     "text": "このウォークスルーで作成したリソースをすべて削除するには、という名前のCloudFormationスタックを削除します。\n`react-map-with-geojson`。"
+  },
+  "settings_modal_option__overview": {
+    "text": "Amazon ロケーションの力を探る"
+  },
+  "settings_modal_option__samples": {
+    "text": "厳選されたコードサンプルに含まれる機能"
+  },
+  "settings_modal_option__settings": {
+    "text": "エクスペリエンスの設定"
+  },
+  "settings_modal_option__about": {
+    "text": "リーガルとアトリビューション"
   }
 }

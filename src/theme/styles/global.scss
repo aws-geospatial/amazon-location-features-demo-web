@@ -76,9 +76,13 @@ body:has(.disable-body-scroll) {
 	min-height: 1.5rem;
 }
 
-
-.close-icon {
+.grey-icon {
 	fill: var(--grey-color);
 	width: 1.5rem;
 	height: 1.5rem;
+}
+
+.amplify-divider.amplify-divider--horizontal.title-divider {
+	border-bottom-width: 1px;
+	border-color: var(--light-color-2);
 }

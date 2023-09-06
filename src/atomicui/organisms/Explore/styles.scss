@@ -4,9 +4,9 @@
 .explore-container {
 	.feature-container {
 		justify-content: space-between;
-    margin: 2.46rem auto;
-    width: 100%;
-    padding: 0 2rem;
+		margin: 2.46rem auto;
+		width: 100%;
+		padding: 0 2rem;
 	}
 	.aws-connect-container {
 		border-radius: 1.07rem;
@@ -18,7 +18,17 @@
 	.explore-more-options {
 		.reverse-icon {
 			transform: rotate(270deg);
-			fill: #8E8E93;
+			fill: #8e8e93;
+		}
+	}
+
+	.auth-footer-button {
+		justify-content: flex-start;
+		color: var(--tertiary-color);
+		margin: 1.84rem 0.7rem;
+
+		&.disconnect-button {
+			color: var(--red-color);
 		}
 	}
 }

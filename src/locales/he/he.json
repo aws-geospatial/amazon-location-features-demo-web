@@ -3559,5 +3559,17 @@
   },
   "samples__react-map-with-markers__cleanUp": {
     "text": "כדי להסיר את כל המשאבים שנוצרו בהדרכה זו, מחק את ערימת CloudFormation בשם\n`תגובה-מפה-עם-geojson`."
+  },
+  "settings_modal_option__overview": {
+    "text": "חקור את העוצמה של מיקום אמזון"
+  },
+  "settings_modal_option__samples": {
+    "text": "התכונות שלנו בדוגמאות קוד שנאספו"
+  },
+  "settings_modal_option__settings": {
+    "text": "הגדר את החוויה שלך"
+  },
+  "settings_modal_option__about": {
+    "text": "משפטי & ייחוס"
   }
 }
