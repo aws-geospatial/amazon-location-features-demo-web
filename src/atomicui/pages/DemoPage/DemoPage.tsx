@@ -543,9 +543,6 @@ const DemoPage: React.FC = () => {
 					setViewpoint({ latitude, longitude });
 					setZoom(15);
 					mapViewRef.current?.flyTo({ center: [longitude, latitude] });
-					setTimeout(() => {
-						geolocateControlRef.current?.trigger();
-					}, 3000);
 				} else {
 					setViewpoint({ latitude: AMAZON_HQ.US.latitude, longitude: AMAZON_HQ.US.longitude });
 					setZoom(15);
