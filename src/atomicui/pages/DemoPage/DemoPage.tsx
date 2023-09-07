@@ -805,15 +805,15 @@ const DemoPage: React.FC = () => {
 							onOpenConnectAwsAccountModal={() => setShow(s => ({ ...s, connectAwsAccount: true }))}
 							onOpenSignInModal={() => setShow(s => ({ ...s, signInModal: true }))}
 							onShowSettings={() => setShow(s => ({ ...s, settings: true }))}
-							onShowTrackingDisclaimerModal={() => setShow(s => ({ ...s, authTrackerDisclaimerModal: true }))}
 							onShowAboutModal={() => setShow(s => ({ ...s, about: true }))}
-							onShowUnauthGeofenceBox={() => setShow(s => ({ ...s, unauthGeofenceBox: true }))}
-							onShowUnauthTrackerBox={() => setShow(s => ({ ...s, unauthTrackerBox: true }))}
 							onShowAuthGeofenceBox={() => setShow(s => ({ ...s, authGeofenceBox: true }))}
+							onShowAuthTrackerDisclaimerModal={() => setShow(s => ({ ...s, authTrackerDisclaimerModal: true }))}
 							onShowAuthTrackerBox={() => setShow(s => ({ ...s, authTrackerBox: true }))}
-							onshowUnauthSimulationDisclaimerModal={() =>
+							onShowUnauthSimulationDisclaimerModal={() =>
 								setShow(s => ({ ...s, unauthSimulationDisclaimerModal: true }))
 							}
+							onShowUnauthGeofenceBox={() => setShow(s => ({ ...s, unauthGeofenceBox: true }))}
+							onShowUnauthTrackerBox={() => setShow(s => ({ ...s, unauthTrackerBox: true }))}
 						/>
 					)}
 					{show.routeBox ? (
@@ -860,9 +860,7 @@ const DemoPage: React.FC = () => {
 						openStylesCard={show.stylesCard}
 						setOpenStylesCard={b => setShow(s => ({ ...s, stylesCard: b }))}
 						onCloseSidebar={() => setShow(s => ({ ...s, sidebar: false }))}
-						onOpenConnectAwsAccountModal={() => setShow(s => ({ ...s, connectAwsAccount: true }))}
 						onOpenSignInModal={() => setShow(s => ({ ...s, signInModal: true }))}
-						onShowGeofenceBox={() => setShow(s => ({ ...s, authGeofenceBox: true }))}
 						isGrabVisible={isGrabVisible}
 						showGrabDisclaimerModal={show.grabDisclaimerModal}
 						showOpenDataDisclaimerModal={show.openDataDisclaimerModal}
@@ -873,9 +871,19 @@ const DemoPage: React.FC = () => {
 						selectedFilters={selectedFilters}
 						setSelectedFilters={setSelectedFilters}
 						resetSearchAndFilters={handleResetCallback}
+						isAuthGeofenceBoxOpen={show.authGeofenceBox}
+						onSetShowAuthGeofenceBox={(b: boolean) => setShow(s => ({ ...s, authGeofenceBox: b }))}
 						isAuthTrackerDisclaimerModalOpen={show.authTrackerDisclaimerModal}
-						onShowAuthTrackerDisclaimerModal={() => setShow(s => ({ ...s, authTrackerDisclaimerModal: true }))}
 						isAuthTrackerBoxOpen={show.authTrackerBox}
+						onShowAuthTrackerDisclaimerModal={() => setShow(s => ({ ...s, authTrackerDisclaimerModal: true }))}
+						onSetShowAuthTrackerBox={(b: boolean) => setShow(s => ({ ...s, authTrackerBox: b }))}
+						onShowUnauthSimulationDisclaimerModal={() =>
+							setShow(s => ({ ...s, unauthSimulationDisclaimerModal: true }))
+						}
+						isUnauthGeofenceBoxOpen={show.unauthGeofenceBox}
+						isUnauthTrackerBoxOpen={show.unauthTrackerBox}
+						onSetShowUnauthGeofenceBox={(b: boolean) => setShow(s => ({ ...s, unauthGeofenceBox: b }))}
+						onSetShowUnauthTrackerBox={(b: boolean) => setShow(s => ({ ...s, unauthTrackerBox: b }))}
 					/>
 					{locationError || isCurrentLocationDisabled ? (
 						<Flex className="location-disabled" onClick={() => getCurrentGeoLocation()}>
@@ -954,9 +962,7 @@ const DemoPage: React.FC = () => {
 						openStylesCard={show.stylesCard}
 						setOpenStylesCard={b => setShow(s => ({ ...s, stylesCard: b }))}
 						onCloseSidebar={() => setShow(s => ({ ...s, sidebar: false }))}
-						onOpenConnectAwsAccountModal={() => setShow(s => ({ ...s, connectAwsAccount: true }))}
 						onOpenSignInModal={() => setShow(s => ({ ...s, signInModal: true }))}
-						onShowGeofenceBox={() => setShow(s => ({ ...s, authGeofenceBox: true }))}
 						isGrabVisible={isGrabVisible}
 						showGrabDisclaimerModal={show.grabDisclaimerModal}
 						showOpenDataDisclaimerModal={show.openDataDisclaimerModal}
@@ -967,9 +973,19 @@ const DemoPage: React.FC = () => {
 						selectedFilters={selectedFilters}
 						setSelectedFilters={setSelectedFilters}
 						onlyMapStyles
+						isAuthGeofenceBoxOpen={show.authGeofenceBox}
+						onSetShowAuthGeofenceBox={(b: boolean) => setShow(s => ({ ...s, authGeofenceBox: b }))}
 						isAuthTrackerDisclaimerModalOpen={show.authTrackerDisclaimerModal}
-						onShowAuthTrackerDisclaimerModal={() => setShow(s => ({ ...s, authTrackerDisclaimerModal: true }))}
 						isAuthTrackerBoxOpen={show.authTrackerBox}
+						onShowAuthTrackerDisclaimerModal={() => setShow(s => ({ ...s, authTrackerDisclaimerModal: true }))}
+						onSetShowAuthTrackerBox={(b: boolean) => setShow(s => ({ ...s, authTrackerBox: b }))}
+						onShowUnauthSimulationDisclaimerModal={() =>
+							setShow(s => ({ ...s, unauthSimulationDisclaimerModal: true }))
+						}
+						isUnauthGeofenceBoxOpen={show.unauthGeofenceBox}
+						isUnauthTrackerBoxOpen={show.unauthTrackerBox}
+						onSetShowUnauthGeofenceBox={(b: boolean) => setShow(s => ({ ...s, unauthGeofenceBox: b }))}
+						onSetShowUnauthTrackerBox={(b: boolean) => setShow(s => ({ ...s, unauthTrackerBox: b }))}
 					/>
 				}
 			/>
