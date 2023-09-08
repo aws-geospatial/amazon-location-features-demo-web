@@ -61,8 +61,7 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 						setShowUnauthGeofenceBox={() => {}}
 						setShowUnauthTrackerBox={() => {}}
 						setShowConnectAwsAccountModal={() => {}}
-						showStartUnauthSimulation={false}
-						setShowStartUnauthSimulation={() => {}}
+						setShowUnauthSimulationBounds={() => {}}
 					/>
 				) : (
 					<SearchBox
