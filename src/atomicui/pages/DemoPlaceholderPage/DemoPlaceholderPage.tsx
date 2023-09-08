@@ -38,14 +38,14 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 						onCloseSidebar={() => {}}
 						onOpenConnectAwsAccountModal={() => {}}
 						onOpenSignInModal={() => {}}
-						onShowAuthGeofenceBox={() => {}}
-						onShowAuthTrackerBox={() => {}}
 						onShowSettings={() => {}}
-						onShowTrackingDisclaimerModal={() => {}}
 						onShowAboutModal={() => {}}
+						onShowAuthGeofenceBox={() => {}}
+						onShowAuthTrackerDisclaimerModal={() => {}}
+						onShowAuthTrackerBox={() => {}}
+						onShowUnauthSimulationDisclaimerModal={() => {}}
 						onShowUnauthGeofenceBox={() => {}}
 						onShowUnauthTrackerBox={() => {}}
-						onshowUnauthSimulationDisclaimerModal={() => {}}
 					/>
 				)}
 				{show.routeBox ? (
@@ -81,9 +81,7 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 					openStylesCard={show.stylesCard}
 					setOpenStylesCard={() => {}}
 					onCloseSidebar={() => {}}
-					onOpenConnectAwsAccountModal={() => {}}
 					onOpenSignInModal={() => {}}
-					onShowGeofenceBox={() => {}}
 					isGrabVisible={isGrabVisible}
 					showGrabDisclaimerModal={show.grabDisclaimerModal}
 					onShowGridLoader={() => {}}
@@ -94,9 +92,17 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 					setSelectedFilters={() => {}}
 					isLoading={true}
 					showOpenDataDisclaimerModal={false}
+					isAuthGeofenceBoxOpen={show.authGeofenceBox}
+					onSetShowAuthGeofenceBox={() => {}}
 					isAuthTrackerDisclaimerModalOpen={show.authTrackerDisclaimerModal}
-					onShowAuthTrackerDisclaimerModal={() => {}}
 					isAuthTrackerBoxOpen={show.authTrackerBox}
+					onShowAuthTrackerDisclaimerModal={() => {}}
+					onSetShowAuthTrackerBox={() => {}}
+					onShowUnauthSimulationDisclaimerModal={() => {}}
+					isUnauthGeofenceBoxOpen={show.unauthGeofenceBox}
+					isUnauthTrackerBoxOpen={show.unauthTrackerBox}
+					onSetShowUnauthGeofenceBox={() => {}}
+					onSetShowUnauthTrackerBox={() => {}}
 				/>
 				<Flex className="location-disabled">
 					<IconLocateMe />
@@ -120,9 +126,7 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 						openStylesCard={show.stylesCard}
 						setOpenStylesCard={() => {}}
 						onCloseSidebar={() => {}}
-						onOpenConnectAwsAccountModal={() => {}}
 						onOpenSignInModal={() => {}}
-						onShowGeofenceBox={() => {}}
 						isGrabVisible={isGrabVisible}
 						showGrabDisclaimerModal={show.grabDisclaimerModal}
 						onShowGridLoader={() => {}}
@@ -133,9 +137,17 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 						setSelectedFilters={() => {}}
 						isLoading={true}
 						showOpenDataDisclaimerModal={false}
+						isAuthGeofenceBoxOpen={show.authGeofenceBox}
+						onSetShowAuthGeofenceBox={() => {}}
 						isAuthTrackerDisclaimerModalOpen={show.authTrackerDisclaimerModal}
-						onShowAuthTrackerDisclaimerModal={() => {}}
 						isAuthTrackerBoxOpen={show.authTrackerBox}
+						onShowAuthTrackerDisclaimerModal={() => {}}
+						onShowUnauthSimulationDisclaimerModal={() => {}}
+						onSetShowAuthTrackerBox={() => {}}
+						isUnauthGeofenceBoxOpen={show.unauthGeofenceBox}
+						isUnauthTrackerBoxOpen={show.unauthTrackerBox}
+						onSetShowUnauthGeofenceBox={() => {}}
+						onSetShowUnauthTrackerBox={() => {}}
 					/>
 				}
 				resetSearchAndFilters={() => {}}

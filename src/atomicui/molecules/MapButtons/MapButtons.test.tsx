@@ -11,9 +11,7 @@ describe("<MapButtons/>", () => {
 		openStylesCard: false,
 		setOpenStylesCard: jest.fn(),
 		onCloseSidebar: jest.fn(),
-		onOpenConnectAwsAccountModal: jest.fn(),
 		onOpenSignInModal: jest.fn(),
-		onShowGeofenceBox: jest.fn(),
 		isGrabVisible: true,
 		showGrabDisclaimerModal: false,
 		onShowGridLoader: jest.fn(),
@@ -29,9 +27,17 @@ describe("<MapButtons/>", () => {
 		isLoading: false,
 		resetSearchAndFilters: jest.fn(),
 		showOpenDataDisclaimerModal: false,
+		isAuthGeofenceBoxOpen: false,
+		onSetShowAuthGeofenceBox: jest.fn(),
 		isAuthTrackerDisclaimerModalOpen: false,
+		isAuthTrackerBoxOpen: false,
 		onShowAuthTrackerDisclaimerModal: jest.fn(),
-		isAuthTrackerBoxOpen: false
+		onSetShowAuthTrackerBox: jest.fn(),
+		onShowUnauthSimulationDisclaimerModal: jest.fn(),
+		isUnauthGeofenceBoxOpen: false,
+		isUnauthTrackerBoxOpen: false,
+		onSetShowUnauthGeofenceBox: jest.fn(),
+		onSetShowUnauthTrackerBox: jest.fn()
 	};
 
 	const renderComponent = () => {

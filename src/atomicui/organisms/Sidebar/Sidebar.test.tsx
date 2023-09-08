@@ -9,14 +9,14 @@ const mockProps = {
 	onCloseSidebar: jest.fn(),
 	onOpenConnectAwsAccountModal: jest.fn(),
 	onOpenSignInModal: jest.fn(),
-	onShowAuthGeofenceBox: jest.fn(),
-	onShowAuthTrackerBox: jest.fn(),
 	onShowSettings: jest.fn(),
-	onShowTrackingDisclaimerModal: jest.fn(),
 	onShowAboutModal: jest.fn(),
+	onShowAuthGeofenceBox: jest.fn(),
+	onShowAuthTrackerDisclaimerModal: jest.fn(),
+	onShowAuthTrackerBox: jest.fn(),
+	onShowUnauthSimulationDisclaimerModal: jest.fn(),
 	onShowUnauthGeofenceBox: jest.fn(),
-	onShowUnauthTrackerBox: jest.fn(),
-	onshowUnauthSimulationDisclaimerModal: jest.fn()
+	onShowUnauthTrackerBox: jest.fn()
 };
 
 describe("<Sidebar />", () => {
