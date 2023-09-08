@@ -22,7 +22,6 @@ import {
 } from "@demo/assets";
 
 import { NotFoundCard, StepCard } from "@demo/atomicui/molecules";
-import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import {
 	useAmplifyMap,
 	useAwsPlace,
