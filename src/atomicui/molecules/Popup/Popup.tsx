@@ -5,7 +5,6 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 import { Button, Flex, Placeholder, Text, View } from "@aws-amplify/ui-react";
 import { IconCar, IconClose, IconCopyPages, IconDirections, IconInfo } from "@demo/assets";
-import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useAmplifyMap, useAwsPlace, useAwsRoute, useBottomSheet, useDeviceMediaQuery } from "@demo/hooks";
 import { DistanceUnitEnum, MapProviderEnum, MapUnitEnum, SuggestionType, TravelMode } from "@demo/types";
 
@@ -133,8 +132,6 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 		setDirections({ info, isEsriLimitation });
 		clearPoiList();
 		if (!isDesktop) {
-			// setBottomSheetMinHeight(BottomSheetHeights.routes.min);
-			// setBottomSheetHeight(BottomSheetHeights.routes.max);
 			onClose(ResponsiveUIEnum.direction_to_routes);
 		}
 	}, [clearPoiList, info, isDesktop, isEsriLimitation, onClose, setDirections]);

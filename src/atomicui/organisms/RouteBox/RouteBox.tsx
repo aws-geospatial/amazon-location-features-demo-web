@@ -22,6 +22,7 @@ import {
 } from "@demo/assets";
 
 import { NotFoundCard, StepCard } from "@demo/atomicui/molecules";
+import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import {
 	useAmplifyMap,
 	useAwsPlace,
@@ -81,7 +82,8 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 	const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const moreOptionsRef = useRef<HTMLDivElement | null>(null);
 	const arrowRef = useRef<HTMLDivElement | null>(null);
-
+	const routesCardRef = useRef<HTMLDivElement | null>(null);
+	const expandRouteRef = useRef<HTMLDivElement | null>(null);
 	const {
 		currentLocationData,
 		viewpoint,
@@ -91,7 +93,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 		mapProvider: currentMapProvider
 	} = useAmplifyMap();
 	const { search, getPlaceData } = useAwsPlace();
-	const { setUI, setBottomSheetMinHeight, setBottomSheetHeight, ui } = useBottomSheet();
+	const { setUI, setBottomSheetMinHeight, setBottomSheetHeight, ui, bottomSheetHeight } = useBottomSheet();
 	const {
 		setRoutePositions,
 		getRoute,
@@ -143,8 +145,6 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 			if (ui === ResponsiveUIEnum.routes) {
 				fromInputRef?.current?.blur();
 				toInputRef?.current?.blur();
-				// setBottomSheetHeight(BottomSheetHeights.search.max);
-				// setBottomSheetMinHeight(BottomSheetHeights.search.min);
 			}
 		}
 
@@ -155,11 +155,29 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 	}, [ui, setBottomSheetHeight, setBottomSheetMinHeight]);
 
 	useEffect(() => {
-		if (!isDesktop || !!inputFocused.from || !!inputFocused.to) {
-			// setBottomSheetMinHeight(BottomSheetHeights.routes.max - 10);
-			// setBottomSheetHeight(BottomSheetHeights.routes.max);
+		if (!isDesktop) {
+			if (isInputFocused) {
+				setBottomSheetMinHeight(window.innerHeight - 10);
+				setBottomSheetHeight(window.innerHeight);
+			} else {
+				if (expandRouteOptionsMobile) {
+					setBottomSheetMinHeight((expandRouteRef?.current?.clientHeight || 230) + 90);
+					setBottomSheetHeight((expandRouteRef?.current?.clientHeight || 230) + 100);
+				} else {
+					setBottomSheetMinHeight((routesCardRef?.current?.clientHeight || 230) + 30);
+					setBottomSheetHeight((routesCardRef?.current?.clientHeight || 230) + 40);
+				}
+			}
 		}
-	}, [inputFocused.from, inputFocused.to, isDesktop, setBottomSheetHeight, setBottomSheetMinHeight]);
+	}, [
+		bottomSheetHeight,
+		isInputFocused,
+		isDesktop,
+		setBottomSheetHeight,
+		setBottomSheetMinHeight,
+		routeData,
+		expandRouteOptionsMobile
+	]);
 
 	useEffect(() => {
 		if (!value.from) {
@@ -747,26 +765,26 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 		}
 	}, [routeData, routePositions, isCurrentLocationDisabled, currentLocationData, mapRef]);
 
-	const getDistance = useCallback(
+	const getDuration = useCallback(
 		(mode: TravelMode) => {
 			const route = routeDataForMobile?.find(r => r.hasOwnProperty(mode));
 			const legs = route?.[mode]?.Legs;
-			const distance = legs?.[0]?.Distance;
+			const durationSeconds = legs?.[0]?.DurationSeconds;
 
-			return distance ? distance.toFixed(2) : "";
+			return durationSeconds ? humanReadableTime(durationSeconds * 1000, currentLang, t, true) : "";
 		},
-		[routeDataForMobile]
+		[currentLang, routeDataForMobile, t]
 	);
 
 	if (expandRouteOptionsMobile)
 		return (
-			<Flex direction="column" gap="0">
+			<Flex direction="column" gap="0" ref={expandRouteRef}>
 				<Flex className="route-card-close" onClick={() => setExpandRouteOptionsMobile(false)} justifyContent="flex-end">
-					<IconClose className="grey-icon expand-mobile-close" width="auto" height="auto" />
+					<IconClose className="grey-icon expand-mobile-close" width="24px" height="24px" />
 				</Flex>
 				<Flex direction="column" padding="0 1.23rem">
 					<Text fontFamily="AmazonEmber-Bold" fontSize="1.23rem">
-						Route Options
+						{t("route_box__route_options.text")}
 					</Text>
 					<MoreOptionsUI />
 				</Flex>
@@ -779,6 +797,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 				data-testid="route-card"
 				className={`route-card ${!isDesktop ? "route-card-mobile" : ""}`}
 				left={!isDesktop ? 0 : isSideMenuExpanded ? 245 : 21}
+				ref={routesCardRef}
 			>
 				<View className="route-card-close" onClick={onClose}>
 					<IconClose />
@@ -884,7 +903,6 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 								data-testid="from-input"
 								placeholder={t("route_box__from.text") as string}
 								onFocus={() => onFocus(InputType.FROM)}
-								// onBlur={() => isBothInputFilled && onFocus(InputType.FROM, true)}
 								value={value.from}
 								onChange={e => onChangeValue(e, InputType.FROM)}
 								dir={langDir}
@@ -895,7 +913,6 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 								data-testid="to-input"
 								placeholder={t("route_box__to.text") as string}
 								onFocus={() => onFocus(InputType.TO)}
-								// onBlur={() => isBothInputFilled && onFocus(InputType.TO, true)}
 								value={value.to}
 								onChange={e => onChangeValue(e, InputType.TO)}
 								dir={langDir}
@@ -944,13 +961,13 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 							<View
 								key={mode}
 								data-testid={`travel-mode-${mode}-icon-container`}
-								className={`travel-mode ${!getDistance(mode) ? "empty-distance" : ""} ${
+								className={`travel-mode ${!getDuration(mode) ? "empty-distance" : ""} ${
 									travelMode === mode ? "selected" : ""
 								}`}
 								onClick={() => handleTravelModeChange(mode)}
 							>
 								<IconComponent />
-								{getDistance(mode)}
+								{getDuration(mode)}
 							</View>
 						))}
 					</Flex>

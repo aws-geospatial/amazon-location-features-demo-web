@@ -312,8 +312,8 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 
 	return (
 		<>
-			{isNonStartedSimulation && UnauthSimulationUI}
-			{isExitSimulation && ExitSimulation()}
+			{!isDesktop && isNonStartedSimulation && UnauthSimulationUI}
+			{!isDesktop && isExitSimulation && ExitSimulation()}
 
 			<BottomSheet
 				open
