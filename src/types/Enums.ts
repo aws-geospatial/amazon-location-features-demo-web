@@ -298,5 +298,6 @@ export enum ResponsiveUIEnum {
 	unauth_tracker = "unauth_tracker",
 	auth_tracker = "auth_tracker",
 	auth_geofence = "auth_geofence",
-	unauth_geofence = "unauth_geofence"
+	unauth_geofence = "unauth_geofence",
+	direction_to_routes = "direction_to_routes"
 }

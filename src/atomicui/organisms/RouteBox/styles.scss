@@ -12,6 +12,34 @@
 		box-shadow: none;
 		padding: 0 1.23rem;
 
+		.icon-more-vertical {
+			g {
+				g {
+					fill: var(--grey-color) !important;
+				}
+			}
+		}
+
+		.travel-mode-button-container {
+			padding-left: 0 !important;
+
+			.empty-distance {
+				svg {
+					margin-right: 0 !important;
+				}
+			}
+
+			.travel-mode {
+				min-width: 32px;
+				width: auto;
+				padding: 0 0.5rem;
+
+				svg {
+					margin-right: 0.5rem;
+				}
+			}
+		}
+
 		.route-card-close {
 			top: -10px;
 		}
@@ -76,8 +104,64 @@
 		}
 	}
 
+	.from-to-container-wrapper {
+		.from-to-container {
+			width: 100%;
+		}
+	}
+
+	.from-to-mobile {
+		position: relative;
+
+		.more-action-icon-container {
+			border-radius: 0 8px 8px 0;
+			margin-top: 8px;
+			padding: 8px;
+
+			background-color: var(--light-color-2);
+			&:hover {
+				background-color: var(--ghost-white);
+			}
+		}
+
+		.more-options-container {
+			background-color: var(--white-color);
+			box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.202633);
+			width: 11rem;
+			position: absolute;
+			bottom: -20px;
+			right: 16px;
+			padding: 1rem;
+			border-radius: 8px;
+			text-align: center;
+		}
+	}
+
 	.from-to-container {
 		padding: 12px 0px 12px 18px !important;
+
+		&.from-to-container-mobile {
+			margin-top: 8px;
+			background-color: var(--light-color-2);
+			border-radius: 8px 0 0 8px;
+			padding: 10px !important;
+			width: 100%;
+
+			.inputs-container {
+				width: 100%;
+				input {
+					background-color: var(--light-color-2);
+				}
+			}
+
+			.marker-container {
+				margin: 0.5rem 0;
+
+				.dashed-line {
+					height: 3px;
+				}
+			}
+		}
 
 		.marker-container {
 			gap: 0;
@@ -132,21 +216,20 @@
 				border-top: 1px solid rgba(242, 242, 247, 1);
 			}
 		}
+	}
+	.swap-icon-container {
+		gap: 0;
+		align-items: center;
 
-		.swap-icon-container {
-			gap: 0;
-			align-items: center;
+		svg {
+			width: 24px;
+			height: 24px;
+			fill: #8e8e93;
+			cursor: pointer;
 
-			svg {
-				width: 24px;
-				height: 24px;
-				fill: #8e8e93;
-				cursor: pointer;
-
-				@media only screen and (min-width: 1024px) {
-					&:hover {
-						fill: #008296;
-					}
+			@media only screen and (min-width: 1024px) {
+				&:hover {
+					fill: #008296;
 				}
 			}
 		}
@@ -194,52 +277,6 @@
 				text-align: right !important;
 				line-height: 18px !important;
 				cursor: pointer;
-			}
-		}
-
-		.route-option-items {
-			display: flex;
-			flex-direction: column;
-
-			.option-item {
-				padding: 10px 0px;
-				gap: 0;
-
-				.amplify-flex.amplify-checkbox {
-					.amplify-text.amplify-checkbox__label {
-						opacity: 1 !important;
-						color: rgba(35, 47, 62, 1) !important;
-						font-size: 13px !important;
-						font-family: "AmazonEmber-Regular";
-						font-style: normal !important;
-						letter-spacing: 0px !important;
-						text-align: left !important;
-						line-height: 18px !important;
-						margin-left: 16px;
-					}
-
-					.amplify-flex.amplify-checkbox__button {
-						border-radius: 3px;
-						border: 1px solid #c7c7cc;
-						opacity: 1;
-						width: 20px;
-						height: 20px;
-
-						.amplify-icon.amplify-checkbox__icon {
-							display: flex;
-							justify-content: center !important;
-							align-items: center !important;
-							background-color: #008296 !important;
-							width: 100% !important;
-							height: 100% !important;
-
-							svg {
-								width: 100%;
-								height: 100%;
-							}
-						}
-					}
-				}
 			}
 		}
 	}
@@ -447,4 +484,53 @@
 			}
 		}
 	}
+}
+
+.route-option-items {
+	display: flex;
+	flex-direction: column;
+
+	.option-item {
+		padding: 10px 0px;
+		gap: 0;
+
+		.amplify-flex.amplify-checkbox {
+			.amplify-text.amplify-checkbox__label {
+				opacity: 1 !important;
+				color: rgba(35, 47, 62, 1) !important;
+				font-size: 13px !important;
+				font-family: "AmazonEmber-Regular";
+				font-style: normal !important;
+				letter-spacing: 0px !important;
+				text-align: left !important;
+				line-height: 18px !important;
+				margin-left: 16px;
+			}
+
+			.amplify-flex.amplify-checkbox__button {
+				width: 20px;
+				height: 20px;
+
+				.amplify-icon.amplify-checkbox__icon {
+					display: flex;
+					justify-content: center !important;
+					align-items: center !important;
+					background-color: #008296 !important;
+					width: 100% !important;
+					height: 100% !important;
+
+					svg {
+						width: 100%;
+						height: 100%;
+					}
+				}
+			}
+		}
+	}
+}
+
+.expand-mobile-close {
+	position: absolute;
+	top: 11px;
+	right: 10px;
 }

@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { ChangeEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Card, CheckboxField, Flex, Text, View } from "@aws-amplify/ui-react";
 import {
@@ -11,6 +11,7 @@ import {
 	IconCar,
 	IconClose,
 	IconDestination,
+	IconMoreVertical,
 	IconMotorcycleSolid,
 	IconMyLocation,
 	IconPin,
@@ -21,7 +22,6 @@ import {
 } from "@demo/assets";
 
 import { NotFoundCard, StepCard } from "@demo/atomicui/molecules";
-import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import {
 	useAmplifyMap,
 	useAwsPlace,
@@ -35,6 +35,7 @@ import {
 	InputType,
 	MapProviderEnum,
 	MapUnitEnum,
+	RouteDataType,
 	RouteOptionsType,
 	SuggestionType,
 	TravelMode
@@ -54,10 +55,15 @@ interface RouteBoxProps {
 	mapRef: MapRef | null;
 	setShowRouteBox: (b: boolean) => void;
 	isSideMenuExpanded: boolean;
+	isDirection?: boolean;
 }
 
 const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenuExpanded }) => {
-	const [travelMode, setTravelMode] = useState<string>(TravelMode.CAR);
+	const [travelMode, setTravelMode] = useState<TravelMode>(TravelMode.CAR);
+	const [travelModes, setTravelModes] = useState<TravelMode[]>([TravelMode.CAR]);
+	const [routeDataForMobile, setRouteDataForMobile] = useState<{ [K in TravelMode]?: RouteDataType }[] | undefined>(
+		undefined
+	);
 	const [inputFocused, setInputFocused] = useState<{ from: boolean; to: boolean }>({ from: false, to: false });
 	const [value, setValue] = useState<{ from: string; to: string }>({ from: "", to: "" });
 	const [suggestions, setSuggestions] = useState<{
@@ -73,6 +79,9 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 	const [stepsData, setStepsData] = useState<Place[]>([]);
 	const [isCollapsed, setIsCollapsed] = useState(true);
 	const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+	const moreOptionsRef = useRef<HTMLDivElement | null>(null);
+	const arrowRef = useRef<HTMLDivElement | null>(null);
+
 	const {
 		currentLocationData,
 		viewpoint,
@@ -95,7 +104,9 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 	} = useAwsRoute();
 	const { defaultRouteOptions } = usePersistedData();
 	const [expandRouteOptions, setExpandRouteOptions] = useState(false);
+	const [moreOption, setMoreOption] = useState(false);
 	const [routeOptions, setRouteOptions] = useState<RouteOptionsType>({ ...defaultRouteOptions });
+	const [expandRouteOptionsMobile, setExpandRouteOptionsMobile] = useState(false);
 
 	const { isDesktop } = useDeviceMediaQuery();
 	const { t, i18n } = useTranslation();
@@ -105,6 +116,23 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 	const isLanguageRTL = ["ar", "he"].includes(currentLang);
 	const fromInputRef = useRef<HTMLInputElement>(null);
 	const toInputRef = useRef<HTMLInputElement>(null);
+	const isInputFocused = inputFocused.from || inputFocused.to;
+	const isBothInputFilled = value.from && value.to;
+	const isOneInputFilled = value.from || value.to;
+
+	const iconsByTravelMode = useMemo(
+		() => [
+			{ mode: TravelMode.CAR, IconComponent: IconCar },
+			{ mode: TravelMode.WALKING, IconComponent: IconWalking },
+			...(currentMapProvider === MapProviderEnum.GRAB
+				? [
+						{ mode: TravelMode.BICYCLE, IconComponent: IconBicycleSolid },
+						{ mode: TravelMode.MOTORCYCLE, IconComponent: IconMotorcycleSolid }
+				  ]
+				: [{ mode: TravelMode.TRUCK, IconComponent: IconTruckSolid }])
+		],
+		[currentMapProvider]
+	);
 
 	const clearRoutePosition = useCallback((type: InputType) => setRoutePositions(undefined, type), [setRoutePositions]);
 
@@ -115,8 +143,8 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 			if (ui === ResponsiveUIEnum.routes) {
 				fromInputRef?.current?.blur();
 				toInputRef?.current?.blur();
-				setBottomSheetHeight(BottomSheetHeights.search.max);
-				setBottomSheetMinHeight(BottomSheetHeights.search.min);
+				// setBottomSheetHeight(BottomSheetHeights.search.max);
+				// setBottomSheetMinHeight(BottomSheetHeights.search.min);
 			}
 		}
 
@@ -128,8 +156,8 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 
 	useEffect(() => {
 		if (!isDesktop || !!inputFocused.from || !!inputFocused.to) {
-			setBottomSheetMinHeight(BottomSheetHeights.routes.max - 10);
-			setBottomSheetHeight(BottomSheetHeights.routes.max);
+			// setBottomSheetMinHeight(BottomSheetHeights.routes.max - 10);
+			// setBottomSheetHeight(BottomSheetHeights.routes.max);
 		}
 	}, [inputFocused.from, inputFocused.to, isDesktop, setBottomSheetHeight, setBottomSheetMinHeight]);
 
@@ -174,7 +202,20 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 	]);
 
 	useEffect(() => {
+		function handleClickOutside(event: MouseEvent) {
+			const target = event.target as HTMLElement;
+			!isDesktop && !!moreOption && !moreOptionsRef?.current?.contains(target) && setMoreOption(false);
+		}
+
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, [isDesktop, moreOption]);
+
+	useEffect(() => {
 		isDesktop && isCollapsed && setIsCollapsed(false);
+		!isDesktop && setIsCollapsed(false);
 	}, [isDesktop, isCollapsed]);
 
 	const getDestDept = useCallback(() => {
@@ -208,39 +249,72 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 		}
 	}, [isCurrentLocationSelected, placeData, currentLocationData]);
 
+	const handleParams = useCallback(
+		(mode: string) => {
+			const obj = getDestDept();
+			let params;
+			if (obj?.DeparturePosition && obj?.DestinationPosition) {
+				params = {
+					IncludeLegGeometry: true,
+					DistanceUnit: currentMapUnit === METRIC ? KILOMETERS : MILES,
+					DeparturePosition: obj.DeparturePosition,
+					DestinationPosition: obj.DestinationPosition,
+					TravelMode: mode,
+					CarModeOptions:
+						mode === TravelMode.CAR
+							? {
+									AvoidFerries: routeOptions.avoidFerries,
+									AvoidTolls: routeOptions.avoidTolls
+							  }
+							: undefined,
+					TruckModeOptions:
+						mode === TravelMode.TRUCK
+							? {
+									AvoidFerries: routeOptions.avoidFerries,
+									AvoidTolls: routeOptions.avoidTolls
+							  }
+							: undefined
+				};
+			}
+
+			return params;
+		},
+		[currentMapUnit, getDestDept, routeOptions.avoidFerries, routeOptions.avoidTolls]
+	);
+
 	const calculateRouteData = useCallback(async () => {
+		if (!!handleParams(travelMode)) {
+			const rd = await getRoute(handleParams(travelMode) as CalculateRouteRequest, TriggeredByEnum.ROUTE_MODULE);
+			rd && setRouteData({ ...rd, travelMode: travelMode as TravelMode });
+		}
+	}, [getRoute, handleParams, travelMode, setRouteData]);
+
+	const calculateRouteDataForAllTravelModes = useCallback(async () => {
 		const obj = getDestDept();
 
 		if (obj?.DeparturePosition && obj?.DestinationPosition) {
-			const params: Omit<CalculateRouteRequest, "CalculatorName" | "DepartNow"> = {
-				IncludeLegGeometry: true,
-				DistanceUnit: currentMapUnit === METRIC ? KILOMETERS : MILES,
-				DeparturePosition: obj.DeparturePosition,
-				DestinationPosition: obj.DestinationPosition,
-				TravelMode: travelMode,
-				CarModeOptions:
-					travelMode === TravelMode.CAR
-						? {
-								AvoidFerries: routeOptions.avoidFerries,
-								AvoidTolls: routeOptions.avoidTolls
-						  }
-						: undefined,
-				TruckModeOptions:
-					travelMode === TravelMode.TRUCK
-						? {
-								AvoidFerries: routeOptions.avoidFerries,
-								AvoidTolls: routeOptions.avoidTolls
-						  }
-						: undefined
-			};
-			const rd = await getRoute(params as CalculateRouteRequest, TriggeredByEnum.ROUTE_MODULE);
-			rd && setRouteData({ ...rd, travelMode: travelMode as TravelMode });
+			travelModes.map(async mode => {
+				const rd = await getRoute(handleParams(mode) as CalculateRouteRequest, TriggeredByEnum.ROUTE_MODULE);
+				setRouteDataForMobile(preVal => (preVal ? [...preVal, { [mode]: rd }] : [{ [mode]: rd }]));
+			});
 		}
-	}, [getDestDept, currentMapUnit, travelMode, routeOptions, getRoute, setRouteData]);
+	}, [getDestDept, travelModes, getRoute, handleParams]);
+
+	useEffect(() => {
+		if (!isDesktop) {
+			if (currentMapProvider === MapProviderEnum.GRAB)
+				setTravelModes([TravelMode.CAR, TravelMode.WALKING, TravelMode.BICYCLE, TravelMode.MOTORCYCLE]);
+			else setTravelModes([TravelMode.CAR, TravelMode.WALKING, TravelMode.TRUCK]);
+		}
+	}, [currentMapProvider, isDesktop]);
+
+	useEffect(() => {
+		!isDesktop && calculateRouteDataForAllTravelModes();
+	}, [calculateRouteDataForAllTravelModes, isDesktop, currentMapProvider]);
 
 	useEffect(() => {
 		!routeData && calculateRouteData();
-	}, [routeData, calculateRouteData, mapStyle]);
+	}, [routeData, calculateRouteData, mapStyle, isDesktop]);
 
 	useEffect(() => {
 		if (directions) {
@@ -277,10 +351,13 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 		setUI(ResponsiveUIEnum.explore);
 	};
 
-	const handleTravelModeChange = (travelMode: TravelMode) => {
-		setTravelMode(travelMode);
-		setRouteData(undefined);
-	};
+	const handleTravelModeChange = useCallback(
+		(tm: TravelMode) => {
+			setTravelMode(tm);
+			clearRouteData();
+		},
+		[clearRouteData]
+	);
 
 	const handleSearch = useCallback(
 		async (value: string, exact = false, type: InputType, action: string) => {
@@ -321,6 +398,32 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 		};
 	}, []);
 
+	const handleClick = useCallback(
+		(event: MouseEvent) => {
+			const target = event.target as HTMLElement;
+
+			if (
+				arrowRef?.current?.contains(target) ||
+				toInputRef?.current?.contains(target) ||
+				fromInputRef?.current?.contains(target)
+			) {
+				return;
+			}
+
+			if (!!isBothInputFilled) {
+				setInputFocused(preVal => ({ ...preVal, from: false, to: false }));
+			}
+		},
+		[isBothInputFilled]
+	);
+
+	useEffect(() => {
+		document.body.addEventListener("click", handleClick);
+		return () => {
+			document.body.removeEventListener("click", handleClick);
+		};
+	}, [handleClick]);
+
 	const onFocus = (type: InputType) => {
 		if (type === InputType.FROM) {
 			setInputFocused({ from: true, to: false });
@@ -351,6 +454,38 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 
 	const onClickRouteOptions = useCallback(() => setExpandRouteOptions(!expandRouteOptions), [expandRouteOptions]);
 
+	const MoreOptionsUI = useCallback(
+		() => (
+			<View className="route-option-items">
+				<CheckboxField
+					className="option-item"
+					label={t("avoid_tolls.text")}
+					name={t("avoid_tolls.text")}
+					value="Avoid tolls"
+					checked={routeOptions.avoidTolls}
+					onChange={e => {
+						setRouteOptions({ ...routeOptions, avoidTolls: e.target.checked });
+						setRouteData(undefined);
+					}}
+					crossOrigin={undefined}
+				/>
+				<CheckboxField
+					className="option-item"
+					label={t("avoid_ferries.text")}
+					name={t("avoid_ferries.text")}
+					value="Avoid ferries"
+					checked={routeOptions.avoidFerries}
+					onChange={e => {
+						setRouteOptions({ ...routeOptions, avoidFerries: e.target.checked });
+						setRouteData(undefined);
+					}}
+					crossOrigin={undefined}
+				/>
+			</View>
+		),
+		[routeOptions, setRouteData, t]
+	);
+
 	const renderRouteOptionsContainer = useMemo(
 		() => (
 			<View
@@ -372,37 +507,10 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 						</Text>
 					</View>
 				)}
-				{expandRouteOptions && (
-					<View className="route-option-items">
-						<CheckboxField
-							className="option-item"
-							label={t("avoid_tolls.text")}
-							name={t("avoid_tolls.text")}
-							value="Avoid tolls"
-							checked={routeOptions.avoidTolls}
-							onChange={e => {
-								setRouteOptions({ ...routeOptions, avoidTolls: e.target.checked });
-								setRouteData(undefined);
-							}}
-							crossOrigin={undefined}
-						/>
-						<CheckboxField
-							className="option-item"
-							label={t("avoid_ferries.text")}
-							name={t("avoid_ferries.text")}
-							value="Avoid ferries"
-							checked={routeOptions.avoidFerries}
-							onChange={e => {
-								setRouteOptions({ ...routeOptions, avoidFerries: e.target.checked });
-								setRouteData(undefined);
-							}}
-							crossOrigin={undefined}
-						/>
-					</View>
-				)}
+				{expandRouteOptions && <MoreOptionsUI />}
 			</View>
 		),
-		[inputFocused, routeData, expandRouteOptions, onClickRouteOptions, routeOptions, setRouteData, t]
+		[inputFocused.from, inputFocused.to, routeData, expandRouteOptions, onClickRouteOptions, t, MoreOptionsUI]
 	);
 
 	const onSelectCurrentLocaiton = (type: InputType) => {
@@ -639,6 +747,32 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 		}
 	}, [routeData, routePositions, isCurrentLocationDisabled, currentLocationData, mapRef]);
 
+	const getDistance = useCallback(
+		(mode: TravelMode) => {
+			const route = routeDataForMobile?.find(r => r.hasOwnProperty(mode));
+			const legs = route?.[mode]?.Legs;
+			const distance = legs?.[0]?.Distance;
+
+			return distance ? distance.toFixed(2) : "";
+		},
+		[routeDataForMobile]
+	);
+
+	if (expandRouteOptionsMobile)
+		return (
+			<Flex direction="column" gap="0">
+				<Flex className="route-card-close" onClick={() => setExpandRouteOptionsMobile(false)} justifyContent="flex-end">
+					<IconClose className="grey-icon expand-mobile-close" width="auto" height="auto" />
+				</Flex>
+				<Flex direction="column" padding="0 1.23rem">
+					<Text fontFamily="AmazonEmber-Bold" fontSize="1.23rem">
+						Route Options
+					</Text>
+					<MoreOptionsUI />
+				</Flex>
+			</Flex>
+		);
+
 	return (
 		<>
 			<Card
@@ -724,45 +858,105 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 						)}
 					</Flex>
 				)}
-				<Flex className="from-to-container" gap={0}>
-					<Flex className="marker-container" order={isLtr ? 1 : 3}>
-						<IconMyLocation />
-						{[...Array(3)].map((_, index) => (
-							<View key={index} className="dashed-line" />
-						))}
-						<IconDestination />
-					</Flex>
-					<Flex className="inputs-container" order={2}>
-						<input
-							ref={fromInputRef}
-							data-testid="from-input"
-							placeholder={t("route_box__from.text") as string}
-							onFocus={() => onFocus(InputType.FROM)}
-							value={value.from}
-							onChange={e => onChangeValue(e, InputType.FROM)}
-							dir={langDir}
-						/>
-						<View className="divider" />
-						<input
-							ref={toInputRef}
-							data-testid="to-input"
-							placeholder={t("route_box__to.text") as string}
-							onFocus={() => onFocus(InputType.TO)}
-							value={value.to}
-							onChange={e => onChangeValue(e, InputType.TO)}
-							dir={langDir}
-						/>
-					</Flex>
+				<Flex
+					width="100%"
+					gap="0"
+					className={`from-to-container-wrapper ${
+						!isDesktop && isBothInputFilled && !isInputFocused ? "from-to-mobile" : ""
+					}`}
+				>
 					<Flex
-						data-testid="swap-icon-container"
-						className="swap-icon-container"
-						onClick={onSwap}
-						order={isLtr ? 3 : 1}
+						className={`from-to-container ${
+							!isDesktop && isBothInputFilled && !isInputFocused ? "from-to-container-mobile" : ""
+						}`}
+						gap={0}
 					>
-						<IconArrowDownUp />
+						<Flex className="marker-container" order={isLtr ? 1 : 3}>
+							<IconMyLocation />
+							{[...Array(3)].map((_, index) => (
+								<View key={index} className="dashed-line" />
+							))}
+							<IconDestination />
+						</Flex>
+						<Flex className="inputs-container" order={2}>
+							<input
+								ref={fromInputRef}
+								data-testid="from-input"
+								placeholder={t("route_box__from.text") as string}
+								onFocus={() => onFocus(InputType.FROM)}
+								// onBlur={() => isBothInputFilled && onFocus(InputType.FROM, true)}
+								value={value.from}
+								onChange={e => onChangeValue(e, InputType.FROM)}
+								dir={langDir}
+							/>
+							<View className="divider" />
+							<input
+								ref={toInputRef}
+								data-testid="to-input"
+								placeholder={t("route_box__to.text") as string}
+								onFocus={() => onFocus(InputType.TO)}
+								// onBlur={() => isBothInputFilled && onFocus(InputType.TO, true)}
+								value={value.to}
+								onChange={e => onChangeValue(e, InputType.TO)}
+								dir={langDir}
+							/>
+						</Flex>
+						{(isDesktop || (!isDesktop && isInputFocused && (isOneInputFilled || !isBothInputFilled))) && (
+							<Flex
+								data-testid="swap-icon-container"
+								className="swap-icon-container"
+								onClick={onSwap}
+								order={isLtr ? 3 : 1}
+								ref={arrowRef}
+							>
+								<IconArrowDownUp />
+							</Flex>
+						)}
 					</Flex>
+					{!isDesktop && !isInputFocused && isBothInputFilled && (
+						<Flex>
+							<Flex
+								data-testid="swap-icon-container"
+								className="swap-icon-container more-action-icon-container"
+								onClick={() => setMoreOption(n => !n)}
+								order={isLtr ? 3 : 1}
+							>
+								<IconMoreVertical className="icon-more-vertical" />
+							</Flex>
+							{moreOption && (
+								<View
+									className="more-options-container"
+									onClick={() => {
+										setMoreOption(false);
+										setExpandRouteOptionsMobile(true);
+									}}
+									ref={moreOptionsRef}
+								>
+									More Options
+								</View>
+							)}
+						</Flex>
+					)}
 				</Flex>
-				{[TravelMode.CAR, TravelMode.TRUCK].includes(travelMode as TravelMode) &&
+				{!isDesktop && (
+					<Flex className="travel-mode-button-container" gap={0}>
+						{iconsByTravelMode.map(({ mode, IconComponent }) => (
+							<View
+								key={mode}
+								data-testid={`travel-mode-${mode}-icon-container`}
+								className={`travel-mode ${!getDistance(mode) ? "empty-distance" : ""} ${
+									travelMode === mode ? "selected" : ""
+								}`}
+								onClick={() => handleTravelModeChange(mode)}
+							>
+								<IconComponent />
+								{getDistance(mode)}
+							</View>
+						))}
+					</Flex>
+				)}
+				{isDesktop &&
+					[TravelMode.CAR, TravelMode.TRUCK].includes(travelMode as TravelMode) &&
 					!isCollapsed &&
 					renderRouteOptionsContainer}
 				<View className="search-results-container" maxHeight={window.innerHeight - 260}>
@@ -846,7 +1040,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 						{!isCollapsed && renderSteps}
 					</View>
 				)}
-				{routeData && (
+				{isDesktop && routeData && (
 					<View className="show-hide-details-container bottom-border-radius" onClick={() => setIsCollapsed(s => !s)}>
 						<Text className="text">{isCollapsed ? t("route_box__route_details.text") : t("hide_details.text")}</Text>
 						<IconArrow style={{ transform: isCollapsed ? "rotate(0deg)" : "rotate(180deg)" }} />

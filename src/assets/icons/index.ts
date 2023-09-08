@@ -98,3 +98,4 @@ export { ReactComponent as IconBusActive } from "./icon-bus-active.svg";
 export { ReactComponent as IconBusInactive } from "./icon-bus-inactive.svg";
 export { ReactComponent as IconLanguage } from "./icon-language.svg";
 export { ReactComponent as IconEdit } from "./icon-edit.svg";
+export { ReactComponent as IconMoreVertical } from "./icon-more-vertical.svg";

@@ -183,6 +183,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				case ResponsiveUIEnum.auth_geofence:
 				case ResponsiveUIEnum.non_start_unauthorized_tracker:
 				case ResponsiveUIEnum.non_start_unauthorized_geofence:
+				case ResponsiveUIEnum.direction_to_routes:
 					return null;
 				case ResponsiveUIEnum.explore:
 				case ResponsiveUIEnum.poi_card:
@@ -200,6 +201,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				case ResponsiveUIEnum.map_styles:
 					return MapButtons;
 				case ResponsiveUIEnum.routes:
+				case ResponsiveUIEnum.direction_to_routes:
 					return RouteBox;
 				case ResponsiveUIEnum.search:
 				case ResponsiveUIEnum.poi_card:

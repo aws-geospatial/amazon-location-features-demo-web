@@ -133,20 +133,11 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 		setDirections({ info, isEsriLimitation });
 		clearPoiList();
 		if (!isDesktop) {
-			setBottomSheetMinHeight(BottomSheetHeights.routes.min);
-			setBottomSheetHeight(BottomSheetHeights.routes.max);
-			onClose(ResponsiveUIEnum.routes);
+			// setBottomSheetMinHeight(BottomSheetHeights.routes.min);
+			// setBottomSheetHeight(BottomSheetHeights.routes.max);
+			onClose(ResponsiveUIEnum.direction_to_routes);
 		}
-	}, [
-		clearPoiList,
-		info,
-		isDesktop,
-		isEsriLimitation,
-		onClose,
-		setBottomSheetHeight,
-		setBottomSheetMinHeight,
-		setDirections
-	]);
+	}, [clearPoiList, info, isDesktop, isEsriLimitation, onClose, setDirections]);
 
 	const renderRouteInfo = useMemo(() => {
 		if (currentLocationData?.error || isCurrentLocationDisabled) {

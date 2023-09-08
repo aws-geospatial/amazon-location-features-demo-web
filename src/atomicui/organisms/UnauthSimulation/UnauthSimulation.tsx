@@ -34,6 +34,7 @@ import {
 import { ResponsiveUIEnum } from "@demo/types/Enums";
 import { PubSub } from "aws-amplify";
 import { format, parseISO } from "date-fns";
+import { LngLatBoundsLike } from "mapbox-gl";
 import { useTranslation } from "react-i18next";
 import { MapRef } from "react-map-gl";
 
@@ -58,7 +59,8 @@ const busRoutesDropdown = [
 
 const {
 	MAP_RESOURCES: {
-		AMAZON_HQ: { US }
+		AMAZON_HQ: { US },
+		MAX_BOUNDS: { VANCOUVER }
 	}
 } = appConfig.default;
 interface UnauthGeofenceBoxProps {
@@ -141,20 +143,24 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 		);
 
 	useEffect(() => {
-		showStartUnauthSimulation && mapRef?.zoomTo(2);
+		startSimulation && mapRef?.fitBounds(VANCOUVER as LngLatBoundsLike, { linear: true });
+	}, [mapRef, startSimulation]);
 
-		return () => {
-			// currentLocationData?.currentLocation
-			// 	? mapRef?.flyTo({
-			// 			center: [currentLocationData.currentLocation.longitude, currentLocationData.currentLocation.latitude],
-			// 			zoom: 15
-			// 	  })
-			// 	: mapRef?.flyTo({
-			// 			center: [US.longitude, US.latitude],
-			// 			zoom: 15
-			// 	  });
-		};
-	}, [showStartUnauthSimulation, mapRef, currentLocationData]);
+	// useEffect(() => {
+	// 	showStartUnauthSimulation && mapRef?.zoomTo(2);
+
+	// 	return () => {
+	// 		// currentLocationData?.currentLocation
+	// 		// 	? mapRef?.flyTo({
+	// 		// 			center: [currentLocationData.currentLocation.longitude, currentLocationData.currentLocation.latitude],
+	// 		// 			zoom: 15
+	// 		// 	  })
+	// 		// 	: mapRef?.flyTo({
+	// 		// 			center: [US.longitude, US.latitude],
+	// 		// 			zoom: 15
+	// 		// 	  });
+	// 	};
+	// }, [showStartUnauthSimulation, mapRef, currentLocationData]);
 
 	useEffect(() => {
 		if (

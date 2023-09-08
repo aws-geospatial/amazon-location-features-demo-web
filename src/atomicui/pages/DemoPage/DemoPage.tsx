@@ -167,7 +167,7 @@ const DemoPage: React.FC = () => {
 		setDoNotAskOpenDataDisclaimerModal
 	} = usePersistedData();
 	const { isDesktop, isMobile } = useDeviceMediaQuery();
-	const { setUI, bottomSheetCurrentHeight } = useBottomSheet();
+	const { setUI, ui, bottomSheetCurrentHeight } = useBottomSheet();
 	const peggedRemValue = 13;
 	const extraGeoLocateTop = 2.6;
 	const geoLocateTopValue = `-${(bottomSheetCurrentHeight || 0) / peggedRemValue + extraGeoLocateTop}rem`;
@@ -1006,6 +1006,7 @@ const DemoPage: React.FC = () => {
 								mapRef={mapViewRef?.current}
 								setShowRouteBox={b => setShow(s => ({ ...s, routeBox: b }))}
 								isSideMenuExpanded={show.sidebar}
+								isDirection={ui === ResponsiveUIEnum.direction_to_routes}
 							/>
 						}
 						onCloseSidebar={() => setShow(s => ({ ...s, sidebar: false }))}
