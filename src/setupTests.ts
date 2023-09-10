@@ -57,6 +57,9 @@ jest.mock("@demo/core/constants/appConfig", () => ({
 		NOT_FOUND: "/404",
 		ERROR_BOUNDARY: "/error"
 	},
+	GET_PARAMS: {
+		DATA_PROVIDER: "data_provider"
+	},
 	MAP_RESOURCES: {
 		IMPERIAL_COUNTRIES: ["US", "GB", "LR", "MM"],
 		GRAB_SUPPORTED_AWS_REGIONS: ["ap-southeast-1"],

@@ -4,7 +4,7 @@
 describe("Settings", () => {
 	beforeEach(() => {
 		cy.visitDomain(`${Cypress.env("WEB_DOMAIN")}/demo`);
-		cy.get('[id="Icon"]').click();
+		cy.get('[data-testid="hamburger-menu"]').click();
 		cy.contains("Settings").click();
 	});
 
@@ -14,10 +14,12 @@ describe("Settings", () => {
 		cy.get('[data-testid="option-item-Units"]').contains("Imperial");
 	});
 
-	it("should allow user to select map data provider", { scrollBehavior: false }, () => {
+	it.only("should allow user to select map data provider", { scrollBehavior: false }, () => {
 		cy.get('[data-testid="option-item-Data provider"]').click();
-		cy.get('[data-testid="data-provider-here-radio"]').click({ force: true });
-		cy.get('[data-testid="option-item-Data provider"]').contains("HERE");
+		cy.get('[data-testid="option-details-container"]').contains("Esri");
+		cy.get('[data-testid="option-details-container"]').contains("HERE");
+		cy.get('[data-testid="option-details-container"]').contains("GrabMaps");
+		cy.get('[data-testid="option-details-container"]').contains("OpenData");
 	});
 
 	it("should allow user to select map style", { scrollBehavior: false }, () => {

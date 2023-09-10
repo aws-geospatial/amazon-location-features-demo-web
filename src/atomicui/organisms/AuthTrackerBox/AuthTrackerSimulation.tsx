@@ -1,16 +1,14 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-// import { IconTrackerIntersect } from "@demo/assets";
 import { useAmplifyMap, useAwsGeofence, useAwsRoute, useAwsTracker, usePersistedData } from "@demo/hooks";
 import { DistanceUnitEnum, MapUnitEnum, RouteDataType, TrackerType, TravelMode } from "@demo/types";
 import { TriggeredByEnum } from "@demo/types/Enums";
 import * as turf from "@turf/turf";
 import { CalculateRouteRequest, Position } from "aws-sdk/clients/location";
 import { Layer, LayerProps, MapRef, Marker, Source } from "react-map-gl";
-// import { calculateGeodesicDistance } from "@demo/utils/geoCalculation";
 
 import { trackerTypes } from "./AuthTrackerBox";
 
@@ -32,9 +30,6 @@ interface AuthTrackerSimulationProps {
 	isDesktop: boolean;
 }
 
-let interval: NodeJS.Timer | undefined;
-let idx = -1;
-
 const AuthTrackerSimulation: React.FC<AuthTrackerSimulationProps> = ({
 	mapRef,
 	isSaved,
@@ -49,18 +44,17 @@ const AuthTrackerSimulation: React.FC<AuthTrackerSimulationProps> = ({
 	setTrackerPos,
 	isDesktop
 }) => {
+	const [idx, setIdx] = useState(0);
+	const timeoutId = useRef<NodeJS.Timeout | null>(null);
 	const { mapUnit: currentMapUnit } = useAmplifyMap();
 	const { getRoute } = useAwsRoute();
-	const {
-		evaluateGeofence
-		// geofences
-	} = useAwsGeofence();
+	const { evaluateGeofence } = useAwsGeofence();
 	const { trackerPoints } = useAwsTracker();
 	const { defaultRouteOptions } = usePersistedData();
 
 	/* Route calculation for travel mode car or walk */
 	const calculateRoute = useCallback(async () => {
-		if (trackerPoints && trackerPoints.length >= 2) {
+		if (isSaved && trackerPoints && trackerPoints.length >= 2) {
 			const params: Omit<CalculateRouteRequest, "CalculatorName" | "DepartNow"> = {
 				IncludeLegGeometry: true,
 				DistanceUnit: currentMapUnit === IMPERIAL ? MILES : KILOMETERS,
@@ -83,11 +77,11 @@ const AuthTrackerSimulation: React.FC<AuthTrackerSimulationProps> = ({
 					travelMode: selectedTrackerType === TrackerType.WALK ? TrackerType.WALK : TrackerType.CAR
 				});
 		}
-	}, [trackerPoints, currentMapUnit, selectedTrackerType, defaultRouteOptions, getRoute, setRouteData]);
+	}, [isSaved, trackerPoints, currentMapUnit, selectedTrackerType, defaultRouteOptions, getRoute, setRouteData]);
 
 	/* Route calculation for travel mode drone */
 	const calculatePath = useCallback(() => {
-		if (trackerPoints && trackerPoints.length >= 2) {
+		if (isSaved && trackerPoints && trackerPoints.length >= 2) {
 			const lineDistance = turf.lineDistance(
 				{
 					type: "FeatureCollection",
@@ -105,7 +99,7 @@ const AuthTrackerSimulation: React.FC<AuthTrackerSimulationProps> = ({
 				{ units: "kilometers" }
 			);
 			const arc = [];
-			const steps = 350;
+			const steps = 150;
 
 			for (let i = 0; i < lineDistance; i += lineDistance / steps) {
 				const segment = turf.along(
@@ -138,15 +132,15 @@ const AuthTrackerSimulation: React.FC<AuthTrackerSimulationProps> = ({
 			} as RouteDataType);
 			setPoints(arc);
 		}
-	}, [trackerPoints, setRouteData, setPoints]);
+	}, [isSaved, trackerPoints, setRouteData, setPoints]);
 
 	useEffect(() => {
 		if (isSaved && !routeData) {
 			setIsPlaying(false);
 			setTrackerPos(undefined);
 			setPoints(undefined);
-			idx = -1;
-			clearInterval(interval);
+			setIdx(0);
+			clearTimeout(timeoutId.current!);
 			selectedTrackerType === TrackerType.DRONE ? calculatePath() : calculateRoute();
 		}
 	}, [isSaved, routeData, setIsPlaying, setTrackerPos, setPoints, selectedTrackerType, calculatePath, calculateRoute]);
@@ -159,29 +153,41 @@ const AuthTrackerSimulation: React.FC<AuthTrackerSimulationProps> = ({
 		}
 	}, [routeData, points, setPoints]);
 
+	const timeoutTime = useMemo(
+		() => (selectedTrackerType === TrackerType.DRONE ? 100 : selectedTrackerType === TrackerType.CAR ? 600 : 1200),
+		[selectedTrackerType]
+	);
+
 	useEffect(() => {
-		if (isPlaying) {
-			interval = setInterval(() => {
-				idx++;
-
-				if (!!points && idx < points?.length) {
-					setTrackerPos(points[idx]);
-					evaluateGeofence(points[idx]);
-
-					if (idx === points.length - 1) {
-						setIsPlaying(false);
-						setTrackerPos(undefined);
-						idx = -1;
-					}
-				} else {
-					clearInterval(interval);
-					idx = -1;
-				}
-			}, 600);
-		} else if (!!interval) {
-			clearInterval(interval);
+		// Clear existing timeout when changing idx or pausing
+		if (timeoutId.current) {
+			clearTimeout(timeoutId.current);
+			timeoutId.current = null;
 		}
-	}, [isPlaying, points, setTrackerPos, evaluateGeofence, setIsPlaying]);
+
+		if (isPlaying) {
+			if (!!points && idx < points.length) {
+				// Update tracker position
+				setTrackerPos(points[idx]);
+				// Evaluate geofences to check if tracker is inside any of them
+				evaluateGeofence(points[idx]);
+				// Increment idx after specified time
+				timeoutId.current = setTimeout(() => setIdx(idx + 1), timeoutTime);
+			} else {
+				// Stop tracker simulation when end of points array is reached
+				setIsPlaying(false);
+				// Reset tracker position to undefined when end of points array is reached
+				setTrackerPos(undefined);
+				// Reset index to 0 when end of points array is reached
+				setIdx(0);
+			}
+		}
+
+		return () => {
+			timeoutId.current && clearTimeout(timeoutId.current);
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isPlaying, idx]);
 
 	const renderRoute = useMemo(() => {
 		if (routeData && points) {
@@ -284,23 +290,6 @@ const AuthTrackerSimulation: React.FC<AuthTrackerSimulationProps> = ({
 	const renderRouteTracker = useMemo(() => {
 		if (trackerPos) {
 			const icon = trackerTypes.filter(({ type }) => type === selectedTrackerType)[0].icon;
-			// let intersected = false;
-
-			// geofences?.forEach(g => {
-			// 	const distanceInKm = calculateGeodesicDistance(
-			// 		[g.Geometry.Circle?.Center[0] as number, g.Geometry.Circle?.Center[1] as number],
-			// 		[trackerPos[0], trackerPos[1]]
-			// 	) as number;
-			// 	const distanceInM = distanceInKm * 1000;
-			// 	const diff = distanceInM - g.Geometry.Circle!.Radius;
-
-			// 	if (Math.abs(diff) <= 19) {
-			// 		intersected = true;
-			// 		setTimeout(() => {
-			// 			intersected = false;
-			// 		}, 500);
-			// 	}
-			// });
 
 			return (
 				<Marker
@@ -310,26 +299,19 @@ const AuthTrackerSimulation: React.FC<AuthTrackerSimulationProps> = ({
 						alignItems: "center",
 						zIndex: 1,
 						borderRadius: "1.23rem",
-						// backgroundColor: intersected ? "transparent" : "var(--white-color)",
 						backgroundColor: "var(--white-color)",
 						width: "2.46rem",
 						height: "2.46rem",
-						// boxShadow: intersected ? "none" : "0 0 10px rgba(0, 0, 0, 0.202633)"
 						boxShadow: "0 0 10px rgba(0, 0, 0, 0.202633)"
 					}}
 					longitude={trackerPos[0]}
 					latitude={trackerPos[1]}
 				>
-					{/* {intersected ? <IconTrackerIntersect /> : icon} */}
 					{icon}
 				</Marker>
 			);
 		}
-	}, [
-		trackerPos,
-		selectedTrackerType
-		// geofences
-	]);
+	}, [trackerPos, selectedTrackerType]);
 
 	return (
 		<>
@@ -339,4 +321,4 @@ const AuthTrackerSimulation: React.FC<AuthTrackerSimulationProps> = ({
 	);
 };
 
-export default AuthTrackerSimulation;
+export default React.memo(AuthTrackerSimulation);

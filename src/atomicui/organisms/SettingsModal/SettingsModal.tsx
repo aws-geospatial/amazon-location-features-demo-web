@@ -850,7 +850,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 						{renderOptionItems}
 					</Flex>
 					<Divider orientation="vertical" className="col-divider" />
-					<Flex className="option-details-container">{renderOptionDetails}</Flex>
+					<Flex data-testid="option-details-container" className="option-details-container">
+						{renderOptionDetails}
+					</Flex>
 				</Flex>
 			}
 		/>
