@@ -1,4 +1,4 @@
-import { Ref, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { Ref, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button, Card, Flex, Text } from "@aws-amplify/ui-react";
 import {
@@ -16,7 +16,7 @@ import {
 import { DropdownEl } from "@demo/atomicui/atoms";
 import { ConfirmationModal, IconicInfoCard, NotificationsBox, WebsocketBanner } from "@demo/atomicui/molecules";
 import { appConfig, busRoutesData } from "@demo/core";
-import { useAmplifyMap, useAwsGeofence } from "@demo/hooks";
+import { useAwsGeofence } from "@demo/hooks";
 import i18n from "@demo/locales/i18n";
 import {
 	MenuItemEnum,
@@ -26,8 +26,8 @@ import {
 	TrackingHistoryType,
 	TrackingHistoryTypeEnum
 } from "@demo/types";
-import { PubSub } from "aws-amplify";
 import { format, parseISO } from "date-fns";
+import { LngLatBoundsLike } from "mapbox-gl";
 import { useTranslation } from "react-i18next";
 import { MapRef } from "react-map-gl";
 
@@ -37,7 +37,7 @@ import "./styles.scss";
 
 const {
 	MAP_RESOURCES: {
-		AMAZON_HQ: { US }
+		MAX_BOUNDS: { VANCOUVER }
 	}
 } = appConfig.default;
 const initialTrackingHistory: TrackingHistoryType = {
@@ -61,8 +61,8 @@ interface UnauthGeofenceBoxProps {
 	setShowUnauthGeofenceBox: (b: boolean) => void;
 	setShowUnauthTrackerBox: (b: boolean) => void;
 	setShowConnectAwsAccountModal: (b: boolean) => void;
-	showStartUnauthSimulation: boolean;
-	setShowStartUnauthSimulation: (b: boolean) => void;
+	setShowUnauthSimulationBounds: (b: boolean) => void;
+	clearCredsAndLocationClient?: () => void;
 }
 
 const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
@@ -71,9 +71,10 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 	setShowUnauthGeofenceBox,
 	setShowUnauthTrackerBox,
 	setShowConnectAwsAccountModal,
-	showStartUnauthSimulation,
-	setShowStartUnauthSimulation
+	setShowUnauthSimulationBounds,
+	clearCredsAndLocationClient
 }) => {
+	const [showUnauthSimulation, setShowUnauthSimulation] = useState(false);
 	const [startSimulation, setStartSimulation] = useState(false);
 	const [trackingHistory, setTrackingHistory] = useState<TrackingHistoryType>(initialTrackingHistory);
 	const [selectedRoutes, setSelectedRoutes] = useState<SelectOption[]>([busRoutesDropdown[0]]);
@@ -81,9 +82,8 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 	const [isNotifications, setIsNotifications] = useState(false);
 	const [confirmCloseSimulation, setConfirmCloseSimulation] = useState(false);
 	const [isPlaying, setIsPlaying] = useState(true);
-	const { currentLocationData } = useAmplifyMap();
 	const { unauthNotifications, setUnauthNotifications } = useAwsGeofence();
-	const { subscription, Connection, isHidden } = WebsocketBanner(
+	const { Connection, isHidden } = WebsocketBanner(
 		useCallback((n: NotificationHistoryItemtype) => {
 			// Update tracking history with geofence notification, for geofence add "Bus stop number 1" to title and bus stop coords to description
 			setTrackingHistory(prevState => {
@@ -114,20 +114,8 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 	const selectedRoutesIds = useMemo(() => selectedRoutes.map(route => route.value), [selectedRoutes]);
 
 	useEffect(() => {
-		showStartUnauthSimulation && mapRef?.zoomTo(2);
-
-		return () => {
-			currentLocationData?.currentLocation
-				? mapRef?.flyTo({
-						center: [currentLocationData.currentLocation.longitude, currentLocationData.currentLocation.latitude],
-						zoom: 15
-				  })
-				: mapRef?.flyTo({
-						center: [US.longitude, US.latitude],
-						zoom: 15
-				  });
-		};
-	}, [showStartUnauthSimulation, mapRef, currentLocationData]);
+		startSimulation && mapRef?.fitBounds(VANCOUVER as LngLatBoundsLike, { linear: true });
+	}, [startSimulation, mapRef]);
 
 	const updateSelectedRoutes = useCallback(
 		(selectedRoute: SelectOption) => {
@@ -145,10 +133,12 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 		[selectedRoutes]
 	);
 
-	const handleClose = () =>
+	const handleClose = () => {
+		setShowUnauthSimulationBounds(false);
 		from === MenuItemEnum.GEOFENCE ? setShowUnauthGeofenceBox(false) : setShowUnauthTrackerBox(false);
+	};
 
-	const handleCta = () => setShowStartUnauthSimulation(true);
+	const handleCta = () => setShowUnauthSimulation(true);
 
 	const handleEnableLive = () => {
 		handleClose();
@@ -156,11 +146,9 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 	};
 
 	const onCloseHandler = () => {
-		subscription?.unsubscribe();
-		PubSub.removePluggable("AWSIoTProvider");
-		setShowStartUnauthSimulation(false);
+		clearCredsAndLocationClient && clearCredsAndLocationClient();
+		setShowUnauthSimulation(false);
 		handleClose();
-		window.location.reload();
 	};
 
 	const StartSimulation = useCallback(() => {
@@ -237,7 +225,10 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 							data-testid="start-simulation-btn"
 							variation="primary"
 							padding="0.923rem 0"
-							onClick={() => setStartSimulation(true)}
+							onClick={() => {
+								setStartSimulation(true);
+								setShowUnauthSimulationBounds(true);
+							}}
 							fontFamily="AmazonEmber-Medium"
 							fontSize="1.077rem"
 							height="3.075rem"
@@ -249,7 +240,7 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 				</Flex>
 			</Flex>
 		);
-	}, [t, currentLanguage]);
+	}, [t, currentLanguage, setShowUnauthSimulationBounds]);
 
 	const renderGeofences = useMemo(
 		() =>
@@ -287,7 +278,7 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 
 	return (
 		<>
-			{!showStartUnauthSimulation ? (
+			{!showUnauthSimulation ? (
 				<Card
 					data-testid="unauth-simulation-card"
 					className="unauth-simulation-card"

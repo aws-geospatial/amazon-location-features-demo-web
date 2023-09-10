@@ -18,7 +18,7 @@ import {
 	MapStyleFilterTypes,
 	TypeEnum
 } from "@demo/types";
-import { EventTypeEnum, OpenDataMapEnum, TriggeredByEnum } from "@demo/types/Enums";
+import { EventTypeEnum, MenuItemEnum, OpenDataMapEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
 import { useTranslation } from "react-i18next";
 import { Tooltip } from "react-tooltip";
@@ -44,9 +44,7 @@ export interface MapButtonsProps {
 	openStylesCard: boolean;
 	setOpenStylesCard: (b: boolean) => void;
 	onCloseSidebar: () => void;
-	onOpenConnectAwsAccountModal: () => void;
 	onOpenSignInModal: () => void;
-	onShowGeofenceBox: () => void;
 	isGrabVisible: boolean;
 	showGrabDisclaimerModal: boolean;
 	onShowGridLoader: () => void;
@@ -59,9 +57,17 @@ export interface MapButtonsProps {
 	onlyMapStyles?: boolean;
 	resetSearchAndFilters?: () => void;
 	showOpenDataDisclaimerModal: boolean;
+	isAuthGeofenceBoxOpen: boolean;
+	onSetShowAuthGeofenceBox: (b: boolean) => void;
 	isAuthTrackerDisclaimerModalOpen: boolean;
-	onShowAuthTrackerDisclaimerModal: () => void;
 	isAuthTrackerBoxOpen: boolean;
+	onShowAuthTrackerDisclaimerModal: () => void;
+	onSetShowAuthTrackerBox: (b: boolean) => void;
+	onShowUnauthSimulationDisclaimerModal: () => void;
+	isUnauthGeofenceBoxOpen: boolean;
+	isUnauthTrackerBoxOpen: boolean;
+	onSetShowUnauthGeofenceBox: (b: boolean) => void;
+	onSetShowUnauthTrackerBox: (b: boolean) => void;
 }
 
 const MapButtons: React.FC<MapButtonsProps> = ({
@@ -69,9 +75,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	openStylesCard,
 	setOpenStylesCard,
 	onCloseSidebar,
-	onOpenConnectAwsAccountModal,
 	onOpenSignInModal,
-	onShowGeofenceBox,
 	isGrabVisible,
 	showGrabDisclaimerModal,
 	onShowGridLoader,
@@ -88,16 +92,24 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	onlyMapStyles = false,
 	resetSearchAndFilters,
 	showOpenDataDisclaimerModal,
+	isAuthGeofenceBoxOpen,
+	onSetShowAuthGeofenceBox,
 	isAuthTrackerDisclaimerModalOpen,
+	isAuthTrackerBoxOpen,
 	onShowAuthTrackerDisclaimerModal,
-	isAuthTrackerBoxOpen
+	onSetShowAuthTrackerBox,
+	onShowUnauthSimulationDisclaimerModal,
+	isUnauthGeofenceBoxOpen,
+	isUnauthTrackerBoxOpen,
+	onSetShowUnauthGeofenceBox,
+	onSetShowUnauthTrackerBox
 }) => {
 	const [isLoadingImg, setIsLoadingImg] = useState(true);
 	const [showFilter, setShowFilter] = useState(false);
 	const stylesCardRef = useRef<HTMLDivElement | null>(null);
 	const stylesCardTogglerRef = useRef<HTMLDivElement | null>(null);
 	const { credentials, isUserAwsAccountConnected } = useAmplifyAuth();
-	const { mapStyle: currentMapStyle } = useAmplifyMap();
+	const { mapProvider: currentMapProvider, mapStyle: currentMapStyle } = useAmplifyMap();
 	const { isAddingGeofence, setIsAddingGeofence } = useAwsGeofence();
 	const isAuthenticated = !!credentials?.authenticated;
 	const { t, i18n } = useTranslation();
@@ -138,45 +150,46 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 		setShowFilter(false);
 	};
 
-	const onConnectAwsAccount = () => {
+	const onClickGeofenceTracker = (menuItem: MenuItemEnum) => {
 		onCloseSidebar();
-		onOpenConnectAwsAccountModal();
-	};
 
-	const onPrompt = () => {
 		if (isUserAwsAccountConnected) {
-			onCloseSidebar();
-			!isAuthenticated && onOpenSignInModal();
+			if (isAuthenticated) {
+				if (menuItem === MenuItemEnum.GEOFENCE) {
+					isAuthTrackerBoxOpen && onSetShowAuthTrackerBox(!isAuthTrackerBoxOpen);
+					onSetShowAuthGeofenceBox(!isAuthGeofenceBoxOpen);
+					setIsAddingGeofence(!isAddingGeofence);
+					record(
+						[
+							{
+								EventType: EventTypeEnum.GEOFENCE_CREATION_STARTED,
+								Attributes: { triggeredBy: TriggeredByEnum.MAP_BUTTONS }
+							}
+						],
+						["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
+					);
+				} else {
+					isAddingGeofence && setIsAddingGeofence(!isAddingGeofence);
+					isAuthGeofenceBoxOpen && onSetShowAuthGeofenceBox(!isAuthGeofenceBoxOpen);
+					currentMapProvider === MapProviderEnum.ESRI
+						? onShowAuthTrackerDisclaimerModal()
+						: onSetShowAuthTrackerBox(!isAuthTrackerBoxOpen);
+				}
+			} else {
+				onOpenSignInModal();
+			}
 		} else {
-			onConnectAwsAccount();
-		}
-	};
-
-	const onClickGeofence = () => {
-		if (isAuthenticated) {
-			onCloseSidebar();
-			onShowGeofenceBox();
-			setIsAddingGeofence(!isAddingGeofence);
-			record(
-				[
-					{
-						EventType: EventTypeEnum.GEOFENCE_CREATION_STARTED,
-						Attributes: { triggeredBy: TriggeredByEnum.MAP_BUTTONS }
-					}
-				],
-				["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
-			);
-		} else {
-			onPrompt();
-		}
-	};
-
-	const onClickTracker = () => {
-		if (isAuthenticated) {
-			onCloseSidebar();
-			onShowAuthTrackerDisclaimerModal();
-		} else {
-			onPrompt();
+			if (currentMapProvider === MapProviderEnum.GRAB) {
+				onShowUnauthSimulationDisclaimerModal();
+			} else {
+				if (menuItem === MenuItemEnum.GEOFENCE) {
+					isUnauthTrackerBoxOpen && onSetShowUnauthTrackerBox(!isUnauthTrackerBoxOpen);
+					onSetShowUnauthGeofenceBox(!isUnauthGeofenceBoxOpen);
+				} else {
+					isUnauthGeofenceBoxOpen && onSetShowUnauthGeofenceBox(!isUnauthGeofenceBoxOpen);
+					onSetShowUnauthTrackerBox(!isUnauthTrackerBoxOpen);
+				}
+			}
 		}
 	};
 
@@ -510,8 +523,8 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 				<Divider className="button-divider" />
 				<Flex
 					data-testid="geofence-control-button"
-					className={isAddingGeofence ? "geofence-button active" : "geofence-button"}
-					onClick={onClickGeofence}
+					className={isAddingGeofence || isUnauthGeofenceBoxOpen ? "geofence-button active" : "geofence-button"}
+					onClick={() => onClickGeofenceTracker(MenuItemEnum.GEOFENCE)}
 					data-tooltip-id="geofence-control-button"
 					data-tooltip-place="left"
 					data-tooltip-content={t("geofence.text")}
@@ -523,9 +536,11 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 				<Flex
 					data-testid="tracker-control-button"
 					className={
-						isAuthTrackerDisclaimerModalOpen || isAuthTrackerBoxOpen ? "tracker-button active" : "tracker-button"
+						isAuthTrackerDisclaimerModalOpen || isAuthTrackerBoxOpen || isUnauthTrackerBoxOpen
+							? "tracker-button active"
+							: "tracker-button"
 					}
-					onClick={onClickTracker}
+					onClick={() => onClickGeofenceTracker(MenuItemEnum.TRACKER)}
 					data-tooltip-id="tracker-control-button"
 					data-tooltip-place="left"
 					data-tooltip-content={t("tracker.text")}
