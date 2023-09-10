@@ -231,8 +231,8 @@ const Explore: React.FC<IProps> = ({
 			icon: <IconDirections width="1.53rem" height="1.53rem" fill="white" />,
 			onClick: () => {
 				updateUIInfo(ResponsiveUIEnum.routes);
-				setBottomSheetMinHeight(BottomSheetHeights.routes.min);
-				setBottomSheetHeight(BottomSheetHeights.routes.max);
+				setBottomSheetMinHeight(window.innerHeight - 10);
+				setBottomSheetHeight(window.innerHeight);
 			}
 		},
 		{

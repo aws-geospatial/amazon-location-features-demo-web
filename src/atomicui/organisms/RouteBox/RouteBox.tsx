@@ -22,6 +22,7 @@ import {
 } from "@demo/assets";
 
 import { NotFoundCard, StepCard } from "@demo/atomicui/molecules";
+import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import {
 	useAmplifyMap,
 	useAwsPlace,
@@ -163,8 +164,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 					setBottomSheetMinHeight((expandRouteRef?.current?.clientHeight || 230) + 90);
 					setBottomSheetHeight((expandRouteRef?.current?.clientHeight || 230) + 100);
 				} else {
-					setBottomSheetMinHeight((routesCardRef?.current?.clientHeight || 230) + 30);
-					setBottomSheetHeight((routesCardRef?.current?.clientHeight || 230) + 40);
+					setTimeout(() => setBottomSheetMinHeight(BottomSheetHeights.routes.min), 200);
 				}
 			}
 		}
@@ -879,7 +879,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 				<Flex
 					width="100%"
 					gap="0"
-					className={`from-to-container-wrapper ${
+					className={`from-to-container-wrapper ${!isDesktop ? "from-to-container-wrapper-mobile" : ""} ${
 						!isDesktop && isBothInputFilled && !isInputFocused ? "from-to-mobile" : ""
 					}`}
 				>
@@ -917,7 +917,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 								dir={langDir}
 							/>
 						</Flex>
-						{(isDesktop || (!isDesktop && isInputFocused && (isOneInputFilled || !isBothInputFilled))) && (
+						{(isDesktop || (!isDesktop && !(!isInputFocused && isBothInputFilled))) && (
 							<Flex
 								data-testid="swap-icon-container"
 								className="swap-icon-container"

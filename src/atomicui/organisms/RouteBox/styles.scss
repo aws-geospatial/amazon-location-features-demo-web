@@ -109,6 +109,12 @@
 		.from-to-container {
 			width: 100%;
 		}
+
+		&.from-to-container-wrapper-mobile {
+			.inputs-container {
+				width: inherit;
+			}
+		}
 	}
 
 	.from-to-mobile {
