@@ -1,734 +1,412 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
+import { Button, Card, Flex, Loader, Text, View } from "@aws-amplify/ui-react";
 import {
-	Button,
-	Card,
-	CheckboxField,
-	Divider,
-	Flex,
-	Link,
-	Placeholder,
-	SearchField,
-	Text,
-	View
-} from "@aws-amplify/ui-react";
-import { IconClose, IconFilterFunnel, IconGeofencePlusSolid, IconMapSolid, IconRadar, IconSearch } from "@demo/assets";
-import { NotFoundCard } from "@demo/atomicui/molecules";
-import { appConfig } from "@demo/core/constants";
-import { useAmplifyAuth, useAmplifyMap, useAwsGeofence, useDeviceMediaQuery } from "@demo/hooks";
-import useBottomSheet from "@demo/hooks/useBottomSheet";
-import {
-	AttributeEnum,
-	EsriMapEnum,
-	GrabMapEnum,
-	HereMapEnum,
-	MapProviderEnum,
-	MapStyle,
-	MapStyleFilterTypes,
-	TypeEnum
-} from "@demo/types";
-import { EventTypeEnum, MenuItemEnum, OpenDataMapEnum, TriggeredByEnum } from "@demo/types/Enums";
+	IconArrow,
+	IconCar,
+	IconClose,
+	IconDroneSolid,
+	IconEdit,
+	IconInfoSolid,
+	IconMobileSolid,
+	IconSegment,
+	IconWalking
+} from "@demo/assets";
+import { GeofenceMarker, WebsocketBanner } from "@demo/atomicui/molecules";
+import { useAwsGeofence, useAwsRoute, useAwsTracker, useDeviceMediaQuery } from "@demo/hooks";
+import { RouteDataType, TrackerType } from "@demo/types";
+import { EventTypeEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
+import * as turf from "@turf/turf";
+import { Position } from "aws-sdk/clients/location";
 import { useTranslation } from "react-i18next";
+import { Layer, MapRef, Marker, Source } from "react-map-gl";
 import { Tooltip } from "react-tooltip";
+
+import AuthTrackerSimulation from "./AuthTrackerSimulation";
 import "./styles.scss";
 
-const { GRAB } = MapProviderEnum;
-const {
-	MAP_RESOURCES: {
-		MAP_STYLES: { ESRI_STYLES, HERE_STYLES, GRAB_STYLES, OPEN_DATA_STYLES }
-	}
-} = appConfig;
+export const trackerTypes = [
+	{ type: TrackerType.CAR, icon: <IconCar width="1.54rem" height="1.54rem" /> },
+	{ type: TrackerType.WALK, icon: <IconWalking width="1.54rem" height="1.54rem" /> },
+	{ type: TrackerType.MOBILE, icon: <IconMobileSolid width="1.54rem" height="1.54rem" /> },
+	{ type: TrackerType.DRONE, icon: <IconDroneSolid width="1.54rem" height="1.54rem" /> }
+];
 
-const MAP_STYLES = [...ESRI_STYLES, ...HERE_STYLES, ...GRAB_STYLES, ...OPEN_DATA_STYLES] as MapStyle[];
-
-const filters = {
-	Providers: Object.values(MapProviderEnum).map(value => value),
-	Attribute: Object.values(AttributeEnum).map(value => value),
-	Type: Object.values(TypeEnum).map(value => value)
-};
-
-export interface MapButtonsProps {
-	renderedUpon: string;
-	openStylesCard: boolean;
-	setOpenStylesCard: (b: boolean) => void;
-	onCloseSidebar: () => void;
-	onOpenSignInModal: () => void;
-	isGrabVisible: boolean;
-	showGrabDisclaimerModal: boolean;
-	onShowGridLoader: () => void;
-	handleMapStyleChange: (id: EsriMapEnum | HereMapEnum | GrabMapEnum | OpenDataMapEnum) => void;
-	searchValue: string;
-	setSearchValue: (s: string) => void;
-	selectedFilters: MapStyleFilterTypes;
-	setSelectedFilters: React.Dispatch<React.SetStateAction<MapStyleFilterTypes>>;
-	isLoading?: boolean;
-	onlyMapStyles?: boolean;
-	resetSearchAndFilters?: () => void;
-	showOpenDataDisclaimerModal: boolean;
-	isHandDevice?: boolean;
-	handleMapProviderChange?: (provider: MapProviderEnum, triggeredBy: TriggeredByEnum) => void;
-	isAuthGeofenceBoxOpen: boolean;
-	onSetShowAuthGeofenceBox: (b: boolean) => void;
-	isAuthTrackerDisclaimerModalOpen: boolean;
-	isAuthTrackerBoxOpen: boolean;
-	isSettingsModal?: boolean;
-	onShowAuthTrackerDisclaimerModal: () => void;
-	onSetShowAuthTrackerBox: (b: boolean) => void;
-	onShowUnauthSimulationDisclaimerModal: () => void;
-	isUnauthGeofenceBoxOpen: boolean;
-	isUnauthTrackerBoxOpen: boolean;
-	onSetShowUnauthGeofenceBox: (b: boolean) => void;
-	onSetShowUnauthTrackerBox: (b: boolean) => void;
+interface AuthTrackerBoxProps {
+	mapRef: MapRef | null;
+	setShowAuthTrackerBox: (b: boolean) => void;
+	clearCredsAndLocationClient?: () => void;
 }
 
-const MapButtons: React.FC<MapButtonsProps> = ({
-	renderedUpon,
-	openStylesCard,
-	setOpenStylesCard,
-	onCloseSidebar,
-	onOpenSignInModal,
-	isGrabVisible,
-	showGrabDisclaimerModal,
-	onShowGridLoader,
-	handleMapStyleChange,
-	searchValue = "",
-	setSearchValue,
-	selectedFilters = {
-		Providers: [],
-		Attribute: [],
-		Type: []
-	},
-	setSelectedFilters,
-	isLoading = false,
-	onlyMapStyles = false,
-	resetSearchAndFilters,
-	showOpenDataDisclaimerModal,
-	isHandDevice,
-	handleMapProviderChange,
-	isAuthGeofenceBoxOpen,
-	onSetShowAuthGeofenceBox,
-	isAuthTrackerDisclaimerModalOpen,
-	onShowAuthTrackerDisclaimerModal,
-	isAuthTrackerBoxOpen,
-	isSettingsModal = false,
-	onSetShowAuthTrackerBox,
-	onShowUnauthSimulationDisclaimerModal,
-	isUnauthGeofenceBoxOpen,
-	isUnauthTrackerBoxOpen,
-	onSetShowUnauthGeofenceBox,
-	onSetShowUnauthTrackerBox
+const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
+	mapRef,
+	setShowAuthTrackerBox,
+	clearCredsAndLocationClient
 }) => {
-	const searchHandDeviceWidth = "36px";
-	const searchDesktopWidth = "100%";
-
-	const [tempFilters, setTempFilters] = useState(selectedFilters);
-	const [isLoadingImg, setIsLoadingImg] = useState(true);
-	const [showFilter, setShowFilter] = useState(false);
-	const [searchWidth, setSearchWidth] = useState(isHandDevice ? searchHandDeviceWidth : searchDesktopWidth);
-	const stylesCardRef = useRef<HTMLDivElement | null>(null);
-	const stylesCardTogglerRef = useRef<HTMLDivElement | null>(null);
-	const { credentials, isUserAwsAccountConnected } = useAmplifyAuth();
-	const { mapProvider: currentMapProvider, mapStyle: currentMapStyle } = useAmplifyMap();
-	const { isAddingGeofence, setIsAddingGeofence } = useAwsGeofence();
-	const isAuthenticated = !!credentials?.authenticated;
-	const { isTablet, isMobile } = useDeviceMediaQuery();
+	const [isSaved, setIsSaved] = useState(false);
+	const [isPlaying, setIsPlaying] = useState(false);
+	const [routeData, setRouteData] = useState<RouteDataType | undefined>(undefined);
+	const [points, setPoints] = useState<Position[] | undefined>(undefined);
+	const [trackerPos, setTrackerPos] = useState<Position | undefined>(undefined);
+	const [isCollapsed, setIsCollapsed] = useState(true);
+	const { isFetchingRoute } = useAwsRoute();
+	const { geofences, getGeofencesList } = useAwsGeofence();
+	const {
+		selectedTrackerType,
+		setSelectedTrackerType,
+		isEditingRoute,
+		setIsEditingRoute,
+		trackerPoints,
+		setTrackerPoints
+	} = useAwsTracker();
+	const { Connection } = WebsocketBanner();
 	const { t, i18n } = useTranslation();
-	const { bottomSheetCurrentHeight = 0 } = useBottomSheet();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
 
-	const settingsTablet = isTablet && !!onlyMapStyles && isSettingsModal;
+	const { isDesktop } = useDeviceMediaQuery();
+	const fetchGeofencesList = useCallback(async () => getGeofencesList(), [getGeofencesList]);
 
-	const filterIconWrapperRef = useRef<HTMLDivElement>(null);
-	const searchFieldRef = useRef<HTMLInputElement>(null);
-	const clearIconContainerRef = useRef<HTMLDivElement>(null);
-
-	useEffect(() => {
-		function handleClickOutside(event: MouseEvent) {
-			if (
-				!filterIconWrapperRef?.current?.contains(event.target as Node) &&
-				!searchFieldRef?.current?.contains(event.target as Node) &&
-				!clearIconContainerRef?.current?.contains(event.target as Node)
-			) {
-				if (!showFilter) {
-					isHandDevice && setSearchWidth(searchHandDeviceWidth);
-				}
-			}
-		}
-
-		document.addEventListener("mousedown", handleClickOutside);
-		return () => {
-			document.removeEventListener("mousedown", handleClickOutside);
-		};
-	}, [isHandDevice, setSearchWidth, searchHandDeviceWidth, showFilter]);
-
-	const handleClickOutside = useCallback(
-		(ev: MouseEvent) => {
-			if (
-				stylesCardRef.current &&
-				!stylesCardRef.current.contains(ev.target as Node) &&
-				stylesCardTogglerRef.current &&
-				!stylesCardTogglerRef.current.contains(ev.target as Node) &&
-				!showGrabDisclaimerModal &&
-				!showOpenDataDisclaimerModal
-			) {
-				setOpenStylesCard(false);
-				resetSearchAndFilters && resetSearchAndFilters();
-				setShowFilter(false);
-			}
-		},
-		[showGrabDisclaimerModal, showOpenDataDisclaimerModal, setOpenStylesCard, resetSearchAndFilters]
+	const _trackerTypes = useMemo(
+		() => trackerTypes.filter(item => (isDesktop ? item.type !== TrackerType.MOBILE : item.type !== TrackerType.WALK)),
+		[isDesktop]
 	);
 
 	useEffect(() => {
-		window.addEventListener("mousedown", handleClickOutside);
+		fetchGeofencesList();
+		setIsEditingRoute(true);
+	}, [fetchGeofencesList, setIsEditingRoute]);
 
-		return () => {
-			window.removeEventListener("mousedown", handleClickOutside);
-		};
-	}, [handleClickOutside]);
+	useEffect(() => {
+		isDesktop && isCollapsed && setIsCollapsed(false);
+		!isDesktop && setIsCollapsed(false);
+	}, [isDesktop, isCollapsed]);
 
-	const toggleMapStyles = () => {
-		setIsLoadingImg(true);
-		setOpenStylesCard(!openStylesCard);
-		setSearchValue("");
-		resetSearchAndFilters && resetSearchAndFilters();
-		setShowFilter(false);
-	};
+	const isSimulationEnbaled = useMemo(() => isSaved && routeData, [isSaved, routeData]);
 
-	const onClickGeofenceTracker = (menuItem: MenuItemEnum) => {
-		onCloseSidebar();
-
-		if (isUserAwsAccountConnected) {
-			if (isAuthenticated) {
-				if (menuItem === MenuItemEnum.GEOFENCE) {
-					isAuthTrackerBoxOpen && onSetShowAuthTrackerBox(!isAuthTrackerBoxOpen);
-					onSetShowAuthGeofenceBox(!isAuthGeofenceBoxOpen);
-					setIsAddingGeofence(!isAddingGeofence);
-					record(
-						[
-							{
-								EventType: EventTypeEnum.GEOFENCE_CREATION_STARTED,
-								Attributes: { triggeredBy: TriggeredByEnum.MAP_BUTTONS }
-							}
-						],
-						["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
-					);
-				} else {
-					isAddingGeofence && setIsAddingGeofence(!isAddingGeofence);
-					isAuthGeofenceBoxOpen && onSetShowAuthGeofenceBox(!isAuthGeofenceBoxOpen);
-					currentMapProvider === MapProviderEnum.ESRI
-						? onShowAuthTrackerDisclaimerModal()
-						: onSetShowAuthTrackerBox(!isAuthTrackerBoxOpen);
-				}
-			} else {
-				onOpenSignInModal();
-			}
-		} else {
-			if (currentMapProvider === MapProviderEnum.GRAB) {
-				onShowUnauthSimulationDisclaimerModal();
-			} else {
-				if (menuItem === MenuItemEnum.GEOFENCE) {
-					isUnauthTrackerBoxOpen && onSetShowUnauthTrackerBox(!isUnauthTrackerBoxOpen);
-					onSetShowUnauthGeofenceBox(!isUnauthGeofenceBoxOpen);
-				} else {
-					isUnauthGeofenceBoxOpen && onSetShowUnauthGeofenceBox(!isUnauthGeofenceBoxOpen);
-					onSetShowUnauthTrackerBox(!isUnauthTrackerBoxOpen);
-				}
-			}
+	const onPlayPause = () => {
+		if (isSimulationEnbaled) {
+			!isPlaying && !isDesktop && !isCollapsed && setIsCollapsed(true);
+			setIsPlaying(s => !s);
 		}
 	};
 
-	const resetFilters = useCallback(() => {
-		setSelectedFilters({
-			Providers: [],
-			Attribute: [],
-			Type: []
-		});
-	}, [setSelectedFilters]);
+	const onClose = () => {
+		clearCredsAndLocationClient && clearCredsAndLocationClient();
+		setIsEditingRoute(false);
+		setTrackerPoints(undefined);
+		setShowAuthTrackerBox(false);
+	};
 
-	const onChangeStyle = useCallback(
-		(id: EsriMapEnum | HereMapEnum | GrabMapEnum | OpenDataMapEnum) => {
-			if (id !== currentMapStyle) {
-				onShowGridLoader();
-				handleMapStyleChange(id);
-			}
+	const onTrackerMarkerChange = (type: TrackerType) => {
+		setRouteData(undefined);
+		setPoints(undefined);
+		setSelectedTrackerType(type);
+	};
 
-			let mapProvider = "Unknown";
+	const onClear = () => {
+		setRouteData(undefined);
+		setPoints(undefined);
+		setTrackerPoints(undefined);
+	};
 
-			if (Object.values(EsriMapEnum).includes(id as EsriMapEnum)) {
-				mapProvider = MapProviderEnum.ESRI;
-			} else if (Object.values(HereMapEnum).includes(id as HereMapEnum)) {
-				mapProvider = MapProviderEnum.HERE;
-			} else if (Object.values(GrabMapEnum).includes(id as GrabMapEnum)) {
-				mapProvider = MapProviderEnum.GRAB;
-			} else if (Object.values(OpenDataMapEnum).includes(id as OpenDataMapEnum)) {
-				mapProvider = MapProviderEnum.OPEN_DATA;
-			}
+	const onSave = () => {
+		if (trackerPoints && trackerPoints.length >= 2) {
+			setIsEditingRoute(false);
+			setIsSaved(true);
 
-			record([
-				{
-					EventType: EventTypeEnum.MAP_STYLE_CHANGE,
-					Attributes: { id, provider: String(mapProvider), triggeredBy: renderedUpon }
-				}
-			]);
-		},
-		[currentMapStyle, handleMapStyleChange, onShowGridLoader, renderedUpon]
-	);
-
-	const addProviderTitle = useCallback(
-		(styles: MapStyle[], isGrabVisible: boolean): (MapStyle | { title: string })[] => {
-			return styles.reduce((acc: (MapStyle | { title: string })[], style: MapStyle) => {
-				const { filters } = style;
-				const provider = filters?.provider === GRAB ? `${GRAB}Maps` : filters?.provider;
-
-				if (!(provider === `${GRAB}Maps` && !isGrabVisible)) {
-					if (!acc.some(item => "title" in item && item.title === provider)) {
-						acc.push({ title: provider });
+			record(
+				[
+					{
+						EventType: EventTypeEnum.TRACKER_SAVED,
+						Attributes: { trackerType: selectedTrackerType, numberOfTrackerPoints: String(trackerPoints.length) }
 					}
-					acc.push(style);
-				}
-
-				return acc;
-			}, []);
-		},
-		[]
-	);
-
-	const noFilters = !(
-		!selectedFilters.Providers.length &&
-		!selectedFilters.Attribute.length &&
-		!selectedFilters.Type.length
-	);
-
-	/**
-	 * Filters and groups map styles based on the provided keyword and selected filters.
-	 *
-	 * @param {Array<MapStyle | { title: string }>} styles - The array of map styles to filter.
-	 * @param {string} keyword - The keyword to filter map styles by.
-	 * @param {SelectedFilters} selectedFilters - The selected filters to apply.
-	 * @returns {Array<MapStyle | { title: string }>} - The filtered and grouped map styles.
-	 */
-	const searchStyles = (
-		styles: Array<MapStyle | { title: string }>,
-		keyword: string,
-		selectedFilters: MapStyleFilterTypes
-	): Array<MapStyle | { title: string }> => {
-		const lowerCaseKeyword = keyword.toLowerCase();
-
-		// Check if there is no keyword and no filters are selected
-		const noKeywordAndFilters =
-			lowerCaseKeyword === "" &&
-			selectedFilters.Providers.length === 0 &&
-			selectedFilters.Attribute.length === 0 &&
-			selectedFilters.Type.length === 0;
-
-		// Return the original styles array if there is no keyword and no filters are selected
-		if (noKeywordAndFilters) return styles;
-
-		// Group styles by provider
-		const groupedStyles = styles.reduce((acc: { [key: string]: Array<MapStyle | { title: string }> }, item) => {
-			const providerKey = "title" in item ? (item.title === `${GRAB}Maps` ? GRAB : item.title) : item.filters.provider;
-			acc[providerKey] = acc[providerKey] || [];
-			if (!("title" in item)) acc[providerKey].push(item);
-			return acc;
-		}, {});
-
-		// Filter styles within each group and flatten the result
-		return Object.entries(groupedStyles).flatMap(([provider, styles]) => {
-			// Filter styles based on keyword and selected filters
-			const filteredGroup = styles.filter(item => {
-				const { filters, name } = item as MapStyle;
-				const matchesKeyword =
-					filters.provider.toLowerCase().includes(lowerCaseKeyword) ||
-					filters.attribute.some(attr => attr.toLowerCase().includes(lowerCaseKeyword)) ||
-					filters.type.some(type => type.toLowerCase().includes(lowerCaseKeyword)) ||
-					name.toLowerCase().includes(lowerCaseKeyword);
-
-				const matchesFilters =
-					(selectedFilters.Providers.length === 0 || selectedFilters.Providers.includes(filters.provider)) &&
-					(selectedFilters.Attribute.length === 0 ||
-						filters.attribute.some(attr => selectedFilters.Attribute.includes(attr))) &&
-					(selectedFilters.Type.length === 0 || filters.type.some(type => selectedFilters.Type.includes(type)));
-
-				return matchesKeyword && matchesFilters;
-			});
-
-			// Add the filtered group to the result if it's not empty
-			return (
-				filteredGroup.length > 0 ? [{ title: provider === GRAB ? `${GRAB}Maps` : provider }, ...filteredGroup] : []
-			) as (
-				| MapStyle
-				| {
-						title: string;
-				  }
-			)[];
-		});
+				],
+				["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
+			);
+		}
 	};
 
-	/**
-	 * Handles changes to filter checkboxes by updating the selected filters state.
-	 *
-	 * @param {React.ChangeEvent<HTMLInputElement>} e - The change event from the input element.
-	 * @param {string} filterCategory - The category of the filter being changed (e.g., 'Providers', 'Attribute', 'Type').
-	 */
+	const onEdit = () => {
+		setIsEditingRoute(true);
+		setIsSaved(false);
+		setRouteData(undefined);
+		setPoints(undefined);
+		setTrackerPos(undefined);
+		setIsPlaying(false);
+		!isDesktop && isCollapsed && setIsCollapsed(false);
+	};
 
-	const handleFilterChange = useCallback(
-		(e: React.ChangeEvent<HTMLInputElement>, filterCategory: string) => {
-			const { name, checked } = e.target;
-			const key = filterCategory as keyof MapStyleFilterTypes;
+	const renderGeofenceMarkers = useMemo(() => {
+		if (geofences?.length) {
+			return geofences.map(({ GeofenceId, Geometry: { Circle } }, idx) => {
+				if (Circle) {
+					const { Center } = Circle;
 
-			const updatedFilters = {
-				...tempFilters,
-				[key]: checked ? [...tempFilters[key], name] : tempFilters[key].filter(item => item !== name)
-			};
-
-			if (isHandDevice) {
-				setTempFilters(updatedFilters);
-			} else {
-				const desktopUpdatedFilters = {
-					...selectedFilters,
-					[key]: checked ? [...selectedFilters[key], name] : selectedFilters[key].filter(item => item !== name)
-				};
-				setSelectedFilters(desktopUpdatedFilters);
-			}
-		},
-		[tempFilters, isHandDevice, selectedFilters, setSelectedFilters]
-	);
-
-	const applyMobileFilters = useCallback(() => {
-		if (isHandDevice) {
-			setSelectedFilters(tempFilters);
+					return <GeofenceMarker key={idx} lng={Center[0]} lat={Center[1]} description={GeofenceId} />;
+				}
+			});
 		}
-	}, [isHandDevice, setSelectedFilters, tempFilters]);
+	}, [geofences]);
 
-	// Invoke this when dialog is closed without applying filters in mobile mode
-	const discardChanges = useCallback(() => {
-		if (isHandDevice) {
-			// revert tempFilters to the applied selectedFilters
-			setTempFilters(selectedFilters);
-		}
-	}, [selectedFilters, isHandDevice]);
+	const renderGeofences = useMemo(() => {
+		if (geofences?.length) {
+			return geofences.map(({ GeofenceId, Geometry: { Circle } }, idx) => {
+				if (Circle) {
+					const { Center, Radius } = Circle;
+					const circle = turf.circle(Center, Radius, { steps: 50, units: "meters" });
+					const line = turf.lineString(circle.geometry.coordinates[0]);
 
-	const clearFilters = useCallback(() => {
-		if (isHandDevice) {
-			const initialFilterValues = {
-				Providers: [],
-				Attribute: [],
-				Type: []
-			};
-			setTempFilters(initialFilterValues);
-			setSelectedFilters(initialFilterValues);
-		}
-	}, [isHandDevice, setSelectedFilters]);
-
-	const stylesWithTitles = addProviderTitle(MAP_STYLES, isGrabVisible);
-	const searchAndFilteredResults = searchStyles(stylesWithTitles, searchValue, selectedFilters);
-	const hasAnyFilterSelected =
-		!!selectedFilters.Providers.length || !!selectedFilters.Attribute.length || !!selectedFilters.Type.length;
-
-	const mapStyles = useMemo(
-		() => (
-			<Flex
-				className={onlyMapStyles ? "map-styles-wrapper only-map-styles" : "map-styles-wrapper"}
-				direction={"column"}
-			>
-				<Flex direction={"column"} gap={0} marginBottom={isHandDevice && showFilter ? "5rem" : "0"}>
-					<Flex
-						className={`maps-styles-search ${!!isHandDevice ? "responsive-search" : ""} ${
-							showFilter ? "with-filters" : ""
-						}`}
-						marginBottom={showFilter ? 0 : "0.6rem"}
-						padding={isHandDevice && searchWidth === searchHandDeviceWidth ? "0 0 0 1.2rem" : "0 1.2rem"}
-					>
-						<SearchField
-							ref={searchFieldRef}
-							data-testid="map-styles-search-field"
-							className="map-styles-search-field"
-							dir={langDir}
-							label={t("search.text")}
-							placeholder={t("map_buttons__search_placeholder.text") as string}
-							hasSearchButton={false}
-							hasSearchIcon={true}
-							size={"large"}
-							innerStartComponent={
-								<Flex className="search-icon-container">
-									<IconSearch className="search-bar-icon" />
-								</Flex>
-							}
-							innerEndComponent={null}
-							value={searchValue}
-							onChange={e => setSearchValue(e.target.value)}
-							onClick={() => {
-								isHandDevice && setSearchWidth(searchDesktopWidth);
-								!!showFilter && setShowFilter(false);
-							}}
-							crossOrigin={undefined}
-							width={searchWidth}
-						/>
-						<Flex className="filter-container" gap="0">
-							{!!searchValue && searchWidth === searchDesktopWidth && (
-								<Flex
-									ref={clearIconContainerRef}
-									onClick={() => {
-										setSearchValue("");
-										setShowFilter(false);
+					return (
+						<div key={idx}>
+							<Source id={`${GeofenceId}-circle-source-fill`} type="geojson" data={circle}>
+								<Layer
+									id={`${GeofenceId}-circle-layer-fill`}
+									type="fill"
+									paint={{
+										"fill-opacity": 0.4,
+										"fill-color": "#30b8c0"
 									}}
-									margin="0 0.4rem"
-								>
-									<IconClose className="search-bar-icon" />
-								</Flex>
-							)}
-							<View
-								ref={filterIconWrapperRef}
-								className="filter-icon-wrapper"
-								onClick={() => {
-									setShowFilter(show => {
-										isHandDevice && show ? setSearchWidth(searchHandDeviceWidth) : setSearchWidth(searchDesktopWidth);
-										return !show;
-									});
-									discardChanges();
-								}}
-								data-testid="filter-icon-wrapper"
-								paddingRight={isHandDevice ? "0" : "0.7rem"}
-							>
-								<IconFilterFunnel className={showFilter || hasAnyFilterSelected ? "filter-icon live" : "filter-icon"} />
-								<span className={hasAnyFilterSelected ? "filter-bubble live" : "filter-bubble"} />
-							</View>
-						</Flex>
-						{searchWidth === searchHandDeviceWidth && (
-							<Flex gap="0.5rem" className="map-providers-container-mobile">
-								{Object.values(MapProviderEnum).map(provider => (
-									<Button
-										key={provider}
-										className={currentMapProvider === provider ? "active-button" : ""}
-										onClick={() =>
-											handleMapProviderChange && handleMapProviderChange(provider, TriggeredByEnum.SETTINGS_MODAL)
-										}
-									>
-										{provider === MapProviderEnum.GRAB ? `${MapProviderEnum.GRAB}Maps` : provider}
-									</Button>
-								))}
-							</Flex>
-						)}
-					</Flex>
-					{showFilter && (
-						<Flex className={`maps-filter-container ${isHandDevice ? "responsive-filter" : ""}`} direction="column">
-							{Object.entries(filters).map(([key, value]) => (
-								<Flex key={key} direction="column">
-									<Text as="strong" fontWeight={700} fontSize="1em">
-										{key}
-									</Text>
-									{value.map((item: string, i) => {
-										if (item === GRAB && !isGrabVisible) return null;
-										return (
-											<CheckboxField
-												className="custom-checkbox"
-												size={"large"}
-												key={i}
-												label={item === GRAB ? `${item}Maps` : item}
-												name={item}
-												value={item}
-												checked={
-													isHandDevice
-														? tempFilters[key as keyof MapStyleFilterTypes].includes(item)
-														: selectedFilters[key as keyof MapStyleFilterTypes].includes(item)
-												}
-												onChange={e => handleFilterChange(e, key)}
-												data-testid={`filter-checkbox-${item}`}
-												crossOrigin={undefined}
-											/>
-										);
-									})}
-								</Flex>
-							))}
-						</Flex>
-					)}
-				</Flex>
-				{(!showFilter || (onlyMapStyles && !isHandDevice)) && (
-					<Flex gap={0} direction="column" className={isGrabVisible ? "maps-container grab-visible" : "maps-container"}>
-						<Flex gap={0} padding={onlyMapStyles ? "0 0 1.23rem" : "0 0.7rem 1.23rem 0.5rem"} wrap="wrap">
-							{!searchAndFilteredResults.length && (
-								<Flex width={"80%"} margin={"0 auto"} direction="column">
-									<NotFoundCard
-										title={t("map_buttons__no_styles_found_title.text") as string}
-										text={`${t("map_buttons__no_styles_found_desc_1.text")}${
-											noFilters ? t("map_buttons__no_styles_found_desc_2.text") : ""
-										}`}
-										textFontSize="0.93rem"
-										textMargin={"0.6rem 0 0.9rem"}
-										textPadding={noFilters ? "0" : undefined}
-										actionButton={
-											noFilters && (
-												<Link className="clear-filters-button" onClick={resetFilters}>
-													{t("map_buttons__clear_filters.text")}
-												</Link>
-											)
-										}
-									/>
-								</Flex>
-							)}
-							{searchAndFilteredResults.map((item, i) =>
-								"title" in item ? (
-									<Flex key={i} width={"100%"} direction={"column"}>
-										{i !== 0 && <Divider className="mb-divider" />}
-										<Text as="strong" fontWeight={700} fontSize="1em" padding={"0.6rem 1.2rem 0.4rem"}>
-											{item.title}
-										</Text>
-									</Flex>
-								) : (
-									(item.filters?.provider !== GRAB || (item.filters?.provider === GRAB && isGrabVisible)) && (
-										<Flex key={i} width={settingsTablet ? "auto" : "33.33%"} height="130px" alignItems="flex-start">
-											<Flex
-												data-testid={`map-style-item-${item.id}`}
-												className={item.id === currentMapStyle ? "mb-style-container selected" : "mb-style-container"}
-												onClick={e => {
-													e.preventDefault();
-													e.stopPropagation();
-													onChangeStyle(item.id);
-												}}
-												width="100%"
-											>
-												<Flex gap={0} position="relative">
-													{(isLoading || isLoadingImg) && (
-														<Placeholder position="absolute" width="100%" height="100%" />
-													)}
-													<img
-														className={`${isHandDevice ? "hand-device-img" : ""} ${
-															isMobile && onlyMapStyles ? "only-map" : ""
-														} map-image`}
-														src={item.image}
-														alt={item.name}
-														onLoad={() => setIsLoadingImg(false)}
-													/>
-												</Flex>
-												{!isLoading && (
-													<Text marginTop="0.62rem" textAlign="center">
-														{t(item.name)}
-													</Text>
-												)}
-											</Flex>
-										</Flex>
-									)
-								)
-							)}
-						</Flex>
-					</Flex>
-				)}
-				{isHandDevice && showFilter && bottomSheetCurrentHeight > 150 && (
-					<Flex className="responsive-map-footer">
-						<Button variation="link" className="clear-selection-button" onClick={clearFilters}>
-							Clear selections
-						</Button>
-						<Button variation="primary" onClick={applyMobileFilters}>
-							Apply filters
-						</Button>
-					</Flex>
-				)}
-			</Flex>
-		),
-		[
-			onlyMapStyles,
-			isHandDevice,
-			showFilter,
-			searchWidth,
-			langDir,
-			t,
-			searchValue,
-			hasAnyFilterSelected,
-			isGrabVisible,
-			searchAndFilteredResults,
-			noFilters,
-			resetFilters,
-			bottomSheetCurrentHeight,
-			clearFilters,
-			applyMobileFilters,
-			setSearchValue,
-			discardChanges,
-			currentMapProvider,
-			handleMapProviderChange,
-			tempFilters,
-			selectedFilters,
-			handleFilterChange,
-			settingsTablet,
-			currentMapStyle,
-			isLoading,
-			isLoadingImg,
-			isMobile,
-			onChangeStyle
-		]
-	);
+								/>
+							</Source>
+							<Source id={`${GeofenceId}-circle-source-line`} type="geojson" data={line}>
+								<Layer
+									id={`${GeofenceId}-circle-layer-line`}
+									type="line"
+									layout={{ "line-cap": "round", "line-join": "round" }}
+									paint={{
+										"line-color": "#008296",
+										"line-width": 3
+									}}
+								/>
+							</Source>
+						</div>
+					);
+				}
+			});
+		}
+	}, [geofences]);
 
-	if (onlyMapStyles) return mapStyles;
+	const renderTrackerPointsList = useMemo(() => {
+		if (trackerPoints?.length) {
+			return (
+				<Flex gap={0} direction="column" maxHeight={window.innerHeight - 250} overflow="scroll">
+					{trackerPoints.map((point, idx) => {
+						const icon = _trackerTypes.filter(({ type }) => selectedTrackerType === type)[0].icon;
+
+						return (
+							<Flex key={idx} className="tracker-point-list-item">
+								<Flex className="icon-container">
+									{icon}
+									{trackerPoints.length > 1 && idx + 1 !== trackerPoints.length && <View className="dotted-line" />}
+								</Flex>
+								<Text marginLeft="1.38rem">{`${point[1]}, ${point[0]}`}</Text>
+							</Flex>
+						);
+					})}
+				</Flex>
+			);
+		}
+	}, [trackerPoints, selectedTrackerType, _trackerTypes]);
+
+	const renderTrackerPointMarkers = useMemo(() => {
+		if (trackerPoints?.length) {
+			return trackerPoints.map((point, idx) => {
+				const icon = _trackerTypes.filter(({ type }) => selectedTrackerType === type)[0].icon;
+
+				return (
+					<Marker
+						key={idx}
+						style={{
+							display: "flex",
+							justifyContent: "center",
+							alignItems: "center",
+							zIndex: 1,
+							borderRadius: "1.23rem",
+							backgroundColor: isPlaying || trackerPos ? "none" : "var(--white-color)",
+							width: isPlaying || trackerPos ? "1.23rem" : "2.46rem",
+							height: isPlaying || trackerPos ? "1.23rem" : "2.46rem",
+							boxShadow: "0 0 10px rgba(0, 0, 0, 0.202633)"
+						}}
+						longitude={point[0]}
+						latitude={point[1]}
+					>
+						{isPlaying || trackerPos ? <IconSegment width="1.23rem" height="1.23rem" /> : icon}
+					</Marker>
+				);
+			});
+		}
+	}, [trackerPoints, _trackerTypes, isPlaying, trackerPos, selectedTrackerType]);
+
+	const renderDottedLines = useMemo(() => {
+		if (isEditingRoute && trackerPoints && trackerPoints?.length > 1) {
+			const lineString:
+				| GeoJSON.Feature<GeoJSON.Geometry>
+				| GeoJSON.FeatureCollection<GeoJSON.Geometry>
+				| GeoJSON.Geometry
+				| string
+				| undefined = {
+				type: "Feature",
+				properties: {},
+				geometry: {
+					type: "LineString",
+					coordinates: trackerPoints
+				}
+			};
+
+			return (
+				<Source id="dotted-line-source" type="geojson" data={lineString}>
+					<Layer
+						id="dotted-line-layer"
+						type="line"
+						layout={{
+							"line-join": "round",
+							"line-cap": "round"
+						}}
+						paint={{
+							"line-color": "#8e8e93",
+							"line-width": 4,
+							"line-dasharray": [0.0001, 2]
+						}}
+					/>
+				</Source>
+			);
+		}
+	}, [isEditingRoute, trackerPoints]);
 
 	return (
 		<>
-			<Flex data-testid="map-buttons-container" className="map-styles-geofence-and-tracker-container">
-				<Flex
-					data-testid="map-styles-button"
-					ref={stylesCardTogglerRef}
-					className={openStylesCard ? "map-styles-button active" : "map-styles-button"}
-					onClick={toggleMapStyles}
-					data-tooltip-id="map-styles-button"
-					data-tooltip-place="left"
-					data-tooltip-content={t("tooltip__mps.text")}
-				>
-					<IconMapSolid />
-				</Flex>
-				{!openStylesCard && <Tooltip id="map-styles-button" />}
-				<Divider className="button-divider" />
-				<Flex
-					data-testid="geofence-control-button"
-					className={isAddingGeofence || isUnauthGeofenceBoxOpen ? "geofence-button active" : "geofence-button"}
-					onClick={() => onClickGeofenceTracker(MenuItemEnum.GEOFENCE)}
-					data-tooltip-id="geofence-control-button"
-					data-tooltip-place="left"
-					data-tooltip-content={t("geofence.text")}
-				>
-					<IconGeofencePlusSolid />
-				</Flex>
-				<Tooltip id="geofence-control-button" />
-				<Divider className="button-divider" />
-				<Flex
-					data-testid="tracker-control-button"
-					className={
-						isAuthTrackerDisclaimerModalOpen || isAuthTrackerBoxOpen || isUnauthTrackerBoxOpen
-							? "tracker-button active"
-							: "tracker-button"
-					}
-					onClick={() => onClickGeofenceTracker(MenuItemEnum.TRACKER)}
-					data-tooltip-id="tracker-control-button"
-					data-tooltip-place="left"
-					data-tooltip-content={t("tracker.text")}
-				>
-					<IconRadar />
-				</Flex>
-				<Tooltip id="tracker-control-button" />
-			</Flex>
-			{openStylesCard && (
-				<Card data-testid="map-styles-card" ref={stylesCardRef} className="map-styles-card">
-					<Flex className="map-styles-header">
-						<Text margin="1.23rem 0rem" fontFamily="AmazonEmber-Bold" fontSize="1.23rem">
-							{t("map_style.text")}
-						</Text>
-						<Flex className="map-styles-icon-close-container" onClick={() => setOpenStylesCard(false)}>
+			<Card className={`tracking-card ${!isDesktop ? "tracking-card-mobile" : ""}`} left="1.62rem">
+				<Flex className="tracking-card-header">
+					<Text fontFamily="AmazonEmber-Medium" fontSize="1.08rem">
+						{t("tracker.text")}
+					</Text>
+					<Flex gap={0} alignItems="center">
+						<Flex
+							data-testid="auth-tracker-box-close"
+							className={`tracking-card-close ${!isDesktop ? "tracking-card-close-mobile" : ""}`}
+							onClick={onClose}
+						>
 							<IconClose />
 						</Flex>
 					</Flex>
-					<Flex className="ms-info-container">
-						<Text variation="tertiary" textAlign={isLtr ? "start" : "end"}>
-							{t("map_buttons__info.text")}
-						</Text>
+				</Flex>
+				{Connection}
+				<Flex gap={0} alignItems="center" padding="1.23rem">
+					<IconInfoSolid className="icon-plus-rounded" />
+					<Text marginLeft="1.23rem" variation="tertiary" textAlign={isLtr ? "start" : "end"}>
+						{t("tracker_box__click_any_point.text")}
+					</Text>
+				</Flex>
+				<Flex className="marker-container" justifyContent="space-between">
+					<Flex gap="0">
+						{_trackerTypes.map(({ type, icon }, idx) => (
+							<View key={`${type}-${idx}`}>
+								<View
+									className={selectedTrackerType === type ? "icon-container selected" : "icon-container"}
+									data-tooltip-id={type}
+									data-tooltip-place="top"
+									data-tooltip-content={
+										type === TrackerType.CAR
+											? t("tooltip__simulate_tracking_car.text")
+											: type === TrackerType.WALK
+											? t("tooltip__simulate_tracking_walk.text")
+											: t("tooltip__simulate_tracking_drone.text")
+									}
+									marginLeft={!!idx ? "0.62rem" : "0rem"}
+									onClick={() => onTrackerMarkerChange(type)}
+								>
+									{icon}
+								</View>
+								<Tooltip id={type} />
+							</View>
+						))}
 					</Flex>
-					{mapStyles}
-				</Card>
-			)}
+					{!!trackerPoints?.length && (
+						<Flex className="buttons-container" width={isEditingRoute ? "" : ""}>
+							{isEditingRoute ? (
+								<>
+									<View className="button" onClick={onClear}>
+										<Text fontFamily="AmazonEmber-Bold" color="var(--red-color)">
+											{t("clear.text")}
+										</Text>
+									</View>
+									<View className="button" onClick={onSave}>
+										<Text
+											fontFamily="AmazonEmber-Bold"
+											color={trackerPoints.length >= 2 ? "var(--primary-color)" : "var(--tertiary-color)"}
+											opacity={trackerPoints.length >= 2 ? 1 : 0.3}
+											marginLeft="1.9rem"
+										>
+											{t("save.text")}
+										</Text>
+									</View>
+								</>
+							) : (
+								<>
+									<Button
+										className="play-pause-button"
+										variation="primary"
+										fontFamily="AmazonEmber-Bold"
+										fontSize="0.92rem"
+										isLoading={isFetchingRoute}
+										onClick={onPlayPause}
+									>
+										{isFetchingRoute ? (
+											<Loader size="large" />
+										) : isPlaying ? (
+											t("tracker_box__pause.text")
+										) : (
+											t("tracker_box__simulate.text")
+										)}
+									</Button>
+									<Button className="edit-button" variation="primary" onClick={onEdit}>
+										{isDesktop ? (
+											t("tracker_box__edit.text")
+										) : (
+											<IconEdit className="edit-icon" width={20} height={20} />
+										)}
+									</Button>
+								</>
+							)}
+						</Flex>
+					)}
+				</Flex>
+				{!isCollapsed && renderTrackerPointsList}
+				{isDesktop && !!trackerPoints?.length && (
+					<Flex className="show-hide-details-container bottom-border-radius" onClick={() => setIsCollapsed(s => !s)}>
+						<Text className="text">
+							{isCollapsed ? t("tracker_box__tracker_details.text") : t("hide_details.text")}
+						</Text>
+						<IconArrow style={{ transform: isCollapsed ? "rotate(0deg)" : "rotate(180deg)" }} />
+					</Flex>
+				)}
+			</Card>
+			<Tooltip id="notification-services" />
+			{renderGeofenceMarkers}
+			{renderGeofences}
+			{renderTrackerPointMarkers}
+			{renderDottedLines}
+			<AuthTrackerSimulation
+				mapRef={mapRef}
+				isSaved={isSaved}
+				routeData={routeData}
+				setRouteData={setRouteData}
+				isPlaying={isPlaying}
+				setIsPlaying={setIsPlaying}
+				selectedTrackerType={selectedTrackerType}
+				points={points}
+				setPoints={setPoints}
+				trackerPos={trackerPos}
+				setTrackerPos={setTrackerPos}
+				isDesktop={isDesktop}
+			/>
 		</>
 	);
 };
 
-export default memo(MapButtons);
+export default AuthTrackerBox;

@@ -1,916 +1,1298 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 
-import { Button, CheckboxField, Divider, Flex, Link, Radio, Text, View } from "@aws-amplify/ui-react";
+import { Flex, Text, View } from "@aws-amplify/ui-react";
+import { IconLocateMe, LogoDark, LogoLight } from "@demo/assets";
 import {
-	IconArrow,
-	IconAwsCloudFormation,
-	IconBackArrow,
-	IconCloud,
-	IconGlobe,
-	IconLanguage,
-	IconMapOutlined,
-	IconPaintroller,
-	IconPeopleArrows,
-	IconShuffle
-} from "@demo/assets";
-import { DropdownEl, Modal } from "@demo/atomicui/atoms";
-import { InputField } from "@demo/atomicui/molecules";
-import { appConfig, languageSwitcherData, regionsData } from "@demo/core/constants";
-import { useAmplifyAuth, useAmplifyMap, useAws, useAwsIot, useDeviceMediaQuery, usePersistedData } from "@demo/hooks";
+	ConnectAwsAccountModal,
+	GrabConfirmationModal,
+	MapButtons,
+	OpenDataConfirmationModal,
+	SignInModal,
+	ConfirmationModal as TrackerInformationModal,
+	ConfirmationModal as UnauthSimulationDisclaimerModal,
+	ConfirmationModal as UnauthSimulationExitModal,
+	WelcomeModal
+} from "@demo/atomicui/molecules";
 import {
-	ConnectFormValuesType,
+	AboutModal,
+	AuthGeofenceBox,
+	AuthTrackerBox,
+	ResponsiveBottomSheet,
+	RouteBox,
+	SearchBox,
+	SettingsModal,
+	Sidebar,
+	UnauthSimulation
+} from "@demo/atomicui/organisms";
+import { DemoPlaceholderPage } from "@demo/atomicui/pages";
+import { showToast } from "@demo/core";
+import { appConfig } from "@demo/core/constants";
+import {
+	useAmplifyAuth,
+	useAmplifyMap,
+	useAws,
+	useAwsGeofence,
+	useAwsIot,
+	useAwsPlace,
+	useAwsRoute,
+	useAwsTracker,
+	useBottomSheet,
+	useDeviceMediaQuery,
+	usePersistedData,
+	useRecordViewPage
+} from "@demo/hooks";
+import {
 	EsriMapEnum,
+	GrabMapEnum,
+	HereMapEnum,
 	MapProviderEnum,
-	MapUnitEnum,
-	RegionEnum,
-	SettingOptionEnum,
-	SettingOptionItemType
+	MapStyleFilterTypes,
+	MenuItemEnum,
+	ShowStateType,
+	ToastType
 } from "@demo/types";
-import { AnalyticsEventActionsEnum, EventTypeEnum, TriggeredByEnum } from "@demo/types/Enums";
+import { EventTypeEnum, OpenDataMapEnum, ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
-import { transformCloudFormationLink } from "@demo/utils/transformCloudFormationLink";
+import { errorHandler } from "@demo/utils/errorHandler";
+import { getCurrentLocation } from "@demo/utils/getCurrentLocation";
+import { Signer } from "aws-amplify";
+import { differenceInMilliseconds } from "date-fns";
+import { LngLatBoundsLike } from "mapbox-gl";
+import { omit } from "ramda";
 import { useTranslation } from "react-i18next";
+import {
+	AttributionControl,
+	GeolocateControl,
+	GeolocateControlRef,
+	GeolocateErrorEvent,
+	GeolocateResultEvent,
+	Map,
+	MapLayerMouseEvent,
+	MapRef,
+	NavigationControl
+} from "react-map-gl";
+
 import "./styles.scss";
 
 const {
-	POOLS,
-	ENV: { CF_TEMPLATE },
-	ROUTES: { HELP },
-	MAP_RESOURCES: {
-		MAP_STYLES: { ESRI_STYLES, HERE_STYLES },
-		GRAB_SUPPORTED_AWS_REGIONS
-	},
-	LINKS: { AWS_TERMS_AND_CONDITIONS },
-	PERSIST_STORAGE_KEYS: { FASTEST_REGION }
+	PERSIST_STORAGE_KEYS: { SHOULD_CLEAR_CREDENTIALS, GEO_LOCATION_ALLOWED, FASTEST_REGION },
+	ROUTES: { DEMO },
+	MAP_RESOURCES: { MAX_BOUNDS, AMAZON_HQ, GRAB_SUPPORTED_AWS_REGIONS },
+	LINKS: { AMAZON_LOCATION_TERMS_AND_CONDITIONS },
+	GET_PARAMS: { DATA_PROVIDER }
 } = appConfig;
+const initShow = {
+	gridLoader: true,
+	sidebar: false,
+	routeBox: false,
+	signInModal: false,
+	connectAwsAccount: false,
+	authGeofenceBox: false,
+	authTrackerBox: false,
+	settings: false,
+	stylesCard: false,
+	authTrackerDisclaimerModal: false,
+	about: false,
+	grabDisclaimerModal: false,
+	openDataDisclaimerModal: false,
+	mapStyle: undefined,
+	unauthGeofenceBox: false,
+	unauthTrackerBox: false,
+	unauthSimulationBounds: false,
+	unauthSimulationDisclaimerModal: false,
+	unauthSimulationExitModal: false,
+	startUnauthSimulation: false
+};
+let interval: NodeJS.Timer | undefined;
+let timeout: NodeJS.Timer | undefined;
 
-const fallbackRegion = Object.values(POOLS)[0];
-const region = localStorage.getItem(FASTEST_REGION) ?? fallbackRegion;
-const defaultRegion = regionsData.find(option => option.value === region) as { value: string; label: string };
-const { IMPERIAL, METRIC } = MapUnitEnum;
-const { ESRI, HERE, GRAB, OPEN_DATA } = MapProviderEnum;
+const searchParams = new URLSearchParams(window.location.search);
+let switchToMapProvider = searchParams.get(DATA_PROVIDER);
 
-interface SettingsModalProps {
-	open: boolean;
-	onClose: () => void;
-	resetAppState: () => void;
-	isGrabVisible: boolean;
-	handleMapProviderChange: (mapProvider: MapProviderEnum, triggeredBy: TriggeredByEnum) => void;
-	handleCurrentLocationAndViewpoint: (b: boolean) => void;
-	mapButtons: JSX.Element;
-	resetSearchAndFilters: () => void;
-}
-
-const SettingsModal: React.FC<SettingsModalProps> = ({
-	open,
-	onClose,
-	resetAppState,
-	isGrabVisible,
-	handleMapProviderChange,
-	handleCurrentLocationAndViewpoint,
-	mapButtons,
-	resetSearchAndFilters
-}) => {
-	const {
-		autoMapUnit,
-		setIsAutomaticMapUnit,
-		mapUnit: currentMapUnit,
-		setMapUnit,
-		mapProvider: currentMapProvider,
-		mapStyle: currentMapStyle,
-		setMapProvider,
-		setMapStyle,
-		resetStore: resetMapStore
-	} = useAmplifyMap();
-	const { defaultRouteOptions, setDefaultRouteOptions, setSettingsOptions, settingsOptions } = usePersistedData();
-	const [formValues, setFormValues] = useState<ConnectFormValuesType>({
-		IdentityPoolId: "",
-		UserDomain: "",
-		UserPoolClientId: "",
-		UserPoolId: "",
-		WebSocketUrl: ""
+const DemoPage: React.FC = () => {
+	const {} = useRecordViewPage("DemoPage");
+	const [show, setShow] = React.useState<ShowStateType>(initShow);
+	const [height, setHeight] = React.useState(window.innerHeight);
+	const [searchValue, setSearchValue] = React.useState("");
+	const [searchBoxValue, setSearchBoxValue] = React.useState("");
+	const [doNotAskGrabDisclaimer, setDoNotAskGrabDisclaimer] = React.useState(false);
+	const [doNotAskOpenDataDisclaimer, setDoNotAskOpenDataDisclaimer] = React.useState(false);
+	const [selectedFilters, setSelectedFilters] = React.useState<MapStyleFilterTypes>({
+		Providers: [],
+		Attribute: [],
+		Type: []
 	});
-	const [cloudFormationLink, setCloudFormationLink] = useState(CF_TEMPLATE);
-	const [stackRegion, setStackRegion] = useState<{ value: string; label: string }>(defaultRegion);
+	const [startSimulation, setStartSimulation] = React.useState(false);
+
+	const mapViewRef = useRef<MapRef | null>(null);
+	const geolocateControlRef = useRef<GeolocateControlRef | null>(null);
 	const {
-		isUserAwsAccountConnected,
-		validateFormValues,
-		clearCredentials,
-		setIsUserAwsAccountConnected,
-		onDisconnectAwsAccount,
-		setConnectFormValues,
 		credentials,
-		onLogin,
+		getCurrentUserCredentials,
+		clearCredentials,
+		region,
+		authTokens,
 		setAuthTokens,
 		onLogout,
-		autoRegion,
-		region: currentRegion,
-		setAutoRegion
+		handleCurrentSession,
+		switchToGrabMapRegionStack,
+		isUserAwsAccountConnected,
+		switchToDefaultRegionStack
 	} = useAmplifyAuth();
-	const { resetStore: resetAwsStore } = useAws();
-	const { detachPolicy } = useAwsIot();
-	const keyArr = Object.keys(formValues);
-	const isAuthenticated = !!credentials?.authenticated;
+	const { locationClient, createLocationClient, iotClient, createIotClient, resetStore: resetAwsStore } = useAws();
+	const { attachPolicy } = useAwsIot();
+	const {
+		mapProvider: currentMapProvider,
+		mapStyle: currentMapStyle,
+		currentLocationData,
+		setMapProvider,
+		setMapStyle,
+		isCurrentLocationDisabled,
+		setIsCurrentLocationDisabled,
+		setCurrentLocation,
+		viewpoint,
+		setViewpoint,
+		autoMapUnit,
+		setAutomaticMapUnit
+	} = useAmplifyMap();
+	const { setMarker, marker, selectedMarker, suggestions, bound, clearPoiList, zoom, setZoom, setSelectedMarker } =
+		useAwsPlace();
+	const { routeData, directions, resetStore: resetAwsRouteStore, setRouteData } = useAwsRoute();
+	const { resetStore: resetAwsGeofenceStore } = useAwsGeofence();
+	const { isEditingRoute, trackerPoints, setTrackerPoints, resetStore: resetAwsTrackingStore } = useAwsTracker();
+	const {
+		showWelcomeModal,
+		setShowWelcomeModal,
+		doNotAskGrabDisclaimerModal,
+		setDoNotAskGrabDisclaimerModal,
+		doNotAskOpenDataDisclaimerModal,
+		setDoNotAskOpenDataDisclaimerModal
+	} = usePersistedData();
+	const { isDesktop, isMobile } = useDeviceMediaQuery();
+	const { setUI, ui, bottomSheetCurrentHeight } = useBottomSheet();
+	const peggedRemValue = 13;
+	const extraGeoLocateTop = 2.6;
+	const geoLocateTopValue = `-${(bottomSheetCurrentHeight || 0) / peggedRemValue + extraGeoLocateTop}rem`;
+
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
-	const fastestRegion = localStorage.getItem("fastestRegion") || "";
-	const { isDesktop, isMobile } = useDeviceMediaQuery();
+	const shouldClearCredentials = localStorage.getItem(SHOULD_CLEAR_CREDENTIALS) === "true";
+
+	const isGrabAvailableInRegion = useMemo(() => !!region && GRAB_SUPPORTED_AWS_REGIONS.includes(region), [region]);
+
+	const isGrabVisible = useMemo(
+		() => !isUserAwsAccountConnected || (isUserAwsAccountConnected && isGrabAvailableInRegion),
+		[isUserAwsAccountConnected, isGrabAvailableInRegion]
+	);
 
 	useEffect(() => {
-		isMobile ? setSettingsOptions(undefined) : setSettingsOptions(SettingOptionEnum.UNITS);
-	}, [isMobile, setSettingsOptions]);
+		let previousWidth = document.body.clientWidth;
+		const resizeObserver = new ResizeObserver(() => {
+			const currentWidth = document.body.clientWidth;
+			if ((previousWidth < 1024 && currentWidth >= 1024) || (previousWidth >= 1024 && currentWidth < 1024)) {
+				window.location.reload();
+			}
+			previousWidth = currentWidth;
+		});
 
-	useEffect(() => {
-		const regionOption = region && regionsData.find(option => option.value === region);
+		const handleWindowResize = () => {
+			resizeObserver.observe(document.body);
+		};
 
-		if (regionOption) {
-			const newUrl = transformCloudFormationLink(region);
-			setCloudFormationLink(newUrl);
-			setStackRegion(regionOption);
-		}
+		window.addEventListener("resize", handleWindowResize);
+
+		return () => {
+			window.removeEventListener("resize", handleWindowResize);
+			resizeObserver.disconnect();
+		};
 	}, []);
 
-	const handleAutoMapUnitChange = useCallback(() => {
-		setIsAutomaticMapUnit(true);
-		resetAppState();
-		record([{ EventType: EventTypeEnum.MAP_UNIT_CHANGE, Attributes: { type: "Automatic" } }]);
-	}, [setIsAutomaticMapUnit, resetAppState]);
+	useEffect(() => {
+		autoMapUnit.selected && setAutomaticMapUnit();
+	}, [autoMapUnit.selected, setAutomaticMapUnit]);
 
-	const onMapUnitChange = useCallback(
-		(mapUnit: MapUnitEnum) => {
-			setIsAutomaticMapUnit(false);
-			setMapUnit(mapUnit);
-			resetAppState();
-
-			record([{ EventType: EventTypeEnum.MAP_UNIT_CHANGE, Attributes: { type: String(mapUnit) } }]);
+	const handleResetCallback = useCallback(
+		function handleReset() {
+			setSearchValue("");
+			setSelectedFilters({ Providers: [], Attribute: [], Type: [] });
 		},
-		[setIsAutomaticMapUnit, setMapUnit, resetAppState]
+		[setSearchValue, setSelectedFilters]
 	);
 
-	const _onLogin = useCallback(async () => await onLogin(), [onLogin]);
+	const clearCredsAndLocationClient = useCallback(() => {
+		clearCredentials();
+		resetAwsStore();
+	}, [clearCredentials, resetAwsStore]);
+
+	if (shouldClearCredentials || (!!credentials && !credentials?.identityId)) {
+		localStorage.removeItem(SHOULD_CLEAR_CREDENTIALS);
+		clearCredsAndLocationClient();
+	}
+
+	/* Fetch the current user credentials */
+	useEffect(() => {
+		if (credentials?.identityId && credentials?.expiration) {
+			const now = new Date();
+			const expiration = new Date(credentials.expiration);
+
+			if (now > expiration) {
+				/* If the credentials are expired, clear them and the location client */
+				clearCredsAndLocationClient();
+			} else {
+				/* If the credentials are not expired, set the refresh interval/timeout */
+				interval && clearInterval(interval);
+				timeout && clearTimeout(timeout);
+
+				if (credentials.authenticated) {
+					/* If the credentials are authenticated, set the refresh interval */
+					interval = setInterval(() => {
+						handleCurrentSession(resetAwsStore);
+					}, 10 * 60 * 1000);
+				} else {
+					/* If the credentials are not authenticated, set the refresh timeout */
+					timeout = setTimeout(() => {
+						clearCredsAndLocationClient();
+					}, differenceInMilliseconds(new Date(credentials.expiration || 0), new Date()));
+				}
+			}
+		} else {
+			/* If the credentials are not present, fetch them */
+			getCurrentUserCredentials();
+		}
+	}, [credentials, getCurrentUserCredentials, handleCurrentSession, resetAwsStore, clearCredsAndLocationClient]);
+
+	/* Instantiate location and iot client from aws-sdk whenever the credentials change */
+	useEffect(() => {
+		if (credentials && region) {
+			!locationClient && createLocationClient(credentials, region);
+			!iotClient && createIotClient(credentials, region);
+		}
+	}, [credentials, locationClient, createLocationClient, region, iotClient, createIotClient]);
 
 	const _onLogout = useCallback(async () => {
-		setAuthTokens(undefined);
-		await detachPolicy(credentials!.identityId);
 		await onLogout();
-	}, [setAuthTokens, detachPolicy, credentials, onLogout]);
+		clearCredentials();
+		resetAwsStore();
+	}, [onLogout, clearCredentials, resetAwsStore]);
 
-	const isBtnEnabled = useMemo(
-		() => keyArr.filter(key => !!formValues[key as keyof typeof formValues]).length === keyArr.length,
-		[formValues, keyArr]
-	);
+	/* Fired when user logs in or logs out */
+	useEffect(() => {
+		const searchParams = new URLSearchParams(window.location.search);
+		const code = searchParams.get("code");
+		const state = searchParams.get("state");
+		const sign_out = searchParams.get("sign_out");
 
-	const onChangeFormValues = useCallback(
-		(key: string, value: string) => {
-			setFormValues({ ...formValues, [key as keyof ConnectFormValuesType]: value });
-		},
-		[setFormValues, formValues]
-	);
+		/* After login */
+		if (code && state && !authTokens) {
+			window.history.replaceState(undefined, "", DEMO);
+			setAuthTokens({ code, state });
+			record(
+				[{ EventType: EventTypeEnum.SIGN_IN_SUCCESSFUL, Attributes: {} }],
+				["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
+			);
+			setTimeout(() => clearCredsAndLocationClient(), 0);
+		}
 
-	const onConnect = useCallback(() => {
-		const {
-			IdentityPoolId: identityPoolId,
-			UserPoolId: userPoolId,
-			UserPoolClientId: userPoolWebClientId,
-			UserDomain: domain,
-			WebSocketUrl: webSocketUrl
-		} = formValues;
+		/* After logout */
+		if (sign_out === "true") {
+			window.history.replaceState(undefined, "", DEMO);
+			!!credentials?.authenticated && !authTokens && _onLogout();
+		}
+	}, [setAuthTokens, clearCredsAndLocationClient, credentials, authTokens, _onLogout]);
 
-		validateFormValues(
-			identityPoolId,
-			userPoolId,
-			userPoolWebClientId,
-			domain,
-			webSocketUrl,
-			/* Success callback */
-			() => {
-				if (
-					currentMapProvider === MapProviderEnum.GRAB &&
-					!GRAB_SUPPORTED_AWS_REGIONS.includes(identityPoolId.split(":")[0])
-				) {
-					setMapProvider(MapProviderEnum.ESRI);
-					setMapStyle(EsriMapEnum.ESRI_LIGHT);
-					handleCurrentLocationAndViewpoint(false);
+	const _attachPolicy = useCallback(async () => {
+		if (credentials?.identityId && credentials?.expiration) {
+			const now = new Date();
+			const expiration = new Date(credentials.expiration);
+
+			if (now > expiration) {
+				/* If the credentials are expired, clear them and the location client */
+				clearCredsAndLocationClient();
+			} else {
+				if (!!credentials.authenticated && !!authTokens) {
+					await attachPolicy(credentials.identityId);
+				} else if (!isUserAwsAccountConnected && currentMapProvider !== MapProviderEnum.GRAB) {
+					await attachPolicy(credentials.identityId, true);
 				}
-
-				setConnectFormValues(formValues);
-				clearCredentials();
-				resetAwsStore();
-				setIsUserAwsAccountConnected(true);
 			}
-		);
+		}
 	}, [
-		formValues,
-		validateFormValues,
-		currentMapProvider,
-		setMapProvider,
-		setMapStyle,
-		handleCurrentLocationAndViewpoint,
-		setConnectFormValues,
-		clearCredentials,
-		resetAwsStore,
-		setIsUserAwsAccountConnected
+		credentials,
+		clearCredsAndLocationClient,
+		authTokens,
+		attachPolicy,
+		isUserAwsAccountConnected,
+		currentMapProvider
 	]);
 
-	const selectedMapStyle = useMemo(
-		() =>
-			currentMapProvider === ESRI
-				? ESRI_STYLES.find(({ id }) => id === currentMapStyle)?.name
-				: HERE_STYLES.find(({ id }) => id === currentMapStyle)?.name,
-		[currentMapProvider, currentMapStyle]
+	/* Attach IoT policy to authenticated user to ensure successful websocket connection */
+	useEffect(() => {
+		_attachPolicy();
+	}, [_attachPolicy]);
+
+	const onResize = useCallback(() => setHeight(window.innerHeight), []);
+
+	useEffect(() => {
+		addEventListener("resize", onResize);
+
+		return () => {
+			removeEventListener("resize", onResize);
+		};
+	}, [onResize]);
+
+	useEffect(() => {
+		if (selectedMarker) {
+			const { longitude: lng, latitude: lat } = viewpoint;
+			mapViewRef?.current?.setCenter({ lat, lng });
+		}
+	}, [selectedMarker, viewpoint]);
+
+	useEffect(() => {
+		if (suggestions && bound) {
+			mapViewRef.current?.fitBounds(bound as [number, number, number, number], {
+				padding: suggestions.length > 2 ? 50 : 150
+			});
+		} else if (show.routeBox && routeData?.Summary.RouteBBox) {
+			const boundingBox = routeData.Summary.RouteBBox;
+			const options = isDesktop
+				? {
+						padding: {
+							top: 200,
+							bottom: 200,
+							left: 450,
+							right: 200
+						},
+						speed: 5,
+						linear: false
+				  }
+				: {
+						padding: {
+							top: 235,
+							bottom: 30,
+							left: 60,
+							right: 70
+						},
+						speed: 5,
+						linear: false
+				  };
+			isDesktop
+				? mapViewRef.current?.fitBounds(
+						[
+							[boundingBox[0], boundingBox[1]],
+							[boundingBox[2], boundingBox[3]]
+						],
+						options
+				  )
+				: mapViewRef.current?.fitBounds(
+						[
+							[boundingBox[0], boundingBox[1]],
+							[boundingBox[2], boundingBox[3]]
+						],
+						options
+				  );
+		}
+	}, [suggestions, bound, show.routeBox, routeData, isDesktop, currentMapProvider, currentMapStyle]);
+
+	useEffect(() => {
+		if (directions) setShow(s => ({ ...s, routeBox: true }));
+	}, [directions, show]);
+
+	const onLoad = useCallback(() => {
+		clearPoiList();
+		!isCurrentLocationDisabled && geolocateControlRef.current?.trigger();
+		routeData && setRouteData(routeData);
+	}, [clearPoiList, isCurrentLocationDisabled, routeData, setRouteData]);
+
+	const getCurrentGeoLocation = useCallback(() => {
+		if (!region) {
+			return;
+		}
+
+		if (isGrabAvailableInRegion) {
+			if (isCurrentLocationDisabled) {
+				showToast({
+					content: t("show_toast__grab_not_supported.text"),
+					type: ToastType.INFO
+				});
+				mapViewRef.current?.flyTo({ center: [AMAZON_HQ.SG.longitude, AMAZON_HQ.SG.latitude], zoom: 15 });
+			} else {
+				getCurrentLocation(setCurrentLocation, setViewpoint, currentMapProvider, setIsCurrentLocationDisabled);
+			}
+		} else {
+			getCurrentLocation(setCurrentLocation, setViewpoint, currentMapProvider, setIsCurrentLocationDisabled);
+		}
+	}, [
+		region,
+		isGrabAvailableInRegion,
+		isCurrentLocationDisabled,
+		t,
+		setCurrentLocation,
+		setViewpoint,
+		currentMapProvider,
+		setIsCurrentLocationDisabled
+	]);
+
+	useEffect(() => {
+		if ("permissions" in navigator && region) {
+			navigator.permissions.query({ name: "geolocation" }).then(({ state }) => {
+				const permissionAllowed = localStorage.getItem(GEO_LOCATION_ALLOWED) || "no";
+
+				if (permissionAllowed === "no" && state === "granted") {
+					localStorage.setItem(GEO_LOCATION_ALLOWED, "yes");
+					getCurrentGeoLocation();
+				}
+			});
+		}
+	}, [getCurrentGeoLocation, region]);
+
+	const onGeoLocate = useCallback(
+		({ coords: { latitude, longitude } }: GeolocateResultEvent) => {
+			if (routeData) {
+				resetAwsRouteStore();
+				setShow(s => ({ ...s, routeBox: false }));
+
+				setTimeout(() => {
+					setViewpoint({ latitude, longitude });
+					setCurrentLocation({ currentLocation: { latitude, longitude }, error: undefined });
+				}, 0);
+			} else {
+				setViewpoint({ latitude, longitude });
+				setCurrentLocation({ currentLocation: { latitude, longitude }, error: undefined });
+			}
+		},
+		[resetAwsRouteStore, routeData, setCurrentLocation, setViewpoint]
 	);
 
-	const _onSelect = (option: { value: string; label: string }) => {
-		const newUrl = transformCloudFormationLink(option.value);
-		setCloudFormationLink(newUrl);
-		setStackRegion(option);
+	const onGeoLocateError = useCallback(
+		(e: GeolocateErrorEvent) => {
+			setCurrentLocation({ currentLocation: undefined, error: { ...omit(["type", "target"], e) } });
+
+			if (e.code === e.PERMISSION_DENIED) {
+				localStorage.setItem(GEO_LOCATION_ALLOWED, "no");
+				showToast({
+					content: t("show_toast__lpd.text"),
+					type: ToastType.ERROR
+				});
+			} else if (e.code === e.POSITION_UNAVAILABLE) {
+				showToast({
+					content: t("show_toast__lpu.text"),
+					type: ToastType.ERROR
+				});
+			}
+		},
+		[setCurrentLocation, t]
+	);
+
+	const handleMapClick = ({ lngLat }: MapLayerMouseEvent) => {
+		if (lngLat && !show.unauthGeofenceBox && !show.unauthTrackerBox) {
+			const { lat: latitude, lng: longitude } = lngLat;
+
+			if (!show.routeBox && !show.authGeofenceBox && !show.settings && !isEditingRoute) {
+				marker && setMarker(undefined);
+				selectedMarker && setSelectedMarker(undefined);
+				setTimeout(() => setMarker({ latitude, longitude }), 0);
+			}
+
+			if (isEditingRoute) {
+				if (trackerPoints) {
+					trackerPoints.length < 25
+						? setTrackerPoints([longitude, latitude])
+						: showToast({ content: t("show_toast__route_waypoint_restriction.text"), type: ToastType.WARNING });
+				} else {
+					setTrackerPoints([longitude, latitude]);
+				}
+			}
+
+			mapViewRef?.current?.flyTo({ center: lngLat });
+		}
 	};
 
-	const handleLanguageChange = useCallback(
-		(e: { target: { value: string } }) => {
-			record([
-				{
-					EventType: EventTypeEnum.LANGUAGE_CHANGED,
-					Attributes: { language: e.target.value, triggeredBy: TriggeredByEnum.SETTINGS_MODAL }
-				}
-			]);
-			i18n.changeLanguage(e.target.value);
-		},
-		[i18n]
-	);
+	const onEnableTracking = () => {
+		clearPoiList();
+		resetAwsRouteStore();
+		resetAwsGeofenceStore();
+		resetAwsTrackingStore();
+		setShow(s => ({ ...s, authTrackerDisclaimerModal: false, authTrackerBox: true }));
+		!isDesktop && setUI(ResponsiveUIEnum.auth_tracker);
+	};
 
-	const handleRouteOptionChange = useCallback(
-		(e: { target: { checked: boolean } }, routeOption: string) => {
-			setDefaultRouteOptions({ ...defaultRouteOptions, [routeOption]: e.target.checked });
+	const locationError = useMemo(() => !!currentLocationData?.error, [currentLocationData]);
 
-			record([
-				{
-					EventType: EventTypeEnum.ROUTE_OPTION_CHANGED,
-					Attributes: {
-						option: routeOption,
-						status: e.target.checked ? "on" : "off",
-						triggeredBy: TriggeredByEnum.SETTINGS_MODAL
-					}
-				}
-			]);
-		},
-		[defaultRouteOptions, setDefaultRouteOptions]
-	);
+	const transformRequest = useCallback(
+		(url: string, resourceType: string) => {
+			let newUrl = url;
 
-	const handleRegionChange = useCallback(
-		(region: "Automatic" | RegionEnum) => {
-			setAutoRegion(region === "Automatic", region);
-			resetAwsStore();
-			resetAppState();
-			resetMapStore();
-		},
-		[setAutoRegion, resetAwsStore, resetAppState, resetMapStore]
-	);
-
-	const optionItems: Array<SettingOptionItemType> = useMemo(
-		() => [
-			{
-				id: SettingOptionEnum.UNITS,
-				title: t("settings_modal__units.text"),
-				defaultValue: autoMapUnit.selected
-					? (t("settings_modal__automatic.text") as string)
-					: currentMapUnit === MapUnitEnum.IMPERIAL
-					? (t("settings_modal__imperial.text") as string)
-					: (t("settings_modal__metric.text") as string),
-				icon: <IconPeopleArrows />,
-				detailsComponent: (
-					<Flex
-						data-testid={`${SettingOptionEnum.UNITS}-details-component`}
-						gap={0}
-						direction="column"
-						padding="0rem 1.15rem"
-					>
-						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
-							<Radio
-								data-testid="unit-automatic-radio"
-								value={"Automatic"}
-								checked={autoMapUnit.selected}
-								onChange={handleAutoMapUnitChange}
-								crossOrigin={undefined}
-							>
-								<Text marginLeft="1.23rem">{t("settings_modal__automatic.text")}</Text>
-								<Text variation="tertiary" marginLeft="1.23rem">
-									{autoMapUnit.system === IMPERIAL
-										? t("settings_modal__auto_desc_1.text")
-										: t("settings_modal__auto_desc_2.text")}
-								</Text>
-							</Radio>
-						</Flex>
-						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
-							<Radio
-								data-testid="unit-imperial-radio"
-								value={IMPERIAL}
-								checked={!autoMapUnit.selected && currentMapUnit === IMPERIAL}
-								onChange={() => onMapUnitChange(IMPERIAL)}
-								crossOrigin={undefined}
-							>
-								<Text marginLeft="1.23rem">{t("settings_modal__imperial.text")}</Text>
-								<Text variation="tertiary" marginLeft="1.23rem">
-									{t("settings_modal__imperial_units.text")}
-								</Text>
-							</Radio>
-						</Flex>
-						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
-							<Radio
-								data-testid="unit-metric-radio"
-								value={METRIC}
-								checked={!autoMapUnit.selected && currentMapUnit === METRIC}
-								onChange={() => onMapUnitChange(METRIC)}
-								crossOrigin={undefined}
-							>
-								<Text marginLeft="1.23rem">{t("settings_modal__metric.text")}</Text>
-								<Text variation="tertiary" marginLeft="1.23rem">
-									{t("settings_modal__metric_units.text")}
-								</Text>
-							</Radio>
-						</Flex>
-					</Flex>
-				)
-			},
-			{
-				id: SettingOptionEnum.DATA_PROVIDER,
-				title: t("settings_modal__data_provider.text"),
-				defaultValue: currentMapProvider,
-				icon: <IconMapOutlined />,
-				detailsComponent: (
-					<Flex
-						data-testid={`${SettingOptionEnum.DATA_PROVIDER}-details-component`}
-						gap={0}
-						direction="column"
-						padding="0rem 1.15rem"
-					>
-						{/* Esri */}
-						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
-							<Radio
-								data-testid="data-provider-esri-radio"
-								value={ESRI}
-								checked={currentMapProvider === ESRI}
-								onChange={() => handleMapProviderChange(ESRI, TriggeredByEnum.SETTINGS_MODAL)}
-								crossOrigin={undefined}
-							>
-								<Text marginLeft="1.23rem">{ESRI}</Text>
-							</Radio>
-						</Flex>
-						{/* HERE */}
-						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
-							<Radio
-								data-testid="data-provider-here-radio"
-								value={HERE}
-								checked={currentMapProvider === HERE}
-								onChange={() => handleMapProviderChange(HERE, TriggeredByEnum.SETTINGS_MODAL)}
-								crossOrigin={undefined}
-							>
-								<Text marginLeft="1.23rem">{HERE}</Text>
-							</Radio>
-						</Flex>
-						{/* Grab */}
-						{isGrabVisible && (
-							<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
-								<Radio
-									data-testid="data-provider-grab-radio"
-									value={GRAB}
-									checked={currentMapProvider === GRAB}
-									onChange={() => handleMapProviderChange(GRAB, TriggeredByEnum.SETTINGS_MODAL)}
-									crossOrigin={undefined}
-								>
-									<Text marginLeft="1.23rem">{`${GRAB}Maps`}</Text>
-								</Radio>
-							</Flex>
-						)}
-						{/* OpenData */}
-						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
-							<Radio
-								data-testid="data-provider-openData-radio"
-								value={OPEN_DATA}
-								checked={currentMapProvider === OPEN_DATA}
-								onChange={() => handleMapProviderChange(OPEN_DATA, TriggeredByEnum.SETTINGS_MODAL)}
-								crossOrigin={undefined}
-							>
-								<Text marginLeft="1.23rem">{OPEN_DATA}</Text>
-							</Radio>
-						</Flex>
-					</Flex>
-				)
-			},
-			{
-				id: SettingOptionEnum.MAP_STYLE,
-				title: t("map_style.text"),
-				defaultValue: t(selectedMapStyle as string) as string,
-				icon: <IconPaintroller />,
-				detailsComponent: (
-					<Flex
-						data-testid={`${SettingOptionEnum.MAP_STYLE}-details-component`}
-						gap={0}
-						direction="column"
-						overflow="scroll"
-					>
-						{mapButtons}
-					</Flex>
-				)
-			},
-			{
-				id: SettingOptionEnum.LANGUAGE,
-				title: t("language.text"),
-				defaultValue: languageSwitcherData.find(({ value }) => value === i18n.language)?.label as string,
-				icon: <IconLanguage />,
-				detailsComponent: (
-					<Flex
-						data-testid={`${SettingOptionEnum.UNITS}-details-component`}
-						gap={0}
-						direction="column"
-						padding="0rem 1.15rem"
-						overflow="scroll"
-					>
-						{languageSwitcherData.map(({ value, label }, idx) => (
-							<Flex key={idx} style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
-								<Radio
-									data-testid="unit-automatic-radio"
-									value={value}
-									checked={i18n.language === value}
-									onChange={handleLanguageChange}
-									crossOrigin={undefined}
-								>
-									<Text marginLeft="1.23rem">{label}</Text>
-								</Radio>
-							</Flex>
-						))}
-					</Flex>
-				)
-			},
-			{
-				id: SettingOptionEnum.ROUTE_OPTIONS,
-				title: t("settings_modal__default_route_options.text"),
-				icon: <IconShuffle />,
-				detailsComponent: (
-					<Flex
-						data-testid={`${SettingOptionEnum.ROUTE_OPTIONS}-details-component`}
-						gap={0}
-						direction="column"
-						padding="0rem 1.15rem"
-					>
-						<CheckboxField
-							data-testid="avoid-tolls"
-							className="sm-checkbox"
-							label={t("avoid_tolls.text")}
-							name={t("avoid_tolls.text")}
-							value="Avoid tolls"
-							checked={defaultRouteOptions.avoidTolls}
-							onChange={e => handleRouteOptionChange(e, "avoidTolls")}
-							crossOrigin={undefined}
-						/>
-						<CheckboxField
-							data-testid="avoid-ferries"
-							className="sm-checkbox"
-							label={t("avoid_ferries.text")}
-							name={t("avoid_ferries.text")}
-							value="Avoid ferries"
-							checked={defaultRouteOptions.avoidFerries}
-							onChange={e => handleRouteOptionChange(e, "avoidFerries")}
-							crossOrigin={undefined}
-						/>
-					</Flex>
-				)
-			},
-			{
-				id: SettingOptionEnum.REGION,
-				title: t("settings_modal__region.text"),
-				defaultValue: autoRegion
-					? (t("settings_modal__automatic.text") as string)
-					: currentRegion === RegionEnum.EU_WEST_1
-					? t("regions__eu_west__region.text")
-					: currentRegion === RegionEnum.AP_SOUTHEAST_1
-					? t("regions__ap_southeast__region.text")
-					: t("regions__us_east__region.text"),
-				icon: <IconGlobe />,
-				detailsComponent: (
-					<Flex
-						data-testid={`${SettingOptionEnum.REGION}-details-component`}
-						gap={0}
-						direction="column"
-						padding="0rem 1.15rem"
-						dir={langDir}
-					>
-						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
-							<Radio
-								data-testid="region-automatic-radio"
-								value={"Automatic"}
-								checked={autoRegion}
-								onChange={() => handleRegionChange("Automatic")}
-								crossOrigin={undefined}
-							>
-								<Text marginLeft="1.23rem">{`${t("settings_modal__automatic.text")} - ${fastestRegion}`}</Text>
-							</Radio>
-						</Flex>
-						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
-							<Radio
-								data-testid={`region-${RegionEnum.EU_WEST_1}-radio`}
-								value={RegionEnum.EU_WEST_1}
-								checked={!autoRegion && currentRegion === RegionEnum.EU_WEST_1}
-								onChange={() => handleRegionChange(RegionEnum.EU_WEST_1)}
-								crossOrigin={undefined}
-							>
-								<Text marginLeft="1.23rem">{t("regions__eu_west_1.text")}</Text>
-							</Radio>
-						</Flex>
-						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
-							<Radio
-								data-testid={`region-${RegionEnum.AP_SOUTHEAST_1}-radio`}
-								value={RegionEnum.AP_SOUTHEAST_1}
-								checked={!autoRegion && currentRegion === RegionEnum.AP_SOUTHEAST_1}
-								onChange={() => handleRegionChange(RegionEnum.AP_SOUTHEAST_1)}
-								crossOrigin={undefined}
-							>
-								<Text marginLeft="1.23rem">{t("regions__ap_southeast_1.text")}</Text>
-							</Radio>
-						</Flex>
-						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
-							<Radio
-								data-testid={`region-${RegionEnum.US_EAST_1}-radio`}
-								value={RegionEnum.US_EAST_1}
-								checked={!autoRegion && currentRegion === RegionEnum.US_EAST_1}
-								onChange={() => handleRegionChange(RegionEnum.US_EAST_1)}
-								crossOrigin={undefined}
-							>
-								<Text marginLeft="1.23rem">{t("regions__us_east_1.text")}</Text>
-							</Radio>
-						</Flex>
-					</Flex>
-				)
-			},
-			{
-				id: SettingOptionEnum.AWS_CLOUD_FORMATION,
-				title: t("connect_aws_account.text"),
-				icon: <IconCloud />,
-				detailsComponent: (
-					<Flex
-						data-testid={`${SettingOptionEnum.AWS_CLOUD_FORMATION}-details-component`}
-						className="sm-aws-cloudformation-container"
-					>
-						<Flex gap={0} padding="0rem 1.23rem 0rem 1.62rem" backgroundColor="var(--light-color-2)">
-							<IconAwsCloudFormation
-								style={{
-									width: "2.46rem",
-									height: "2.46rem",
-									minWidth: "2.46rem",
-									minHeight: "2.46rem",
-									margin: "1.85rem 1.62rem 2rem 0rem"
-								}}
-							/>
-							<Flex gap={0} direction="column" marginTop="1.23rem">
-								<Text marginTop="0.31rem" variation="tertiary" whiteSpace="pre-line" className={isLtr ? "ltr" : "rtl"}>
-									{t("caam__desc.text")}
-								</Text>
-							</Flex>
-						</Flex>
-						<Flex className="sm-aws-cloudformation-form">
-							<Flex
-								gap={0}
-								justifyContent={isLtr ? "flex-start" : "flex-end"}
-								alignItems="center"
-								margin="1.85rem 0rem 1.85rem 0rem"
-								width="100%"
-							>
-								<Text
-									className={`bold ${isLtr ? "ltr" : "rtl"}`}
-									fontSize="1.08rem"
-									textAlign={isLtr ? "start" : "end"}
-									order={isLtr ? 1 : 2}
-								>
-									{t("caam__htct.text")}
-								</Text>
-								<View order={isLtr ? 2 : 1}>
-									<DropdownEl defaultOption={stackRegion} options={regionsData} onSelect={_onSelect} showSelected />
-								</View>
-							</Flex>
-							<Flex gap={0} marginBottom="1.85rem" alignSelf="flex-start">
-								<View
-									className="step-number"
-									margin={isLtr ? "0rem 1.23rem 0rem 0rem" : "0rem 0rem 0rem 1.23rem"}
-									order={isLtr ? 1 : 2}
-								>
-									<Text className="bold">1</Text>
-								</View>
-								<View order={isLtr ? 2 : 1}>
-									<Flex gap={5} className={`step-heading-${isLtr ? "" : "rtl"}`}>
-										<Text className={`bold ${isLtr ? "ltr" : "rtl"}`}>
-											<Link href={cloudFormationLink} target="_blank">
-												{t("caam__click_here.text")}
-											</Link>{" "}
-											{t("caam__step_1__title.text")}
-										</Text>
-									</Flex>
-									<Text className={`step-two-description ${isLtr ? "ltr" : "rtl"}`}>
-										{t("caam__step_1__desc.text")}
-									</Text>
-								</View>
-							</Flex>
-							<Flex gap={0} marginBottom="1.85rem" alignSelf="flex-start">
-								<View
-									className="step-number"
-									margin={isLtr ? "0rem 1.23rem 0rem 0rem" : "0rem 0rem 0rem 1.23rem"}
-									order={isLtr ? 1 : 2}
-								>
-									<Text className="bold" textAlign={isLtr ? "start" : "end"}>
-										2
-									</Text>
-								</View>
-								<View order={isLtr ? 2 : 1}>
-									<Text className={`bold ${isLtr ? "ltr" : "rtl"}`}>{t("caam__step_2__title.text")}</Text>
-									<Text className={`step-two-description ${isLtr ? "ltr" : "rtl"}`}>
-										{t("caam__step_2__desc.text")}
-										<a href={HELP} target="_blank" rel="noreferrer">
-											{t("learn_more.text")}
-										</a>
-									</Text>
-								</View>
-							</Flex>
-							<Flex gap={0} marginBottom="1.85rem" alignSelf="flex-start">
-								<View
-									className="step-number"
-									margin={isLtr ? "0rem 1.23rem 0rem 0rem" : "0rem 0rem 0rem 1.23rem"}
-									order={isLtr ? 1 : 2}
-								>
-									<Text className="bold" textAlign={isLtr ? "start" : "end"}>
-										3
-									</Text>
-								</View>
-								<View order={isLtr ? 2 : 1}>
-									<Text className="bold" textAlign={isLtr ? "start" : "end"}>
-										{t("caam__step_3__title.text")}
-									</Text>
-									<Text className="step-two-description" textAlign={isLtr ? "start" : "end"}>
-										{t("caam__step_3__desc.text")}
-									</Text>
-								</View>
-							</Flex>
-							{isUserAwsAccountConnected ? (
-								!isAuthenticated ? (
-									<>
-										<Button
-											variation="primary"
-											fontFamily="AmazonEmber-Bold"
-											width="100%"
-											onClick={async () => {
-												await record(
-													[
-														{
-															EventType: EventTypeEnum.SIGN_IN_STARTED,
-															Attributes: { triggeredBy: TriggeredByEnum.SETTINGS_MODAL }
-														}
-													],
-													["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
-												);
-
-												_onLogin();
-											}}
-										>
-											{t("sign_in.text")}
-										</Button>
-										<Button
-											variation="primary"
-											fontFamily="AmazonEmber-Bold"
-											width="100%"
-											backgroundColor="var(--red-color)"
-											marginTop="0.62rem"
-											onClick={onDisconnectAwsAccount}
-										>
-											{t("disconnect_aws_account.text")}
-										</Button>
-									</>
-								) : (
-									<Button variation="primary" fontFamily="AmazonEmber-Bold" width="100%" onClick={_onLogout}>
-										{t("sign_out.text")}
-									</Button>
-								)
-							) : (
-								<>
-									{keyArr.map(key => {
-										return (
-											<InputField
-												key={key}
-												containerMargin="0rem 0rem 1.85rem 0rem"
-												label={key}
-												placeholder={`${t("caam__enter.text")} ${key}`}
-												value={formValues[key as keyof ConnectFormValuesType]}
-												onChange={e => onChangeFormValues(key, e.target.value.trim())}
-												dir={langDir}
-											/>
-										);
-									})}
-									<Button variation="primary" width="100%" isDisabled={!isBtnEnabled} onClick={onConnect}>
-										{t("caam__connect.text")}
-									</Button>
-									<Text marginTop="0.62rem">{t("caam__agree.text")}</Text>
-									<View onClick={() => window.open(AWS_TERMS_AND_CONDITIONS, "_blank")}>
-										<Text className="hyperlink" fontFamily="AmazonEmber-Bold">
-											{t("t&c.text")}
-										</Text>
-									</View>
-								</>
-							)}
-						</Flex>
-					</Flex>
-				)
+			if (resourceType === "Style" && !newUrl.includes("://") && region) {
+				newUrl = `https://maps.geo.${region}.amazonaws.com/maps/v0/maps/${newUrl}/style-descriptor`;
 			}
-		],
+
+			if (newUrl.includes("amazonaws.com")) {
+				return {
+					url: Signer.signUrl(newUrl, {
+						access_key: credentials?.accessKeyId,
+						secret_key: credentials?.secretAccessKey,
+						session_token: credentials?.sessionToken
+					})
+				};
+			}
+
+			return { url: newUrl };
+		},
+		[region, credentials]
+	);
+
+	const resetAppState = useCallback(() => {
+		clearPoiList();
+		resetAwsRouteStore();
+		resetAwsGeofenceStore();
+		resetAwsTrackingStore();
+		setShow(s => ({ ...initShow, stylesCard: s.stylesCard, settings: s.settings }));
+	}, [clearPoiList, resetAwsRouteStore, resetAwsGeofenceStore, resetAwsTrackingStore]);
+
+	const handleCurrentLocationAndViewpoint = useCallback(
+		(switchToGrab = true) => {
+			if (switchToGrab) {
+				/* When switching to Grab */
+				if (currentLocationData?.currentLocation) {
+					/* If current location data exists */
+					const { latitude, longitude } = currentLocationData.currentLocation;
+					const [westBound, southBound, eastBound, northBound] = MAX_BOUNDS.GRAB;
+					const isWithinGrabBounds =
+						latitude >= southBound && latitude <= northBound && longitude >= westBound && longitude <= eastBound;
+
+					if (!isWithinGrabBounds) {
+						/* If current location lies outside Grab MAX_BOUNDS */
+						setIsCurrentLocationDisabled(true);
+						setViewpoint({ latitude: AMAZON_HQ.SG.latitude, longitude: AMAZON_HQ.SG.longitude });
+						setZoom(15);
+						mapViewRef.current?.flyTo({
+							center: [AMAZON_HQ.SG.longitude, AMAZON_HQ.SG.latitude]
+						});
+					}
+				} else {
+					/* If current location data doesn't exists */
+					setViewpoint({ latitude: AMAZON_HQ.SG.latitude, longitude: AMAZON_HQ.SG.longitude });
+					setZoom(15);
+					mapViewRef.current?.flyTo({
+						center: [AMAZON_HQ.SG.longitude, AMAZON_HQ.SG.latitude]
+					});
+				}
+			} else {
+				/* When switching from Grab */
+				if (currentLocationData?.currentLocation && isCurrentLocationDisabled) {
+					const { latitude, longitude } = currentLocationData.currentLocation;
+					setIsCurrentLocationDisabled(false);
+					setViewpoint({ latitude, longitude });
+					setZoom(15);
+					mapViewRef.current?.flyTo({ center: [longitude, latitude] });
+					setTimeout(() => {
+						geolocateControlRef.current?.trigger();
+					}, 3000);
+				} else {
+					setViewpoint({ latitude: AMAZON_HQ.US.latitude, longitude: AMAZON_HQ.US.longitude });
+					setZoom(15);
+					mapViewRef.current?.flyTo({
+						center: [AMAZON_HQ.US.longitude, AMAZON_HQ.US.latitude]
+					});
+				}
+			}
+		},
+		[currentLocationData, setViewpoint, setZoom, setIsCurrentLocationDisabled, isCurrentLocationDisabled]
+	);
+
+	const handleOpenDataMapChange = useCallback(
+		(mapStyle?: OpenDataMapEnum) => {
+			if (doNotAskOpenDataDisclaimerModal) setDoNotAskOpenDataDisclaimerModal(!doNotAskOpenDataDisclaimer);
+
+			setShow(s => ({ ...s, openDataDisclaimerModal: false, gridLoader: true }));
+
+			if (currentMapProvider === MapProviderEnum.GRAB && !isUserAwsAccountConnected) {
+				switchToDefaultRegionStack();
+				resetAwsStore();
+				setIsCurrentLocationDisabled(false);
+			}
+
+			setMapProvider(MapProviderEnum.OPEN_DATA);
+			setMapStyle(
+				(typeof mapStyle === "string" ? mapStyle : undefined) ||
+					(show.mapStyle ? show.mapStyle : OpenDataMapEnum.OPEN_DATA_STANDARD_LIGHT)
+			);
+			handleCurrentLocationAndViewpoint(false);
+		},
 		[
-			currentMapUnit,
-			autoMapUnit,
-			isGrabVisible,
-			handleAutoMapUnitChange,
-			onMapUnitChange,
 			currentMapProvider,
-			handleMapProviderChange,
-			selectedMapStyle,
-			defaultRouteOptions,
+			doNotAskOpenDataDisclaimerModal,
 			isUserAwsAccountConnected,
-			onDisconnectAwsAccount,
-			onConnect,
-			formValues,
-			isBtnEnabled,
-			keyArr,
-			onChangeFormValues,
-			isAuthenticated,
-			_onLogin,
-			_onLogout,
-			stackRegion,
-			cloudFormationLink,
-			t,
-			langDir,
-			i18n,
-			isLtr,
-			mapButtons,
-			handleLanguageChange,
-			handleRouteOptionChange,
-			autoRegion,
-			currentRegion,
-			handleRegionChange,
-			fastestRegion
+			resetAwsStore,
+			setDoNotAskOpenDataDisclaimerModal,
+			setIsCurrentLocationDisabled,
+			setMapProvider,
+			setMapStyle,
+			show.mapStyle,
+			switchToDefaultRegionStack,
+			doNotAskOpenDataDisclaimer,
+			handleCurrentLocationAndViewpoint
 		]
 	);
 
-	const renderOptionItems = useMemo(() => {
-		const filtered = optionItems.filter(({ id }) => {
-			if (isUserAwsAccountConnected) {
-				return id !== SettingOptionEnum.REGION;
-			} else {
-				return id;
+	const handleGrabMapChange = useCallback(
+		(mapStyle?: GrabMapEnum) => {
+			if (doNotAskGrabDisclaimerModal) setDoNotAskGrabDisclaimerModal(!doNotAskGrabDisclaimer);
+			else setShow(s => ({ ...s, grabDisclaimerModal: false }));
+
+			if (!isUserAwsAccountConnected && !isGrabAvailableInRegion) {
+				switchToGrabMapRegionStack();
+				resetAwsStore();
 			}
-		});
 
-		return filtered.map(({ id, title, defaultValue, icon }) => (
-			<Flex
-				data-testid={`option-item-${id}`}
-				key={id}
-				className={`option-item ${!isMobile && settingsOptions === id ? "selected" : ""} ${
-					isMobile ? "option-item-mobile" : ""
-				}`}
-				onClick={() => {
-					if (id === SettingOptionEnum.AWS_CLOUD_FORMATION) {
-						record(
-							[
-								{
-									EventType: EventTypeEnum.AWS_ACCOUNT_CONNECTION_STARTED,
-									Attributes: { triggeredBy: TriggeredByEnum.SETTINGS_MODAL }
-								}
-							],
-							["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
-						);
-					} else if (settingsOptions === SettingOptionEnum.AWS_CLOUD_FORMATION) {
-						const columnsHavingText = Object.keys(formValues)
-							.filter(key => !!formValues[key as keyof ConnectFormValuesType].trim())
-							.map(valueKey => valueKey)
-							.join(",");
+			setMapProvider(MapProviderEnum.GRAB);
+			setMapStyle(
+				(typeof mapStyle === "string" ? mapStyle : undefined) ||
+					(show.mapStyle ? show.mapStyle : GrabMapEnum.GRAB_STANDARD_LIGHT)
+			);
+			setShow(s => ({ ...s, gridLoader: true }));
+			resetAppState();
+			handleCurrentLocationAndViewpoint();
+		},
+		[
+			isGrabAvailableInRegion,
+			doNotAskGrabDisclaimerModal,
+			setDoNotAskGrabDisclaimerModal,
+			doNotAskGrabDisclaimer,
+			isUserAwsAccountConnected,
+			setMapProvider,
+			setMapStyle,
+			show.mapStyle,
+			resetAppState,
+			handleCurrentLocationAndViewpoint,
+			switchToGrabMapRegionStack,
+			resetAwsStore
+		]
+	);
 
-						record(
-							[
-								{
-									EventType: EventTypeEnum.AWS_ACCOUNT_CONNECTION_STOPPED,
-									Attributes: {
-										triggeredBy: TriggeredByEnum.SETTINGS_MODAL,
-										fieldsFilled: columnsHavingText,
-										action: AnalyticsEventActionsEnum.TAB_CHANGED
-									}
-								}
-							],
-							["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
-						);
+	const onMapProviderChange = useCallback(
+		(mapProvider: MapProviderEnum, triggeredBy: TriggeredByEnum) => {
+			setShow(s => ({ ...s, gridLoader: true }));
+
+			if (mapProvider === MapProviderEnum.OPEN_DATA) {
+				if (doNotAskOpenDataDisclaimerModal) {
+					/* Switching from different map provider and style to OpenData map provider and style */
+					setShow(s => ({ ...s, openDataDisclaimerModal: true }));
+				} else handleOpenDataMapChange();
+			} else if (mapProvider === MapProviderEnum.GRAB) {
+				if (doNotAskGrabDisclaimerModal) {
+					/* Switching from different map provider and style to Grab map provider and style */
+					setShow(s => ({ ...s, grabDisclaimerModal: true }));
+				} else handleGrabMapChange();
+			} else {
+				if (currentMapProvider === MapProviderEnum.GRAB) {
+					/* Switching from Grab map provider to different map provider and style */
+					if (!isUserAwsAccountConnected) {
+						switchToDefaultRegionStack();
+						resetAwsStore();
+						setIsCurrentLocationDisabled(false);
 					}
 
-					resetSearchAndFilters();
-					setSettingsOptions(id);
-				}}
-			>
-				<Flex gap="0" alignItems="center">
-					{icon}
-					<Flex gap={0} direction="column">
-						<Text fontSize="1rem" lineHeight="1.38rem">
-							{title}
-						</Text>
-						{defaultValue && (
-							<Text fontSize="1rem" lineHeight="1.38rem" variation="tertiary">
-								{defaultValue}{" "}
-							</Text>
-						)}
-					</Flex>
-				</Flex>
-				{isMobile && (
-					<Flex className="option-arrow">
-						<IconArrow />
-					</Flex>
-				)}
-			</Flex>
-		));
-	}, [
-		optionItems,
-		isUserAwsAccountConnected,
-		settingsOptions,
-		isMobile,
-		resetSearchAndFilters,
-		setSettingsOptions,
-		formValues
-	]);
+					setMapProvider(mapProvider);
+					setMapStyle(mapProvider === MapProviderEnum.ESRI ? EsriMapEnum.ESRI_LIGHT : HereMapEnum.HERE_EXPLORE);
+					handleCurrentLocationAndViewpoint(false);
+				} else {
+					/* Switching between Esri and HERE map provider and style */
+					setMapProvider(mapProvider);
+					setMapStyle(mapProvider === MapProviderEnum.ESRI ? EsriMapEnum.ESRI_LIGHT : HereMapEnum.HERE_EXPLORE);
+				}
 
-	const renderOptionDetails = useMemo(() => {
-		const [optionItem] = optionItems.filter(({ id }) => settingsOptions === id);
-
-		if (!optionItem) return null;
-		return (
-			<>
-				<Text className="option-title">
-					{isMobile && <IconBackArrow className="grey-icon back-arrow" onClick={() => setSettingsOptions(undefined)} />}
-					{optionItem?.title}
-				</Text>
-				<Divider className="title-divider" />
-				{optionItem?.detailsComponent}
-			</>
-		);
-	}, [isMobile, optionItems, setSettingsOptions, settingsOptions]);
-
-	const modalCloseHandler = useCallback(() => {
-		!isMobile && setSettingsOptions(SettingOptionEnum.UNITS);
-		onClose();
-	}, [isMobile, onClose, setSettingsOptions]);
-
-	return (
-		<Modal
-			data-testid="settings-modal"
-			open={open}
-			onClose={modalCloseHandler}
-			className={`settings-modal ${isMobile ? "settings-modal-mobile" : ""} ${
-				!isDesktop ? "settings-modal-tablet" : ""
-			} `}
-			content={
-				<>
-					{isMobile && !settingsOptions && (
-						<Flex direction="column" className="setting-title-container-mobile">
-							<Text className="option-title">
-								{isMobile && <IconBackArrow className="grey-icon back-arrow" onClick={modalCloseHandler} />}
-								{t("settings.text")}
-							</Text>
-							<Divider className="title-divider" />
-						</Flex>
-					)}
-					<Flex
-						className={`settings-modal-content ${!isDesktop ? "settings-modal-content-tablet" : ""} ${
-							isMobile ? "settings-modal-content-mobile" : ""
-						}`}
-					>
-						{(!settingsOptions || !isMobile) && (
-							<Flex className="options-container">
-								{!isMobile && (
-									<Text
-										className="bold"
-										fontSize="1.23rem"
-										lineHeight="1.85rem"
-										padding={"1.23rem 0rem 1.23rem 1.23rem"}
-									>
-										{t("settings.text")}
-									</Text>
-								)}
-								{renderOptionItems}
-							</Flex>
-						)}
-						{!isMobile && <Divider orientation="vertical" className="col-divider" />}
-						{!!settingsOptions && <Flex className="option-details-container">{renderOptionDetails}</Flex>}
-					</Flex>
-					<Divider orientation="vertical" className="col-divider" />
-					<Flex data-testid="option-details-container" className="option-details-container">
-						{renderOptionDetails}
-					</Flex>
-				</>
+				resetAppState();
 			}
+
+			record([
+				{ EventType: EventTypeEnum.MAP_PROVIDER_CHANGE, Attributes: { provider: String(mapProvider), triggeredBy } }
+			]);
+		},
+		[
+			doNotAskOpenDataDisclaimerModal,
+			handleOpenDataMapChange,
+			doNotAskGrabDisclaimerModal,
+			handleGrabMapChange,
+			currentMapProvider,
+			resetAppState,
+			isUserAwsAccountConnected,
+			setMapProvider,
+			setMapStyle,
+			handleCurrentLocationAndViewpoint,
+			switchToDefaultRegionStack,
+			resetAwsStore,
+			setIsCurrentLocationDisabled
+		]
+	);
+
+	/* Handle search query params for map provider */
+	useEffect(() => {
+		const { ESRI, HERE, GRAB, OPEN_DATA } = MapProviderEnum;
+
+		if (switchToMapProvider && ![ESRI, HERE, GRAB, "GrabMaps", OPEN_DATA].includes(switchToMapProvider)) {
+			switchToMapProvider = MapProviderEnum.ESRI;
+			onMapProviderChange(switchToMapProvider as MapProviderEnum, TriggeredByEnum.DEMO_PAGE);
+		} else {
+			if (switchToMapProvider && currentMapProvider !== switchToMapProvider) {
+				/* If search query param exist, update map provider based on search query param */
+				if (["Grab", "GrabMaps"].includes(switchToMapProvider)) {
+					isGrabVisible ? onMapProviderChange(GRAB, TriggeredByEnum.DEMO_PAGE) : setMapProvider(currentMapProvider);
+				} else {
+					onMapProviderChange(switchToMapProvider as MapProviderEnum, TriggeredByEnum.DEMO_PAGE);
+				}
+
+				switchToMapProvider = null;
+			} else if (!location.search.includes(`${DATA_PROVIDER}=`)) {
+				/* If search query param doesn't exist, update search query param based on current map provider */
+				setMapProvider(currentMapProvider);
+			}
+		}
+	}, [currentMapProvider, isGrabVisible, setMapProvider, onMapProviderChange]);
+
+	const onMapStyleChange = useCallback(
+		(mapStyle: EsriMapEnum | HereMapEnum | GrabMapEnum | OpenDataMapEnum) => {
+			const splitArr = mapStyle.split(".");
+			const mapProviderFromStyle = splitArr[splitArr.length - 2] as MapProviderEnum;
+			setShow(s => ({ ...s, gridLoader: true }));
+
+			if (
+				(currentMapProvider === MapProviderEnum.ESRI && mapProviderFromStyle === MapProviderEnum.ESRI) ||
+				(currentMapProvider === MapProviderEnum.HERE && mapProviderFromStyle === MapProviderEnum.HERE) ||
+				(currentMapProvider === MapProviderEnum.GRAB && mapProviderFromStyle === MapProviderEnum.GRAB) ||
+				(currentMapProvider === MapProviderEnum.OPEN_DATA && mapProviderFromStyle === MapProviderEnum.OPEN_DATA)
+			) {
+				/* No map provider switch required */
+				setMapStyle(mapStyle);
+			} else if (mapProviderFromStyle === MapProviderEnum.OPEN_DATA) {
+				/* Switching from OpenData map provider to different map provider and style */
+				if (doNotAskOpenDataDisclaimerModal) {
+					setTimeout(
+						() => setShow(s => ({ ...s, openDataDisclaimerModal: true, mapStyle: mapStyle as OpenDataMapEnum })),
+						0
+					);
+				} else {
+					handleOpenDataMapChange(mapStyle as OpenDataMapEnum);
+				}
+			} else {
+				if (currentMapProvider === MapProviderEnum.GRAB) {
+					/* Switching from Grab map provider to different map provider and style */
+					if (!isUserAwsAccountConnected) {
+						const fastestRegion = localStorage.getItem(FASTEST_REGION);
+
+						if (fastestRegion !== region) {
+							switchToDefaultRegionStack();
+							resetAwsStore();
+							setIsCurrentLocationDisabled(false);
+						}
+					}
+
+					setMapProvider(mapProviderFromStyle);
+					setMapStyle(mapStyle);
+					handleCurrentLocationAndViewpoint(false);
+				} else if (mapProviderFromStyle === MapProviderEnum.GRAB) {
+					/* Switching from different map provider and style to Grab map provider and style */
+					if (doNotAskGrabDisclaimerModal) {
+						setTimeout(
+							() =>
+								setShow(s => ({
+									...s,
+									grabDisclaimerModal: true,
+									mapStyle: mapStyle as GrabMapEnum
+								})),
+							0
+						);
+					} else {
+						show.unauthGeofenceBox || show.unauthTrackerBox
+							? setShow(s => ({ ...s, unauthSimulationExitModal: true, mapStyle: mapStyle as GrabMapEnum }))
+							: handleGrabMapChange(mapStyle as GrabMapEnum);
+					}
+				} else {
+					/* Switching between Esri and HERE map provider and style */
+					setMapProvider(mapProviderFromStyle);
+					setMapStyle(mapStyle);
+				}
+
+				!show.unauthGeofenceBox && !show.unauthTrackerBox && resetAppState();
+			}
+		},
+		[
+			region,
+			currentMapProvider,
+			setMapStyle,
+			doNotAskOpenDataDisclaimerModal,
+			handleOpenDataMapChange,
+			show.unauthGeofenceBox,
+			show.unauthTrackerBox,
+			resetAppState,
+			isUserAwsAccountConnected,
+			setMapProvider,
+			handleCurrentLocationAndViewpoint,
+			switchToDefaultRegionStack,
+			resetAwsStore,
+			setIsCurrentLocationDisabled,
+			doNotAskGrabDisclaimerModal,
+			handleGrabMapChange
+		]
+	);
+
+	const searchBoxEl = useCallback(
+		(isSimpleSearch = false) => (
+			<SearchBox
+				mapRef={mapViewRef?.current}
+				isSideMenuExpanded={show.sidebar}
+				onToggleSideMenu={() => setShow(s => ({ ...s, sidebar: !s.sidebar }))}
+				setShowRouteBox={b => setShow(s => ({ ...s, routeBox: b }))}
+				isRouteBoxOpen={show.routeBox}
+				isAuthGeofenceBoxOpen={show.authGeofenceBox}
+				isAuthTrackerBoxOpen={show.authTrackerBox}
+				isSettingsOpen={show.settings}
+				isStylesCardOpen={show.stylesCard}
+				isSimpleSearch={isSimpleSearch}
+				value={searchBoxValue}
+				setValue={setSearchBoxValue}
+			/>
+		),
+		[
+			searchBoxValue,
+			show.authGeofenceBox,
+			show.authTrackerBox,
+			show.routeBox,
+			show.settings,
+			show.sidebar,
+			show.stylesCard
+		]
+	);
+
+	const GeoLocateIcon = useMemo(
+		() =>
+			locationError || isCurrentLocationDisabled ? (
+				<Flex
+					style={{
+						position: "absolute",
+						bottom: isMobile ? `${(bottomSheetCurrentHeight || 0) / 13 + 1.2}rem` : isDesktop ? "9.85rem" : "2rem",
+						right: isMobile ? "1rem" : isDesktop ? "2rem" : "2rem"
+					}}
+					className="location-disabled"
+					onClick={() => getCurrentGeoLocation()}
+				>
+					<IconLocateMe />
+				</Flex>
+			) : (
+				<GeolocateControl
+					style={{
+						width: "2.46rem",
+						height: "2.46rem",
+						position: "absolute",
+						top: isMobile ? geoLocateTopValue : isDesktop ? "-9.5rem" : "-2.5rem",
+						right: isMobile ? "-0.3rem" : isDesktop ? "0.75rem" : "0rem",
+						margin: 0,
+						borderRadius: "0.62rem"
+					}}
+					position="bottom-right"
+					ref={geolocateControlRef}
+					positionOptions={{ enableHighAccuracy: true }}
+					showUserLocation
+					showAccuracyCircle={false}
+					onGeolocate={onGeoLocate}
+					onError={onGeoLocateError}
+				/>
+			),
+		[
+			locationError,
+			isCurrentLocationDisabled,
+			isMobile,
+			bottomSheetCurrentHeight,
+			isDesktop,
+			geoLocateTopValue,
+			onGeoLocate,
+			onGeoLocateError,
+			getCurrentGeoLocation
+		]
+	);
+
+	const UnauthSimulationUI = useMemo(
+		() => (
+			<UnauthSimulation
+				mapRef={mapViewRef?.current}
+				from={show.unauthGeofenceBox ? MenuItemEnum.GEOFENCE : MenuItemEnum.TRACKER}
+				setShowUnauthGeofenceBox={b => setShow(s => ({ ...s, unauthGeofenceBox: b }))}
+				setShowUnauthTrackerBox={b => setShow(s => ({ ...s, unauthTrackerBox: b }))}
+				setShowConnectAwsAccountModal={b => setShow(s => ({ ...s, connectAwsAccount: b }))}
+				showStartUnauthSimulation={show.startUnauthSimulation}
+				setShowStartUnauthSimulation={b => setShow(s => ({ ...s, startUnauthSimulation: b }))}
+				startSimulation={startSimulation}
+				setStartSimulation={setStartSimulation}
+				setShowUnauthSimulationBounds={b => setShow(s => ({ ...s, unauthSimulationBounds: b }))}
+			/>
+		),
+		[show.startUnauthSimulation, show.unauthGeofenceBox, startSimulation]
+	);
+	return !!credentials?.identityId ? (
+		<View
+			style={{ height }}
+			className={`${currentMapStyle.toLowerCase().includes("dark") ? "dark-mode" : "light-mode"}`}
+		>
+			<Map
+				style={{ width: "100%", height: "100%" }}
+				ref={mapViewRef}
+				cursor={isEditingRoute ? "crosshair" : ""}
+				maxTileCacheSize={100}
+				zoom={zoom}
+				initialViewState={
+					currentLocationData?.currentLocation && !isCurrentLocationDisabled
+						? { ...currentLocationData.currentLocation, zoom }
+						: { ...viewpoint, zoom }
+				}
+				mapStyle={currentMapStyle}
+				minZoom={2}
+				maxBounds={
+					currentMapProvider === MapProviderEnum.GRAB
+						? (MAX_BOUNDS.GRAB as LngLatBoundsLike)
+						: (show.unauthGeofenceBox || show.unauthTrackerBox) && show.unauthSimulationBounds
+						? (MAX_BOUNDS.VANCOUVER as LngLatBoundsLike)
+						: (MAX_BOUNDS.DEFAULT as LngLatBoundsLike)
+				}
+				onClick={handleMapClick}
+				onLoad={onLoad}
+				onZoom={({ viewState }) => setZoom(viewState.zoom)}
+				onError={error => errorHandler(error.error)}
+				onIdle={() => show.gridLoader && setShow(s => ({ ...s, gridLoader: false }))}
+				transformRequest={transformRequest}
+				attributionControl={false}
+			>
+				<View className={show.gridLoader ? "loader-container" : ""}>
+					{isDesktop && (
+						<>
+							{show.sidebar && (
+								<Sidebar
+									onCloseSidebar={() => setShow(s => ({ ...s, sidebar: false }))}
+									onOpenConnectAwsAccountModal={() => setShow(s => ({ ...s, connectAwsAccount: true }))}
+									onOpenSignInModal={() => setShow(s => ({ ...s, signInModal: true }))}
+									onShowSettings={() => setShow(s => ({ ...s, settings: true }))}
+									onShowAboutModal={() => setShow(s => ({ ...s, about: true }))}
+									onShowAuthGeofenceBox={() => setShow(s => ({ ...s, authGeofenceBox: true }))}
+									onShowAuthTrackerDisclaimerModal={() => setShow(s => ({ ...s, authTrackerDisclaimerModal: true }))}
+									onShowAuthTrackerBox={() => setShow(s => ({ ...s, authTrackerBox: true }))}
+									onShowUnauthSimulationDisclaimerModal={() =>
+										setShow(s => ({ ...s, unauthSimulationDisclaimerModal: true }))
+									}
+									onShowUnauthGeofenceBox={() => setShow(s => ({ ...s, unauthGeofenceBox: true }))}
+									onShowUnauthTrackerBox={() => setShow(s => ({ ...s, unauthTrackerBox: true }))}
+								/>
+							)}
+							{show.routeBox ? (
+								<RouteBox
+									mapRef={mapViewRef?.current}
+									setShowRouteBox={b => setShow(s => ({ ...s, routeBox: b }))}
+									isSideMenuExpanded={show.sidebar}
+								/>
+							) : show.authGeofenceBox ? (
+								<AuthGeofenceBox
+									mapRef={mapViewRef?.current}
+									setShowAuthGeofenceBox={b => setShow(s => ({ ...s, authGeofenceBox: b }))}
+								/>
+							) : show.authTrackerBox ? (
+								<AuthTrackerBox
+									mapRef={mapViewRef?.current}
+									setShowAuthTrackerBox={b => setShow(s => ({ ...s, authTrackerBox: b }))}
+									clearCredsAndLocationClient={clearCredsAndLocationClient}
+								/>
+							) : show.unauthGeofenceBox || show.unauthTrackerBox ? (
+								UnauthSimulationUI
+							) : (
+								searchBoxEl()
+							)}
+						</>
+					)}
+					<ResponsiveBottomSheet
+						SearchBoxEl={() => searchBoxEl(true)}
+						MapButtons={
+							<MapButtons
+								renderedUpon={TriggeredByEnum.SETTINGS_MODAL}
+								openStylesCard={show.stylesCard}
+								setOpenStylesCard={b => setShow(s => ({ ...s, stylesCard: b }))}
+								onCloseSidebar={() => setShow(s => ({ ...s, sidebar: false }))}
+								onOpenSignInModal={() => setShow(s => ({ ...s, signInModal: true }))}
+								isGrabVisible={isGrabVisible}
+								showGrabDisclaimerModal={show.grabDisclaimerModal}
+								showOpenDataDisclaimerModal={show.openDataDisclaimerModal}
+								onShowGridLoader={() => setShow(s => ({ ...s, gridLoader: true }))}
+								handleMapStyleChange={onMapStyleChange}
+								searchValue={searchValue}
+								setSearchValue={setSearchValue}
+								selectedFilters={selectedFilters}
+								setSelectedFilters={setSelectedFilters}
+								handleMapProviderChange={onMapProviderChange}
+								isAuthTrackerBoxOpen={show.authTrackerBox}
+								isAuthTrackerDisclaimerModalOpen={show.authTrackerDisclaimerModal}
+								onShowAuthTrackerDisclaimerModal={() => setShow(s => ({ ...s, authTrackerDisclaimerModal: true }))}
+								isAuthGeofenceBoxOpen={show.authGeofenceBox}
+								onSetShowAuthGeofenceBox={(b: boolean) => setShow(s => ({ ...s, authGeofenceBox: b }))}
+								onSetShowAuthTrackerBox={(b: boolean) => setShow(s => ({ ...s, authTrackerBox: b }))}
+								onShowUnauthSimulationDisclaimerModal={() =>
+									setShow(s => ({ ...s, unauthSimulationDisclaimerModal: true }))
+								}
+								isUnauthGeofenceBoxOpen={show.unauthGeofenceBox}
+								isUnauthTrackerBoxOpen={show.unauthTrackerBox}
+								onSetShowUnauthGeofenceBox={(b: boolean) => setShow(s => ({ ...s, unauthGeofenceBox: b }))}
+								onSetShowUnauthTrackerBox={(b: boolean) => setShow(s => ({ ...s, unauthTrackerBox: b }))}
+								onlyMapStyles
+								isHandDevice
+							/>
+						}
+						mapRef={mapViewRef?.current}
+						RouteBox={
+							<RouteBox
+								mapRef={mapViewRef?.current}
+								setShowRouteBox={b => setShow(s => ({ ...s, routeBox: b }))}
+								isSideMenuExpanded={show.sidebar}
+								isDirection={ui === ResponsiveUIEnum.direction_to_routes}
+							/>
+						}
+						onCloseSidebar={() => setShow(s => ({ ...s, sidebar: false }))}
+						onOpenConnectAwsAccountModal={() => setShow(s => ({ ...s, connectAwsAccount: true }))}
+						onOpenSignInModal={() => setShow(s => ({ ...s, signInModal: true }))}
+						onShowSettings={() => setShow(s => ({ ...s, settings: true }))}
+						onShowTrackingDisclaimerModal={() => setShow(s => ({ ...s, authTrackerDisclaimerModal: true }))}
+						onShowAboutModal={() => setShow(s => ({ ...s, about: true }))}
+						onShowUnauthGeofenceBox={() => setShow(s => ({ ...s, unauthGeofenceBox: true }))}
+						onShowUnauthTrackerBox={() => setShow(s => ({ ...s, unauthTrackerBox: true }))}
+						onShowAuthGeofenceBox={() => setShow(s => ({ ...s, authGeofenceBox: true }))}
+						onShowAuthTrackerBox={() => setShow(s => ({ ...s, authTrackerBox: true }))}
+						onshowUnauthSimulationDisclaimerModal={() =>
+							setShow(s => ({ ...s, unauthSimulationDisclaimerModal: true }))
+						}
+						setShowUnauthGeofenceBox={b => setShow(s => ({ ...s, unauthGeofenceBox: b }))}
+						setShowUnauthTrackerBox={b => setShow(s => ({ ...s, unauthTrackerBox: b }))}
+						setShowConnectAwsAccountModal={b => setShow(s => ({ ...s, connectAwsAccount: b }))}
+						showStartUnauthSimulation={show.startUnauthSimulation}
+						setShowStartUnauthSimulation={b => setShow(s => ({ ...s, startUnauthSimulation: b }))}
+						from={show.unauthGeofenceBox ? MenuItemEnum.GEOFENCE : MenuItemEnum.TRACKER}
+						UnauthSimulationUI={UnauthSimulationUI}
+						AuthGeofenceBox={
+							<AuthGeofenceBox
+								mapRef={mapViewRef?.current}
+								setShowAuthGeofenceBox={b => setShow(s => ({ ...s, authGeofenceBox: b }))}
+							/>
+						}
+						AuthTrackerBox={
+							<AuthTrackerBox
+								mapRef={mapViewRef?.current}
+								setShowAuthTrackerBox={b => setShow(s => ({ ...s, authTrackerBox: b }))}
+							/>
+						}
+					/>
+					<MapButtons
+						renderedUpon={TriggeredByEnum.DEMO_PAGE}
+						openStylesCard={show.stylesCard}
+						setOpenStylesCard={b => setShow(s => ({ ...s, stylesCard: b }))}
+						onCloseSidebar={() => setShow(s => ({ ...s, sidebar: false }))}
+						onOpenSignInModal={() => setShow(s => ({ ...s, signInModal: true }))}
+						isGrabVisible={isGrabVisible}
+						showGrabDisclaimerModal={show.grabDisclaimerModal}
+						showOpenDataDisclaimerModal={show.openDataDisclaimerModal}
+						onShowGridLoader={() => setShow(s => ({ ...s, gridLoader: true }))}
+						handleMapStyleChange={onMapStyleChange}
+						searchValue={searchValue}
+						setSearchValue={setSearchValue}
+						selectedFilters={selectedFilters}
+						setSelectedFilters={setSelectedFilters}
+						resetSearchAndFilters={handleResetCallback}
+						isAuthGeofenceBoxOpen={show.authGeofenceBox}
+						onSetShowAuthGeofenceBox={(b: boolean) => setShow(s => ({ ...s, authGeofenceBox: b }))}
+						isAuthTrackerDisclaimerModalOpen={show.authTrackerDisclaimerModal}
+						isAuthTrackerBoxOpen={show.authTrackerBox}
+						onShowAuthTrackerDisclaimerModal={() => setShow(s => ({ ...s, authTrackerDisclaimerModal: true }))}
+						onSetShowAuthTrackerBox={(b: boolean) => setShow(s => ({ ...s, authTrackerBox: b }))}
+						onShowUnauthSimulationDisclaimerModal={() =>
+							setShow(s => ({ ...s, unauthSimulationDisclaimerModal: true }))
+						}
+						isUnauthGeofenceBoxOpen={show.unauthGeofenceBox}
+						isUnauthTrackerBoxOpen={show.unauthTrackerBox}
+						onSetShowUnauthGeofenceBox={(b: boolean) => setShow(s => ({ ...s, unauthGeofenceBox: b }))}
+						onSetShowUnauthTrackerBox={(b: boolean) => setShow(s => ({ ...s, unauthTrackerBox: b }))}
+					/>
+					{GeoLocateIcon}
+					{isDesktop && (
+						<NavigationControl
+							style={{
+								width: "2.46rem",
+								height: "4.92rem",
+								position: "absolute",
+								top: "-6rem",
+								right: "0.75rem",
+								margin: 0,
+								borderRadius: "0.62rem"
+							}}
+							position="bottom-right"
+							showZoom
+							showCompass={false}
+						/>
+					)}
+				</View>
+				{isDesktop && (
+					<AttributionControl
+						style={{
+							fontSize: "0.77rem",
+							borderRadius: "0.62rem",
+							marginRight: "0.77rem",
+							marginBottom: !isDesktop ? "2.77rem" : "0rem",
+							backgroundColor: currentMapStyle.toLowerCase().includes("dark")
+								? "rgba(0, 0, 0, 0.2)"
+								: "var(--white-color)",
+							color: currentMapStyle.toLowerCase().includes("dark") ? "var(--white-color)" : "var(--black-color)"
+						}}
+						compact={!isDesktop}
+					/>
+				)}
+			</Map>
+			<WelcomeModal open={showWelcomeModal} onClose={() => setShowWelcomeModal(false)} />
+			<SignInModal open={show.signInModal} onClose={() => setShow(s => ({ ...s, signInModal: false }))} />
+			<ConnectAwsAccountModal
+				open={show.connectAwsAccount}
+				onClose={() => setShow(s => ({ ...s, connectAwsAccount: false }))}
+				handleCurrentLocationAndViewpoint={handleCurrentLocationAndViewpoint}
+			/>
+			<SettingsModal
+				open={show.settings}
+				onClose={() => {
+					handleResetCallback();
+					setShow(s => ({ ...s, settings: false }));
+				}}
+				resetAppState={resetAppState}
+				isGrabVisible={isGrabVisible}
+				handleMapProviderChange={onMapProviderChange}
+				handleCurrentLocationAndViewpoint={handleCurrentLocationAndViewpoint}
+				resetSearchAndFilters={handleResetCallback}
+				mapButtons={
+					<MapButtons
+						renderedUpon={TriggeredByEnum.SETTINGS_MODAL}
+						openStylesCard={show.stylesCard}
+						setOpenStylesCard={b => setShow(s => ({ ...s, stylesCard: b }))}
+						onCloseSidebar={() => setShow(s => ({ ...s, sidebar: false }))}
+						onOpenSignInModal={() => setShow(s => ({ ...s, signInModal: true }))}
+						isGrabVisible={isGrabVisible}
+						showGrabDisclaimerModal={show.grabDisclaimerModal}
+						showOpenDataDisclaimerModal={show.openDataDisclaimerModal}
+						onShowGridLoader={() => setShow(s => ({ ...s, gridLoader: true }))}
+						handleMapStyleChange={onMapStyleChange}
+						searchValue={searchValue}
+						setSearchValue={setSearchValue}
+						selectedFilters={selectedFilters}
+						setSelectedFilters={setSelectedFilters}
+						onlyMapStyles
+						isAuthGeofenceBoxOpen={show.authGeofenceBox}
+						onSetShowAuthGeofenceBox={(b: boolean) => setShow(s => ({ ...s, authGeofenceBox: b }))}
+						isAuthTrackerDisclaimerModalOpen={show.authTrackerDisclaimerModal}
+						isAuthTrackerBoxOpen={show.authTrackerBox}
+						isSettingsModal
+						onShowAuthTrackerDisclaimerModal={() => setShow(s => ({ ...s, authTrackerDisclaimerModal: true }))}
+						onSetShowAuthTrackerBox={(b: boolean) => setShow(s => ({ ...s, authTrackerBox: b }))}
+						onShowUnauthSimulationDisclaimerModal={() =>
+							setShow(s => ({ ...s, unauthSimulationDisclaimerModal: true }))
+						}
+						isUnauthGeofenceBoxOpen={show.unauthGeofenceBox}
+						isUnauthTrackerBoxOpen={show.unauthTrackerBox}
+						onSetShowUnauthGeofenceBox={(b: boolean) => setShow(s => ({ ...s, unauthGeofenceBox: b }))}
+						onSetShowUnauthTrackerBox={(b: boolean) => setShow(s => ({ ...s, unauthTrackerBox: b }))}
+					/>
+				}
+			/>
+			<AboutModal open={show.about} onClose={() => setShow(s => ({ ...s, about: false }))} />
+			<TrackerInformationModal
+				open={show.authTrackerDisclaimerModal}
+				onClose={() => setShow(s => ({ ...s, authTrackerDisclaimerModal: false }))}
+				heading={t("tracker_info_modal__heading.text") as string}
+				description={
+					<Text
+						className={`regular-text ${isLtr ? "ltr" : "rtl"}`}
+						variation="tertiary"
+						marginTop="1.23rem"
+						textAlign="center"
+						whiteSpace="pre-line"
+					>
+						{t("tracker_info_modal__desc.text")}{" "}
+						<a
+							style={{ cursor: "pointer", color: "var(--primary-color)" }}
+							href={AMAZON_LOCATION_TERMS_AND_CONDITIONS}
+							target="_blank"
+							rel="noreferrer"
+						>
+							{t("t&c.text")}
+						</a>
+					</Text>
+				}
+				onConfirm={onEnableTracking}
+				hideCancelButton
+			/>
+			<OpenDataConfirmationModal
+				open={show.openDataDisclaimerModal}
+				onClose={() => {
+					setShow(s => ({ ...s, openDataDisclaimerModal: false, mapStyle: undefined }));
+					setMapProvider(currentMapProvider);
+				}}
+				onConfirm={() => setTimeout(() => handleOpenDataMapChange(), 0)}
+				showDoNotAskAgainCheckbox
+				onConfirmationCheckboxOnChange={setDoNotAskOpenDataDisclaimer}
+			/>
+			<GrabConfirmationModal
+				open={show.grabDisclaimerModal}
+				onClose={() => {
+					setShow(s => ({ ...s, grabDisclaimerModal: false, mapStyle: undefined }));
+					setMapProvider(currentMapProvider);
+				}}
+				onConfirm={() => {
+					(show.unauthGeofenceBox || show.unauthTrackerBox) &&
+						setShow(s => ({ ...s, unauthGeofenceBox: false, unauthTrackerBox: false }));
+					setTimeout(() => handleGrabMapChange(), 0);
+				}}
+				showDoNotAskAgainCheckbox
+				onConfirmationCheckboxOnChange={setDoNotAskGrabDisclaimer}
+				isUnauthSimulationOpen={show.unauthGeofenceBox || show.unauthTrackerBox}
+			/>
+			<UnauthSimulationDisclaimerModal
+				open={show.unauthSimulationDisclaimerModal}
+				onClose={() => setShow(s => ({ ...s, unauthSimulationDisclaimerModal: false }))}
+				heading={t("unauth_simulation__disclaimer_modal_heading.text")}
+				description={t("unauth_simulation__disclaimer_modal_desc.text")}
+				confirmationText={t("unauth_simulation__disclaimer_modal_confirmation.text")}
+				onConfirm={() => onMapProviderChange(MapProviderEnum.ESRI, TriggeredByEnum.UNAUTH_SIMULATION_MODULE)}
+			/>
+			<UnauthSimulationExitModal
+				open={show.unauthSimulationExitModal}
+				onClose={() => setShow(s => ({ ...s, unauthSimulationExitModal: false }))}
+				heading={t("start_unauth_simulation__exit_simulation.text")}
+				description={t("start_unauth_simulation__exit_modal_desc.text")}
+				confirmationText={t("start_unauth_simulation__exit_simulation.text")}
+				onConfirm={() => {
+					setShow(s => ({ ...s, unauthSimulationExitModal: false, unauthGeofenceBox: false, unauthTrackerBox: false }));
+					setTimeout(() => {
+						handleGrabMapChange(show.mapStyle as GrabMapEnum);
+						window.location.reload();
+					}, 0);
+				}}
+				cancelationText={t("start_unauth_simulation__stay_in_simulation.text")}
+			/>
+			{isDesktop && (
+				<Flex className="logo-stroke-container">
+					{currentMapStyle.toLowerCase().includes("dark") ? <LogoDark /> : <LogoLight />}
+				</Flex>
+			)}
+		</View>
+	) : (
+		<DemoPlaceholderPage
+			searchValue={searchValue}
+			selectedFilters={selectedFilters}
+			height={height}
+			show={show}
+			isGrabVisible={isGrabVisible}
 		/>
 	);
 };
 
-export default SettingsModal;
+export default DemoPage;
