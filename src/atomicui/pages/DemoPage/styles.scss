@@ -137,6 +137,13 @@
 		width: 100%;
 		height: 100%;
 	}
+
+	&.logo-stroke-container-tablet {
+		left: 26.54rem;
+		@media screen and (max-width: 556px) {
+			display: none;
+		}
+	}
 }
 
 .mapboxgl-user-location-dot:before,

@@ -171,7 +171,7 @@ const DemoPage: React.FC = () => {
 		doNotAskOpenDataDisclaimerModal,
 		setDoNotAskOpenDataDisclaimerModal
 	} = usePersistedData();
-	const { isDesktop, isMobile } = useDeviceMediaQuery();
+	const { isDesktop, isMobile, isTablet } = useDeviceMediaQuery();
 	const { setUI, ui, bottomSheetCurrentHeight } = useBottomSheet();
 	const peggedRemValue = 13;
 	const extraGeoLocateTop = 2.6;
@@ -1278,8 +1278,8 @@ const DemoPage: React.FC = () => {
 				}}
 				cancelationText={t("start_unauth_simulation__stay_in_simulation.text")}
 			/>
-			{isDesktop && (
-				<Flex className="logo-stroke-container">
+			{(isDesktop || isTablet) && (
+				<Flex className={`logo-stroke-container ${isTablet ? "logo-stroke-container-tablet" : ""}`}>
 					{currentMapStyle.toLowerCase().includes("dark") ? <LogoDark /> : <LogoLight />}
 				</Flex>
 			)}

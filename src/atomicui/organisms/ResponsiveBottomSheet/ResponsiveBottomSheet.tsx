@@ -67,7 +67,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	AuthGeofenceBox,
 	AuthTrackerBox
 }) => {
-	const { isDesktop, isTablet, isMobile } = useDeviceMediaQuery();
+	const { isDesktop, isTablet, isMobile, isMax556 } = useDeviceMediaQuery();
 	const { t } = useTranslation();
 	const {
 		setBottomSheetMinHeight,
@@ -327,7 +327,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				maxHeight={bottomSheetHeight}
 				header={
 					<Flex>
-						{isMobile && (
+						{isMax556 && (
 							<Flex className="logo-mobile">
 								{mapStyle.toLowerCase().includes("dark") ? <LogoDark /> : <LogoLight />}
 							</Flex>
