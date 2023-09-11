@@ -1,4 +1,4 @@
-import { Ref, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { Ref, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button, Card, Flex, Text } from "@aws-amplify/ui-react";
 import {
@@ -21,7 +21,7 @@ import {
 } from "@demo/atomicui/molecules";
 import { appConfig, busRoutesData } from "@demo/core";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
-import { useAmplifyMap, useAwsGeofence, useBottomSheet, useDeviceMediaQuery } from "@demo/hooks";
+import { useAwsGeofence, useBottomSheet, useDeviceMediaQuery } from "@demo/hooks";
 import i18n from "@demo/locales/i18n";
 import {
 	MenuItemEnum,
@@ -32,7 +32,6 @@ import {
 	TrackingHistoryTypeEnum
 } from "@demo/types";
 import { ResponsiveUIEnum } from "@demo/types/Enums";
-import { PubSub } from "aws-amplify";
 import { format, parseISO } from "date-fns";
 import { LngLatBoundsLike } from "mapbox-gl";
 import { useTranslation } from "react-i18next";
@@ -59,7 +58,6 @@ const busRoutesDropdown = [
 
 const {
 	MAP_RESOURCES: {
-		AMAZON_HQ: { US },
 		MAX_BOUNDS: { VANCOUVER }
 	}
 } = appConfig.default;
@@ -73,6 +71,8 @@ interface UnauthGeofenceBoxProps {
 	setShowStartUnauthSimulation: (b: boolean) => void;
 	startSimulation: boolean;
 	setStartSimulation: (b: boolean) => void;
+	setShowUnauthSimulationBounds: (b: boolean) => void;
+	clearCredsAndLocationClient?: () => void;
 }
 
 const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
@@ -84,7 +84,9 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 	showStartUnauthSimulation,
 	setShowStartUnauthSimulation,
 	startSimulation,
-	setStartSimulation
+	setStartSimulation,
+	setShowUnauthSimulationBounds,
+	clearCredsAndLocationClient
 }) => {
 	const [trackingHistory, setTrackingHistory] = useState<TrackingHistoryType>(initialTrackingHistory);
 	const [selectedRoutes, setSelectedRoutes] = useState<SelectOption[]>([busRoutesDropdown[0]]);
@@ -92,9 +94,8 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 	const [isNotifications, setIsNotifications] = useState(false);
 	const [confirmCloseSimulation, setConfirmCloseSimulation] = useState(false);
 	const [isPlaying, setIsPlaying] = useState(true);
-	const { currentLocationData } = useAmplifyMap();
 	const { unauthNotifications, setUnauthNotifications } = useAwsGeofence();
-	const { subscription, Connection, isHidden } = WebsocketBanner(
+	const { Connection, isHidden } = WebsocketBanner(
 		useCallback((n: NotificationHistoryItemtype) => {
 			// Update tracking history with geofence notification, for geofence add "Bus stop number 1" to title and bus stop coords to description
 			setTrackingHistory(prevState => {
@@ -145,22 +146,6 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 	useEffect(() => {
 		startSimulation && mapRef?.fitBounds(VANCOUVER as LngLatBoundsLike, { linear: true });
 	}, [mapRef, startSimulation]);
-
-	// useEffect(() => {
-	// 	showStartUnauthSimulation && mapRef?.zoomTo(2);
-
-	// 	return () => {
-	// 		// currentLocationData?.currentLocation
-	// 		// 	? mapRef?.flyTo({
-	// 		// 			center: [currentLocationData.currentLocation.longitude, currentLocationData.currentLocation.latitude],
-	// 		// 			zoom: 15
-	// 		// 	  })
-	// 		// 	: mapRef?.flyTo({
-	// 		// 			center: [US.longitude, US.latitude],
-	// 		// 			zoom: 15
-	// 		// 	  });
-	// 	};
-	// }, [showStartUnauthSimulation, mapRef, currentLocationData]);
 
 	useEffect(() => {
 		if (
@@ -214,10 +199,9 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 	};
 
 	const onCloseHandler = () => {
-		subscription?.unsubscribe();
-		PubSub.removePluggable("AWSIoTProvider");
+		clearCredsAndLocationClient && clearCredsAndLocationClient();
+		setShowStartUnauthSimulation(false);
 		handleClose();
-		window.location.reload();
 	};
 
 	const StartSimulation = useCallback(() => {
@@ -304,6 +288,7 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 								from === MenuItemEnum.TRACKER
 									? setUI(ResponsiveUIEnum.unauth_tracker)
 									: setUI(ResponsiveUIEnum.unauth_geofence);
+								setShowUnauthSimulationBounds(true);
 							}}
 							fontFamily="AmazonEmber-Medium"
 							fontSize="1.077rem"
@@ -316,7 +301,16 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 				</Flex>
 			</Flex>
 		);
-	}, [currentLanguage, t, setStartSimulation, setBottomSheetMinHeight, setBottomSheetHeight, from, setUI]);
+	}, [
+		currentLanguage,
+		t,
+		setStartSimulation,
+		setBottomSheetMinHeight,
+		setBottomSheetHeight,
+		from,
+		setUI,
+		setShowUnauthSimulationBounds
+	]);
 
 	const renderGeofences = useMemo(
 		() =>

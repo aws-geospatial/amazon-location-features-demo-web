@@ -16,12 +16,14 @@ describe("Switch data provider and map styles", () => {
 		);
 
 		cy.get('[data-testid="map-style-item-location.aws.com.demo.maps.HERE.Explore"]').click({ force: true });
+		cy.get('[data-testid="map-style-item-location.aws.com.demo.maps.HERE.Explore"]').click({ force: true });
 		cy.wait(5000);
 		cy.get('[data-testid="map-style-item-location.aws.com.demo.maps.HERE.Explore"]').should(
 			"have.class",
 			"mb-style-container selected"
 		);
 
+		cy.get('[data-testid="map-style-item-location.aws.com.demo.maps.Grab.StandardLight"]').click({ force: true });
 		cy.get('[data-testid="map-style-item-location.aws.com.demo.maps.Grab.StandardLight"]').click({ force: true });
 		cy.get('[data-testid="confirmation-button"]').click({ force: true });
 		cy.wait(5000);
@@ -30,6 +32,7 @@ describe("Switch data provider and map styles", () => {
 			"mb-style-container selected"
 		);
 
+		cy.get('[data-testid="map-style-item-location.aws.com.demo.maps.OpenData.StandardLight"]').click({ force: true });
 		cy.get('[data-testid="map-style-item-location.aws.com.demo.maps.OpenData.StandardLight"]').click({ force: true });
 		cy.get('[data-testid="confirmation-button"]').click({ force: true });
 		cy.wait(5000);

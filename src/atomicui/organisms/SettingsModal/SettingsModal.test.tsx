@@ -18,30 +18,36 @@ describe("<SettingsModal />", () => {
 	const props = {
 		renderedUpon: "",
 		openStylesCard: false,
+		setOpenStylesCard: jest.fn(),
+		onCloseSidebar: jest.fn(),
+		onOpenSignInModal: jest.fn(),
 		isGrabVisible: true,
 		showGrabDisclaimerModal: false,
+		onShowGridLoader: jest.fn(),
+		handleMapStyleChange: jest.fn(),
 		searchValue: "",
-		isLoading: false,
-		onlyMapStyles: true,
+		setSearchValue: jest.fn(),
 		selectedFilters: {
 			Providers: [],
 			Attribute: [],
 			Type: []
 		},
-		setOpenStylesCard: jest.fn(),
-		onCloseSidebar: jest.fn(),
-		onOpenConnectAwsAccountModal: jest.fn(),
-		onOpenSignInModal: jest.fn(),
-		onShowGeofenceBox: jest.fn(),
-		onShowGridLoader: jest.fn(),
-		handleMapStyleChange: jest.fn(),
-		setSearchValue: jest.fn(),
 		setSelectedFilters: jest.fn(),
+		isLoading: false,
+		onlyMapStyles: true,
 		resetSearchAndFilters: jest.fn(),
 		showOpenDataDisclaimerModal: false,
+		isAuthGeofenceBoxOpen: false,
+		onSetShowAuthGeofenceBox: jest.fn(),
 		isAuthTrackerDisclaimerModalOpen: false,
+		isAuthTrackerBoxOpen: false,
 		onShowAuthTrackerDisclaimerModal: jest.fn(),
-		isAuthTrackerBoxOpen: false
+		onSetShowAuthTrackerBox: jest.fn(),
+		onShowUnauthSimulationDisclaimerModal: jest.fn(),
+		isUnauthGeofenceBoxOpen: false,
+		isUnauthTrackerBoxOpen: false,
+		onSetShowUnauthGeofenceBox: jest.fn(),
+		onSetShowUnauthTrackerBox: jest.fn()
 	};
 
 	const renderComponent = async (): Promise<RenderResult> => {

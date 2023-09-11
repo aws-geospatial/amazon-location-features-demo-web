@@ -566,12 +566,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								}}
 							/>
 							<Flex gap={0} direction="column" marginTop="1.23rem">
-								<Text
-									marginTop="0.31rem"
-									variation="tertiary"
-									whiteSpace="pre-line"
-									textAlign={isLtr ? "start" : "end"}
-								>
+								<Text marginTop="0.31rem" variation="tertiary" whiteSpace="pre-line" className={isLtr ? "ltr" : "rtl"}>
 									{t("caam__desc.text")}
 								</Text>
 							</Flex>
@@ -584,7 +579,12 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 								margin="1.85rem 0rem 1.85rem 0rem"
 								width="100%"
 							>
-								<Text className="bold" fontSize="1.08rem" textAlign={isLtr ? "start" : "end"} order={isLtr ? 1 : 2}>
+								<Text
+									className={`bold ${isLtr ? "ltr" : "rtl"}`}
+									fontSize="1.08rem"
+									textAlign={isLtr ? "start" : "end"}
+									order={isLtr ? 1 : 2}
+								>
 									{t("caam__htct.text")}
 								</Text>
 								<View order={isLtr ? 2 : 1}>
@@ -600,15 +600,15 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 									<Text className="bold">1</Text>
 								</View>
 								<View order={isLtr ? 2 : 1}>
-									<Flex gap={5}>
-										<Text className="bold" textAlign={isLtr ? "start" : "end"}>
+									<Flex gap={5} className={`step-heading-${isLtr ? "" : "rtl"}`}>
+										<Text className={`bold ${isLtr ? "ltr" : "rtl"}`}>
 											<Link href={cloudFormationLink} target="_blank">
 												{t("caam__click_here.text")}
-											</Link>
+											</Link>{" "}
 											{t("caam__step_1__title.text")}
 										</Text>
 									</Flex>
-									<Text className="step-two-description" textAlign={isLtr ? "start" : "end"}>
+									<Text className={`step-two-description ${isLtr ? "ltr" : "rtl"}`}>
 										{t("caam__step_1__desc.text")}
 									</Text>
 								</View>
@@ -624,10 +624,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 									</Text>
 								</View>
 								<View order={isLtr ? 2 : 1}>
-									<Text className="bold" textAlign={isLtr ? "start" : "end"}>
-										{t("caam__step_2__title.text")}
-									</Text>
-									<Text className="step-two-description" textAlign={isLtr ? "start" : "end"}>
+									<Text className={`bold ${isLtr ? "ltr" : "rtl"}`}>{t("caam__step_2__title.text")}</Text>
+									<Text className={`step-two-description ${isLtr ? "ltr" : "rtl"}`}>
 										{t("caam__step_2__desc.text")}
 										<a href={HELP} target="_blank" rel="noreferrer">
 											{t("learn_more.text")}
@@ -904,6 +902,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 						)}
 						{!isMobile && <Divider orientation="vertical" className="col-divider" />}
 						{!!settingsOptions && <Flex className="option-details-container">{renderOptionDetails}</Flex>}
+					</Flex>
+					<Divider orientation="vertical" className="col-divider" />
+					<Flex data-testid="option-details-container" className="option-details-container">
+						{renderOptionDetails}
 					</Flex>
 				</>
 			}

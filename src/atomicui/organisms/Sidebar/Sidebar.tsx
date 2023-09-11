@@ -24,28 +24,28 @@ interface SidebarProps {
 	onCloseSidebar: () => void;
 	onOpenConnectAwsAccountModal: () => void;
 	onOpenSignInModal: () => void;
-	onShowAuthGeofenceBox: () => void;
-	onShowAuthTrackerBox: () => void;
 	onShowSettings: () => void;
-	onShowTrackingDisclaimerModal: () => void;
 	onShowAboutModal: () => void;
+	onShowAuthGeofenceBox: () => void;
+	onShowAuthTrackerDisclaimerModal: () => void;
+	onShowAuthTrackerBox: () => void;
 	onShowUnauthGeofenceBox: () => void;
 	onShowUnauthTrackerBox: () => void;
-	onshowUnauthSimulationDisclaimerModal: () => void;
+	onShowUnauthSimulationDisclaimerModal: () => void;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
 	onCloseSidebar,
 	onOpenConnectAwsAccountModal,
 	onOpenSignInModal,
-	onShowAuthGeofenceBox,
-	onShowAuthTrackerBox,
 	onShowSettings,
-	onShowTrackingDisclaimerModal,
 	onShowAboutModal,
+	onShowAuthGeofenceBox,
+	onShowAuthTrackerDisclaimerModal,
+	onShowAuthTrackerBox,
+	onShowUnauthSimulationDisclaimerModal,
 	onShowUnauthGeofenceBox,
-	onShowUnauthTrackerBox,
-	onshowUnauthSimulationDisclaimerModal
+	onShowUnauthTrackerBox
 }) => {
 	const { isUserAwsAccountConnected, credentials, onLogin, onLogout, onDisconnectAwsAccount, setAuthTokens } =
 		useAmplifyAuth();
@@ -82,14 +82,14 @@ const Sidebar: React.FC<SidebarProps> = ({
 				if (menuItem === MenuItemEnum.GEOFENCE) {
 					onShowAuthGeofenceBox();
 				} else {
-					currentMapProvider === MapProviderEnum.ESRI ? onShowTrackingDisclaimerModal() : onShowAuthTrackerBox();
+					currentMapProvider === MapProviderEnum.ESRI ? onShowAuthTrackerDisclaimerModal() : onShowAuthTrackerBox();
 				}
 			} else {
 				onOpenSignInModal();
 			}
 		} else {
 			if (currentMapProvider === MapProviderEnum.GRAB) {
-				onshowUnauthSimulationDisclaimerModal();
+				onShowUnauthSimulationDisclaimerModal();
 			} else {
 				if (menuItem === MenuItemEnum.GEOFENCE) {
 					onShowUnauthGeofenceBox();
