@@ -67,7 +67,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	AuthGeofenceBox,
 	AuthTrackerBox
 }) => {
-	const { isDesktop, isTablet, isMobile, isMax556 } = useDeviceMediaQuery();
+	const { isDesktop, isTablet, isMax556 } = useDeviceMediaQuery();
 	const { t } = useTranslation();
 	const {
 		setBottomSheetMinHeight,
