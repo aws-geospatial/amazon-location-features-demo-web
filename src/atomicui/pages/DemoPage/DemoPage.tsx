@@ -104,8 +104,7 @@ const initShow = {
 	unauthSimulationBounds: false,
 	unauthSimulationDisclaimerModal: false,
 	unauthSimulationExitModal: false,
-	startUnauthSimulation: false,
-	isAttributionOpen: false
+	startUnauthSimulation: false
 };
 let interval: NodeJS.Timer | undefined;
 let timeout: NodeJS.Timer | undefined;
@@ -175,7 +174,7 @@ const DemoPage: React.FC = () => {
 	const { isDesktop, isMobile, isTablet, isMax556 } = useDeviceMediaQuery();
 	const { setUI, ui, bottomSheetCurrentHeight } = useBottomSheet();
 	const peggedRemValue = 13;
-	const extraGeoLocateTop = show.isAttributionOpen ? -2.6 : 2.6;
+	const extraGeoLocateTop = 2.6;
 	const geoLocateTopValue = `-${(bottomSheetCurrentHeight || 0) / peggedRemValue + extraGeoLocateTop}rem`;
 
 	const { t, i18n } = useTranslation();
@@ -1046,8 +1045,6 @@ const DemoPage: React.FC = () => {
 								isHandDevice
 							/>
 						}
-						show={show}
-						setShow={setShow}
 						mapRef={mapViewRef?.current}
 						RouteBox={
 							<RouteBox

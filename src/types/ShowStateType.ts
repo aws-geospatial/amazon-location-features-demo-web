@@ -21,5 +21,4 @@ export type ShowStateType = {
 	unauthSimulationDisclaimerModal: boolean;
 	unauthSimulationExitModal: boolean;
 	startUnauthSimulation: boolean;
-	isAttributionOpen: boolean;
 };
