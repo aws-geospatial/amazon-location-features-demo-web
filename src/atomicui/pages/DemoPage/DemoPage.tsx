@@ -166,7 +166,9 @@ const DemoPage: React.FC = () => {
 		setDoNotAskOpenDataDisclaimerModal
 	} = usePersistedData();
 	const isDesktop = useMediaQuery("(min-width: 1024px)");
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
+	const langDir = i18n.dir();
+	const isLtr = langDir === "ltr";
 	const shouldClearCredentials = localStorage.getItem(SHOULD_CLEAR_CREDENTIALS) === "true";
 
 	const isGrabAvailableInRegion = useMemo(() => !!region && GRAB_SUPPORTED_AWS_REGIONS.includes(region), [region]);
@@ -1030,7 +1032,7 @@ const DemoPage: React.FC = () => {
 				heading={t("tracker_info_modal__heading.text") as string}
 				description={
 					<Text
-						className="regular-text"
+						className={`regular-text ${isLtr ? "ltr" : "rtl"}`}
 						variation="tertiary"
 						marginTop="1.23rem"
 						textAlign="center"

@@ -17,6 +17,7 @@ import { equals } from "ramda";
 
 const RETRY_INTERVAL = 100;
 const authEvents: unknown[] = [];
+const unauthEvents: unknown[] = [];
 
 const useWebSocketService = (
 	updateTrackingHistory?: (n: NotificationHistoryItemtype) => void,
@@ -87,16 +88,20 @@ const useWebSocketService = (
 						if (source === "aws.geo") {
 							if (stopName) {
 								/* Unauth simulation events */
+								const unauthEvent = { ...data.value };
 								const busRouteId = geofenceId.split("-")[0];
 
 								if (trackerEventType === "ENTER") {
-									setUnauthNotifications({
-										busRouteId,
-										geofenceCollection,
-										stopName,
-										coordinates: `${coordinates[1]}, ${coordinates[0]}`,
-										createdAt: eventTime
-									});
+									if (unauthEvents.length === 0 || !unauthEvents.some(equals(unauthEvent))) {
+										setUnauthNotifications({
+											busRouteId,
+											geofenceCollection,
+											stopName,
+											coordinates: `${coordinates[1]}, ${coordinates[0]}`,
+											createdAt: eventTime
+										});
+										unauthEvents.push(unauthEvent);
+									}
 									updateTrackingHistory &&
 										updateTrackingHistory({
 											busRouteId,
