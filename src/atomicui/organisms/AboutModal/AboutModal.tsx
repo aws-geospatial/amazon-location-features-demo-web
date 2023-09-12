@@ -42,7 +42,9 @@ const AboutModal: React.FC<AboutModalProps> = ({ open, onClose }) => {
 			? window.open(ESRI_ATTRIBUTION_LINK, "_blank")
 			: window.open(HERE_ATTRIBUTION_LINK, "_blank");
 	}, [mapProvider]);
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
+	const langDir = i18n.dir();
+	const isLtr = langDir === "ltr";
 
 	const optionItems = useMemo(
 		() => [
@@ -90,10 +92,12 @@ const AboutModal: React.FC<AboutModalProps> = ({ open, onClose }) => {
 				title: t("about_modal__version.text"),
 				detailsComponent: (
 					<Flex gap={0} direction="column" padding="0rem 1.15rem">
-						<Text className="more-secondary-text">
+						<Text className={`more-secondary-text ${isLtr ? "ltr" : "rtl"}`}>
 							{t(VERSION)}: {VERSION_VALUE} {BUILD}
 						</Text>
-						<Text className="more-secondary-text">{`© ${new Date().getFullYear()}, ${t(COPYRIGHT)}`}</Text>
+						<Text className={`more-secondary-text ${isLtr ? "ltr" : "rtl"}`}>{`© ${new Date().getFullYear()}${
+							isLtr ? "," : "،"
+						} ${t(COPYRIGHT)}`}</Text>
 						<Flex gap={0} direction="column" padding="0rem 3.15rem">
 							<IconPoweredByAws1 className="powered-by-aws-1-icon" />
 						</Flex>
@@ -105,7 +109,7 @@ const AboutModal: React.FC<AboutModalProps> = ({ open, onClose }) => {
 				title: t("t&c.text"),
 				detailsComponent: (
 					<Flex gap={0} direction="column" padding="0rem 1.15rem" alignItems="center">
-						<Text className="more-secondary-text">
+						<Text className={`more-secondary-text ${isLtr ? "ltr" : "rtl"}`}>
 							{t(TERMS_PREFIX)}
 							<a href={TERMS} target="_blank" rel="noreferrer">
 								{t(TERMS_LINK_LABEL)}
@@ -116,7 +120,7 @@ const AboutModal: React.FC<AboutModalProps> = ({ open, onClose }) => {
 				)
 			}
 		],
-		[attributeEl?.innerText, handlePartnerLearnMore, t]
+		[attributeEl?.innerText, handlePartnerLearnMore, isLtr, t]
 	);
 
 	const renderOptionItems = useMemo(() => {

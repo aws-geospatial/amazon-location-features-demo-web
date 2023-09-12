@@ -201,7 +201,13 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 								{t("connect_aws_account.text")}
 							</Text>
 						</View>
-						<Text marginTop="0.62rem" variation="tertiary" textAlign="center" whiteSpace="pre-line">
+						<Text
+							marginTop="0.62rem"
+							variation="tertiary"
+							textAlign="center"
+							whiteSpace="pre-line"
+							className={isLtr ? "ltr" : "rtl"}
+						>
 							{t("caam__desc.text")}
 						</Text>
 						<View>
@@ -224,14 +230,14 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 									</View>
 									<View order={isLtr ? 2 : 1}>
 										<Flex gap={5}>
-											<Text className="bold" textAlign={isLtr ? "start" : "end"}>
+											<Text className={`bold ${isLtr ? "ltr" : "rtl"}`}>
 												<Link href={cloudFormationLink} target="_blank">
 													{t("caam__click_here.text")}
-												</Link>
+												</Link>{" "}
 												{t("caam__step_1__title.text")}
 											</Text>
 										</Flex>
-										<Text className="step-two-description" textAlign={isLtr ? "start" : "end"}>
+										<Text className={`step-two-description ${isLtr ? "ltr" : "rtl"}`}>
 											{t("caam__step_1__desc.text")}
 										</Text>
 									</View>
@@ -245,11 +251,9 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 										<Text className="bold">2</Text>
 									</View>
 									<View order={isLtr ? 2 : 1}>
-										<Text className="bold" textAlign={isLtr ? "start" : "end"}>
-											{t("caam__step_2__title.text")}
-										</Text>
-										<Text className="step-two-description" textAlign={isLtr ? "start" : "end"}>
-											{t("caam__step_2__desc.text")}
+										<Text className={`bold ${isLtr ? "ltr" : "rtl"}`}>{t("caam__step_2__title.text")}</Text>
+										<Text className={`step-two-description ${isLtr ? "ltr" : "rtl"}`}>
+											{t("caam__step_2__desc.text")}{" "}
 											<a href={HELP} target="_blank" rel="noreferrer">
 												{t("learn_more.text")}
 											</a>

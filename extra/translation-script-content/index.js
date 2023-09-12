@@ -134,6 +134,18 @@ const main = async () => {
 				}
 
 				const combinedJson = { ...existingJson, ...translatedJson };
+
+				// Check if overwrite-{languageName}.json exists
+				const overwriteFilePath = path.join(dirPath, `overwrite-${lang}.json`);
+				if (fs.existsSync(overwriteFilePath)) {
+					const overwriteJson = JSON.parse(fs.readFileSync(overwriteFilePath, "utf8"));
+					// Overwrite the translations
+					for (const key in overwriteJson) {
+						if (combinedJson[key]) {
+							combinedJson[key] = overwriteJson[key];
+						}
+					}
+				}
 				fs.writeFileSync(outputPath, JSON.stringify(combinedJson, null, 2));
 
 				console.log(`Translation batch ${i + 1}/16 for the language ${lang} completed.`);

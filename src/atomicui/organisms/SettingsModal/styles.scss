@@ -217,6 +217,11 @@
 						display: flex;
 						justify-content: center;
 						align-items: center;
+
+					}
+					
+					.step-heading-rtl {
+						justify-content: flex-end;
 					}
 
 					.hyperlink {

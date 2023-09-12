@@ -86,3 +86,12 @@ body:has(.disable-body-scroll) {
 	border-bottom-width: 1px;
 	border-color: var(--light-color-2);
 }
+.ltr{
+	direction: ltr;
+	text-align: start;
+}
+
+.rtl{
+	direction: rtl;
+	text-align: start;
+}
