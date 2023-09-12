@@ -8,7 +8,6 @@ import { IconClose, LogoDark, LogoLight } from "@demo/assets";
 import { ConfirmationModal } from "@demo/atomicui/molecules";
 import { useAmplifyMap, useBottomSheet, useDeviceMediaQuery } from "@demo/hooks";
 import { MenuItemEnum, ResponsiveUIEnum } from "@demo/types/Enums";
-import { PubSub } from "aws-amplify";
 import { useTranslation } from "react-i18next";
 import { MapRef } from "react-map-gl";
 import { BottomSheet } from "react-spring-bottom-sheet";
@@ -65,7 +64,8 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	UnauthSimulationUI,
 	from,
 	AuthGeofenceBox,
-	AuthTrackerBox
+	AuthTrackerBox,
+	setShowStartUnauthSimulation
 }) => {
 	const { isDesktop, isTablet, isMax556 } = useDeviceMediaQuery();
 	const { t } = useTranslation();
@@ -276,10 +276,10 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	const footerHeight = useCallback((maxHeight: number) => calculatePixelValue(maxHeight, 50), [calculatePixelValue]);
 
 	const onCloseHandler = useCallback(() => {
-		PubSub.removePluggable("AWSIoTProvider");
 		from === MenuItemEnum.GEOFENCE ? setShowUnauthGeofenceBox(false) : setShowUnauthTrackerBox(false);
-		window.location.reload();
-	}, [from, setShowUnauthGeofenceBox, setShowUnauthTrackerBox]);
+		setShowStartUnauthSimulation(false);
+		setUI(ResponsiveUIEnum.explore);
+	}, [from, setShowStartUnauthSimulation, setShowUnauthGeofenceBox, setShowUnauthTrackerBox, setUI]);
 
 	const ExitSimulation = useCallback(
 		() => (

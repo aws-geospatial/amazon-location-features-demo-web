@@ -202,6 +202,7 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 		clearCredsAndLocationClient && clearCredsAndLocationClient();
 		setShowStartUnauthSimulation(false);
 		handleClose();
+		setUI(ResponsiveUIEnum.explore);
 	};
 
 	const StartSimulation = useCallback(() => {
