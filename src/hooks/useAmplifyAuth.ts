@@ -22,8 +22,9 @@ const {
 	POOLS,
 	WEB_SOCKET_URLS,
 	ROUTES: { DEMO, ERROR_BOUNDARY },
-	PERSIST_STORAGE_KEYS: { FASTEST_REGION },
-	MAP_RESOURCES: { GRAB_SUPPORTED_AWS_REGIONS }
+	PERSIST_STORAGE_KEYS: { FASTEST_REGION, LOCAL_APP_VERSION },
+	MAP_RESOURCES: { GRAB_SUPPORTED_AWS_REGIONS },
+	ENV: { APP_VERSION }
 } = appConfig.default;
 
 const fallbackRegion = POOLS[Object.keys(POOLS)[0]];
@@ -38,6 +39,14 @@ const useAmplifyAuth = () => {
 	const { t } = useTranslation();
 
 	useEffect(() => {
+		const localAppVersion = localStorage.getItem(LOCAL_APP_VERSION) || "";
+
+		if (localAppVersion !== APP_VERSION) {
+			localStorage.clear();
+			localStorage.setItem(LOCAL_APP_VERSION, APP_VERSION);
+			window.location.reload();
+		}
+
 		if (!store.identityPoolId) {
 			(async () => {
 				await setClosestRegion();

@@ -10,6 +10,7 @@
    - `IdentityPoolId` value will be added to `.env` file against `VITE_AWS_COGNITO_IDENTITY_POOL_IDS` (comma separated for multiple values).
    - `WebSocketUrl` value will be added to `.env` file against `VITE_AWS_WEB_SOCKET_URLS` (comma separated for multiple values).
 3. Value for `VITE_AWS_CF_TEMPLATE`, `VITE_APPLE_APP_STORE_LINK`, `VITE_GOOGLE_PLAY_STORE_LINK` can be added as it is to `.env` file from `.env.examples`.
+4. Value for `VITE_APP_VERSION` needs to be populated with the correct version at the time of deployment in the following format `2.1.0`.
 
 #### Env keys required in `.env` file, see `.env.example` for reference
 
@@ -20,6 +21,7 @@
 > VITE_AWS_CF_TEMPLATE<br />
 > VITE_APPLE_APP_STORE_LINK<br />
 > VITE_GOOGLE_PLAY_STORE_LINK<br />
+> VITE_APP_VERSION<br />
 
 ## Configure
 

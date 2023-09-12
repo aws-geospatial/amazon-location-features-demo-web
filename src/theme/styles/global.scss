@@ -70,3 +70,13 @@ body:has(.disable-body-scroll) {
 		}
 	}
 }
+
+.ltr{
+	direction: ltr;
+	text-align: start;
+}
+
+.rtl{
+	direction: rtl;
+	text-align: start;
+}
