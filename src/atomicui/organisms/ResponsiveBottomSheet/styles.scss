@@ -42,21 +42,25 @@
 		margin-top: 1.5rem;
 	}
 
-	.logo-mobile {
+	.logo-mobile-container {
 		position: absolute;
 		top: -2.89rem;
-		width: 11.54rem;
-		height: 2.08rem;
 		z-index: 3;
 		gap: 0;
 		left: 0.59rem;
+		align-items: center;
+	}
+
+	.logo-mobile {
+		width: 11.54rem;
+		height: 2.08rem;
 	}
 
 	.map-header-mobile {
-    width: 100%;
-    flex-direction: column;
-    gap: 0px;
-    padding: 8px 12px 0px 16px;
+		width: 100%;
+		flex-direction: column;
+		gap: 0px;
+		padding: 8px 12px 0px 16px;
 		cursor: initial;
 	}
 }

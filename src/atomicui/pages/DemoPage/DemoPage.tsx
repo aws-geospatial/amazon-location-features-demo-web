@@ -104,7 +104,8 @@ const initShow = {
 	unauthSimulationBounds: false,
 	unauthSimulationDisclaimerModal: false,
 	unauthSimulationExitModal: false,
-	startUnauthSimulation: false
+	startUnauthSimulation: false,
+	isAttributionOpen: false
 };
 let interval: NodeJS.Timer | undefined;
 let timeout: NodeJS.Timer | undefined;
@@ -171,10 +172,10 @@ const DemoPage: React.FC = () => {
 		doNotAskOpenDataDisclaimerModal,
 		setDoNotAskOpenDataDisclaimerModal
 	} = usePersistedData();
-	const { isDesktop, isMobile, isTablet } = useDeviceMediaQuery();
+	const { isDesktop, isMobile, isTablet, isMax556 } = useDeviceMediaQuery();
 	const { setUI, ui, bottomSheetCurrentHeight } = useBottomSheet();
 	const peggedRemValue = 13;
-	const extraGeoLocateTop = 2.6;
+	const extraGeoLocateTop = show.isAttributionOpen ? -2.6 : 2.6;
 	const geoLocateTopValue = `-${(bottomSheetCurrentHeight || 0) / peggedRemValue + extraGeoLocateTop}rem`;
 
 	const { t, i18n } = useTranslation();
@@ -1045,6 +1046,8 @@ const DemoPage: React.FC = () => {
 								isHandDevice
 							/>
 						}
+						show={show}
+						setShow={setShow}
 						mapRef={mapViewRef?.current}
 						RouteBox={
 							<RouteBox
@@ -1140,12 +1143,13 @@ const DemoPage: React.FC = () => {
 						style={{
 							fontSize: "0.77rem",
 							borderRadius: "0.62rem",
-							marginRight: "0.77rem",
-							marginBottom: !isDesktop ? "2.77rem" : "0rem",
+							marginRight: isMax556 ? `${(bottomSheetCurrentHeight || 0) / 13 + 1.2}rem` : "0.77rem",
+							marginBottom: isMax556 ? `${(bottomSheetCurrentHeight || 0) / 15}rem` : "2.77rem",
 							backgroundColor: currentMapStyle.toLowerCase().includes("dark")
 								? "rgba(0, 0, 0, 0.2)"
 								: "var(--white-color)",
-							color: currentMapStyle.toLowerCase().includes("dark") ? "var(--white-color)" : "var(--black-color)"
+							color: currentMapStyle.toLowerCase().includes("dark") ? "var(--white-color)" : "var(--black-color)",
+							width: !isDesktop ? "100%" : undefined
 						}}
 						compact={!isDesktop}
 					/>

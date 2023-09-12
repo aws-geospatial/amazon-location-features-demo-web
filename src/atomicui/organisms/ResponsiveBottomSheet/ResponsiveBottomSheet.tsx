@@ -7,6 +7,7 @@ import { Flex, Text } from "@aws-amplify/ui-react";
 import { IconClose, LogoDark, LogoLight } from "@demo/assets";
 import { ConfirmationModal } from "@demo/atomicui/molecules";
 import { useAmplifyMap, useBottomSheet, useDeviceMediaQuery } from "@demo/hooks";
+import { ShowStateType } from "@demo/types";
 import { MenuItemEnum, ResponsiveUIEnum } from "@demo/types/Enums";
 import { PubSub } from "aws-amplify";
 import { useTranslation } from "react-i18next";
@@ -43,6 +44,8 @@ interface IProps {
 	UnauthSimulationUI: JSX.Element;
 	AuthGeofenceBox: JSX.Element;
 	AuthTrackerBox: JSX.Element;
+	setShow: React.Dispatch<React.SetStateAction<ShowStateType>>;
+	show: ShowStateType;
 }
 
 const ResponsiveBottomSheet: FC<IProps> = ({
@@ -65,7 +68,8 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	UnauthSimulationUI,
 	from,
 	AuthGeofenceBox,
-	AuthTrackerBox
+	AuthTrackerBox,
+	show
 }) => {
 	const { isDesktop, isTablet, isMax556 } = useDeviceMediaQuery();
 	const { t } = useTranslation();
@@ -328,8 +332,21 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				header={
 					<Flex>
 						{isMax556 && (
-							<Flex className="logo-mobile">
-								{mapStyle.toLowerCase().includes("dark") ? <LogoDark /> : <LogoLight />}
+							<Flex className="logo-mobile-container" top={show.isAttributionOpen ? "-7rem" : "-2.89rem"}>
+								<Flex className="logo-mobile">
+									{mapStyle.toLowerCase().includes("dark") ? <LogoDark /> : <LogoLight />}
+								</Flex>
+								{/* <Flex
+									alignItems="center"
+									paddingTop={show.isAttributionOpen ? "0.55rem" : "0.35rem"}
+									marginLeft="0.2rem"
+								>
+									<IconInfo
+										width={18}
+										fill="var(--grey-color)"
+										onClick={() => setShow(s => ({ ...s, isAttributionOpen: !s.isAttributionOpen }))}
+									/>
+								</Flex> */}
 							</Flex>
 						)}
 						{bottomSheetHeader(ui)}

@@ -135,7 +135,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	const { mapProvider: currentMapProvider, mapStyle: currentMapStyle } = useAmplifyMap();
 	const { isAddingGeofence, setIsAddingGeofence } = useAwsGeofence();
 	const isAuthenticated = !!credentials?.authenticated;
-	const { isTablet, isMobile } = useDeviceMediaQuery();
+	const { isTablet, isMobile, isDesktop, isMax766 } = useDeviceMediaQuery();
 	const { t, i18n } = useTranslation();
 	const { bottomSheetCurrentHeight = 0 } = useBottomSheet();
 	const langDir = i18n.dir();
@@ -664,10 +664,15 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	);
 
 	if (onlyMapStyles) return mapStyles;
-
+	else if (isMax766) return null;
 	return (
 		<>
-			<Flex data-testid="map-buttons-container" className="map-styles-geofence-and-tracker-container">
+			<Flex
+				data-testid="map-buttons-container"
+				className={`map-styles-geofence-and-tracker-container ${
+					!isDesktop ? "map-styles-geofence-and-tracker-container-mobile" : ""
+				}`}
+			>
 				<Flex
 					data-testid="map-styles-button"
 					ref={stylesCardTogglerRef}
@@ -680,33 +685,37 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 					<IconMapSolid />
 				</Flex>
 				{!openStylesCard && <Tooltip id="map-styles-button" />}
-				<Divider className="button-divider" />
-				<Flex
-					data-testid="geofence-control-button"
-					className={isAddingGeofence || isUnauthGeofenceBoxOpen ? "geofence-button active" : "geofence-button"}
-					onClick={() => onClickGeofenceTracker(MenuItemEnum.GEOFENCE)}
-					data-tooltip-id="geofence-control-button"
-					data-tooltip-place="left"
-					data-tooltip-content={t("geofence.text")}
-				>
-					<IconGeofencePlusSolid />
-				</Flex>
-				<Tooltip id="geofence-control-button" />
-				<Divider className="button-divider" />
-				<Flex
-					data-testid="tracker-control-button"
-					className={
-						isAuthTrackerDisclaimerModalOpen || isAuthTrackerBoxOpen || isUnauthTrackerBoxOpen
-							? "tracker-button active"
-							: "tracker-button"
-					}
-					onClick={() => onClickGeofenceTracker(MenuItemEnum.TRACKER)}
-					data-tooltip-id="tracker-control-button"
-					data-tooltip-place="left"
-					data-tooltip-content={t("tracker.text")}
-				>
-					<IconRadar />
-				</Flex>
+				{isDesktop && (
+					<>
+						<Divider className="button-divider" />
+						<Flex
+							data-testid="geofence-control-button"
+							className={isAddingGeofence || isUnauthGeofenceBoxOpen ? "geofence-button active" : "geofence-button"}
+							onClick={() => onClickGeofenceTracker(MenuItemEnum.GEOFENCE)}
+							data-tooltip-id="geofence-control-button"
+							data-tooltip-place="left"
+							data-tooltip-content={t("geofence.text")}
+						>
+							<IconGeofencePlusSolid />
+						</Flex>
+						<Tooltip id="geofence-control-button" />
+						<Divider className="button-divider" />
+						<Flex
+							data-testid="tracker-control-button"
+							className={
+								isAuthTrackerDisclaimerModalOpen || isAuthTrackerBoxOpen || isUnauthTrackerBoxOpen
+									? "tracker-button active"
+									: "tracker-button"
+							}
+							onClick={() => onClickGeofenceTracker(MenuItemEnum.TRACKER)}
+							data-tooltip-id="tracker-control-button"
+							data-tooltip-place="left"
+							data-tooltip-content={t("tracker.text")}
+						>
+							<IconRadar />
+						</Flex>
+					</>
+				)}
 				<Tooltip id="tracker-control-button" />
 			</Flex>
 			{openStylesCard && (

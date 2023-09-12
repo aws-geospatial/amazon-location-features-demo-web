@@ -120,7 +120,6 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 	const toInputRef = useRef<HTMLInputElement>(null);
 	const isInputFocused = inputFocused.from || inputFocused.to;
 	const isBothInputFilled = value.from && value.to;
-	const isOneInputFilled = value.from || value.to;
 
 	const iconsByTravelMode = useMemo(
 		() => [

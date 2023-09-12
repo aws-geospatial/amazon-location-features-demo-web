@@ -18,8 +18,6 @@ import { LngLat } from "mapbox-gl";
 import { useTranslation } from "react-i18next";
 import { MapRef } from "react-map-gl";
 import { Tooltip } from "react-tooltip";
-import AutoSizer from "react-virtualized-auto-sizer";
-import { FixedSizeList as List } from "react-window";
 import "./styles.scss";
 
 const { METRIC } = MapUnitEnum;

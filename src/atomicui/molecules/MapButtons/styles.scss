@@ -29,6 +29,15 @@
 	justify-content: space-evenly;
 	align-items: center;
 
+	&.map-styles-geofence-and-tracker-container-mobile {
+		height: 2.4rem;
+
+		.map-styles-button {
+			border-bottom-left-radius: 0.62rem;
+			border-bottom-right-radius: 0.62rem;
+		}
+	}
+
 	.map-styles-button,
 	.geofence-button,
 	.tracker-button {
@@ -79,7 +88,7 @@
 }
 
 .active,
-.active>svg {
+.active > svg {
 	background-color: var(--primary-color);
 	fill: var(--white-color);
 }
@@ -213,8 +222,6 @@
 					box-shadow: none;
 				}
 			}
-
-
 		}
 
 		.amplify-input {
@@ -335,8 +342,6 @@
 		}
 	}
 
-
-
 	.maps-filter-container {
 		margin: 0 1.2rem 1.2rem;
 		border: 1px solid var(--grey-color-3);
@@ -357,7 +362,6 @@
 	}
 
 	.amplify-flex.maps-container {
-
 		.mb-style-container:nth-of-type(1),
 		.mb-style-container:nth-of-type(2),
 		.mb-style-container:nth-of-type(3) {
