@@ -33,8 +33,6 @@ interface SearchBoxProps {
 	isAuthTrackerBoxOpen: boolean;
 	isSettingsOpen: boolean;
 	isStylesCardOpen: boolean;
-	value: string;
-	setValue: React.Dispatch<React.SetStateAction<string>>;
 	isSimpleSearch?: boolean;
 }
 
@@ -48,12 +46,11 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	isAuthTrackerBoxOpen,
 	isSettingsOpen,
 	isStylesCardOpen,
-	isSimpleSearch = false,
-	value,
-	setValue
+	isSimpleSearch = false
 }) => {
-	const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+	const [value, setValue] = useState("");
 	const [isFocused, setIsFocused] = useState(false);
+	const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const autocompleteRef = useRef<HTMLInputElement | null>(null);
 	const { mapUnit: currentMapUnit, isCurrentLocationDisabled, currentLocationData, viewpoint } = useAmplifyMap();
 	const {
@@ -98,7 +95,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		}
 
 		if (isRouteBoxOpen || isAuthGeofenceBoxOpen || isAuthTrackerBoxOpen || isSettingsOpen || isStylesCardOpen) {
-			setValue && setValue("");
+			setValue("");
 			clearPoiList();
 		}
 	}, [
@@ -108,8 +105,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		isAuthGeofenceBoxOpen,
 		isAuthTrackerBoxOpen,
 		isSettingsOpen,
-		isStylesCardOpen,
-		setValue
+		isStylesCardOpen
 	]);
 
 	const handleSearch = useCallback(

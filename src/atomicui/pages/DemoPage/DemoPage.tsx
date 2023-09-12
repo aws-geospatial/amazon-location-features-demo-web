@@ -117,7 +117,6 @@ const DemoPage: React.FC = () => {
 	const [show, setShow] = React.useState<ShowStateType>(initShow);
 	const [height, setHeight] = React.useState(window.innerHeight);
 	const [searchValue, setSearchValue] = React.useState("");
-	const [searchBoxValue, setSearchBoxValue] = React.useState("");
 	const [doNotAskGrabDisclaimer, setDoNotAskGrabDisclaimer] = React.useState(false);
 	const [doNotAskOpenDataDisclaimer, setDoNotAskOpenDataDisclaimer] = React.useState(false);
 	const [selectedFilters, setSelectedFilters] = React.useState<MapStyleFilterTypes>({
@@ -853,19 +852,9 @@ const DemoPage: React.FC = () => {
 				isSettingsOpen={show.settings}
 				isStylesCardOpen={show.stylesCard}
 				isSimpleSearch={isSimpleSearch}
-				value={searchBoxValue}
-				setValue={setSearchBoxValue}
 			/>
 		),
-		[
-			searchBoxValue,
-			show.authGeofenceBox,
-			show.authTrackerBox,
-			show.routeBox,
-			show.settings,
-			show.sidebar,
-			show.stylesCard
-		]
+		[show.authGeofenceBox, show.authTrackerBox, show.routeBox, show.settings, show.sidebar, show.stylesCard]
 	);
 
 	const GeoLocateIcon = useMemo(

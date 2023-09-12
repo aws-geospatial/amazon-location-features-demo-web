@@ -82,8 +82,6 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 								isAuthTrackerBoxOpen={show.authTrackerBox}
 								isSettingsOpen={show.settings}
 								isStylesCardOpen={show.stylesCard}
-								value=""
-								setValue={() => {}}
 							/>
 						) : (
 							<></>

@@ -11,12 +11,13 @@ interface BottomSheetStoreProps {
 	bottomSheetMinHeight: number;
 	bottomSheetHeight: number;
 	POICard?: JSX.Element;
-	ui?: ResponsiveUIEnum;
+	ui: ResponsiveUIEnum;
 }
 
 const initialState: IStateProps<BottomSheetStoreProps> = {
 	bottomSheetMinHeight: 80,
-	bottomSheetHeight: window.innerHeight
+	bottomSheetHeight: window.innerHeight,
+	ui: ResponsiveUIEnum.explore
 };
 
 export default createStore<BottomSheetStoreProps>(initialState);
