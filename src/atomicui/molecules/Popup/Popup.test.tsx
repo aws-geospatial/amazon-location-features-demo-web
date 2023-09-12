@@ -66,6 +66,7 @@ describe("<Popup/>", () => {
 						}
 					}}
 					select={jest.fn()}
+					setInfo={jest.fn()}
 				/>
 			</I18nextProvider>
 		);

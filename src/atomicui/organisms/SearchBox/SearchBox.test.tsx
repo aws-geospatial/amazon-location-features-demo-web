@@ -21,6 +21,8 @@ describe("<SearchBox />", () => {
 					isAuthTrackerBoxOpen={false}
 					isSettingsOpen={false}
 					isStylesCardOpen={false}
+					value=""
+					setValue={jest.fn()}
 				/>
 			</I18nextProvider>
 		);

@@ -64,6 +64,10 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 						setShowUnauthTrackerBox={() => {}}
 						setShowConnectAwsAccountModal={() => {}}
 						setShowUnauthSimulationBounds={() => {}}
+						showStartUnauthSimulation={false}
+						setShowStartUnauthSimulation={() => {}}
+						startSimulation={false}
+						setStartSimulation={() => {}}
 					/>
 				) : (
 					<>
@@ -78,6 +82,8 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 								isAuthTrackerBoxOpen={show.authTrackerBox}
 								isSettingsOpen={show.settings}
 								isStylesCardOpen={show.stylesCard}
+								value=""
+								setValue={() => {}}
 							/>
 						) : (
 							<></>
