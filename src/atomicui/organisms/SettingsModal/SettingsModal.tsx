@@ -430,22 +430,19 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 						padding="0rem 1.15rem"
 						overflow="scroll"
 					>
-						{languageSwitcherData.map(({ value, label }, idx) => {
-							console.log(i18n.language, value);
-							return (
-								<Flex key={idx} style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
-									<Radio
-										data-testid="unit-automatic-radio"
-										value={value}
-										checked={i18n.language === value}
-										onChange={handleLanguageChange}
-										crossOrigin={undefined}
-									>
-										<Text marginLeft="1.23rem">{label}</Text>
-									</Radio>
-								</Flex>
-							);
-						})}
+						{languageSwitcherData.map(({ value, label }, idx) => (
+							<Flex key={idx} style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
+								<Radio
+									data-testid="unit-automatic-radio"
+									value={value}
+									checked={i18n.language === value}
+									onChange={handleLanguageChange}
+									crossOrigin={undefined}
+								>
+									<Text marginLeft="1.23rem">{label}</Text>
+								</Radio>
+							</Flex>
+						))}
 					</Flex>
 				)
 			},
