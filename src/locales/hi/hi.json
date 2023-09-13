@@ -3571,5 +3571,11 @@
   },
   "settings_modal_option__about": {
     "text": "कानूनी और आरोपण"
+  },
+  "map_buttons__clear_selections": {
+    "text": "चयन साफ़ करें"
+  },
+  "map_buttons__apply_filters": {
+    "text": "फ़िल्टर लागू करें"
   }
 }

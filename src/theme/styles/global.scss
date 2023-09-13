@@ -76,6 +76,12 @@ body:has(.disable-body-scroll) {
 	min-height: 1.5rem;
 }
 
+.amplify-radio__input:focus + .amplify-radio__button,
+.amplify-radio__input:checked + .amplify-radio__button,
+.amplify-radio__input:active + .amplify-radio__button {
+	color: var(--primary-color);
+}
+
 .grey-icon {
 	fill: var(--grey-color);
 	width: 1.5rem;
@@ -86,12 +92,12 @@ body:has(.disable-body-scroll) {
 	border-bottom-width: 1px;
 	border-color: var(--light-color-2);
 }
-.ltr{
+.ltr {
 	direction: ltr;
 	text-align: start;
 }
 
-.rtl{
+.rtl {
 	direction: rtl;
 	text-align: start;
 }

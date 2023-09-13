@@ -430,19 +430,22 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 						padding="0rem 1.15rem"
 						overflow="scroll"
 					>
-						{languageSwitcherData.map(({ value, label }, idx) => (
-							<Flex key={idx} style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
-								<Radio
-									data-testid="unit-automatic-radio"
-									value={value}
-									checked={i18n.language === value}
-									onChange={handleLanguageChange}
-									crossOrigin={undefined}
-								>
-									<Text marginLeft="1.23rem">{label}</Text>
-								</Radio>
-							</Flex>
-						))}
+						{languageSwitcherData.map(({ value, label }, idx) => {
+							console.log(i18n.language, value);
+							return (
+								<Flex key={idx} style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
+									<Radio
+										data-testid="unit-automatic-radio"
+										value={value}
+										checked={i18n.language === value}
+										onChange={handleLanguageChange}
+										crossOrigin={undefined}
+									>
+										<Text marginLeft="1.23rem">{label}</Text>
+									</Radio>
+								</Flex>
+							);
+						})}
 					</Flex>
 				)
 			},
@@ -725,6 +728,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 		[
 			currentMapUnit,
 			autoMapUnit,
+			i18n,
 			isGrabVisible,
 			handleAutoMapUnitChange,
 			onMapUnitChange,
@@ -746,7 +750,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 			cloudFormationLink,
 			t,
 			langDir,
-			i18n,
 			isLtr,
 			mapButtons,
 			handleLanguageChange,
@@ -904,9 +907,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 						{!!settingsOptions && <Flex className="option-details-container">{renderOptionDetails}</Flex>}
 					</Flex>
 					<Divider orientation="vertical" className="col-divider" />
-					<Flex data-testid="option-details-container" className="option-details-container">
-						{renderOptionDetails}
-					</Flex>
 				</>
 			}
 		/>

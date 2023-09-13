@@ -3567,5 +3567,11 @@
   },
   "settings_modal_option__about": {
     "text": "法律与归因"
+  },
+  "map_buttons__clear_selections": {
+    "text": "清除所选内容"
+  },
+  "map_buttons__apply_filters": {
+    "text": "应用过滤器"
   }
 }

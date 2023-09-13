@@ -403,8 +403,10 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	const applyMobileFilters = useCallback(() => {
 		if (isHandDevice) {
 			setSelectedFilters(tempFilters);
+			setShowFilter(false);
+			setSearchWidth(!!searchValue ? searchHandDeviceWidth : searchHandDeviceWidth);
 		}
-	}, [isHandDevice, setSelectedFilters, tempFilters]);
+	}, [isHandDevice, setSelectedFilters, tempFilters, searchValue]);
 
 	// Invoke this when dialog is closed without applying filters in mobile mode
 	const discardChanges = useCallback(() => {
@@ -622,10 +624,10 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 				{isHandDevice && showFilter && bottomSheetCurrentHeight > 150 && (
 					<Flex className="responsive-map-footer">
 						<Button variation="link" className="clear-selection-button" onClick={clearFilters}>
-							Clear selections
+							{t("map_buttons__clear_selections.text")}
 						</Button>
 						<Button variation="primary" onClick={applyMobileFilters}>
-							Apply filters
+							{t("map_buttons__apply_filters.text")}
 						</Button>
 					</Flex>
 				)}

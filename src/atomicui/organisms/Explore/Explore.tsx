@@ -63,7 +63,8 @@ const Explore: React.FC<IProps> = ({
 	onShowUnauthTrackerBox,
 	onshowUnauthSimulationDisclaimerModal
 }) => {
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
+	const currentLanguage = i18n.language;
 	const { setBottomSheetMinHeight, setBottomSheetHeight } = useBottomSheet();
 	const { isUserAwsAccountConnected, credentials, onLogin, onLogout, onDisconnectAwsAccount, setAuthTokens } =
 		useAmplifyAuth();
@@ -258,7 +259,9 @@ const Explore: React.FC<IProps> = ({
 
 	return (
 		<Flex direction="column" className="explore-container" gap="0">
-			<Flex className="feature-container">
+			<Flex
+				className={`feature-container ${["fr", "es"].includes(currentLanguage) ? "feature-container-baseline" : ""}`}
+			>
 				{exploreButtons.map((button, index) => (
 					<ExploreButton key={index} text={button.text} icon={button.icon} onClick={button.onClick} />
 				))}
