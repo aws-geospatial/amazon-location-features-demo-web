@@ -7,6 +7,14 @@
 		margin: 2.46rem auto;
 		width: 100%;
 		padding: 0 2rem;
+
+		.button-text {
+			text-align: center;
+		}
+
+		&.feature-container-baseline {
+			align-items: baseline;
+		}
 	}
 	.aws-connect-container {
 		border-radius: 1.07rem;

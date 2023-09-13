@@ -3571,5 +3571,11 @@
   },
   "settings_modal_option__about": {
     "text": "Rechtliches und Quellenangabe"
+  },
+  "map_buttons__clear_selections": {
+    "text": "Auswahl löschen"
+  },
+  "map_buttons__apply_filters": {
+    "text": "Filter anwenden"
   }
 }

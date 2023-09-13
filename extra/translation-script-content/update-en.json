@@ -1,1 +1,8 @@
-{}
+{
+	"map_buttons__clear_selections": {
+		"text": "Clear selections"
+	},
+	"map_buttons__apply_filters": {
+		"text": "Apply filters"
+	}
+}

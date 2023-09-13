@@ -3571,5 +3571,11 @@
   },
   "settings_modal_option__about": {
     "text": "リーガルとアトリビューション"
+  },
+  "map_buttons__clear_selections": {
+    "text": "選択内容をクリア"
+  },
+  "map_buttons__apply_filters": {
+    "text": "フィルターを適用"
   }
 }

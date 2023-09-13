@@ -725,6 +725,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 		[
 			currentMapUnit,
 			autoMapUnit,
+			i18n,
 			isGrabVisible,
 			handleAutoMapUnitChange,
 			onMapUnitChange,
@@ -746,7 +747,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 			cloudFormationLink,
 			t,
 			langDir,
-			i18n,
 			isLtr,
 			mapButtons,
 			handleLanguageChange,
@@ -904,9 +904,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 						{!!settingsOptions && <Flex className="option-details-container">{renderOptionDetails}</Flex>}
 					</Flex>
 					<Divider orientation="vertical" className="col-divider" />
-					<Flex data-testid="option-details-container" className="option-details-container">
-						{renderOptionDetails}
-					</Flex>
 				</>
 			}
 		/>

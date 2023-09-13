@@ -3571,5 +3571,11 @@
   },
   "settings_modal_option__about": {
     "text": "Legal e atribuição"
+  },
+  "map_buttons__clear_selections": {
+    "text": "Limpar seleções"
+  },
+  "map_buttons__apply_filters": {
+    "text": "Aplicar filtros"
   }
 }

@@ -3141,8 +3141,8 @@
     "text": "الإصدار"
   },
   "about_modal__terms__prefix": {
-		"text": "من خلال تنزيل تطبيق Amazon Location Demo أو تثبيته أو استخدامه، فإنك توافق على التطبيق"
-	},
+    "text": "من خلال تنزيل تطبيق Amazon Location Demo أو تثبيته أو استخدامه، فإنك توافق على التطبيق"
+  },
   "about_modal__terms__suffix": {
     "text": ". للاستخدام"
   },
@@ -3571,5 +3571,11 @@
   },
   "settings_modal_option__about": {
     "text": "القانونية والإسناد"
+  },
+  "map_buttons__clear_selections": {
+    "text": "مسح التحديدات"
+  },
+  "map_buttons__apply_filters": {
+    "text": "تطبيق الفلاتر"
   }
 }
