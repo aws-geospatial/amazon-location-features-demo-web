@@ -355,7 +355,7 @@ const DemoPage: React.FC = () => {
 			mapViewRef.current?.fitBounds(bound as [number, number, number, number], {
 				padding: suggestions.length > 2 ? 50 : 150
 			});
-		} else if (show.routeBox && routeData?.Summary.RouteBBox) {
+		} else if ((show.routeBox || ui === ResponsiveUIEnum.routes) && routeData?.Summary.RouteBBox) {
 			const boundingBox = routeData.Summary.RouteBBox;
 			const options = isDesktop
 				? {
@@ -366,17 +366,28 @@ const DemoPage: React.FC = () => {
 							right: 200
 						},
 						speed: 5,
+						linear: true
+				  }
+				: isTablet
+				? {
+						padding: {
+							top: 100,
+							bottom: 100,
+							left: 390,
+							right: 50
+						},
+						speed: 5,
 						linear: false
 				  }
 				: {
 						padding: {
-							top: 235,
-							bottom: 30,
+							top: 200,
+							bottom: 250,
 							left: 60,
 							right: 70
 						},
 						speed: 5,
-						linear: false
+						linear: true
 				  };
 			isDesktop
 				? mapViewRef.current?.fitBounds(
@@ -394,7 +405,7 @@ const DemoPage: React.FC = () => {
 						options
 				  );
 		}
-	}, [suggestions, bound, show.routeBox, routeData, isDesktop, currentMapProvider, currentMapStyle]);
+	}, [suggestions, bound, show.routeBox, ui, routeData, isDesktop, isTablet, currentMapProvider, currentMapStyle]);
 
 	useEffect(() => {
 		if (directions) setShow(s => ({ ...s, routeBox: true }));
@@ -921,6 +932,7 @@ const DemoPage: React.FC = () => {
 		),
 		[show.startUnauthSimulation, show.unauthGeofenceBox, startSimulation]
 	);
+
 	return !!credentials?.identityId ? (
 		<View
 			style={{ height }}
