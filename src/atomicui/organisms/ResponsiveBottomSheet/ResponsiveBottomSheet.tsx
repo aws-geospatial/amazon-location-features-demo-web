@@ -341,6 +341,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 					isShortHeader ? "short-header" : ""
 				} ${(bottomSheetCurrentHeight || 0) + 30 < window.innerHeight ? "add-overlay" : ""}`}
 				data-amplify-theme="aws-location-theme"
+				style={{ position: "absolute", bottom: 0, left: 1 }}
 			>
 				{bottomSheetBody(ui)}
 			</BottomSheet>
