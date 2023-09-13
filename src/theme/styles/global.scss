@@ -76,12 +76,6 @@ body:has(.disable-body-scroll) {
 	min-height: 1.5rem;
 }
 
-.amplify-radio__input:focus + .amplify-radio__button,
-.amplify-radio__input:checked + .amplify-radio__button,
-.amplify-radio__input:active + .amplify-radio__button {
-	color: var(--primary-color);
-}
-
 .grey-icon {
 	fill: var(--grey-color);
 	width: 1.5rem;
