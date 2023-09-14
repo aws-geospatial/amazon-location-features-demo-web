@@ -135,6 +135,9 @@
 	.popup-icon-close-container {
 		display: flex;
 		justify-content: flex-end;
+		position: absolute;
+    top: 4px;
+    right: 6px;
 
 		svg {
 			width: 20px;

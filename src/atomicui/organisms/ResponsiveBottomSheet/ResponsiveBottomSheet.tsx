@@ -87,7 +87,8 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 			ResponsiveUIEnum.auth_tracker,
 			ResponsiveUIEnum.auth_geofence,
 			ResponsiveUIEnum.non_start_unauthorized_tracker,
-			ResponsiveUIEnum.non_start_unauthorized_geofence
+			ResponsiveUIEnum.non_start_unauthorized_geofence,
+			ResponsiveUIEnum.poi_card
 		].includes(ui);
 	const isNonStartedSimulation =
 		!isDesktop &&
@@ -214,9 +215,9 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 					return AuthTrackerBox;
 				case ResponsiveUIEnum.auth_geofence:
 					return AuthGeofenceBox;
+				case ResponsiveUIEnum.poi_card:
 				case ResponsiveUIEnum.explore:
 				case ResponsiveUIEnum.search:
-				case ResponsiveUIEnum.poi_card:
 				default:
 					return (
 						<>
@@ -331,7 +332,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				]}
 				maxHeight={bottomSheetHeight}
 				header={
-					<Flex>
+					<Flex data-amplify-theme="aws-location-theme" direction="column" gap="0">
 						{isMax556 && (
 							<Flex className="logo-mobile-container">
 								<Flex className="logo-mobile">

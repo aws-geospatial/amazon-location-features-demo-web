@@ -257,11 +257,13 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 						<View>
 							<Text variation="tertiary">{address}</Text>
 						</View>
-						<IconCopyPages
-							data-testid="copy-icon"
-							className="copy-icon"
-							onClick={() => navigator.clipboard.writeText(`${info.Place?.Label?.split(",")[0]}` + ", " + address)}
-						/>
+						{isDesktop && (
+							<IconCopyPages
+								data-testid="copy-icon"
+								className="copy-icon"
+								onClick={() => navigator.clipboard.writeText(`${info.Place?.Label?.split(",")[0]}` + ", " + address)}
+							/>
+						)}
 					</View>
 					{renderRouteInfo}
 					<Button
@@ -286,9 +288,9 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 		if (!!info.Place?.Label && !isDesktop) {
 			setUI(ResponsiveUIEnum.poi_card);
 			setPOICard(<POIBody />);
-			if (bottomSheetHeight !== (POICardRef?.current?.clientHeight || 230) + 40) {
-				setBottomSheetMinHeight((POICardRef?.current?.clientHeight || 230) + 30);
-				setBottomSheetHeight((POICardRef?.current?.clientHeight || 230) + 40);
+			if (bottomSheetHeight !== (POICardRef?.current?.clientHeight || 230) + 70) {
+				setBottomSheetMinHeight((POICardRef?.current?.clientHeight || 230) + 60);
+				setBottomSheetHeight((POICardRef?.current?.clientHeight || 230) + 70);
 			}
 		}
 	}, [
