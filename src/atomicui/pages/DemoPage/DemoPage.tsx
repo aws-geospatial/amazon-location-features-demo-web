@@ -108,9 +108,10 @@ const initShow = {
 };
 let interval: NodeJS.Timer | undefined;
 let timeout: NodeJS.Timer | undefined;
-
 const searchParams = new URLSearchParams(window.location.search);
 let switchToMapProvider = searchParams.get(DATA_PROVIDER);
+const peggedRemValue = 13;
+const extraGeoLocateTop = 2.6;
 
 const DemoPage: React.FC = () => {
 	const {} = useRecordViewPage("DemoPage");
@@ -125,7 +126,6 @@ const DemoPage: React.FC = () => {
 		Type: []
 	});
 	const [startSimulation, setStartSimulation] = React.useState(false);
-
 	const mapViewRef = useRef<MapRef | null>(null);
 	const geolocateControlRef = useRef<GeolocateControlRef | null>(null);
 	const {
@@ -172,14 +172,11 @@ const DemoPage: React.FC = () => {
 	} = usePersistedData();
 	const { isDesktop, isMobile, isTablet, isMax556 } = useDeviceMediaQuery();
 	const { setUI, ui, bottomSheetCurrentHeight } = useBottomSheet();
-	const peggedRemValue = 13;
-	const extraGeoLocateTop = 2.6;
-	const geoLocateTopValue = `-${(bottomSheetCurrentHeight || 0) / peggedRemValue + extraGeoLocateTop}rem`;
-
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
 	const shouldClearCredentials = localStorage.getItem(SHOULD_CLEAR_CREDENTIALS) === "true";
+	const geoLocateTopValue = `-${(bottomSheetCurrentHeight || 0) / peggedRemValue + extraGeoLocateTop}rem`;
 
 	const isGrabAvailableInRegion = useMemo(() => !!region && GRAB_SUPPORTED_AWS_REGIONS.includes(region), [region]);
 
@@ -584,7 +581,6 @@ const DemoPage: React.FC = () => {
 						});
 					}
 				} else {
-					/* If current location data doesn't exists */
 					setViewpoint({ latitude: AMAZON_HQ.SG.latitude, longitude: AMAZON_HQ.SG.longitude });
 					setZoom(15);
 					mapViewRef.current?.flyTo({
@@ -592,10 +588,10 @@ const DemoPage: React.FC = () => {
 					});
 				}
 			} else {
-				/* When switching from Grab */
-				if (currentLocationData?.currentLocation && isCurrentLocationDisabled) {
+				/* When switching between other map providers or styles */
+				if (currentLocationData?.currentLocation) {
 					const { latitude, longitude } = currentLocationData.currentLocation;
-					setIsCurrentLocationDisabled(false);
+					isCurrentLocationDisabled && setIsCurrentLocationDisabled(false);
 					setViewpoint({ latitude, longitude });
 					setZoom(15);
 					mapViewRef.current?.flyTo({ center: [longitude, latitude] });
@@ -742,25 +738,24 @@ const DemoPage: React.FC = () => {
 
 	/* Handle search query params for map provider */
 	useEffect(() => {
-		const { ESRI, HERE, GRAB, OPEN_DATA } = MapProviderEnum;
+		if (switchToMapProvider) {
+			const { ESRI, HERE, GRAB, OPEN_DATA } = MapProviderEnum;
 
-		if (switchToMapProvider && ![ESRI, HERE, GRAB, "GrabMaps", OPEN_DATA].includes(switchToMapProvider)) {
-			switchToMapProvider = MapProviderEnum.ESRI;
-			onMapProviderChange(switchToMapProvider as MapProviderEnum, TriggeredByEnum.DEMO_PAGE);
-		} else {
-			if (switchToMapProvider && currentMapProvider !== switchToMapProvider) {
+			if (![ESRI, HERE, GRAB, "GrabMaps", OPEN_DATA].includes(switchToMapProvider)) {
+				/* Invalid search query param for map provider */
+				onMapProviderChange(currentMapProvider, TriggeredByEnum.DEMO_PAGE);
+			} else if (currentMapProvider !== switchToMapProvider) {
 				/* If search query param exist, update map provider based on search query param */
 				if (["Grab", "GrabMaps"].includes(switchToMapProvider)) {
 					isGrabVisible ? onMapProviderChange(GRAB, TriggeredByEnum.DEMO_PAGE) : setMapProvider(currentMapProvider);
 				} else {
 					onMapProviderChange(switchToMapProvider as MapProviderEnum, TriggeredByEnum.DEMO_PAGE);
 				}
-
-				switchToMapProvider = null;
-			} else if (!location.search.includes(`${DATA_PROVIDER}=`)) {
-				/* If search query param doesn't exist, update search query param based on current map provider */
-				setMapProvider(currentMapProvider);
 			}
+			switchToMapProvider = null;
+		} else if (!location.search.includes(`${DATA_PROVIDER}=`)) {
+			/* If search query param doesn't exist, update search query param based on current map provider */
+			setMapProvider(currentMapProvider);
 		}
 	}, [currentMapProvider, isGrabVisible, setMapProvider, onMapProviderChange]);
 
@@ -779,7 +774,7 @@ const DemoPage: React.FC = () => {
 				/* No map provider switch required */
 				setMapStyle(mapStyle);
 			} else if (mapProviderFromStyle === MapProviderEnum.OPEN_DATA) {
-				/* Switching from OpenData map provider to different map provider and style */
+				/* Switching to OpenData map provider to different map provider and style */
 				if (doNotAskOpenDataDisclaimerModal) {
 					setTimeout(
 						() => setShow(s => ({ ...s, openDataDisclaimerModal: true, mapStyle: mapStyle as OpenDataMapEnum })),
