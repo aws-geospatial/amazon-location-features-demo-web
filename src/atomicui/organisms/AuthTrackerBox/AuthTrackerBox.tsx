@@ -16,9 +16,9 @@ import {
 	IconWalking
 } from "@demo/assets";
 import { GeofenceMarker, WebsocketBanner } from "@demo/atomicui/molecules";
-import { useAwsGeofence, useAwsRoute, useAwsTracker, useDeviceMediaQuery } from "@demo/hooks";
+import { useAwsGeofence, useAwsRoute, useAwsTracker, useBottomSheet, useDeviceMediaQuery } from "@demo/hooks";
 import { RouteDataType, TrackerType } from "@demo/types";
-import { EventTypeEnum } from "@demo/types/Enums";
+import { EventTypeEnum, ResponsiveUIEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
 import * as turf from "@turf/turf";
 import { Position } from "aws-sdk/clients/location";
@@ -67,6 +67,7 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
+	const { setUI } = useBottomSheet();
 
 	const { isDesktop } = useDeviceMediaQuery();
 	const fetchGeofencesList = useCallback(async () => getGeofencesList(), [getGeofencesList]);
@@ -100,6 +101,7 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 		setIsEditingRoute(false);
 		setTrackerPoints(undefined);
 		setShowAuthTrackerBox(false);
+		setUI(ResponsiveUIEnum.explore);
 	};
 
 	const onTrackerMarkerChange = (type: TrackerType) => {
@@ -285,14 +287,12 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 					<Text fontFamily="AmazonEmber-Medium" fontSize="1.08rem">
 						{t("tracker.text")}
 					</Text>
-					<Flex gap={0} alignItems="center">
-						<Flex
-							data-testid="auth-tracker-box-close"
-							className={`tracking-card-close ${!isDesktop ? "tracking-card-close-mobile" : ""}`}
-							onClick={onClose}
-						>
-							<IconClose />
-						</Flex>
+					<Flex
+						data-testid="auth-tracker-box-close"
+						className={`tracking-card-close ${!isDesktop ? "tracking-card-close-mobile" : ""}`}
+						onClick={onClose}
+					>
+						<IconClose />
 					</Flex>
 				</Flex>
 				{Connection}
