@@ -2746,12 +2746,6 @@
   "welcome_modal__heading": {
     "text": "欢迎来到\n亚马逊位置演示"
   },
-  "welcome_modal__item_1": {
-    "text": "使用亚马逊定位演示应用程序，即表示您同意该应用程序"
-  },
-  "welcome_modal__item_3": {
-    "text": "供使用。"
-  },
   "search_box__searching_for_suggestions": {
     "text": "正在搜索建议..."
   },
@@ -3573,5 +3567,8 @@
   },
   "map_buttons__apply_filters": {
     "text": "应用过滤器"
+  },
+  "welcome_modal__cta": {
+    "text": "开始探索"
   }
 }

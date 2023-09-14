@@ -2,10 +2,15 @@
 /* SPDX-License-Identifier: MIT-0 */
 
 .welcome-modal {
-	max-width: 30.23rem;
-	// max-height: 23.69rem;
-	max-height: 22rem;
-	padding: 2.77rem;
+	max-width: 45.69rem;
+	max-height: 43.38rem;
+	padding: 4.92rem 9.62rem 4.31rem 9.62rem;
+
+	@media screen and (max-width: 430px) {
+		max-width: unset;
+		max-height: unset;
+		padding: 6rem 1.23rem 1.85rem 1.23rem;
+	}
 
 	.welcome-content {
 		gap: 0;
@@ -14,18 +19,72 @@
 		align-self: center;
 		height: 100%;
 
-		a {
-			font-family: "AmazonEmber-Regular";
-			color: var(--primary-color);
-			cursor: pointer;
-			text-decoration: none;
-		}
-	}
-}
+		.logo-container {
+			gap: 0;
+			height: 4.31rem;
+			justify-content: center;
+			align-items: center;
+			margin-bottom: 2.46rem;
 
-@media screen and (max-width: 960px) {
-	.welcome-modal {
-		width: 90% !important;
-		height: 90% !important;
+			@media screen and (max-width: 430px) {
+				margin-bottom: 2.77rem;
+			}
+
+			svg {
+				width: 4.31rem;
+				height: 4.31rem;
+			}
+		}
+
+		.heading {
+			font-size: 1.85rem;
+			line-height: 2.46rem;
+			margin-bottom: 4.31rem;
+
+			@media screen and (max-width: 430px) {
+				margin-bottom: 4.92rem;
+			}
+		}
+
+		.cta-button {
+			height: 3.69rem;
+			font-size: 1.23rem;
+			line-height: 1.54rem;
+			margin-bottom: 4.31rem;
+
+			@media screen and (max-width: 430px) {
+				margin-bottom: 7.85rem;
+			}
+		}
+
+		.tnc-container {
+			gap: 0;
+			flex-direction: column;
+
+			svg {
+				width: 8.69re;
+				height: 1.54rem;
+				align-self: center;
+				margin-bottom: 1.85rem;
+			}
+
+			.text {
+				font-size: 0.77rem;
+				color: var(--grey-color);
+				margin-bottom: 1.23rem;
+
+				a {
+					font-family: "AmazonEmber-Regular";
+					color: var(--primary-color);
+					cursor: pointer;
+					text-decoration: none;
+				}
+			}
+
+			.copyright {
+				font-size: 0.77rem;
+				color: var(--grey-color);
+			}
+		}
 	}
 }

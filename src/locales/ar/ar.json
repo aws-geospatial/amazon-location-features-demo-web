@@ -2750,12 +2750,6 @@
   "welcome_modal__heading": {
     "text": "مرحبًا بك في\nعرض توضيحي لموقع أمازون"
   },
-  "welcome_modal__item_1": {
-    "text": "باستخدام تطبيق Amazon Location Demo، فإنك توافق على التطبيق الشروط والأحكام .للاستخدام"
-  },
-  "welcome_modal__item_3": {
-    "text": ".للاستخدام"
-  },
   "search_box__searching_for_suggestions": {
     "text": ".جاري البحث عن اقتراحات.."
   },
@@ -3577,5 +3571,8 @@
   },
   "map_buttons__apply_filters": {
     "text": "تطبيق الفلاتر"
+  },
+  "welcome_modal__cta": {
+    "text": "ابدأ الاستكشاف"
   }
 }

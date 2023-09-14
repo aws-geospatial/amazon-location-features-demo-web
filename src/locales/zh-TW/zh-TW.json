@@ -2750,12 +2750,6 @@
   "welcome_modal__heading": {
     "text": "歡迎來到\n亞馬遜位置演示"
   },
-  "welcome_modal__item_1": {
-    "text": "通過使用亞馬遜位置演示應用程序，您同意該應用程序的"
-  },
-  "welcome_modal__item_3": {
-    "text": "供使用。"
-  },
   "search_box__searching_for_suggestions": {
     "text": "正在搜尋建議..."
   },
@@ -3577,5 +3571,8 @@
   },
   "map_buttons__apply_filters": {
     "text": "套用篩選"
+  },
+  "welcome_modal__cta": {
+    "text": "開始探索"
   }
 }

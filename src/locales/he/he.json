@@ -2750,12 +2750,6 @@
   "welcome_modal__heading": {
     "text": "ברוכים הבאים\nהדגמת מיקום של אמזון"
   },
-  "welcome_modal__item_1": {
-    "text": "על ידי שימוש באפליקציית הדגמת המיקום של אמזון, אתה מסכים לאפליקציות"
-  },
-  "welcome_modal__item_3": {
-    "text": ".לשימוש"
-  },
   "search_box__searching_for_suggestions": {
     "text": ".מחפש הצעות.."
   },
@@ -3577,5 +3571,8 @@
   },
   "map_buttons__apply_filters": {
     "text": "החלת מסננים"
+  },
+  "welcome_modal__cta": {
+    "text": "התחל לחקור"
   }
 }

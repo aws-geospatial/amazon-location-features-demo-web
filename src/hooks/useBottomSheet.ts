@@ -15,7 +15,6 @@ const useBottomSheet = () => {
 
 	useEffect(() => {
 		if (store.ui === ResponsiveUIEnum.explore) {
-			console.log("useBottomSheet: ResponsiveUIEnum.explore");
 			setState({ bottomSheetMinHeight: isTablet ? 80 : 22 });
 		}
 	}, [setState, isTablet, store.ui]);

@@ -2750,12 +2750,6 @@
   "welcome_modal__heading": {
     "text": "Willkommen bei\nAmazon-Standort-Demo"
   },
-  "welcome_modal__item_1": {
-    "text": "Durch die Nutzung der Amazon Location Demo App stimmen Sie den Nutzungsbedingungen der App zu"
-  },
-  "welcome_modal__item_3": {
-    "text": "zur Verwendung."
-  },
   "search_box__searching_for_suggestions": {
     "text": "Auf der Suche nach Vorschlägen..."
   },
@@ -3577,5 +3571,8 @@
   },
   "map_buttons__apply_filters": {
     "text": "Filter anwenden"
+  },
+  "welcome_modal__cta": {
+    "text": "Beginne zu erkunden"
   }
 }

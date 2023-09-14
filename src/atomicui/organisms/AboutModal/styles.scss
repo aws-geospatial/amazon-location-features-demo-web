@@ -130,6 +130,7 @@
 			}
 		}
 	}
+
 	.amplify-divider.amplify-divider--horizontal.title-divider {
 		border-bottom-width: 1px;
 		border-color: var(--light-color-2);
@@ -151,6 +152,36 @@
 			svg {
 				margin-right: 1rem;
 			}
+		}
+	}
+
+	.tnc-container {
+		gap: 0;
+		flex-direction: column;
+		margin: 0rem 1.23rem;
+
+		svg {
+			width: 8.69re;
+			height: 1.54rem;
+			align-self: center;
+			margin-bottom: 1.85rem;
+		}
+
+		.text {
+			color: var(--grey-color);
+			margin-bottom: 1.23rem;
+
+			a {
+				font-family: "AmazonEmber-Regular";
+				color: var(--primary-color);
+				cursor: pointer;
+				text-decoration: none;
+			}
+		}
+
+		.copyright {
+			font-size: 0.77rem;
+			color: var(--grey-color);
 		}
 	}
 

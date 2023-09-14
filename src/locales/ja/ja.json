@@ -2750,12 +2750,6 @@
   "welcome_modal__heading": {
     "text": "へようこそ\nAmazon ロケーションデモ"
   },
-  "welcome_modal__item_1": {
-    "text": "Amazon ロケーションデモアプリを使用することにより、アプリに同意したものとみなされます"
-  },
-  "welcome_modal__item_3": {
-    "text": "使用のため。"
-  },
   "search_box__searching_for_suggestions": {
     "text": "候補を検索中..."
   },
@@ -3577,5 +3571,8 @@
   },
   "map_buttons__apply_filters": {
     "text": "フィルターを適用"
+  },
+  "welcome_modal__cta": {
+    "text": "探索を始める"
   }
 }

@@ -2750,12 +2750,6 @@
   "welcome_modal__heading": {
     "text": "में आपका स्वागत है\nAmazon लोकेशन डेमो"
   },
-  "welcome_modal__item_1": {
-    "text": "Amazon लोकेशन डेमो ऐप का उपयोग करके, आप ऐप के लिए सहमत होते हैं"
-  },
-  "welcome_modal__item_3": {
-    "text": "उपयोग के लिए।"
-  },
   "search_box__searching_for_suggestions": {
     "text": "सुझाव खोज रहे हैं..."
   },
@@ -3577,5 +3571,8 @@
   },
   "map_buttons__apply_filters": {
     "text": "फ़िल्टर लागू करें"
+  },
+  "welcome_modal__cta": {
+    "text": "खोजना शुरू करें"
   }
 }
