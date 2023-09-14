@@ -32,6 +32,7 @@
 			.travel-mode {
 				min-width: 32px;
 				width: auto;
+				min-height: 32px;
 				height: auto;
 				padding: 0 0.5rem;
 
@@ -298,6 +299,12 @@
 		border-bottom-right-radius: 8px;
 		overflow: auto;
 
+		&.search-results-container-mobile {
+			.suggestion {
+				padding-left: 0;
+			}
+		}
+		
 		.current-location-toggle-container {
 			display: flex;
 			flex-direction: row;
@@ -305,6 +312,10 @@
 			padding: 20px 0px 20px 18px;
 			cursor: pointer;
 			border-bottom: 1px solid rgba(242, 242, 247, 1);
+
+			&.current-location-toggle-container-mobile {
+				padding-left: 0;
+			}
 
 			svg {
 				width: 16px;

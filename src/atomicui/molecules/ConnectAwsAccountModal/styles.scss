@@ -5,12 +5,16 @@
 	max-width: 67.08rem;
 	max-height: 52.62rem;
 
+	&.connect-aws-account-modal-tablet {
+		padding: 8% 0;
+	}
+
 	&.connect-aws-account-modal-mobile {
 		width: 100% !important;
 		height: 100% !important;
 		max-height: 100% !important;
 		max-width: 100% !important;
-		padding: 8% 0;
+
 		border-radius: 0;
 
 		.amplify-flex.left-col {
@@ -40,7 +44,7 @@
 				text-align: center;
 			}
 
-			@media screen and (max-width: 960px) {
+			@media screen and (max-width: 1024px) {
 				max-width: none;
 			}
 		}
@@ -53,7 +57,7 @@
 			align-items: center;
 			margin-left: 6.15rem;
 
-			@media only screen and (max-width: 950px) {
+			@media only screen and (max-width: 1024px) {
 				width: 100%;
 				max-width: none;
 				margin: 2.31rem 0rem;
@@ -110,7 +114,7 @@
 			}
 		}
 
-		@media only screen and (max-width: 950px) {
+		@media only screen and (max-width: 1024px) {
 			flex-direction: column;
 			overflow-y: auto;
 			overflow-x: hidden;
@@ -121,7 +125,7 @@
 		}
 	}
 
-	@media only screen and (max-width: 950px) {
+	@media only screen and (max-width: 1024px) {
 		padding: 5%;
 		overflow-x: hidden;
 		width: 90% !important;

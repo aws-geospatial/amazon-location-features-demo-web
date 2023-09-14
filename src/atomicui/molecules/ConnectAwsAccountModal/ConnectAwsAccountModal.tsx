@@ -61,7 +61,7 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
 	const isOverflowing = ["de", "es", "fr", "it", "pt-BR"].includes(i18n.language);
-	const { isDesktop } = useDeviceMediaQuery();
+	const { isDesktop, isMobile } = useDeviceMediaQuery();
 
 	useEffect(() => {
 		const regionOption = region && regionsData.find(option => option.value === region);
@@ -180,7 +180,9 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 			data-testid="connect-aws-account-modal-container"
 			open={open}
 			onClose={handleModalClose}
-			className={`connect-aws-account-modal ${!isDesktop ? "connect-aws-account-modal-mobile" : ""}`}
+			className={`connect-aws-account-modal ${
+				isMobile ? "connect-aws-account-modal-mobile" : "connect-aws-account-modal-tablet"
+			}`}
 			content={
 				<Flex className="content-container">
 					<Flex

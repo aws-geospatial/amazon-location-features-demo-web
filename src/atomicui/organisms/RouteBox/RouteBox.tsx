@@ -974,14 +974,19 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 					[TravelMode.CAR, TravelMode.TRUCK].includes(travelMode as TravelMode) &&
 					!isCollapsed &&
 					renderRouteOptionsContainer}
-				<View className="search-results-container" maxHeight={window.innerHeight - 260}>
+				<View
+					className={`search-results-container ${!isDesktop ? "search-results-container-mobile" : ""}`}
+					maxHeight={window.innerHeight - 260}
+				>
 					{(inputFocused.from || inputFocused.to) &&
 						(!placeData.from || !placeData.to) &&
 						currentLocationData?.currentLocation &&
 						!isCurrentLocationSelected &&
 						!isCurrentLocationDisabled && (
 							<View
-								className="current-location-toggle-container"
+								className={`current-location-toggle-container ${
+									!isDesktop ? "current-location-toggle-container-mobile" : ""
+								}`}
 								onClick={() => onSelectCurrentLocaiton(inputFocused.from ? InputType.FROM : InputType.TO)}
 							>
 								<IconMyLocation />
