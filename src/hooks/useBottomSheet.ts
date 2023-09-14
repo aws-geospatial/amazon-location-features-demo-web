@@ -1,14 +1,24 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 import { useBottomSheetStore } from "@demo/stores";
 import { ResponsiveUIEnum } from "@demo/types/Enums";
 
+import useDeviceMediaQuery from "./useDeviceMediaQuery";
+
 const useBottomSheet = () => {
 	const store = useBottomSheetStore();
 	const { setState } = useBottomSheetStore;
+	const { isTablet } = useDeviceMediaQuery();
+
+	useEffect(() => {
+		if (store.ui === ResponsiveUIEnum.explore) {
+			console.log("useBottomSheet: ResponsiveUIEnum.explore");
+			setState({ bottomSheetMinHeight: isTablet ? 80 : 22 });
+		}
+	}, [setState, isTablet, store.ui]);
 
 	const methods = useMemo(
 		() => ({

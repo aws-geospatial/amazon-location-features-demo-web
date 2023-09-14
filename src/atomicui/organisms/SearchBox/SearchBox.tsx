@@ -80,7 +80,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		setUI,
 		ui
 	} = useBottomSheet();
-	const { isDesktop } = useDeviceMediaQuery();
+	const { isDesktop, isMobile } = useDeviceMediaQuery();
 	const searchContainerRef = useRef<HTMLDivElement>(null);
 	const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -147,7 +147,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 			if (!POICard) {
 				searchInputRef?.current?.blur();
 				setBottomSheetHeight(BottomSheetHeights.search.max);
-				setBottomSheetMinHeight(BottomSheetHeights.search.min);
+				setBottomSheetMinHeight(isMobile ? BottomSheetHeights.search.min : 80);
 			}
 		}
 
@@ -155,7 +155,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		return () => {
 			document.removeEventListener("touchmove", handleClickOutside);
 		};
-	}, [POICard, setBottomSheetHeight, setBottomSheetMinHeight]);
+	}, [POICard, setBottomSheetHeight, setBottomSheetMinHeight, isMobile]);
 
 	const selectSuggestion = useCallback(
 		async ({ text, label, placeid }: ComboBoxOption) => {
@@ -194,7 +194,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		if (!!value) {
 			clearPoiList();
 			handleSearch(value, false, AnalyticsEventActionsEnum.SEARCH_ICON_CLICK);
-			setBottomSheetMinHeight(BottomSheetHeights.search.min);
+			setBottomSheetMinHeight(isMobile ? (isMobile ? BottomSheetHeights.search.min : 80) : 80);
 		}
 		autocompleteRef?.current?.focus();
 	};
@@ -337,12 +337,12 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 			e.preventDefault();
 			handleSearch(value, true, AnalyticsEventActionsEnum.ENTER_BUTTON);
 			if (!!options?.length) {
-				setBottomSheetMinHeight(BottomSheetHeights.search.min);
+				setBottomSheetMinHeight(isMobile ? BottomSheetHeights.search.min : 80);
 				setBottomSheetHeight(BottomSheetHeights.search.min);
 				searchInputRef?.current?.blur();
 			}
 		},
-		[handleSearch, options, setBottomSheetHeight, setBottomSheetMinHeight, value]
+		[handleSearch, options, setBottomSheetHeight, setBottomSheetMinHeight, value, isMobile]
 	);
 
 	// const Row = ({ index, style }: { index: number; style: React.CSSProperties }) => {

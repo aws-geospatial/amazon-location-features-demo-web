@@ -29,7 +29,7 @@
 		padding: 0;
 		z-index: 20;
 		opacity: 1;
-		min-height: 1.4rem;
+		min-height: 1.7rem;
 	}
 
 	&.bottom-sheet--collapsed {
@@ -38,9 +38,9 @@
 		}
 	}
 
-	[data-rsbs-scroll="true"] {
-		margin-top: 1.5rem;
-	}
+	// [data-rsbs-scroll="true"] {
+	// 	margin-top: 1.5rem;
+	// }
 
 	.logo-mobile-container {
 		position: absolute;
