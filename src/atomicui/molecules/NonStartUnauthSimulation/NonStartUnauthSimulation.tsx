@@ -54,11 +54,11 @@ const NonStartUnauthSimulation: FC<IProps> = ({
 			</Flex>
 			<Flex className="unauth-simulation-card-body">
 				<Flex direction={isDesktop ? "column" : "row"} alignItems={"center"} marginBottom={!isDesktop ? "1.5rem" : ""}>
-					<Flex marginRight={!isDesktop ? "1rem" : ""}>
+					<Flex className="icon-container">
 						{from === MenuItemEnum.GEOFENCE ? <IconGeofenceColor /> : <IconTrackers />}
 					</Flex>
 					<Flex direction="column" alignItems={isDesktop ? "center" : "flex-start"}>
-						<Text className="bold medium-text" marginTop="1.5rem">
+						<Text className={`bold ${isDesktop ? "medium-text" : "regular-text"}`} marginTop="1.5rem">
 							{from === MenuItemEnum.GEOFENCE ? t("geofences.text") : t("trackers.text")}
 						</Text>
 						<Text
