@@ -99,6 +99,7 @@
 		}
 		.tracking-history-container {
 			overflow-y: scroll;
+			-webkit-overflow-scrolling: touch;
 		}
 		.back-icon {
 			fill: var(--grey-color);

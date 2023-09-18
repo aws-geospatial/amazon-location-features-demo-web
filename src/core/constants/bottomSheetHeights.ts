@@ -4,7 +4,7 @@ const BottomSheetHeights = {
 		max: window.innerHeight
 	},
 	explore: {
-		min: 22,
+		min: 125,
 		max: window.innerHeight
 	},
 	routes: {
@@ -16,7 +16,7 @@ const BottomSheetHeights = {
 		max: window.innerHeight
 	},
 	search: {
-		min: 22,
+		min: 125,
 		max: window.innerHeight
 	}
 };

@@ -89,6 +89,8 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 			ResponsiveUIEnum.non_start_unauthorized_tracker,
 			ResponsiveUIEnum.non_start_unauthorized_geofence,
 			ResponsiveUIEnum.auth_geofence,
+			ResponsiveUIEnum.unauth_tracker,
+			ResponsiveUIEnum.unauth_geofence,
 			ResponsiveUIEnum.auth_tracker,
 			ResponsiveUIEnum.poi_card
 		].includes(ui);

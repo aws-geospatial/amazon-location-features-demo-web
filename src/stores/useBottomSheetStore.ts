@@ -15,7 +15,7 @@ interface BottomSheetStoreProps {
 }
 
 const initialState: IStateProps<BottomSheetStoreProps> = {
-	bottomSheetMinHeight: 80,
+	bottomSheetMinHeight: 125,
 	bottomSheetHeight: window.innerHeight,
 	ui: ResponsiveUIEnum.explore
 };
