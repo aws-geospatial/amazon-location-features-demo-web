@@ -92,7 +92,9 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 			ResponsiveUIEnum.unauth_tracker,
 			ResponsiveUIEnum.unauth_geofence,
 			ResponsiveUIEnum.auth_tracker,
-			ResponsiveUIEnum.poi_card
+			ResponsiveUIEnum.poi_card,
+			ResponsiveUIEnum.routes,
+			ResponsiveUIEnum.direction_to_routes
 		].includes(ui);
 	const isNonStartedSimulation =
 		!isDesktop &&

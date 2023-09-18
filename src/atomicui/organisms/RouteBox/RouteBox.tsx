@@ -93,7 +93,8 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 		mapProvider: currentMapProvider
 	} = useAmplifyMap();
 	const { search, getPlaceData } = useAwsPlace();
-	const { setUI, setBottomSheetMinHeight, setBottomSheetHeight, ui, bottomSheetHeight } = useBottomSheet();
+	const { setUI, setBottomSheetMinHeight, setBottomSheetHeight, ui, bottomSheetHeight, bottomSheetCurrentHeight } =
+		useBottomSheet();
 	const {
 		setRoutePositions,
 		getRoute,
@@ -144,6 +145,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 			if (ui === ResponsiveUIEnum.routes) {
 				fromInputRef?.current?.blur();
 				toInputRef?.current?.blur();
+				setInputFocused({ from: false, to: false });
 			}
 		}
 
@@ -155,10 +157,10 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 
 	useEffect(() => {
 		if (!isDesktop) {
-			if (isInputFocused) {
+			if (isInputFocused && bottomSheetCurrentHeight !== window.innerHeight - 10) {
 				setBottomSheetMinHeight(window.innerHeight - 10);
 				setBottomSheetHeight(window.innerHeight);
-			} else {
+			} else if (!isInputFocused) {
 				if (expandRouteOptionsMobile) {
 					setBottomSheetMinHeight((expandRouteRef?.current?.clientHeight || 230) + 90);
 					setBottomSheetHeight((expandRouteRef?.current?.clientHeight || 230) + 100);
@@ -174,7 +176,8 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 		setBottomSheetHeight,
 		setBottomSheetMinHeight,
 		routeData,
-		expandRouteOptionsMobile
+		expandRouteOptionsMobile,
+		bottomSheetCurrentHeight
 	]);
 
 	useEffect(() => {
@@ -619,7 +622,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 	const renderSteps = useMemo(() => {
 		if (routeData) {
 			return (
-				<View data-testid="steps-container" className="steps-container">
+				<View data-testid="steps-container" className={`steps-container ${!isDesktop ? "steps-container-mobile" : ""}`}>
 					{routeData.Legs[0].Steps.map((s, idx) => (
 						<StepCard
 							key={idx}
@@ -632,7 +635,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 				</View>
 			);
 		}
-	}, [routeData, travelMode]);
+	}, [routeData, travelMode, isDesktop]);
 
 	const routeFromMarker = useMemo(() => {
 		if (routePositions?.from) {
@@ -776,17 +779,26 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 
 	if (expandRouteOptionsMobile)
 		return (
-			<Flex direction="column" gap="0" ref={expandRouteRef}>
-				<Flex className="route-card-close" onClick={() => setExpandRouteOptionsMobile(false)} justifyContent="flex-end">
-					<IconClose className="grey-icon expand-mobile-close" width="24px" height="24px" />
+			<>
+				<Flex direction="column" gap="0" ref={expandRouteRef}>
+					<Flex
+						className="route-card-close"
+						onClick={() => setExpandRouteOptionsMobile(false)}
+						justifyContent="flex-end"
+					>
+						<IconClose className="grey-icon expand-mobile-close" width="24px" height="24px" />
+					</Flex>
+					<Flex direction="column" padding="0 1.23rem">
+						<Text fontFamily="AmazonEmber-Bold" fontSize="1.23rem">
+							{t("route_box__route_options.text")}
+						</Text>
+						<MoreOptionsUI />
+					</Flex>
 				</Flex>
-				<Flex direction="column" padding="0 1.23rem">
-					<Text fontFamily="AmazonEmber-Bold" fontSize="1.23rem">
-						{t("route_box__route_options.text")}
-					</Text>
-					<MoreOptionsUI />
-				</Flex>
-			</Flex>
+				{routeFromMarker}
+				{routeToMarker}
+				{routeLayer}
+			</>
 		);
 
 	return (
@@ -1015,7 +1027,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 						className="route-data-container bottom-border-radius"
 						maxHeight={window.innerHeight - 260}
 					>
-						<View className="route-info">
+						<View className={`route-info ${!isDesktop ? "route-info-mobile" : ""}`}>
 							{travelMode === TravelMode.CAR ? (
 								<IconCar />
 							) : travelMode === TravelMode.TRUCK ? (

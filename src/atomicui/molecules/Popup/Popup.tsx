@@ -242,7 +242,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 		() => (
 			<Flex ref={POICardRef} className={!isDesktop ? "poi-only-container" : ""} direction="column">
 				<View className="popup-icon-close-container">
-					<IconClose onClick={() => onClose(ResponsiveUIEnum.explore)} />
+					<IconClose onClick={() => onClose(ResponsiveUIEnum.search)} />
 				</View>
 				{isDesktop && (
 					<View className="triangle-container">

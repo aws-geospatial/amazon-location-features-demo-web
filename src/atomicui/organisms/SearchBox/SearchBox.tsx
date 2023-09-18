@@ -85,9 +85,11 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	const searchInputRef = useRef<HTMLInputElement>(null);
 
 	useEffect(() => {
-		if (isFocused || !!value?.length) setUI(ResponsiveUIEnum.search);
-		// else if (!value?.length) setUI(ResponsiveUIEnum.explore);
-	}, [setUI, isFocused, value]);
+		if (!isDesktop) {
+			if (isFocused && !!value?.length) setUI(ResponsiveUIEnum.search);
+			else if (ui === ResponsiveUIEnum.search && !value?.length) setUI(ResponsiveUIEnum.explore);
+		}
+	}, [setUI, isFocused, value, isDesktop, ui]);
 
 	useEffect(() => {
 		if (!value) {
@@ -194,7 +196,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		if (!!value) {
 			clearPoiList();
 			handleSearch(value, false, AnalyticsEventActionsEnum.SEARCH_ICON_CLICK);
-			setBottomSheetMinHeight(isMobile ? (isMobile ? BottomSheetHeights.search.min : 80) : 80);
+			// setBottomSheetMinHeight(isMobile ? (isMobile ? BottomSheetHeights.search.min : 80) : 80);
 		}
 		autocompleteRef?.current?.focus();
 	};
@@ -337,37 +339,13 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 			e.preventDefault();
 			handleSearch(value, true, AnalyticsEventActionsEnum.ENTER_BUTTON);
 			if (!!options?.length) {
-				setBottomSheetMinHeight(isMobile ? BottomSheetHeights.search.min : 80);
+				setBottomSheetMinHeight(BottomSheetHeights.search.min);
 				setBottomSheetHeight(BottomSheetHeights.search.min);
 				searchInputRef?.current?.blur();
 			}
 		},
-		[handleSearch, options, setBottomSheetHeight, setBottomSheetMinHeight, value, isMobile]
+		[handleSearch, options, setBottomSheetHeight, setBottomSheetMinHeight, value]
 	);
-
-	// const Row = ({ index, style }: { index: number; style: React.CSSProperties }) => {
-	// 	return !options?.length ? (
-	// 		<></>
-	// 	) : (
-	// 		<div
-	// 			key={index}
-	// 			// className={`option-wrapper ${index % 2 ? "ListItemOdd" : "ListItemEven"}`}
-	// 			style={style}
-	// 			onClick={() => {
-	// 				selectSuggestion({
-	// 					id: options[index]?.id,
-	// 					text: !!options[index]?.placeid ? value : options[index].label,
-	// 					label: options[index].label,
-	// 					placeid: options[index]?.placeid
-	// 				});
-	// 				setBottomSheetMinHeight(BottomSheetHeights.search.min);
-	// 				setBottomSheetHeight(BottomSheetHeights.search.min);
-	// 			}}
-	// 		>
-	// 			{renderOption(options[index])}
-	// 		</div>
-	// 	);
-	// };
 
 	return (
 		<>
@@ -426,7 +404,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 									/>
 									{!!value && (
 										<Button className="clear-button" onClick={onClearSearch}>
-											Cancel
+											{t("confirmation_modal__cancel.text")}
 										</Button>
 									)}
 								</Flex>
@@ -453,25 +431,6 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 										maxHeight={bottomSheetCurrentHeight}
 										paddingBottom={!!options?.length ? "5.1rem" : ""}
 									>
-										{/* {!!options?.length && (
-											<AutoSizer>
-												{({ height, width }) => {
-													console.log("height", height);
-													console.log("width", width);
-													return (
-														<List
-															className="List"
-															height={height}
-															itemCount={options?.length || 0}
-															itemSize={100}
-															width={width}
-														>
-															{Row}
-														</List>
-													);
-												}}
-											</AutoSizer>
-										)} */}
 										{!!options?.length &&
 											options.map((option, i) => (
 												<div

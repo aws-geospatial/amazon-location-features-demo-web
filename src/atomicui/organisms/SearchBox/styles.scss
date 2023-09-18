@@ -85,6 +85,8 @@
 	.clear-button {
 		border: none;
 		color: var(--primary-color);
+		font-family: "AmazonEmber-Bold";
+		font-size: 1rem;
 
 		&:active,
 		&:focus {
@@ -134,7 +136,7 @@
 	.search-complete {
 		text-align: left;
 		align-items: flex-start;
-		overflow-y: scroll;
+		max-height: max-content;
 	}
 }
 

@@ -429,6 +429,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 						direction="column"
 						padding="0rem 1.15rem"
 						overflow="scroll"
+						className="language-switcher-container"
 					>
 						{languageSwitcherData.map(({ value, label }, idx) => (
 							<Flex key={idx} style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>

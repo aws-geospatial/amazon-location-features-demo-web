@@ -37,7 +37,8 @@
 		}
 
 		&.settings-modal-content-mobile {
-			.options-container, .option-details-container {
+			.options-container,
+			.option-details-container {
 				width: 100%;
 			}
 
@@ -58,6 +59,10 @@
 			gap: 0;
 			width: 33.67%;
 			flex-direction: column;
+
+			&.language-switcher-container {
+				-webkit-overflow-scrolling: touch;
+			}
 
 			.option-item {
 				gap: 0;
@@ -217,9 +222,8 @@
 						display: flex;
 						justify-content: center;
 						align-items: center;
-
 					}
-					
+
 					.step-heading-rtl {
 						justify-content: flex-end;
 					}

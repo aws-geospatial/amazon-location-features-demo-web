@@ -44,6 +44,8 @@
 
 		.route-card-close {
 			top: -10px;
+			z-index: 30;
+			overflow: visible;
 		}
 
 		.route-card-header-text {
@@ -53,6 +55,7 @@
 
 		.from-to-container {
 			padding-left: 0 !important;
+			padding-right: 0 !important;
 		}
 	}
 
@@ -391,6 +394,14 @@
 			border-bottom: 1px solid rgba(242, 242, 247, 1);
 			position: relative;
 
+			&.route-info-mobile {
+				padding: 18px 0;
+
+				.duration {
+					right: 2px;
+				}
+			}
+
 			svg {
 				width: 20px;
 				height: 20px;
@@ -461,7 +472,12 @@
 		}
 
 		.steps-container {
-			overflow: scroll;
+			overflow-y: scroll;
+			&.steps-container-mobile {
+				.step-card-icon-container {
+					margin-left: 0;
+				}
+			}
 		}
 	}
 
