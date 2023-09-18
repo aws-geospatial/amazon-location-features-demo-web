@@ -74,8 +74,6 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		bottomSheetCurrentHeight = 0,
 		setBottomSheetMinHeight,
 		setBottomSheetHeight,
-		bottomSheetHeight,
-		bottomSheetMinHeight,
 		POICard,
 		setUI,
 		ui
@@ -148,8 +146,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		function handleClickOutside() {
 			if (!POICard) {
 				searchInputRef?.current?.blur();
-				setBottomSheetHeight(BottomSheetHeights.search.max);
-				setBottomSheetMinHeight(isMobile ? BottomSheetHeights.search.min : 80);
+				setBottomSheetHeight(window.innerHeight);
+				setBottomSheetMinHeight(BottomSheetHeights.explore.min);
 			}
 		}
 
@@ -362,19 +360,12 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 										dir={langDir}
 										onKeyDown={e => {
 											e.stopPropagation();
-											if (
-												e.key !== "Enter" &&
-												[bottomSheetMinHeight, bottomSheetHeight].every(r => r !== window.innerHeight)
-											) {
-												setBottomSheetMinHeight(BottomSheetHeights.search.max);
-												setBottomSheetHeight(BottomSheetHeights.search.max);
-											}
 										}}
 										onFocus={e => {
 											e.stopPropagation();
 											setIsFocused(true);
-											setBottomSheetMinHeight(BottomSheetHeights.search.max - 10);
-											setBottomSheetHeight(BottomSheetHeights.search.max);
+											setBottomSheetMinHeight(window.innerHeight - 10);
+											setBottomSheetHeight(window.innerHeight);
 										}}
 										onBlur={e => {
 											e.stopPropagation();

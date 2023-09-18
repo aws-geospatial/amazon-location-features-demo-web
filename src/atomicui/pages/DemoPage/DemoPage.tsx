@@ -76,6 +76,7 @@ import {
 } from "react-map-gl";
 
 import "./styles.scss";
+import { useNavigate } from "react-router-dom";
 
 const {
 	PERSIST_STORAGE_KEYS: { SHOULD_CLEAR_CREDENTIALS, GEO_LOCATION_ALLOWED, FASTEST_REGION },
@@ -173,6 +174,7 @@ const DemoPage: React.FC = () => {
 	const { isDesktop, isMobile, isTablet, isMax556 } = useDeviceMediaQuery();
 	const { setUI, ui, bottomSheetCurrentHeight } = useBottomSheet();
 	const { t, i18n } = useTranslation();
+	const navigate = useNavigate();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
 	const shouldClearCredentials = localStorage.getItem(SHOULD_CLEAR_CREDENTIALS) === "true";
@@ -1276,7 +1278,10 @@ const DemoPage: React.FC = () => {
 				cancelationText={t("start_unauth_simulation__stay_in_simulation.text")}
 			/>
 			{(isDesktop || isTablet) && (
-				<Flex className={`logo-stroke-container ${isTablet ? "logo-stroke-container-tablet" : ""}`}>
+				<Flex
+					className={`logo-stroke-container ${isTablet ? "logo-stroke-container-tablet" : ""}`}
+					onClick={() => navigate("/overview")}
+				>
 					{currentMapStyle.toLowerCase().includes("dark") ? <LogoDark /> : <LogoLight />}
 				</Flex>
 			)}

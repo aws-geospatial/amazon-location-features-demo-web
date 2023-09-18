@@ -81,7 +81,7 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({ mapRef, setShowAuthGe
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
-	const { setUI } = useBottomSheet();
+	const { setUI, bottomSheetCurrentHeight } = useBottomSheet();
 
 	useEffect(() => {
 		isDesktop && isCollapsed && setIsCollapsed(false);
@@ -725,9 +725,15 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({ mapRef, setShowAuthGe
 				{isAddingGeofence ? (
 					renderAddGeofence
 				) : (
-					<View className="geofences-list-container" padding={!isDesktop ? "0 1rem" : ""}>
+					<Flex
+						className={`geofences-list-container ${!isDesktop ? "geofences-list-container-mobile" : ""}`}
+						padding={!isDesktop ? "0 1rem" : ""}
+						direction="column"
+						gap="0"
+						maxHeight={!isDesktop ? `${(bottomSheetCurrentHeight || 0) - 120}px` : "50vh"}
+					>
 						{renderGeofencesList}
-					</View>
+					</Flex>
 				)}
 				{renderShowHideContainer}
 			</Card>
