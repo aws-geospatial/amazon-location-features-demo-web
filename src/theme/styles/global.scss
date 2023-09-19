@@ -97,6 +97,12 @@ body:has(.disable-body-scroll) {
 }
 
 @media (max-width: 1024px) {
+	html,
+	body {
+			overflow: hidden;
+			overscroll-behavior: none;
+	}
+	
 	.amplify-button--primary:hover {
 		background-color: var(--primary-color) !important;
 		border-color: var(--primary-color) !important;
