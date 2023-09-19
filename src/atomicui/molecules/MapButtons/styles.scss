@@ -164,20 +164,32 @@
 	}
 
 	.responsive-map-footer {
-		position: absolute;
+		position: fixed;
 		bottom: 0;
 		background: var(--white-color);
-		padding: 1.07rem 1.14rem;
+		padding: 1.07rem 1.14rem 2.61rem 1.14rem;
 		align-items: flex-start;
 		width: 100%;
 		justify-content: space-between;
 		z-index: 9;
+		border-top: 1px solid var(--grey-color-3);
+		align-items: center;
+
+		.apply-button {
+			font-family: "AmazonEmber-Bold";
+			font-size: 1.07rem;
+			padding: 0.72rem 2.23rem;
+			text-align: center;
+		}
 
 		.clear-selection-button {
 			border: none;
 			background-color: transparent;
 			padding-left: 0;
 			padding-right: 0;
+			font-family: "AmazonEmber-Bold";
+			font-size: 1rem;
+			text-align: center;
 
 			&:active,
 			&:focus {
@@ -192,9 +204,10 @@
 		gap: 0;
 
 		&.responsive-search {
-			overflow-y: hidden;
+			overflow-y: auto;
 			overflow-x: scroll;
 			-webkit-overflow-scrolling: touch;
+			margin-bottom: 0 !important;
 
 			&::-webkit-scrollbar {
 				display: none;
@@ -352,6 +365,7 @@
 
 		&.responsive-filter {
 			animation: animateWidth 0.2s ease-in-out;
+			margin-bottom: 5rem;
 		}
 	}
 

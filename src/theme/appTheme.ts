@@ -73,10 +73,12 @@ const appTheme: Theme = {
 				borderRadius: { value: "8px" },
 				color: { value: "var(--tertiary-color)" },
 				primary: {
+					backgroundColor: { value: "var(--primary-color)" },
+					borderColor: { value: "var(--primary-color)" },
 					_focus: {
-						backgroundColor: { value: "var(--primary-color)" },
-						borderColor: { value: "var(--primary-color)" },
-						boxShadow: { value: "var(--primary-color)" }
+						backgroundColor: { value: "var(--primary-contrast-color)" },
+						borderColor: { value: "var(--primary-contrast-color)" },
+						boxShadow: { value: "var(--primary-contrast-color)" }
 					},
 					_active: {
 						backgroundColor: {

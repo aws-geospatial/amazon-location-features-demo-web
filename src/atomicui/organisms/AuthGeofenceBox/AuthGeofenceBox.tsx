@@ -676,6 +676,7 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({ mapRef, setShowAuthGe
 			showToast({ content: t("show_toast__radius_restriction.text"), type: ToastType.INFO });
 	};
 
+	console.log(!isDesktop, isAddingOrEditing);
 	return (
 		<>
 			<Card className={`geofence-card ${!isDesktop ? "geofence-card-mobile" : ""}`} left={21}>

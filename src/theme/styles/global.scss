@@ -95,3 +95,26 @@ body:has(.disable-body-scroll) {
 	direction: rtl;
 	text-align: start;
 }
+
+@media (max-width: 1024px) {
+	html,
+	body {
+			overflow: hidden;
+			overscroll-behavior: none;
+	}
+	
+	.amplify-button--primary:hover {
+		background-color: var(--primary-color) !important;
+		border-color: var(--primary-color) !important;
+	}
+
+	.amplify-button--primary:active {
+		background-color: var(--primary-contrast-color) !important;
+		border-color: var(--primary-contrast-color) !important;
+	}
+}
+html,
+body {
+    overflow: hidden;
+    overscroll-behavior: none;
+}

@@ -445,7 +445,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 							showFilter ? "with-filters" : ""
 						}`}
 						marginBottom={showFilter ? 0 : "0.6rem"}
-						padding={isHandDevice && searchWidth === searchHandDeviceWidth ? "0 0 0 1.2rem" : "0 1.2rem"}
+						padding={isHandDevice && searchWidth === searchHandDeviceWidth ? "0 0 0.5rem 1.2rem" : "0 1.2rem"}
 					>
 						<SearchField
 							ref={searchFieldRef}
@@ -626,7 +626,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 						<Button variation="link" className="clear-selection-button" onClick={clearFilters}>
 							{t("map_buttons__clear_selections.text")}
 						</Button>
-						<Button variation="primary" onClick={applyMobileFilters}>
+						<Button className="apply-button" variation="primary" onClick={applyMobileFilters}>
 							{t("map_buttons__apply_filters.text")}
 						</Button>
 					</Flex>

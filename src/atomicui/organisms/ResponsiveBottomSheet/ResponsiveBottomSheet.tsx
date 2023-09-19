@@ -198,6 +198,8 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				case ResponsiveUIEnum.explore:
 				case ResponsiveUIEnum.search:
 				case ResponsiveUIEnum.poi_card:
+				case ResponsiveUIEnum.exit_unauthorized_tracker:
+				case ResponsiveUIEnum.exit_unauthorized_geofence:
 					return null;
 				default:
 					return <Flex width="100%">{SearchBoxEl()}</Flex>;
@@ -362,7 +364,18 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				}
 				className={`bottom-sheet ${isDesktop ? "desktop" : isTablet ? "tablet" : "mobile"} ${
 					isShortHeader ? "short-header" : ""
-				} ${(bottomSheetCurrentHeight || 0) + 30 < window.innerHeight ? "add-overlay" : ""}`}
+				} ${(bottomSheetCurrentHeight || 0) + 30 < window.innerHeight ? "add-overlay" : ""} ${
+					ui &&
+					[
+						ResponsiveUIEnum.search,
+						ResponsiveUIEnum.explore,
+						ResponsiveUIEnum.poi_card,
+						ResponsiveUIEnum.before_start_unauthorized_tracker,
+						ResponsiveUIEnum.before_start_unauthorized_geofence
+					].includes(ui)
+						? "margin-top-from-header"
+						: ""
+				}`}
 				scrollLocking={false}
 			>
 				<Flex data-amplify-theme="aws-location-theme" direction="column" gap="0">
