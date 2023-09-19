@@ -81,3 +81,19 @@
 		fill: white;
 	}
 }
+
+@media only screen and (max-width: 480px) {
+	.Toastify__toast-container {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+
+		.Toastify__toast {
+			.Toastify__toast-body {
+				text-align: center;
+				padding-left: 0;
+				padding-right: 0;
+			}
+		}
+	}
+}

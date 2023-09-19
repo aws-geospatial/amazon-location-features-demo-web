@@ -869,7 +869,7 @@ const DemoPage: React.FC = () => {
 				<Flex
 					style={{
 						position: "absolute",
-						bottom: isMobile ? `${(bottomSheetCurrentHeight || 0) / 13 + 1.2}rem` : isDesktop ? "9.85rem" : "2rem",
+						bottom: isMobile ? `${(bottomSheetCurrentHeight || 0) / 13 + 1.2}rem` : isDesktop ? "12.85rem" : "2rem",
 						right: isMobile ? "1rem" : isDesktop ? "2rem" : "2rem"
 					}}
 					className="location-disabled"
@@ -1073,7 +1073,6 @@ const DemoPage: React.FC = () => {
 						}
 						setShowUnauthGeofenceBox={b => setShow(s => ({ ...s, unauthGeofenceBox: b }))}
 						setShowUnauthTrackerBox={b => setShow(s => ({ ...s, unauthTrackerBox: b }))}
-						setShowConnectAwsAccountModal={b => setShow(s => ({ ...s, connectAwsAccount: b }))}
 						showStartUnauthSimulation={show.startUnauthSimulation}
 						setShowStartUnauthSimulation={b => setShow(s => ({ ...s, startUnauthSimulation: b }))}
 						from={show.unauthGeofenceBox ? MenuItemEnum.GEOFENCE : MenuItemEnum.TRACKER}
@@ -1090,6 +1089,7 @@ const DemoPage: React.FC = () => {
 								setShowAuthTrackerBox={b => setShow(s => ({ ...s, authTrackerBox: b }))}
 							/>
 						}
+						handleLogoClick={handleLogoClick}
 					/>
 					<MapButtons
 						renderedUpon={TriggeredByEnum.DEMO_PAGE}

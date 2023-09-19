@@ -10,7 +10,6 @@ import { useAmplifyMap, useBottomSheet, useDeviceMediaQuery } from "@demo/hooks"
 import { MenuItemEnum, ResponsiveUIEnum } from "@demo/types/Enums";
 import { useTranslation } from "react-i18next";
 import { MapRef } from "react-map-gl";
-import { useNavigate } from "react-router-dom";
 import { BottomSheet } from "react-spring-bottom-sheet";
 
 import "react-spring-bottom-sheet/dist/style.css";
@@ -36,13 +35,13 @@ interface IProps {
 	onshowUnauthSimulationDisclaimerModal: () => void;
 	setShowUnauthGeofenceBox: (b: boolean) => void;
 	setShowUnauthTrackerBox: (b: boolean) => void;
-	setShowConnectAwsAccountModal: (b: boolean) => void;
 	setShowStartUnauthSimulation: (b: boolean) => void;
 	showStartUnauthSimulation: boolean;
 	from: MenuItemEnum;
 	UnauthSimulationUI: JSX.Element;
 	AuthGeofenceBox: JSX.Element;
 	AuthTrackerBox: JSX.Element;
+	handleLogoClick: () => Window | null;
 }
 
 const ResponsiveBottomSheet: FC<IProps> = ({
@@ -66,11 +65,11 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	from,
 	AuthGeofenceBox,
 	AuthTrackerBox,
-	setShowStartUnauthSimulation
+	setShowStartUnauthSimulation,
+	handleLogoClick
 }) => {
 	const { isDesktop, isTablet, isMax556 } = useDeviceMediaQuery();
 	const { t } = useTranslation();
-	const navigate = useNavigate();
 	const {
 		setBottomSheetMinHeight,
 		setBottomSheetHeight,
@@ -354,7 +353,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 					<Flex data-amplify-theme="aws-location-theme" direction="column" gap="0">
 						{isMax556 && (
 							<Flex className="logo-mobile-container">
-								<Flex className="logo-mobile" onClick={() => navigate("/overview")}>
+								<Flex className="logo-mobile" onClick={handleLogoClick}>
 									{mapStyle.toLowerCase().includes("dark") ? <LogoDark /> : <LogoLight />}
 								</Flex>
 							</Flex>

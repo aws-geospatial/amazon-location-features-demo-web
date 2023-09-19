@@ -243,8 +243,9 @@ const Explore: React.FC<IProps> = ({
 			icon: <IconMapSolid width="1.53rem" height="1.53rem" fill="white" />,
 			onClick: () => {
 				updateUIInfo(ResponsiveUIEnum.map_styles);
-				setBottomSheetMinHeight(BottomSheetHeights.map_styles.min);
-				setBottomSheetHeight(BottomSheetHeights.map_styles.max);
+				setBottomSheetMinHeight(window.innerHeight - 10);
+				setBottomSheetHeight(window.innerHeight);
+				setTimeout(() => setBottomSheetMinHeight(BottomSheetHeights.explore.min), 300);
 			}
 		},
 		{
