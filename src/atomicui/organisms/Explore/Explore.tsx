@@ -162,7 +162,7 @@ const Explore: React.FC<IProps> = ({
 					height="3.07rem"
 					fontFamily={"AmazonEmber-Bold"}
 					fontSize="1.07rem"
-					// onClick={() => onConnectAwsAccount(AnalyticsEventActionsEnum.CONNECT_AWS_ACCOUNT_BUTTON_CLICKED)}
+					onClick={() => onConnectAwsAccount(AnalyticsEventActionsEnum.CONNECT_AWS_ACCOUNT_BUTTON_CLICKED)}
 				>
 					{t("caam__connect.text")}
 				</Button>
