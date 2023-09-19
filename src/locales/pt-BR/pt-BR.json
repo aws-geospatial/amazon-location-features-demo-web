@@ -3574,5 +3574,11 @@
   },
   "welcome_modal__cta": {
     "text": "Comece a explorar"
+  },
+  "go": {
+    "text": "Vá"
+  },
+  "more_options": {
+    "text": "Mais opções"
   }
 }

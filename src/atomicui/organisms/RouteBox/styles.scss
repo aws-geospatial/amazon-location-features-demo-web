@@ -21,23 +21,47 @@
 		}
 
 		.travel-mode-button-container {
+			gap: 0;
 			padding-left: 0 !important;
+			overflow-x: auto;
+			width: 100%;
+			white-space: nowrap;
 
-			.empty-distance {
-				svg {
-					margin-right: 0 !important;
-				}
+			&::-webkit-scrollbar {
+				width: 0rem;
+			}
+
+			&::-webkit-scrollbar-track {
+				background-color: transparent;
+			}
+
+			&::-webkit-scrollbar-thumb {
+				background-color: transparent;
 			}
 
 			.travel-mode {
-				min-width: 32px;
+				gap: 0;
+				display: flex;
+				align-items: center;
+				height: 2.46rem !important;
 				width: auto;
-				min-height: 32px;
-				height: auto;
-				padding: 0 0.5rem;
+				padding: 0.54rem;
+				border: 1px solid var(--grey-color-3);
+				border-radius: 0.62rem;
+				flex-shrink: 0;
 
 				svg {
-					margin-right: 0.5rem;
+					min-width: 1.23rem;
+					min-height: 1.23rem;
+					max-width: 1.23rem;
+					max-height: 1.23rem;
+					width: 100%;
+					height: 100%;
+				}
+
+				.duration-text {
+					margin-left: 0.62rem;
+					height: 1.38rem;
 				}
 			}
 		}
@@ -102,6 +126,7 @@
 		.selected {
 			border-radius: 8px !important;
 			background-color: rgba(0, 130, 150, 0.08) !important;
+			border: none !important;
 
 			svg {
 				fill: #008296 !important;
@@ -228,6 +253,7 @@
 			}
 		}
 	}
+
 	.swap-icon-container {
 		gap: 0;
 		align-items: center;
@@ -307,7 +333,7 @@
 				padding-left: 0;
 			}
 		}
-		
+
 		.current-location-toggle-container {
 			display: flex;
 			flex-direction: row;
@@ -394,14 +420,6 @@
 			border-bottom: 1px solid rgba(242, 242, 247, 1);
 			position: relative;
 
-			&.route-info-mobile {
-				padding: 18px 0;
-
-				.duration {
-					right: 2px;
-				}
-			}
-
 			svg {
 				width: 20px;
 				height: 20px;
@@ -468,6 +486,26 @@
 				@media only screen and (max-width: 425px) {
 					width: 100px;
 				}
+			}
+		}
+
+		.route-info-mobile {
+			gap: 0;
+			padding: 1.23rem 0rem;
+
+			&.border-bottom {
+				border-bottom: 1px solid rgba(242, 242, 247, 1);
+			}
+
+			.time-and-distance {
+				gap: 0;
+				flex-direction: column;
+			}
+
+			.go-button {
+				width: 5.92rem;
+				height: 3.08rem;
+				font-size: 1.08rem;
 			}
 		}
 

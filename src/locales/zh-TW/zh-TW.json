@@ -3574,5 +3574,11 @@
   },
   "welcome_modal__cta": {
     "text": "開始探索"
+  },
+  "go": {
+    "text": "前往"
+  },
+  "more_options": {
+    "text": "更多選項"
   }
 }

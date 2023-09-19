@@ -3574,5 +3574,11 @@
   },
   "welcome_modal__cta": {
     "text": "탐험 시작하기"
+  },
+  "go": {
+    "text": "Go"
+  },
+  "more_options": {
+    "text": "추가 옵션"
   }
 }

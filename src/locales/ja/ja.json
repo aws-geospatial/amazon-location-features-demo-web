@@ -3574,5 +3574,11 @@
   },
   "welcome_modal__cta": {
     "text": "探索を始める"
+  },
+  "go": {
+    "text": "行く"
+  },
+  "more_options": {
+    "text": "その他のオプション"
   }
 }

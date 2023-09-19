@@ -3574,5 +3574,11 @@
   },
   "welcome_modal__cta": {
     "text": "खोजना शुरू करें"
+  },
+  "go": {
+    "text": "जाओ"
+  },
+  "more_options": {
+    "text": "और विकल्प"
   }
 }

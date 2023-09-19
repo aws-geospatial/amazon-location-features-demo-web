@@ -3570,5 +3570,11 @@
   },
   "welcome_modal__cta": {
     "text": "开始探索"
+  },
+  "go": {
+    "text": "走吧"
+  },
+  "more_options": {
+    "text": "更多选项"
   }
 }
