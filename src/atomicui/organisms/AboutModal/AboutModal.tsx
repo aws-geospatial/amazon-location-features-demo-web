@@ -39,7 +39,7 @@ const AboutModal: React.FC<AboutModalProps> = ({ open, onClose }) => {
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
-	const { isDesktop, isMobile } = useDeviceMediaQuery();
+	const { isMobile } = useDeviceMediaQuery();
 	const attributeEl = document.querySelector<HTMLElement>(".mapboxgl-ctrl-attrib-inner");
 
 	useEffect(() => {
@@ -144,17 +144,6 @@ const AboutModal: React.FC<AboutModalProps> = ({ open, onClose }) => {
 			{
 				id: AboutOptionEnum.TERMS_AND_CONDITIONS,
 				title: t("t&c.text"),
-				// detailsComponent: (
-				// 	<Flex gap={0} direction="column" padding="1.15rem 0rem 1.15rem 1.15rem" alignItems="center">
-				// 		<Text className={`more-secondary-text ${isLtr ? "ltr" : "rtl"}`}>
-				// 			{t(TERMS_PREFIX)}
-				// 			<a href={TERMS} target="_blank" rel="noreferrer">
-				// 				{t(TERMS_LINK_LABEL)}
-				// 			</a>
-				// 			{t(TERMS_SUFFIX)}
-				// 		</Text>
-				// 	</Flex>
-				// )
 				detailsComponent: <>{renderTermsAndConditions(false)}</>
 			}
 		],
@@ -205,7 +194,8 @@ const AboutModal: React.FC<AboutModalProps> = ({ open, onClose }) => {
 			data-testid="about-modal-container"
 			open={open}
 			onClose={onClose}
-			className={`more-modal ${isMobile ? "more-modal-mobile" : ""} ${!isDesktop ? "more-modal-tablet" : ""} `}
+			hideCloseIcon={isMobile}
+			className="more-modal"
 			content={
 				<>
 					{isMobile && !selectedOption && (
@@ -223,7 +213,7 @@ const AboutModal: React.FC<AboutModalProps> = ({ open, onClose }) => {
 							<Divider className="title-divider" />
 						</Flex>
 					)}
-					<Flex className={`more-modal-content ${isMobile ? "more-modal-content-mobile" : ""}`}>
+					<Flex className="more-modal-content">
 						{(!selectedOption || !isMobile) && (
 							<Flex className="options-container">
 								{!isMobile && (
