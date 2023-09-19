@@ -113,8 +113,3 @@ body:has(.disable-body-scroll) {
 		border-color: var(--primary-contrast-color) !important;
 	}
 }
-html,
-body {
-    overflow: hidden;
-    overscroll-behavior: none;
-}
