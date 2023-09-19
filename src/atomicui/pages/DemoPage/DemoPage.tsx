@@ -76,13 +76,12 @@ import {
 } from "react-map-gl";
 
 import "./styles.scss";
-import { useNavigate } from "react-router-dom";
 
 const {
 	PERSIST_STORAGE_KEYS: { SHOULD_CLEAR_CREDENTIALS, GEO_LOCATION_ALLOWED, FASTEST_REGION },
 	ROUTES: { DEMO },
 	MAP_RESOURCES: { MAX_BOUNDS, AMAZON_HQ, GRAB_SUPPORTED_AWS_REGIONS },
-	LINKS: { AMAZON_LOCATION_TERMS_AND_CONDITIONS },
+	LINKS: { AMAZON_LOCATION_TERMS_AND_CONDITIONS, AWS_LOCATION },
 	GET_PARAMS: { DATA_PROVIDER }
 } = appConfig;
 const initShow = {
@@ -174,7 +173,6 @@ const DemoPage: React.FC = () => {
 	const { isDesktop, isMobile, isTablet, isMax556 } = useDeviceMediaQuery();
 	const { setUI, ui, bottomSheetCurrentHeight } = useBottomSheet();
 	const { t, i18n } = useTranslation();
-	const navigate = useNavigate();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
 	const shouldClearCredentials = localStorage.getItem(SHOULD_CLEAR_CREDENTIALS) === "true";
@@ -930,6 +928,14 @@ const DemoPage: React.FC = () => {
 		[show.startUnauthSimulation, show.unauthGeofenceBox, startSimulation]
 	);
 
+	const handleLogoClick = () =>
+		window.open(
+			isUserAwsAccountConnected && region
+				? `https://${region}.console.aws.amazon.com/location/home?region=${region}#/`
+				: AWS_LOCATION,
+			"_blank"
+		);
+
 	return !!credentials?.identityId ? (
 		<View
 			style={{ height }}
@@ -1280,7 +1286,7 @@ const DemoPage: React.FC = () => {
 			{(isDesktop || isTablet) && (
 				<Flex
 					className={`logo-stroke-container ${isTablet ? "logo-stroke-container-tablet" : ""}`}
-					onClick={() => navigate("/overview")}
+					onClick={handleLogoClick}
 				>
 					{currentMapStyle.toLowerCase().includes("dark") ? <LogoDark /> : <LogoLight />}
 				</Flex>

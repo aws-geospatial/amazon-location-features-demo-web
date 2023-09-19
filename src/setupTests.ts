@@ -269,7 +269,8 @@ jest.mock("@demo/core/constants/appConfig", () => ({
 		GET_DEVICE_POSITION_HISTORY_URL:
 			"https://docs.aws.amazon.com/location/latest/APIReference/API_GetDevicePositionHistory.html",
 		BATCH_DELETE_DEVICE_POSITION_HISTORY_URL:
-			"https://docs.aws.amazon.com/location/latest/APIReference/API_BatchDeleteDevicePositionHistory.html"
+			"https://docs.aws.amazon.com/location/latest/APIReference/API_BatchDeleteDevicePositionHistory.html",
+		AWS_LOCATION: "https://aws.amazon.com/location/"
 	}
 }));
 

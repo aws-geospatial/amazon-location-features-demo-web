@@ -5,7 +5,6 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button, Card, Flex, Loader, Text, View } from "@aws-amplify/ui-react";
 import {
-	IconArrow,
 	IconCar,
 	IconClose,
 	IconDroneSolid,
@@ -52,7 +51,6 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 	const [routeData, setRouteData] = useState<RouteDataType | undefined>(undefined);
 	const [points, setPoints] = useState<Position[] | undefined>(undefined);
 	const [trackerPos, setTrackerPos] = useState<Position | undefined>(undefined);
-	const [isCollapsed, setIsCollapsed] = useState(true);
 	const { isFetchingRoute } = useAwsRoute();
 	const { geofences, getGeofencesList } = useAwsGeofence();
 	const {
@@ -82,16 +80,10 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 		setIsEditingRoute(true);
 	}, [fetchGeofencesList, setIsEditingRoute]);
 
-	useEffect(() => {
-		isDesktop && isCollapsed && setIsCollapsed(false);
-		!isDesktop && setIsCollapsed(false);
-	}, [isDesktop, isCollapsed]);
-
 	const isSimulationEnbaled = useMemo(() => isSaved && routeData, [isSaved, routeData]);
 
 	const onPlayPause = () => {
 		if (isSimulationEnbaled) {
-			!isPlaying && !isDesktop && !isCollapsed && setIsCollapsed(true);
 			setIsPlaying(s => !s);
 		}
 	};
@@ -140,7 +132,6 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 		setPoints(undefined);
 		setTrackerPos(undefined);
 		setIsPlaying(false);
-		!isDesktop && isCollapsed && setIsCollapsed(false);
 	};
 
 	const renderGeofenceMarkers = useMemo(() => {
@@ -376,15 +367,7 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 						</Flex>
 					)}
 				</Flex>
-				{!isCollapsed && renderTrackerPointsList}
-				{isDesktop && !!trackerPoints?.length && (
-					<Flex className="show-hide-details-container bottom-border-radius" onClick={() => setIsCollapsed(s => !s)}>
-						<Text className="text">
-							{isCollapsed ? t("tracker_box__tracker_details.text") : t("hide_details.text")}
-						</Text>
-						<IconArrow style={{ transform: isCollapsed ? "rotate(0deg)" : "rotate(180deg)" }} />
-					</Flex>
-				)}
+				{renderTrackerPointsList}
 			</Card>
 			<Tooltip id="notification-services" />
 			{renderGeofenceMarkers}
@@ -403,7 +386,6 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 				setPoints={setPoints}
 				trackerPos={trackerPos}
 				setTrackerPos={setTrackerPos}
-				isDesktop={isDesktop}
 			/>
 		</>
 	);
