@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button, Flex, Link, Text, View } from "@aws-amplify/ui-react";
 import { IconAwsCloudFormation, IconCheckMarkCircle } from "@demo/assets";
@@ -61,7 +61,22 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
 	const isOverflowing = ["de", "es", "fr", "it", "pt-BR"].includes(i18n.language);
-	const { isDesktop, isMobile } = useDeviceMediaQuery();
+	const { isDesktop } = useDeviceMediaQuery();
+
+	const handleStackRegion = useCallback(
+		(option: { value: string; label: string }) => {
+			const { label, value } = option;
+
+			if (isDesktop) {
+				setStackRegion(option);
+			} else {
+				const translatedLabel = t(label);
+				const l = translatedLabel.slice(0, translatedLabel.indexOf(")") + 1);
+				setStackRegion({ label: l, value });
+			}
+		},
+		[isDesktop, t]
+	);
 
 	useEffect(() => {
 		const regionOption = region && regionsData.find(option => option.value === region);
@@ -69,9 +84,9 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 		if (regionOption) {
 			const newUrl = transformCloudFormationLink(region);
 			setCloudFormationLink(newUrl);
-			setStackRegion(regionOption);
+			handleStackRegion(regionOption);
 		}
-	}, [region]);
+	}, [region, handleStackRegion]);
 
 	useEffect(() => {
 		if (isOverflowing && isDesktop) {
@@ -99,7 +114,7 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 	const _onSelect = (option: { value: string; label: string }) => {
 		const newUrl = transformCloudFormationLink(option.value);
 		setCloudFormationLink(newUrl);
-		setStackRegion(option);
+		handleStackRegion(option);
 	};
 
 	const isBtnEnabled = useMemo(
@@ -180,9 +195,7 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 			data-testid="connect-aws-account-modal-container"
 			open={open}
 			onClose={handleModalClose}
-			className={`connect-aws-account-modal ${
-				isMobile ? "connect-aws-account-modal-mobile" : "connect-aws-account-modal-tablet"
-			}`}
+			className="connect-aws-account-modal"
 			content={
 				<Flex className="content-container">
 					<Flex
@@ -192,6 +205,8 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 								? isOverflowing
 									? { justifyContent: "none", overflowY: "auto" }
 									: { justifyContent: "center" }
+								: isUserAwsAccountConnected
+								? { display: "none" }
 								: {}
 						}
 					>
@@ -214,12 +229,12 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 						</Text>
 						<View>
 							<Flex gap={0} justifyContent="flex-start" alignItems="center" marginTop="1rem">
-								<Text className="bold" fontSize="1.08rem" order={isLtr ? 1 : 2}>
+								<Text className="bold" fontSize="1.08rem" order={isLtr ? 1 : 2} whiteSpace="nowrap">
 									{t("caam__htct.text")}
 								</Text>
-								<View order={isLtr ? 2 : 1}>
+								<Flex order={isLtr ? 2 : 1}>
 									<DropdownEl defaultOption={stackRegion} options={regionsData} onSelect={_onSelect} showSelected />
-								</View>
+								</Flex>
 							</Flex>
 							<View marginTop="1.23rem">
 								<Flex gap={0} marginBottom="1.85rem">

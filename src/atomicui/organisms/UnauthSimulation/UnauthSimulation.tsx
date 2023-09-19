@@ -280,16 +280,21 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 							variation="primary"
 							padding="0.923rem 0"
 							onClick={() => {
-								setStartSimulation(true);
-								setBottomSheetMinHeight(BottomSheetHeights.routes.max);
-								setBottomSheetHeight(BottomSheetHeights.routes.max);
-								setTimeout(() => {
-									setBottomSheetMinHeight(BottomSheetHeights.routes.min);
-								}, 300);
-								from === MenuItemEnum.TRACKER
-									? setUI(ResponsiveUIEnum.unauth_tracker)
-									: setUI(ResponsiveUIEnum.unauth_geofence);
-								setShowUnauthSimulationBounds(true);
+								if (isDesktop) {
+									setStartSimulation(true);
+									setShowUnauthSimulationBounds(true);
+								} else {
+									setStartSimulation(true);
+									setBottomSheetMinHeight(BottomSheetHeights.routes.max);
+									setBottomSheetHeight(BottomSheetHeights.routes.max);
+									setTimeout(() => {
+										setBottomSheetMinHeight(BottomSheetHeights.routes.min);
+									}, 300);
+									from === MenuItemEnum.TRACKER
+										? setUI(ResponsiveUIEnum.unauth_tracker)
+										: setUI(ResponsiveUIEnum.unauth_geofence);
+									setShowUnauthSimulationBounds(true);
+								}
 							}}
 							fontFamily="AmazonEmber-Medium"
 							fontSize="1.077rem"
@@ -310,7 +315,8 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 		setBottomSheetHeight,
 		from,
 		setUI,
-		setShowUnauthSimulationBounds
+		setShowUnauthSimulationBounds,
+		isDesktop
 	]);
 
 	const renderGeofences = useMemo(

@@ -28,7 +28,6 @@ const WelcomeModal: React.FC<WelcomeModalProps> = ({ open, onClose }) => {
 			open={open}
 			onClose={onClose}
 			className="welcome-modal"
-			hideCloseIcon
 			content={
 				<Flex className="welcome-content">
 					<Flex className="logo-container">

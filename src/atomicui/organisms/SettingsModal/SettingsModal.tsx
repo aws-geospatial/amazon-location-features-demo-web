@@ -124,15 +124,30 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 		isMobile ? setSettingsOptions(undefined) : setSettingsOptions(SettingOptionEnum.UNITS);
 	}, [isMobile, setSettingsOptions]);
 
+	const handleStackRegion = useCallback(
+		(option: { value: string; label: string }) => {
+			const { label, value } = option;
+
+			if (isDesktop) {
+				setStackRegion(option);
+			} else {
+				const translatedLabel = t(label);
+				const l = translatedLabel.slice(0, translatedLabel.indexOf(")") + 1);
+				setStackRegion({ label: l, value });
+			}
+		},
+		[isDesktop, t]
+	);
+
 	useEffect(() => {
 		const regionOption = region && regionsData.find(option => option.value === region);
 
 		if (regionOption) {
 			const newUrl = transformCloudFormationLink(region);
 			setCloudFormationLink(newUrl);
-			setStackRegion(regionOption);
+			handleStackRegion(regionOption);
 		}
-	}, []);
+	}, [handleStackRegion]);
 
 	const handleAutoMapUnitChange = useCallback(() => {
 		setIsAutomaticMapUnit(true);
@@ -224,11 +239,14 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 		[currentMapProvider, currentMapStyle]
 	);
 
-	const _onSelect = (option: { value: string; label: string }) => {
-		const newUrl = transformCloudFormationLink(option.value);
-		setCloudFormationLink(newUrl);
-		setStackRegion(option);
-	};
+	const _onSelect = useCallback(
+		(option: { value: string; label: string }) => {
+			const newUrl = transformCloudFormationLink(option.value);
+			setCloudFormationLink(newUrl);
+			handleStackRegion(option);
+		},
+		[handleStackRegion]
+	);
 
 	const handleLanguageChange = useCallback(
 		(e: { target: { value: string } }) => {
@@ -755,7 +773,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 			autoRegion,
 			currentRegion,
 			handleRegionChange,
-			fastestRegion
+			fastestRegion,
+			_onSelect
 		]
 	);
 
