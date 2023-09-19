@@ -511,7 +511,10 @@
 
 		.steps-container {
 			overflow-y: scroll;
+			padding: 0 1rem;
+
 			&.steps-container-mobile {
+				padding: 0;
 				.step-card-icon-container {
 					margin-left: 0;
 				}
