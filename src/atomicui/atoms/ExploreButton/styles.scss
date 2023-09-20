@@ -2,30 +2,31 @@
 /* SPDX-License-Identifier: MIT-0 */
 
 .explore-button-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 
-  .button-icon {
-    background-color: var(--primary-color);
-    width: 3.07rem;
-    height: 3.07rem;
-    border-radius: 0.61rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 0.61rem;
+	.button-icon {
+		background-color: var(--primary-color);
+		width: 3.07rem;
+		height: 3.07rem;
+		border-radius: 0.61rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin-bottom: 0.61rem;
 
-    svg {
-      g {
-        g {
-          fill: var(--white-color);
-        }
-      }
-    }
-  }
+		svg {
+			g {
+				g {
+					fill: var(--white-color);
+				}
+			}
+		}
+	}
 
-  .button-text {
-    color: var(--grey-color)
-  }
+	.button-text {
+		color: var(--grey-color);
+		width: min-content;
+	}
 }

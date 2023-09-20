@@ -78,19 +78,29 @@
 
 				.amplify-flex {
 					position: absolute !important;
-					top: -21px;
+					top: -13px;
 				}
 
-				.amplify-flex:nth-child(1){
+				.amplify-flex:nth-child(1) {
 					right: 0;
+					padding-top: 0.1rem !important;
 				}
 
-				.amplify-flex:nth-child(2){
+				.amplify-flex:nth-child(2) {
 					left: 0;
+					padding-top: 0.3rem !important;
+				}
+
+				.notification-bubble {
+					top: 5px;
+					right: 11px;
 				}
 
 				.bell-icon-container {
-					&.bell-active,&:active, &:focus, &:hover {
+					&.bell-active,
+					&:active,
+					&:focus,
+					&:hover {
 						background-color: transparent;
 						border-top-left-radius: 11px;
 					}

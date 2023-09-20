@@ -202,7 +202,7 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 	const handleCta = () => setShowStartUnauthSimulation(true);
 
 	const handleEnableLive = () => {
-		handleClose();
+		isDesktop && handleClose();
 		setShowConnectAwsAccountModal(true);
 	};
 

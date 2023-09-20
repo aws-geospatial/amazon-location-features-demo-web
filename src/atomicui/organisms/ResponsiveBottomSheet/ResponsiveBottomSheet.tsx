@@ -94,21 +94,6 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 		prevBottomSheetHeightRef.current = bottomSheetCurrentHeight;
 	}, [bottomSheetCurrentHeight]);
 
-	const isShortHeader =
-		ui &&
-		[
-			ResponsiveUIEnum.auth_tracker,
-			ResponsiveUIEnum.auth_geofence,
-			ResponsiveUIEnum.non_start_unauthorized_tracker,
-			ResponsiveUIEnum.non_start_unauthorized_geofence,
-			ResponsiveUIEnum.auth_geofence,
-			ResponsiveUIEnum.unauth_tracker,
-			ResponsiveUIEnum.unauth_geofence,
-			ResponsiveUIEnum.auth_tracker,
-			ResponsiveUIEnum.poi_card,
-			ResponsiveUIEnum.routes,
-			ResponsiveUIEnum.direction_to_routes
-		].includes(ui);
 	const isNonStartedSimulation =
 		!isDesktop &&
 		ui &&
@@ -374,8 +359,8 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 					</Flex>
 				}
 				className={`bottom-sheet ${isDesktop ? "desktop" : isTablet ? "tablet" : "mobile"} ${
-					isShortHeader ? "short-header" : ""
-				} ${(bottomSheetCurrentHeight || 0) + 30 < window.innerHeight ? "add-overlay" : ""} ${
+					(bottomSheetCurrentHeight || 0) + 30 < window.innerHeight ? "add-overlay" : ""
+				} ${
 					ui &&
 					[
 						ResponsiveUIEnum.search,

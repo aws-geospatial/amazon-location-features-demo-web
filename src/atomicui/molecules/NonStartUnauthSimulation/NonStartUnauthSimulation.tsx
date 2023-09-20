@@ -36,9 +36,11 @@ const NonStartUnauthSimulation: FC<IProps> = ({
 			className={`unauth-simulation-card ${!isDesktop ? "unauth-simulation-card-mobile" : ""}`}
 			left={isDesktop ? 21 : 0}
 			width={
-				unauthSimulationCtaText.length > 42 || "ja" === currentLanguage
-					? `${["pt-BR", "ja"].includes(currentLanguage) ? "37rem" : "31rem"}`
-					: ""
+				isDesktop
+					? unauthSimulationCtaText.length > 42 || "ja" === currentLanguage
+						? `${["pt-BR", "ja"].includes(currentLanguage) ? "37rem" : "31rem"}`
+						: ""
+					: "100%"
 			}
 			ref={startRef}
 		>
