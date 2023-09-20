@@ -1114,8 +1114,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 									)}
 								</Flex>
 							)}
-							{/* {(isDesktop || (!isDesktop && isUserDeviceIsIOS() === IOS)) && renderSteps} */}
-							{renderSteps}
+							{(isDesktop || (!isDesktop && isUserDeviceIsIOS() === IOS)) && renderSteps}
 						</View>
 					)}
 				</Card>
