@@ -94,6 +94,30 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 		prevBottomSheetHeightRef.current = bottomSheetCurrentHeight;
 	}, [bottomSheetCurrentHeight]);
 
+	useEffect(() => {
+		setTimeout(() => {
+			const targetElement = document.querySelector('[data-rsbs-scroll="true"]') as HTMLElement;
+			targetElement?.classList.add("hideScroll");
+
+			let scrollTimeout: NodeJS.Timer | undefined;
+
+			const handleWheel = () => {
+				clearTimeout(scrollTimeout);
+				targetElement?.classList.remove("hideScroll");
+
+				scrollTimeout = setTimeout(() => {
+					targetElement?.classList.add("hideScroll");
+				}, 500);
+			};
+
+			targetElement?.addEventListener("wheel", handleWheel);
+
+			return () => {
+				targetElement?.removeEventListener("wheel", handleWheel);
+			};
+		}, 1000);
+	}, []);
+
 	const isNonStartedSimulation =
 		!isDesktop &&
 		ui &&

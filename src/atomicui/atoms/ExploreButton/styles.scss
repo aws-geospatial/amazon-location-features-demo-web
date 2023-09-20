@@ -25,6 +25,12 @@
 		}
 	}
 
+	&.no-min-width-button {
+		.button-text {
+			width: auto;
+		}
+	}
+
 	.button-text {
 		color: var(--grey-color);
 		width: min-content;

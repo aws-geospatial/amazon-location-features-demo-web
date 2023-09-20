@@ -89,7 +89,7 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 	}, [region, handleStackRegion]);
 
 	useEffect(() => {
-		if (isOverflowing && isDesktop) {
+		if (isOverflowing) {
 			const targetElement = document.getElementsByClassName("left-col")[0];
 
 			window.addEventListener("wheel", () => {
@@ -104,7 +104,7 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 				}, 800);
 			});
 		}
-	}, [open, isOverflowing, isDesktop]);
+	}, [open, isOverflowing]);
 
 	const _onClose = () => {
 		onClose();
