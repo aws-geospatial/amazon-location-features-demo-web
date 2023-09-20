@@ -108,10 +108,20 @@ const appConfig = {
 		MAX_BOUNDS: {
 			DEFAULT: [-210, -80, 290, 85],
 			GRAB: [90.0, -21.943045533438166, 146.25, 31.952162238024968],
-			VANCOUVER: [
-				[-123.185777, 49.258543], // southwest corner
-				[-123.061047, 49.303531] // northeast corner
-			]
+			VANCOUVER: {
+				DESKTOP: [
+					[-123.185777, 49.258543], // southwest corner
+					[-123.061047, 49.303531] // northeast corner
+				],
+				TABLET: [
+					[-123.196983, 49.234978], // southwest corner
+					[-123.040067, 49.317798] // northeast corner
+				],
+				MOBILE: [
+					[-123.209922, 49.192026], // southwest corner
+					[-123.037722, 49.347977] // northeast corner
+				]
+			}
 		},
 		MAP_ITEMS: {
 			[EsriMapEnum.ESRI_DARK_GRAY_CANVAS]: {

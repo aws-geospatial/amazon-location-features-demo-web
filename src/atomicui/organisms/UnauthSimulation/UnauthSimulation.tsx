@@ -144,8 +144,16 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 		);
 
 	useEffect(() => {
-		startSimulation && mapRef?.fitBounds(VANCOUVER as LngLatBoundsLike, { linear: true });
-	}, [mapRef, startSimulation]);
+		startSimulation &&
+			mapRef?.fitBounds(
+				isDesktop
+					? (VANCOUVER.DESKTOP as LngLatBoundsLike)
+					: isTablet
+					? (VANCOUVER.TABLET as LngLatBoundsLike)
+					: (VANCOUVER.MOBILE as LngLatBoundsLike),
+				{ linear: true }
+			);
+	}, [mapRef, startSimulation, isDesktop, isTablet]);
 
 	useEffect(() => {
 		if (

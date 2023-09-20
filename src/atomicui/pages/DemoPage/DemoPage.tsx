@@ -958,7 +958,11 @@ const DemoPage: React.FC = () => {
 					currentMapProvider === MapProviderEnum.GRAB
 						? (MAX_BOUNDS.GRAB as LngLatBoundsLike)
 						: (show.unauthGeofenceBox || show.unauthTrackerBox) && show.unauthSimulationBounds
-						? (MAX_BOUNDS.VANCOUVER as LngLatBoundsLike)
+						? isDesktop
+							? (MAX_BOUNDS.VANCOUVER.DESKTOP as LngLatBoundsLike)
+							: isTablet
+							? (MAX_BOUNDS.VANCOUVER.TABLET as LngLatBoundsLike)
+							: (MAX_BOUNDS.VANCOUVER.MOBILE as LngLatBoundsLike)
 						: (MAX_BOUNDS.DEFAULT as LngLatBoundsLike)
 				}
 				onClick={handleMapClick}
