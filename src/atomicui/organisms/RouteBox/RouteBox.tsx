@@ -42,7 +42,7 @@ import {
 	TravelMode
 } from "@demo/types";
 import { AnalyticsEventActionsEnum, ResponsiveUIEnum, TriggeredByEnum, UserAgentEnum } from "@demo/types/Enums";
-import { isUserDeviceIsAndroid, isUserDeviceIsIOS } from "@demo/utils";
+import { isUserDeviceIsAndroid } from "@demo/utils";
 import { humanReadableTime } from "@demo/utils/dateTimeUtils";
 import { CalculateRouteRequest, LineString, Place, Position } from "aws-sdk/clients/location";
 import { useTranslation } from "react-i18next";
@@ -52,7 +52,7 @@ import "./styles.scss";
 
 const { METRIC } = MapUnitEnum;
 const { KILOMETERS, MILES } = DistanceUnitEnum;
-const { ANDROID, IOS } = UserAgentEnum;
+const { ANDROID } = UserAgentEnum;
 
 const {
 	ENV: { GOOGLE_PLAY_STORE_LINK }
@@ -1087,7 +1087,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 									</View>
 								</View>
 							) : (
-								<Flex className={`route-info-mobile ${isUserDeviceIsIOS() === IOS ? "border-bottom" : ""}`}>
+								<Flex className={"route-info-mobile  border-bottom"}>
 									<Flex className="time-and-distance">
 										<Text className="bold small-text">
 											{humanReadableTime(routeData.Summary.DurationSeconds * 1000, currentLang, t, !isDesktop)}
@@ -1114,7 +1114,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 									)}
 								</Flex>
 							)}
-							{(isDesktop || (!isDesktop && isUserDeviceIsIOS() === IOS)) && renderSteps}
+							{renderSteps}
 						</View>
 					)}
 				</Card>

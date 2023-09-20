@@ -492,10 +492,7 @@
 		.route-info-mobile {
 			gap: 0;
 			padding: 1.23rem 0rem;
-
-			&.border-bottom {
-				border-bottom: 1px solid rgba(242, 242, 247, 1);
-			}
+			border-bottom: 1px solid rgba(242, 242, 247, 1);
 
 			.time-and-distance {
 				gap: 0;
