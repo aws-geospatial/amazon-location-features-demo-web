@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { FC, useCallback, useEffect } from "react";
+import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 
 import { Flex, Text } from "@aws-amplify/ui-react";
 import { IconClose, LogoDark, LogoLight } from "@demo/assets";
@@ -75,12 +75,24 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 		setBottomSheetHeight,
 		bottomSheetMinHeight,
 		bottomSheetHeight,
-		bottomSheetCurrentHeight,
+		bottomSheetCurrentHeight = 0,
 		setBottomSheetCurrentHeight,
 		ui,
 		setUI
 	} = useBottomSheet();
 	const { mapStyle } = useAmplifyMap();
+	const [arrowDirection, setArrowDirection] = useState("no-dragging");
+	const prevBottomSheetHeightRef = useRef(bottomSheetCurrentHeight);
+
+	useEffect(() => {
+		if (bottomSheetCurrentHeight > prevBottomSheetHeightRef.current) {
+			setArrowDirection("dragging-up");
+		} else if (bottomSheetCurrentHeight < prevBottomSheetHeightRef.current) {
+			setArrowDirection("dragging-down");
+		}
+
+		prevBottomSheetHeightRef.current = bottomSheetCurrentHeight;
+	}, [bottomSheetCurrentHeight]);
 
 	const isShortHeader =
 		ui &&
@@ -374,8 +386,9 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 					].includes(ui)
 						? "margin-top-from-header"
 						: ""
-				}`}
+				} ${arrowDirection}`}
 				scrollLocking={false}
+				onSpringEnd={() => setArrowDirection("no-dragging")}
 			>
 				<Flex data-amplify-theme="aws-location-theme" direction="column" gap="0">
 					{bottomSheetBody(ui)}

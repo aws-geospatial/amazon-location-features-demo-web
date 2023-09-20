@@ -368,6 +368,9 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 												setBottomSheetMinHeight(window.innerHeight - 10);
 												setBottomSheetHeight(window.innerHeight);
 											}, 200);
+											setTimeout(() => {
+												setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+											}, 400);
 										}}
 										onBlur={e => {
 											e.stopPropagation();
