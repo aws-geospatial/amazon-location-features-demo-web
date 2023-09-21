@@ -306,3 +306,11 @@ jest.mock("@demo/hooks/useDeviceMediaQuery", () => ({
 		isMax766: false
 	})
 }));
+
+if (typeof window?.location.reload === "undefined") {
+	Object.assign(window, {
+		location: {
+			reload: () => jest.fn()
+		}
+	});
+}
