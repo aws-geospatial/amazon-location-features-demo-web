@@ -16,7 +16,8 @@ import { ExploreButton } from "@demo/atomicui/atoms";
 import { IconicInfoCard } from "@demo/atomicui/molecules";
 import { appConfig } from "@demo/core/constants";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
-import { useAmplifyAuth, useAmplifyMap, useAwsIot, useBottomSheet } from "@demo/hooks";
+import { useAmplifyAuth, useAmplifyMap, useAwsIot } from "@demo/hooks";
+import useBottomSheet from "@demo/hooks/useBottomSheet";
 import {
 	AnalyticsEventActionsEnum,
 	EventTypeEnum,

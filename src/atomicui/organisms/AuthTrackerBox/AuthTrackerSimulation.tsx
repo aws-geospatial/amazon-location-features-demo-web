@@ -3,14 +3,8 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import {
-	useAmplifyMap,
-	useAwsGeofence,
-	useAwsRoute,
-	useAwsTracker,
-	useDeviceMediaQuery,
-	usePersistedData
-} from "@demo/hooks";
+import { useAmplifyMap, useAwsGeofence, useAwsRoute, useAwsTracker, usePersistedData } from "@demo/hooks";
+import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { DistanceUnitEnum, MapUnitEnum, RouteDataType, TrackerType, TravelMode } from "@demo/types";
 import { TriggeredByEnum } from "@demo/types/Enums";
 import * as turf from "@turf/turf";

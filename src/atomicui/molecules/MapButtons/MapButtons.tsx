@@ -18,8 +18,9 @@ import {
 import { IconClose, IconFilterFunnel, IconGeofencePlusSolid, IconMapSolid, IconRadar, IconSearch } from "@demo/assets";
 import { NotFoundCard } from "@demo/atomicui/molecules";
 import { appConfig } from "@demo/core/constants";
-import { useAmplifyAuth, useAmplifyMap, useAwsGeofence, useDeviceMediaQuery } from "@demo/hooks";
+import { useAmplifyAuth, useAmplifyMap, useAwsGeofence } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
+import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import {
 	AttributeEnum,
 	EsriMapEnum,

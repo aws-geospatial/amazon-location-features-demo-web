@@ -2,7 +2,8 @@ import React, { FC } from "react";
 
 import { Button, Card, Flex, Text } from "@aws-amplify/ui-react";
 import { IconClose, IconGeofenceColor, IconTrackers } from "@demo/assets";
-import { useBottomSheet, useDeviceMediaQuery } from "@demo/hooks";
+import useBottomSheet from "@demo/hooks/useBottomSheet";
+import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { MenuItemEnum } from "@demo/types";
 import { ResponsiveUIEnum } from "@demo/types/Enums";
 import { useTranslation } from "react-i18next";

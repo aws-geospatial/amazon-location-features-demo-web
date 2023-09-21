@@ -1,6 +1,4 @@
 import { View } from "@aws-amplify/ui-react";
-// import { MapProviderEnum } from "@demo/types";
-// import * as geoCalculationUtils from "@demo/utils/geoCalculation";
 import i18n from "@demo/locales/i18n";
 import { faker } from "@faker-js/faker";
 import { act, fireEvent, render } from "@testing-library/react";

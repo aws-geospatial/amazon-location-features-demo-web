@@ -12,7 +12,7 @@ import {
 	Sidebar,
 	UnauthSimulation
 } from "@demo/atomicui/organisms";
-import { useDeviceMediaQuery } from "@demo/hooks";
+import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { MapStyleFilterTypes, MenuItemEnum, ShowStateType } from "@demo/types";
 import "./styles.scss";
 

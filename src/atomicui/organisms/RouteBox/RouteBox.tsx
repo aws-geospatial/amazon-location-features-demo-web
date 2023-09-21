@@ -23,14 +23,9 @@ import {
 import { NotFoundCard, StepCard } from "@demo/atomicui/molecules";
 import { appConfig } from "@demo/core";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
-import {
-	useAmplifyMap,
-	useAwsPlace,
-	useAwsRoute,
-	useBottomSheet,
-	useDeviceMediaQuery,
-	usePersistedData
-} from "@demo/hooks";
+import { useAmplifyMap, useAwsPlace, useAwsRoute, usePersistedData } from "@demo/hooks";
+import useBottomSheet from "@demo/hooks/useBottomSheet";
+import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import {
 	DistanceUnitEnum,
 	InputType,

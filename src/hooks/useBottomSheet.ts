@@ -10,12 +10,6 @@ const useBottomSheet = () => {
 	const store = useBottomSheetStore();
 	const { setState } = useBottomSheetStore;
 
-	// useEffect(() => {
-	// 	if (store.ui === ResponsiveUIEnum.explore) {
-	// 		setState({ bottomSheetMinHeight: isTablet ? 80 : 22 });
-	// 	}
-	// }, [setState, isTablet, store.ui]);
-
 	const methods = useMemo(
 		() => ({
 			setBottomSheetCurrentHeight: (bottomSheetCurrentHeight: number) => {

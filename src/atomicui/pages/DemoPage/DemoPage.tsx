@@ -39,11 +39,11 @@ import {
 	useAwsPlace,
 	useAwsRoute,
 	useAwsTracker,
-	useBottomSheet,
-	useDeviceMediaQuery,
 	usePersistedData,
 	useRecordViewPage
 } from "@demo/hooks";
+import useBottomSheet from "@demo/hooks/useBottomSheet";
+import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import {
 	EsriMapEnum,
 	GrabMapEnum,

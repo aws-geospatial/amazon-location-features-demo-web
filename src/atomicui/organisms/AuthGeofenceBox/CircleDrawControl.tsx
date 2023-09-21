@@ -3,7 +3,7 @@
 
 import { useCallback, useEffect } from "react";
 
-import { useDeviceMediaQuery } from "@demo/hooks";
+import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { CircleDrawEventType, CircleFeatureType } from "@demo/types";
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";

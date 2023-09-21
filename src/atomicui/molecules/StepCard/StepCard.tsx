@@ -4,7 +4,8 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 
 import { Flex, Text, View } from "@aws-amplify/ui-react";
-import { useAmplifyMap, useAwsPlace, useDeviceMediaQuery } from "@demo/hooks";
+import { useAmplifyMap, useAwsPlace } from "@demo/hooks";
+import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { MapUnitEnum, SuggestionType, TravelMode } from "@demo/types";
 import { Position, Step } from "aws-sdk/clients/location";
 import { useTranslation } from "react-i18next";

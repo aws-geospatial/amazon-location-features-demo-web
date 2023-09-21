@@ -5,7 +5,7 @@ import React from "react";
 
 import { Button, CheckboxField, Flex, Text } from "@aws-amplify/ui-react";
 import { Modal } from "@demo/atomicui/atoms";
-import { useDeviceMediaQuery } from "@demo/hooks";
+import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
 

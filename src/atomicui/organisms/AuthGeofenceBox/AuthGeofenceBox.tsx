@@ -17,7 +17,9 @@ import {
 import { GeofenceMarker, InputField, NotFoundCard } from "@demo/atomicui/molecules";
 import { showToast } from "@demo/core";
 import { appConfig } from "@demo/core/constants";
-import { useAmplifyMap, useAwsGeofence, useAwsPlace, useBottomSheet, useDeviceMediaQuery } from "@demo/hooks";
+import { useAmplifyMap, useAwsGeofence, useAwsPlace } from "@demo/hooks";
+import useBottomSheet from "@demo/hooks/useBottomSheet";
+import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import {
 	CircleDrawEventType,
 	DistanceUnitEnum,

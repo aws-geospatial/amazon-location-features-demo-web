@@ -19,7 +19,8 @@ import {
 import { DropdownEl, Modal } from "@demo/atomicui/atoms";
 import { InputField } from "@demo/atomicui/molecules";
 import { appConfig, languageSwitcherData, regionsData } from "@demo/core/constants";
-import { useAmplifyAuth, useAmplifyMap, useAws, useAwsIot, useDeviceMediaQuery, usePersistedData } from "@demo/hooks";
+import { useAmplifyAuth, useAmplifyMap, useAws, useAwsIot, usePersistedData } from "@demo/hooks";
+import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import {
 	ConnectFormValuesType,
 	EsriMapEnum,

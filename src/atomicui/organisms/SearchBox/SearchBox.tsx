@@ -7,7 +7,9 @@ import { Autocomplete, Button, ComboBoxOption, Flex, Placeholder, Text, View } f
 import { IconActionMenu, IconClose, IconDirections, IconPin, IconSearch } from "@demo/assets";
 import { InputField, Marker, NotFoundCard, SuggestionMarker } from "@demo/atomicui/molecules";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
-import { useAmplifyMap, useAwsPlace, useBottomSheet, useDeviceMediaQuery } from "@demo/hooks";
+import { useAmplifyMap, useAwsPlace } from "@demo/hooks";
+import useBottomSheet from "@demo/hooks/useBottomSheet";
+import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { DistanceUnitEnum, MapUnitEnum, SuggestionType } from "@demo/types";
 import { AnalyticsEventActionsEnum, ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { calculateGeodesicDistance } from "@demo/utils/geoCalculation";

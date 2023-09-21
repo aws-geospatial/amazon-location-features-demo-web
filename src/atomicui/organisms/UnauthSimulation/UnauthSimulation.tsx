@@ -21,7 +21,9 @@ import {
 } from "@demo/atomicui/molecules";
 import { appConfig, busRoutesData } from "@demo/core";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
-import { useAwsGeofence, useBottomSheet, useDeviceMediaQuery } from "@demo/hooks";
+import { useAwsGeofence } from "@demo/hooks";
+import useBottomSheet from "@demo/hooks/useBottomSheet";
+import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import i18n from "@demo/locales/i18n";
 import {
 	MenuItemEnum,

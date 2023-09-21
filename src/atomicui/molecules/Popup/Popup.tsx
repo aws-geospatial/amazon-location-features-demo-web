@@ -5,7 +5,9 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 import { Button, Flex, Placeholder, Text, View } from "@aws-amplify/ui-react";
 import { IconCar, IconClose, IconCopyPages, IconDirections, IconInfo } from "@demo/assets";
-import { useAmplifyMap, useAwsPlace, useAwsRoute, useBottomSheet, useDeviceMediaQuery } from "@demo/hooks";
+import { useAmplifyMap, useAwsPlace, useAwsRoute } from "@demo/hooks";
+import useBottomSheet from "@demo/hooks/useBottomSheet";
+import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { DistanceUnitEnum, MapProviderEnum, MapUnitEnum, SuggestionType, TravelMode } from "@demo/types";
 
 import { ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
