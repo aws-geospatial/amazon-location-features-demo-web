@@ -66,7 +66,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 
 	const localizeGeodesicDistance = useMemo(() => {
 		const formatter = new Intl.NumberFormat(currentLang, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-		return formatter.format(geodesicDistance || 0);
+		return formatter.format(geodesicDistance || 0).replaceAll(/\s/g, "");
 	}, [geodesicDistance, currentLang]);
 
 	const geodesicDistanceUnit = useMemo(

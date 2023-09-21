@@ -90,10 +90,6 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	}, [setUI, isFocused, value, isDesktop, ui]);
 
 	useEffect(() => {
-		if (!value) {
-			clearPoiList();
-		}
-
 		if (isRouteBoxOpen || isAuthGeofenceBoxOpen || isAuthTrackerBoxOpen || isSettingsOpen || isStylesCardOpen) {
 			setValue("");
 			clearPoiList();
@@ -283,8 +279,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 
 	const markers = useMemo(() => {
 		if (suggestions?.length === 1 && selectedMarker) {
-			return suggestions.map(s => (
-				<SuggestionMarker key={s.Hash} active={true} searchValue={value} setSearchValue={setValue} {...s} />
+			return suggestions.map((s, i) => (
+				<SuggestionMarker key={i} active={true} searchValue={value} setSearchValue={setValue} {...s} />
 			));
 		} else if (!clusters) {
 			return suggestions?.map((s, i) => {
