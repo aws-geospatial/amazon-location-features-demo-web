@@ -198,7 +198,7 @@ const AuthTrackerSimulation: React.FC<AuthTrackerSimulationProps> = ({
 	useEffect(() => {
 		if (routeData) {
 			const boundingBox = routeData.Summary.RouteBBox;
-			console.log("renderRoute()");
+
 			isDesktop
 				? mapRef?.fitBounds(
 						[
