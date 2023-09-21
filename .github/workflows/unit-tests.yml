@@ -2,9 +2,11 @@ name: Unit_Tests
 
 on:
   push:
-    branches: [develop]
+    branches:
+      - main
+      - "**_main"
   pull_request:
-    branches: [develop]
+    branches: [main]
 
 jobs:
   e2e-tests:
