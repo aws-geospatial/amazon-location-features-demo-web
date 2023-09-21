@@ -140,7 +140,8 @@
 	}
 
 	&.logo-stroke-container-tablet {
-		left: 26.54rem;
+		left: 26.54rem !important;
+
 		@media screen and (max-width: 556px) {
 			display: none;
 		}
