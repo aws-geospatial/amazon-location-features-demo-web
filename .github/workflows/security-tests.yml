@@ -2,7 +2,9 @@ name: Security_Tests
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - "**_main"
   pull_request:
     branches: [main]
 
