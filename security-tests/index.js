@@ -102,6 +102,7 @@ const main = async () => {
 		}
 	} catch (error) {
 		console.error("ERROR", error);
+		throw new Error(`Error: ${error}`);
 	} finally {
 		console.log("----------------------------------------");
 	}
