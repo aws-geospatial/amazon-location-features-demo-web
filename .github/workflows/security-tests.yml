@@ -23,9 +23,6 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Print environment variables
-        run: env | sort
-
       - name: Run Security test
         env:
           IDENTITY_POOL_ID: ${{ secrets.IDENTITY_POOL_ID }}

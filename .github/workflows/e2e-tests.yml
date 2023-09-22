@@ -26,9 +26,6 @@ jobs:
       - name: Setup Cypress
         run: npm install cypress --save-dev
 
-      - name: Print environment variables
-        run: env | sort
-
       - name: Run Cypress test
         env:
           CYPRESS_WEB_DOMAIN: ${{ secrets.WEB_DOMAIN }}
