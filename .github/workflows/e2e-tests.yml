@@ -12,7 +12,6 @@ jobs:
   e2e-tests:
     name: E2E-Testing
     runs-on: ubuntu-20.04
-    secrets: inherit
 
     steps:
       - name: Checkout
