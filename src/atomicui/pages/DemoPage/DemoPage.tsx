@@ -170,7 +170,7 @@ const DemoPage: React.FC = () => {
 		doNotAskOpenDataDisclaimerModal,
 		setDoNotAskOpenDataDisclaimerModal
 	} = usePersistedData();
-	const { isDesktop, isMobile, isTablet, isMax556 } = useDeviceMediaQuery();
+	const { isDesktop, isMobile, isTablet } = useDeviceMediaQuery();
 	const { setUI, ui, bottomSheetCurrentHeight } = useBottomSheet();
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
@@ -1144,19 +1144,22 @@ const DemoPage: React.FC = () => {
 					)}
 				</View>
 				<AttributionControl
-					style={{
-						fontSize: "0.77rem",
-						borderRadius: "0.62rem",
-						marginRight: isMax556 ? `${(bottomSheetCurrentHeight || 0) / 13 + 1.2}rem` : "0.77rem",
-						marginBottom: isMax556 ? `${(bottomSheetCurrentHeight || 0) / 15}rem` : "2.77rem",
-						backgroundColor: currentMapStyle.toLowerCase().includes("dark")
-							? "rgba(0, 0, 0, 0.2)"
-							: "var(--white-color)",
-						color: currentMapStyle.toLowerCase().includes("dark") ? "var(--white-color)" : "var(--black-color)",
-						width: !isDesktop ? "100%" : undefined,
-						display: isDesktop ? "flex" : "none"
-					}}
-					compact={!isDesktop}
+					style={
+						isDesktop
+							? {
+									display: "flex",
+									fontSize: "0.77rem",
+									color: currentMapStyle.toLowerCase().includes("dark") ? "var(--white-color)" : "var(--black-color)",
+									backgroundColor: currentMapStyle.toLowerCase().includes("dark")
+										? "rgba(0, 0, 0, 0.2)"
+										: "var(--white-color)",
+									border: "0px solid none",
+									marginTop: "0rem",
+									marginBottom: "0rem"
+							  }
+							: { display: "none" }
+					}
+					compact={true}
 				/>
 			</Map>
 			<WelcomeModal open={showWelcomeModal} onClose={() => setShowWelcomeModal(false)} />
