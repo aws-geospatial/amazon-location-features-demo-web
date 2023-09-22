@@ -9,7 +9,6 @@ Cypress.Commands.add("grantLocationAccess", () => {
 
 Cypress.Commands.add("visitDomain", domain => {
 	cy.task("log", `ENV===>>> ${JSON.stringify(Cypress.env())}`);
-	// cy.task("log", `visitDomain===>>> ${domain}`);
 
 	if (typeof domain === "string") {
 		domain.includes("dev")
