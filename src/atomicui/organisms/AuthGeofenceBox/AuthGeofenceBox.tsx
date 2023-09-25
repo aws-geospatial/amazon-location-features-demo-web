@@ -281,7 +281,12 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({ mapRef, setShowAuthGe
 		const isSaveDisabled = isEditing ? current.value === value && current.radiusInM === radiusInM : !name || !!errorMsg;
 
 		return (
-			<Flex gap={0} direction="column" padding={"0px 16px"}>
+			<Flex
+				gap={0}
+				direction="column"
+				padding={"0px 16px"}
+				style={isDesktop ? {} : { overflowY: "scroll", height: (bottomSheetCurrentHeight || 0) - 64 }}
+			>
 				{!geofenceCenter && (
 					<Flex gap={0} justifyContent="center" alignItems="center" marginTop="14px">
 						{isDesktop && (
@@ -453,7 +458,8 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({ mapRef, setShowAuthGe
 		t,
 		langDir,
 		isLtr,
-		isDesktop
+		isDesktop,
+		bottomSheetCurrentHeight
 	]);
 
 	const onDelete = useCallback(

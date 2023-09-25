@@ -29,13 +29,8 @@
 	justify-content: space-evenly;
 	align-items: center;
 
-	&.map-styles-geofence-and-tracker-container-mobile {
+	@media screen and (max-width: 1023px) {
 		height: 2.4rem;
-
-		.map-styles-button {
-			border-bottom-left-radius: 0.62rem;
-			border-bottom-right-radius: 0.62rem;
-		}
 	}
 
 	.map-styles-button,
@@ -53,6 +48,11 @@
 		border-top-right-radius: 0.62rem;
 		border-bottom-left-radius: 0rem;
 		border-bottom-right-radius: 0rem;
+
+		@media screen and (max-width: 1023px) {
+			border-bottom-left-radius: 0.62rem;
+			border-bottom-right-radius: 0.62rem;
+		}
 	}
 
 	.tracker-button {
@@ -60,10 +60,6 @@
 		border-top-right-radius: 0rem;
 		border-bottom-left-radius: 0.62rem;
 		border-bottom-right-radius: 0.62rem;
-	}
-
-	@media only screen and (max-width: 480px) {
-		right: 1rem;
 	}
 }
 
@@ -89,8 +85,8 @@
 
 .active,
 .active > svg {
-	background-color: var(--primary-color);
-	fill: var(--white-color);
+	background-color: var(--white-color) !important;
+	fill: var(--primary-color) !important;
 }
 
 .amplify-divider.amplify-divider--horizontal.button-divider {
