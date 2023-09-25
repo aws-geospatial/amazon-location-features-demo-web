@@ -7,14 +7,25 @@ import { policies } from "./constants/index.js";
 
 dotenv.config();
 
-const identityPoolId = process.env.VITE_AWS_COGNITO_IDENTITY_POOL_ID_TEST;
-const region = process.env.VITE_AWS_REGION_TEST;
-const userPoolId = process.env.VITE_AWS_USER_POOL_ID_TEST;
-const userPoolWebClientId = process.env.VITE_AWS_USER_POOL_WEB_CLIENT_ID_TEST;
-const username = process.env.VITE_AWS_COGNITO_USERNAME_TEST;
-const password = process.env.VITE_AWS_COGNITO_PASSWORD_TEST;
-const authRoleName = process.env.VITE_AWS_IAM_AUTH_ROLE_NAME_TEST;
-const unauthRoleName = process.env.VITE_AWS_IAM_UNAUTH_ROLE_NAME_TEST;
+const identityPoolId = process.env.IDENTITY_POOL_ID;
+const userPoolId = process.env.USER_POOL_ID;
+const userPoolWebClientId = process.env.USER_POOL_CLIENT_ID;
+const username = process.env.COGNITO_EMAIL;
+const password = process.env.COGNITO_PASSWORD;
+const authRoleName = process.env.IAM_AUTH_ROLE_NAME;
+const unauthRoleName = process.env.IAM_UNAUTH_ROLE_NAME;
+const region = identityPoolId.split(":")[0];
+
+console.log("ENV===>>>", {
+	identityPoolId,
+	userPoolId,
+	userPoolWebClientId,
+	username,
+	password,
+	authRoleName,
+	unauthRoleName,
+	region
+});
 
 Amplify.configure({
 	Auth: {
@@ -91,6 +102,7 @@ const main = async () => {
 		}
 	} catch (error) {
 		console.error("ERROR", error);
+		throw new Error(`Error: ${error}`);
 	} finally {
 		console.log("----------------------------------------");
 	}
