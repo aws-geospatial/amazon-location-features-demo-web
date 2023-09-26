@@ -73,7 +73,6 @@ Runs Cypress tests to completion in a browser which can be specified in the `opt
 #### Env keys required in `security-tests/.env` file, see `security-tests/.env.example` for reference.
 
 > VITE_AWS_COGNITO_IDENTITY_POOL_ID_TEST</br>
-> VITE_AWS_REGION_TEST</br>
 > VITE_AWS_USER_POOL_ID_TEST</br>
 > VITE_AWS_USER_POOL_WEB_CLIENT_ID_TEST</br>
 > VITE_AWS_COGNITO_USERNAME_TEST</br>
