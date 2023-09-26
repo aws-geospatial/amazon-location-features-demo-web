@@ -116,7 +116,7 @@ const extraGeoLocateTop = 2.6;
 const DemoPage: React.FC = () => {
 	const {} = useRecordViewPage("DemoPage");
 	const [show, setShow] = React.useState<ShowStateType>(initShow);
-	const [height, setHeight] = React.useState(window.innerHeight);
+	// const [height, setHeight] = React.useState(window.innerHeight);
 	const [searchValue, setSearchValue] = React.useState("");
 	const [doNotAskGrabDisclaimer, setDoNotAskGrabDisclaimer] = React.useState(false);
 	const [doNotAskOpenDataDisclaimer, setDoNotAskOpenDataDisclaimer] = React.useState(false);
@@ -330,15 +330,15 @@ const DemoPage: React.FC = () => {
 		_attachPolicy();
 	}, [_attachPolicy]);
 
-	const onResize = useCallback(() => setHeight(window.innerHeight), []);
+	// const onResize = useCallback(() => setHeight(window.innerHeight), []);
 
-	useEffect(() => {
-		addEventListener("resize", onResize);
+	// useEffect(() => {
+	// 	addEventListener("resize", onResize);
 
-		return () => {
-			removeEventListener("resize", onResize);
-		};
-	}, [onResize]);
+	// 	return () => {
+	// 		removeEventListener("resize", onResize);
+	// 	};
+	// }, [onResize]);
 
 	useEffect(() => {
 		if (selectedMarker) {
@@ -869,7 +869,7 @@ const DemoPage: React.FC = () => {
 				<Flex
 					style={{
 						position: "absolute",
-						bottom: isMobile ? `${(bottomSheetCurrentHeight || 0) / 13 + 1.2}rem` : isDesktop ? "12.85rem" : "2rem",
+						bottom: isMobile ? `${(bottomSheetCurrentHeight || 0) / 13 + 1.2}rem` : isDesktop ? "9.85rem" : "2rem",
 						right: isMobile ? "1rem" : isDesktop ? "2rem" : "2rem"
 					}}
 					className="location-disabled"
@@ -938,7 +938,7 @@ const DemoPage: React.FC = () => {
 
 	return !!credentials?.identityId ? (
 		<View
-			style={{ height }}
+			style={{ height: "100%" }}
 			className={`${currentMapStyle.toLowerCase().includes("dark") ? "dark-mode" : "light-mode"}`}
 		>
 			<Map
@@ -1302,7 +1302,6 @@ const DemoPage: React.FC = () => {
 		<DemoPlaceholderPage
 			searchValue={searchValue}
 			selectedFilters={selectedFilters}
-			height={height}
 			show={show}
 			isGrabVisible={isGrabVisible}
 		/>

@@ -17,7 +17,6 @@ import { MapStyleFilterTypes, MenuItemEnum, ShowStateType } from "@demo/types";
 import "./styles.scss";
 
 interface DemoPlaceholderPageProps {
-	height: number;
 	show: ShowStateType;
 	isGrabVisible: boolean;
 	searchValue: string;
@@ -25,7 +24,6 @@ interface DemoPlaceholderPageProps {
 }
 
 const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
-	height,
 	show,
 	isGrabVisible,
 	searchValue,
@@ -33,7 +31,7 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 }) => {
 	const { isDesktop } = useDeviceMediaQuery();
 	return (
-		<View style={{ height }}>
+		<View style={{ height: "100%" }}>
 			<View className={"loader-container"}>
 				{show.sidebar && (
 					<Sidebar

@@ -6,18 +6,22 @@ import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import { Flex, Text } from "@aws-amplify/ui-react";
 import { IconClose, LogoDark, LogoLight } from "@demo/assets";
 import { ConfirmationModal } from "@demo/atomicui/molecules";
+import { appConfig } from "@demo/core";
 import { useAmplifyMap } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { MenuItemEnum, ResponsiveUIEnum } from "@demo/types/Enums";
 import { useTranslation } from "react-i18next";
 import { MapRef } from "react-map-gl";
+import { useLocation } from "react-router-dom";
 import { BottomSheet } from "react-spring-bottom-sheet";
 
 import "react-spring-bottom-sheet/dist/style.css";
 import { Explore } from "../Explore";
 
 import "./styles.scss";
+
+const { DEMO } = appConfig.default.ROUTES;
 
 interface IProps {
 	mapRef: MapRef | null;
@@ -72,6 +76,8 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 }) => {
 	const { isDesktop, isTablet, isMax556 } = useDeviceMediaQuery();
 	const { t } = useTranslation();
+	const location = useLocation();
+	const isDemoUrl = location.pathname === DEMO;
 	const {
 		setBottomSheetMinHeight,
 		setBottomSheetHeight,
@@ -95,6 +101,20 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 
 		prevBottomSheetHeightRef.current = bottomSheetCurrentHeight;
 	}, [bottomSheetCurrentHeight]);
+
+	// useEffect(() => {
+	// 	const hasDemoUrl = document.querySelector(".demoUrl");
+
+	// 	if (hasDemoUrl) {
+	// 		document.body.style.overflow = "hidden";
+	// 	} else {
+	// 		document.body.style.overflow = "auto";
+	// 	}
+
+	// 	return () => {
+	// 		document.body.style.overflow = "auto";
+	// 	};
+	// }, []);
 
 	useEffect(() => {
 		setTimeout(() => {
@@ -386,7 +406,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				}
 				className={`bottom-sheet ${isDesktop ? "desktop" : isTablet ? "tablet" : "mobile"} ${
 					(bottomSheetCurrentHeight || 0) + 30 < window.innerHeight ? "add-overlay" : ""
-				} ${
+				} ${!isDesktop && isDemoUrl ? "disable-body-scroll" : ""} ${
 					ui &&
 					[
 						ResponsiveUIEnum.search,

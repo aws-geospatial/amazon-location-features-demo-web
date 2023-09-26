@@ -85,6 +85,7 @@ const NonStartUnauthSimulation: FC<IProps> = ({
 					fontFamily="AmazonEmber-Medium"
 					fontSize="1.076rem"
 					minHeight="3.076rem"
+					textAlign={!isDesktop ? "center" : "left"}
 				>
 					{unauthSimulationCtaText}
 				</Button>

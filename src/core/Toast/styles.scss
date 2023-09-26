@@ -42,9 +42,11 @@
 	min-width: 300px !important;
 	height: 55px !important; /* Setting a fixed height */
 	overflow: visible !important; /* To ensure toasts are visible outside container */
+	top: 0;
 
 	.Toastify__toast {
 		position: absolute !important; /* Makes each toast overlay on each other */
+		margin-bottom: 0;
 	}
 }
 
