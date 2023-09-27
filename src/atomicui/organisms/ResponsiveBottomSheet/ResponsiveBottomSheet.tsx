@@ -102,20 +102,6 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 		prevBottomSheetHeightRef.current = bottomSheetCurrentHeight;
 	}, [bottomSheetCurrentHeight]);
 
-	// useEffect(() => {
-	// 	const hasDemoUrl = document.querySelector(".demoUrl");
-
-	// 	if (hasDemoUrl) {
-	// 		document.body.style.overflow = "hidden";
-	// 	} else {
-	// 		document.body.style.overflow = "auto";
-	// 	}
-
-	// 	return () => {
-	// 		document.body.style.overflow = "auto";
-	// 	};
-	// }, []);
-
 	useEffect(() => {
 		setTimeout(() => {
 			const targetElement = document.querySelector('[data-rsbs-scroll="true"]') as HTMLElement;
@@ -376,6 +362,8 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 		),
 		[from, onCloseHandler, setUI, t]
 	);
+
+	console.log(bottomSheetMinHeight, bottomSheetHeight);
 
 	return (
 		<>

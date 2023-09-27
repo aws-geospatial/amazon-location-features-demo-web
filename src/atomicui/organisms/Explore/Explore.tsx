@@ -18,6 +18,7 @@ import { appConfig } from "@demo/core/constants";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useAmplifyAuth, useAmplifyMap, useAwsIot } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
+import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import {
 	AnalyticsEventActionsEnum,
 	EventTypeEnum,
@@ -67,6 +68,7 @@ const Explore: React.FC<IProps> = ({
 	const { t, i18n } = useTranslation();
 	const currentLanguage = i18n.language;
 	const { setBottomSheetMinHeight, setBottomSheetHeight } = useBottomSheet();
+	const { isDesktop } = useDeviceMediaQuery();
 	const { isUserAwsAccountConnected, credentials, onLogin, onLogout, onDisconnectAwsAccount, setAuthTokens } =
 		useAmplifyAuth();
 	const { mapProvider: currentMapProvider } = useAmplifyMap();
@@ -99,12 +101,22 @@ const Explore: React.FC<IProps> = ({
 				if (menuItem === MenuItemEnum.GEOFENCE) {
 					onShowAuthGeofenceBox();
 					updateUIInfo(ResponsiveUIEnum.auth_geofence);
+					if (!isDesktop) {
+						setBottomSheetMinHeight(window.innerHeight / 2);
+						setBottomSheetHeight(window.innerHeight);
+						setTimeout(() => setBottomSheetMinHeight(BottomSheetHeights.explore.min), 300);
+					}
 				} else {
 					if (currentMapProvider === MapProviderEnum.ESRI) {
 						onShowTrackingDisclaimerModal();
 					} else {
 						onShowAuthTrackerBox();
 						updateUIInfo(ResponsiveUIEnum.auth_tracker);
+						if (!isDesktop) {
+							setBottomSheetMinHeight(window.innerHeight / 2);
+							setBottomSheetHeight(window.innerHeight);
+							setTimeout(() => setBottomSheetMinHeight(BottomSheetHeights.explore.min), 300);
+						}
 					}
 				}
 			} else {
