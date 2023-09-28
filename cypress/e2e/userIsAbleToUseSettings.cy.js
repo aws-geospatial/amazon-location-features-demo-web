@@ -16,10 +16,14 @@ describe("Settings", () => {
 
 	it.only("should allow user to select map data provider", { scrollBehavior: false }, () => {
 		cy.get('[data-testid="option-item-Data provider"]').click();
-		cy.get('[data-testid="option-details-container"]').contains("Esri");
-		cy.get('[data-testid="option-details-container"]').contains("HERE");
-		cy.get('[data-testid="option-details-container"]').contains("GrabMaps");
-		cy.get('[data-testid="option-details-container"]').contains("OpenData");
+		cy.get('[class="amplify-flex option-details-container"]').contains("Esri");
+		cy.get('[class="amplify-flex option-details-container"]').contains("HERE");
+		cy.get('[class="amplify-flex option-details-container"]').contains("GrabMaps");
+		cy.get('[class="amplify-flex option-details-container"]').contains("OpenData");
+		// cy.get('[data-testid="option-details-container"]').contains("Esri");
+		// cy.get('[data-testid="option-details-container"]').contains("HERE");
+		// cy.get('[data-testid="option-details-container"]').contains("GrabMaps");
+		// cy.get('[data-testid="option-details-container"]').contains("OpenData");
 	});
 
 	it("should allow user to select map style", { scrollBehavior: false }, () => {
