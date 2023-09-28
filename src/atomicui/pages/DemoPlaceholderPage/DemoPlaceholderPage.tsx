@@ -51,7 +51,12 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 				{show.routeBox ? (
 					<RouteBox mapRef={null} setShowRouteBox={() => {}} isSideMenuExpanded={show.sidebar} />
 				) : show.authGeofenceBox ? (
-					<AuthGeofenceBox mapRef={null} setShowAuthGeofenceBox={() => {}} />
+					<AuthGeofenceBox
+						mapRef={null}
+						setShowAuthGeofenceBox={() => {}}
+						isEditingAuthRoute={false}
+						setIsEditingAuthRoute={() => {}}
+					/>
 				) : show.authTrackerBox ? (
 					<AuthTrackerBox mapRef={null} setShowAuthTrackerBox={() => {}} />
 				) : show.unauthGeofenceBox || show.unauthTrackerBox ? (
@@ -66,6 +71,10 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 						setShowStartUnauthSimulation={() => {}}
 						startSimulation={false}
 						setStartSimulation={() => {}}
+						isNotifications={false}
+						setIsNotifications={() => {}}
+						confirmCloseSimulation={false}
+						setConfirmCloseSimulation={() => {}}
 					/>
 				) : (
 					<>
@@ -83,49 +92,6 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 							/>
 						) : (
 							<></>
-							// <ResponsiveBottomSheet
-							// 	SearchBoxEl={() => (
-							// 		<SearchBox
-							// 			mapRef={null}
-							// 			isSideMenuExpanded={show.sidebar}
-							// 			onToggleSideMenu={() => {}}
-							// 			setShowRouteBox={() => {}}
-							// 			isRouteBoxOpen={show.routeBox}
-							// 			isAuthGeofenceBoxOpen={show.authGeofenceBox}
-							// 			isAuthTrackerBoxOpen={show.authTrackerBox}
-							// 			isSettingsOpen={show.settings}
-							// 			isStylesCardOpen={show.stylesCard}
-							// 			value={searchValue}
-							// 			setValue={() => {}}
-							// 		/>
-							// 	)}
-							// 	MapButtons={
-							// 		<MapButtons
-							// 			renderedUpon={"Demo Page"}
-							// 			openStylesCard={show.stylesCard}
-							// 			setOpenStylesCard={() => {}}
-							// 			onCloseSidebar={() => {}}
-							// 			onOpenConnectAwsAccountModal={() => {}}
-							// 			onOpenSignInModal={() => {}}
-							// 			onShowGeofenceBox={() => {}}
-							// 			isGrabVisible={isGrabVisible}
-							// 			showGrabDisclaimerModal={show.grabDisclaimerModal}
-							// 			onShowGridLoader={() => {}}
-							// 			handleMapStyleChange={() => {}}
-							// 			searchValue={searchValue}
-							// 			setSearchValue={() => {}}
-							// 			selectedFilters={selectedFilters}
-							// 			setSelectedFilters={() => {}}
-							// 			isLoading={true}
-							// 			showOpenDataDisclaimerModal={false}
-							// 			handleMapProviderChange={() => {}}
-							// 			// currentMapProvider={}
-							// 			onlyMapStyles
-							// 			isHandDevice
-							// 		/>
-							// 	}
-							// 	RouteBox={<RouteBox mapRef={null} setShowRouteBox={() => {}} isSideMenuExpanded={show.sidebar} />}
-							// />
 						)}
 					</>
 				)}
