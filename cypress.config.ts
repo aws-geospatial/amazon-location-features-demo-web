@@ -2,8 +2,8 @@ import { defineConfig } from "cypress";
 import { cypressBrowserPermissionsPlugin } from "cypress-browser-permissions";
 
 export default defineConfig({
-	viewportWidth: 1280,
-	viewportHeight: 720,
+	viewportWidth: 1024,
+	viewportHeight: 733,
 	env: {
 		browserPermissions: {
 			notifications: "allow",

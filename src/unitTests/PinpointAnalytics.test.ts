@@ -27,8 +27,6 @@ const {
 
 const region = PINPOINT_IDENTITY_POOL_ID.split(":")[0];
 
-console.log("ENV===>>>", { PINPOINT_APPLICATION_ID, PINPOINT_IDENTITY_POOL_ID, region });
-
 const { createOrUpdateEndpoint, record } = jest.requireActual("@demo/utils/analyticsUtils");
 
 describe("PinpointAnalytics", () => {
