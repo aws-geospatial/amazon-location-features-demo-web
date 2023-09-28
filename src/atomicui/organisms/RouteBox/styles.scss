@@ -9,7 +9,7 @@
 
 	&.route-card-mobile {
 		position: relative !important;
-		top: 0 !important;
+		top: -5px !important;
 		width: 100% !important;
 		box-shadow: none;
 		padding: 0 1.23rem;
@@ -166,6 +166,7 @@
 			padding: 1rem;
 			border-radius: 8px;
 			text-align: center;
+			z-index: 1;
 		}
 	}
 

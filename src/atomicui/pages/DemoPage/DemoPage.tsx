@@ -1139,6 +1139,7 @@ const DemoPage: React.FC = () => {
 						clearCredsAndLocationClient={clearCredsAndLocationClient}
 						setShowAuthGeofenceBox={b => setShow(s => ({ ...s, authGeofenceBox: b }))}
 						setShowRouteBox={b => setShow(s => ({ ...s, routeBox: b }))}
+						isExpandRouteOptionsMobile={expandRouteOptionsMobile}
 						setExpandRouteOptionsMobile={setExpandRouteOptionsMobile}
 					/>
 					<MapButtons

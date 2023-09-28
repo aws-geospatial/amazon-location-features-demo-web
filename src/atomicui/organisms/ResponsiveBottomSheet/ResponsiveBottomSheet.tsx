@@ -64,6 +64,7 @@ interface IProps {
 	setTriggerOnReset: React.Dispatch<React.SetStateAction<boolean>>;
 	isEditingAuthRoute: boolean;
 	setShowRouteBox: (b: boolean) => void;
+	isExpandRouteOptionsMobile: boolean;
 	setExpandRouteOptionsMobile: (b: boolean) => void;
 }
 
@@ -104,6 +105,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	setTriggerOnReset,
 	isEditingAuthRoute,
 	setShowRouteBox,
+	isExpandRouteOptionsMobile,
 	setExpandRouteOptionsMobile
 }) => {
 	const { isDesktop, isTablet, isMax556 } = useDeviceMediaQuery();
@@ -310,7 +312,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				setTriggerOnClose(true);
 			}
 		} else if ([ResponsiveUIEnum.routes, ResponsiveUIEnum.direction_to_routes].includes(ui)) {
-			if (ui === ResponsiveUIEnum.routes) {
+			if (!isExpandRouteOptionsMobile) {
 				onCloseRouteBox();
 			} else {
 				setExpandRouteOptionsMobile(false);
@@ -318,6 +320,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 		} else {
 			setUI(ResponsiveUIEnum.explore);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [
 		ui,
 		handleClose,
