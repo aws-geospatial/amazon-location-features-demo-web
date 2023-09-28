@@ -796,13 +796,6 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 		return (
 			<>
 				<Flex direction="column" gap="0" ref={expandRouteRef}>
-					{/* <Flex
-						className="route-card-close"
-						onClick={() => setExpandRouteOptionsMobile(false)}
-						justifyContent="flex-end"
-					>
-						<IconClose className="grey-icon expand-mobile-close" width="24px" height="24px" />
-					</Flex> */}
 					<Flex direction="column" padding="0 1.23rem">
 						<Text fontFamily="AmazonEmber-Bold" fontSize="1.23rem">
 							{t("route_box__route_options.text")}
