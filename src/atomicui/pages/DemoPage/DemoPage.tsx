@@ -124,6 +124,7 @@ const DemoPage: React.FC = () => {
 	const [doNotAskOpenDataDisclaimer, setDoNotAskOpenDataDisclaimer] = React.useState(false);
 	const [triggerOnClose, setTriggerOnClose] = React.useState(false);
 	const [triggerOnReset, setTriggerOnReset] = React.useState(false);
+	const [expandRouteOptionsMobile, setExpandRouteOptionsMobile] = React.useState(false);
 	const [isEditingAuthRoute, setIsEditingAuthRoute] = React.useState(false);
 	const [selectedFilters, setSelectedFilters] = React.useState<MapStyleFilterTypes>({
 		Providers: [],
@@ -1082,6 +1083,8 @@ const DemoPage: React.FC = () => {
 								setShowRouteBox={b => setShow(s => ({ ...s, routeBox: b }))}
 								isSideMenuExpanded={show.sidebar}
 								isDirection={ui === ResponsiveUIEnum.direction_to_routes}
+								expandRouteOptionsMobile={expandRouteOptionsMobile}
+								setExpandRouteOptionsMobile={setExpandRouteOptionsMobile}
 							/>
 						}
 						isEditingAuthRoute={isEditingAuthRoute}
@@ -1135,6 +1138,8 @@ const DemoPage: React.FC = () => {
 						setShowAuthTrackerBox={b => setShow(s => ({ ...s, authTrackerBox: b }))}
 						clearCredsAndLocationClient={clearCredsAndLocationClient}
 						setShowAuthGeofenceBox={b => setShow(s => ({ ...s, authGeofenceBox: b }))}
+						setShowRouteBox={b => setShow(s => ({ ...s, routeBox: b }))}
+						setExpandRouteOptionsMobile={setExpandRouteOptionsMobile}
 					/>
 					<MapButtons
 						renderedUpon={TriggeredByEnum.DEMO_PAGE}

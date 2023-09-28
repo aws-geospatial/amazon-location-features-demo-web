@@ -8,7 +8,7 @@ const BottomSheetHeights = {
 		max: window.innerHeight
 	},
 	routes: {
-		min: 190,
+		min: 210,
 		max: window.innerHeight
 	},
 	poi_card: {

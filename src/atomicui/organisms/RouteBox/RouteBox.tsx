@@ -58,9 +58,17 @@ interface RouteBoxProps {
 	setShowRouteBox: (b: boolean) => void;
 	isSideMenuExpanded: boolean;
 	isDirection?: boolean;
+	expandRouteOptionsMobile?: boolean;
+	setExpandRouteOptionsMobile?: (b: boolean) => void;
 }
 
-const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenuExpanded }) => {
+const RouteBox: React.FC<RouteBoxProps> = ({
+	mapRef,
+	setShowRouteBox,
+	isSideMenuExpanded,
+	expandRouteOptionsMobile,
+	setExpandRouteOptionsMobile
+}) => {
 	const [travelMode, setTravelMode] = useState<TravelMode>(TravelMode.CAR);
 	const [travelModes, setTravelModes] = useState<TravelMode[]>([TravelMode.CAR]);
 	const [routeDataForMobile, setRouteDataForMobile] = useState<{ [K in TravelMode]?: RouteDataType }[] | undefined>(
@@ -109,7 +117,6 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 	const [expandRouteOptions, setExpandRouteOptions] = useState(false);
 	const [moreOption, setMoreOption] = useState(false);
 	const [routeOptions, setRouteOptions] = useState<RouteOptionsType>({ ...defaultRouteOptions });
-	const [expandRouteOptionsMobile, setExpandRouteOptionsMobile] = useState(false);
 	const { isDesktop } = useDeviceMediaQuery();
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
@@ -789,13 +796,13 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 		return (
 			<>
 				<Flex direction="column" gap="0" ref={expandRouteRef}>
-					<Flex
+					{/* <Flex
 						className="route-card-close"
 						onClick={() => setExpandRouteOptionsMobile(false)}
 						justifyContent="flex-end"
 					>
 						<IconClose className="grey-icon expand-mobile-close" width="24px" height="24px" />
-					</Flex>
+					</Flex> */}
 					<Flex direction="column" padding="0 1.23rem">
 						<Text fontFamily="AmazonEmber-Bold" fontSize="1.23rem">
 							{t("route_box__route_options.text")}
@@ -817,9 +824,11 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 					left={!isDesktop ? 0 : isSideMenuExpanded ? 245 : 21}
 					ref={routesCardRef}
 				>
-					<View className="route-card-close" onClick={onClose}>
-						<IconClose />
-					</View>
+					{isDesktop && (
+						<View className="route-card-close" onClick={onClose}>
+							<IconClose />
+						</View>
+					)}
 					{!isDesktop && (
 						<View className="route-card-header">
 							<Text className="route-card-header-text">{t("popup__directions.text")}</Text>
@@ -963,7 +972,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 										className="more-options-container"
 										onClick={() => {
 											setMoreOption(false);
-											setExpandRouteOptionsMobile(true);
+											setExpandRouteOptionsMobile && setExpandRouteOptionsMobile(true);
 										}}
 										ref={moreOptionsRef}
 									>
