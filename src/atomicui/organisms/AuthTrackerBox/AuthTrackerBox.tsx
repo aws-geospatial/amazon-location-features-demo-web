@@ -67,7 +67,7 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
-	const { setUI } = useBottomSheet();
+	const { setUI, bottomSheetCurrentHeight = 0 } = useBottomSheet();
 
 	const { isDesktop } = useDeviceMediaQuery();
 	const fetchGeofencesList = useCallback(async () => getGeofencesList(), [getGeofencesList]);
@@ -189,7 +189,12 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 	const renderTrackerPointsList = useMemo(() => {
 		if (trackerPoints?.length) {
 			return (
-				<Flex gap={0} direction="column" maxHeight={window.innerHeight - 250} overflow="scroll">
+				<Flex
+					gap={0}
+					direction="column"
+					maxHeight={!isDesktop ? `${bottomSheetCurrentHeight - 220}px` : window.innerHeight - 250}
+					overflow="scroll"
+				>
 					{trackerPoints.map((point, idx) => {
 						const icon = _trackerTypes.filter(({ type }) => selectedTrackerType === type)[0].icon;
 
@@ -206,7 +211,7 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 				</Flex>
 			);
 		}
-	}, [trackerPoints, selectedTrackerType, _trackerTypes]);
+	}, [trackerPoints, isDesktop, bottomSheetCurrentHeight, _trackerTypes, selectedTrackerType]);
 
 	const renderTrackerPointMarkers = useMemo(() => {
 		if (trackerPoints?.length) {
@@ -277,19 +282,21 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 		<>
 			<Card className={`tracking-card ${!isDesktop ? "tracking-card-mobile" : ""}`} left="1.62rem">
 				<Flex className="tracking-card-header">
-					<Text fontFamily="AmazonEmber-Medium" fontSize="1.08rem">
+					<Text fontFamily="AmazonEmber-Medium" fontSize={!isDesktop ? "1.23rem" : "1.08rem"}>
 						{t("tracker.text")}
 					</Text>
-					<Flex
-						data-testid="auth-tracker-box-close"
-						className={`tracking-card-close ${!isDesktop ? "tracking-card-close-mobile" : ""}`}
-						onClick={onClose}
-					>
-						<IconClose />
-					</Flex>
+					{isDesktop && (
+						<Flex
+							data-testid="auth-tracker-box-close"
+							className={`tracking-card-close ${!isDesktop ? "tracking-card-close-mobile" : ""}`}
+							onClick={onClose}
+						>
+							<IconClose />
+						</Flex>
+					)}
 				</Flex>
 				{Connection}
-				<Flex gap={0} alignItems="center" padding="1.23rem">
+				<Flex gap={0} alignItems="center" padding={isDesktop ? "1.23rem" : "0.5rem 1.23rem"}>
 					<IconInfoSolid className="icon-plus-rounded" />
 					<Text marginLeft="1.23rem" variation="tertiary" textAlign={isLtr ? "start" : "end"}>
 						{t("tracker_box__click_any_point.text")}

@@ -29,12 +29,13 @@
 		padding: 0;
 		z-index: 20;
 		opacity: 1;
-		min-height: 1.1rem;
+		min-height: 3.1rem;
+		padding-top: 3px;
 	}
 
-	&.bottom-sheet--collapsed {
+	&.no-scroll-on-content {
 		[data-rsbs-scroll="true"] {
-			display: none;
+			overflow: hidden;
 		}
 	}
 
@@ -89,6 +90,25 @@
 		[data-rsbs-header]:before {
 			background: url("/src/assets/icons/icon-move-still.svg") center center no-repeat;
 			background-size: contain;
+		}
+	}
+
+	.bell-icon-container {
+		.notification-bubble {
+			width: 8px;
+			height: 8px;
+			background-color: orange;
+			border-radius: 50%;
+			display: flex;
+			position: absolute;
+			top: 0px;
+			right: 3px;
+		}
+
+		.bell-icon {
+			path {
+				fill: var(--grey-color);
+			}
 		}
 	}
 }

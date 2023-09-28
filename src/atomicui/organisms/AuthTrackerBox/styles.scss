@@ -9,10 +9,18 @@
 	z-index: 4;
 
 	&.tracking-card-mobile {
+		position: relative;
 		width: 100% !important;
 		box-shadow: none;
 		left: 0 !important;
 		overflow: initial;
+		top: 0;
+
+		.tracking-card-header {
+			border-bottom: none;
+			padding-top: 0;
+			padding-bottom: 0.2rem;
+		}
 	}
 
 	.tracking-card-header {
@@ -53,19 +61,6 @@
 
 				&:hover {
 					fill: var(--primary-color);
-				}
-			}
-
-			&.tracking-card-close-mobile {
-				position: relative;
-				top: -18px;
-				border: 0;
-				z-index: 26;
-
-				svg {
-					position: absolute;
-					right: 0;
-					top: -10px;
 				}
 			}
 		}

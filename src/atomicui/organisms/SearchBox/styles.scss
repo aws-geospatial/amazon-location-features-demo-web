@@ -81,7 +81,11 @@
 
 .simple-search-bar {
 	width: -webkit-fill-available;
-	// margin-top: 1.5rem;
+	margin-top: 1.5rem;
+
+	.search-complete-mobile {
+		overflow-y: auto;
+	}
 
 	.clear-button {
 		border: none;

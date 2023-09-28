@@ -75,6 +75,10 @@ interface UnauthGeofenceBoxProps {
 	setStartSimulation: (b: boolean) => void;
 	setShowUnauthSimulationBounds: (b: boolean) => void;
 	clearCredsAndLocationClient?: () => void;
+	isNotifications: boolean;
+	setIsNotifications: React.Dispatch<React.SetStateAction<boolean>>;
+	confirmCloseSimulation: boolean;
+	setConfirmCloseSimulation: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
@@ -88,13 +92,15 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 	startSimulation,
 	setStartSimulation,
 	setShowUnauthSimulationBounds,
-	clearCredsAndLocationClient
+	clearCredsAndLocationClient,
+	isNotifications,
+	setIsNotifications,
+	confirmCloseSimulation,
+	setConfirmCloseSimulation
 }) => {
 	const [trackingHistory, setTrackingHistory] = useState<TrackingHistoryType>(initialTrackingHistory);
 	const [selectedRoutes, setSelectedRoutes] = useState<SelectOption[]>([busRoutesDropdown[0]]);
 	const [busSelectedValue, setBusSelectedValue] = useState<SelectOption>(busRoutesDropdown[0]);
-	const [isNotifications, setIsNotifications] = useState(false);
-	const [confirmCloseSimulation, setConfirmCloseSimulation] = useState(false);
 	const [isPlaying, setIsPlaying] = useState(true);
 	const { unauthNotifications, setUnauthNotifications } = useAwsGeofence();
 	const { Connection, isHidden } = WebsocketBanner(
@@ -121,7 +127,14 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 		}, []),
 		startSimulation
 	);
-	const { ui, setUI, setBottomSheetHeight, setBottomSheetMinHeight, bottomSheetHeight } = useBottomSheet();
+	const {
+		ui,
+		setUI,
+		setBottomSheetHeight,
+		setBottomSheetMinHeight,
+		bottomSheetHeight,
+		bottomSheetCurrentHeight = 0
+	} = useBottomSheet();
 	const { t } = useTranslation();
 	const currentLanguage = i18n.language;
 	const unauthSimulationCtaText = t("unauth_simulation__cta.text");
@@ -372,7 +385,7 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 				? setUI(ResponsiveUIEnum.exit_unauthorized_geofence)
 				: setUI(ResponsiveUIEnum.exit_unauthorized_tracker);
 		}
-	}, [from, isNotifications, setUI]);
+	}, [from, isNotifications, setConfirmCloseSimulation, setIsNotifications, setUI]);
 
 	const BeforeStartSimulation = () => (
 		<>
@@ -457,50 +470,41 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 								justifyContent="space-between"
 								direction={isDesktop ? "row" : "row-reverse"}
 							>
-								<Flex alignItems="center" padding="0.6rem 0 0.6rem 1.2rem">
-									{isDesktop ? (
-										<IconBackArrow
-											data-testid="unauth-simulation-back-arrow"
-											className="back-icon"
-											cursor="pointer"
-											width={20}
-											height={20}
-											onClick={onBackHandler}
-										/>
-									) : (
-										<IconClose
-											style={{ marginRight: "0.5rem" }}
-											onClick={onBackHandler}
-											className="back-icon"
-											cursor="pointer"
-											width={20}
-											height={20}
-										/>
-									)}
-									{isDesktop && (
-										<Text className="medium" fontSize="1.08rem" textAlign="center" marginLeft="0.5rem">
-											{t("start_unauth_simulation__t&g_simulation.text")}
-										</Text>
-									)}
-								</Flex>
-								<Flex
-									padding="0.6rem"
-									className={isNotifications ? "bell-icon-container bell-active" : "bell-icon-container"}
-									onClick={() => setIsNotifications(n => !n)}
-									position="relative"
-								>
-									<IconNotificationBell className="bell-icon" width={20} height={20} />
-									{!isNotifications && !!unauthNotifications.length && <span className="notification-bubble" />}
-								</Flex>
+								{isDesktop && (
+									<>
+										<Flex alignItems="center" padding="0.6rem 0 0.6rem 1.2rem">
+											<IconBackArrow
+												data-testid="unauth-simulation-back-arrow"
+												className="back-icon"
+												cursor="pointer"
+												width={20}
+												height={20}
+												onClick={onBackHandler}
+											/>
+											<Text className="medium" fontSize="1.08rem" textAlign="center" marginLeft="0.5rem">
+												{t("start_unauth_simulation__t&g_simulation.text")}
+											</Text>
+										</Flex>
+										<Flex
+											padding="0.6rem"
+											className={isNotifications ? "bell-icon-container bell-active" : "bell-icon-container"}
+											onClick={() => setIsNotifications(n => !n)}
+											position="relative"
+										>
+											<IconNotificationBell className="bell-icon" width={20} height={20} />
+											{!isNotifications && !!unauthNotifications.length && <span className="notification-bubble" />}
+										</Flex>
+									</>
+								)}
 							</Flex>
-							<Flex gap="0" direction="column" width="100%" marginTop={!isDesktop ? "21px" : "0"} ref={cardRef}>
+							<Flex gap="0" direction="column" width="100%" ref={cardRef}>
 								{Connection}
 								{!isNotifications ? (
 									<Flex
 										padding="1.3rem"
 										direction="column"
 										gap="0"
-										maxHeight={isHidden ? "82vh" : "79vh"}
+										maxHeight={isDesktop ? (isHidden ? "82vh" : "79vh") : "fit-content"}
 										overflow={
 											!trackingHistory[busSelectedValue.value].length ||
 											(trackingHistoryRef?.current?.offsetHeight || 0) < 560
@@ -557,7 +561,11 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 												{t("start_unauth_simulation__no_tracking_history.text")}
 											</Flex>
 										)}
-										<Flex gap="0" className="tracking-history-container">
+										<Flex
+											gap="0"
+											className="tracking-history-container"
+											maxHeight={!isDesktop ? bottomSheetCurrentHeight - 210 : "100%"}
+										>
 											<Flex direction="column" gap="0" paddingLeft="0.2rem" paddingBottom="0.4rem">
 												{trackingHistory[busSelectedValue.value].map(
 													({ title, description, subDescription, type }, idx) => (

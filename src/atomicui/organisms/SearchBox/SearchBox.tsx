@@ -192,7 +192,6 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		if (!!value) {
 			clearPoiList();
 			handleSearch(value, false, AnalyticsEventActionsEnum.SEARCH_ICON_CLICK);
-			// setBottomSheetMinHeight(isMobile ? (isMobile ? BottomSheetHeights.search.min : 80) : 80);
 		}
 		autocompleteRef?.current?.focus();
 	};

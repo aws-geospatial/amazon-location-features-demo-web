@@ -1,25 +1,27 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { FC, useCallback, useEffect, useRef, useState } from "react";
+import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Flex, Text } from "@aws-amplify/ui-react";
-import { IconClose, LogoDark, LogoLight } from "@demo/assets";
+import { IconClose, IconNotificationBell, LogoDark, LogoLight } from "@demo/assets";
 import { ConfirmationModal } from "@demo/atomicui/molecules";
 import { appConfig } from "@demo/core";
-import { useAmplifyMap } from "@demo/hooks";
+import { useAmplifyMap, useAwsGeofence, useAwsTracker } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
+import { ShowStateType } from "@demo/types";
 import { MenuItemEnum, ResponsiveUIEnum } from "@demo/types/Enums";
 import { useTranslation } from "react-i18next";
 import { MapRef } from "react-map-gl";
 import { useLocation } from "react-router-dom";
 import { BottomSheet } from "react-spring-bottom-sheet";
 
-import "react-spring-bottom-sheet/dist/style.css";
 import { Explore } from "../Explore";
+import { UnauthSimulation } from "../UnauthSimulation";
 
 import "./styles.scss";
+import "react-spring-bottom-sheet/dist/style.css";
 
 const { DEMO } = appConfig.default.ROUTES;
 
@@ -44,10 +46,23 @@ interface IProps {
 	setShowStartUnauthSimulation: (b: boolean) => void;
 	showStartUnauthSimulation: boolean;
 	from: MenuItemEnum;
-	UnauthSimulationUI: JSX.Element;
 	AuthGeofenceBox: JSX.Element;
 	AuthTrackerBox: JSX.Element;
 	handleLogoClick: () => Window | null;
+	show: ShowStateType;
+	setShow: React.Dispatch<React.SetStateAction<ShowStateType>>;
+	startSimulation: boolean;
+	setStartSimulation: React.Dispatch<React.SetStateAction<boolean>>;
+	isNotifications: boolean;
+	setIsNotifications: React.Dispatch<React.SetStateAction<boolean>>;
+	confirmCloseSimulation: boolean;
+	setConfirmCloseSimulation: React.Dispatch<React.SetStateAction<boolean>>;
+	setShowAuthTrackerBox: (b: boolean) => void;
+	clearCredsAndLocationClient?: () => void;
+	setShowAuthGeofenceBox: (b: boolean) => void;
+	setTriggerOnClose: React.Dispatch<React.SetStateAction<boolean>>;
+	setTriggerOnReset: React.Dispatch<React.SetStateAction<boolean>>;
+	isEditingAuthRoute: boolean;
 }
 
 const ResponsiveBottomSheet: FC<IProps> = ({
@@ -67,14 +82,28 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	onshowUnauthSimulationDisclaimerModal,
 	setShowUnauthGeofenceBox,
 	setShowUnauthTrackerBox,
-	UnauthSimulationUI,
 	from,
 	AuthGeofenceBox,
 	AuthTrackerBox,
 	setShowStartUnauthSimulation,
-	handleLogoClick
+	handleLogoClick,
+	show,
+	setShow,
+	startSimulation,
+	setStartSimulation,
+	mapRef,
+	isNotifications,
+	setIsNotifications,
+	confirmCloseSimulation,
+	setConfirmCloseSimulation,
+	setShowAuthTrackerBox,
+	clearCredsAndLocationClient,
+	setTriggerOnClose,
+	setTriggerOnReset,
+	isEditingAuthRoute
 }) => {
 	const { isDesktop, isTablet, isMax556 } = useDeviceMediaQuery();
+	const { unauthNotifications, isAddingGeofence } = useAwsGeofence();
 	const { t } = useTranslation();
 	const location = useLocation();
 	const isDemoUrl = location.pathname === DEMO;
@@ -88,9 +117,15 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 		ui,
 		setUI
 	} = useBottomSheet();
+	const { setIsEditingRoute, setTrackerPoints } = useAwsTracker();
 	const { mapStyle } = useAmplifyMap();
 	const [arrowDirection, setArrowDirection] = useState("no-dragging");
 	const prevBottomSheetHeightRef = useRef(bottomSheetCurrentHeight);
+
+	const isAddingOrEditing = useMemo(
+		() => isAddingGeofence || isEditingAuthRoute,
+		[isAddingGeofence, isEditingAuthRoute]
+	);
 
 	useEffect(() => {
 		if (bottomSheetCurrentHeight > prevBottomSheetHeightRef.current) {
@@ -189,6 +224,65 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 		};
 	}, [setBottomSheetCurrentHeight, setBottomSheetHeight, setBottomSheetMinHeight]);
 
+	const UnauthSimulationUI = useMemo(
+		() => (
+			<UnauthSimulation
+				mapRef={mapRef}
+				from={show.unauthGeofenceBox ? MenuItemEnum.GEOFENCE : MenuItemEnum.TRACKER}
+				setShowUnauthGeofenceBox={b => setShow(s => ({ ...s, unauthGeofenceBox: b }))}
+				setShowUnauthTrackerBox={b => setShow(s => ({ ...s, unauthTrackerBox: b }))}
+				setShowConnectAwsAccountModal={b => setShow(s => ({ ...s, connectAwsAccount: b }))}
+				showStartUnauthSimulation={show.startUnauthSimulation}
+				setShowStartUnauthSimulation={b => setShow(s => ({ ...s, startUnauthSimulation: b }))}
+				startSimulation={startSimulation}
+				setStartSimulation={setStartSimulation}
+				setShowUnauthSimulationBounds={b => setShow(s => ({ ...s, unauthSimulationBounds: b }))}
+				isNotifications={isNotifications}
+				setIsNotifications={setIsNotifications}
+				confirmCloseSimulation={confirmCloseSimulation}
+				setConfirmCloseSimulation={setConfirmCloseSimulation}
+			/>
+		),
+		[
+			confirmCloseSimulation,
+			isNotifications,
+			mapRef,
+			setConfirmCloseSimulation,
+			setIsNotifications,
+			setShow,
+			setStartSimulation,
+			show.startUnauthSimulation,
+			show.unauthGeofenceBox,
+			startSimulation
+		]
+	);
+
+	const handleClose = useCallback(() => {
+		from === MenuItemEnum.GEOFENCE
+			? setShow(s => ({ ...s, unauthGeofenceBox: false }))
+			: setShow(s => ({ ...s, unauthTrackerBox: false }));
+		setUI(ResponsiveUIEnum.explore);
+	}, [from, setShow, setUI]);
+
+	const onCloseAuthTracker = useCallback(() => {
+		clearCredsAndLocationClient && clearCredsAndLocationClient();
+		setIsEditingRoute(false);
+		setTrackerPoints(undefined);
+		setShowAuthTrackerBox(false);
+		setUI(ResponsiveUIEnum.explore);
+	}, [clearCredsAndLocationClient, setIsEditingRoute, setShowAuthTrackerBox, setTrackerPoints, setUI]);
+
+	const onBackUnauthHandler = useCallback(() => {
+		if (isNotifications) {
+			setIsNotifications(false);
+		} else {
+			setConfirmCloseSimulation(true);
+			from === MenuItemEnum.GEOFENCE
+				? setUI(ResponsiveUIEnum.exit_unauthorized_geofence)
+				: setUI(ResponsiveUIEnum.exit_unauthorized_tracker);
+		}
+	}, [from, isNotifications, setConfirmCloseSimulation, setIsNotifications, setUI]);
+
 	const bottomSheetHeader = useCallback(
 		(ui?: ResponsiveUIEnum) => {
 			switch (ui) {
@@ -213,18 +307,64 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 							</Flex>
 						</Flex>
 					);
-				case ResponsiveUIEnum.routes:
-				case ResponsiveUIEnum.unauth_tracker:
-				case ResponsiveUIEnum.unauth_geofence:
+				case ResponsiveUIEnum.search:
+				case ResponsiveUIEnum.explore:
+				case ResponsiveUIEnum.before_start_unauthorized_geofence:
+				case ResponsiveUIEnum.before_start_unauthorized_tracker:
+					return <Flex width="100%">{SearchBoxEl()}</Flex>;
+				case ResponsiveUIEnum.non_start_unauthorized_tracker:
+				case ResponsiveUIEnum.non_start_unauthorized_geofence:
 				case ResponsiveUIEnum.auth_tracker:
 				case ResponsiveUIEnum.auth_geofence:
-				case ResponsiveUIEnum.non_start_unauthorized_tracker:
-				case ResponsiveUIEnum.before_start_unauthorized_tracker:
-				case ResponsiveUIEnum.before_start_unauthorized_geofence:
-				case ResponsiveUIEnum.non_start_unauthorized_geofence:
+				case ResponsiveUIEnum.unauth_tracker:
+				case ResponsiveUIEnum.unauth_geofence:
+					return (
+						<Flex
+							className="map-header-mobile"
+							justifyContent={
+								[ResponsiveUIEnum.unauth_geofence, ResponsiveUIEnum.unauth_tracker].includes(ui)
+									? "space-between"
+									: "flex-end"
+							}
+							direction="row"
+						>
+							{[ResponsiveUIEnum.unauth_geofence, ResponsiveUIEnum.unauth_tracker].includes(ui) && (
+								<Flex
+									className={isNotifications ? "bell-icon-container bell-active" : "bell-icon-container"}
+									onClick={() => setIsNotifications(n => !n)}
+									position="relative"
+								>
+									<IconNotificationBell className="bell-icon" width={20} height={20} />
+									{!isNotifications && !!unauthNotifications.length && <span className="notification-bubble" />}
+								</Flex>
+							)}
+							<IconClose
+								width={20}
+								height={20}
+								fill="var(--grey-color)"
+								onClick={() =>
+									[
+										ResponsiveUIEnum.non_start_unauthorized_tracker,
+										ResponsiveUIEnum.non_start_unauthorized_geofence
+									].includes(ui)
+										? handleClose()
+										: [ResponsiveUIEnum.unauth_geofence, ResponsiveUIEnum.unauth_tracker].includes(ui)
+										? onBackUnauthHandler()
+										: ResponsiveUIEnum.auth_tracker === ui
+										? onCloseAuthTracker()
+										: ResponsiveUIEnum.auth_geofence === ui
+										? isAddingOrEditing
+											? setTriggerOnReset(true)
+											: setTriggerOnClose(true)
+										: setUI(ResponsiveUIEnum.explore)
+								}
+							/>
+						</Flex>
+					);
+				case ResponsiveUIEnum.routes:
+				case ResponsiveUIEnum.auth_tracker:
+				case ResponsiveUIEnum.auth_geofence:
 				case ResponsiveUIEnum.direction_to_routes:
-				case ResponsiveUIEnum.explore:
-				case ResponsiveUIEnum.search:
 				case ResponsiveUIEnum.poi_card:
 				case ResponsiveUIEnum.exit_unauthorized_tracker:
 				case ResponsiveUIEnum.exit_unauthorized_geofence:
@@ -233,7 +373,20 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 					return <Flex width="100%">{SearchBoxEl()}</Flex>;
 			}
 		},
-		[SearchBoxEl, setUI, t]
+		[
+			SearchBoxEl,
+			handleClose,
+			isAddingOrEditing,
+			isNotifications,
+			onBackUnauthHandler,
+			onCloseAuthTracker,
+			setIsNotifications,
+			setTriggerOnClose,
+			setTriggerOnReset,
+			setUI,
+			t,
+			unauthNotifications.length
+		]
 	);
 
 	const bottomSheetBody = useCallback(
@@ -263,7 +416,6 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				default:
 					return (
 						<>
-							{SearchBoxEl()}
 							{ui &&
 								[
 									ResponsiveUIEnum.explore,
@@ -294,7 +446,6 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 			AuthTrackerBox,
 			MapButtons,
 			RouteBox,
-			SearchBoxEl,
 			UnauthSimulationUI,
 			onCloseSidebar,
 			onOpenConnectAwsAccountModal,
@@ -403,7 +554,9 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 					].includes(ui)
 						? "margin-top-from-header"
 						: ""
-				} ${arrowDirection}`}
+				} ${arrowDirection} ${
+					[ResponsiveUIEnum.auth_tracker, ResponsiveUIEnum.auth_geofence].includes(ui) ? "no-scroll-on-content" : ""
+				}`}
 				scrollLocking={false}
 				onSpringEnd={() => setArrowDirection("no-dragging")}
 			>

@@ -45,17 +45,19 @@ const NonStartUnauthSimulation: FC<IProps> = ({
 			}
 			ref={startRef}
 		>
-			<Flex
-				data-testid="unauth-simulation-card-header-close"
-				className="unauth-simulation-card-header"
-				onClick={() => {
-					handleClose();
-					setUI(ResponsiveUIEnum.explore);
-				}}
-			>
-				<IconClose />
-			</Flex>
-			<Flex className="unauth-simulation-card-body">
+			{isDesktop && (
+				<Flex
+					data-testid="unauth-simulation-card-header-close"
+					className="unauth-simulation-card-header"
+					onClick={() => {
+						handleClose();
+						setUI(ResponsiveUIEnum.explore);
+					}}
+				>
+					<IconClose />
+				</Flex>
+			)}
+			<Flex className="unauth-simulation-card-body" marginTop={!isDesktop ? "2.5rem" : 0}>
 				<Flex direction={isDesktop ? "column" : "row"} alignItems={"center"} marginBottom={!isDesktop ? "1.5rem" : ""}>
 					<Flex className="icon-container">
 						{from === MenuItemEnum.GEOFENCE ? <IconGeofenceColor /> : <IconTrackers />}

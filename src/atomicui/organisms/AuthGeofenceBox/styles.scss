@@ -13,12 +13,8 @@
 		box-shadow: none;
 		left: 0 !important;
 		overflow: initial;
-
-		.geofence-close-mobile {
-			position: absolute;
-			top: -10px;
-			right: 10px;
-		}
+		position: relative;
+		top: 0;
 
 		.add-geofence-button-container-mobile {
 			margin: 1rem 0;
@@ -38,6 +34,8 @@
 
 		&.geofence-card-header-mobile {
 			border: 0;
+			padding-top: 0;
+			padding-bottom: 0;
 		}
 
 		.back-icon {
