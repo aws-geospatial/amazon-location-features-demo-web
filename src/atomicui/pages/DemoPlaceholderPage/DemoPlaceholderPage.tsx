@@ -29,7 +29,7 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 	searchValue,
 	selectedFilters
 }) => {
-	const { isDesktop, isTablet, isMobile } = useDeviceMediaQuery();
+	const { isDesktop } = useDeviceMediaQuery();
 	return (
 		<View style={{ height: "100%" }}>
 			<View className={"loader-container"}>
