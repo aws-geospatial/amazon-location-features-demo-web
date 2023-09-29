@@ -29,56 +29,56 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 	searchValue,
 	selectedFilters
 }) => {
-	const { isDesktop } = useDeviceMediaQuery();
+	const { isDesktop, isTablet, isMobile } = useDeviceMediaQuery();
 	return (
 		<View style={{ height: "100%" }}>
 			<View className={"loader-container"}>
-				{show.sidebar && (
-					<Sidebar
-						onCloseSidebar={() => {}}
-						onOpenConnectAwsAccountModal={() => {}}
-						onOpenSignInModal={() => {}}
-						onShowSettings={() => {}}
-						onShowAboutModal={() => {}}
-						onShowAuthGeofenceBox={() => {}}
-						onShowAuthTrackerDisclaimerModal={() => {}}
-						onShowAuthTrackerBox={() => {}}
-						onShowUnauthSimulationDisclaimerModal={() => {}}
-						onShowUnauthGeofenceBox={() => {}}
-						onShowUnauthTrackerBox={() => {}}
-					/>
-				)}
-				{show.routeBox ? (
-					<RouteBox mapRef={null} setShowRouteBox={() => {}} isSideMenuExpanded={show.sidebar} />
-				) : show.authGeofenceBox ? (
-					<AuthGeofenceBox
-						mapRef={null}
-						setShowAuthGeofenceBox={() => {}}
-						isEditingAuthRoute={false}
-						setIsEditingAuthRoute={() => {}}
-					/>
-				) : show.authTrackerBox ? (
-					<AuthTrackerBox mapRef={null} setShowAuthTrackerBox={() => {}} />
-				) : show.unauthGeofenceBox || show.unauthTrackerBox ? (
-					<UnauthSimulation
-						mapRef={null}
-						from={show.unauthGeofenceBox ? MenuItemEnum.GEOFENCE : MenuItemEnum.TRACKER}
-						setShowUnauthGeofenceBox={() => {}}
-						setShowUnauthTrackerBox={() => {}}
-						setShowConnectAwsAccountModal={() => {}}
-						setShowUnauthSimulationBounds={() => {}}
-						showStartUnauthSimulation={false}
-						setShowStartUnauthSimulation={() => {}}
-						startSimulation={false}
-						setStartSimulation={() => {}}
-						isNotifications={false}
-						setIsNotifications={() => {}}
-						confirmCloseSimulation={false}
-						setConfirmCloseSimulation={() => {}}
-					/>
-				) : (
+				{isDesktop && (
 					<>
-						{isDesktop ? (
+						{show.sidebar && (
+							<Sidebar
+								onCloseSidebar={() => {}}
+								onOpenConnectAwsAccountModal={() => {}}
+								onOpenSignInModal={() => {}}
+								onShowSettings={() => {}}
+								onShowAboutModal={() => {}}
+								onShowAuthGeofenceBox={() => {}}
+								onShowAuthTrackerDisclaimerModal={() => {}}
+								onShowAuthTrackerBox={() => {}}
+								onShowUnauthSimulationDisclaimerModal={() => {}}
+								onShowUnauthGeofenceBox={() => {}}
+								onShowUnauthTrackerBox={() => {}}
+							/>
+						)}
+						{show.routeBox ? (
+							<RouteBox mapRef={null} setShowRouteBox={() => {}} isSideMenuExpanded={show.sidebar} />
+						) : show.authGeofenceBox ? (
+							<AuthGeofenceBox
+								mapRef={null}
+								setShowAuthGeofenceBox={() => {}}
+								isEditingAuthRoute={false}
+								setIsEditingAuthRoute={() => {}}
+							/>
+						) : show.authTrackerBox ? (
+							<AuthTrackerBox mapRef={null} setShowAuthTrackerBox={() => {}} />
+						) : show.unauthGeofenceBox || show.unauthTrackerBox ? (
+							<UnauthSimulation
+								mapRef={null}
+								from={show.unauthGeofenceBox ? MenuItemEnum.GEOFENCE : MenuItemEnum.TRACKER}
+								setShowUnauthGeofenceBox={() => {}}
+								setShowUnauthTrackerBox={() => {}}
+								setShowConnectAwsAccountModal={() => {}}
+								setShowUnauthSimulationBounds={() => {}}
+								showStartUnauthSimulation={false}
+								setShowStartUnauthSimulation={() => {}}
+								startSimulation={false}
+								setStartSimulation={() => {}}
+								isNotifications={false}
+								setIsNotifications={() => {}}
+								confirmCloseSimulation={false}
+								setConfirmCloseSimulation={() => {}}
+							/>
+						) : (
 							<SearchBox
 								mapRef={null}
 								isSideMenuExpanded={show.sidebar}
@@ -90,11 +90,10 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 								isSettingsOpen={show.settings}
 								isStylesCardOpen={show.stylesCard}
 							/>
-						) : (
-							<></>
 						)}
 					</>
 				)}
+
 				<MapButtons
 					renderedUpon={"Demo Page"}
 					openStylesCard={show.stylesCard}
@@ -123,14 +122,17 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 					onSetShowUnauthGeofenceBox={() => {}}
 					onSetShowUnauthTrackerBox={() => {}}
 				/>
-				<Flex className="location-disabled">
+
+				<Flex className={`location-disabled ${!isDesktop ? "location-disabled-mobile" : ""}`}>
 					<IconLocateMe />
 				</Flex>
-				<Flex className={"navigation-control"}>
-					<IconZoomPlus />
-					<Divider backgroundColor={"#DDDDDD"} size="small" opacity="0.3" />
-					<IconMinus />
-				</Flex>
+				{isDesktop && (
+					<Flex className={"navigation-control"}>
+						<IconZoomPlus />
+						<Divider backgroundColor={"#DDDDDD"} size="small" opacity="0.3" />
+						<IconMinus />
+					</Flex>
+				)}
 			</View>
 			<SettingsModal
 				open={show.settings}
