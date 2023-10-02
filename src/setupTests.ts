@@ -5,14 +5,27 @@
 import "@testing-library/jest-dom";
 import { faker } from "@faker-js/faker";
 
-jest.mock("@demo/utils/analyticsUtils", () => ({
-	record: () => {},
-	initiateAnalytics: () => {}
-}));
+if (typeof navigator?.clipboard?.writeText === "undefined") {
+	Object.assign(navigator, { clipboard: { writeText: jest.fn() } });
+}
 
-jest.mock("@demo/utils/countryUtil", () => ({
-	getCountryCode: () => "PK"
-}));
+if (typeof window.URL.createObjectURL === "undefined") {
+	window.URL.createObjectURL = jest.fn();
+}
+
+if (typeof window?.crypto?.randomUUID === "undefined") {
+	Object.assign(window, { crypto: { randomUUID: faker.datatype.uuid } });
+}
+
+if (typeof window?.matchMedia === "undefined") {
+	Object.assign(window, {
+		matchMedia: () => ({
+			matches: true,
+			addEventListener: jest.fn(),
+			removeEventListener: jest.fn()
+		})
+	});
+}
 
 jest.mock("@demo/core/constants/appConfig", () => ({
 	POOLS: {
@@ -273,24 +286,11 @@ jest.mock("@demo/core/constants/appConfig", () => ({
 	}
 }));
 
-if (typeof navigator?.clipboard?.writeText === "undefined") {
-	Object.assign(navigator, { clipboard: { writeText: jest.fn() } });
-}
+jest.mock("@demo/utils/analyticsUtils", () => ({
+	record: () => {},
+	initiateAnalytics: () => {}
+}));
 
-if (typeof window.URL.createObjectURL === "undefined") {
-	window.URL.createObjectURL = jest.fn();
-}
-
-if (typeof window?.crypto?.randomUUID === "undefined") {
-	Object.assign(window, { crypto: { randomUUID: faker.datatype.uuid } });
-}
-
-if (typeof window?.matchMedia === "undefined") {
-	Object.assign(window, {
-		matchMedia: () => ({
-			matches: true,
-			addEventListener: jest.fn(),
-			removeEventListener: jest.fn()
-		})
-	});
-}
+jest.mock("@demo/utils/countryUtil", () => ({
+	getCountryCode: () => "PK"
+}));
