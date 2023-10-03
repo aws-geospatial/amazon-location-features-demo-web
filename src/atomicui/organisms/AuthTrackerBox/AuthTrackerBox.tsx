@@ -5,8 +5,8 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button, Card, Flex, Loader, Text, View } from "@aws-amplify/ui-react";
 import { IconArrow, IconCar, IconClose, IconDroneSolid, IconInfoSolid, IconSegment, IconWalking } from "@demo/assets";
-import { GeofenceMarker, WebsocketBanner } from "@demo/atomicui/molecules";
-import { useAwsGeofence, useAwsRoute, useAwsTracker, useMediaQuery } from "@demo/hooks";
+import { GeofenceMarker } from "@demo/atomicui/molecules";
+import { useAwsGeofence, useAwsRoute, useAwsTracker, useMediaQuery, useWebSocketBanner } from "@demo/hooks";
 import { RouteDataType, TrackerType } from "@demo/types";
 import { EventTypeEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
@@ -52,7 +52,7 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 		trackerPoints,
 		setTrackerPoints
 	} = useAwsTracker();
-	const { Connection } = WebsocketBanner();
+	const { Connection } = useWebSocketBanner();
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";

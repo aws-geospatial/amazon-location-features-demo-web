@@ -9,14 +9,14 @@ jest.mock("@demo/hooks", () => ({
 	useAwsGeofence: () => ({
 		unauthNotifications: null,
 		setUnauthNotifications: jest.fn()
+	}),
+	useWebSocketBanner: () => ({
+		Connection: jest.fn(),
+		isHidden: false
 	})
 }));
 
 jest.mock("@demo/atomicui/molecules", () => ({
-	WebsocketBanner: () => ({
-		Connection: jest.fn(),
-		isHidden: false
-	}),
 	NotificationsBox: () => null,
 	ConfirmationModal: () => null,
 	IconicInfoCard: () => null

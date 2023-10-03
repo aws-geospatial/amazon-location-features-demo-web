@@ -14,9 +14,9 @@ import {
 	Simulation
 } from "@demo/assets";
 import { DropdownEl } from "@demo/atomicui/atoms";
-import { ConfirmationModal, IconicInfoCard, NotificationsBox, WebsocketBanner } from "@demo/atomicui/molecules";
+import { ConfirmationModal, IconicInfoCard, NotificationsBox } from "@demo/atomicui/molecules";
 import { appConfig, busRoutesData } from "@demo/core";
-import { useAwsGeofence } from "@demo/hooks";
+import { useAwsGeofence, useWebSocketBanner } from "@demo/hooks";
 import i18n from "@demo/locales/i18n";
 import {
 	MenuItemEnum,
@@ -83,7 +83,7 @@ const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 	const [confirmCloseSimulation, setConfirmCloseSimulation] = useState(false);
 	const [isPlaying, setIsPlaying] = useState(true);
 	const { unauthNotifications, setUnauthNotifications } = useAwsGeofence();
-	const { Connection, isHidden } = WebsocketBanner(
+	const { Connection, isHidden } = useWebSocketBanner(
 		useCallback((n: NotificationHistoryItemtype) => {
 			// Update tracking history with geofence notification, for geofence add "Bus stop number 1" to title and bus stop coords to description
 			setTrackingHistory(prevState => {
