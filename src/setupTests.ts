@@ -294,3 +294,38 @@ jest.mock("@demo/utils/analyticsUtils", () => ({
 jest.mock("@demo/utils/countryUtil", () => ({
 	getCountryCode: () => "PK"
 }));
+
+jest.mock("mapbox-gl-draw-circle", () => ({
+	CircleMode: {},
+	DirectMode: {},
+	DragCircleMode: {},
+	SimpleSelectMode: {}
+}));
+
+jest.mock("react-map-gl", () => ({
+	Marker: jest.fn().mockImplementation(() => null),
+	Source: jest.fn().mockImplementation(() => null),
+	Layer: jest.fn().mockImplementation(() => null),
+	LngLat: {},
+	MapRef: {},
+	useMap: () => ({ current: {} }),
+	useControl: jest.fn()
+}));
+
+jest.mock("@mapbox/mapbox-gl-draw", () => {
+	return jest.fn().mockImplementation(() => {
+		return {
+			deleteAll: jest.fn(),
+			set: jest.fn(),
+			getAll: jest.fn().mockImplementation(() => ({
+				features: [
+					{
+						geometry: {
+							coordinates: [[], []]
+						}
+					}
+				]
+			}))
+		};
+	});
+});

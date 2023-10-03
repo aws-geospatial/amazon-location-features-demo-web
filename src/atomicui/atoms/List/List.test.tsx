@@ -16,7 +16,13 @@ describe("<List/>", () => {
 		})),
 		{
 			label: faker.random.word(),
-			link: "/somewhere"
+			link: "/somewhere",
+			subMenu: [
+				{
+					label: faker.random.word(),
+					link: "/somewhere"
+				}
+			]
 		}
 	];
 
