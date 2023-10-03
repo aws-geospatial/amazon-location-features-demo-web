@@ -4,7 +4,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button, Card, Flex, Loader, Text, View } from "@aws-amplify/ui-react";
-import { IconArrow, IconCar, IconClose, IconDroneSolid, IconInfoSolid, IconSegment, IconWalking } from "@demo/assets";
+import { IconCar, IconClose, IconDroneSolid, IconInfoSolid, IconSegment, IconWalking } from "@demo/assets";
 import { GeofenceMarker } from "@demo/atomicui/molecules";
 import { useAwsGeofence, useAwsRoute, useAwsTracker, useMediaQuery, useWebSocketBanner } from "@demo/hooks";
 import { RouteDataType, TrackerType } from "@demo/types";
@@ -25,7 +25,7 @@ export const trackerTypes = [
 	{ type: TrackerType.DRONE, icon: <IconDroneSolid width="1.54rem" height="1.54rem" /> }
 ];
 
-interface AuthTrackerBoxProps {
+export interface AuthTrackerBoxProps {
 	mapRef: MapRef | null;
 	setShowAuthTrackerBox: (b: boolean) => void;
 	clearCredsAndLocationClient?: () => void;
@@ -41,7 +41,6 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 	const [routeData, setRouteData] = useState<RouteDataType | undefined>(undefined);
 	const [points, setPoints] = useState<Position[] | undefined>(undefined);
 	const [trackerPos, setTrackerPos] = useState<Position | undefined>(undefined);
-	const [isCollapsed, setIsCollapsed] = useState(true);
 	const { isFetchingRoute } = useAwsRoute();
 	const { geofences, getGeofencesList } = useAwsGeofence();
 	const {
@@ -64,15 +63,10 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 		setIsEditingRoute(true);
 	}, [fetchGeofencesList, setIsEditingRoute]);
 
-	useEffect(() => {
-		isDesktop && isCollapsed && setIsCollapsed(false);
-	}, [isDesktop, isCollapsed]);
-
 	const isSimulationEnbaled = useMemo(() => isSaved && routeData, [isSaved, routeData]);
 
 	const onPlayPause = () => {
 		if (isSimulationEnbaled) {
-			!isPlaying && !isDesktop && !isCollapsed && setIsCollapsed(true);
 			setIsPlaying(s => !s);
 		}
 	};
@@ -120,7 +114,6 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 		setPoints(undefined);
 		setTrackerPos(undefined);
 		setIsPlaying(false);
-		!isDesktop && isCollapsed && setIsCollapsed(false);
 	};
 
 	const renderGeofenceMarkers = useMemo(() => {
@@ -262,7 +255,7 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 
 	return (
 		<>
-			<Card className="tracking-card" left="1.62rem">
+			<Card data-testid="auth-tracker-box-card" className="tracking-card" left="1.62rem">
 				<Flex className="tracking-card-header">
 					<Text fontFamily="AmazonEmber-Medium" fontSize="1.08rem">
 						{t("tracker.text")}
@@ -350,15 +343,7 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 						</Flex>
 					)}
 				</Flex>
-				{!isCollapsed && renderTrackerPointsList}
-				{!!trackerPoints?.length && (
-					<Flex className="show-hide-details-container bottom-border-radius" onClick={() => setIsCollapsed(s => !s)}>
-						<Text className="text">
-							{isCollapsed ? t("tracker_box__tracker_details.text") : t("hide_details.text")}
-						</Text>
-						<IconArrow style={{ transform: isCollapsed ? "rotate(0deg)" : "rotate(180deg)" }} />
-					</Flex>
-				)}
+				{renderTrackerPointsList}
 			</Card>
 			<Tooltip id="notification-services" />
 			{renderGeofenceMarkers}

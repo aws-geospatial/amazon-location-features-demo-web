@@ -5,6 +5,11 @@ import { I18nextProvider } from "react-i18next";
 
 import MapButtons from "./MapButtons";
 
+Object.defineProperty(window, "location", {
+	writable: true,
+	value: { reload: jest.fn() }
+});
+
 describe("<MapButtons/>", () => {
 	const props = {
 		renderedUpon: "",

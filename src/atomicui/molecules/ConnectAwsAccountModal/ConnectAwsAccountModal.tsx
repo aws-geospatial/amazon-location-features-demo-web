@@ -25,7 +25,7 @@ const {
 
 let scrollTimeout: NodeJS.Timer | undefined;
 
-interface ConnectAwsAccountModalProps {
+export interface ConnectAwsAccountModalProps {
 	open: boolean;
 	onClose: () => void;
 	handleCurrentLocationAndViewpoint: (b: boolean) => void;
@@ -319,6 +319,7 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 									</Button>
 								)}
 								<Button
+									data-testid="continue-to-explore"
 									className="continue-to-explore"
 									width="100%"
 									height="3.08rem"
