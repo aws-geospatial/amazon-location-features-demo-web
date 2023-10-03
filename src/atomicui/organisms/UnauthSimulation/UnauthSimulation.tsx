@@ -55,7 +55,7 @@ const busRoutesDropdown = [
 	{ value: "bus_route_05", label: "Bus 05 UBC" }
 ];
 
-interface UnauthGeofenceBoxProps {
+interface UnauthSimulationProps {
 	mapRef: MapRef | null;
 	from: MenuItemEnum;
 	setShowUnauthGeofenceBox: (b: boolean) => void;
@@ -65,7 +65,7 @@ interface UnauthGeofenceBoxProps {
 	clearCredsAndLocationClient?: () => void;
 }
 
-const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
+const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 	mapRef,
 	from,
 	setShowUnauthGeofenceBox,
@@ -338,7 +338,12 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 				</Card>
 			) : (
 				<>
-					<Card className="unauthSimulation-card" left="1.62rem" overflow={startSimulation ? "inherit" : "hidden"}>
+					<Card
+						data-testid={`unauth-simulation-${startSimulation ? "started" : "not-started"}`}
+						className="unauthSimulation-card"
+						left="1.62rem"
+						overflow={startSimulation ? "inherit" : "hidden"}
+					>
 						{!startSimulation ? (
 							<>
 								<Flex justifyContent="flex-end" padding="0.77rem">
@@ -531,4 +536,4 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 	);
 };
 
-export default UnauthGeofenceBox;
+export default UnauthSimulation;
