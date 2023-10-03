@@ -29,6 +29,8 @@ describe("<AboutModal />", () => {
 		const { getByTestId } = renderComponent();
 		fireEvent.click(getByTestId("learn-more-button-partner-attribution"));
 		expect(windowOpen).toHaveBeenCalledTimes(1);
+		fireEvent.click(getByTestId("learn-more-button-software-attribution"));
+		expect(windowOpen).toHaveBeenCalledTimes(2);
 	});
 
 	it("should render About details", () => {
