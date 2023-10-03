@@ -24,17 +24,34 @@ const IconicInfoCard: React.FC<IconicInfoCardProps> = ({
 	gap = "large"
 }) => {
 	return (
-		<Flex direction="row" gap={gap} margin={cardMargin} alignItems={cardAlignItems} justifyContent="flex-start">
+		<Flex
+			data-testid="iconic-info-card-container"
+			direction="row"
+			gap={gap}
+			margin={cardMargin}
+			alignItems={cardAlignItems}
+			justifyContent="flex-start"
+		>
 			{IconComponent}
 			<Flex direction="column" gap={subDescription ? 0 : "3px"} marginLeft={textContainerMarginLeft}>
-				<Text fontSize="1rem" variation="secondary">
+				<Text fontSize="1rem" variation="secondary" data-testid="iconic-info-card-title">
 					{title}
 				</Text>
-				<Text color={"var(--grey-color)"} fontSize="1rem" variation="tertiary">
+				<Text
+					color={"var(--grey-color)"}
+					fontSize="1rem"
+					variation="tertiary"
+					data-testid="iconic-info-card-description"
+				>
 					{description}
 				</Text>
 				{subDescription && (
-					<Text color="var(--grey-color)" fontSize="1rem" variation="tertiary">
+					<Text
+						color="var(--grey-color)"
+						fontSize="1rem"
+						variation="tertiary"
+						data-testid="iconic-info-card-subdescription"
+					>
 						{subDescription}
 					</Text>
 				)}
