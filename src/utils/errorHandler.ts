@@ -11,7 +11,7 @@ import { clearStorage } from "./localstorageUtils";
 
 const {
 	PERSIST_STORAGE_KEYS: { LOCAL_STORAGE_PREFIX, SHOULD_CLEAR_CREDENTIALS, AMPLIFY_AUTH_DATA },
-	ROUTES: { ERROR_BOUNDARY }
+	ROUTES: { ERROR_BOUNDARY, DEMO }
 } = appConfig;
 const authLocalStorageKey = `${LOCAL_STORAGE_PREFIX}${AMPLIFY_AUTH_DATA}`;
 const errors = {
@@ -39,7 +39,7 @@ export const errorHandler = (error: any, message?: string) => {
 		setTimeout(() => {
 			localStorage.setItem(SHOULD_CLEAR_CREDENTIALS, "true");
 			window.location.reload();
-		}, 1500);
+		}, 2000);
 		return;
 	} else {
 		if (!isStackCorrupted && errors.codes.includes(error.statusCode || error.status)) {
@@ -49,12 +49,22 @@ export const errorHandler = (error: any, message?: string) => {
 				setTimeout(() => {
 					clearStorage();
 					window.location.reload();
-				}, 3000);
+				}, 2000);
 				return;
 			} else {
-				window.location.replace(ERROR_BOUNDARY);
-				showToast({ content: i18n.t("show_toast__something_went_wrong.text"), type: ToastType.ERROR });
-				return;
+				if (error.url.includes("https://maps.geo")) {
+					isStackCorrupted = true;
+					showToast({ content: i18n.t("show_toast__refreshing_session.text"), type: ToastType.INFO });
+					setTimeout(() => {
+						localStorage.setItem(SHOULD_CLEAR_CREDENTIALS, "true");
+						window.location.reload();
+					}, 2000);
+					return;
+				} else {
+					window.location.replace(`${ERROR_BOUNDARY}?from=${DEMO}`);
+					showToast({ content: i18n.t("show_toast__something_went_wrong.text"), type: ToastType.ERROR });
+					return;
+				}
 			}
 		}
 	}
