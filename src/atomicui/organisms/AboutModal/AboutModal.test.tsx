@@ -7,6 +7,7 @@ import AboutModal from "./AboutModal";
 describe("<AboutModal />", () => {
 	const windowOpen = jest.fn();
 	window.open = windowOpen;
+
 	const props = {
 		open: true,
 		onClose: jest.fn()
