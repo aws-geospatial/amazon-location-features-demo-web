@@ -174,7 +174,8 @@ const DemoPage: React.FC = () => {
 		doNotAskGrabDisclaimerModal,
 		setDoNotAskGrabDisclaimerModal,
 		doNotAskOpenDataDisclaimerModal,
-		setDoNotAskOpenDataDisclaimerModal
+		setDoNotAskOpenDataDisclaimerModal,
+		setSettingsOptions
 	} = usePersistedData();
 	const { isDesktop, isMobile, isTablet } = useDeviceMediaQuery();
 	const { setUI, ui, bottomSheetCurrentHeight, setBottomSheetHeight, setBottomSheetMinHeight } = useBottomSheet();
@@ -1091,7 +1092,10 @@ const DemoPage: React.FC = () => {
 						onCloseSidebar={() => setShow(s => ({ ...s, sidebar: false }))}
 						onOpenConnectAwsAccountModal={() => setShow(s => ({ ...s, connectAwsAccount: true }))}
 						onOpenSignInModal={() => setShow(s => ({ ...s, signInModal: true }))}
-						onShowSettings={() => setShow(s => ({ ...s, settings: true }))}
+						onShowSettings={() => {
+							setShow(s => ({ ...s, settings: true }));
+							setSettingsOptions(undefined);
+						}}
 						onShowTrackingDisclaimerModal={() => setShow(s => ({ ...s, authTrackerDisclaimerModal: true }))}
 						onShowAboutModal={() => setShow(s => ({ ...s, about: true }))}
 						onShowUnauthGeofenceBox={() => setShow(s => ({ ...s, unauthGeofenceBox: true }))}
