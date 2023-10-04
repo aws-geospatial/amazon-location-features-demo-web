@@ -14,9 +14,9 @@ import {
 	Simulation
 } from "@demo/assets";
 import { DropdownEl } from "@demo/atomicui/atoms";
-import { ConfirmationModal, IconicInfoCard, NotificationsBox, WebsocketBanner } from "@demo/atomicui/molecules";
+import { ConfirmationModal, IconicInfoCard, NotificationsBox } from "@demo/atomicui/molecules";
 import { appConfig, busRoutesData } from "@demo/core";
-import { useAwsGeofence } from "@demo/hooks";
+import { useAwsGeofence, useWebSocketBanner } from "@demo/hooks";
 import i18n from "@demo/locales/i18n";
 import {
 	MenuItemEnum,
@@ -55,7 +55,7 @@ const busRoutesDropdown = [
 	{ value: "bus_route_05", label: "Bus 05 UBC" }
 ];
 
-interface UnauthGeofenceBoxProps {
+interface UnauthSimulationProps {
 	mapRef: MapRef | null;
 	from: MenuItemEnum;
 	setShowUnauthGeofenceBox: (b: boolean) => void;
@@ -65,7 +65,7 @@ interface UnauthGeofenceBoxProps {
 	clearCredsAndLocationClient?: () => void;
 }
 
-const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
+const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 	mapRef,
 	from,
 	setShowUnauthGeofenceBox,
@@ -83,7 +83,7 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 	const [confirmCloseSimulation, setConfirmCloseSimulation] = useState(false);
 	const [isPlaying, setIsPlaying] = useState(true);
 	const { unauthNotifications, setUnauthNotifications } = useAwsGeofence();
-	const { Connection, isHidden } = WebsocketBanner(
+	const { Connection, isHidden } = useWebSocketBanner(
 		useCallback((n: NotificationHistoryItemtype) => {
 			// Update tracking history with geofence notification, for geofence add "Bus stop number 1" to title and bus stop coords to description
 			setTrackingHistory(prevState => {
@@ -338,7 +338,12 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 				</Card>
 			) : (
 				<>
-					<Card className="unauthSimulation-card" left="1.62rem" overflow={startSimulation ? "inherit" : "hidden"}>
+					<Card
+						data-testid={`unauth-simulation-${startSimulation ? "started" : "not-started"}`}
+						className="unauthSimulation-card"
+						left="1.62rem"
+						overflow={startSimulation ? "inherit" : "hidden"}
+					>
 						{!startSimulation ? (
 							<>
 								<Flex justifyContent="flex-end" padding="0.77rem">
@@ -531,4 +536,4 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 	);
 };
 
-export default UnauthGeofenceBox;
+export default UnauthSimulation;

@@ -2,7 +2,8 @@ name: Security_Tests
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
     branches: [main]
 
@@ -23,12 +24,11 @@ jobs:
 
       - name: Run Security test
         env:
-          VITE_AWS_COGNITO_IDENTITY_POOL_ID_TEST: ${{ secrets.VITE_AWS_COGNITO_IDENTITY_POOL_ID_TEST }}
-          VITE_AWS_REGION_TEST: ${{ secrets.VITE_AWS_REGION_TEST }}
-          VITE_AWS_USER_POOL_ID_TEST: ${{ secrets.VITE_AWS_USER_POOL_ID_TEST }}
-          VITE_AWS_USER_POOL_WEB_CLIENT_ID_TEST: ${{ secrets.VITE_AWS_USER_POOL_WEB_CLIENT_ID_TEST }}
-          VITE_AWS_COGNITO_USERNAME_TEST: ${{ secrets.VITE_AWS_COGNITO_USERNAME_TEST }}
-          VITE_AWS_COGNITO_PASSWORD_TEST: ${{ secrets.VITE_AWS_COGNITO_PASSWORD_TEST }}
-          VITE_AWS_IAM_AUTH_ROLE_NAME_TEST: ${{ secrets.VITE_AWS_IAM_AUTH_ROLE_NAME_TEST }}
-          VITE_AWS_IAM_UNAUTH_ROLE_NAME_TEST: ${{ secrets.VITE_AWS_IAM_UNAUTH_ROLE_NAME_TEST }}
+          IDENTITY_POOL_ID: ${{ secrets.IDENTITY_POOL_ID }}
+          USER_POOL_ID: ${{ secrets.USER_POOL_ID }}
+          USER_POOL_CLIENT_ID: ${{ secrets.USER_POOL_CLIENT_ID }}
+          COGNITO_EMAIL: ${{ secrets.COGNITO_EMAIL }}
+          COGNITO_PASSWORD: ${{ secrets.COGNITO_PASSWORD }}
+          IAM_AUTH_ROLE_NAME: ${{ secrets.IAM_AUTH_ROLE_NAME }}
+          IAM_UNAUTH_ROLE_NAME: ${{ secrets.IAM_UNAUTH_ROLE_NAME }}
         run: cd security-tests/ ; npm run test
