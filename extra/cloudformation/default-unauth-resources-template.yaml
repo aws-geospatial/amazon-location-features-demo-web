@@ -219,7 +219,8 @@ Resources:
   AmazonLocationDemoKinesisBucket:
     Condition: EnablePinTranslate
     Type: "AWS::S3::Bucket"
-    DeletionPolicy: Delete
+    DeletionPolicy: RetainExceptOnCreate
+    UpdateReplacePolicy: Retain
     Properties:
       BucketName: !Sub "location.aws.com.demo.kinesis.${AWS::AccountId}"
       VersioningConfiguration:
