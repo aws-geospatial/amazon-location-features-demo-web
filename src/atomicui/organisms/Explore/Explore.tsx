@@ -67,6 +67,8 @@ const Explore: React.FC<IProps> = ({
 }) => {
 	const { t, i18n } = useTranslation();
 	const currentLanguage = i18n.language;
+	const langDir = i18n.dir();
+	const isLtr = langDir === "ltr";
 	const { setBottomSheetMinHeight, setBottomSheetHeight } = useBottomSheet();
 	const { isDesktop } = useDeviceMediaQuery();
 	const { isUserAwsAccountConnected, credentials, onLogin, onLogout, onDisconnectAwsAccount, setAuthTokens } =
@@ -159,11 +161,11 @@ const Explore: React.FC<IProps> = ({
 		<>
 			<Flex alignItems="center">
 				<IconAwsCloudFormation width="1.2rem" height="1.38rem" />
-				<Text fontFamily="AmazonEmber-Bold" fontSize="1.23rem">
+				<Text fontFamily="AmazonEmber-Bold" fontSize="1.23rem" dir={isLtr ? "ltr" : "rtl"}>
 					{t("explore__connect_aws_account.text")}
 				</Text>
 			</Flex>
-			<Text fontFamily="AmazonEmber-Regular" fontSize="1rem" color="var(--grey-color)">
+			<Text fontFamily="AmazonEmber-Regular" fontSize="1rem" color="var(--grey-color)" dir={isLtr ? "ltr" : "rtl"}>
 				{t("explore__connect_description.text")}
 			</Text>
 			{isAuthenticated ? (

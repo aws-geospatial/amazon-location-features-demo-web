@@ -227,7 +227,8 @@
 				}
 
 				&:active,
-				&:focus {
+				&:focus,
+				&:hover {
 					background-color: transparent;
 					box-shadow: none;
 				}

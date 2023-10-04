@@ -121,10 +121,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 	const fastestRegion = localStorage.getItem("fastestRegion") || "";
 	const { isDesktop, isMobile } = useDeviceMediaQuery();
 
-	useEffect(() => {
-		isMobile ? setSettingsOptions(undefined) : setSettingsOptions(SettingOptionEnum.UNITS);
-	}, [isMobile, setSettingsOptions]);
-
 	const handleStackRegion = useCallback(
 		(option: { value: string; label: string }) => {
 			const { label, value } = option;
