@@ -1,6 +1,8 @@
+import i18n from "@demo/locales/i18n";
 import { TravelMode } from "@demo/types";
 import { faker } from "@faker-js/faker";
 import { render } from "@testing-library/react";
+import { I18nextProvider } from "react-i18next";
 
 import StepCard from "./StepCard";
 
@@ -26,17 +28,19 @@ describe("<StepCard/>", () => {
 
 	const renderComponent = async (props: { travelMode?: TravelMode; isFirst: boolean; isLast: boolean }) => {
 		const renderedComponent = render(
-			<StepCard
-				step={{
-					GeometryOffset: faker.datatype.number(),
-					Distance: faker.datatype.number(),
-					DurationSeconds: faker.datatype.number(),
-					EndPosition: [Number(faker.address.longitude()), Number(faker.address.latitude())],
-					StartPosition: [Number(faker.address.longitude()), Number(faker.address.latitude())]
-				}}
-				travelMode={TravelMode.CAR}
-				{...props}
-			/>
+			<I18nextProvider i18n={i18n}>
+				<StepCard
+					step={{
+						GeometryOffset: faker.datatype.number(),
+						Distance: faker.datatype.number(),
+						DurationSeconds: faker.datatype.number(),
+						EndPosition: [Number(faker.address.longitude()), Number(faker.address.latitude())],
+						StartPosition: [Number(faker.address.longitude()), Number(faker.address.latitude())]
+					}}
+					travelMode={TravelMode.CAR}
+					{...props}
+				/>
+			</I18nextProvider>
 		);
 		const { findByTestId, queryByTestId } = renderedComponent;
 

@@ -197,7 +197,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 			: undefined;
 
 		return (
-			<Flex key={id} className="option-container" onMouseOver={() => setHover(option)}>
+			<Flex data-testid={`suggestion-${id}`} key={id} className="option-container" onMouseOver={() => setHover(option)}>
 				{!placeid ? <IconSearch /> : <IconPin />}
 				<View className="option-details">
 					<Text>{title}</Text>
@@ -303,6 +303,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 			>
 				<Flex gap={0} width="100%" height="100%" alignItems="center">
 					<Autocomplete
+						id="search-bar"
 						className={!value && !suggestions?.length ? "search-complete noEmpty" : "search-complete"}
 						ref={autocompleteRef}
 						inputMode="search"
@@ -361,13 +362,14 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 									onClick={!!value ? onClearSearch : () => setShowRouteBox(true)}
 								>
 									{!!value ? (
-										<IconClose />
+										<IconClose data-testid="clean-search" />
 									) : (
 										<>
 											<IconDirections
 												data-tooltip-id="directions-button"
 												data-tooltip-place="bottom"
 												data-tooltip-content={t("routes.text")}
+												data-testid="directions-button"
 											/>
 											<Tooltip id="directions-button" />
 										</>
