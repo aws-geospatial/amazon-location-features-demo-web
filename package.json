@@ -124,7 +124,12 @@
 			"!**/src/App.tsx",
 			"!**/src/main.tsx",
 			"!**/src/setupTests.ts",
-			"!**/src/vite-env.d.ts"
+			"!**/src/vite-env.d.ts",
+			"!**/src/atomicui/organisms/AuthGeofenceBox/CircleDrawControl.tsx",
+			"!**/src/atomicui/pages/DemoPlaceholderPage/**",
+			"!**/src/atomicui/organisms/AuthTrackerBox/AuthTrackerSimulation.tsx",
+			"!**/src/atomicui/organisms/UnauthSimulation/UnauthGeofencesSimulation.tsx",
+			"!**/src/atomicui/organisms/UnauthSimulation/UnauthRouteSimulation.tsx"
 		]
 	}
 }

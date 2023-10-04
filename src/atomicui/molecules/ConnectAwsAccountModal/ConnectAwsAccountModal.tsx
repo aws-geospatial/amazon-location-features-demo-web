@@ -25,7 +25,7 @@ const {
 
 let scrollTimeout: NodeJS.Timer | undefined;
 
-interface ConnectAwsAccountModalProps {
+export interface ConnectAwsAccountModalProps {
 	open: boolean;
 	onClose: () => void;
 	handleCurrentLocationAndViewpoint: (b: boolean) => void;
@@ -319,6 +319,7 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 									</Button>
 								)}
 								<Button
+									data-testid="continue-to-explore"
 									className="continue-to-explore"
 									width="100%"
 									height="3.08rem"
@@ -366,7 +367,10 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 									{t("caam__connect.text")}
 								</Button>
 								<Text marginTop="0.62rem">{t("caam__agree.text")}</Text>
-								<View onClick={() => window.open(AWS_TERMS_AND_CONDITIONS, "_blank")}>
+								<View
+									data-testid="terms-and-conditions"
+									onClick={() => window.open(AWS_TERMS_AND_CONDITIONS, "_blank")}
+								>
 									<Text className="hyperlink" fontFamily="AmazonEmber-Bold">
 										{t("t&c.text")}
 									</Text>

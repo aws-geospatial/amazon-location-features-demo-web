@@ -8,7 +8,7 @@ import { Modal } from "@demo/atomicui/atoms";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
 
-interface ConfirmationModalProps {
+export interface ConfirmationModalProps {
 	className?: string;
 	open: boolean;
 	onClose: () => void;
@@ -56,7 +56,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 			className={`confirmation-modal ${className}`}
 			hideCloseIcon
 			content={
-				<Flex className="confirmation-content">
+				<Flex data-testid="confirmation-content" className="confirmation-content">
 					<Text className="bold medium-text" textAlign="center">
 						{heading || t("confirmation_modal__heading.text")}
 					</Text>
@@ -75,6 +75,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 					)}
 					{showConfirmationCheckbox && (
 						<CheckboxField
+							data-testid="confirmation-checkbox"
 							className="custom-checkbox confirmation-checkbox"
 							size="large"
 							label={confirmationCheckboxLabel || ""}

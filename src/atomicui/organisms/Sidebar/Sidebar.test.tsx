@@ -5,6 +5,11 @@ import { BrowserRouter } from "react-router-dom";
 
 import Sidebar from "./Sidebar";
 
+Object.defineProperty(window, "location", {
+	writable: true,
+	value: { reload: jest.fn() }
+});
+
 const mockProps = {
 	onCloseSidebar: jest.fn(),
 	onOpenConnectAwsAccountModal: jest.fn(),
