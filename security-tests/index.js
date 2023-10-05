@@ -16,17 +16,6 @@ const authRoleName = process.env.IAM_AUTH_ROLE_NAME;
 const unauthRoleName = process.env.IAM_UNAUTH_ROLE_NAME;
 const region = identityPoolId.split(":")[0];
 
-console.log("ENV===>>>", {
-	identityPoolId,
-	userPoolId,
-	userPoolWebClientId,
-	username,
-	password,
-	authRoleName,
-	unauthRoleName,
-	region
-});
-
 Amplify.configure({
 	Auth: {
 		identityPoolId,

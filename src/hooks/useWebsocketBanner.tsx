@@ -7,7 +7,7 @@ import { NotificationHistoryItemtype } from "@demo/types";
 import { t } from "i18next";
 import "./styles.scss";
 
-const WebsocketBanner = (
+const useWebSocketBanner = (
 	updateTrackingHistory?: (n: NotificationHistoryItemtype) => void,
 	startSocketConnection = true
 ) => {
@@ -40,12 +40,13 @@ const WebsocketBanner = (
 			isConnected,
 			Connection: (
 				<Flex
+					data-testid="websocket-banner"
 					className={`tracking-connection-alert slide-up ${
 						hideConnectionAlert ? "hide" : isConnected ? "success" : "info"
 					}`}
 				>
 					<Flex width="100%" justifyContent="space-between" alignItems="center">
-						<Text className="notification-text">
+						<Text data-testid="websocket-banner-text" className="notification-text">
 							{isConnected
 								? t("tracker_box__notification_service_status_1.text")
 								: t("tracker_box__notification_service_status_2.text")}{" "}
@@ -59,4 +60,4 @@ const WebsocketBanner = (
 	);
 };
 
-export default WebsocketBanner;
+export default useWebSocketBanner;

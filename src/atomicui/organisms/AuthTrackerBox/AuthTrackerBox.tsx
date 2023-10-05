@@ -14,10 +14,11 @@ import {
 	IconSegment,
 	IconWalking
 } from "@demo/assets";
-import { GeofenceMarker, WebsocketBanner } from "@demo/atomicui/molecules";
+import { GeofenceMarker } from "@demo/atomicui/molecules";
 import { useAwsGeofence, useAwsRoute, useAwsTracker } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
+import useWebSocketBanner from "@demo/hooks/useWebsocketBanner";
 import { RouteDataType, TrackerType } from "@demo/types";
 import { EventTypeEnum, ResponsiveUIEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
@@ -37,7 +38,7 @@ export const trackerTypes = [
 	{ type: TrackerType.DRONE, icon: <IconDroneSolid width="1.54rem" height="1.54rem" /> }
 ];
 
-interface AuthTrackerBoxProps {
+export interface AuthTrackerBoxProps {
 	mapRef: MapRef | null;
 	setShowAuthTrackerBox: (b: boolean) => void;
 	clearCredsAndLocationClient?: () => void;
@@ -63,7 +64,7 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 		trackerPoints,
 		setTrackerPoints
 	} = useAwsTracker();
-	const { Connection } = WebsocketBanner();
+	const { Connection } = useWebSocketBanner();
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
@@ -280,7 +281,11 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 
 	return (
 		<>
-			<Card className={`tracking-card ${!isDesktop ? "tracking-card-mobile" : ""}`} left="1.62rem">
+			<Card
+				data-testid="auth-tracker-box-card"
+				className={`tracking-card ${!isDesktop ? "tracking-card-mobile" : ""}`}
+				left="1.62rem"
+			>
 				<Flex className="tracking-card-header">
 					<Text fontFamily="AmazonEmber-Medium" fontSize={!isDesktop ? "1.23rem" : "1.08rem"}>
 						{t("tracker.text")}

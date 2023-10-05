@@ -8,7 +8,7 @@ import { IconArrow } from "@demo/assets";
 import { SelectOption } from "@demo/types";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
-interface DropdownElProps {
+export interface DropdownElProps {
 	defaultOption?: SelectOption | SelectOption[];
 	options: SelectOption[];
 	onSelect: (option: SelectOption) => void;
@@ -62,12 +62,13 @@ const DropdownEl: React.FC<DropdownElProps> = ({
 	return (
 		<div ref={dropdownRef} className="dropdown-container">
 			<div
+				data-testid="dropdown-trigger"
 				className={
 					bordered ? `trigger bordered dropdown-${open}` : `${isRadioBox ? "trigger dropdown-radioBox" : "trigger"}`
 				}
 				onClick={() => setOpen(!open)}
 			>
-				<p className="dropdown-label">
+				<p data-testid="dropdown-label" className="dropdown-label">
 					{label || t((defaultOption as SelectOption)?.label as string) || t("dropdown__placeholder.text")}
 				</p>
 				<IconArrow
@@ -80,21 +81,26 @@ const DropdownEl: React.FC<DropdownElProps> = ({
 				/>
 			</div>
 			{open && (
-				<ul className={bordered ? "options bordered" : `${isRadioBox ? "options radioBox" : "options"}`}>
+				<ul
+					data-testid="dropdown-options"
+					className={bordered ? "options bordered" : `${isRadioBox ? "options radioBox" : "options"}`}
+				>
 					{isRadioBox ? (
 						<>
 							{options.map((option, i) => (
 								<li
+									data-testid={option.value}
 									key={i}
 									style={{ display: "flex", justifyContent: isLtr ? "start" : "end" }}
-									onChange={() => handleClick(option)}
 									className="radio-li"
 								>
 									<RadioGroupField
+										data-testid={`radiobox-${option.value}`}
 										label=""
 										name="radioBox"
 										defaultValue={(defaultOption as SelectOption)?.value}
 										style={{ width: "100%", gap: 0 }}
+										onChange={() => handleClick(option)}
 									>
 										<Radio
 											className={`${isLtr ? "radio-option-end" : "radio-option"} ${
@@ -114,15 +120,16 @@ const DropdownEl: React.FC<DropdownElProps> = ({
 						<>
 							{options.map(option => (
 								<li
+									data-testid={option.value}
 									key={option.value}
 									className={showSelected && (defaultOption as SelectOption)?.value === option.value ? "selected" : ""}
 									style={{ display: "flex", justifyContent: isLtr ? "start" : "end" }}
-									onChange={() => isCheckbox && handleClick(option)}
 									onClick={() => !isCheckbox && handleClick(option)}
 									dir={langDir}
 								>
 									{isCheckbox ? (
 										<CheckboxField
+											data-testid={`checkbox-${option.value}`}
 											className="option-checkbox"
 											label={option.label}
 											name={option.value}
@@ -132,6 +139,7 @@ const DropdownEl: React.FC<DropdownElProps> = ({
 												(item: SelectOption) => item.value === option.value
 											)}
 											crossOrigin={undefined}
+											onChange={() => handleClick(option)}
 										/>
 									) : (
 										<>{t(option.label)}</>

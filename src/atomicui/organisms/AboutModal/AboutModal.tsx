@@ -114,6 +114,7 @@ const AboutModal: React.FC<AboutModalProps> = ({ open, onClose }) => {
 							{t(SOFTWARE_ATTRIBUTION_DESC)}
 						</Text>
 						<Button
+							data-testid="learn-more-button-software-attribution"
 							className="learn-more-button"
 							variation="primary"
 							marginTop="1.15rem"

@@ -6,6 +6,11 @@ import { I18nextProvider } from "react-i18next";
 
 import SettingsModal from "./SettingsModal";
 
+Object.defineProperty(window, "location", {
+	writable: true,
+	value: { reload: jest.fn() }
+});
+
 describe("<SettingsModal />", () => {
 	let settingsModal: HTMLElement;
 

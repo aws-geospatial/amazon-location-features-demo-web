@@ -13,3 +13,4 @@ export { default as useMediaQuery } from "./useMediaQuery";
 export { default as usePersistedData } from "./usePersistedData";
 export { default as useRecordViewPage } from "./useRecordViewPage";
 export { default as useUnauthSimulation } from "./useUnauthSimulation";
+export { default as useWebSocketBanner } from "./useWebsocketBanner";

@@ -236,7 +236,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 			: undefined;
 
 		return (
-			<Flex key={id} className="option-container" onMouseOver={() => setHover(option)}>
+			<Flex data-testid={`suggestion-${id}`} key={id} className="option-container" onMouseOver={() => setHover(option)}>
 				{!placeid ? <IconSearch /> : <IconPin />}
 				<View className="option-details">
 					<Text>{title}</Text>

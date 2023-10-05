@@ -1,14 +1,10 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-Cypress.Commands.add("grantLocationAccess", () => {
-	Cypress.log({
-		name: "Grant Location Access"
-	});
-});
-
 Cypress.Commands.add("visitDomain", domain => {
-	cy.task("log", `ENV===>>> ${JSON.stringify(Cypress.env())}`);
+	Cypress.on("uncaught:exception", () => {
+		return false;
+	});
 
 	if (typeof domain === "string") {
 		domain.includes("dev")

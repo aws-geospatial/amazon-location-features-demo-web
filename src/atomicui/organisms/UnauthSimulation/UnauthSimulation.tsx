@@ -16,12 +16,11 @@ import {
 	ConfirmationModal,
 	IconicInfoCard,
 	NonStartUnauthSimulation,
-	NotificationsBox,
-	WebsocketBanner
+	NotificationsBox
 } from "@demo/atomicui/molecules";
 import { appConfig, busRoutesData } from "@demo/core";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
-import { useAwsGeofence } from "@demo/hooks";
+import { useAwsGeofence, useWebSocketBanner } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import i18n from "@demo/locales/i18n";
@@ -63,7 +62,8 @@ const {
 		MAX_BOUNDS: { VANCOUVER }
 	}
 } = appConfig.default;
-interface UnauthGeofenceBoxProps {
+
+interface UnauthSimulationProps {
 	mapRef: MapRef | null;
 	from: MenuItemEnum;
 	setShowUnauthGeofenceBox: (b: boolean) => void;
@@ -81,7 +81,7 @@ interface UnauthGeofenceBoxProps {
 	setConfirmCloseSimulation: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
+const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 	mapRef,
 	from,
 	setShowUnauthGeofenceBox,
@@ -103,7 +103,7 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 	const [busSelectedValue, setBusSelectedValue] = useState<SelectOption>(busRoutesDropdown[0]);
 	const [isPlaying, setIsPlaying] = useState(true);
 	const { unauthNotifications, setUnauthNotifications } = useAwsGeofence();
-	const { Connection, isHidden } = WebsocketBanner(
+	const { Connection, isHidden } = useWebSocketBanner(
 		useCallback((n: NotificationHistoryItemtype) => {
 			// Update tracking history with geofence notification, for geofence add "Bus stop number 1" to title and bus stop coords to description
 			setTrackingHistory(prevState => {
@@ -632,4 +632,4 @@ const UnauthGeofenceBox: React.FC<UnauthGeofenceBoxProps> = ({
 	);
 };
 
-export default UnauthGeofenceBox;
+export default UnauthSimulation;

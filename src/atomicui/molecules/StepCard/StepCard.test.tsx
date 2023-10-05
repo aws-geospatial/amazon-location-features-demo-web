@@ -2,6 +2,7 @@ import i18n from "@demo/locales/i18n";
 import { TravelMode } from "@demo/types";
 import { faker } from "@faker-js/faker";
 import { render } from "@testing-library/react";
+import { I18nextProvider } from "react-i18next";
 
 import { I18nextProvider } from "react-i18next";
 

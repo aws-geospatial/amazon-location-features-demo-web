@@ -26,7 +26,13 @@ const NotificationsBox: React.FC<NotificationsBoxProps> = ({
 	return (
 		<Flex width="100%" className="notifications-box-container" direction="column" gap="0" paddingBottom="1.2rem">
 			<Flex justifyContent="space-between" width="100%" padding="0.5rem 1.2rem">
-				<Text className="medium" fontSize="0.95rem" textAlign="center" variation="secondary">
+				<Text
+					className="medium"
+					fontSize="0.95rem"
+					textAlign="center"
+					variation="secondary"
+					data-testid="notifications-text"
+				>
 					{t("notifications_box__geofences_notifications.text")}
 				</Text>
 				<Text
@@ -35,6 +41,7 @@ const NotificationsBox: React.FC<NotificationsBoxProps> = ({
 					textAlign="center"
 					variation="secondary"
 					onClick={() => setUnauthNotifications(undefined)}
+					data-testid="clear-notifications-text"
 				>
 					{t("notifications_box__clear_notifications.text")}
 				</Text>
@@ -44,6 +51,7 @@ const NotificationsBox: React.FC<NotificationsBoxProps> = ({
 				direction="column"
 				gap="0"
 				height={`${maxHeight}vh`}
+				data-testid="notifications-list"
 			>
 				{!!unauthNotifications.length ? (
 					unauthNotifications?.map(({ busRouteId, stopName, createdAt }, idx) => {
@@ -51,7 +59,7 @@ const NotificationsBox: React.FC<NotificationsBoxProps> = ({
 						const isEnabled = selectedRoutesIds.includes(busRouteId);
 
 						return (
-							<Flex key={idx} direction="column" width="100%" gap="0">
+							<Flex key={idx} direction="column" width="100%" gap="0" data-testid={`notification-card-${idx}`}>
 								<IconicInfoCard
 									IconComponent={
 										<Flex>
@@ -73,7 +81,7 @@ const NotificationsBox: React.FC<NotificationsBoxProps> = ({
 						);
 					})
 				) : (
-					<Flex className="no-notifications" direction="column" gap="0">
+					<Flex className="no-notifications" direction="column" gap="0" data-testid="no-notifications">
 						<IconBellSolid width={36} height={36} />
 						<Text className="regular" fontSize="0.95rem" textAlign="center" variation="secondary" marginTop="1.2rem">
 							{t("notifications_box__no_new_notifications.text")}

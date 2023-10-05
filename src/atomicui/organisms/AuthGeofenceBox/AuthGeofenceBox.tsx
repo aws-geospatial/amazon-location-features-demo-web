@@ -46,7 +46,7 @@ const {
 	MAP_RESOURCES: { MAX_BOUNDS }
 } = appConfig;
 
-interface AuthGeofenceBoxProps {
+export interface AuthGeofenceBoxProps {
 	mapRef: MapRef | null;
 	setShowAuthGeofenceBox: (b: boolean) => void;
 	isEditingAuthRoute: boolean;
@@ -306,6 +306,7 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({
 
 		return (
 			<Flex
+				data-testid="auth-geofence-add-container"
 				gap={0}
 				direction="column"
 				padding={"0px 16px"}
@@ -328,6 +329,7 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({
 					</Flex>
 				)}
 				<InputField
+					dataTestId="auth-geofence-box-search-input"
 					containerMargin="16px 0px 24px 0px"
 					placeholder={t("geofence_box__search_placeholder.text") as string}
 					value={value}
@@ -345,6 +347,7 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({
 				{!suggestions?.length && geofenceCenter && (
 					<>
 						<InputField
+							dataTestId="auth-geofence-box-name-field"
 							containerMargin={errorMsg ? "0px 0px 8px 0px" : "0px 0px 24px 0px"}
 							label={t("geofence_box__name.text") as string}
 							placeholder={t("geofence_box__name_placeholder.text") as string}
@@ -366,6 +369,7 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({
 						)}
 						<Flex gap={0} direction="column" marginBottom="1.85rem">
 							<SliderField
+								data-testid="geofence-radius-slider"
 								className="geofence-radius-slider"
 								width="100%"
 								margin="0rem 1.23rem 0.62rem 0rem"
@@ -539,6 +543,7 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({
 
 				return (
 					<Flex
+						data-testid={GeofenceId}
 						key={idx}
 						className={idx !== geofences!.length - 1 ? "geofence-item border-bottom" : "geofence-item"}
 						style={isDisabled ? { opacity: 0.3 } : {}}
@@ -598,7 +603,14 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({
 	const renderGeofencesList = useMemo(() => {
 		if (isFetchingGeofences) {
 			return (
-				<Flex gap={0} padding="24px 0px" direction="column" justifyContent="center" alignItems="center">
+				<Flex
+					data-testid="auth-geofence-box-loader"
+					gap={0}
+					padding="24px 0px"
+					direction="column"
+					justifyContent="center"
+					alignItems="center"
+				>
 					<Loader width="40px" height="40px" />
 					<Text className="bold" marginTop="16px" variation="tertiary">
 						{t("geofence_box__fetching_geofences.text")}
@@ -610,7 +622,14 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({
 				return geofences.map((geofence, idx) => renderGeofenceListItem(geofence, idx));
 			} else {
 				return (
-					<Flex gap={0} direction="column" justifyContent="center" alignItems="center" padding="24px 24px">
+					<Flex
+						data-testid="auth-geofence-box-empty-list"
+						gap={0}
+						direction="column"
+						justifyContent="center"
+						alignItems="center"
+						padding="24px 24px"
+					>
 						<Text textAlign={isLtr ? "start" : "end"}>{t("geofence_box__havent_created.text")}</Text>
 						<Text variation="tertiary" textAlign={isLtr ? "start" : "end"}>
 							{t("geofence_box__add_to_view.text")}
@@ -675,7 +694,11 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({
 
 	return (
 		<>
-			<Card className={`geofence-card ${!isDesktop ? "geofence-card-mobile" : ""}`} left={21}>
+			<Card
+				data-testid="auth-geofence-box-card"
+				className={`geofence-card ${!isDesktop ? "geofence-card-mobile" : ""}`}
+				left={21}
+			>
 				<Flex className={`geofence-card-header ${!isDesktop ? "geofence-card-header-mobile" : ""}`}>
 					<Flex alignItems={"center"}>
 						{isDesktop && isAddingOrEditing && <IconBackArrow className="back-icon" onClick={resetAll} />}
@@ -694,7 +717,7 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({
 					<Flex gap={0} alignItems="center">
 						{isDesktop && !isAddingGeofence && (
 							<>
-								<Flex className="geofence-action" onClick={onAddGeofence}>
+								<Flex data-testid="auth-geofence-box-add-button" className="geofence-action" onClick={onAddGeofence}>
 									<IconPlus />
 									<Text className="bold" textAlign={isLtr ? "start" : "end"}>
 										{t("geofence_box__add.text")}
@@ -714,6 +737,7 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({
 					renderAddGeofence
 				) : (
 					<Flex
+						data-testid="geofences-list-container"
 						className={`geofences-list-container ${!isDesktop ? "geofences-list-container-mobile" : ""}`}
 						padding={!isDesktop ? "0 1rem" : ""}
 						direction="column"
