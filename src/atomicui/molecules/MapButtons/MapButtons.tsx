@@ -228,7 +228,6 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 						["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
 					);
 				} else {
-					console.log("JERE");
 					isAddingGeofence && setIsAddingGeofence(!isAddingGeofence);
 					isAuthGeofenceBoxOpen && onSetShowAuthGeofenceBox(!isAuthGeofenceBoxOpen);
 					currentMapProvider === MapProviderEnum.ESRI
