@@ -330,3 +330,16 @@ jest.mock("@mapbox/mapbox-gl-draw", () => {
 		};
 	});
 });
+
+jest.mock("@demo/hooks/useDeviceMediaQuery", () => {
+	return {
+		__esModule: true,
+		default: () => ({
+			isDesktop: true,
+			isMobile: false,
+			isTablet: false,
+			isMax556: false,
+			isMax766: false
+		})
+	};
+});

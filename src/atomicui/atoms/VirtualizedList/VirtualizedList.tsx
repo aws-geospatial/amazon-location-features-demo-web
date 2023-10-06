@@ -27,10 +27,10 @@ const VirtualizedList: FC<{ listData: JSX.Element[] }> = ({ listData }) => {
 	const containerHeight = listData.length * 50; // Total height of all items
 
 	return (
-		<div style={{ width: "100%", overflow: "auto" }} ref={containerRef}>
+		<div data-testid="virtualized-list-container" style={{ width: "100%", overflow: "auto" }} ref={containerRef}>
 			<div style={{ height: `${containerHeight}px` }}>
 				{listData.map((item, index) => (
-					<div key={index} style={{ height: "50px" }}>
+					<div data-testid={`virtualized-list-item-${index}`} key={index} style={{ height: "50px" }}>
 						{visibleItems.includes(item) ? item : null}
 					</div>
 				))}

@@ -7,5 +7,6 @@ const {
 const CFRegion = new URL(CF_TEMPLATE).searchParams.get("region")!;
 
 export const transformCloudFormationLink = (newRegion: string) => {
-	return (CF_TEMPLATE as string).replaceAll(CFRegion, newRegion);
+	const regionRegex = new RegExp(CFRegion, "g");
+	return (CF_TEMPLATE as string).replace(regionRegex, newRegion);
 };

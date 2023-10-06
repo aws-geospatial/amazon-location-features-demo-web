@@ -228,6 +228,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 						["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
 					);
 				} else {
+					console.log("JERE");
 					isAddingGeofence && setIsAddingGeofence(!isAddingGeofence);
 					isAuthGeofenceBoxOpen && onSetShowAuthGeofenceBox(!isAuthGeofenceBoxOpen);
 					currentMapProvider === MapProviderEnum.ESRI
@@ -445,6 +446,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	const mapStyles = useMemo(
 		() => (
 			<Flex
+				data-testid="map-styles-wrapper"
 				className={onlyMapStyles ? "map-styles-wrapper only-map-styles" : "map-styles-wrapper"}
 				direction={"column"}
 			>
@@ -495,6 +497,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 								</Flex>
 							)}
 							<View
+								data-testid="filter-icon-wrapper"
 								ref={filterIconWrapperRef}
 								className="filter-icon-wrapper"
 								onClick={() => {
@@ -504,7 +507,6 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 									});
 									discardChanges();
 								}}
-								data-testid="filter-icon-wrapper"
 								paddingRight={isHandDevice ? "0" : "0.7rem"}
 							>
 								<IconFilterFunnel className={showFilter || hasAnyFilterSelected ? "filter-icon live" : "filter-icon"} />
@@ -528,16 +530,21 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 						)}
 					</Flex>
 					{showFilter && (
-						<Flex className={`maps-filter-container ${isHandDevice ? "responsive-filter" : ""}`} direction="column">
+						<Flex
+							data-testid="maps-filter-container"
+							className={`maps-filter-container ${isHandDevice ? "responsive-filter" : ""}`}
+							direction="column"
+						>
 							{Object.entries(filters).map(([key, value]) => (
 								<Flex key={key} direction="column">
-									<Text as="strong" fontWeight={700} fontSize="1em">
+									<Text data-testid={`filter-title-${key}`} as="strong" fontWeight={700} fontSize="1em">
 										{key}
 									</Text>
 									{value.map((item: string, i) => {
 										if (item === GRAB && !isGrabVisible) return null;
 										return (
 											<CheckboxField
+												data-testid={`filter-checkbox-${item}`}
 												className="custom-checkbox"
 												size={"large"}
 												key={i}
@@ -550,7 +557,6 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 														: selectedFilters[key as keyof MapStyleFilterTypes].includes(item)
 												}
 												onChange={e => handleFilterChange(e, key)}
-												data-testid={`filter-checkbox-${item}`}
 												crossOrigin={undefined}
 											/>
 										);
@@ -561,7 +567,12 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 					)}
 				</Flex>
 				{(!showFilter || (onlyMapStyles && !isHandDevice)) && (
-					<Flex gap={0} direction="column" className={isGrabVisible ? "maps-container grab-visible" : "maps-container"}>
+					<Flex
+						data-testid="map-styles-container"
+						gap={0}
+						direction="column"
+						className={isGrabVisible ? "maps-container grab-visible" : "maps-container"}
+					>
 						<Flex gap={0} padding={onlyMapStyles ? "0 0 1.23rem" : "0 0.7rem 1.23rem 0.5rem"} wrap="wrap">
 							{!searchAndFilteredResults.length && (
 								<Flex width={"80%"} margin={"0 auto"} direction="column">
