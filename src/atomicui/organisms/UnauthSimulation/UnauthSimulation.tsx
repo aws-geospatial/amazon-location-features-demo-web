@@ -63,7 +63,7 @@ const {
 	}
 } = appConfig.default;
 
-interface UnauthSimulationProps {
+export interface UnauthSimulationProps {
 	mapRef: MapRef | null;
 	from: MenuItemEnum;
 	setShowUnauthGeofenceBox: (b: boolean) => void;

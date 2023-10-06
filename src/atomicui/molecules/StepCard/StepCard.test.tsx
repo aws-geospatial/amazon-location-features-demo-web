@@ -4,8 +4,6 @@ import { faker } from "@faker-js/faker";
 import { render } from "@testing-library/react";
 import { I18nextProvider } from "react-i18next";
 
-import { I18nextProvider } from "react-i18next";
-
 import StepCard from "./StepCard";
 
 const useAwsPlace = () => ({

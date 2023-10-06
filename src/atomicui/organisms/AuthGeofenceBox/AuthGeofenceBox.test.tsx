@@ -6,7 +6,7 @@ import { I18nextProvider } from "react-i18next";
 
 import AuthGeofenceBox, { AuthGeofenceBoxProps } from "./AuthGeofenceBox";
 
-const props: AuthGeofenceBoxProps = {
+const mockProps: AuthGeofenceBoxProps = {
 	mapRef: {
 		...jest.requireActual("react-map-gl").MapRef,
 		getCenter: () => ({
@@ -14,7 +14,13 @@ const props: AuthGeofenceBoxProps = {
 			lat: Number(faker.address.latitude())
 		})
 	},
-	setShowAuthGeofenceBox: jest.fn()
+	setShowAuthGeofenceBox: jest.fn(),
+	isEditingAuthRoute: false,
+	setIsEditingAuthRoute: jest.fn(),
+	triggerOnClose: false,
+	triggerOnReset: false,
+	setTriggerOnClose: jest.fn(),
+	setTriggerOnReset: jest.fn()
 };
 
 const mockGeofencesData = [
@@ -81,7 +87,7 @@ describe("<AuthGeofenceBox />", () => {
 	const renderComponent = () =>
 		render(
 			<I18nextProvider i18n={i18n}>
-				<AuthGeofenceBox {...props} />
+				<AuthGeofenceBox {...mockProps} />
 			</I18nextProvider>
 		);
 

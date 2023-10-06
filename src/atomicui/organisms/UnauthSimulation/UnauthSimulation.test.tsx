@@ -3,7 +3,25 @@ import React from "react";
 import { MenuItemEnum } from "@demo/types";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 
-import UnauthSimulation from "./UnauthSimulation";
+import UnauthSimulation, { UnauthSimulationProps } from "./UnauthSimulation";
+
+const mockProps: UnauthSimulationProps = {
+	mapRef: null,
+	from: MenuItemEnum.TRACKER,
+	setShowUnauthGeofenceBox: jest.fn(),
+	setShowUnauthTrackerBox: jest.fn(),
+	setShowConnectAwsAccountModal: jest.fn(),
+	showStartUnauthSimulation: false,
+	setShowStartUnauthSimulation: jest.fn(),
+	startSimulation: false,
+	setStartSimulation: jest.fn(),
+	setShowUnauthSimulationBounds: jest.fn(),
+	clearCredsAndLocationClient: jest.fn(),
+	isNotifications: false,
+	setIsNotifications: jest.fn(),
+	confirmCloseSimulation: false,
+	setConfirmCloseSimulation: jest.fn()
+};
 
 jest.mock("@demo/hooks", () => ({
 	useAwsGeofence: () => ({
@@ -23,18 +41,8 @@ jest.mock("@demo/atomicui/molecules", () => ({
 }));
 
 describe("UnauthSimulation", () => {
-	const props = {
-		mapRef: null,
-		from: MenuItemEnum.TRACKER,
-		setShowUnauthGeofenceBox: jest.fn(),
-		setShowUnauthTrackerBox: jest.fn(),
-		setShowConnectAwsAccountModal: jest.fn(),
-		setShowUnauthSimulationBounds: jest.fn(),
-		clearCredsAndLocationClient: jest.fn()
-	};
-
 	const renderComponent = () => {
-		return render(<UnauthSimulation {...props} />);
+		return render(<UnauthSimulation {...mockProps} />);
 	};
 	it("renders the component without errors", () => {
 		renderComponent();
