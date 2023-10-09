@@ -88,7 +88,6 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 	const [isSearching, setIsSearching] = useState(false);
 	const [stepsData, setStepsData] = useState<Place[]>([]);
 	const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-	const moreOptionsRef = useRef<HTMLDivElement | null>(null);
 	const arrowRef = useRef<HTMLDivElement | null>(null);
 	const routesCardRef = useRef<HTMLDivElement | null>(null);
 	const expandRouteRef = useRef<HTMLDivElement | null>(null);
@@ -101,8 +100,14 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 		mapProvider: currentMapProvider
 	} = useAmplifyMap();
 	const { search, getPlaceData } = useAwsPlace();
-	const { setUI, setBottomSheetMinHeight, setBottomSheetHeight, ui, bottomSheetHeight, bottomSheetCurrentHeight } =
-		useBottomSheet();
+	const {
+		setUI,
+		setBottomSheetMinHeight,
+		setBottomSheetHeight,
+		ui,
+		bottomSheetHeight,
+		bottomSheetCurrentHeight = 0
+	} = useBottomSheet();
 	const {
 		setRoutePositions,
 		getRoute,
@@ -115,7 +120,6 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 	} = useAwsRoute();
 	const { defaultRouteOptions } = usePersistedData();
 	const [expandRouteOptions, setExpandRouteOptions] = useState(false);
-	const [moreOption, setMoreOption] = useState(false);
 	const [routeOptions, setRouteOptions] = useState<RouteOptionsType>({ ...defaultRouteOptions });
 	const { isDesktop } = useDeviceMediaQuery();
 	const { t, i18n } = useTranslation();
@@ -166,10 +170,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 
 	useEffect(() => {
 		if (!isDesktop) {
-			if (isInputFocused && bottomSheetCurrentHeight !== window.innerHeight - 10) {
-				setBottomSheetMinHeight(window.innerHeight - 10);
-				setBottomSheetHeight(window.innerHeight);
-			} else if (!isInputFocused) {
+			if (!isInputFocused) {
 				if (expandRouteOptionsMobile) {
 					setBottomSheetMinHeight((expandRouteRef?.current?.clientHeight || 230) + 90);
 					setBottomSheetHeight((expandRouteRef?.current?.clientHeight || 230) + 100);
@@ -228,18 +229,6 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 		setDirections,
 		t
 	]);
-
-	useEffect(() => {
-		function handleClickOutside(event: MouseEvent) {
-			const target = event.target as HTMLElement;
-			!isDesktop && !!moreOption && !moreOptionsRef?.current?.contains(target) && setMoreOption(false);
-		}
-
-		document.addEventListener("mousedown", handleClickOutside);
-		return () => {
-			document.removeEventListener("mousedown", handleClickOutside);
-		};
-	}, [isDesktop, moreOption]);
 
 	const getDestDept = useCallback(() => {
 		const obj: { DeparturePosition: Position | undefined; DestinationPosition: Position | undefined } = {
@@ -334,6 +323,12 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 		routeDataForMobile,
 		calculateRouteDataForAllTravelModes
 	]);
+
+	useEffect(() => {
+		if (!isDesktop) {
+			fromInputRef.current?.focus();
+		}
+	}, [isDesktop]);
 
 	useEffect(() => {
 		if (!isDesktop) {
@@ -623,7 +618,9 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 					data-testid={`${type}-suggestions`}
 					key={`${PlaceId}-${idx}`}
 					className="suggestion"
-					onClick={() => onSelectSuggestion({ PlaceId, Text, Place }, type)}
+					onClick={() => {
+						onSelectSuggestion({ PlaceId, Text, Place }, type);
+					}}
 				>
 					{PlaceId ? <IconPin /> : <IconSearch />}
 					<View className="description">
@@ -926,6 +923,8 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 									value={value.from}
 									onChange={e => onChangeValue(e, InputType.FROM)}
 									dir={langDir}
+									type="text"
+									autoComplete="from-input"
 								/>
 								<View className="divider" />
 								<input
@@ -938,60 +937,47 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 									dir={langDir}
 								/>
 							</Flex>
-							{(isDesktop || (!isDesktop && !(!isInputFocused && isBothInputFilled))) && (
-								<Flex
-									data-testid="swap-icon-container"
-									className="swap-icon-container"
-									onClick={onSwap}
-									order={isLtr ? 3 : 1}
-									ref={arrowRef}
-								>
-									<IconArrowDownUp />
-								</Flex>
-							)}
-						</Flex>
-						{!isDesktop && !isInputFocused && isBothInputFilled && (
-							<Flex>
-								<Flex
-									data-testid="swap-icon-container"
-									className="swap-icon-container more-action-icon-container"
-									onClick={() => setMoreOption(n => !n)}
-									order={isLtr ? 3 : 1}
-								>
-									<IconMoreVertical className="icon-more-vertical" />
-								</Flex>
-								{moreOption && (
-									<View
-										className="more-options-container"
-										onClick={() => {
-											setMoreOption(false);
-											setExpandRouteOptionsMobile && setExpandRouteOptionsMobile(true);
-										}}
-										ref={moreOptionsRef}
-									>
-										{t("more_options.text")}
-									</View>
-								)}
+							<Flex
+								data-testid="swap-icon-container"
+								className="swap-icon-container"
+								onClick={onSwap}
+								order={isLtr ? 3 : 1}
+								ref={arrowRef}
+							>
+								<IconArrowDownUp />
 							</Flex>
-						)}
+						</Flex>
 					</Flex>
 					{!isDesktop && (
 						<Flex className="travel-mode-button-container">
-							{iconsByTravelMode.map(({ mode, IconComponent }) => {
-								const duration = getDuration(mode);
+							{!isInputFocused && isBothInputFilled && (
+								<Flex
+									data-testid="swap-icon-container"
+									className="swap-icon-container more-action-icon-container"
+									onClick={() => {
+										setExpandRouteOptionsMobile && setExpandRouteOptionsMobile(true);
+									}}
+								>
+									<IconMoreVertical className="icon-more-vertical" />
+								</Flex>
+							)}
+							<Flex gap="0">
+								{iconsByTravelMode.map(({ mode, IconComponent }) => {
+									const duration = getDuration(mode);
 
-								return (
-									<Flex
-										key={mode}
-										data-testid={`travel-mode-${mode}-icon-container`}
-										className={`travel-mode ${travelMode === mode ? "selected" : ""}`}
-										onClick={() => handleTravelModeChange(mode)}
-									>
-										<IconComponent />
-										{duration ? <Text className="regular small-text duration-text">{duration}</Text> : null}
-									</Flex>
-								);
-							})}
+									return (
+										<Flex
+											key={mode}
+											data-testid={`travel-mode-${mode}-icon-container`}
+											className={`travel-mode ${travelMode === mode ? "selected" : ""}`}
+											onClick={() => handleTravelModeChange(mode)}
+										>
+											<IconComponent />
+											{duration ? <Text className="regular small-text duration-text">{duration}</Text> : null}
+										</Flex>
+									);
+								})}
+							</Flex>
 						</Flex>
 					)}
 					{isDesktop &&
@@ -999,7 +985,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 						renderRouteOptionsContainer}
 					<View
 						className={`search-results-container ${!isDesktop ? "search-results-container-mobile" : ""}`}
-						maxHeight={window.innerHeight - 260}
+						maxHeight={!isDesktop ? bottomSheetCurrentHeight - 230 : window.innerHeight - 260}
 					>
 						{(inputFocused.from || inputFocused.to) &&
 							(!placeData.from || !placeData.to) &&
@@ -1035,8 +1021,8 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 					{routeData && (
 						<View
 							data-testid="route-data-container"
-							className="route-data-container bottom-border-radius"
-							maxHeight={window.innerHeight - 260}
+							className={`route-data-container ${isDesktop ? "bottom-border-radius" : ""}`}
+							maxHeight={!isDesktop ? bottomSheetCurrentHeight - 230 : "100%"}
 						>
 							{isDesktop ? (
 								<View className="route-info">

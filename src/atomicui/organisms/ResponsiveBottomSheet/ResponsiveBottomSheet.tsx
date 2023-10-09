@@ -7,6 +7,7 @@ import { Flex, Text } from "@aws-amplify/ui-react";
 import { IconClose, IconNotificationBell, LogoDark, LogoLight } from "@demo/assets";
 import { ConfirmationModal } from "@demo/atomicui/molecules";
 import { appConfig } from "@demo/core";
+import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useAmplifyMap, useAwsGeofence, useAwsRoute, useAwsTracker } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
@@ -114,20 +115,28 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	const location = useLocation();
 	const isDemoUrl = location.pathname === DEMO;
 	const {
-		setBottomSheetMinHeight,
 		setBottomSheetHeight,
 		bottomSheetMinHeight,
 		bottomSheetHeight,
 		bottomSheetCurrentHeight = 0,
 		setBottomSheetCurrentHeight,
 		ui,
-		setUI
+		setUI,
+		setBottomSheetMinHeight
 	} = useBottomSheet();
 	const { resetStore: resetAwsRouteStore } = useAwsRoute();
 	const { setIsEditingRoute, setTrackerPoints } = useAwsTracker();
 	const { mapStyle } = useAmplifyMap();
 	const [arrowDirection, setArrowDirection] = useState("no-dragging");
 	const prevBottomSheetHeightRef = useRef(bottomSheetCurrentHeight);
+
+	const resetToExplore = useCallback(() => {
+		setUI(ResponsiveUIEnum.explore);
+		setTimeout(() => {
+			setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+			setBottomSheetHeight(window.innerHeight);
+		}, 500);
+	}, [setBottomSheetHeight, setBottomSheetMinHeight, setUI]);
 
 	const isAddingOrEditing = useMemo(
 		() => isAddingGeofence || isEditingAuthRoute,
@@ -229,7 +238,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 			mutationObserver.disconnect();
 			resizeObserver.disconnect();
 		};
-	}, [setBottomSheetCurrentHeight, setBottomSheetHeight, setBottomSheetMinHeight]);
+	}, [setBottomSheetCurrentHeight, setBottomSheetHeight]);
 
 	const UnauthSimulationUI = useMemo(
 		() => (
@@ -274,8 +283,8 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 		from === MenuItemEnum.GEOFENCE
 			? setShow(s => ({ ...s, unauthGeofenceBox: false }))
 			: setShow(s => ({ ...s, unauthTrackerBox: false }));
-		setUI(ResponsiveUIEnum.explore);
-	}, [from, setShow, setUI]);
+		resetToExplore();
+	}, [from, resetToExplore, setShow]);
 
 	const onCloseAuthTracker = useCallback(() => {
 		clearCredsAndLocationClient && clearCredsAndLocationClient();
@@ -314,6 +323,8 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 		} else if ([ResponsiveUIEnum.routes, ResponsiveUIEnum.direction_to_routes].includes(ui)) {
 			if (!isExpandRouteOptionsMobile) {
 				onCloseRouteBox();
+				setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+				setBottomSheetHeight(window.innerHeight);
 			} else {
 				setExpandRouteOptionsMobile(false);
 			}
@@ -345,7 +356,11 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 									width={20}
 									height={20}
 									fill="var(--grey-color)"
-									onClick={() => setUI(ResponsiveUIEnum.explore)}
+									onClick={() => {
+										setUI(ResponsiveUIEnum.explore);
+										setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+										setBottomSheetHeight(window.innerHeight);
+									}}
 								/>
 							</Flex>
 							<Flex direction="column" alignItems="flex-start" gap="0">
@@ -402,7 +417,17 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 					return <Flex width="100%">{SearchBoxEl()}</Flex>;
 			}
 		},
-		[SearchBoxEl, handleUIAction, isNotifications, setIsNotifications, setUI, t, unauthNotifications.length]
+		[
+			SearchBoxEl,
+			handleUIAction,
+			isNotifications,
+			setBottomSheetHeight,
+			setBottomSheetMinHeight,
+			setIsNotifications,
+			setUI,
+			t,
+			unauthNotifications.length
+		]
 	);
 
 	const bottomSheetBody = useCallback(
@@ -500,8 +525,8 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	const onCloseHandler = useCallback(() => {
 		from === MenuItemEnum.GEOFENCE ? setShowUnauthGeofenceBox(false) : setShowUnauthTrackerBox(false);
 		setShowStartUnauthSimulation(false);
-		setUI(ResponsiveUIEnum.explore);
-	}, [from, setShowStartUnauthSimulation, setShowUnauthGeofenceBox, setShowUnauthTrackerBox, setUI]);
+		resetToExplore();
+	}, [from, resetToExplore, setShowStartUnauthSimulation, setShowUnauthGeofenceBox, setShowUnauthTrackerBox]);
 
 	const ExitSimulation = useCallback(
 		() => (
@@ -542,7 +567,15 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				blocking={false}
 				snapPoints={({ maxHeight }) => [
 					bottomSheetMinHeight,
-					footerHeight(maxHeight),
+					[
+						ResponsiveUIEnum.search,
+						ResponsiveUIEnum.routes,
+						ResponsiveUIEnum.direction_to_routes,
+						ResponsiveUIEnum.map_styles,
+						ResponsiveUIEnum.explore
+					].includes(ui)
+						? bottomSheetHeight * 0.4
+						: footerHeight(maxHeight),
 					bottomSheetHeight - 10,
 					bottomSheetMinHeight
 				]}
@@ -574,7 +607,8 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 					[
 						ResponsiveUIEnum.auth_tracker,
 						ResponsiveUIEnum.auth_geofence,
-						ResponsiveUIEnum.direction_to_routes
+						ResponsiveUIEnum.direction_to_routes,
+						ResponsiveUIEnum.routes
 					].includes(ui)
 						? "no-scroll-on-content"
 						: ""

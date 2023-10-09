@@ -69,7 +69,7 @@ const Explore: React.FC<IProps> = ({
 	const currentLanguage = i18n.language;
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
-	const { setBottomSheetMinHeight, setBottomSheetHeight } = useBottomSheet();
+	const { setBottomSheetMinHeight, setBottomSheetHeight, bottomSheetCurrentHeight = 0 } = useBottomSheet();
 	const { isDesktop } = useDeviceMediaQuery();
 	const { isUserAwsAccountConnected, credentials, onLogin, onLogout, onDisconnectAwsAccount, setAuthTokens } =
 		useAmplifyAuth();
@@ -249,8 +249,15 @@ const Explore: React.FC<IProps> = ({
 			icon: <IconDirections width="1.53rem" height="1.53rem" fill="white" />,
 			onClick: () => {
 				updateUIInfo(ResponsiveUIEnum.routes);
-				setBottomSheetMinHeight(window.innerHeight - 10);
-				setBottomSheetHeight(window.innerHeight);
+				if (bottomSheetCurrentHeight < window.innerHeight * 0.4) {
+					setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+					setBottomSheetHeight(window.innerHeight * 0.4);
+				}
+
+				setTimeout(() => {
+					setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+					setBottomSheetHeight(window.innerHeight);
+				}, 500);
 			}
 		},
 		{
@@ -258,9 +265,15 @@ const Explore: React.FC<IProps> = ({
 			icon: <IconMapSolid width="1.53rem" height="1.53rem" fill="white" />,
 			onClick: () => {
 				updateUIInfo(ResponsiveUIEnum.map_styles);
-				setBottomSheetMinHeight(window.innerHeight - 10);
-				setBottomSheetHeight(window.innerHeight);
-				setTimeout(() => setBottomSheetMinHeight(BottomSheetHeights.explore.min), 300);
+				if (bottomSheetCurrentHeight < window.innerHeight * 0.4) {
+					setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+					setBottomSheetHeight(window.innerHeight * 0.4);
+				}
+
+				setTimeout(() => {
+					setBottomSheetMinHeight(BottomSheetHeights.map_styles.min);
+					setBottomSheetHeight(window.innerHeight);
+				}, 500);
 			}
 		},
 		{

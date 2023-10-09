@@ -194,6 +194,9 @@ const useAwsPlace = () => {
 			setIsSearching: (isSearching: boolean) => {
 				setState({ isSearching });
 			},
+			setSuggestions: (suggestions?: SuggestionType[]) => {
+				setState({ suggestions });
+			},
 			resetStore() {
 				setState({
 					bound: undefined,

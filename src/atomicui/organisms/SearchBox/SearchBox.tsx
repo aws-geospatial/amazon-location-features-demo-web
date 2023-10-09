@@ -66,7 +66,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		setSelectedMarker,
 		setHoveredMarker,
 		setSearchingState,
-		setIsSearching
+		setIsSearching,
+		setSuggestions
 	} = useAwsPlace();
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
@@ -80,7 +81,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		setUI,
 		ui
 	} = useBottomSheet();
-	const { isDesktop, isMobile } = useDeviceMediaQuery();
+	const { isDesktop } = useDeviceMediaQuery();
 	const searchContainerRef = useRef<HTMLDivElement>(null);
 	const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -140,34 +141,39 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		};
 	}, []);
 
-	useEffect(() => {
-		function handleClickOutside() {
-			if (!POICard) {
-				searchInputRef?.current?.blur();
-				setBottomSheetHeight(window.innerHeight);
-				setBottomSheetMinHeight(BottomSheetHeights.explore.min);
-			}
-		}
-
-		document.addEventListener("touchmove", handleClickOutside);
-		return () => {
-			document.removeEventListener("touchmove", handleClickOutside);
-		};
-	}, [POICard, setBottomSheetHeight, setBottomSheetMinHeight, isMobile]);
-
 	const selectSuggestion = useCallback(
 		async ({ text, label, placeid }: ComboBoxOption) => {
 			if (!placeid) {
 				await handleSearch(text || label, true, AnalyticsEventActionsEnum.SUGGESTION_SELECTED);
+				setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+				setBottomSheetHeight(window.innerHeight * 0.4);
+
+				setTimeout(() => {
+					setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+					setBottomSheetHeight(window.innerHeight);
+				}, 500);
 			} else {
 				const selectedMarker = suggestions?.find(
 					(i: SuggestionType) => i.PlaceId === placeid || i.Place?.Label === placeid
 				);
 
 				await setSelectedMarker(selectedMarker);
+				if (!isDesktop) {
+					setTimeout(() => {
+						setSuggestions([]);
+					}, 2000);
+				}
 			}
 		},
-		[handleSearch, setSelectedMarker, suggestions]
+		[
+			handleSearch,
+			isDesktop,
+			setBottomSheetHeight,
+			setBottomSheetMinHeight,
+			setSelectedMarker,
+			setSuggestions,
+			suggestions
+		]
 	);
 
 	const setHover = useCallback(
@@ -334,8 +340,10 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 			e.preventDefault();
 			handleSearch(value, true, AnalyticsEventActionsEnum.ENTER_BUTTON);
 			if (!!options?.length) {
-				setBottomSheetMinHeight(BottomSheetHeights.search.min);
-				setBottomSheetHeight(BottomSheetHeights.search.min);
+				setTimeout(() => {
+					setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+					setBottomSheetHeight(window.innerHeight * 0.4);
+				}, 200);
 				searchInputRef?.current?.blur();
 			}
 		},
@@ -361,13 +369,15 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 										onFocus={e => {
 											e.stopPropagation();
 											setIsFocused(true);
-											setTimeout(() => {
-												setBottomSheetMinHeight(window.innerHeight - 10);
-												setBottomSheetHeight(window.innerHeight);
-											}, 200);
-											setTimeout(() => {
-												setBottomSheetMinHeight(BottomSheetHeights.explore.min);
-											}, 400);
+											if (bottomSheetCurrentHeight < window.innerHeight * 0.4) {
+												setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+												setBottomSheetHeight(window.innerHeight * 0.4);
+
+												setTimeout(() => {
+													setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+													setBottomSheetHeight(window.innerHeight);
+												}, 200);
+											}
 										}}
 										onBlur={e => {
 											e.stopPropagation();
@@ -435,8 +445,6 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 															label: option.label,
 															placeid: option?.placeid
 														});
-														setBottomSheetMinHeight(BottomSheetHeights.search.min);
-														setBottomSheetHeight(BottomSheetHeights.search.min);
 													}}
 													className="option-wrapper"
 												>

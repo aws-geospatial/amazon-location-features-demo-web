@@ -6,14 +6,6 @@
 	max-height: 30.15rem;
 	padding: 4.92rem 2.77rem 2.77rem 2.77rem;
 
-	&.sign-in-modal-mobile {
-		max-width: 100% !important;
-		max-height: 100% !important;
-		height: 100% !important;
-		width: 100% !important;
-		border-radius: 0;
-	}
-
 	.sign-in-modal-content {
 		gap: 0;
 		flex-direction: column;

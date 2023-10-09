@@ -101,6 +101,8 @@
 	.travel-mode-button-container {
 		padding: 16px 0px 16px 16px !important;
 		border-bottom: 1px solid rgba(242, 242, 247, 1) !important;
+		display: flex;
+		align-items: center;
 
 		.travel-mode {
 			width: 32px;
@@ -144,29 +146,14 @@
 
 	.from-to-mobile {
 		position: relative;
+	}
 
-		.more-action-icon-container {
-			border-radius: 0 8px 8px 0;
-			margin-top: 8px;
-			padding: 8px;
-
-			background-color: var(--light-color-2);
-			&:hover {
-				background-color: var(--ghost-white);
-			}
-		}
-
-		.more-options-container {
-			background-color: var(--white-color);
-			box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.202633);
-			width: 11rem;
-			position: absolute;
-			bottom: -20px;
-			right: 16px;
-			padding: 1rem;
-			border-radius: 8px;
-			text-align: center;
-			z-index: 1;
+	.more-action-icon-container {
+		border-radius: 8px;
+		padding: 4px;
+		margin-right: 0.5rem;
+		&:hover {
+			background-color: var(--ghost-white);
 		}
 	}
 
@@ -176,7 +163,7 @@
 		&.from-to-container-mobile {
 			margin-top: 8px;
 			background-color: var(--light-color-2);
-			border-radius: 8px 0 0 8px;
+			border-radius: 8px;
 			padding: 10px !important;
 			width: 100%;
 

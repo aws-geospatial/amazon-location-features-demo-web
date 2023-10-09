@@ -5,6 +5,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 import { Button, Flex, Placeholder, Text, View } from "@aws-amplify/ui-react";
 import { IconCar, IconClose, IconCopyPages, IconDirections, IconInfo } from "@demo/assets";
+import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useAmplifyMap, useAwsPlace, useAwsRoute } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
@@ -244,7 +245,18 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 		() => (
 			<Flex ref={POICardRef} className={!isDesktop ? "poi-only-container" : ""} direction="column">
 				<View className="popup-icon-close-container">
-					<IconClose onClick={() => onClose(ResponsiveUIEnum.search)} />
+					<IconClose
+						onClick={() => {
+							onClose(ResponsiveUIEnum.search);
+							setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+							setBottomSheetHeight(window.innerHeight * 0.4);
+
+							setTimeout(() => {
+								setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+								setBottomSheetHeight(window.innerHeight);
+							}, 500);
+						}}
+					/>
 				</View>
 				{isDesktop && (
 					<View className="triangle-container">
@@ -283,7 +295,17 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 				</View>
 			</Flex>
 		),
-		[address, info.Place?.Label, isDesktop, onClose, onGetDirections, renderRouteInfo, t]
+		[
+			address,
+			info.Place?.Label,
+			isDesktop,
+			onClose,
+			onGetDirections,
+			renderRouteInfo,
+			setBottomSheetHeight,
+			setBottomSheetMinHeight,
+			t
+		]
 	);
 
 	useEffect(() => {
