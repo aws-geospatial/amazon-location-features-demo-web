@@ -23,7 +23,7 @@ const useWebSocketBanner = (
 		let flushTimeoutId: NodeJS.Timeout;
 		if (isConnected) {
 			flushTimeoutId = setTimeout(() => {
-				setHideConnectionAlert(true);
+				// setHideConnectionAlert(true);
 			}, 3000);
 		} else {
 			setHideConnectionAlert(false);
@@ -45,7 +45,7 @@ const useWebSocketBanner = (
 						hideConnectionAlert ? "hide" : isConnected ? "success" : "info"
 					}`}
 				>
-					<Flex width="100%" justifyContent="space-between" alignItems="center">
+					<Flex width="100%" justifyContent="space-between" alignItems="center" marginLeft="1.3rem">
 						<Text data-testid="websocket-banner-text" className="notification-text">
 							{isConnected
 								? t("tracker_box__notification_service_status_1.text")
