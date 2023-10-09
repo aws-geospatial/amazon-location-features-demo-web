@@ -126,7 +126,6 @@ const useWebSocketService = (
 														: i18n.t("show_toast__exited.text")
 											  } :${busRouteId.split("_")[2]} Bus`,
 									type: ToastType.INFO,
-									containerId: "unauth-simulation-toast-container",
 									className: `${String(trackerEventType).toLowerCase()}-geofence`
 								});
 							} else {
