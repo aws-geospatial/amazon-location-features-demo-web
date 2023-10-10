@@ -15,10 +15,9 @@ import {
 	IconWalking
 } from "@demo/assets";
 import { GeofenceMarker } from "@demo/atomicui/molecules";
-import { useAwsGeofence, useAwsRoute, useAwsTracker } from "@demo/hooks";
+import { useAwsGeofence, useAwsRoute, useAwsTracker, useWebSocketBanner } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
-import useWebSocketBanner from "@demo/hooks/useWebsocketBanner";
 import { RouteDataType, TrackerType } from "@demo/types";
 import { EventTypeEnum, ResponsiveUIEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";

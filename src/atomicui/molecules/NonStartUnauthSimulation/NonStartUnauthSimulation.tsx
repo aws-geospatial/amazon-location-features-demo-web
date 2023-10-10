@@ -9,7 +9,7 @@ import { ResponsiveUIEnum } from "@demo/types/Enums";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
 
-interface IProps {
+export interface NonStartUnauthSimulationProps {
 	unauthSimulationCtaText: string;
 	handleClose: () => void;
 	handleCta: () => void;
@@ -18,7 +18,7 @@ interface IProps {
 	startRef: React.RefObject<HTMLDivElement>;
 }
 
-const NonStartUnauthSimulation: FC<IProps> = ({
+const NonStartUnauthSimulation: FC<NonStartUnauthSimulationProps> = ({
 	unauthSimulationCtaText,
 	handleClose,
 	from,

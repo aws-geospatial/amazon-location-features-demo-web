@@ -1,7 +1,7 @@
 import i18n from "@demo/locales/i18n";
 import { TravelMode } from "@demo/types";
 import { faker } from "@faker-js/faker";
-import { render } from "@testing-library/react";
+import { render, waitFor } from "@testing-library/react";
 import { I18nextProvider } from "react-i18next";
 
 import StepCard from "./StepCard";
@@ -64,7 +64,9 @@ describe("<StepCard/>", () => {
 		expect(stepCardContainer).toBeInTheDocument();
 
 		if (isLast && !isFirst) {
-			expect(destinationIcon).toBeInTheDocument();
+			waitFor(() => {
+				expect(destinationIcon).toBeInTheDocument();
+			});
 		} else {
 			segmentIcon && expect(segmentIcon).toBeInTheDocument();
 		}

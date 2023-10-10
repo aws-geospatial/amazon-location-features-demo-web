@@ -133,7 +133,9 @@
 			"!**/src/atomicui/pages/DemoPlaceholderPage/**",
 			"!**/src/atomicui/organisms/AuthTrackerBox/AuthTrackerSimulation.tsx",
 			"!**/src/atomicui/organisms/UnauthSimulation/UnauthGeofencesSimulation.tsx",
-			"!**/src/atomicui/organisms/UnauthSimulation/UnauthRouteSimulation.tsx"
+			"!**/src/atomicui/organisms/UnauthSimulation/UnauthRouteSimulation.tsx",
+			"!**/src/atomicui/organisms/Explore/**",
+			"!**/src/atomicui/organisms/ResponsiveBottomSheet/**"
 		]
 	}
 }

@@ -118,7 +118,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
-	const fastestRegion = localStorage.getItem("fastestRegion") || "";
+	const fastestRegion = localStorage.getItem(FASTEST_REGION) || "";
 	const { isDesktop, isMobile } = useDeviceMediaQuery();
 
 	const handleStackRegion = useCallback(

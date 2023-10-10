@@ -178,7 +178,14 @@ const DemoPage: React.FC = () => {
 		setSettingsOptions
 	} = usePersistedData();
 	const { isDesktop, isMobile, isTablet } = useDeviceMediaQuery();
-	const { setUI, ui, bottomSheetCurrentHeight = 0, setBottomSheetHeight, setBottomSheetMinHeight } = useBottomSheet();
+	const {
+		setUI,
+		ui,
+		bottomSheetCurrentHeight = 0,
+		setBottomSheetHeight,
+		setBottomSheetMinHeight,
+		setBottomSheetOpen
+	} = useBottomSheet();
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
@@ -633,6 +640,7 @@ const DemoPage: React.FC = () => {
 				switchToDefaultRegionStack();
 				resetAwsStore();
 				setIsCurrentLocationDisabled(false);
+				!isDesktop && setBottomSheetOpen();
 			}
 
 			setMapProvider(MapProviderEnum.OPEN_DATA);
@@ -656,7 +664,9 @@ const DemoPage: React.FC = () => {
 			handleCurrentLocationAndViewpoint,
 			switchToDefaultRegionStack,
 			resetAwsStore,
-			setIsCurrentLocationDisabled
+			setIsCurrentLocationDisabled,
+			isDesktop,
+			setBottomSheetOpen
 		]
 	);
 
@@ -668,19 +678,7 @@ const DemoPage: React.FC = () => {
 			if (!isUserAwsAccountConnected && !isGrabAvailableInRegion) {
 				switchToGrabMapRegionStack();
 				resetAwsStore();
-
-				if (!isDesktop) {
-					setTimeout(() => {
-						setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
-						setBottomSheetHeight(window.innerHeight * 0.4);
-						document.querySelector("[data-rsbs-scroll='true']")!.scrollTo(0, 680);
-					}, 1000);
-
-					setTimeout(() => {
-						setBottomSheetMinHeight(BottomSheetHeights.explore.min);
-						setBottomSheetHeight(window.innerHeight);
-					}, 1200);
-				}
+				!isDesktop && setBottomSheetOpen();
 			}
 
 			setMapProvider(MapProviderEnum.GRAB);
@@ -706,8 +704,7 @@ const DemoPage: React.FC = () => {
 			switchToGrabMapRegionStack,
 			resetAwsStore,
 			isDesktop,
-			setBottomSheetMinHeight,
-			setBottomSheetHeight
+			setBottomSheetOpen
 		]
 	);
 
@@ -732,6 +729,18 @@ const DemoPage: React.FC = () => {
 						switchToDefaultRegionStack();
 						resetAwsStore();
 						setIsCurrentLocationDisabled(false);
+
+						if (!isDesktop) {
+							setTimeout(() => {
+								setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+								setBottomSheetHeight(window.innerHeight * 0.4);
+							}, 1000);
+
+							setTimeout(() => {
+								setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+								setBottomSheetHeight(window.innerHeight);
+							}, 1200);
+						}
 					}
 
 					setMapProvider(mapProvider);
@@ -758,14 +767,17 @@ const DemoPage: React.FC = () => {
 			currentMapProvider,
 			resetAppState,
 			isUserAwsAccountConnected,
+			fastestRegion,
+			region,
 			setMapProvider,
 			setMapStyle,
 			handleCurrentLocationAndViewpoint,
-			fastestRegion,
-			region,
 			switchToDefaultRegionStack,
 			resetAwsStore,
-			setIsCurrentLocationDisabled
+			setIsCurrentLocationDisabled,
+			isDesktop,
+			setBottomSheetMinHeight,
+			setBottomSheetHeight
 		]
 	);
 
@@ -823,6 +835,18 @@ const DemoPage: React.FC = () => {
 						switchToDefaultRegionStack();
 						resetAwsStore();
 						setIsCurrentLocationDisabled(false);
+
+						if (!isDesktop) {
+							setTimeout(() => {
+								setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+								setBottomSheetHeight(window.innerHeight * 0.4);
+							}, 1000);
+
+							setTimeout(() => {
+								setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+								setBottomSheetHeight(window.innerHeight);
+							}, 1200);
+						}
 					}
 
 					setMapProvider(mapProviderFromStyle);
@@ -863,13 +887,16 @@ const DemoPage: React.FC = () => {
 			show.unauthTrackerBox,
 			resetAppState,
 			isUserAwsAccountConnected,
-			setMapProvider,
-			handleCurrentLocationAndViewpoint,
 			fastestRegion,
 			region,
+			setMapProvider,
+			handleCurrentLocationAndViewpoint,
 			switchToDefaultRegionStack,
 			resetAwsStore,
 			setIsCurrentLocationDisabled,
+			isDesktop,
+			setBottomSheetMinHeight,
+			setBottomSheetHeight,
 			doNotAskGrabDisclaimerModal,
 			handleGrabMapChange
 		]

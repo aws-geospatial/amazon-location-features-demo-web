@@ -359,6 +359,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 							<form onSubmit={onFormSubmit}>
 								<Flex gap="0" padding="0 0.61rem 0.61rem">
 									<InputField
+										dataTestId="search-box-input"
 										searchInputRef={searchInputRef}
 										value={value}
 										onChange={onChange}
@@ -468,6 +469,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 						>
 							<Flex gap={0} width="100%" height="100%" alignItems="center">
 								<Autocomplete
+									data-testid="search-box-input"
 									className={!value && !suggestions?.length ? "search-complete noEmpty" : "search-complete"}
 									ref={autocompleteRef}
 									inputMode="search"

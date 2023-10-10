@@ -231,6 +231,7 @@ const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 	const StartSimulation = useCallback(() => {
 		return (
 			<Flex
+				data-testid="start-simulation"
 				position="relative"
 				height={`${
 					!["en"].includes(currentLanguage) ? `${currentLanguage === "pt-BR" ? "51.5rem" : "50rem"}` : "46rem"
@@ -389,7 +390,7 @@ const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 
 	const BeforeStartSimulation = () => (
 		<>
-			<Flex justifyContent="flex-end" padding="0.77rem">
+			<Flex data-testid="before-start-simulation" justifyContent="flex-end" padding="0.77rem">
 				<Flex className="card-close">
 					<IconClose className="grey-icon" width={20} height={20} onClick={onCloseHandler} />
 				</Flex>
@@ -422,7 +423,7 @@ const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 		</Flex>
 	);
 
-	if (isNonStartUnauthSimulation)
+	if (isNonStartUnauthSimulation) {
 		return (
 			<NonStartUnauthSimulation
 				from={from}
@@ -440,196 +441,198 @@ const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 				startRef={nonStartRef}
 			/>
 		);
-
-	return (
-		<>
-			{isBeforeStartSimulation ? (
-				<Modal
-					open
-					onClose={() => {}}
-					hideCloseIcon
-					className={`unauthSimulation-card ${
-						isTablet ? "unauth-non-start-simulation-card-tablet" : "unauth-non-start-simulation-card-mobile"
-					}`}
-					content={<BeforeStartSimulation />}
-				/>
-			) : (
-				<Card
-					className={`unauthSimulation-card ${!isDesktop ? "unauthSimulation-card-mobile" : ""}`}
-					left={isDesktop ? "1.62rem" : "0"}
-					overflow={startSimulation ? "initial" : "hidden"}
-				>
-					{!startSimulation &&
-					ui &&
-					![ResponsiveUIEnum.unauth_geofence, ResponsiveUIEnum.unauth_tracker].includes(ui) ? (
-						<BeforeStartSimulation />
-					) : (
-						<Flex className="simulation-container" direction="column" gap="0">
-							<Flex
-								className={`simulation-header ${!isDesktop ? "simulation-header-mobile" : ""}`}
-								justifyContent="space-between"
-								direction={isDesktop ? "row" : "row-reverse"}
-							>
-								{isDesktop && (
-									<>
-										<Flex alignItems="center" padding="0.6rem 0 0.6rem 1.2rem">
-											<IconBackArrow
-												data-testid="unauth-simulation-back-arrow"
-												className="back-icon"
-												cursor="pointer"
-												width={20}
-												height={20}
-												onClick={onBackHandler}
-											/>
-											<Text className="medium" fontSize="1.08rem" textAlign="center" marginLeft="0.5rem">
-												{t("start_unauth_simulation__t&g_simulation.text")}
-											</Text>
-										</Flex>
-										<Flex
-											padding="0.6rem"
-											className={isNotifications ? "bell-icon-container bell-active" : "bell-icon-container"}
-											onClick={() => setIsNotifications(n => !n)}
-											position="relative"
-										>
-											<IconNotificationBell className="bell-icon" width={20} height={20} />
-											{!isNotifications && !!unauthNotifications.length && <span className="notification-bubble" />}
-										</Flex>
-									</>
-								)}
-							</Flex>
-							<Flex gap="0" direction="column" width="100%" ref={cardRef}>
-								{Connection}
-								{!isNotifications ? (
-									<Flex
-										padding="1.3rem"
-										direction="column"
-										gap="0"
-										maxHeight={isDesktop ? (isHidden ? "82vh" : "79vh") : "fit-content"}
-										overflow={
-											!trackingHistory[busSelectedValue.value].length ||
-											(trackingHistoryRef?.current?.offsetHeight || 0) < 560
-												? "visible"
-												: "hidden"
-										}
-										ref={trackingHistoryRef}
-									>
-										<Text className="bold" fontSize="0.92rem">
-											{t("start_unauth_simulation__routes_notifications.text")}
-										</Text>
-										<Flex className="routes-notification-container" marginTop="0.5rem">
-											<DropdownEl
-												defaultOption={selectedRoutes}
-												options={busRoutesDropdown}
-												onSelect={value => value && updateSelectedRoutes(value)}
-												label={
-													!!selectedRoutes.length
-														? `${selectedRoutes.length} ${t("start_unauth_simulation__routes_active.text")}`
-														: (t("start_unauth_simulation__select_route.text") as string)
-												}
-												arrowIconColor={"var(--tertiary-color)"}
-												showSelected
-												bordered
-												isCheckbox
-											/>
-											<Button
-												data-testid={isPlaying ? "pause-button" : "simulate-button"}
-												variation="primary"
-												onClick={() => setIsPlaying(!isPlaying)}
+	} else {
+		return (
+			<>
+				{isBeforeStartSimulation ? (
+					<Modal
+						open
+						onClose={() => {}}
+						hideCloseIcon
+						className={`unauthSimulation-card ${
+							isTablet ? "unauth-non-start-simulation-card-tablet" : "unauth-non-start-simulation-card-mobile"
+						}`}
+						content={<BeforeStartSimulation />}
+					/>
+				) : (
+					<Card
+						data-testid="unauthSimulation-card"
+						className={`unauthSimulation-card ${!isDesktop ? "unauthSimulation-card-mobile" : ""}`}
+						left={isDesktop ? "1.62rem" : "0"}
+						overflow={startSimulation ? "initial" : "hidden"}
+					>
+						{!startSimulation &&
+						ui &&
+						![ResponsiveUIEnum.unauth_geofence, ResponsiveUIEnum.unauth_tracker].includes(ui) ? (
+							<BeforeStartSimulation />
+						) : (
+							<Flex data-testid="simulation-container" className="simulation-container" direction="column" gap="0">
+								<Flex
+									className={`simulation-header ${!isDesktop ? "simulation-header-mobile" : ""}`}
+									justifyContent="space-between"
+									direction={isDesktop ? "row" : "row-reverse"}
+								>
+									{isDesktop && (
+										<>
+											<Flex alignItems="center" padding="0.6rem 0 0.6rem 1.2rem">
+												<IconBackArrow
+													data-testid="unauth-simulation-back-arrow"
+													className="back-icon"
+													cursor="pointer"
+													width={20}
+													height={20}
+													onClick={onBackHandler}
+												/>
+												<Text className="medium" fontSize="1.08rem" textAlign="center" marginLeft="0.5rem">
+													{t("start_unauth_simulation__t&g_simulation.text")}
+												</Text>
+											</Flex>
+											<Flex
+												padding="0.6rem"
+												className={isNotifications ? "bell-icon-container bell-active" : "bell-icon-container"}
+												onClick={() => setIsNotifications(n => !n)}
+												position="relative"
 											>
-												{isPlaying ? t("tracker_box__pause.text") : t("tracker_box__simulate.text")}
-											</Button>
-										</Flex>
-										<Flex className="bus-container">
-											<Text className="bold" fontSize="0.92rem">
-												{t("start_unauth_simulation__tracking_history.text")}
-											</Text>
-											<DropdownEl
-												defaultOption={busSelectedValue}
-												options={busRoutesDropdown}
-												onSelect={value => value && setBusSelectedValue(value)}
-												label={
-													!!busSelectedValue
-														? `${busSelectedValue?.label}`
-														: (t("start_unauth_simulation__select_bus.text") as string)
-												}
-												showSelected
-												isRadioBox
-											/>
-										</Flex>
-										{!trackingHistory[busSelectedValue.value].length && (
-											<Flex className="no-tracking-history">
-												{t("start_unauth_simulation__no_tracking_history.text")}
+												<IconNotificationBell className="bell-icon" width={20} height={20} />
+												{!isNotifications && !!unauthNotifications.length && <span className="notification-bubble" />}
 											</Flex>
-										)}
+										</>
+									)}
+								</Flex>
+								<Flex gap="0" direction="column" width="100%" ref={cardRef}>
+									{Connection}
+									{!isNotifications ? (
 										<Flex
+											padding="1.3rem"
+											direction="column"
 											gap="0"
-											className="tracking-history-container"
-											maxHeight={!isDesktop ? bottomSheetCurrentHeight - 210 : "100%"}
+											maxHeight={isDesktop ? (isHidden ? "82vh" : "79vh") : "fit-content"}
+											overflow={
+												!trackingHistory[busSelectedValue.value].length ||
+												(trackingHistoryRef?.current?.offsetHeight || 0) < 560
+													? "visible"
+													: "hidden"
+											}
+											ref={trackingHistoryRef}
 										>
-											<Flex direction="column" gap="0" paddingLeft="0.2rem" paddingBottom="0.4rem">
-												{trackingHistory[busSelectedValue.value].map(
-													({ title, description, subDescription, type }, idx) => (
-														<Flex key={idx}>
-															<Flex
-																className="tracking-icon-container"
-																gap="0"
-																position="relative"
-																top="1.8rem"
-																left={type === TrackingHistoryTypeEnum.BUS_STOP ? "-0.2rem" : "0.2rem"}
-																minHeight={type === TrackingHistoryTypeEnum.BUS_STOP ? "5rem" : "4.3rem"}
-															>
-																{type === TrackingHistoryTypeEnum.BUS_STOP ? (
-																	<IconGeofenceMarkerDisabled className="geofence-icon" width={23} height={23} />
-																) : (
-																	<IconSegment width={14} height={14} />
-																)}
-																{idx !== trackingHistory[busSelectedValue.value].length - 1 && (
-																	<Flex
-																		direction="column"
-																		gap={type === TrackingHistoryTypeEnum.BUS_STOP ? "0.5rem" : "0.4rem"}
-																		margin="0.75rem 0"
-																	>
-																		<Flex className="bubble-icon" />
-																		<Flex className="bubble-icon" />
-																		<Flex className="bubble-icon" />
-																	</Flex>
-																)}
+											<Text className="bold" fontSize="0.92rem">
+												{t("start_unauth_simulation__routes_notifications.text")}
+											</Text>
+											<Flex className="routes-notification-container" marginTop="0.5rem">
+												<DropdownEl
+													defaultOption={selectedRoutes}
+													options={busRoutesDropdown}
+													onSelect={value => value && updateSelectedRoutes(value)}
+													label={
+														!!selectedRoutes.length
+															? `${selectedRoutes.length} ${t("start_unauth_simulation__routes_active.text")}`
+															: (t("start_unauth_simulation__select_route.text") as string)
+													}
+													arrowIconColor={"var(--tertiary-color)"}
+													showSelected
+													bordered
+													isCheckbox
+												/>
+												<Button
+													data-testid={isPlaying ? "pause-button" : "simulate-button"}
+													variation="primary"
+													onClick={() => setIsPlaying(!isPlaying)}
+												>
+													{isPlaying ? t("tracker_box__pause.text") : t("tracker_box__simulate.text")}
+												</Button>
+											</Flex>
+											<Flex className="bus-container">
+												<Text className="bold" fontSize="0.92rem">
+													{t("start_unauth_simulation__tracking_history.text")}
+												</Text>
+												<DropdownEl
+													defaultOption={busSelectedValue}
+													options={busRoutesDropdown}
+													onSelect={value => value && setBusSelectedValue(value)}
+													label={
+														!!busSelectedValue
+															? `${busSelectedValue?.label}`
+															: (t("start_unauth_simulation__select_bus.text") as string)
+													}
+													showSelected
+													isRadioBox
+												/>
+											</Flex>
+											{!trackingHistory[busSelectedValue.value].length && (
+												<Flex className="no-tracking-history">
+													{t("start_unauth_simulation__no_tracking_history.text")}
+												</Flex>
+											)}
+											<Flex
+												gap="0"
+												className="tracking-history-container"
+												maxHeight={!isDesktop ? bottomSheetCurrentHeight - 210 : "100%"}
+											>
+												<Flex direction="column" gap="0" paddingLeft="0.2rem" paddingBottom="0.4rem">
+													{trackingHistory[busSelectedValue.value].map(
+														({ title, description, subDescription, type }, idx) => (
+															<Flex key={idx}>
+																<Flex
+																	className="tracking-icon-container"
+																	gap="0"
+																	position="relative"
+																	top="1.8rem"
+																	left={type === TrackingHistoryTypeEnum.BUS_STOP ? "-0.2rem" : "0.2rem"}
+																	minHeight={type === TrackingHistoryTypeEnum.BUS_STOP ? "5rem" : "4.3rem"}
+																>
+																	{type === TrackingHistoryTypeEnum.BUS_STOP ? (
+																		<IconGeofenceMarkerDisabled className="geofence-icon" width={23} height={23} />
+																	) : (
+																		<IconSegment width={14} height={14} />
+																	)}
+																	{idx !== trackingHistory[busSelectedValue.value].length - 1 && (
+																		<Flex
+																			direction="column"
+																			gap={type === TrackingHistoryTypeEnum.BUS_STOP ? "0.5rem" : "0.4rem"}
+																			margin="0.75rem 0"
+																		>
+																			<Flex className="bubble-icon" />
+																			<Flex className="bubble-icon" />
+																			<Flex className="bubble-icon" />
+																		</Flex>
+																	)}
+																</Flex>
+																<IconicInfoCard
+																	title={title}
+																	description={description || ""}
+																	subDescription={format(parseISO(subDescription), "hh:mm aa")}
+																	textContainerMarginLeft={
+																		type === TrackingHistoryTypeEnum.BUS_STOP ? "0.7rem" : "1.33rem"
+																	}
+																	cardMargin={"0"}
+																	cardAlignItems="center"
+																/>
 															</Flex>
-															<IconicInfoCard
-																title={title}
-																description={description || ""}
-																subDescription={format(parseISO(subDescription), "hh:mm aa")}
-																textContainerMarginLeft={
-																	type === TrackingHistoryTypeEnum.BUS_STOP ? "0.7rem" : "1.33rem"
-																}
-																cardMargin={"0"}
-																cardAlignItems="center"
-															/>
-														</Flex>
-													)
-												)}
+														)
+													)}
+												</Flex>
 											</Flex>
 										</Flex>
-									</Flex>
-								) : (
-									<NotificationsBox
-										maxHeight={isHidden ? 76.4 : 73.4}
-										selectedRoutesIds={selectedRoutesIds}
-										unauthNotifications={unauthNotifications}
-										setUnauthNotifications={setUnauthNotifications}
-									/>
-								)}
+									) : (
+										<NotificationsBox
+											maxHeight={isHidden ? 76.4 : 73.4}
+											selectedRoutesIds={selectedRoutesIds}
+											unauthNotifications={unauthNotifications}
+											setUnauthNotifications={setUnauthNotifications}
+										/>
+									)}
+								</Flex>
+								{renderGeofences}
+								{renderRoutes}
 							</Flex>
-							{renderGeofences}
-							{renderRoutes}
-						</Flex>
-					)}
-				</Card>
-			)}
+						)}
+					</Card>
+				)}
 
-			{isDesktop && <ExitSimulation />}
-		</>
-	);
+				{isDesktop && <ExitSimulation />}
+			</>
+		);
+	}
 };
 
 export default UnauthSimulation;
