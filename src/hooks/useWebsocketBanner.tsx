@@ -23,7 +23,7 @@ const useWebSocketBanner = (
 		let flushTimeoutId: NodeJS.Timeout;
 		if (isConnected) {
 			flushTimeoutId = setTimeout(() => {
-				// setHideConnectionAlert(true);
+				setHideConnectionAlert(true);
 			}, 3000);
 		} else {
 			setHideConnectionAlert(false);
