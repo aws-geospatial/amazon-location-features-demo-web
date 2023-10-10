@@ -331,6 +331,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 		} else {
 			setUI(ResponsiveUIEnum.explore);
 		}
+		document.querySelector("[data-rsbs-scroll='true']")!.scrollTop = 0;
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [
 		ui,
@@ -358,8 +359,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 									fill="var(--grey-color)"
 									onClick={() => {
 										setUI(ResponsiveUIEnum.explore);
-										setBottomSheetMinHeight(BottomSheetHeights.explore.min);
-										setBottomSheetHeight(window.innerHeight);
+										document.querySelector("[data-rsbs-scroll='true']")!.scrollTop = 0;
 									}}
 								/>
 							</Flex>
@@ -417,17 +417,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 					return <Flex width="100%">{SearchBoxEl()}</Flex>;
 			}
 		},
-		[
-			SearchBoxEl,
-			handleUIAction,
-			isNotifications,
-			setBottomSheetHeight,
-			setBottomSheetMinHeight,
-			setIsNotifications,
-			setUI,
-			t,
-			unauthNotifications.length
-		]
+		[SearchBoxEl, handleUIAction, isNotifications, setIsNotifications, setUI, t, unauthNotifications.length]
 	);
 
 	const bottomSheetBody = useCallback(
@@ -574,7 +564,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 						ResponsiveUIEnum.map_styles,
 						ResponsiveUIEnum.explore
 					].includes(ui)
-						? bottomSheetHeight * 0.4
+						? bottomSheetHeight * 0.4 - 10
 						: footerHeight(maxHeight),
 					bottomSheetHeight - 10,
 					bottomSheetMinHeight

@@ -271,7 +271,7 @@ const Explore: React.FC<IProps> = ({
 				}
 
 				setTimeout(() => {
-					setBottomSheetMinHeight(BottomSheetHeights.map_styles.min);
+					setBottomSheetMinHeight(BottomSheetHeights.explore.min);
 					setBottomSheetHeight(window.innerHeight);
 				}, 500);
 			}

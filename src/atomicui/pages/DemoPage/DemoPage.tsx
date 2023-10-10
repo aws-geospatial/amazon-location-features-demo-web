@@ -178,12 +178,13 @@ const DemoPage: React.FC = () => {
 		setSettingsOptions
 	} = usePersistedData();
 	const { isDesktop, isMobile, isTablet } = useDeviceMediaQuery();
-	const { setUI, ui, bottomSheetCurrentHeight, setBottomSheetHeight, setBottomSheetMinHeight } = useBottomSheet();
+	const { setUI, ui, bottomSheetCurrentHeight = 0, setBottomSheetHeight, setBottomSheetMinHeight } = useBottomSheet();
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
 	const shouldClearCredentials = localStorage.getItem(SHOULD_CLEAR_CREDENTIALS) === "true";
-	const geoLocateTopValue = `-${(bottomSheetCurrentHeight || 0) / peggedRemValue + extraGeoLocateTop}rem`;
+	const geoLocateTopValue = `-${bottomSheetCurrentHeight / peggedRemValue + extraGeoLocateTop}rem`;
+	const fastestRegion = localStorage.getItem(FASTEST_REGION);
 
 	const isGrabAvailableInRegion = useMemo(() => !!region && GRAB_SUPPORTED_AWS_REGIONS.includes(region), [region]);
 
@@ -628,7 +629,7 @@ const DemoPage: React.FC = () => {
 
 			setShow(s => ({ ...s, openDataDisclaimerModal: false, gridLoader: true }));
 
-			if (currentMapProvider === MapProviderEnum.GRAB && !isUserAwsAccountConnected) {
+			if (currentMapProvider === MapProviderEnum.GRAB && !isUserAwsAccountConnected && fastestRegion !== region) {
 				switchToDefaultRegionStack();
 				resetAwsStore();
 				setIsCurrentLocationDisabled(false);
@@ -642,18 +643,20 @@ const DemoPage: React.FC = () => {
 			handleCurrentLocationAndViewpoint(false);
 		},
 		[
-			currentMapProvider,
 			doNotAskOpenDataDisclaimerModal,
-			isUserAwsAccountConnected,
-			resetAwsStore,
 			setDoNotAskOpenDataDisclaimerModal,
-			setIsCurrentLocationDisabled,
+			doNotAskOpenDataDisclaimer,
+			currentMapProvider,
+			isUserAwsAccountConnected,
+			fastestRegion,
+			region,
 			setMapProvider,
 			setMapStyle,
 			show.mapStyle,
+			handleCurrentLocationAndViewpoint,
 			switchToDefaultRegionStack,
-			doNotAskOpenDataDisclaimer,
-			handleCurrentLocationAndViewpoint
+			resetAwsStore,
+			setIsCurrentLocationDisabled
 		]
 	);
 
@@ -665,6 +668,19 @@ const DemoPage: React.FC = () => {
 			if (!isUserAwsAccountConnected && !isGrabAvailableInRegion) {
 				switchToGrabMapRegionStack();
 				resetAwsStore();
+
+				if (!isDesktop) {
+					setTimeout(() => {
+						setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+						setBottomSheetHeight(window.innerHeight * 0.4);
+						document.querySelector("[data-rsbs-scroll='true']")!.scrollTo(0, 680);
+					}, 1000);
+
+					setTimeout(() => {
+						setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+						setBottomSheetHeight(window.innerHeight);
+					}, 1200);
+				}
 			}
 
 			setMapProvider(MapProviderEnum.GRAB);
@@ -677,18 +693,21 @@ const DemoPage: React.FC = () => {
 			handleCurrentLocationAndViewpoint();
 		},
 		[
-			isGrabAvailableInRegion,
 			doNotAskGrabDisclaimerModal,
 			setDoNotAskGrabDisclaimerModal,
 			doNotAskGrabDisclaimer,
 			isUserAwsAccountConnected,
+			isGrabAvailableInRegion,
 			setMapProvider,
 			setMapStyle,
 			show.mapStyle,
 			resetAppState,
 			handleCurrentLocationAndViewpoint,
 			switchToGrabMapRegionStack,
-			resetAwsStore
+			resetAwsStore,
+			isDesktop,
+			setBottomSheetMinHeight,
+			setBottomSheetHeight
 		]
 	);
 
@@ -709,7 +728,7 @@ const DemoPage: React.FC = () => {
 			} else {
 				if (currentMapProvider === MapProviderEnum.GRAB) {
 					/* Switching from Grab map provider to different map provider and style */
-					if (!isUserAwsAccountConnected) {
+					if (!isUserAwsAccountConnected && fastestRegion !== region) {
 						switchToDefaultRegionStack();
 						resetAwsStore();
 						setIsCurrentLocationDisabled(false);
@@ -742,6 +761,8 @@ const DemoPage: React.FC = () => {
 			setMapProvider,
 			setMapStyle,
 			handleCurrentLocationAndViewpoint,
+			fastestRegion,
+			region,
 			switchToDefaultRegionStack,
 			resetAwsStore,
 			setIsCurrentLocationDisabled
@@ -786,7 +807,7 @@ const DemoPage: React.FC = () => {
 				/* No map provider switch required */
 				setMapStyle(mapStyle);
 			} else if (mapProviderFromStyle === MapProviderEnum.OPEN_DATA) {
-				/* Switching to OpenData map provider to different map provider and style */
+				/* Switching to OpenData map provider from different map provider and style */
 				if (doNotAskOpenDataDisclaimerModal) {
 					setTimeout(
 						() => setShow(s => ({ ...s, openDataDisclaimerModal: true, mapStyle: mapStyle as OpenDataMapEnum })),
@@ -798,14 +819,10 @@ const DemoPage: React.FC = () => {
 			} else {
 				if (currentMapProvider === MapProviderEnum.GRAB) {
 					/* Switching from Grab map provider to different map provider and style */
-					if (!isUserAwsAccountConnected) {
-						const fastestRegion = localStorage.getItem(FASTEST_REGION);
-
-						if (fastestRegion !== region) {
-							switchToDefaultRegionStack();
-							resetAwsStore();
-							setIsCurrentLocationDisabled(false);
-						}
+					if (!isUserAwsAccountConnected && fastestRegion !== region) {
+						switchToDefaultRegionStack();
+						resetAwsStore();
+						setIsCurrentLocationDisabled(false);
 					}
 
 					setMapProvider(mapProviderFromStyle);
@@ -838,7 +855,6 @@ const DemoPage: React.FC = () => {
 			}
 		},
 		[
-			region,
 			currentMapProvider,
 			setMapStyle,
 			doNotAskOpenDataDisclaimerModal,
@@ -849,6 +865,8 @@ const DemoPage: React.FC = () => {
 			isUserAwsAccountConnected,
 			setMapProvider,
 			handleCurrentLocationAndViewpoint,
+			fastestRegion,
+			region,
 			switchToDefaultRegionStack,
 			resetAwsStore,
 			setIsCurrentLocationDisabled,
