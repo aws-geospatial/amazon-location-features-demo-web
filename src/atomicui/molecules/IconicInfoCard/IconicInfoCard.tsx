@@ -3,7 +3,7 @@ import React, { ReactElement } from "react";
 import { Flex, Text } from "@aws-amplify/ui-react";
 import "./styles.scss";
 
-interface IconicInfoCardProps {
+export interface IconicInfoCardProps {
 	IconComponent?: ReactElement;
 	title: string;
 	description: string;
