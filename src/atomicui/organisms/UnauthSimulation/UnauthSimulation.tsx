@@ -403,7 +403,8 @@ const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 		<Flex className="confirmation-modal-container">
 			<ConfirmationModal
 				open={confirmCloseSimulation}
-				onClose={onCloseHandler}
+				onClose={() => setConfirmCloseSimulation(false)}
+				onCancel={onCloseHandler}
 				heading={t("start_unauth_simulation__exit_simulation.text") as string}
 				description={
 					<Text

@@ -21,6 +21,7 @@ export interface ConfirmationModalProps {
 	handleLearnMore?: () => void;
 	hideCancelButton?: boolean;
 	cancelationText?: string;
+	onCancel?: () => void;
 	showConfirmationCheckbox?: boolean;
 	confirmationCheckboxLabel?: string;
 	confirmationCheckboxValue?: string;
@@ -40,6 +41,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 	handleLearnMore = () => {},
 	hideCancelButton = false,
 	cancelationText,
+	onCancel,
 	showConfirmationCheckbox,
 	confirmationCheckboxLabel,
 	confirmationCheckboxValue,
@@ -114,7 +116,11 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 						</Flex>
 					)}
 					{!hideCancelButton && (
-						<Flex data-testid="confirmation-cancel-button" className="confirmation-cancel-button" onClick={onClose}>
+						<Flex
+							data-testid="confirmation-cancel-button"
+							className="confirmation-cancel-button"
+							onClick={onCancel ? onCancel : onClose}
+						>
 							<Text className="bold" fontSize="1.08rem" textAlign="center">
 								{cancelationText || t("confirmation_modal__cancel.text")}
 							</Text>
