@@ -394,8 +394,8 @@ const DemoPage: React.FC = () => {
 				  }
 				: {
 						padding: {
-							top: 200,
-							bottom: 250,
+							top: 50,
+							bottom: 400,
 							left: 60,
 							right: 70
 						},
