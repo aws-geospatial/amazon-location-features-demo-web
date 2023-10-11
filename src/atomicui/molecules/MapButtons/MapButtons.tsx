@@ -676,7 +676,11 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	else if (!isDesktop) return null;
 	return (
 		<>
-			<Flex data-testid="map-buttons-container" className="map-styles-geofence-and-tracker-container">
+			<Flex
+				data-testid="map-buttons-container"
+				className="map-styles-geofence-and-tracker-container"
+				height={!isUnauthGeofenceBoxOpen && !isUnauthTrackerBoxOpen ? "7.38rem" : "2.4rem"}
+			>
 				<Flex
 					data-testid="map-styles-button"
 					ref={stylesCardTogglerRef}
@@ -689,15 +693,13 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 					<IconMapSolid />
 				</Flex>
 				{!openStylesCard && <Tooltip id="map-styles-button" />}
-				{isDesktop && (
+				{isDesktop && !isUnauthGeofenceBoxOpen && !isUnauthTrackerBoxOpen && (
 					<>
 						<Divider className="button-divider" />
 						<Flex
 							data-testid="geofence-control-button"
-							className={isAddingGeofence || isUnauthGeofenceBoxOpen ? "geofence-button active" : "geofence-button"}
-							onClick={() => {
-								!isUnauthGeofenceBoxOpen && !isUnauthTrackerBoxOpen && onClickGeofenceTracker(MenuItemEnum.GEOFENCE);
-							}}
+							className={isAddingGeofence ? "geofence-button active" : "geofence-button"}
+							onClick={() => onClickGeofenceTracker(MenuItemEnum.GEOFENCE)}
 							data-tooltip-id="geofence-control-button"
 							data-tooltip-place="left"
 							data-tooltip-content={t("geofence.text")}
@@ -709,13 +711,9 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 						<Flex
 							data-testid="tracker-control-button"
 							className={
-								isAuthTrackerDisclaimerModalOpen || isAuthTrackerBoxOpen || isUnauthTrackerBoxOpen
-									? "tracker-button active"
-									: "tracker-button"
+								isAuthTrackerDisclaimerModalOpen || isAuthTrackerBoxOpen ? "tracker-button active" : "tracker-button"
 							}
-							onClick={() => {
-								!isUnauthGeofenceBoxOpen && !isUnauthTrackerBoxOpen && onClickGeofenceTracker(MenuItemEnum.TRACKER);
-							}}
+							onClick={() => onClickGeofenceTracker(MenuItemEnum.TRACKER)}
 							data-tooltip-id="tracker-control-button"
 							data-tooltip-place="left"
 							data-tooltip-content={t("tracker.text")}

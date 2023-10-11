@@ -22,16 +22,11 @@
 	z-index: 4;
 	flex-direction: column;
 	width: 2.46rem;
-	height: 7.38rem;
 	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.202633);
 	border-radius: 0.62rem;
 	background-color: var(--white-color);
 	justify-content: space-evenly;
 	align-items: center;
-
-	@media screen and (max-width: 1023px) {
-		height: 2.4rem;
-	}
 
 	.map-styles-button,
 	.geofence-button,
