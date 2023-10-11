@@ -32,6 +32,7 @@ import { isAndroid, isIOS } from "react-device-detect";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import "./styles.scss";
+import { RefHandles } from "react-spring-bottom-sheet/dist/types";
 
 interface IProps {
 	updateUIInfo: (ui: ResponsiveUIEnum) => void;
@@ -46,6 +47,7 @@ interface IProps {
 	onShowUnauthGeofenceBox: () => void;
 	onShowUnauthTrackerBox: () => void;
 	onshowUnauthSimulationDisclaimerModal: () => void;
+	bottomSheetRef?: React.MutableRefObject<RefHandles | null>;
 }
 
 const {
@@ -64,7 +66,8 @@ const Explore: React.FC<IProps> = ({
 	onShowAboutModal,
 	onShowUnauthGeofenceBox,
 	onShowUnauthTrackerBox,
-	onshowUnauthSimulationDisclaimerModal
+	onshowUnauthSimulationDisclaimerModal,
+	bottomSheetRef
 }) => {
 	const { t, i18n } = useTranslation();
 	const currentLanguage = i18n.language;
@@ -259,6 +262,7 @@ const Explore: React.FC<IProps> = ({
 				if ((isAndroid || isIOS) && !isDesktopBrowser) {
 					setBottomSheetMinHeight(window.innerHeight - 10);
 					setBottomSheetHeight(window.innerHeight);
+					bottomSheetRef?.current?.snapTo(1000);
 					setTimeout(() => {
 						setBottomSheetMinHeight(BottomSheetHeights.explore.min);
 					}, 400);

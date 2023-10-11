@@ -18,6 +18,8 @@ import { MapRef } from "react-map-gl";
 import { useLocation } from "react-router-dom";
 import { BottomSheet } from "react-spring-bottom-sheet";
 
+import { RefHandles } from "react-spring-bottom-sheet/dist/types";
+
 import { Explore } from "../Explore";
 import { UnauthSimulation } from "../UnauthSimulation";
 
@@ -28,9 +30,9 @@ const { DEMO } = appConfig.default.ROUTES;
 
 interface IProps {
 	mapRef: MapRef | null;
-	SearchBoxEl: () => JSX.Element;
+	SearchBoxEl: (ref?: React.MutableRefObject<RefHandles | null>) => JSX.Element;
 	MapButtons: JSX.Element;
-	RouteBox: JSX.Element;
+	RouteBox: (ref?: React.MutableRefObject<RefHandles | null>) => JSX.Element;
 	onCloseSidebar: () => void;
 	onOpenConnectAwsAccountModal: () => void;
 	onOpenSignInModal: () => void;
@@ -129,6 +131,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	const { mapStyle } = useAmplifyMap();
 	const [arrowDirection, setArrowDirection] = useState("no-dragging");
 	const prevBottomSheetHeightRef = useRef(bottomSheetCurrentHeight);
+	const bottomSheetRef = useRef<RefHandles | null>(null);
 
 	const resetToExplore = useCallback(() => {
 		setUI(ResponsiveUIEnum.explore);
@@ -380,7 +383,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				case ResponsiveUIEnum.explore:
 				case ResponsiveUIEnum.before_start_unauthorized_geofence:
 				case ResponsiveUIEnum.before_start_unauthorized_tracker:
-					return <Flex width="100%">{SearchBoxEl()}</Flex>;
+					return <Flex width="100%">{SearchBoxEl(bottomSheetRef)}</Flex>;
 				case ResponsiveUIEnum.non_start_unauthorized_tracker:
 				case ResponsiveUIEnum.non_start_unauthorized_geofence:
 				case ResponsiveUIEnum.auth_tracker:
@@ -430,7 +433,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 					return MapButtons;
 				case ResponsiveUIEnum.routes:
 				case ResponsiveUIEnum.direction_to_routes:
-					return RouteBox;
+					return RouteBox(bottomSheetRef);
 				case ResponsiveUIEnum.unauth_tracker:
 				case ResponsiveUIEnum.unauth_geofence:
 				case ResponsiveUIEnum.exit_unauthorized_tracker:
@@ -470,6 +473,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 										onShowUnauthGeofenceBox={onShowUnauthGeofenceBox}
 										onShowUnauthTrackerBox={onShowUnauthTrackerBox}
 										onshowUnauthSimulationDisclaimerModal={onshowUnauthSimulationDisclaimerModal}
+										bottomSheetRef={bottomSheetRef}
 									/>
 								)}
 						</>
@@ -557,6 +561,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 
 			<BottomSheet
 				open
+				ref={bottomSheetRef}
 				blocking={false}
 				snapPoints={({ maxHeight }) => [
 					bottomSheetMinHeight,

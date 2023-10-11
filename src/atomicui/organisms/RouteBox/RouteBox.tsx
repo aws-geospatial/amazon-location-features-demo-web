@@ -43,6 +43,7 @@ import { CalculateRouteRequest, LineString, Place, Position } from "aws-sdk/clie
 import { isAndroid, isIOS } from "react-device-detect";
 import { useTranslation } from "react-i18next";
 import { Layer, LayerProps, LngLat, MapRef, Marker as ReactMapGlMarker, Source } from "react-map-gl";
+import { RefHandles } from "react-spring-bottom-sheet/dist/types";
 import { Tooltip } from "react-tooltip";
 import "./styles.scss";
 
@@ -61,6 +62,7 @@ interface RouteBoxProps {
 	isDirection?: boolean;
 	expandRouteOptionsMobile?: boolean;
 	setExpandRouteOptionsMobile?: (b: boolean) => void;
+	bottomSheetRef?: React.MutableRefObject<RefHandles | null>;
 }
 
 const RouteBox: React.FC<RouteBoxProps> = ({
@@ -68,7 +70,8 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 	setShowRouteBox,
 	isSideMenuExpanded,
 	expandRouteOptionsMobile,
-	setExpandRouteOptionsMobile
+	setExpandRouteOptionsMobile,
+	bottomSheetRef
 }) => {
 	const [travelMode, setTravelMode] = useState<TravelMode>(TravelMode.CAR);
 	const [travelModes, setTravelModes] = useState<TravelMode[]>([TravelMode.CAR]);
@@ -451,33 +454,39 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 		};
 	}, [handleClick]);
 
-	const onFocus = (type: InputType) => {
-		if (type === InputType.FROM) {
-			setInputFocused({ from: true, to: false });
-			suggestions.to?.length && setSuggestions({ ...suggestions, to: undefined });
-		} else {
-			setInputFocused({ from: false, to: true });
-			suggestions.from?.length && setSuggestions({ ...suggestions, from: undefined });
-		}
-
-		if ((isAndroid || isIOS) && !isDesktopBrowser) {
-			setBottomSheetMinHeight(window.innerHeight - 10);
-			setBottomSheetHeight(window.innerHeight);
-			setTimeout(() => {
-				setBottomSheetMinHeight(BottomSheetHeights.explore.min);
-			}, 400);
-		} else {
-			if (bottomSheetCurrentHeight < window.innerHeight * 0.4) {
-				setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
-				setBottomSheetHeight(window.innerHeight * 0.4);
-
-				setTimeout(() => {
-					setBottomSheetMinHeight(BottomSheetHeights.explore.min);
-					setBottomSheetHeight(window.innerHeight);
-				}, 200);
+	const onFocus = useCallback(
+		(type: InputType) => {
+			if (type === InputType.FROM) {
+				setInputFocused({ from: true, to: false });
+				suggestions.to?.length && setSuggestions({ ...suggestions, to: undefined });
+			} else {
+				setInputFocused({ from: false, to: true });
+				suggestions.from?.length && setSuggestions({ ...suggestions, from: undefined });
 			}
-		}
-	};
+
+			if ((isAndroid || isIOS) && !isDesktopBrowser) {
+				bottomSheetRef?.current?.snapTo(window.innerHeight);
+			} else {
+				if (bottomSheetCurrentHeight < window.innerHeight * 0.4) {
+					setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+					setBottomSheetHeight(window.innerHeight * 0.4);
+
+					setTimeout(() => {
+						setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+						setBottomSheetHeight(window.innerHeight);
+					}, 200);
+				}
+			}
+		},
+		[
+			bottomSheetCurrentHeight,
+			bottomSheetRef,
+			isDesktopBrowser,
+			setBottomSheetHeight,
+			setBottomSheetMinHeight,
+			suggestions
+		]
+	);
 
 	const onChangeValue = (e: ChangeEvent<HTMLInputElement>, type: InputType) => {
 		if (type === InputType.FROM) {
@@ -496,6 +505,21 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 		setRoutePositions(placeData.from?.Geometry.Point, InputType.TO);
 		setRouteData(undefined);
 		setRouteDataForMobile(undefined);
+	};
+
+	const handleBlur = () => {
+		if ((isAndroid || isIOS) && !isDesktopBrowser && !isDesktop) {
+			setTimeout(() => {
+				if (
+					!fromInputRef.current?.contains(document.activeElement) &&
+					!toInputRef.current?.contains(document.activeElement) &&
+					((value.from.length && value.to.length) || (!value.from.length && !value.to.length))
+				) {
+					setBottomSheetMinHeight(window.innerHeight * 0.42 - 10);
+					setBottomSheetHeight(window.innerHeight * 0.42);
+				}
+			}, 200);
+		}
 	};
 
 	const onClickRouteOptions = useCallback(() => setExpandRouteOptions(!expandRouteOptions), [expandRouteOptions]);
@@ -939,6 +963,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 									data-testid="from-input"
 									placeholder={t("route_box__from.text") as string}
 									onFocus={() => onFocus(InputType.FROM)}
+									onBlur={handleBlur}
 									value={value.from}
 									onChange={e => onChangeValue(e, InputType.FROM)}
 									dir={langDir}
@@ -951,6 +976,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 									data-testid="to-input"
 									placeholder={t("route_box__to.text") as string}
 									onFocus={() => onFocus(InputType.TO)}
+									onBlur={handleBlur}
 									value={value.to}
 									onChange={e => onChangeValue(e, InputType.TO)}
 									dir={langDir}

@@ -20,6 +20,7 @@ import { LngLat } from "mapbox-gl";
 import { isAndroid, isIOS } from "react-device-detect";
 import { useTranslation } from "react-i18next";
 import { MapRef } from "react-map-gl";
+import { RefHandles } from "react-spring-bottom-sheet/dist/types";
 import { Tooltip } from "react-tooltip";
 import "./styles.scss";
 
@@ -37,6 +38,7 @@ interface SearchBoxProps {
 	isSettingsOpen: boolean;
 	isStylesCardOpen: boolean;
 	isSimpleSearch?: boolean;
+	bottomSheetRef?: React.MutableRefObject<RefHandles | null>;
 }
 
 const SearchBox: React.FC<SearchBoxProps> = ({
@@ -49,7 +51,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	isAuthTrackerBoxOpen,
 	isSettingsOpen,
 	isStylesCardOpen,
-	isSimpleSearch = false
+	isSimpleSearch = false,
+	bottomSheetRef
 }) => {
 	const [value, setValue] = useState("");
 	const [isFocused, setIsFocused] = useState(false);
@@ -122,7 +125,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 				document.removeEventListener("touchmove", handleClickOutside);
 			};
 		}
-	}, [ui, setBottomSheetHeight, setBottomSheetMinHeight, isDesktop]);
+	}, [ui, setBottomSheetHeight, isDesktop, bottomSheetRef]);
 
 	const handleSearch = useCallback(
 		async (value: string, exact = false, action: string) => {
@@ -352,6 +355,24 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		);
 	}, [value, suggestions?.length, isFocused, isSearching]);
 
+	const simpleSearchOnFocus = (e: { stopPropagation: () => void }) => {
+		e.stopPropagation();
+		setIsFocused(true);
+		if ((isAndroid || isIOS) && !isDesktopBrowser) {
+			bottomSheetRef?.current?.snapTo(1000);
+		} else {
+			if (bottomSheetCurrentHeight < document.documentElement.clientHeight * 0.4) {
+				setBottomSheetMinHeight(document.documentElement.clientHeight * 0.4 - 10);
+				setBottomSheetHeight(document.documentElement.clientHeight * 0.4);
+
+				setTimeout(() => {
+					setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+					setBottomSheetHeight(document.documentElement.clientHeight);
+				}, 200);
+			}
+		}
+	};
+
 	const onFormSubmit = useCallback(
 		(e: React.FormEvent<HTMLFormElement>) => {
 			e.preventDefault();
@@ -384,29 +405,18 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 										onKeyDown={e => {
 											e.stopPropagation();
 										}}
-										onFocus={e => {
-											e.stopPropagation();
-											setIsFocused(true);
-											if ((isAndroid || isIOS) && !isDesktopBrowser) {
-												setBottomSheetMinHeight(window.innerHeight - 10);
-												setBottomSheetHeight(window.innerHeight);
-												setTimeout(() => {
-													setBottomSheetMinHeight(BottomSheetHeights.explore.min);
-												}, 400);
-											} else {
-												if (bottomSheetCurrentHeight < window.innerHeight * 0.4) {
-													setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
-													setBottomSheetHeight(window.innerHeight * 0.4);
-
-													setTimeout(() => {
-														setBottomSheetMinHeight(BottomSheetHeights.explore.min);
-														setBottomSheetHeight(window.innerHeight);
-													}, 200);
-												}
-											}
-										}}
+										onFocus={simpleSearchOnFocus}
 										onBlur={e => {
 											e.stopPropagation();
+											if ((isAndroid || isIOS) && !isDesktopBrowser) {
+												setBottomSheetMinHeight(document.documentElement.clientHeight * 0.4 - 10);
+												setBottomSheetHeight(document.documentElement.clientHeight * 0.4);
+
+												setTimeout(() => {
+													setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+													setBottomSheetHeight(document.documentElement.clientHeight);
+												}, 200);
+											}
 											setIsFocused(false);
 											!value?.length && setUI(ResponsiveUIEnum.explore);
 										}}

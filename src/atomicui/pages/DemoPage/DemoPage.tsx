@@ -77,6 +77,7 @@ import {
 } from "react-map-gl";
 
 import "./styles.scss";
+import { RefHandles } from "react-spring-bottom-sheet/dist/types";
 
 const {
 	PERSIST_STORAGE_KEYS: { SHOULD_CLEAR_CREDENTIALS, GEO_LOCATION_ALLOWED, FASTEST_REGION },
@@ -903,7 +904,7 @@ const DemoPage: React.FC = () => {
 	);
 
 	const searchBoxEl = useCallback(
-		(isSimpleSearch = false) => (
+		(isSimpleSearch = false, bottomSheetRef?: React.MutableRefObject<RefHandles | null>) => (
 			<SearchBox
 				mapRef={mapViewRef?.current}
 				isSideMenuExpanded={show.sidebar}
@@ -915,6 +916,7 @@ const DemoPage: React.FC = () => {
 				isSettingsOpen={show.settings}
 				isStylesCardOpen={show.stylesCard}
 				isSimpleSearch={isSimpleSearch}
+				bottomSheetRef={bottomSheetRef}
 			/>
 		),
 		[show.authGeofenceBox, show.authTrackerBox, show.routeBox, show.settings, show.sidebar, show.stylesCard]
@@ -1087,7 +1089,7 @@ const DemoPage: React.FC = () => {
 						</>
 					)}
 					<ResponsiveBottomSheet
-						SearchBoxEl={() => searchBoxEl(true)}
+						SearchBoxEl={(ref?: React.MutableRefObject<RefHandles | null>) => searchBoxEl(true, ref)}
 						MapButtons={
 							<MapButtons
 								renderedUpon={TriggeredByEnum.SETTINGS_MODAL}
@@ -1123,7 +1125,7 @@ const DemoPage: React.FC = () => {
 							/>
 						}
 						mapRef={mapViewRef?.current}
-						RouteBox={
+						RouteBox={(ref?: React.MutableRefObject<RefHandles | null>) => (
 							<RouteBox
 								mapRef={mapViewRef?.current}
 								setShowRouteBox={b => setShow(s => ({ ...s, routeBox: b }))}
@@ -1131,8 +1133,9 @@ const DemoPage: React.FC = () => {
 								isDirection={ui === ResponsiveUIEnum.direction_to_routes}
 								expandRouteOptionsMobile={expandRouteOptionsMobile}
 								setExpandRouteOptionsMobile={setExpandRouteOptionsMobile}
+								bottomSheetRef={ref}
 							/>
-						}
+						)}
 						isEditingAuthRoute={isEditingAuthRoute}
 						onCloseSidebar={() => setShow(s => ({ ...s, sidebar: false }))}
 						onOpenConnectAwsAccountModal={() => setShow(s => ({ ...s, connectAwsAccount: true }))}
