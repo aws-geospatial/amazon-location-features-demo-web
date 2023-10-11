@@ -18,7 +18,6 @@ import {
 import { IconClose, IconFilterFunnel, IconGeofencePlusSolid, IconMapSolid, IconRadar, IconSearch } from "@demo/assets";
 import { NotFoundCard } from "@demo/atomicui/molecules";
 import { appConfig } from "@demo/core/constants";
-import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useAmplifyAuth, useAmplifyMap, useAwsGeofence } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
@@ -52,7 +51,7 @@ const filters = {
 };
 const searchHandDeviceWidth = "36px";
 const searchDesktopWidth = "100%";
-const { map_styles, explore } = ResponsiveUIEnum;
+const { map_styles } = ResponsiveUIEnum;
 
 export interface MapButtonsProps {
 	renderedUpon: string;
@@ -137,7 +136,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	const isAuthenticated = !!credentials?.authenticated;
 	const { isTablet, isMobile, isDesktop } = useDeviceMediaQuery();
 	const { t, i18n } = useTranslation();
-	const { bottomSheetCurrentHeight = 0, ui, setUI, setBottomSheetMinHeight, setBottomSheetHeight } = useBottomSheet();
+	const { bottomSheetCurrentHeight = 0, ui } = useBottomSheet();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
 	const settingsTablet = isTablet && !!onlyMapStyles && isSettingsModal;
@@ -191,22 +190,11 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	}, [handleClickOutside]);
 
 	const toggleMapStyles = () => {
-		if (isDesktop) {
-			setIsLoadingImg(true);
-			setOpenStylesCard(!openStylesCard);
-			setSearchValue("");
-			resetSearchAndFilters && resetSearchAndFilters();
-			setShowFilter(false);
-		} else {
-			if (ui === map_styles) {
-				setUI(explore);
-			} else {
-				setUI(map_styles);
-				setBottomSheetMinHeight(window.innerHeight - 10);
-				setBottomSheetHeight(window.innerHeight);
-				setTimeout(() => setBottomSheetMinHeight(BottomSheetHeights.explore.min), 300);
-			}
-		}
+		setIsLoadingImg(true);
+		setOpenStylesCard(!openStylesCard);
+		setSearchValue("");
+		resetSearchAndFilters && resetSearchAndFilters();
+		setShowFilter(false);
 	};
 
 	const onClickGeofenceTracker = (menuItem: MenuItemEnum) => {
@@ -685,7 +673,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	);
 
 	if (onlyMapStyles) return mapStyles;
-	else if (isMobile) return null;
+	else if (!isDesktop) return null;
 	return (
 		<>
 			<Flex data-testid="map-buttons-container" className="map-styles-geofence-and-tracker-container">
@@ -707,7 +695,9 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 						<Flex
 							data-testid="geofence-control-button"
 							className={isAddingGeofence || isUnauthGeofenceBoxOpen ? "geofence-button active" : "geofence-button"}
-							onClick={() => onClickGeofenceTracker(MenuItemEnum.GEOFENCE)}
+							onClick={() => {
+								!isUnauthGeofenceBoxOpen && !isUnauthTrackerBoxOpen && onClickGeofenceTracker(MenuItemEnum.GEOFENCE);
+							}}
 							data-tooltip-id="geofence-control-button"
 							data-tooltip-place="left"
 							data-tooltip-content={t("geofence.text")}
@@ -723,7 +713,9 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 									? "tracker-button active"
 									: "tracker-button"
 							}
-							onClick={() => onClickGeofenceTracker(MenuItemEnum.TRACKER)}
+							onClick={() => {
+								!isUnauthGeofenceBoxOpen && !isUnauthTrackerBoxOpen && onClickGeofenceTracker(MenuItemEnum.TRACKER);
+							}}
 							data-tooltip-id="tracker-control-button"
 							data-tooltip-place="left"
 							data-tooltip-content={t("tracker.text")}

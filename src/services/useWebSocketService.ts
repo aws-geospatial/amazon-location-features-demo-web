@@ -92,16 +92,6 @@ const useWebSocketService = (
 								const busRouteId = geofenceId.split("-")[0];
 
 								if (trackerEventType === "ENTER") {
-									if (unauthEvents.length === 0 || !unauthEvents.some(equals(unauthEvent))) {
-										setUnauthNotifications({
-											busRouteId,
-											geofenceCollection,
-											stopName,
-											coordinates: `${coordinates[1]}, ${coordinates[0]}`,
-											createdAt: eventTime
-										});
-										unauthEvents.push(unauthEvent);
-									}
 									updateTrackingHistory &&
 										updateTrackingHistory({
 											busRouteId,
@@ -110,6 +100,18 @@ const useWebSocketService = (
 											coordinates: `${coordinates[1]}, ${coordinates[0]}`,
 											createdAt: eventTime
 										});
+								}
+
+								if (unauthEvents.length === 0 || !unauthEvents.some(equals(unauthEvent))) {
+									setUnauthNotifications({
+										busRouteId,
+										geofenceCollection,
+										stopName,
+										coordinates: `${coordinates[1]}, ${coordinates[0]}`,
+										createdAt: eventTime,
+										eventType: trackerEventType === "ENTER" ? "Entered" : "Exited"
+									});
+									unauthEvents.push(unauthEvent);
 								}
 
 								showToast({
