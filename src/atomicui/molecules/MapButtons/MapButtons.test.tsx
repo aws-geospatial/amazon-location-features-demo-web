@@ -71,10 +71,15 @@ const mockUseAwsGeofenceData = {
 	setIsAddingGeofence: jest.fn()
 };
 
+const mockUseUnauthSimulationData = {
+	hideGeofenceTrackerShortcut: false
+};
+
 jest.mock("@demo/hooks", () => ({
 	useAmplifyAuth: () => mockUseAmplifyAuthData,
 	useAmplifyMap: () => mockUseAmplifyMapData,
-	useAwsGeofence: () => mockUseAwsGeofenceData
+	useAwsGeofence: () => mockUseAwsGeofenceData,
+	useUnauthSimulation: () => mockUseUnauthSimulationData
 }));
 
 describe("<MapButtons/>", () => {

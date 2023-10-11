@@ -45,6 +45,9 @@ jest.mock("@demo/hooks", () => ({
 		getGeofencesList: jest.fn(),
 		evaluateGeofence: jest.fn()
 	}),
+	useUnauthSimulation: () => ({
+		setHideGeofenceTrackerShortcut: jest.fn()
+	}),
 	useWebSocketBanner: () => ({
 		Connection: <div data-testid="websocket-banner"></div>,
 		isHidden: false

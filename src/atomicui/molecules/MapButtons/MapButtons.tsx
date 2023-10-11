@@ -18,7 +18,7 @@ import {
 import { IconClose, IconFilterFunnel, IconGeofencePlusSolid, IconMapSolid, IconRadar, IconSearch } from "@demo/assets";
 import { NotFoundCard } from "@demo/atomicui/molecules";
 import { appConfig } from "@demo/core/constants";
-import { useAmplifyAuth, useAmplifyMap, useAwsGeofence } from "@demo/hooks";
+import { useAmplifyAuth, useAmplifyMap, useAwsGeofence, useUnauthSimulation } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import {
@@ -143,6 +143,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	const filterIconWrapperRef = useRef<HTMLDivElement>(null);
 	const searchFieldRef = useRef<HTMLInputElement>(null);
 	const clearIconContainerRef = useRef<HTMLDivElement>(null);
+	const { hideGeofenceTrackerShortcut } = useUnauthSimulation();
 
 	useEffect(() => {
 		function handleClickOutside(event: MouseEvent) {
@@ -679,7 +680,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 			<Flex
 				data-testid="map-buttons-container"
 				className="map-styles-geofence-and-tracker-container"
-				height={!isUnauthGeofenceBoxOpen && !isUnauthTrackerBoxOpen ? "7.38rem" : "2.4rem"}
+				height={hideGeofenceTrackerShortcut ? "2.4rem" : "7.38rem"}
 			>
 				<Flex
 					data-testid="map-styles-button"
@@ -693,7 +694,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 					<IconMapSolid />
 				</Flex>
 				{!openStylesCard && <Tooltip id="map-styles-button" />}
-				{isDesktop && !isUnauthGeofenceBoxOpen && !isUnauthTrackerBoxOpen && (
+				{isDesktop && !hideGeofenceTrackerShortcut && (
 					<>
 						<Divider className="button-divider" />
 						<Flex

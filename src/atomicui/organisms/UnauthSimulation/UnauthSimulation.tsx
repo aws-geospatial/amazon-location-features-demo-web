@@ -20,7 +20,7 @@ import {
 } from "@demo/atomicui/molecules";
 import { appConfig, busRoutesData } from "@demo/core";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
-import { useAwsGeofence, useWebSocketBanner } from "@demo/hooks";
+import { useAwsGeofence, useUnauthSimulation, useWebSocketBanner } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import i18n from "@demo/locales/i18n";
@@ -144,6 +144,7 @@ const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 	const isNotDesktop = !isDesktop && ui;
 	const nonStartRef = useRef<HTMLDivElement>(null);
 	const cardRef = useRef<HTMLDivElement>(null);
+	const { setHideGeofenceTrackerShortcut } = useUnauthSimulation();
 
 	const isNonStartUnauthSimulation =
 		(isNotDesktop &&
@@ -215,7 +216,10 @@ const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 		[from, setShowUnauthGeofenceBox, setShowUnauthTrackerBox]
 	);
 
-	const handleCta = () => setShowStartUnauthSimulation(true);
+	const handleCta = () => {
+		setShowStartUnauthSimulation(true);
+		setHideGeofenceTrackerShortcut(true);
+	};
 
 	const handleEnableLive = () => {
 		isDesktop && handleClose();
@@ -226,6 +230,7 @@ const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 		clearCredsAndLocationClient && clearCredsAndLocationClient();
 		setShowStartUnauthSimulation(false);
 		handleClose();
+		setHideGeofenceTrackerShortcut(false);
 		setUI(ResponsiveUIEnum.explore);
 	};
 

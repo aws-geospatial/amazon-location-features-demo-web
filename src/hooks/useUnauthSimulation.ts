@@ -20,6 +20,8 @@ const useUnauthSimulation = () => {
 			setIsNotifications: (isNotifications: boolean) => setState({ isNotifications }),
 			setConfirmCloseSimulation: (confirmCloseSimulation: boolean) => setState({ confirmCloseSimulation }),
 			setIsPlaying: (isPlaying: boolean) => setState({ isPlaying }),
+			setHideGeofenceTrackerShortcut: (hideGeofenceTrackerShortcut: boolean) =>
+				setState({ hideGeofenceTrackerShortcut }),
 			resetStore: () => {
 				setInitial();
 			}

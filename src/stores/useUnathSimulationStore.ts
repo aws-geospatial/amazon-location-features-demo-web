@@ -28,6 +28,7 @@ export interface UnauthSimulationStoreProps {
 	isNotifications: boolean;
 	confirmCloseSimulation: boolean;
 	isPlaying: boolean;
+	hideGeofenceTrackerShortcut: boolean;
 }
 
 export const initialState: IStateProps<UnauthSimulationStoreProps> = {
@@ -37,7 +38,8 @@ export const initialState: IStateProps<UnauthSimulationStoreProps> = {
 	busSelectedValue: busRoutesDropdown[0],
 	isNotifications: false,
 	confirmCloseSimulation: false,
-	isPlaying: true
+	isPlaying: true,
+	hideGeofenceTrackerShortcut: false
 };
 
 export default createStore<UnauthSimulationStoreProps>(initialState);
