@@ -28,6 +28,7 @@ import {
 	TriggeredByEnum
 } from "@demo/types/Enums";
 import { record } from "@demo/utils";
+import { isAndroid, isIOS } from "react-device-detect";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import "./styles.scss";
@@ -70,7 +71,7 @@ const Explore: React.FC<IProps> = ({
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
 	const { setBottomSheetMinHeight, setBottomSheetHeight, bottomSheetCurrentHeight = 0 } = useBottomSheet();
-	const { isDesktop } = useDeviceMediaQuery();
+	const { isDesktop, isDesktopBrowser } = useDeviceMediaQuery();
 	const { isUserAwsAccountConnected, credentials, onLogin, onLogout, onDisconnectAwsAccount, setAuthTokens } =
 		useAmplifyAuth();
 	const { mapProvider: currentMapProvider } = useAmplifyMap();
@@ -104,9 +105,12 @@ const Explore: React.FC<IProps> = ({
 					onShowAuthGeofenceBox();
 					updateUIInfo(ResponsiveUIEnum.auth_geofence);
 					if (!isDesktop) {
-						setBottomSheetMinHeight(window.innerHeight / 2);
-						setBottomSheetHeight(window.innerHeight);
-						setTimeout(() => setBottomSheetMinHeight(BottomSheetHeights.explore.min), 300);
+						setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+						setBottomSheetHeight(window.innerHeight * 0.4);
+						setTimeout(() => {
+							setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+							setBottomSheetHeight(window.innerHeight);
+						}, 300);
 					}
 				} else {
 					if (currentMapProvider === MapProviderEnum.ESRI) {
@@ -115,9 +119,12 @@ const Explore: React.FC<IProps> = ({
 						onShowAuthTrackerBox();
 						updateUIInfo(ResponsiveUIEnum.auth_tracker);
 						if (!isDesktop) {
-							setBottomSheetMinHeight(window.innerHeight / 2);
-							setBottomSheetHeight(window.innerHeight);
-							setTimeout(() => setBottomSheetMinHeight(BottomSheetHeights.explore.min), 300);
+							setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+							setBottomSheetHeight(window.innerHeight * 0.4);
+							setTimeout(() => {
+								setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+								setBottomSheetHeight(window.innerHeight);
+							}, 300);
 						}
 					}
 				}
@@ -249,15 +256,23 @@ const Explore: React.FC<IProps> = ({
 			icon: <IconDirections width="1.53rem" height="1.53rem" fill="white" />,
 			onClick: () => {
 				updateUIInfo(ResponsiveUIEnum.routes);
-				if (bottomSheetCurrentHeight < window.innerHeight * 0.4) {
-					setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
-					setBottomSheetHeight(window.innerHeight * 0.4);
-				}
-
-				setTimeout(() => {
-					setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+				if ((isAndroid || isIOS) && !isDesktopBrowser) {
+					setBottomSheetMinHeight(window.innerHeight - 10);
 					setBottomSheetHeight(window.innerHeight);
-				}, 500);
+					setTimeout(() => {
+						setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+					}, 400);
+				} else {
+					if (bottomSheetCurrentHeight < window.innerHeight * 0.4) {
+						setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+						setBottomSheetHeight(window.innerHeight * 0.4);
+
+						setTimeout(() => {
+							setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+							setBottomSheetHeight(window.innerHeight);
+						}, 200);
+					}
+				}
 			}
 		},
 		{

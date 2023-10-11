@@ -17,6 +17,7 @@ import { uuid } from "@demo/utils/uuid";
 import { Units } from "@turf/turf";
 import { Location } from "aws-sdk";
 import { LngLat } from "mapbox-gl";
+import { isAndroid, isIOS } from "react-device-detect";
 import { useTranslation } from "react-i18next";
 import { MapRef } from "react-map-gl";
 import { Tooltip } from "react-tooltip";
@@ -81,7 +82,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		setUI,
 		ui
 	} = useBottomSheet();
-	const { isDesktop } = useDeviceMediaQuery();
+	const { isDesktop, isDesktopBrowser } = useDeviceMediaQuery();
 	const searchContainerRef = useRef<HTMLDivElement>(null);
 	const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -106,6 +107,22 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		isSettingsOpen,
 		isStylesCardOpen
 	]);
+
+	useEffect(() => {
+		if (!isDesktop) {
+			function handleClickOutside() {
+				if (ui === ResponsiveUIEnum.explore) {
+					setIsFocused(false);
+					searchInputRef.current?.blur();
+				}
+			}
+
+			document.addEventListener("touchmove", handleClickOutside);
+			return () => {
+				document.removeEventListener("touchmove", handleClickOutside);
+			};
+		}
+	}, [ui, setBottomSheetHeight, setBottomSheetMinHeight, isDesktop]);
 
 	const handleSearch = useCallback(
 		async (value: string, exact = false, action: string) => {
@@ -370,14 +387,22 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 										onFocus={e => {
 											e.stopPropagation();
 											setIsFocused(true);
-											if (bottomSheetCurrentHeight < window.innerHeight * 0.4) {
-												setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
-												setBottomSheetHeight(window.innerHeight * 0.4);
-
+											if ((isAndroid || isIOS) && !isDesktopBrowser) {
+												setBottomSheetMinHeight(window.innerHeight - 10);
+												setBottomSheetHeight(window.innerHeight);
 												setTimeout(() => {
 													setBottomSheetMinHeight(BottomSheetHeights.explore.min);
-													setBottomSheetHeight(window.innerHeight);
-												}, 200);
+												}, 400);
+											} else {
+												if (bottomSheetCurrentHeight < window.innerHeight * 0.4) {
+													setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+													setBottomSheetHeight(window.innerHeight * 0.4);
+
+													setTimeout(() => {
+														setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+														setBottomSheetHeight(window.innerHeight);
+													}, 200);
+												}
 											}
 										}}
 										onBlur={e => {
@@ -385,7 +410,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 											setIsFocused(false);
 											!value?.length && setUI(ResponsiveUIEnum.explore);
 										}}
-										placeholder={t("search.text") as string}
+										// placeholder={t("search.text") as string}
+										placeholder={`${JSON.stringify({ isAndroid, isDesktopBrowser })}`}
 										innerStartComponent={
 											<Flex
 												className="icon inner-end-component"

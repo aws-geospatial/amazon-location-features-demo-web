@@ -40,6 +40,7 @@ import { AnalyticsEventActionsEnum, ResponsiveUIEnum, TriggeredByEnum, UserAgent
 import { isUserDeviceIsAndroid } from "@demo/utils";
 import { humanReadableTime } from "@demo/utils/dateTimeUtils";
 import { CalculateRouteRequest, LineString, Place, Position } from "aws-sdk/clients/location";
+import { isAndroid, isIOS } from "react-device-detect";
 import { useTranslation } from "react-i18next";
 import { Layer, LayerProps, LngLat, MapRef, Marker as ReactMapGlMarker, Source } from "react-map-gl";
 import { Tooltip } from "react-tooltip";
@@ -121,7 +122,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 	const { defaultRouteOptions } = usePersistedData();
 	const [expandRouteOptions, setExpandRouteOptions] = useState(false);
 	const [routeOptions, setRouteOptions] = useState<RouteOptionsType>({ ...defaultRouteOptions });
-	const { isDesktop } = useDeviceMediaQuery();
+	const { isDesktop, isDesktopBrowser } = useDeviceMediaQuery();
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
@@ -457,6 +458,24 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 		} else {
 			setInputFocused({ from: false, to: true });
 			suggestions.from?.length && setSuggestions({ ...suggestions, from: undefined });
+		}
+
+		if ((isAndroid || isIOS) && !isDesktopBrowser) {
+			setBottomSheetMinHeight(window.innerHeight - 10);
+			setBottomSheetHeight(window.innerHeight);
+			setTimeout(() => {
+				setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+			}, 400);
+		} else {
+			if (bottomSheetCurrentHeight < window.innerHeight * 0.4) {
+				setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+				setBottomSheetHeight(window.innerHeight * 0.4);
+
+				setTimeout(() => {
+					setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+					setBottomSheetHeight(window.innerHeight);
+				}, 200);
+			}
 		}
 	};
 

@@ -109,7 +109,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	isExpandRouteOptionsMobile,
 	setExpandRouteOptionsMobile
 }) => {
-	const { isDesktop, isTablet, isMax556 } = useDeviceMediaQuery();
+	const { isDesktop, isTablet, isMax556, isDesktopBrowser } = useDeviceMediaQuery();
 	const { unauthNotifications, isAddingGeofence } = useAwsGeofence();
 	const { t } = useTranslation();
 	const location = useLocation();
@@ -132,8 +132,11 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 
 	const resetToExplore = useCallback(() => {
 		setUI(ResponsiveUIEnum.explore);
+		setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+		setBottomSheetHeight(window.innerHeight * 0.4);
+
 		setTimeout(() => {
-			setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+			setBottomSheetMinHeight(BottomSheetHeights.search.min);
 			setBottomSheetHeight(window.innerHeight);
 		}, 500);
 	}, [setBottomSheetHeight, setBottomSheetMinHeight, setUI]);
@@ -151,7 +154,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 		}
 
 		prevBottomSheetHeightRef.current = bottomSheetCurrentHeight;
-	}, [bottomSheetCurrentHeight]);
+	}, [bottomSheetCurrentHeight, setBottomSheetHeight, setBottomSheetMinHeight, ui]);
 
 	useEffect(() => {
 		setTimeout(() => {
@@ -385,6 +388,8 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				case ResponsiveUIEnum.unauth_tracker:
 				case ResponsiveUIEnum.unauth_geofence:
 				case ResponsiveUIEnum.routes:
+				case ResponsiveUIEnum.exit_unauthorized_tracker:
+				case ResponsiveUIEnum.exit_unauthorized_geofence:
 				case ResponsiveUIEnum.direction_to_routes:
 					return (
 						<Flex
@@ -410,8 +415,6 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 						</Flex>
 					);
 				case ResponsiveUIEnum.poi_card:
-				case ResponsiveUIEnum.exit_unauthorized_tracker:
-				case ResponsiveUIEnum.exit_unauthorized_geofence:
 					return null;
 				default:
 					return <Flex width="100%">{SearchBoxEl()}</Flex>;
@@ -558,15 +561,24 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				snapPoints={({ maxHeight }) => [
 					bottomSheetMinHeight,
 					[
-						ResponsiveUIEnum.search,
-						ResponsiveUIEnum.routes,
-						ResponsiveUIEnum.direction_to_routes,
 						ResponsiveUIEnum.map_styles,
+						ResponsiveUIEnum.unauth_geofence,
+						ResponsiveUIEnum.unauth_tracker,
 						ResponsiveUIEnum.explore
-					].includes(ui)
+					].includes(ui) ||
+					(isDesktopBrowser &&
+						[
+							ResponsiveUIEnum.search,
+							ResponsiveUIEnum.routes,
+							ResponsiveUIEnum.direction_to_routes,
+							ResponsiveUIEnum.auth_geofence,
+							ResponsiveUIEnum.auth_tracker
+						].includes(ui))
 						? bottomSheetHeight * 0.4 - 10
 						: footerHeight(maxHeight),
-					bottomSheetHeight - 10,
+					[ResponsiveUIEnum.unauth_geofence, ResponsiveUIEnum.unauth_tracker].includes(ui)
+						? bottomSheetHeight - 60
+						: bottomSheetHeight - 10,
 					bottomSheetMinHeight
 				]}
 				maxHeight={bottomSheetHeight}

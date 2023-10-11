@@ -181,16 +181,17 @@ const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 		}
 
 		if (!isNonStartUnauthSimulation && !isBeforeStartSimulation && !isDesktop) {
-			setBottomSheetMinHeight(BottomSheetHeights.explore.min);
-			setBottomSheetHeight(window.innerHeight - 50);
+			setBottomSheetMinHeight(BottomSheetHeights.routes.min);
 		}
 	}, [
+		bottomSheetCurrentHeight,
 		bottomSheetHeight,
 		isBeforeStartSimulation,
 		isDesktop,
 		isNonStartUnauthSimulation,
 		setBottomSheetHeight,
-		setBottomSheetMinHeight
+		setBottomSheetMinHeight,
+		ui
 	]);
 
 	const updateSelectedRoutes = useCallback(
@@ -310,10 +311,10 @@ const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 								} else {
 									setStartSimulation(true);
 									setBottomSheetMinHeight(BottomSheetHeights.routes.max);
-									setBottomSheetHeight(BottomSheetHeights.routes.max);
-									setTimeout(() => {
-										setBottomSheetMinHeight(BottomSheetHeights.routes.min);
-									}, 300);
+									if (bottomSheetCurrentHeight < window.innerHeight * 0.4) {
+										setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+										setBottomSheetHeight(window.innerHeight * 0.4);
+									}
 									from === MenuItemEnum.TRACKER
 										? setUI(ResponsiveUIEnum.unauth_tracker)
 										: setUI(ResponsiveUIEnum.unauth_geofence);
@@ -334,13 +335,14 @@ const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 	}, [
 		currentLanguage,
 		t,
+		isDesktop,
 		setStartSimulation,
+		setShowUnauthSimulationBounds,
 		setBottomSheetMinHeight,
-		setBottomSheetHeight,
+		bottomSheetCurrentHeight,
 		from,
 		setUI,
-		setShowUnauthSimulationBounds,
-		isDesktop
+		setBottomSheetHeight
 	]);
 
 	const renderGeofences = useMemo(
