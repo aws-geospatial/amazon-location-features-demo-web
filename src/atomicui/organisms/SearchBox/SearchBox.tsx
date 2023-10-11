@@ -410,8 +410,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 											setIsFocused(false);
 											!value?.length && setUI(ResponsiveUIEnum.explore);
 										}}
-										// placeholder={t("search.text") as string}
-										placeholder={`${JSON.stringify({ isAndroid, isDesktopBrowser })}`}
+										placeholder={t("search.text") as string}
 										innerStartComponent={
 											<Flex
 												className="icon inner-end-component"
