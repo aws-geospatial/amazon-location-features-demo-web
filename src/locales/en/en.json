@@ -3547,6 +3547,42 @@
   },
   "samples__react-map-with-markers__cleanUp": {
     "text": "To remove all of the resources created in this walkthrough, delete the CloudFormation stack named\n`react-map-with-geojson`."
+	},
+	"nl_search_label": {
+		"text": "Use AI search powered by Amazon Bedrock"
+	},
+	"nl_search_footer_label": {
+		"text": "Powered by Amazon Bedrock"
+	},
+	"prototype": {
+		"text": "Prototype"
+	},
+	"try_asking": {
+		"text": "Try Asking"
+	},
+	"nl_query_example_1": {
+		"text": "What are some places to get coffee in Boston?"
+	},
+	"nl_query_example_2": {
+		"text": "Find me some pizza places in Paris?"
+	},
+	"nl_query_example_3": {
+		"text": "Find me some dinner spots around Vancouver?"
+	},
+	"nl_loader_sample_text_1": {
+		"text": "Buckle up for an adventure! Bedrock on the case."
+	},
+	"nl_loader_sample_text_2": {
+		"text": "Charting your course now! Thanks for waiting."
+	},
+	"nl_loader_sample_text_3": {
+		"text": "Letting Amazon Bedrock navigate this map trip!"
+	},
+	"nl_loader_sample_text_4": {
+		"text": "Consulting the atlas for your location."
+	},
+	"nl_loader_sample_text_5": {
+		"text": "Amazon Bedrock on mapping duty! Searching."
   },
   "explore__connect_aws_account": {
     "text": "Connect to AWS"

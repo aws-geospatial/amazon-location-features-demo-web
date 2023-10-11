@@ -12,7 +12,7 @@ import { record } from "@demo/utils/analyticsUtils";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { calculateClusters, getHash, getPrecision, isGeoString } from "@demo/utils/geoCalculation";
 import { uuid } from "@demo/utils/uuid";
-import { Position } from "aws-sdk/clients/location";
+import { Position, SearchForTextResult } from "aws-sdk/clients/location";
 import { useTranslation } from "react-i18next";
 
 const useAwsPlace = () => {
@@ -85,6 +85,33 @@ const useAwsPlace = () => {
 					setState({ isSearching: false });
 				}
 			},
+			searchNLPlacesByText: async (value: string, viewpoint: ViewPointType, cb?: (sg: SuggestionType[]) => void) => {
+				try {
+					setState({ isSearching: true });
+					const data = await placesService.getNLPlacesByText(value);
+					const clusters: ClustersType = {};
+					const suggestions = data?.Results?.map((p: SearchForTextResult) => {
+						const Hash = getHash(p.Place.Geometry.Point as Position, store.precision);
+						const sg = {
+							...p,
+							Hash,
+							Id: uuid.randomUUID()
+						} as SuggestionType;
+						clusters[Hash] = clusters[Hash] ? [...clusters[Hash], sg] : [sg];
+						return sg;
+					});
+					cb ? cb(suggestions as SuggestionType[]) : setState({ suggestions });
+					setState({
+						bound: data?.Summary.ResultBBox,
+						clusters
+					});
+					setViewpoint(viewpoint);
+				} catch (error) {
+					errorHandler(error, t("error_handler__failed_search_place_text.text") as string);
+				} finally {
+					setState({ isSearching: false });
+				}
+			},
 			getPlaceDataByCoordinates: async (input: Position) => {
 				try {
 					return await placesService.getPlaceByCoordinates(input);
@@ -121,12 +148,17 @@ const useAwsPlace = () => {
 				exact: boolean,
 				cb: ((sg: SuggestionType[]) => void) | undefined,
 				triggeredBy: TriggeredByEnum,
-				action: string
+				action: string,
+				isNLSearchEnabled = false
 			) => {
 				if (isGeoString(value)) {
 					await methods.searchPlacesByCoordinates(value, viewpoint, cb);
 				} else if (exact) {
-					await methods.searchPlacesByText(value, viewpoint, cb);
+					if (isNLSearchEnabled) {
+						await methods.searchNLPlacesByText(value, viewpoint, cb);
+					} else {
+						await methods.searchPlacesByText(value, viewpoint, cb);
+					}
 				} else if (value?.length) {
 					await methods.searchPlaceSuggestions(value, viewpoint, cb);
 				}
