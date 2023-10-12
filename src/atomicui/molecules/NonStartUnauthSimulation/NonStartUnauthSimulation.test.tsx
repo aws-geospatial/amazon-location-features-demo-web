@@ -12,7 +12,7 @@ const mockProps: NonStartUnauthSimulationProps = {
 	handleCta: jest.fn(),
 	handleEnableLive: jest.fn(),
 	from: MenuItemEnum.GEOFENCE,
-	startRef: {} as React.RefObject<HTMLDivElement>
+	startRef: { current: document.createElement("div") } as React.RefObject<HTMLDivElement>
 };
 
 describe("<NonStartUnauthSimulation />", () => {
