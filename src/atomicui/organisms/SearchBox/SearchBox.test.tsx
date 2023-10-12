@@ -7,6 +7,8 @@ import SearchBox from "./SearchBox";
 const mockProps = {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	mapRef: { getCenter: () => ({ lat: 123, lng: 34 }) } as any,
+	value: "",
+	setValue: jest.fn(),
 	isSideMenuExpanded: false,
 	onToggleSideMenu: jest.fn(),
 	setShowRouteBox: jest.fn(),

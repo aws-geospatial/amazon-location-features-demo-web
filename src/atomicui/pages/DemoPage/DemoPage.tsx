@@ -133,6 +133,7 @@ const DemoPage: React.FC = () => {
 		Type: []
 	});
 	const [startSimulation, setStartSimulation] = React.useState(false);
+	const [searchBoxValue, setSearchBoxValue] = React.useState("");
 	const mapViewRef = useRef<MapRef | null>(null);
 	const geolocateControlRef = useRef<GeolocateControlRef | null>(null);
 	const {
@@ -907,6 +908,8 @@ const DemoPage: React.FC = () => {
 		(isSimpleSearch = false, bottomSheetRef?: React.MutableRefObject<RefHandles | null>) => (
 			<SearchBox
 				mapRef={mapViewRef?.current}
+				value={searchBoxValue}
+				setValue={setSearchBoxValue}
 				isSideMenuExpanded={show.sidebar}
 				onToggleSideMenu={() => setShow(s => ({ ...s, sidebar: !s.sidebar }))}
 				setShowRouteBox={b => setShow(s => ({ ...s, routeBox: b }))}
@@ -919,7 +922,16 @@ const DemoPage: React.FC = () => {
 				bottomSheetRef={bottomSheetRef}
 			/>
 		),
-		[show.authGeofenceBox, show.authTrackerBox, show.routeBox, show.settings, show.sidebar, show.stylesCard]
+		[
+			searchBoxValue,
+			setSearchBoxValue,
+			show.authGeofenceBox,
+			show.authTrackerBox,
+			show.routeBox,
+			show.settings,
+			show.sidebar,
+			show.stylesCard
+		]
 	);
 
 	const GeoLocateIcon = useMemo(
@@ -1399,6 +1411,8 @@ const DemoPage: React.FC = () => {
 		</View>
 	) : (
 		<DemoPlaceholderPage
+			value={searchBoxValue}
+			setValue={setSearchBoxValue}
 			searchValue={searchValue}
 			selectedFilters={selectedFilters}
 			show={show}

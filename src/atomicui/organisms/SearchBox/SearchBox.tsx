@@ -29,6 +29,8 @@ const { KILOMETERS, MILES } = DistanceUnitEnum;
 
 interface SearchBoxProps {
 	mapRef: MapRef | null;
+	value: string;
+	setValue: (value: string) => void;
 	isSideMenuExpanded: boolean;
 	onToggleSideMenu: () => void;
 	setShowRouteBox: (b: boolean) => void;
@@ -43,6 +45,8 @@ interface SearchBoxProps {
 
 const SearchBox: React.FC<SearchBoxProps> = ({
 	mapRef,
+	value,
+	setValue,
 	isSideMenuExpanded,
 	onToggleSideMenu,
 	setShowRouteBox,
@@ -54,7 +58,6 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	isSimpleSearch = false,
 	bottomSheetRef
 }) => {
-	const [value, setValue] = useState("");
 	const [isFocused, setIsFocused] = useState(false);
 	const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const autocompleteRef = useRef<HTMLInputElement | null>(null);
@@ -70,8 +73,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		setSelectedMarker,
 		setHoveredMarker,
 		setSearchingState,
-		setIsSearching,
-		setSuggestions
+		setIsSearching
 	} = useAwsPlace();
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
@@ -103,6 +105,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		}
 	}, [
 		value,
+		setValue,
 		clearPoiList,
 		isRouteBoxOpen,
 		isAuthGeofenceBoxOpen,
@@ -178,22 +181,9 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 				);
 
 				await setSelectedMarker(selectedMarker);
-				if (!isDesktop) {
-					setTimeout(() => {
-						setSuggestions([]);
-					}, 2000);
-				}
 			}
 		},
-		[
-			handleSearch,
-			isDesktop,
-			setBottomSheetHeight,
-			setBottomSheetMinHeight,
-			setSelectedMarker,
-			setSuggestions,
-			suggestions
-		]
+		[handleSearch, setBottomSheetHeight, setBottomSheetMinHeight, setSelectedMarker, suggestions]
 	);
 
 	const setHover = useCallback(

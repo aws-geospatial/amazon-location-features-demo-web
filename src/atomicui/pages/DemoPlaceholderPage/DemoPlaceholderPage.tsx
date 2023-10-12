@@ -21,13 +21,17 @@ interface DemoPlaceholderPageProps {
 	isGrabVisible: boolean;
 	searchValue: string;
 	selectedFilters: MapStyleFilterTypes;
+	value: string;
+	setValue: (value: string) => void;
 }
 
 const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 	show,
 	isGrabVisible,
 	searchValue,
-	selectedFilters
+	selectedFilters,
+	value,
+	setValue
 }) => {
 	const { isDesktop } = useDeviceMediaQuery();
 	return (
@@ -81,6 +85,8 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 						) : (
 							<SearchBox
 								mapRef={null}
+								value={value}
+								setValue={setValue}
 								isSideMenuExpanded={show.sidebar}
 								onToggleSideMenu={() => {}}
 								setShowRouteBox={() => {}}
