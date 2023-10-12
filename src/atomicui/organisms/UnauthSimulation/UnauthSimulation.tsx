@@ -231,6 +231,7 @@ const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 		setShowStartUnauthSimulation(false);
 		handleClose();
 		setHideGeofenceTrackerShortcut(false);
+		setConfirmCloseSimulation(false);
 		setUI(ResponsiveUIEnum.explore);
 	};
 
@@ -388,12 +389,16 @@ const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 		if (isNotifications) {
 			setIsNotifications(false);
 		} else {
+			setIsPlaying(false);
 			setConfirmCloseSimulation(true);
-			from === MenuItemEnum.GEOFENCE
-				? setUI(ResponsiveUIEnum.exit_unauthorized_geofence)
-				: setUI(ResponsiveUIEnum.exit_unauthorized_tracker);
+
+			if (!isDesktop) {
+				from === MenuItemEnum.GEOFENCE
+					? setUI(ResponsiveUIEnum.exit_unauthorized_geofence)
+					: setUI(ResponsiveUIEnum.exit_unauthorized_tracker);
+			}
 		}
-	}, [from, isNotifications, setConfirmCloseSimulation, setIsNotifications, setUI]);
+	}, [isNotifications, setIsNotifications, setConfirmCloseSimulation, isDesktop, from, setUI]);
 
 	const BeforeStartSimulation = () => (
 		<>
