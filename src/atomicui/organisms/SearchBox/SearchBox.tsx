@@ -312,7 +312,6 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 				) : null;
 			});
 		} else {
-			console.log("HERE");
 			return Object.keys(clusters).reduce((acc, key) => {
 				const cluster = clusters[key];
 				const containsSelectedPoi = selectedMarker?.Hash?.includes(key);
