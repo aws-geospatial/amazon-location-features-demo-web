@@ -26,7 +26,7 @@ const {
 
 const region = PINPOINT_IDENTITY_POOL_ID.split(":")[0];
 
-const { createOrUpdateEndpoint, record } = jest.requireActual("@demo/utils/analyticsUtils");
+const { createOrUpdateEndpoint, getEndpoint, record } = jest.requireActual("@demo/utils/analyticsUtils");
 
 describe("PinpointAnalytics", () => {
 	let pinClient: PinpointClient;
@@ -58,6 +58,11 @@ describe("PinpointAnalytics", () => {
 
 	it("should successfully create endpoint", async () => {
 		const error = await returnError(createOrUpdateEndpoint);
+		expect(error).toBeUndefined();
+	});
+
+	it("should successfully get endpoint", async () => {
+		const error = await returnError(getEndpoint);
 		expect(error).toBeUndefined();
 	});
 
