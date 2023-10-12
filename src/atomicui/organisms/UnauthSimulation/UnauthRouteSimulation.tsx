@@ -51,7 +51,7 @@ const UnauthRouteSimulation: React.FC<UnauthRouteSimulationProps> = ({
 					subDescription: new Date().toISOString()
 				});
 				// increment idx after 1 second
-				timeoutId.current = setTimeout(() => setIdx(idx + 1), 150);
+				timeoutId.current = setTimeout(() => setIdx(idx + 1), 250);
 			} else {
 				// Reset index to 0 when end of coordinates array is reached
 				setIdx(0);
