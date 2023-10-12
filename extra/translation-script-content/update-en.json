@@ -1,1 +1,5 @@
-{}
+{
+	"map_buttons__clear_selections": {
+		"text": "Clear selection"
+	}
+}

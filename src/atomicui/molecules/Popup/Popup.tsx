@@ -1,14 +1,17 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button, Flex, Placeholder, Text, View } from "@aws-amplify/ui-react";
 import { IconCar, IconClose, IconCopyPages, IconDirections, IconInfo } from "@demo/assets";
-import { useAmplifyMap, useAwsPlace, useAwsRoute, useMediaQuery } from "@demo/hooks";
+import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
+import { useAmplifyMap, useAwsPlace, useAwsRoute } from "@demo/hooks";
+import useBottomSheet from "@demo/hooks/useBottomSheet";
+import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { DistanceUnitEnum, MapProviderEnum, MapUnitEnum, SuggestionType, TravelMode } from "@demo/types";
 
-import { TriggeredByEnum } from "@demo/types/Enums";
+import { ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { humanReadableTime } from "@demo/utils/dateTimeUtils";
 import { calculateGeodesicDistance } from "@demo/utils/geoCalculation";
 import { Units } from "@turf/turf";
@@ -26,8 +29,10 @@ interface Props {
 	info: SuggestionType;
 	select: (id?: string) => Promise<void>;
 	onClosePopUp?: () => void;
+	setInfo: (info?: SuggestionType) => void;
 }
-const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
+const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo }) => {
+	const { setPOICard, setBottomSheetMinHeight, setBottomSheetHeight, setUI, bottomSheetHeight } = useBottomSheet();
 	const [routeData, setRouteData] = useState<CalculateRouteResponse>();
 	const {
 		currentLocationData,
@@ -39,12 +44,13 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 	const { clearPoiList } = useAwsPlace();
 	const { getRoute, setDirections, isFetchingRoute } = useAwsRoute();
 	const [longitude, latitude] = info.Place?.Geometry.Point as Position;
-	const isDesktop = useMediaQuery("(min-width: 1024px)");
+	const { isDesktop } = useDeviceMediaQuery();
 	const { t, i18n } = useTranslation();
 	const currentLang = i18n.language;
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
 	const isLanguageRTL = ["ar", "he"].includes(currentLang);
+	const POICardRef = useRef<HTMLDivElement>(null);
 
 	const geodesicDistance = useMemo(
 		() =>
@@ -63,7 +69,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 
 	const localizeGeodesicDistance = useMemo(() => {
 		const formatter = new Intl.NumberFormat(currentLang, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-		return formatter.format(geodesicDistance || 0);
+		return formatter.format(geodesicDistance || 0).replace(/\s/g, "");
 	}, [geodesicDistance, currentLang]);
 
 	const geodesicDistanceUnit = useMemo(
@@ -112,16 +118,26 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 		}
 	}, [routeData, active, isEsriLimitation, currentLocationData, isCurrentLocationDisabled, loadRouteData]);
 
-	const onClose = useCallback(async () => {
-		await select(undefined);
-		onClosePopUp && onClosePopUp();
-	}, [select, onClosePopUp]);
+	const onClose = useCallback(
+		async (ui: ResponsiveUIEnum) => {
+			if (!isDesktop) {
+				setUI(ui);
+				setPOICard(undefined);
+				setInfo(undefined);
+			}
+			await select(undefined);
+			onClosePopUp && onClosePopUp();
+		},
+		[isDesktop, select, onClosePopUp, setUI, setPOICard, setInfo]
+	);
 
-	const onGetDirections = () => {
+	const onGetDirections = useCallback(() => {
 		setDirections({ info, isEsriLimitation });
-		onClose();
 		clearPoiList();
-	};
+		if (!isDesktop) {
+			onClose(ResponsiveUIEnum.direction_to_routes);
+		}
+	}, [clearPoiList, info, isDesktop, isEsriLimitation, onClose, setDirections]);
 
 	const renderRouteInfo = useMemo(() => {
 		if (currentLocationData?.error || isCurrentLocationDisabled) {
@@ -225,6 +241,95 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 		}
 	}, [info, latitude, longitude]);
 
+	const POIBody = useCallback(
+		() => (
+			<Flex ref={POICardRef} className={!isDesktop ? "poi-only-container" : ""} direction="column">
+				<View className="popup-icon-close-container">
+					<IconClose
+						onClick={() => {
+							onClose(ResponsiveUIEnum.search);
+							setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+							setBottomSheetHeight(window.innerHeight * 0.4);
+
+							setTimeout(() => {
+								setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+								setBottomSheetHeight(window.innerHeight);
+							}, 500);
+						}}
+					/>
+				</View>
+				{isDesktop && (
+					<View className="triangle-container">
+						<View />
+					</View>
+				)}
+				<View className="info-container">
+					<Text className="bold" variation="secondary" fontSize="20px" lineHeight="28px">{`${
+						info.Place?.Label?.split(",")[0]
+					}`}</Text>
+					<View className="address-container">
+						<View>
+							<Text variation="tertiary">{address}</Text>
+						</View>
+						{isDesktop && (
+							<IconCopyPages
+								data-testid="copy-icon"
+								className="copy-icon"
+								onClick={() => navigator.clipboard.writeText(`${info.Place?.Label?.split(",")[0]}` + ", " + address)}
+							/>
+						)}
+					</View>
+					{renderRouteInfo}
+					<Button
+						data-testid="directions-button"
+						ref={r => r?.blur()}
+						className="directions-button"
+						variation="primary"
+						onClick={onGetDirections}
+					>
+						<IconDirections />
+						<Text className="bold" variation="primary" fontSize={"0.92rem"}>
+							{t("popup__directions.text")}
+						</Text>
+					</Button>
+				</View>
+			</Flex>
+		),
+		[
+			address,
+			info.Place?.Label,
+			isDesktop,
+			onClose,
+			onGetDirections,
+			renderRouteInfo,
+			setBottomSheetHeight,
+			setBottomSheetMinHeight,
+			t
+		]
+	);
+
+	useEffect(() => {
+		if (!!info.Place?.Label && !isDesktop) {
+			setUI(ResponsiveUIEnum.poi_card);
+			setPOICard(<POIBody />);
+			if (bottomSheetHeight !== (POICardRef?.current?.clientHeight || 230) + 70) {
+				setBottomSheetMinHeight((POICardRef?.current?.clientHeight || 230) + 60);
+				setBottomSheetHeight((POICardRef?.current?.clientHeight || 230) + 70);
+			}
+		}
+	}, [
+		POIBody,
+		latitude,
+		longitude,
+		info,
+		isDesktop,
+		setBottomSheetHeight,
+		setBottomSheetMinHeight,
+		setPOICard,
+		setUI,
+		bottomSheetHeight
+	]);
+
 	return (
 		<PopupGl
 			data-testid="popup-container"
@@ -236,42 +341,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp }) => {
 			longitude={longitude as number}
 			latitude={latitude as number}
 		>
-			<View className="popup-icon-close-container" onClick={onClose}>
-				<IconClose />
-			</View>
-			{isDesktop && (
-				<View className="triangle-container">
-					<View />
-				</View>
-			)}
-			<View className="info-container">
-				<Text className="bold" variation="secondary" fontSize="20px" lineHeight="28px">{`${
-					info.Place?.Label?.split(",")[0]
-				}`}</Text>
-				<View className="address-container">
-					<View>
-						<Text variation="tertiary">{address}</Text>
-					</View>
-					<IconCopyPages
-						data-testid="copy-icon"
-						className="copy-icon"
-						onClick={() => navigator.clipboard.writeText(`${info.Place?.Label?.split(",")[0]}` + ", " + address)}
-					/>
-				</View>
-				{renderRouteInfo}
-				<Button
-					data-testid="directions-button"
-					ref={r => r?.blur()}
-					className="directions-button"
-					variation="primary"
-					onClick={onGetDirections}
-				>
-					<IconDirections />
-					<Text className="bold" variation="primary" fontSize={"0.92rem"}>
-						{t("popup__directions.text")}
-					</Text>
-				</Button>
-			</View>
+			{isDesktop && <POIBody />}
 		</PopupGl>
 	);
 };

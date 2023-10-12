@@ -20,4 +20,5 @@ export type ShowStateType = {
 	unauthSimulationBounds: boolean;
 	unauthSimulationDisclaimerModal: boolean;
 	unauthSimulationExitModal: boolean;
+	startUnauthSimulation: boolean;
 };

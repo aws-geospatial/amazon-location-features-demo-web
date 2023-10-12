@@ -6,6 +6,10 @@
 	max-height: 23.69rem;
 	padding: 2.77rem;
 
+	&.confirmation-modal-mobile {
+		justify-content: flex-start;
+	}
+
 	.confirmation-content {
 		gap: 0;
 		flex-direction: column;

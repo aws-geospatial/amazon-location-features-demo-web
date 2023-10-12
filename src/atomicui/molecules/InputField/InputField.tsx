@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React from "react";
+import React, { FocusEventHandler, KeyboardEventHandler } from "react";
 
 import { Flex, Text } from "@aws-amplify/ui-react";
 import "./styles.scss";
@@ -15,9 +15,14 @@ interface InputFieldProps {
 	value: string;
 	onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	innerEndComponent?: React.ReactNode;
+	innerStartComponent?: React.ReactNode;
 	type?: React.HTMLInputTypeAttribute;
 	disabled?: boolean;
 	dir?: "rtl" | "ltr";
+	onFocus?: FocusEventHandler<HTMLInputElement>;
+	onBlur?: FocusEventHandler<HTMLInputElement>;
+	onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
+	searchInputRef?: React.RefObject<HTMLInputElement>;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -31,7 +36,12 @@ const InputField: React.FC<InputFieldProps> = ({
 	innerEndComponent,
 	type = "text",
 	disabled = false,
-	dir = "ltr"
+	dir = "ltr",
+	onFocus,
+	onBlur,
+	innerStartComponent,
+	searchInputRef,
+	onKeyDown
 }) => {
 	return (
 		<Flex gap={0} direction="column" width="100%" margin={containerMargin}>
@@ -41,7 +51,9 @@ const InputField: React.FC<InputFieldProps> = ({
 				</Text>
 			)}
 			<Flex className={disabled ? "input-container disabled" : "input-container"} gap={0} alignContent="center">
+				{innerStartComponent}
 				<input
+					ref={searchInputRef}
 					data-testid={dataTestId || "input-field"}
 					style={{ order: dir === "ltr" ? 0 : 1 }}
 					placeholder={placeholder}
@@ -50,8 +62,11 @@ const InputField: React.FC<InputFieldProps> = ({
 					type={type}
 					disabled={disabled}
 					dir={dir}
+					onFocus={onFocus}
+					onBlur={onBlur}
+					onKeyDown={onKeyDown}
 				/>
-				{innerEndComponent && innerEndComponent}
+				{innerEndComponent}
 			</Flex>
 		</Flex>
 	);

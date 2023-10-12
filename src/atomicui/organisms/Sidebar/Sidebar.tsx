@@ -8,7 +8,9 @@ import { IconClose, IconCompass, IconGear, IconGeofence, IconInfo, IconLockSolid
 import { List, Logo } from "@demo/atomicui/atoms";
 import { appConfig, marketingMenuOptionsData } from "@demo/core/constants";
 import { useAmplifyAuth, useAmplifyMap, useAwsIot } from "@demo/hooks";
+import useBottomSheet from "@demo/hooks/useBottomSheet";
 import { AnalyticsEventActionsEnum, EventTypeEnum, MapProviderEnum, MenuItemEnum, TriggeredByEnum } from "@demo/types";
+import { ResponsiveUIEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -54,6 +56,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 	const isAuthenticated = !!credentials?.authenticated;
 	const { t } = useTranslation();
 	const disconnectButtonText = t("disconnect_aws_account.text");
+	const { setUI } = useBottomSheet();
 
 	const sidebarData = marketingMenuOptionsData.filter(v => t(v.label) !== t("demo.text"));
 
@@ -89,7 +92,12 @@ const Sidebar: React.FC<SidebarProps> = ({
 			if (currentMapProvider === MapProviderEnum.GRAB) {
 				onShowUnauthSimulationDisclaimerModal();
 			} else {
-				menuItem === MenuItemEnum.GEOFENCE ? onShowUnauthGeofenceBox() : onShowUnauthTrackerBox();
+				if (menuItem === MenuItemEnum.GEOFENCE) {
+					onShowUnauthGeofenceBox();
+				} else {
+					onShowUnauthTrackerBox();
+					setUI(ResponsiveUIEnum.non_start_unauthorized_tracker);
+				}
 			}
 		}
 	};

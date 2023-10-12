@@ -1,0 +1,117 @@
+/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
+/* SPDX-License-Identifier: MIT-0 */
+
+.bottom-sheet {
+	&.desktop {
+		display: none;
+	}
+
+	&.tablet {
+		[data-rsbs-overlay] {
+			width: 24.61rem;
+			margin-left: 0.8rem;
+			background-color: rgba(200, 255, 0, 0.549);
+		}
+	}
+
+	[data-rsbs-overlay="true"] {
+		z-index: 20;
+		opacity: 1;
+	}
+
+	&.short-header {
+		[data-rsbs-header="true"] {
+			width: 85% !important;
+		}
+	}
+
+	[data-rsbs-header="true"] {
+		box-shadow: none;
+		padding: 0;
+		z-index: 20;
+		opacity: 1;
+		min-height: 3.1rem;
+		padding-top: 3px;
+	}
+
+	&.no-scroll-on-content {
+		[data-rsbs-scroll="true"] {
+			overflow: hidden;
+		}
+	}
+
+	&.margin-top-from-header {
+		[data-rsbs-header="true"] {
+			min-height: 1.5rem;
+		}
+	}
+
+	.logo-mobile-container {
+		position: absolute;
+		top: -2.89rem;
+		z-index: 3;
+		gap: 0;
+		left: 0.59rem;
+		align-items: center;
+	}
+
+	.logo-mobile {
+		width: 11.54rem;
+		height: 2.08rem;
+	}
+
+	.map-header-mobile {
+		width: 100%;
+		flex-direction: column;
+		gap: 0px;
+		padding: 8px 12px 0px 16px;
+		cursor: initial;
+	}
+
+	[data-rsbs-header]:before {
+		width: 30px;
+		height: 8px;
+	}
+
+	&.dragging-up {
+		[data-rsbs-header]:before {
+			background: url("/src/assets/icons/icon-move-up.svg") center center no-repeat;
+			background-size: contain;
+		}
+	}
+
+	&.dragging-down {
+		[data-rsbs-header]:before {
+			background: url("/src/assets/icons/icon-move-down.svg") center center no-repeat;
+			background-size: contain;
+		}
+	}
+
+	&.no-dragging {
+		[data-rsbs-header]:before {
+			background: url("/src/assets/icons/icon-move-still.svg") center center no-repeat;
+			background-size: contain;
+		}
+	}
+
+	.bell-icon-container {
+		.notification-bubble {
+			width: 8px;
+			height: 8px;
+			background-color: orange;
+			border-radius: 50%;
+			display: flex;
+			position: absolute;
+			top: 0px;
+			right: 3px;
+		}
+
+		.bell-icon {
+			path {
+				fill: var(--grey-color);
+			}
+		}
+	}
+
+	--rsbs-overlay-rounded: 16px !important;
+}

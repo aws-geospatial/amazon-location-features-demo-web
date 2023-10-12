@@ -7,6 +7,78 @@
 	top: 21px !important;
 	z-index: 4;
 
+	&.route-card-mobile {
+		position: relative !important;
+		top: -5px !important;
+		width: 100% !important;
+		box-shadow: none;
+		padding: 0 1.23rem;
+
+		.icon-more-vertical {
+			g {
+				g {
+					fill: var(--grey-color) !important;
+				}
+			}
+		}
+
+		.travel-mode-button-container {
+			gap: 0;
+			padding-left: 0 !important;
+			overflow-x: auto;
+			width: 100%;
+			white-space: nowrap;
+
+			&::-webkit-scrollbar {
+				width: 0rem;
+			}
+
+			&::-webkit-scrollbar-track {
+				background-color: transparent;
+			}
+
+			&::-webkit-scrollbar-thumb {
+				background-color: transparent;
+			}
+
+			.travel-mode {
+				gap: 0;
+				display: flex;
+				align-items: center;
+				height: 2.46rem !important;
+				width: auto;
+				padding: 0.54rem;
+				border: 1px solid var(--grey-color-3);
+				border-radius: 0.62rem;
+				flex-shrink: 0;
+
+				svg {
+					min-width: 1.23rem;
+					min-height: 1.23rem;
+					max-width: 1.23rem;
+					max-height: 1.23rem;
+					width: 100%;
+					height: 100%;
+				}
+
+				.duration-text {
+					margin-left: 0.62rem;
+					height: 1.38rem;
+				}
+			}
+		}
+
+		.route-card-header-text {
+			font-family: "AmazonEmber-Bold";
+			font-size: 1.23rem;
+		}
+
+		.from-to-container {
+			padding-left: 0 !important;
+			padding-right: 0 !important;
+		}
+	}
+
 	.route-card-close {
 		width: 20px;
 		height: 20px;
@@ -29,6 +101,8 @@
 	.travel-mode-button-container {
 		padding: 16px 0px 16px 16px !important;
 		border-bottom: 1px solid rgba(242, 242, 247, 1) !important;
+		display: flex;
+		align-items: center;
 
 		.travel-mode {
 			width: 32px;
@@ -50,6 +124,7 @@
 		.selected {
 			border-radius: 8px !important;
 			background-color: rgba(0, 130, 150, 0.08) !important;
+			border: none !important;
 
 			svg {
 				fill: #008296 !important;
@@ -57,8 +132,56 @@
 		}
 	}
 
+	.from-to-container-wrapper {
+		.from-to-container {
+			width: 100%;
+		}
+
+		&.from-to-container-wrapper-mobile {
+			.inputs-container {
+				width: inherit;
+			}
+		}
+	}
+
+	.from-to-mobile {
+		position: relative;
+	}
+
+	.more-action-icon-container {
+		border-radius: 8px;
+		padding: 4px;
+		margin-right: 0.5rem;
+		&:hover {
+			background-color: var(--ghost-white);
+		}
+	}
+
 	.from-to-container {
 		padding: 12px 0px 12px 18px !important;
+
+		&.from-to-container-mobile {
+			margin-top: 8px;
+			background-color: var(--light-color-2);
+			border-radius: 8px;
+			padding: 10px !important;
+			width: 100%;
+
+			.inputs-container {
+				width: 100%;
+				input {
+					background-color: var(--light-color-2);
+				}
+			}
+
+			.marker-container {
+				margin: 0.5rem 0;
+
+				.dashed-line {
+					height: 3px;
+				}
+			}
+		}
 
 		.marker-container {
 			gap: 0;
@@ -113,21 +236,21 @@
 				border-top: 1px solid rgba(242, 242, 247, 1);
 			}
 		}
+	}
 
-		.swap-icon-container {
-			gap: 0;
-			align-items: center;
+	.swap-icon-container {
+		gap: 0;
+		align-items: center;
 
-			svg {
-				width: 24px;
-				height: 24px;
-				fill: #8e8e93;
-				cursor: pointer;
+		svg {
+			width: 24px;
+			height: 24px;
+			fill: #8e8e93;
+			cursor: pointer;
 
-				@media only screen and (min-width: 1024px) {
-					&:hover {
-						fill: #008296;
-					}
+			@media only screen and (min-width: 1024px) {
+				&:hover {
+					fill: #008296;
 				}
 			}
 		}
@@ -177,52 +300,6 @@
 				cursor: pointer;
 			}
 		}
-
-		.route-option-items {
-			display: flex;
-			flex-direction: column;
-
-			.option-item {
-				padding: 10px 0px;
-				gap: 0;
-
-				.amplify-flex.amplify-checkbox {
-					.amplify-text.amplify-checkbox__label {
-						opacity: 1 !important;
-						color: rgba(35, 47, 62, 1) !important;
-						font-size: 13px !important;
-						font-family: "AmazonEmber-Regular";
-						font-style: normal !important;
-						letter-spacing: 0px !important;
-						text-align: left !important;
-						line-height: 18px !important;
-						margin-left: 16px;
-					}
-
-					.amplify-flex.amplify-checkbox__button {
-						border-radius: 3px;
-						border: 1px solid #c7c7cc;
-						opacity: 1;
-						width: 20px;
-						height: 20px;
-
-						.amplify-icon.amplify-checkbox__icon {
-							display: flex;
-							justify-content: center !important;
-							align-items: center !important;
-							background-color: #008296 !important;
-							width: 100% !important;
-							height: 100% !important;
-
-							svg {
-								width: 100%;
-								height: 100%;
-							}
-						}
-					}
-				}
-			}
-		}
 	}
 
 	.bottom-border-radius {
@@ -235,6 +312,12 @@
 		border-bottom-right-radius: 8px;
 		overflow: auto;
 
+		&.search-results-container-mobile {
+			.suggestion {
+				padding-left: 0;
+			}
+		}
+
 		.current-location-toggle-container {
 			display: flex;
 			flex-direction: row;
@@ -242,6 +325,10 @@
 			padding: 20px 0px 20px 18px;
 			cursor: pointer;
 			border-bottom: 1px solid rgba(242, 242, 247, 1);
+
+			&.current-location-toggle-container-mobile {
+				padding-left: 0;
+			}
 
 			svg {
 				width: 16px;
@@ -386,8 +473,33 @@
 			}
 		}
 
+		.route-info-mobile {
+			gap: 0;
+			padding: 1.23rem 0rem;
+			border-bottom: 1px solid rgba(242, 242, 247, 1);
+
+			.time-and-distance {
+				gap: 0;
+				flex-direction: column;
+			}
+
+			.go-button {
+				width: 5.92rem;
+				height: 3.08rem;
+				font-size: 1.08rem;
+			}
+		}
+
 		.steps-container {
-			overflow: scroll;
+			overflow-y: scroll;
+			padding: 0 1rem;
+
+			&.steps-container-mobile {
+				padding: 0;
+				.step-card-icon-container {
+					margin-left: 0;
+				}
+			}
 		}
 	}
 
@@ -428,4 +540,53 @@
 			}
 		}
 	}
+}
+
+.route-option-items {
+	display: flex;
+	flex-direction: column;
+
+	.option-item {
+		padding: 10px 0px;
+		gap: 0;
+
+		.amplify-flex.amplify-checkbox {
+			.amplify-text.amplify-checkbox__label {
+				opacity: 1 !important;
+				color: rgba(35, 47, 62, 1) !important;
+				font-size: 13px !important;
+				font-family: "AmazonEmber-Regular";
+				font-style: normal !important;
+				letter-spacing: 0px !important;
+				text-align: left !important;
+				line-height: 18px !important;
+				margin-left: 16px;
+			}
+
+			.amplify-flex.amplify-checkbox__button {
+				width: 20px;
+				height: 20px;
+
+				.amplify-icon.amplify-checkbox__icon {
+					display: flex;
+					justify-content: center !important;
+					align-items: center !important;
+					background-color: #008296 !important;
+					width: 100% !important;
+					height: 100% !important;
+
+					svg {
+						width: 100%;
+						height: 100%;
+					}
+				}
+			}
+		}
+	}
+}
+
+.expand-mobile-close {
+	position: absolute;
+	top: 11px;
+	right: 10px;
 }

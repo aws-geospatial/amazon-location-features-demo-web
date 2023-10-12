@@ -2750,12 +2750,6 @@
   "welcome_modal__heading": {
     "text": "में आपका स्वागत है\nAmazon लोकेशन डेमो"
   },
-  "welcome_modal__item_1": {
-    "text": "Amazon लोकेशन डेमो ऐप का उपयोग करके, आप ऐप के लिए सहमत होते हैं"
-  },
-  "welcome_modal__item_3": {
-    "text": "उपयोग के लिए।"
-  },
   "search_box__searching_for_suggestions": {
     "text": "सुझाव खोज रहे हैं..."
   },
@@ -3395,6 +3389,12 @@
   "regions__ap_southeast__region": {
     "text": "एशिया पैसिफिक"
   },
+  "explore__connect_aws_account": {
+    "text": "AWS से कनेक्ट करें"
+  },
+  "explore__connect_description": {
+    "text": "AWS CloudFormation से कनेक्ट करके ट्रैकिंग और जियोफेंस सुविधाओं तक पहुंचें "
+  },
   "samples__js-map-style-change__title": {
     "text": "मानचित्र शैलियों को स्विच करें"
   },
@@ -3553,5 +3553,32 @@
   },
   "samples__react-map-with-markers__cleanUp": {
     "text": "इस वॉकथ्रू में बनाए गए सभी संसाधनों को निकालने के लिए, नामित CloudFormation स्टैक को हटा दें\n`react-map-with-geojson`।"
+  },
+  "settings_modal_option__overview": {
+    "text": "Amazon Location की शक्ति का अन्वेषण करें"
+  },
+  "settings_modal_option__samples": {
+    "text": "क्यूरेटेड कोड नमूनों में हमारी विशेषताएं"
+  },
+  "settings_modal_option__settings": {
+    "text": "अपना अनुभव कॉन्फ़िगर करें"
+  },
+  "settings_modal_option__about": {
+    "text": "कानूनी और आरोपण"
+  },
+  "map_buttons__clear_selections": {
+    "text": "चयन साफ़ करें"
+  },
+  "map_buttons__apply_filters": {
+    "text": "फ़िल्टर लागू करें"
+  },
+  "welcome_modal__cta": {
+    "text": "खोजना शुरू करें"
+  },
+  "go": {
+    "text": "जाओ"
+  },
+  "more_options": {
+    "text": "और विकल्प"
   }
 }
