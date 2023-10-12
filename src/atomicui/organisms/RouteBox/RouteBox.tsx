@@ -454,6 +454,22 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 		};
 	}, [handleClick]);
 
+	// useEffect(() => {
+	// 	if (fromInputRef.current) {
+	// 		fromInputRef.current.onfocus = () => {
+	// 			window.scrollTo(0, 0);
+	// 			document.body.scrollTop = 0;
+	// 		};
+	// 	}
+
+	// 	if (toInputRef.current) {
+	// 		toInputRef.current.onfocus = () => {
+	// 			window.scrollTo(0, 0);
+	// 			document.body.scrollTop = 0;
+	// 		};
+	// 	}
+	// });
+
 	const onFocus = useCallback(
 		(type: InputType) => {
 			if (type === InputType.FROM) {
@@ -465,7 +481,9 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 			}
 
 			if ((isAndroid || isIOS) && !isDesktopBrowser) {
-				bottomSheetRef?.current?.snapTo(window.innerHeight);
+				if (bottomSheetCurrentHeight < window.innerHeight * 0.4) {
+					bottomSheetRef?.current?.snapTo(window.innerHeight);
+				}
 			} else {
 				if (bottomSheetCurrentHeight < window.innerHeight * 0.4) {
 					setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
@@ -963,7 +981,9 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 									ref={fromInputRef}
 									data-testid="from-input"
 									placeholder={t("route_box__from.text") as string}
-									onFocus={() => onFocus(InputType.FROM)}
+									onFocus={() => {
+										onFocus(InputType.FROM);
+									}}
 									onBlur={handleBlur}
 									value={value.from}
 									onChange={e => onChangeValue(e, InputType.FROM)}
