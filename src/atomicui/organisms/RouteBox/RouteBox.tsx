@@ -507,20 +507,21 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 		setRouteDataForMobile(undefined);
 	};
 
-	const handleBlur = () => {
+	const handleBlur = useCallback(() => {
 		if ((isAndroid || isIOS) && !isDesktopBrowser && !isDesktop) {
 			setTimeout(() => {
 				if (
 					!fromInputRef.current?.contains(document.activeElement) &&
 					!toInputRef.current?.contains(document.activeElement) &&
-					((value.from.length && value.to.length) || (!value.from.length && !value.to.length))
+					(value.from.length || fromInputRef.current?.value === t("route_box__my_location.text")) &&
+					(value.to.length || toInputRef.current?.value === t("route_box__my_location.text"))
 				) {
 					setBottomSheetMinHeight(window.innerHeight * 0.42 - 10);
 					setBottomSheetHeight(window.innerHeight * 0.42);
 				}
 			}, 200);
 		}
-	};
+	}, [isDesktop, isDesktopBrowser, setBottomSheetHeight, setBottomSheetMinHeight, t, value]);
 
 	const onClickRouteOptions = useCallback(() => setExpandRouteOptions(!expandRouteOptions), [expandRouteOptions]);
 
@@ -585,7 +586,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 		[inputFocused.from, inputFocused.to, routeData, expandRouteOptions, onClickRouteOptions, t, MoreOptionsUI]
 	);
 
-	const onSelectCurrentLocaiton = (type: InputType) => {
+	const onSelectCurrentLocation = (type: InputType) => {
 		type === InputType.FROM &&
 			setValue({ ...value, from: isCurrentLocationSelected ? "" : t("route_box__my_location.text") });
 		type === InputType.TO &&
@@ -1041,7 +1042,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 									className={`current-location-toggle-container ${
 										!isDesktop ? "current-location-toggle-container-mobile" : ""
 									}`}
-									onClick={() => onSelectCurrentLocaiton(inputFocused.from ? InputType.FROM : InputType.TO)}
+									onClick={() => onSelectCurrentLocation(inputFocused.from ? InputType.FROM : InputType.TO)}
 								>
 									<IconMyLocation />
 									<Text>{t("route_box__current_location.text")}</Text>
