@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="UI-Kit" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icons" transform="translate(-88, -304)" fill="#1D1D1F">
+            <g id="Row-5" transform="translate(40, 304)">
+                <g id="Icon/more-vertical" transform="translate(58, 3)">
+                    <path d="M2,7 C0.896,7 0,7.896 0,9 C0,10.104 0.896,11 2,11 C3.104,11 4,10.104 4,9 C4,7.896 3.104,7 2,7 M2,4 C3.104,4 4,3.104 4,2 C4,0.896 3.104,0 2,0 C0.896,0 0,0.896 0,2 C0,3.104 0.896,4 2,4 M2,14 C0.896,14 0,14.896 0,16 C0,17.104 0.896,18 2,18 C3.104,18 4,17.104 4,16 C4,14.896 3.104,14 2,14" id="🎨-Icon-Сolor"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

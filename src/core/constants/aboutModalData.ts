@@ -4,7 +4,6 @@
 const aboutModalData = {
 	ABOUT: {
 		VERSION: "about_modal__version.text",
-		VERSION_VALUE: "1.0.0",
 		BUILD: "",
 		COPYRIGHT: "copyright.text"
 	},

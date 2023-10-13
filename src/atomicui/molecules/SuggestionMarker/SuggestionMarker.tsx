@@ -123,6 +123,7 @@ const SuggestionMarker: React.FC<Props> = ({
 								  }
 								: onClosePopUp
 						}
+						setInfo={setInfo}
 					/>
 				) : (
 					<View

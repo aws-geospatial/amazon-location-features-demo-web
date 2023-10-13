@@ -3,8 +3,8 @@
 
 import { useCallback, useEffect } from "react";
 
+import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { CircleDrawEventType, CircleFeatureType } from "@demo/types";
-
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import * as turf from "@turf/turf";
@@ -64,17 +64,11 @@ interface CircleDrawControlProps {
 	radiusInM: number;
 	onCreate: (e: CircleDrawEventType) => void;
 	onUpdate: (e: CircleDrawEventType) => void;
-	isDesktop: boolean;
 }
 
-const CircleDrawControl: React.FC<CircleDrawControlProps> = ({
-	geofenceCenter,
-	radiusInM,
-	onCreate,
-	onUpdate,
-	isDesktop
-}) => {
+const CircleDrawControl: React.FC<CircleDrawControlProps> = ({ geofenceCenter, radiusInM, onCreate, onUpdate }) => {
 	const { current: mapRef } = useMap();
+	const { isDesktop, isTablet } = useDeviceMediaQuery();
 
 	useEffect(() => {
 		const timeout = setTimeout(() => {
@@ -103,7 +97,9 @@ const CircleDrawControl: React.FC<CircleDrawControlProps> = ({
 				const bbox = turf.bbox(line);
 				isDesktop
 					? mapRef?.fitBounds(bbox as LngLatBoundsLike, { padding: 100 })
-					: mapRef?.fitBounds(bbox as LngLatBoundsLike, { padding: { top: 280, right: 25, bottom: 25, left: 25 } });
+					: isTablet
+					? mapRef?.fitBounds(bbox as LngLatBoundsLike, { padding: { top: 100, bottom: 100, left: 390, right: 50 } })
+					: mapRef?.fitBounds(bbox as LngLatBoundsLike, { padding: { top: 100, bottom: 420, left: 60, right: 70 } });
 			} else {
 				const all = draw.getAll() as unknown as CircleDrawEventType;
 				all?.features[0]?.geometry?.coordinates[0]?.length > 2 && draw.deleteAll();
@@ -113,7 +109,7 @@ const CircleDrawControl: React.FC<CircleDrawControlProps> = ({
 		return () => {
 			clearTimeout(timeout);
 		};
-	}, [geofenceCenter, radiusInM, isDesktop, mapRef]);
+	}, [geofenceCenter, radiusInM, isDesktop, isTablet, mapRef]);
 
 	const drawCreate = useCallback((e: CircleDrawEventType) => onCreate(e), [onCreate]);
 

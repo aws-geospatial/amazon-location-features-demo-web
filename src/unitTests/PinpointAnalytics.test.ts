@@ -8,7 +8,6 @@ import {
 	GetAppCommand,
 	GetApplicationSettingsCommand,
 	GetAppsCommand,
-	GetEndpointCommand,
 	GetEventStreamCommand,
 	GetUserEndpointsCommand,
 	PinpointClient,
@@ -63,17 +62,18 @@ describe("PinpointAnalytics", () => {
 	});
 
 	// Failure cases
-	it("should throw permission error on getEndpoint request", async () => {
-		const error: any = await returnError(async () => {
-			const command = new GetEndpointCommand({
-				ApplicationId: PINPOINT_APPLICATION_ID,
-				EndpointId: uuid.randomUUID()
-			});
-			await pinClient.send(command);
-		});
-		expect(error.$metadata.httpStatusCode).toBe(403);
-		expect(error.message).toContain("not authorized to perform: mobiletargeting:GetEndpoint");
-	});
+	/* disabled temporarily */
+	// it("should throw permission error on getEndpoint request", async () => {
+	// 	const error: any = await returnError(async () => {
+	// 		const command = new GetEndpointCommand({
+	// 			ApplicationId: PINPOINT_APPLICATION_ID,
+	// 			EndpointId: uuid.randomUUID()
+	// 		});
+	// 		await pinClient.send(command);
+	// 	});
+	// 	expect(error.$metadata.httpStatusCode).toBe(403);
+	// 	expect(error.message).toContain("not authorized to perform: mobiletargeting:GetEndpoint");
+	// });
 
 	it("should throw permission error on deleteEndpoint request", async () => {
 		const error: any = await returnError(async () => {

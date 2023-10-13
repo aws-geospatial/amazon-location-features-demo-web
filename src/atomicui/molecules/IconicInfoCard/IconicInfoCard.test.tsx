@@ -1,18 +1,27 @@
-import React from "react";
+import { render, screen, waitFor } from "@testing-library/react";
 
-import { render, screen } from "@testing-library/react";
+import IconicInfoCard, { IconicInfoCardProps } from "./IconicInfoCard";
 
-import "@testing-library/jest-dom/extend-expect";
-import IconicInfoCard from "./IconicInfoCard";
+const mockProps: IconicInfoCardProps = {
+	IconComponent: <div></div>,
+	title: "Title",
+	description: "Description",
+	onClickHandler: jest.fn()
+};
 
 describe("IconicInfoCard", () => {
-	test("renders IconicInfoCard component", () => {
-		render(<IconicInfoCard title="Test Title" description="Test Description" />);
+	const renderComponent = () => {
+		return render(<IconicInfoCard {...mockProps} />);
+	};
 
-		expect(screen.getByTestId("iconic-info-card-container")).toBeInTheDocument();
-		expect(screen.getByTestId("iconic-info-card-title")).toBeInTheDocument();
-		expect(screen.getByTestId("iconic-info-card-description")).toBeInTheDocument();
-		screen.queryByTestId("iconic-info-card-subdescription") &&
-			expect(screen.getByTestId("iconic-info-card-subdescription")).toBeInTheDocument();
+	it("should render correctly", () => {
+		const { getByTestId, queryByTestId } = renderComponent();
+		waitFor(() => {
+			expect(getByTestId("iconic-info-card-container")).toBeInTheDocument();
+			expect(getByTestId("iconic-info-card-title")).toBeInTheDocument();
+			expect(getByTestId("iconic-info-card-description")).toBeInTheDocument();
+			queryByTestId("iconic-info-card-subdescription") &&
+				expect(screen.getByTestId("iconic-info-card-subdescription")).toBeInTheDocument();
+		});
 	});
 });

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import { View } from "@aws-amplify/ui-react";
-import { IconBusActive, IconBusInactive, IconSegment, IconSegmentDisabled } from "@demo/assets";
+import { IconBusActive, IconBusInactive } from "@demo/assets";
 import { useAwsGeofence } from "@demo/hooks";
 import { TrackingHistoryItemtype, TrackingHistoryTypeEnum } from "@demo/types";
 import { Layer, LayerProps, Marker, Source } from "react-map-gl";
@@ -51,7 +51,7 @@ const UnauthRouteSimulation: React.FC<UnauthRouteSimulationProps> = ({
 					subDescription: new Date().toISOString()
 				});
 				// increment idx after 1 second
-				timeoutId.current = setTimeout(() => setIdx(idx + 1), 2000);
+				timeoutId.current = setTimeout(() => setIdx(idx + 1), 150);
 			} else {
 				// Reset index to 0 when end of coordinates array is reached
 				setIdx(0);
@@ -105,26 +105,6 @@ const UnauthRouteSimulation: React.FC<UnauthRouteSimulationProps> = ({
 		);
 	}, [id, disabled, coordinates]);
 
-	const renderRouteMarkers = useMemo(() => {
-		return coordinates.map((coordinate, i) => (
-			<Marker
-				key={`${i}-route-marker`}
-				style={{
-					zIndex: 1,
-					width: "0.7rem",
-					height: "0.7rem",
-					display: "flex",
-					justifyContent: "center",
-					alignItems: "center"
-				}}
-				longitude={coordinate[0]}
-				latitude={coordinate[1]}
-			>
-				{disabled ? <IconSegmentDisabled /> : <IconSegment />}
-			</Marker>
-		));
-	}, [coordinates, disabled]);
-
 	const renderRouteTracker = useMemo(() => {
 		return (
 			<Marker
@@ -143,7 +123,6 @@ const UnauthRouteSimulation: React.FC<UnauthRouteSimulationProps> = ({
 	return (
 		<View key={id}>
 			{renderRoute}
-			{renderRouteMarkers}
 			{renderRouteTracker}
 		</View>
 	);

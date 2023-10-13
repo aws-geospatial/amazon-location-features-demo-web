@@ -2750,12 +2750,6 @@
   "welcome_modal__heading": {
     "text": "مرحبًا بك في\nعرض توضيحي لموقع أمازون"
   },
-  "welcome_modal__item_1": {
-    "text": "باستخدام تطبيق Amazon Location Demo، فإنك توافق على التطبيق الشروط والأحكام .للاستخدام"
-  },
-  "welcome_modal__item_3": {
-    "text": ".للاستخدام"
-  },
   "search_box__searching_for_suggestions": {
     "text": ".جاري البحث عن اقتراحات.."
   },
@@ -3141,8 +3135,8 @@
     "text": "الإصدار"
   },
   "about_modal__terms__prefix": {
-		"text": "من خلال تنزيل تطبيق Amazon Location Demo أو تثبيته أو استخدامه، فإنك توافق على التطبيق"
-	},
+    "text": "من خلال تنزيل تطبيق Amazon Location Demo أو تثبيته أو استخدامه، فإنك توافق على التطبيق"
+  },
   "about_modal__terms__suffix": {
     "text": ". للاستخدام"
   },
@@ -3395,6 +3389,12 @@
   "regions__ap_southeast__region": {
     "text": "آسيا والمحيط الهادئ"
   },
+  "explore__connect_aws_account": {
+    "text": "الاتصال بـ AWS"
+  },
+  "explore__connect_description": {
+    "text": "الوصول إلى ميزات التتبع والسياج الجغرافي من خلال الاتصال بـ AWS CloudFormation "
+  },
   "samples__js-map-style-change__title": {
     "text": "تبديل أنماط الخريطة"
   },
@@ -3553,5 +3553,32 @@
   },
   "samples__react-map-with-markers__cleanUp": {
     "text": "لإزالة جميع الموارد التي تم إنشاؤها في هذه الإرشادات التفصيلية، احذف مكدس CloudFormation المسمى\n«خريطة التفاعل مع geojson»."
+  },
+  "settings_modal_option__overview": {
+    "text": "اكتشف قوة موقع أمازون"
+  },
+  "settings_modal_option__samples": {
+    "text": "ميزاتنا في عينات التعليمات البرمجية المنسقة"
+  },
+  "settings_modal_option__settings": {
+    "text": "تكوين تجربتك"
+  },
+  "settings_modal_option__about": {
+    "text": "القانونية والإسناد"
+  },
+  "map_buttons__clear_selections": {
+    "text": "اختيار واضح"
+  },
+  "map_buttons__apply_filters": {
+    "text": "تطبيق الفلاتر"
+  },
+  "welcome_modal__cta": {
+    "text": "ابدأ الاستكشاف"
+  },
+  "go": {
+    "text": "اذهب"
+  },
+  "more_options": {
+    "text": "المزيد من الخيارات"
   }
 }

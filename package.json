@@ -41,6 +41,7 @@
 		"@aws-amplify/ui-react": "3.6.1",
 		"@aws-sdk/credential-providers": "3.370.0",
 		"@turf/turf": "6.5.0",
+		"@types/react-window": "^1.8.5",
 		"aws-amplify": "4.3.43",
 		"aws-sdk": "2.1248.0",
 		"date-fns": "2.29.3",
@@ -54,8 +55,11 @@
 		"react-dom": "18.2.0",
 		"react-i18next": "13.0.1",
 		"react-router-dom": "6.4.3",
+		"react-spring-bottom-sheet": "3.5.0-alpha.0",
 		"react-toastify": "9.1.1",
 		"react-tooltip": "5.10.0",
+		"react-virtualized-auto-sizer": "^1.0.20",
+		"react-window": "1.8.9",
 		"zustand": "4.3.9"
 	},
 	"devDependencies": {
@@ -129,7 +133,9 @@
 			"!**/src/atomicui/pages/DemoPlaceholderPage/**",
 			"!**/src/atomicui/organisms/AuthTrackerBox/AuthTrackerSimulation.tsx",
 			"!**/src/atomicui/organisms/UnauthSimulation/UnauthGeofencesSimulation.tsx",
-			"!**/src/atomicui/organisms/UnauthSimulation/UnauthRouteSimulation.tsx"
+			"!**/src/atomicui/organisms/UnauthSimulation/UnauthRouteSimulation.tsx",
+			"!**/src/atomicui/organisms/Explore/**",
+			"!**/src/atomicui/organisms/ResponsiveBottomSheet/**"
 		]
 	}
 }

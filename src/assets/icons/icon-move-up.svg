@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36.0007185px" height="10px" viewBox="0 0 36.0007185 10" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Icon/Move-Up</title>
+    <g id="UI-Kit" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icons" transform="translate(-226, -555)">
+            <g id="Row-10" transform="translate(40, 544)">
+                <g id="Icon/Move-Up" transform="translate(186, 11)">
+                    <rect id="Rectangle" x="0" y="2.84217094e-14" width="36" height="10"></rect>
+                    <path d="M18.0003593,0 L18.3689363,0.0691082006 L34.3689363,3.0691082 C35.454587,3.2726677 36.1696631,4.317779 35.9661036,5.40342964 C35.7625441,6.48908028 34.7174328,7.20415644 33.6317822,7.00059695 L18.0003593,4.06885257 L2.36893633,7.00059695 C1.33263345,7.19490374 0.333268262,6.5521892 0.0675140061,5.54912449 L0.0346148895,5.40342964 C-0.168944605,4.317779 0.546131554,3.2726677 1.63178219,3.0691082 L17.6317822,0.0691082006 L18.0003593,0 Z" id="Up" fill="#D1D1D6" fill-rule="nonzero"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

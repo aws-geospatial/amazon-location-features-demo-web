@@ -17,4 +17,5 @@ export type NotificationHistoryItemtype = {
 	stopName: string;
 	coordinates: string;
 	createdAt: string;
+	eventType?: "Entered" | "Exited";
 };

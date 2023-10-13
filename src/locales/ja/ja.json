@@ -2750,12 +2750,6 @@
   "welcome_modal__heading": {
     "text": "へようこそ\nAmazon ロケーションデモ"
   },
-  "welcome_modal__item_1": {
-    "text": "Amazon ロケーションデモアプリを使用することにより、アプリに同意したものとみなされます"
-  },
-  "welcome_modal__item_3": {
-    "text": "使用のため。"
-  },
   "search_box__searching_for_suggestions": {
     "text": "候補を検索中..."
   },
@@ -3395,6 +3389,12 @@
   "regions__ap_southeast__region": {
     "text": "アジアパシフィック"
   },
+  "explore__connect_aws_account": {
+    "text": "AWS に接続"
+  },
+  "explore__connect_description": {
+    "text": "AWS CloudFormation に接続してトラッキングとジオフェンス機能にアクセスする "
+  },
   "samples__js-map-style-change__title": {
     "text": "マップスタイルを切り替える"
   },
@@ -3553,5 +3553,32 @@
   },
   "samples__react-map-with-markers__cleanUp": {
     "text": "このウォークスルーで作成したリソースをすべて削除するには、という名前のCloudFormationスタックを削除します。\n`react-map-with-geojson`。"
+  },
+  "settings_modal_option__overview": {
+    "text": "Amazon ロケーションの力を探る"
+  },
+  "settings_modal_option__samples": {
+    "text": "厳選されたコードサンプルに含まれる機能"
+  },
+  "settings_modal_option__settings": {
+    "text": "エクスペリエンスの設定"
+  },
+  "settings_modal_option__about": {
+    "text": "リーガルとアトリビューション"
+  },
+  "map_buttons__clear_selections": {
+    "text": "選択をクリア"
+  },
+  "map_buttons__apply_filters": {
+    "text": "フィルターを適用"
+  },
+  "welcome_modal__cta": {
+    "text": "探索を始める"
+  },
+  "go": {
+    "text": "行く"
+  },
+  "more_options": {
+    "text": "その他のオプション"
   }
 }
