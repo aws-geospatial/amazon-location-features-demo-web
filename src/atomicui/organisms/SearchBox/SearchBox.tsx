@@ -128,7 +128,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 				document.removeEventListener("touchmove", handleClickOutside);
 			};
 		}
-	}, [ui, setBottomSheetHeight, isDesktop, bottomSheetRef]);
+	}, [ui, isDesktop, bottomSheetRef]);
 
 	const handleSearch = useCallback(
 		async (value: string, exact = false, action: string) => {
@@ -349,25 +349,47 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		e.stopPropagation();
 		setIsFocused(true);
 		if ((isAndroid || isIOS) && !isDesktopBrowser) {
-			// if (bottomSheetCurrentHeight < document.documentElement.clientHeight * 0.4) {
-			bottomSheetRef?.current?.snapTo(window.innerHeight);
-			setTimeout(() => {
+			if (bottomSheetCurrentHeight < window.innerHeight * 0.9) {
 				setBottomSheetHeight(window.innerHeight);
-				setBottomSheetMinHeight(BottomSheetHeights.explore.min);
-			}, 200);
-			// }
+				setTimeout(() => {
+					bottomSheetRef?.current?.snapTo(window.innerHeight);
+				}, 0);
+				setTimeout(() => {
+					setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+				}, 200);
+			}
 		} else {
-			if (bottomSheetCurrentHeight < document.documentElement.clientHeight * 0.4) {
-				setBottomSheetMinHeight(document.documentElement.clientHeight * 0.4 - 10);
-				setBottomSheetHeight(document.documentElement.clientHeight * 0.4);
+			if (bottomSheetCurrentHeight < window.innerHeight * 0.4) {
+				setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+				setBottomSheetHeight(window.innerHeight * 0.4);
 
 				setTimeout(() => {
 					setBottomSheetMinHeight(BottomSheetHeights.explore.min);
-					setBottomSheetHeight(document.documentElement.clientHeight);
+					setBottomSheetHeight(window.innerHeight);
 				}, 200);
 			}
 		}
 	};
+
+	const simpleSearchBlur = useCallback(
+		(e: { stopPropagation: () => void }) => {
+			e.stopPropagation();
+			setIsFocused(false);
+			!value?.length && setUI(ResponsiveUIEnum.explore);
+
+			setTimeout(() => {
+				if (bottomSheetCurrentHeight < window.innerHeight * 0.9) {
+					setBottomSheetHeight(5000);
+					setBottomSheetMinHeight(window.innerHeight - 10);
+				}
+			}, 200);
+
+			setTimeout(() => {
+				setBottomSheetHeight(window.innerHeight);
+			}, 500);
+		},
+		[bottomSheetCurrentHeight, setBottomSheetHeight, setBottomSheetMinHeight, setUI, value?.length]
+	);
 
 	const onFormSubmit = useCallback(
 		(e: React.FormEvent<HTMLFormElement>) => {
@@ -400,18 +422,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 										dir={langDir}
 										onKeyDown={e => e.stopPropagation()}
 										onFocus={simpleSearchOnFocus}
-										onBlur={e => {
-											e.stopPropagation();
-											setIsFocused(false);
-											!value?.length && setUI(ResponsiveUIEnum.explore);
-
-											setBottomSheetHeight(window.innerHeight);
-											setTimeout(() => {
-												if ((isAndroid || isIOS) && !isDesktopBrowser) {
-													setBottomSheetMinHeight(window.innerHeight - 10);
-												}
-											}, 200);
-										}}
+										onBlur={simpleSearchBlur}
 										placeholder={t("search.text") as string}
 										innerStartComponent={
 											<Flex

@@ -463,10 +463,12 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 			}
 
 			if ((isAndroid || isIOS) && !isDesktopBrowser) {
-				setBottomSheetHeight(window.innerHeight);
-				setTimeout(() => {
-					bottomSheetRef?.current?.snapTo(window.innerHeight);
-				}, 0);
+				if (bottomSheetCurrentHeight < window.innerHeight * 0.9) {
+					setBottomSheetHeight(window.innerHeight);
+					setTimeout(() => {
+						bottomSheetRef?.current?.snapTo(window.innerHeight);
+					}, 0);
+				}
 			} else {
 				if (bottomSheetCurrentHeight < window.innerHeight * 0.4) {
 					setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
@@ -520,12 +522,15 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 					setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
 					setBottomSheetHeight(window.innerHeight * 0.4);
 				} else {
-					setBottomSheetMinHeight(window.innerHeight - 10);
-					setBottomSheetHeight(window.innerHeight);
+					if (bottomSheetCurrentHeight < window.innerHeight * 0.9) {
+						setBottomSheetMinHeight(window.innerHeight - 10);
+						setBottomSheetHeight(window.innerHeight);
+					}
 				}
 			}, 200);
 		}
 	}, [
+		bottomSheetCurrentHeight,
 		isDesktop,
 		isDesktopBrowser,
 		setBottomSheetHeight,
