@@ -34,7 +34,7 @@ describe("Should record user events correctly", () => {
 		});
 	});
 
-	it.only("should successfully create correct endpoint with the correct event to correct pinpoint application", () => {
+	it("should successfully create correct endpoint with the correct event to correct pinpoint application", () => {
 		cy.wait(10000);
 		cy.getAllLocalStorage().then(result => {
 			const analyticsEndpointId =
@@ -47,6 +47,7 @@ describe("Should record user events correctly", () => {
 					ANALYTICS_ENDPOINT_ID: `${analyticsEndpointId}`
 				}
 			}).then(result => {
+				console.log({ result });
 				const response = JSON.parse(result.stdout);
 				expect(response["$metadata"]["httpStatusCode"]).to.equal(200);
 				expect(response["EndpointResponse"]["ApplicationId"]).to.equal(`${Cypress.env("PINPOINT_APPLICATION_ID")}`);
