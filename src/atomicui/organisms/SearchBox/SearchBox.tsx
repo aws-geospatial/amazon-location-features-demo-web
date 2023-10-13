@@ -120,6 +120,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 				if (ui === ResponsiveUIEnum.explore) {
 					setIsFocused(false);
 					searchInputRef.current?.blur();
+					setBottomSheetMinHeight(BottomSheetHeights.explore.min);
 				}
 			}
 
@@ -128,7 +129,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 				document.removeEventListener("touchmove", handleClickOutside);
 			};
 		}
-	}, [ui, isDesktop, bottomSheetRef]);
+	}, [ui, isDesktop, bottomSheetRef, setBottomSheetMinHeight]);
 
 	const handleSearch = useCallback(
 		async (value: string, exact = false, action: string) => {
