@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button, Flex, Placeholder, Text, View } from "@aws-amplify/ui-react";
 import { IconCar, IconClose, IconCopyPages, IconDirections, IconInfo } from "@demo/assets";
@@ -32,7 +32,7 @@ interface Props {
 	setInfo: (info?: SuggestionType) => void;
 }
 const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo }) => {
-	const { setPOICard, setBottomSheetMinHeight, setBottomSheetHeight, setUI, bottomSheetHeight } = useBottomSheet();
+	const { setPOICard, setBottomSheetMinHeight, setBottomSheetHeight, setUI, bottomSheetHeight, ui } = useBottomSheet();
 	const [routeData, setRouteData] = useState<CalculateRouteResponse>();
 	const {
 		currentLocationData,
@@ -309,41 +309,44 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 	);
 
 	useEffect(() => {
-		if (!!info.Place?.Label && !isDesktop) {
-			setUI(ResponsiveUIEnum.poi_card);
+		if (!isDesktop) {
+			const ch = POICardRef?.current?.clientHeight || 230;
+			ui !== ResponsiveUIEnum.poi_card && setUI(ResponsiveUIEnum.poi_card);
 			setPOICard(<POIBody />);
-			if (bottomSheetHeight !== (POICardRef?.current?.clientHeight || 230) + 70) {
-				setBottomSheetMinHeight((POICardRef?.current?.clientHeight || 230) + 60);
-				setBottomSheetHeight((POICardRef?.current?.clientHeight || 230) + 70);
-			}
+			setBottomSheetMinHeight(ch + 60);
+			setBottomSheetHeight(ch + 70);
 		}
 	}, [
 		POIBody,
 		latitude,
 		longitude,
-		info,
 		isDesktop,
 		setBottomSheetHeight,
 		setBottomSheetMinHeight,
 		setPOICard,
 		setUI,
-		bottomSheetHeight
+		bottomSheetHeight,
+		ui
 	]);
 
-	return (
-		<PopupGl
-			data-testid="popup-container"
-			className="popup-container"
-			closeButton={false}
-			anchor={isDesktop ? "left" : "bottom"}
-			offset={active ? 27 : 22}
-			style={{ maxWidth: isDesktop ? "28.62rem" : "20rem", width: "100%" }}
-			longitude={longitude as number}
-			latitude={latitude as number}
-		>
-			{isDesktop && <POIBody />}
-		</PopupGl>
-	);
+	if (isDesktop) {
+		return (
+			<PopupGl
+				data-testid="popup-container"
+				className="popup-container"
+				closeButton={false}
+				anchor={isDesktop ? "left" : "bottom"}
+				offset={active ? 27 : 22}
+				style={{ maxWidth: isDesktop ? "28.62rem" : "20rem", width: "100%" }}
+				longitude={longitude as number}
+				latitude={latitude as number}
+			>
+				<POIBody />
+			</PopupGl>
+		);
+	} else {
+		return null;
+	}
 };
 
-export default Popup;
+export default memo(Popup);
