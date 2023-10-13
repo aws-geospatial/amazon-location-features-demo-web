@@ -48,7 +48,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const [value, setValue] = useState<string>("");
 	const [isFocused, setIsFocused] = useState(false);
-	const [isNLPChecked, setIsNLPChecked] = React.useState(false);
+	const [isNLChecked, setIsNLChecked] = React.useState(false);
 	const autocompleteRef = useRef<HTMLInputElement | null>(null);
 	const { mapUnit: currentMapUnit, isCurrentLocationDisabled, currentLocationData, viewpoint } = useAmplifyMap();
 	const {
@@ -158,11 +158,9 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		}
 	};
 
-	// ####### NLP
 	const onNLPChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
 		clearPoiList();
 		setValue(value);
-		// handleSearch(value, false, AnalyticsEventActionsEnum.AUTOCOMPLETE);
 	};
 
 	const renderOption = (option: {
@@ -307,7 +305,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 					left: isSideMenuExpanded ? 252 : 20,
 					borderBottomLeftRadius: hideBorderRadius ? "0px" : "8px",
 					borderBottomRightRadius: hideBorderRadius ? "0px" : "8px",
-					maxWidth: isNLPChecked ? "500px" : "360px"
+					maxWidth: isNLChecked ? "500px" : "360px"
 				}}
 			>
 				<Flex gap={0} width="100%" height="100%" alignItems="center">
@@ -329,7 +327,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 						onBlur={() => setIsFocused(false)}
 						onSubmit={e => handleSearch(e, true, AnalyticsEventActionsEnum.ENTER_BUTTON)}
 						value={value}
-						onChange={!isNLPChecked ? onChange : onNLPChange}
+						onChange={!isNLChecked ? onChange : onNLPChange}
 						onClear={clearPoiList}
 						placeholder={t("search.text") as string}
 						options={options || []}
@@ -348,7 +346,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 									))}
 								</Flex>
 							),
-							Empty: !isNLPChecked ? (
+							Empty: !isNLChecked ? (
 								!!value && !suggestions?.length ? (
 									<Flex className="not-found-container">
 										<NotFoundCard />
@@ -357,34 +355,34 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 							) : (
 								<Flex
 									gap={0}
-									alignItems="start"
 									className="inner-search-component"
-									// marginLeft="10px"
 									style={{
 										flexDirection: "column",
 										gap: "0"
 									}}
 								>
-									<h3>Try Asking:</h3>
+									<Flex>
+										<h3>Try Asking:</h3>
+									</Flex>
 									<Flex
 										style={{
 											flexDirection: "column",
 											gap: "0.1px",
-											marginBottom: "12px",
+											marginBottom: "20px",
 											fontStyle: "italic",
 											fontSize: "15px"
 										}}
 									>
-										<q>What are some good places to get coffee in Boston?</q>
+										<q>What are some places to get coffee in Boston?</q>
 										<q>Where can I get a haircut?</q>
-										<q>Whats open now for dinner?</q>
+										<q>Find me some dinner spots around Vancouver?</q>
 									</Flex>
 									<Flex
 										style={{
-											marginLeft: "66px"
+											marginLeft: "60px"
 										}}
 									>
-										Search Powered by AWS Bedrock
+										Search Powered by Amazon Bedrock
 										<Badge size="small" variation="warning">
 											Prototype
 										</Badge>
@@ -424,9 +422,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 							</Flex>
 						}
 						outerStartComponent={
-							// ######NLP
 							<Flex
-								className="nlp-search-container"
+								className="nl-search-container"
 								style={{
 									flexDirection: "column",
 									left: isSideMenuExpanded ? 0 : 0,
@@ -435,7 +432,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 									borderBottomRightRadius: hideBorderRadius ? "0px" : "8px",
 									gap: "0.1px",
 									padding: "0.5em",
-									height: isNLPChecked && !value ? "185px" : "40px",
+									height: isNLChecked && !value ? "185px" : "40px",
 									flex: 1
 								}}
 							>
@@ -445,7 +442,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 									height="100%"
 									alignItems="center"
 									style={{
-										borderBottom: isNLPChecked && !value ? "1px solid var(--grey-color-3)" : "",
+										borderBottom: isNLChecked && !value ? "1px solid var(--grey-color-3)" : "",
 										marginLeft: "10px"
 									}}
 								>
@@ -453,14 +450,14 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 										label="Enable AI search powered by AWS Bedrock"
 										labelPosition="end"
 										size="small"
-										isChecked={isNLPChecked}
-										onChange={e => setIsNLPChecked(e.target.checked)}
+										isChecked={isNLChecked}
+										onChange={e => setIsNLChecked(e.target.checked)}
 									/>
 									<Badge size="small" variation="warning">
 										Prototype
 									</Badge>
 								</Flex>
-								{isNLPChecked && !value ? (
+								{isNLChecked && !value ? (
 									<Flex
 										gap={0}
 										width="100%"
@@ -486,14 +483,13 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 										>
 											<q>What are some good places to get coffee in Boston?</q>
 											<q>Where can I get a haircut?</q>
-											<q>Whats open now for dinner?</q>
+											<q>Find me some dinner spots around Vancouver?</q>
 										</Flex>
 									</Flex>
 								) : (
 									<></>
 								)}
 							</Flex>
-							// #####NLP
 						}
 						crossOrigin={undefined}
 					/>
