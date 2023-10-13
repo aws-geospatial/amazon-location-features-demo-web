@@ -18,6 +18,7 @@ import {
 import { IconClose, IconFilterFunnel, IconGeofencePlusSolid, IconMapSolid, IconRadar, IconSearch } from "@demo/assets";
 import { NotFoundCard } from "@demo/atomicui/molecules";
 import { appConfig } from "@demo/core/constants";
+import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useAmplifyAuth, useAmplifyMap, useAwsGeofence, useUnauthSimulation } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
@@ -33,7 +34,9 @@ import {
 } from "@demo/types";
 import { EventTypeEnum, MenuItemEnum, OpenDataMapEnum, ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
+import { isAndroid, isIOS } from "react-device-detect";
 import { useTranslation } from "react-i18next";
+import { RefHandles } from "react-spring-bottom-sheet/dist/types";
 import { Tooltip } from "react-tooltip";
 import "./styles.scss";
 
@@ -85,6 +88,7 @@ export interface MapButtonsProps {
 	isUnauthTrackerBoxOpen: boolean;
 	onSetShowUnauthGeofenceBox: (b: boolean) => void;
 	onSetShowUnauthTrackerBox: (b: boolean) => void;
+	bottomSheetRef?: React.MutableRefObject<RefHandles | null>;
 }
 
 const MapButtons: React.FC<MapButtonsProps> = ({
@@ -122,7 +126,8 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	isUnauthGeofenceBoxOpen,
 	isUnauthTrackerBoxOpen,
 	onSetShowUnauthGeofenceBox,
-	onSetShowUnauthTrackerBox
+	onSetShowUnauthTrackerBox,
+	bottomSheetRef
 }) => {
 	const [tempFilters, setTempFilters] = useState(selectedFilters);
 	const [isLoadingImg, setIsLoadingImg] = useState(true);
@@ -134,9 +139,9 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	const { mapProvider: currentMapProvider, mapStyle: currentMapStyle } = useAmplifyMap();
 	const { isAddingGeofence, setIsAddingGeofence } = useAwsGeofence();
 	const isAuthenticated = !!credentials?.authenticated;
-	const { isTablet, isMobile, isDesktop } = useDeviceMediaQuery();
+	const { isTablet, isMobile, isDesktop, isDesktopBrowser } = useDeviceMediaQuery();
 	const { t, i18n } = useTranslation();
-	const { bottomSheetCurrentHeight = 0, ui } = useBottomSheet();
+	const { bottomSheetCurrentHeight = 0, ui, setBottomSheetHeight, setBottomSheetMinHeight } = useBottomSheet();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
 	const settingsTablet = isTablet && !!onlyMapStyles && isSettingsModal;
@@ -465,8 +470,34 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 							value={searchValue}
 							onChange={e => setSearchValue(e.target.value)}
 							onClick={() => {
+								console.log("clicked");
 								isHandDevice && setSearchWidth(searchDesktopWidth);
 								!!showFilter && setShowFilter(false);
+
+								if ((isAndroid || isIOS) && !isDesktopBrowser) {
+									if (bottomSheetCurrentHeight < document.documentElement.clientHeight * 0.4) {
+										bottomSheetRef?.current?.snapTo(window.innerHeight);
+										setTimeout(() => {
+											setBottomSheetHeight(window.innerHeight);
+											setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+										}, 200);
+									}
+								}
+							}}
+							onBlur={() => {
+								isHandDevice && searchValue && setSearchWidth(searchDesktopWidth);
+
+								if ((isAndroid || isIOS) && !isDesktopBrowser) {
+									setTimeout(() => {
+										setBottomSheetMinHeight(window.innerHeight - 10);
+										setBottomSheetHeight(window.innerHeight);
+									}, 200);
+
+									setTimeout(() => {
+										setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+										setBottomSheetHeight(window.innerHeight);
+									}, 500);
+								}
 							}}
 							crossOrigin={undefined}
 							width={searchWidth}
@@ -658,6 +689,10 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 			clearFilters,
 			applyMobileFilters,
 			setSearchValue,
+			isDesktopBrowser,
+			bottomSheetRef,
+			setBottomSheetHeight,
+			setBottomSheetMinHeight,
 			discardChanges,
 			currentMapProvider,
 			handleMapProviderChange,

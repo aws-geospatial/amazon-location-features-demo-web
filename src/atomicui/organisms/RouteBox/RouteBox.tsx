@@ -170,17 +170,15 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 		return () => {
 			document.removeEventListener("touchmove", handleClickOutside);
 		};
-	}, [ui, setBottomSheetHeight, setBottomSheetMinHeight]);
+	}, [ui]);
 
 	useEffect(() => {
-		if (!isDesktop) {
-			if (!isInputFocused) {
-				if (expandRouteOptionsMobile) {
-					setBottomSheetMinHeight((expandRouteRef?.current?.clientHeight || 230) + 90);
-					setBottomSheetHeight((expandRouteRef?.current?.clientHeight || 230) + 100);
-				} else {
-					setTimeout(() => setBottomSheetMinHeight(BottomSheetHeights.routes.min), 200);
-				}
+		if (!isDesktop && !isInputFocused) {
+			if (expandRouteOptionsMobile) {
+				setBottomSheetMinHeight((expandRouteRef?.current?.clientHeight || 230) + 90);
+				setBottomSheetHeight((expandRouteRef?.current?.clientHeight || 230) + 100);
+			} else {
+				setTimeout(() => setBottomSheetMinHeight(BottomSheetHeights.routes.min), 200);
 			}
 		}
 	}, [
@@ -454,22 +452,6 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 		};
 	}, [handleClick]);
 
-	// useEffect(() => {
-	// 	if (fromInputRef.current) {
-	// 		fromInputRef.current.onfocus = () => {
-	// 			window.scrollTo(0, 0);
-	// 			document.body.scrollTop = 0;
-	// 		};
-	// 	}
-
-	// 	if (toInputRef.current) {
-	// 		toInputRef.current.onfocus = () => {
-	// 			window.scrollTo(0, 0);
-	// 			document.body.scrollTop = 0;
-	// 		};
-	// 	}
-	// });
-
 	const onFocus = useCallback(
 		(type: InputType) => {
 			if (type === InputType.FROM) {
@@ -481,8 +463,11 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 			}
 
 			if ((isAndroid || isIOS) && !isDesktopBrowser) {
-				if (bottomSheetCurrentHeight < window.innerHeight * 0.4) {
-					bottomSheetRef?.current?.snapTo(window.innerHeight);
+				if (bottomSheetCurrentHeight < window.innerHeight * 0.9) {
+					setBottomSheetHeight(window.innerHeight);
+					setTimeout(() => {
+						bottomSheetRef?.current?.snapTo(window.innerHeight);
+					}, 0);
 				}
 			} else {
 				if (bottomSheetCurrentHeight < window.innerHeight * 0.4) {
@@ -534,12 +519,26 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 					(value.from.length || fromInputRef.current?.value === t("route_box__my_location.text")) &&
 					(value.to.length || toInputRef.current?.value === t("route_box__my_location.text"))
 				) {
-					setBottomSheetMinHeight(window.innerHeight * 0.42 - 10);
-					setBottomSheetHeight(window.innerHeight * 0.42);
+					setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+					setBottomSheetHeight(window.innerHeight * 0.4);
+				} else {
+					if (bottomSheetCurrentHeight < window.innerHeight * 0.9) {
+						setBottomSheetMinHeight(window.innerHeight - 10);
+						setBottomSheetHeight(window.innerHeight);
+					}
 				}
 			}, 200);
 		}
-	}, [isDesktop, isDesktopBrowser, setBottomSheetHeight, setBottomSheetMinHeight, t, value]);
+	}, [
+		bottomSheetCurrentHeight,
+		isDesktop,
+		isDesktopBrowser,
+		setBottomSheetHeight,
+		setBottomSheetMinHeight,
+		t,
+		value.from.length,
+		value.to.length
+	]);
 
 	const onClickRouteOptions = useCallback(() => setExpandRouteOptions(!expandRouteOptions), [expandRouteOptions]);
 
@@ -981,9 +980,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 									ref={fromInputRef}
 									data-testid="from-input"
 									placeholder={t("route_box__from.text") as string}
-									onFocus={() => {
-										onFocus(InputType.FROM);
-									}}
+									onFocus={() => onFocus(InputType.FROM)}
 									onBlur={handleBlur}
 									value={value.from}
 									onChange={e => onChangeValue(e, InputType.FROM)}

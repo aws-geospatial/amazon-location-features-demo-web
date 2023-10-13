@@ -1,5 +1,7 @@
 import { useMemo } from "react";
 
+import { isUserDeviceIsAndroid, isUserDeviceIsIOS } from "@demo/utils";
+
 import useMediaQuery from "./useMediaQuery";
 
 const useDeviceMediaQuery = () => {
@@ -9,18 +11,7 @@ const useDeviceMediaQuery = () => {
 	const isMax766 = useMediaQuery("(max-width: 766px)");
 	const isTablet = !isDesktop && !isMobile;
 
-	const isDesktopBrowser = useMemo(() => {
-		const userAgent = navigator.userAgent.toLowerCase();
-		const mobileKeywords = ["android", "iphone", "ipad", "ipod", "windows phone"];
-
-		for (const keyword of mobileKeywords) {
-			if (userAgent.includes(keyword)) {
-				return false; // Found a mobile keyword in the user agent string
-			}
-		}
-
-		return true; // No mobile keywords found, so it's likely a desktop browser
-	}, []);
+	const isDesktopBrowser = useMemo(() => !isUserDeviceIsIOS() && !isUserDeviceIsAndroid(), []);
 
 	return { isDesktop, isMobile, isTablet, isMax556, isMax766, isDesktopBrowser };
 };

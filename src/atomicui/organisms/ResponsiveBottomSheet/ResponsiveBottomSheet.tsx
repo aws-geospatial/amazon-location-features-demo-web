@@ -31,7 +31,7 @@ const { DEMO } = appConfig.default.ROUTES;
 interface IProps {
 	mapRef: MapRef | null;
 	SearchBoxEl: (ref?: React.MutableRefObject<RefHandles | null>) => JSX.Element;
-	MapButtons: JSX.Element;
+	MapButtons: (ref?: React.MutableRefObject<RefHandles | null>) => JSX.Element;
 	RouteBox: (ref?: React.MutableRefObject<RefHandles | null>) => JSX.Element;
 	onCloseSidebar: () => void;
 	onOpenConnectAwsAccountModal: () => void;
@@ -333,6 +333,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				setBottomSheetHeight(window.innerHeight);
 			} else {
 				setExpandRouteOptionsMobile(false);
+				setTimeout(() => setBottomSheetMinHeight(BottomSheetHeights.routes.min), 200);
 			}
 		} else {
 			setUI(ResponsiveUIEnum.explore);
@@ -430,7 +431,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 		(ui?: ResponsiveUIEnum) => {
 			switch (ui) {
 				case ResponsiveUIEnum.map_styles:
-					return MapButtons;
+					return MapButtons(bottomSheetRef);
 				case ResponsiveUIEnum.routes:
 				case ResponsiveUIEnum.direction_to_routes:
 					return RouteBox(bottomSheetRef);

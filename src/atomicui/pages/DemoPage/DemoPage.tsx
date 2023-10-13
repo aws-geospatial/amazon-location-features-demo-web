@@ -347,16 +347,6 @@ const DemoPage: React.FC = () => {
 		_attachPolicy();
 	}, [_attachPolicy]);
 
-	// const onResize = useCallback(() => setHeight(window.innerHeight), []);
-
-	// useEffect(() => {
-	// 	addEventListener("resize", onResize);
-
-	// 	return () => {
-	// 		removeEventListener("resize", onResize);
-	// 	};
-	// }, [onResize]);
-
 	useEffect(() => {
 		if (selectedMarker) {
 			const { longitude: lng, latitude: lat } = viewpoint;
@@ -365,59 +355,50 @@ const DemoPage: React.FC = () => {
 	}, [selectedMarker, viewpoint]);
 
 	useEffect(() => {
+		const options = isDesktop
+			? {
+					padding: {
+						top: 200,
+						bottom: 200,
+						left: 450,
+						right: 200
+					},
+					speed: 5,
+					linear: true
+			  }
+			: isTablet
+			? {
+					padding: {
+						top: 100,
+						bottom: 100,
+						left: 390,
+						right: 50
+					},
+					speed: 5,
+					linear: false
+			  }
+			: {
+					padding: {
+						top: 50,
+						bottom: 400,
+						left: 60,
+						right: 70
+					},
+					speed: 5,
+					linear: true
+			  };
+
 		if (suggestions && bound) {
-			mapViewRef.current?.fitBounds(bound as [number, number, number, number], {
-				padding: suggestions.length > 2 ? 50 : 150
-			});
+			mapViewRef.current?.fitBounds(bound as [number, number, number, number], options);
 		} else if ((show.routeBox || ui === ResponsiveUIEnum.routes) && routeData?.Summary.RouteBBox) {
 			const boundingBox = routeData.Summary.RouteBBox;
-			const options = isDesktop
-				? {
-						padding: {
-							top: 200,
-							bottom: 200,
-							left: 450,
-							right: 200
-						},
-						speed: 5,
-						linear: true
-				  }
-				: isTablet
-				? {
-						padding: {
-							top: 100,
-							bottom: 100,
-							left: 390,
-							right: 50
-						},
-						speed: 5,
-						linear: false
-				  }
-				: {
-						padding: {
-							top: 50,
-							bottom: 400,
-							left: 60,
-							right: 70
-						},
-						speed: 5,
-						linear: true
-				  };
-			isDesktop
-				? mapViewRef.current?.fitBounds(
-						[
-							[boundingBox[0], boundingBox[1]],
-							[boundingBox[2], boundingBox[3]]
-						],
-						options
-				  )
-				: mapViewRef.current?.fitBounds(
-						[
-							[boundingBox[0], boundingBox[1]],
-							[boundingBox[2], boundingBox[3]]
-						],
-						options
-				  );
+			mapViewRef.current?.fitBounds(
+				[
+					[boundingBox[0], boundingBox[1]],
+					[boundingBox[2], boundingBox[3]]
+				],
+				options
+			);
 		}
 	}, [suggestions, bound, show.routeBox, ui, routeData, isDesktop, isTablet, currentMapProvider, currentMapStyle]);
 
@@ -1102,7 +1083,7 @@ const DemoPage: React.FC = () => {
 					)}
 					<ResponsiveBottomSheet
 						SearchBoxEl={(ref?: React.MutableRefObject<RefHandles | null>) => searchBoxEl(true, ref)}
-						MapButtons={
+						MapButtons={(ref?: React.MutableRefObject<RefHandles | null>) => (
 							<MapButtons
 								renderedUpon={TriggeredByEnum.SETTINGS_MODAL}
 								openStylesCard={show.stylesCard}
@@ -1134,8 +1115,9 @@ const DemoPage: React.FC = () => {
 								onSetShowUnauthTrackerBox={(b: boolean) => setShow(s => ({ ...s, unauthTrackerBox: b }))}
 								onlyMapStyles
 								isHandDevice
+								bottomSheetRef={ref}
 							/>
-						}
+						)}
 						mapRef={mapViewRef?.current}
 						RouteBox={(ref?: React.MutableRefObject<RefHandles | null>) => (
 							<RouteBox
