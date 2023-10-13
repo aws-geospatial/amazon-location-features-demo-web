@@ -1083,7 +1083,7 @@ const DemoPage: React.FC = () => {
 					)}
 					<ResponsiveBottomSheet
 						SearchBoxEl={(ref?: React.MutableRefObject<RefHandles | null>) => searchBoxEl(true, ref)}
-						MapButtons={
+						MapButtons={(ref?: React.MutableRefObject<RefHandles | null>) => (
 							<MapButtons
 								renderedUpon={TriggeredByEnum.SETTINGS_MODAL}
 								openStylesCard={show.stylesCard}
@@ -1115,8 +1115,9 @@ const DemoPage: React.FC = () => {
 								onSetShowUnauthTrackerBox={(b: boolean) => setShow(s => ({ ...s, unauthTrackerBox: b }))}
 								onlyMapStyles
 								isHandDevice
+								bottomSheetRef={ref}
 							/>
-						}
+						)}
 						mapRef={mapViewRef?.current}
 						RouteBox={(ref?: React.MutableRefObject<RefHandles | null>) => (
 							<RouteBox

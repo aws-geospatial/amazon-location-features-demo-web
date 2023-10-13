@@ -349,7 +349,13 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		e.stopPropagation();
 		setIsFocused(true);
 		if ((isAndroid || isIOS) && !isDesktopBrowser) {
-			bottomSheetRef?.current?.snapTo(1000);
+			// if (bottomSheetCurrentHeight < document.documentElement.clientHeight * 0.4) {
+			bottomSheetRef?.current?.snapTo(window.innerHeight);
+			setTimeout(() => {
+				setBottomSheetHeight(window.innerHeight);
+				setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+			}, 200);
+			// }
 		} else {
 			if (bottomSheetCurrentHeight < document.documentElement.clientHeight * 0.4) {
 				setBottomSheetMinHeight(document.documentElement.clientHeight * 0.4 - 10);
@@ -392,23 +398,19 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 										value={value}
 										onChange={onChange}
 										dir={langDir}
-										onKeyDown={e => {
-											e.stopPropagation();
-										}}
+										onKeyDown={e => e.stopPropagation()}
 										onFocus={simpleSearchOnFocus}
 										onBlur={e => {
 											e.stopPropagation();
-											if ((isAndroid || isIOS) && !isDesktopBrowser) {
-												setBottomSheetMinHeight(document.documentElement.clientHeight * 0.4 - 10);
-												setBottomSheetHeight(document.documentElement.clientHeight * 0.4);
-
-												setTimeout(() => {
-													setBottomSheetMinHeight(BottomSheetHeights.explore.min);
-													setBottomSheetHeight(document.documentElement.clientHeight);
-												}, 200);
-											}
 											setIsFocused(false);
 											!value?.length && setUI(ResponsiveUIEnum.explore);
+
+											setBottomSheetHeight(window.innerHeight);
+											setTimeout(() => {
+												if ((isAndroid || isIOS) && !isDesktopBrowser) {
+													setBottomSheetMinHeight(window.innerHeight - 10);
+												}
+											}, 200);
 										}}
 										placeholder={t("search.text") as string}
 										innerStartComponent={

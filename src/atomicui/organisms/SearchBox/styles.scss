@@ -93,6 +93,10 @@
 		font-family: "AmazonEmber-Bold";
 		font-size: 1rem;
 
+		&:hover{
+			background-color: transparent;
+		}
+
 		&:active,
 		&:focus {
 			outline: none;
