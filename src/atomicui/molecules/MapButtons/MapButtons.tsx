@@ -470,6 +470,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 							value={searchValue}
 							onChange={e => setSearchValue(e.target.value)}
 							onClick={() => {
+								console.log("clicked");
 								isHandDevice && setSearchWidth(searchDesktopWidth);
 								!!showFilter && setShowFilter(false);
 
@@ -484,11 +485,18 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 								}
 							}}
 							onBlur={() => {
+								isHandDevice && searchValue && setSearchWidth(searchDesktopWidth);
+
 								if ((isAndroid || isIOS) && !isDesktopBrowser) {
 									setTimeout(() => {
 										setBottomSheetMinHeight(window.innerHeight - 10);
 										setBottomSheetHeight(window.innerHeight);
 									}, 200);
+
+									setTimeout(() => {
+										setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+										setBottomSheetHeight(window.innerHeight);
+									}, 500);
 								}
 							}}
 							crossOrigin={undefined}
