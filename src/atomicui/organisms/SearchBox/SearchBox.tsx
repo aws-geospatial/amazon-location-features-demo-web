@@ -362,7 +362,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 									}}
 								>
 									<Flex>
-										<h3>Try Asking:</h3>
+										<h3>{t("try_asking.text") as string}:</h3>
 									</Flex>
 									<Flex
 										style={{
@@ -373,18 +373,18 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 											fontSize: "15px"
 										}}
 									>
-										<q>What are some places to get coffee in Boston?</q>
-										<q>Where can I get a haircut?</q>
-										<q>Find me some dinner spots around Vancouver?</q>
+										<q>{t("nl_query_example_1.text") as string}</q>
+										<q>{t("nl_query_example_2.text") as string}</q>
+										<q>{t("nl_query_example_3.text") as string}</q>
 									</Flex>
 									<Flex
 										style={{
 											marginLeft: "60px"
 										}}
 									>
-										Search Powered by Amazon Bedrock
+										{t("nl_search_footer_label.text") as string}
 										<Badge size="small" variation="warning">
-											Prototype
+											{t("prototype.text") as string}
 										</Badge>
 									</Flex>
 								</Flex>
@@ -447,7 +447,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 									}}
 								>
 									<SwitchField
-										label="GenAI search powered by Amazon Bedrock"
+										label={t("nl_search_label.text") as string}
 										labelPosition="end"
 										size="small"
 										isChecked={isNLChecked}
@@ -457,7 +457,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 										}}
 									/>
 									<Badge size="small" variation="warning">
-										Prototype
+										{t("prototype.text") as string}
 									</Badge>
 								</Flex>
 								{isNLChecked && !value ? (
@@ -474,7 +474,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 											gap: "0"
 										}}
 									>
-										<h5>Try Asking:</h5>
+										<h5>{t("try_asking.text") as string}:</h5>
 										<Flex
 											style={{
 												flexDirection: "column",
@@ -484,9 +484,9 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 												fontSize: "12px"
 											}}
 										>
-											<q>What are some places to get coffee in Boston?</q>
-											<q>Where can I get a haircut?</q>
-											<q>Find me some dinner spots around Vancouver?</q>
+											<q>{t("nl_query_example_1.text") as string}</q>
+											<q>{t("nl_query_example_2.text") as string}</q>
+											<q>{t("nl_query_example_3.text") as string}</q>
 										</Flex>
 									</Flex>
 								) : (
