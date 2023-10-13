@@ -442,16 +442,19 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 									height="100%"
 									alignItems="center"
 									style={{
-										borderBottom: isNLChecked && !value ? "1px solid var(--grey-color-3)" : "",
-										marginLeft: "10px"
+										borderBottom: isNLChecked && !value ? "1px solid var(--grey-color-3)" : ""
+										// marginLeft: "10px"
 									}}
 								>
 									<SwitchField
-										label="Enable AI search powered by AWS Bedrock"
+										label="GenAI search powered by Amazon Bedrock"
 										labelPosition="end"
 										size="small"
 										isChecked={isNLChecked}
 										onChange={e => setIsNLChecked(e.target.checked)}
+										style={{
+											marginLeft: "10px"
+										}}
 									/>
 									<Badge size="small" variation="warning">
 										Prototype
