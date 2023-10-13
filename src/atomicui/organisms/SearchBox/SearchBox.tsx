@@ -481,7 +481,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 												fontSize: "12px"
 											}}
 										>
-											<q>What are some good places to get coffee in Boston?</q>
+											<q>What are some places to get coffee in Boston?</q>
 											<q>Where can I get a haircut?</q>
 											<q>Find me some dinner spots around Vancouver?</q>
 										</Flex>
