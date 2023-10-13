@@ -521,44 +521,56 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	const footerHeight = useCallback((maxHeight: number) => calculatePixelValue(maxHeight, 50), [calculatePixelValue]);
 
 	const onCloseHandler = useCallback(() => {
-		from === MenuItemEnum.GEOFENCE ? setShowUnauthGeofenceBox(false) : setShowUnauthTrackerBox(false);
+		clearCredsAndLocationClient && clearCredsAndLocationClient();
 		setShowStartUnauthSimulation(false);
+		from === MenuItemEnum.GEOFENCE ? setShowUnauthGeofenceBox(false) : setShowUnauthTrackerBox(false);
+		setConfirmCloseSimulation(false);
 		resetToExplore();
-	}, [from, resetToExplore, setShowStartUnauthSimulation, setShowUnauthGeofenceBox, setShowUnauthTrackerBox]);
+	}, [
+		clearCredsAndLocationClient,
+		from,
+		resetToExplore,
+		setConfirmCloseSimulation,
+		setShowStartUnauthSimulation,
+		setShowUnauthGeofenceBox,
+		setShowUnauthTrackerBox
+	]);
 
-	const ExitSimulation = useCallback(
-		() => (
-			<Flex className="confirmation-modal-container">
-				<ConfirmationModal
-					open
-					onClose={onCloseHandler}
-					heading={t("start_unauth_simulation__exit_simulation.text") as string}
-					description={
-						<Text
-							className="small-text"
-							variation="tertiary"
-							marginTop="1.23rem"
-							textAlign="center"
-							whiteSpace="pre-line"
-						>
-							{t("start_unauth_simulation__exit_simulation_desc.text")}
-						</Text>
-					}
-					onConfirm={() =>
-						setUI(from === MenuItemEnum.GEOFENCE ? ResponsiveUIEnum.unauth_geofence : ResponsiveUIEnum.unauth_tracker)
-					}
-					confirmationText={t("start_unauth_simulation__stay_in_simulation.text") as string}
-					cancelationText={t("exit.text") as string}
-				/>
-			</Flex>
-		),
-		[from, onCloseHandler, setUI, t]
+	const ExitSimulation = () => (
+		<Flex className="confirmation-modal-container">
+			<ConfirmationModal
+				open={confirmCloseSimulation}
+				onClose={() => {
+					setUI(from === MenuItemEnum.GEOFENCE ? ResponsiveUIEnum.unauth_geofence : ResponsiveUIEnum.unauth_tracker);
+					setConfirmCloseSimulation(false);
+				}}
+				onCancel={onCloseHandler}
+				heading={t("start_unauth_simulation__exit_simulation.text") as string}
+				description={
+					<Text
+						className="small-text"
+						variation="tertiary"
+						marginTop="1.23rem"
+						textAlign="center"
+						whiteSpace="pre-line"
+					>
+						{t("start_unauth_simulation__exit_simulation_desc.text")}
+					</Text>
+				}
+				onConfirm={() => {
+					setUI(from === MenuItemEnum.GEOFENCE ? ResponsiveUIEnum.unauth_geofence : ResponsiveUIEnum.unauth_tracker);
+					setConfirmCloseSimulation(false);
+				}}
+				confirmationText={t("start_unauth_simulation__stay_in_simulation.text") as string}
+				cancelationText={t("exit.text") as string}
+			/>
+		</Flex>
 	);
 
 	return (
 		<>
 			{!isDesktop && isNonStartedSimulation && UnauthSimulationUI}
-			{!isDesktop && isExitSimulation && ExitSimulation()}
+			{!isDesktop && isExitSimulation && <ExitSimulation />}
 
 			<BottomSheet
 				open
