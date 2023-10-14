@@ -24,6 +24,9 @@ const useAwsPlace = () => {
 
 	const methods = useMemo(
 		() => ({
+			setSearchingState: (isSearching = true) => {
+				setState({ isSearching });
+			},
 			searchPlaceSuggestions: async (value: string, viewpoint: ViewPointType, cb?: (sg: SuggestionType[]) => void) => {
 				try {
 					setState({ isSearching: true });
@@ -190,6 +193,9 @@ const useAwsPlace = () => {
 			},
 			setIsSearching: (isSearching: boolean) => {
 				setState({ isSearching });
+			},
+			setSuggestions: (suggestions?: SuggestionType[]) => {
+				setState({ suggestions });
 			},
 			resetStore() {
 				setState({

@@ -12,70 +12,94 @@ import {
 	Sidebar,
 	UnauthSimulation
 } from "@demo/atomicui/organisms";
+import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { MapStyleFilterTypes, MenuItemEnum, ShowStateType } from "@demo/types";
 import "./styles.scss";
 
 interface DemoPlaceholderPageProps {
-	height: number;
 	show: ShowStateType;
 	isGrabVisible: boolean;
 	searchValue: string;
 	selectedFilters: MapStyleFilterTypes;
+	value: string;
+	setValue: (value: string) => void;
 }
 
 const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
-	height,
 	show,
 	isGrabVisible,
 	searchValue,
-	selectedFilters
+	selectedFilters,
+	value,
+	setValue
 }) => {
+	const { isDesktop } = useDeviceMediaQuery();
 	return (
-		<View style={{ height }}>
+		<View style={{ height: "100%" }}>
 			<View className={"loader-container"}>
-				{show.sidebar && (
-					<Sidebar
-						onCloseSidebar={() => {}}
-						onOpenConnectAwsAccountModal={() => {}}
-						onOpenSignInModal={() => {}}
-						onShowSettings={() => {}}
-						onShowAboutModal={() => {}}
-						onShowAuthGeofenceBox={() => {}}
-						onShowAuthTrackerDisclaimerModal={() => {}}
-						onShowAuthTrackerBox={() => {}}
-						onShowUnauthSimulationDisclaimerModal={() => {}}
-						onShowUnauthGeofenceBox={() => {}}
-						onShowUnauthTrackerBox={() => {}}
-					/>
+				{isDesktop && (
+					<>
+						{show.sidebar && (
+							<Sidebar
+								onCloseSidebar={() => {}}
+								onOpenConnectAwsAccountModal={() => {}}
+								onOpenSignInModal={() => {}}
+								onShowSettings={() => {}}
+								onShowAboutModal={() => {}}
+								onShowAuthGeofenceBox={() => {}}
+								onShowAuthTrackerDisclaimerModal={() => {}}
+								onShowAuthTrackerBox={() => {}}
+								onShowUnauthSimulationDisclaimerModal={() => {}}
+								onShowUnauthGeofenceBox={() => {}}
+								onShowUnauthTrackerBox={() => {}}
+							/>
+						)}
+						{show.routeBox ? (
+							<RouteBox mapRef={null} setShowRouteBox={() => {}} isSideMenuExpanded={show.sidebar} />
+						) : show.authGeofenceBox ? (
+							<AuthGeofenceBox
+								mapRef={null}
+								setShowAuthGeofenceBox={() => {}}
+								isEditingAuthRoute={false}
+								setIsEditingAuthRoute={() => {}}
+							/>
+						) : show.authTrackerBox ? (
+							<AuthTrackerBox mapRef={null} setShowAuthTrackerBox={() => {}} />
+						) : show.unauthGeofenceBox || show.unauthTrackerBox ? (
+							<UnauthSimulation
+								mapRef={null}
+								from={show.unauthGeofenceBox ? MenuItemEnum.GEOFENCE : MenuItemEnum.TRACKER}
+								setShowUnauthGeofenceBox={() => {}}
+								setShowUnauthTrackerBox={() => {}}
+								setShowConnectAwsAccountModal={() => {}}
+								setShowUnauthSimulationBounds={() => {}}
+								showStartUnauthSimulation={false}
+								setShowStartUnauthSimulation={() => {}}
+								startSimulation={false}
+								setStartSimulation={() => {}}
+								isNotifications={false}
+								setIsNotifications={() => {}}
+								confirmCloseSimulation={false}
+								setConfirmCloseSimulation={() => {}}
+							/>
+						) : (
+							<SearchBox
+								mapRef={null}
+								value={value}
+								setValue={setValue}
+								isSideMenuExpanded={show.sidebar}
+								onToggleSideMenu={() => {}}
+								setShowRouteBox={() => {}}
+								isRouteBoxOpen={show.routeBox}
+								isAuthGeofenceBoxOpen={show.authGeofenceBox}
+								isAuthTrackerBoxOpen={show.authTrackerBox}
+								isSettingsOpen={show.settings}
+								isStylesCardOpen={show.stylesCard}
+							/>
+						)}
+					</>
 				)}
-				{show.routeBox ? (
-					<RouteBox mapRef={null} setShowRouteBox={() => {}} isSideMenuExpanded={show.sidebar} />
-				) : show.authGeofenceBox ? (
-					<AuthGeofenceBox mapRef={null} setShowAuthGeofenceBox={() => {}} />
-				) : show.authTrackerBox ? (
-					<AuthTrackerBox mapRef={null} setShowAuthTrackerBox={() => {}} />
-				) : show.unauthGeofenceBox || show.unauthTrackerBox ? (
-					<UnauthSimulation
-						mapRef={null}
-						from={show.unauthGeofenceBox ? MenuItemEnum.GEOFENCE : MenuItemEnum.TRACKER}
-						setShowUnauthGeofenceBox={() => {}}
-						setShowUnauthTrackerBox={() => {}}
-						setShowConnectAwsAccountModal={() => {}}
-						setShowUnauthSimulationBounds={() => {}}
-					/>
-				) : (
-					<SearchBox
-						mapRef={null}
-						isSideMenuExpanded={show.sidebar}
-						onToggleSideMenu={() => {}}
-						setShowRouteBox={() => {}}
-						isRouteBoxOpen={show.routeBox}
-						isAuthGeofenceBoxOpen={show.authGeofenceBox}
-						isAuthTrackerBoxOpen={show.authTrackerBox}
-						isSettingsOpen={show.settings}
-						isStylesCardOpen={show.stylesCard}
-					/>
-				)}
+
 				<MapButtons
 					renderedUpon={"Demo Page"}
 					openStylesCard={show.stylesCard}
@@ -104,14 +128,17 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 					onSetShowUnauthGeofenceBox={() => {}}
 					onSetShowUnauthTrackerBox={() => {}}
 				/>
-				<Flex className="location-disabled">
+
+				<Flex className={`location-disabled ${!isDesktop ? "location-disabled-mobile" : ""}`}>
 					<IconLocateMe />
 				</Flex>
-				<Flex className={"navigation-control"}>
-					<IconZoomPlus />
-					<Divider backgroundColor={"#DDDDDD"} size="small" opacity="0.3" />
-					<IconMinus />
-				</Flex>
+				{isDesktop && (
+					<Flex className={"navigation-control"}>
+						<IconZoomPlus />
+						<Divider backgroundColor={"#DDDDDD"} size="small" opacity="0.3" />
+						<IconMinus />
+					</Flex>
+				)}
 			</View>
 			<SettingsModal
 				open={show.settings}

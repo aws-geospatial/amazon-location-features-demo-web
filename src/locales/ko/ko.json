@@ -2750,12 +2750,6 @@
   "welcome_modal__heading": {
     "text": "에 오신 것을 환영합니다\n아마존 로케이션 데모"
   },
-  "welcome_modal__item_1": {
-    "text": "Amazon 위치 데모 앱을 사용하면 앱에 동의하는 것으로 간주됩니다."
-  },
-  "welcome_modal__item_3": {
-    "text": "사용을 위해."
-  },
   "search_box__searching_for_suggestions": {
     "text": "제안 사항 검색 중..."
   },
@@ -3395,6 +3389,12 @@
   "regions__ap_southeast__region": {
     "text": "아시아 태평양"
   },
+  "explore__connect_aws_account": {
+    "text": "AWS에 연결"
+  },
+  "explore__connect_description": {
+    "text": "AWS CloudFormation에 연결하여 추적 및 지오펜스 기능에 액세스 "
+  },
   "samples__js-map-style-change__title": {
     "text": "맵 스타일 전환"
   },
@@ -3553,5 +3553,32 @@
   },
   "samples__react-map-with-markers__cleanUp": {
     "text": "이 안내에서 생성된 모든 리소스를 제거하려면 이름이 지정된 CloudFormation 스택을 삭제하십시오.\n`react-map-with-geojson`."
+  },
+  "settings_modal_option__overview": {
+    "text": "아마존 로케이션의 힘을 살펴보세요"
+  },
+  "settings_modal_option__samples": {
+    "text": "엄선된 코드 샘플의 기능"
+  },
+  "settings_modal_option__settings": {
+    "text": "경험을 구성하세요"
+  },
+  "settings_modal_option__about": {
+    "text": "법률 및 저작자 표시"
+  },
+  "map_buttons__clear_selections": {
+    "text": "선택 지우기"
+  },
+  "map_buttons__apply_filters": {
+    "text": "필터 적용"
+  },
+  "welcome_modal__cta": {
+    "text": "탐험 시작하기"
+  },
+  "go": {
+    "text": "Go"
+  },
+  "more_options": {
+    "text": "추가 옵션"
   }
 }

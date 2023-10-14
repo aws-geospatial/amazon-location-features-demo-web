@@ -8,12 +8,35 @@
 	overflow: hidden;
 	z-index: 4;
 
+	&.geofence-card-mobile {
+		width: 100% !important;
+		box-shadow: none;
+		left: 0 !important;
+		overflow: initial;
+		position: relative;
+		top: 0;
+
+		.add-geofence-button-container-mobile {
+			margin: 1rem 0;
+			button {
+				border-color: var(--grey-color-1);
+				overflow: hidden;
+			}
+		}
+	}
+
 	.geofence-card-header {
 		gap: 0;
 		padding: 10px 10px 10px 16px;
 		justify-content: space-between;
 		align-items: center;
 		border-bottom: 1px solid var(--grey-color-3);
+
+		&.geofence-card-header-mobile {
+			border: 0;
+			padding-top: 0;
+			padding-bottom: 0;
+		}
 
 		.back-icon {
 			fill: var(--grey-color);
@@ -45,6 +68,19 @@
 			padding-left: 10px;
 			border-left: 1px solid var(--grey-color-3);
 			cursor: pointer;
+
+			&.geofence-card-close-mobile {
+				position: relative;
+				top: -18px;
+				border: 0;
+				z-index: 26;
+				svg {
+					z-index: 26;
+					position: absolute;
+					right: 0;
+					top: -10px;
+				}
+			}
 		}
 
 		.geofence-card-close > svg {
@@ -175,9 +211,12 @@
 	}
 
 	.geofences-list-container {
-		max-height: 50vh;
 		overflow: scroll;
 		position: relative;
+
+		&.geofences-list-container-mobile {
+			-webkit-overflow-scrolling: touch;
+		}
 
 		.border-bottom {
 			border-bottom: 1px solid var(--border-separator-color);

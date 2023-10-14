@@ -13,7 +13,7 @@ const usePersistedData = () => {
 
 	const methods = useMemo(
 		() => ({
-			setSettingsOptions: (settingsOptions: SettingOptionEnum) => {
+			setSettingsOptions: (settingsOptions?: SettingOptionEnum) => {
 				setState({ settingsOptions });
 			},
 			setShowAppDownloadNotification: (showAppDownloadNotification: boolean) => {

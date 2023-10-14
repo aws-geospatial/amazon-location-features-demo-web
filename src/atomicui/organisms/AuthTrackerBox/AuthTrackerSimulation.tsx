@@ -4,6 +4,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useAmplifyMap, useAwsGeofence, useAwsRoute, useAwsTracker, usePersistedData } from "@demo/hooks";
+import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { DistanceUnitEnum, MapUnitEnum, RouteDataType, TrackerType, TravelMode } from "@demo/types";
 import { TriggeredByEnum } from "@demo/types/Enums";
 import * as turf from "@turf/turf";
@@ -27,7 +28,6 @@ interface AuthTrackerSimulationProps {
 	setPoints: (p?: Position[]) => void;
 	trackerPos?: Position;
 	setTrackerPos: (tp?: Position) => void;
-	isDesktop: boolean;
 }
 
 const AuthTrackerSimulation: React.FC<AuthTrackerSimulationProps> = ({
@@ -41,8 +41,7 @@ const AuthTrackerSimulation: React.FC<AuthTrackerSimulationProps> = ({
 	points,
 	setPoints,
 	trackerPos,
-	setTrackerPos,
-	isDesktop
+	setTrackerPos
 }) => {
 	const [idx, setIdx] = useState(0);
 	const timeoutId = useRef<NodeJS.Timeout | null>(null);
@@ -51,6 +50,7 @@ const AuthTrackerSimulation: React.FC<AuthTrackerSimulationProps> = ({
 	const { evaluateGeofence } = useAwsGeofence();
 	const { trackerPoints } = useAwsTracker();
 	const { defaultRouteOptions } = usePersistedData();
+	const { isDesktop, isTablet } = useDeviceMediaQuery();
 
 	/* Route calculation for travel mode car or walk */
 	const calculateRoute = useCallback(async () => {
@@ -189,9 +189,10 @@ const AuthTrackerSimulation: React.FC<AuthTrackerSimulationProps> = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isPlaying, idx]);
 
-	const renderRoute = useMemo(() => {
-		if (routeData && points) {
+	useEffect(() => {
+		if (routeData) {
 			const boundingBox = routeData.Summary.RouteBBox;
+
 			isDesktop
 				? mapRef?.fitBounds(
 						[
@@ -209,6 +210,23 @@ const AuthTrackerSimulation: React.FC<AuthTrackerSimulationProps> = ({
 							linear: false
 						}
 				  )
+				: isTablet
+				? mapRef?.fitBounds(
+						[
+							[boundingBox[0], boundingBox[1]],
+							[boundingBox[2], boundingBox[3]]
+						],
+						{
+							padding: {
+								top: 100,
+								bottom: 100,
+								left: 390,
+								right: 50
+							},
+							speed: 5,
+							linear: false
+						}
+				  )
 				: mapRef?.fitBounds(
 						[
 							[boundingBox[0], boundingBox[1]],
@@ -216,8 +234,8 @@ const AuthTrackerSimulation: React.FC<AuthTrackerSimulationProps> = ({
 						],
 						{
 							padding: {
-								top: 230,
-								bottom: 50,
+								top: 100,
+								bottom: 420,
 								left: 60,
 								right: 70
 							},
@@ -225,7 +243,11 @@ const AuthTrackerSimulation: React.FC<AuthTrackerSimulationProps> = ({
 							linear: false
 						}
 				  );
+		}
+	}, [mapRef, routeData, isDesktop, isTablet]);
 
+	const renderRoute = useMemo(() => {
+		if (points) {
 			const passedLineJson:
 				| GeoJSON.Feature<GeoJSON.Geometry>
 				| GeoJSON.FeatureCollection<GeoJSON.Geometry>
@@ -285,7 +307,7 @@ const AuthTrackerSimulation: React.FC<AuthTrackerSimulationProps> = ({
 			);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [mapRef, routeData, points, trackerPos, isDesktop]);
+	}, [points, trackerPos]);
 
 	const renderRouteTracker = useMemo(() => {
 		if (trackerPos) {

@@ -239,7 +239,8 @@ export enum RadiusInM {
 export enum TrackerType {
 	CAR = "Car",
 	WALK = "Walk",
-	DRONE = "Drone"
+	DRONE = "Drone",
+	MOBILE = "Mobile"
 }
 
 export enum HelpAccordionEnum {
@@ -280,4 +281,23 @@ export enum RegionEnum {
 	US_EAST_1 = "us-east-1",
 	EU_WEST_1 = "eu-west-1",
 	AP_SOUTHEAST_1 = "ap-southeast-1"
+}
+
+export enum ResponsiveUIEnum {
+	explore = "explore",
+	search = "search",
+	map_styles = "map_styles",
+	poi_card = "poi_card",
+	routes = "routes",
+	before_start_unauthorized_tracker = "before_start_unauthorized_tracker",
+	before_start_unauthorized_geofence = "before_start_unauthorized_geofence",
+	non_start_unauthorized_tracker = "non_start_unauthorized_tracker",
+	non_start_unauthorized_geofence = "non_start_unauthorized_geofence",
+	exit_unauthorized_tracker = "exit_unauthorized_tracker",
+	exit_unauthorized_geofence = "exit_unauthorized_geofence",
+	unauth_tracker = "unauth_tracker",
+	auth_tracker = "auth_tracker",
+	auth_geofence = "auth_geofence",
+	unauth_geofence = "unauth_geofence",
+	direction_to_routes = "direction_to_routes"
 }

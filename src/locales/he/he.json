@@ -2750,12 +2750,6 @@
   "welcome_modal__heading": {
     "text": "ברוכים הבאים\nהדגמת מיקום של אמזון"
   },
-  "welcome_modal__item_1": {
-    "text": "על ידי שימוש באפליקציית הדגמת המיקום של אמזון, אתה מסכים לאפליקציות"
-  },
-  "welcome_modal__item_3": {
-    "text": ".לשימוש"
-  },
   "search_box__searching_for_suggestions": {
     "text": ".מחפש הצעות.."
   },
@@ -3395,6 +3389,12 @@
   "regions__ap_southeast__region": {
     "text": "אסיה פסיפיק"
   },
+  "explore__connect_aws_account": {
+    "text": "התחבר ל-AWS"
+  },
+  "explore__connect_description": {
+    "text": "גש לתכונות מעקב וגיאופנס על ידי חיבור ל- AWS CloudFormation "
+  },
   "samples__js-map-style-change__title": {
     "text": "החלף סגנונות מפה"
   },
@@ -3553,5 +3553,32 @@
   },
   "samples__react-map-with-markers__cleanUp": {
     "text": "כדי להסיר את כל המשאבים שנוצרו בהדרכה זו, מחק את ערימת CloudFormation בשם\n`תגובה-מפה-עם-geojson`."
+  },
+  "settings_modal_option__overview": {
+    "text": "חקור את העוצמה של מיקום אמזון"
+  },
+  "settings_modal_option__samples": {
+    "text": "התכונות שלנו בדוגמאות קוד שנאספו"
+  },
+  "settings_modal_option__settings": {
+    "text": "הגדר את החוויה שלך"
+  },
+  "settings_modal_option__about": {
+    "text": "משפטי & ייחוס"
+  },
+  "map_buttons__clear_selections": {
+    "text": "בחירה ברורה"
+  },
+  "map_buttons__apply_filters": {
+    "text": "החלת מסננים"
+  },
+  "welcome_modal__cta": {
+    "text": "התחל לחקור"
+  },
+  "go": {
+    "text": "ללכת"
+  },
+  "more_options": {
+    "text": "אפשרויות נוספות"
   }
 }

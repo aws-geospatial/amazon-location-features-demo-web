@@ -1,13 +1,15 @@
 .tracking-connection-alert {
 	display: flex;
 	align-items: center;
-	padding: 6px 9px 6px 16px;
+	padding: 6px 9px 6px 16px !important;
 	font-size: 14px;
+
 	&.slide-up {
 		height: auto;
 		overflow: hidden;
 		opacity: 1;
 		transition: height 0.3s ease-in-out;
+
 		&.hide {
 			height: 0;
 			padding-top: 0;
@@ -16,24 +18,30 @@
 			transition: height 0.3s ease-in-out, padding-top 0.3s ease-in-out, padding-bottom 0.3s ease-in-out;
 		}
 	}
+
 	.notification-text {
 		color: var(--white-colors);
 	}
+
 	.close-icon {
 		cursor: pointer;
 		padding: 2px;
 	}
+
 	svg {
 		fill: white;
 	}
+
 	&.success {
 		background-color: var(--success);
 		color: var(--primary-text-color);
 	}
+
 	&.info {
 		background-color: var(--warning);
 		color: var(--primary-text-color);
 	}
+
 	.connection-alert-icon {
 		display: flex;
 		align-items: center;

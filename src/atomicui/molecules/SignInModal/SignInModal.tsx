@@ -7,6 +7,7 @@ import { Button, Flex, Text } from "@aws-amplify/ui-react";
 import { IconGeofence, IconRoute } from "@demo/assets";
 import { Modal } from "@demo/atomicui/atoms";
 import { useAmplifyAuth } from "@demo/hooks";
+import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { EventTypeEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
 import { useTranslation } from "react-i18next";
@@ -20,13 +21,14 @@ interface SignInModalProps {
 const SignInModal: React.FC<SignInModalProps> = ({ open, onClose }) => {
 	const { onLogin } = useAmplifyAuth();
 	const { t } = useTranslation();
+	const { isMobile } = useDeviceMediaQuery();
 
 	return (
 		<Modal
 			data-testid="sign-in-modal"
 			open={open}
 			onClose={onClose}
-			className="sign-in-modal"
+			className={`sign-in-modal ${isMobile ? "sign-in-modal-mobile" : ""}`}
 			content={
 				<Flex className="sign-in-modal-content">
 					<Flex gap={0} justifyContent="space-between" alignSelf="center" width="152px">

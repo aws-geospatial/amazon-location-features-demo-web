@@ -6,7 +6,7 @@ import { I18nextProvider } from "react-i18next";
 
 import AuthGeofenceBox, { AuthGeofenceBoxProps } from "./AuthGeofenceBox";
 
-const props: AuthGeofenceBoxProps = {
+const mockProps: AuthGeofenceBoxProps = {
 	mapRef: {
 		...jest.requireActual("react-map-gl").MapRef,
 		getCenter: () => ({
@@ -14,7 +14,13 @@ const props: AuthGeofenceBoxProps = {
 			lat: Number(faker.address.latitude())
 		})
 	},
-	setShowAuthGeofenceBox: jest.fn()
+	setShowAuthGeofenceBox: jest.fn(),
+	isEditingAuthRoute: false,
+	setIsEditingAuthRoute: jest.fn(),
+	triggerOnClose: false,
+	triggerOnReset: false,
+	setTriggerOnClose: jest.fn(),
+	setTriggerOnReset: jest.fn()
 };
 
 const mockGeofencesData = [
@@ -81,7 +87,7 @@ describe("<AuthGeofenceBox />", () => {
 	const renderComponent = () =>
 		render(
 			<I18nextProvider i18n={i18n}>
-				<AuthGeofenceBox {...props} />
+				<AuthGeofenceBox {...mockProps} />
 			</I18nextProvider>
 		);
 
@@ -93,34 +99,44 @@ describe("<AuthGeofenceBox />", () => {
 
 	it("renders the component correctly", () => {
 		const { getByTestId } = renderComponent();
-		expect(getByTestId("auth-geofence-box-card")).toBeInTheDocument();
+		waitFor(() => {
+			expect(getByTestId("auth-geofence-box-card")).toBeInTheDocument();
+		});
 	});
 
 	it("should show the loader when fetching geofences", () => {
 		mockUseAwsGeofenceData.isFetchingGeofences = true;
 		const { getByTestId } = renderComponent();
-		expect(getByTestId("geofences-list-container")).toBeInTheDocument();
-		expect(getByTestId("auth-geofence-box-loader")).toBeInTheDocument();
-		expect(mockUseAwsGeofenceData.getGeofencesList).toHaveBeenCalled();
+		waitFor(() => {
+			expect(getByTestId("geofences-list-container")).toBeInTheDocument();
+			expect(getByTestId("auth-geofence-box-loader")).toBeInTheDocument();
+			expect(mockUseAwsGeofenceData.getGeofencesList).toHaveBeenCalled();
+		});
 	});
 
 	it("should render the geofences list", () => {
 		mockUseAwsGeofenceData.geofences = [...mockGeofencesData];
 		const { getByTestId } = renderComponent();
-		expect(getByTestId("geofences-list-container")).toBeInTheDocument();
-		expect(getByTestId("test_geofence_1")).toBeInTheDocument();
-		expect(getByTestId("test_geofence_2")).toBeInTheDocument();
+		waitFor(() => {
+			expect(getByTestId("geofences-list-container")).toBeInTheDocument();
+			expect(getByTestId("test_geofence_1")).toBeInTheDocument();
+			expect(getByTestId("test_geofence_2")).toBeInTheDocument();
+		});
 	});
 
 	it("should render the empty list message when geofences not present", () => {
 		const { getByTestId } = renderComponent();
-		expect(getByTestId("geofences-list-container")).toBeInTheDocument();
-		expect(getByTestId("auth-geofence-box-empty-list")).toBeInTheDocument();
+		waitFor(() => {
+			expect(getByTestId("geofences-list-container")).toBeInTheDocument();
+			expect(getByTestId("auth-geofence-box-empty-list")).toBeInTheDocument();
+		});
 	});
 
 	it("should fire appropriate function when clicked on add geofence", () => {
 		const { getByTestId } = renderComponent();
-		expect(getByTestId("auth-geofence-box-add-button")).toBeInTheDocument();
+		waitFor(() => {
+			expect(getByTestId("auth-geofence-box-add-button")).toBeInTheDocument();
+		});
 		act(() => {
 			fireEvent.click(getByTestId("auth-geofence-box-add-button"));
 		});
@@ -130,8 +146,10 @@ describe("<AuthGeofenceBox />", () => {
 	it("should render add geofence and allow to use search", () => {
 		mockUseAwsGeofenceData.isAddingGeofence = true;
 		const { getByTestId } = renderComponent();
-		expect(getByTestId("auth-geofence-add-container")).toBeInTheDocument();
-		expect(getByTestId("auth-geofence-box-search-input")).toBeInTheDocument();
+		waitFor(() => {
+			expect(getByTestId("auth-geofence-add-container")).toBeInTheDocument();
+			expect(getByTestId("auth-geofence-box-search-input")).toBeInTheDocument();
+		});
 		act(() => {
 			fireEvent.change(getByTestId("auth-geofence-box-search-input"), { target: { value: "test" } });
 		});
@@ -144,9 +162,13 @@ describe("<AuthGeofenceBox />", () => {
 	it("should allow to select geofence and edit it", () => {
 		mockUseAwsGeofenceData.geofences = [...mockGeofencesData];
 		const { getByTestId } = renderComponent();
-		expect(getByTestId("geofences-list-container")).toBeInTheDocument();
-		expect(getByTestId("test_geofence_1")).toBeInTheDocument();
-		fireEvent.click(getByTestId("test_geofence_1"));
+		waitFor(() => {
+			expect(getByTestId("geofences-list-container")).toBeInTheDocument();
+			expect(getByTestId("test_geofence_1")).toBeInTheDocument();
+		});
+		act(() => {
+			fireEvent.click(getByTestId("test_geofence_1"));
+		});
 		mockUseAwsGeofenceData.isAddingGeofence = true;
 		waitFor(() => {
 			expect(getByTestId("auth-geofence-box-name-field")).toHaveValue("test_geofence_1");

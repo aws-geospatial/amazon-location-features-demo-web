@@ -5,7 +5,9 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button, CheckboxField, Divider, Flex, Link, Radio, Text, View } from "@aws-amplify/ui-react";
 import {
+	IconArrow,
 	IconAwsCloudFormation,
+	IconBackArrow,
 	IconCloud,
 	IconGlobe,
 	IconLanguage,
@@ -18,6 +20,7 @@ import { DropdownEl, Modal } from "@demo/atomicui/atoms";
 import { InputField } from "@demo/atomicui/molecules";
 import { appConfig, languageSwitcherData, regionsData } from "@demo/core/constants";
 import { useAmplifyAuth, useAmplifyMap, useAws, useAwsIot, usePersistedData } from "@demo/hooks";
+import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import {
 	ConnectFormValuesType,
 	EsriMapEnum,
@@ -115,7 +118,23 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
-	const fastestRegion = localStorage.getItem("fastestRegion") || "";
+	const fastestRegion = localStorage.getItem(FASTEST_REGION) || "";
+	const { isDesktop, isMobile } = useDeviceMediaQuery();
+
+	const handleStackRegion = useCallback(
+		(option: { value: string; label: string }) => {
+			const { label, value } = option;
+
+			if (isDesktop) {
+				setStackRegion(option);
+			} else {
+				const translatedLabel = t(label);
+				const l = translatedLabel.slice(0, translatedLabel.indexOf(")") + 1);
+				setStackRegion({ label: l, value });
+			}
+		},
+		[isDesktop, t]
+	);
 
 	useEffect(() => {
 		const regionOption = region && regionsData.find(option => option.value === region);
@@ -123,9 +142,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 		if (regionOption) {
 			const newUrl = transformCloudFormationLink(region);
 			setCloudFormationLink(newUrl);
-			setStackRegion(regionOption);
+			handleStackRegion(regionOption);
 		}
-	}, []);
+	}, [handleStackRegion]);
 
 	const handleAutoMapUnitChange = useCallback(() => {
 		setIsAutomaticMapUnit(true);
@@ -217,11 +236,14 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 		[currentMapProvider, currentMapStyle]
 	);
 
-	const _onSelect = (option: { value: string; label: string }) => {
-		const newUrl = transformCloudFormationLink(option.value);
-		setCloudFormationLink(newUrl);
-		setStackRegion(option);
-	};
+	const _onSelect = useCallback(
+		(option: { value: string; label: string }) => {
+			const newUrl = transformCloudFormationLink(option.value);
+			setCloudFormationLink(newUrl);
+			handleStackRegion(option);
+		},
+		[handleStackRegion]
+	);
 
 	const handleLanguageChange = useCallback(
 		(e: { target: { value: string } }) => {
@@ -422,6 +444,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 						direction="column"
 						padding="0rem 1.15rem"
 						overflow="scroll"
+						className="language-switcher-container"
 					>
 						{languageSwitcherData.map(({ value, label }, idx) => (
 							<Flex key={idx} style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
@@ -718,6 +741,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 		[
 			currentMapUnit,
 			autoMapUnit,
+			i18n,
 			isGrabVisible,
 			handleAutoMapUnitChange,
 			onMapUnitChange,
@@ -739,7 +763,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 			cloudFormationLink,
 			t,
 			langDir,
-			i18n,
 			isLtr,
 			mapButtons,
 			handleLanguageChange,
@@ -747,7 +770,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 			autoRegion,
 			currentRegion,
 			handleRegionChange,
-			fastestRegion
+			fastestRegion,
+			_onSelect
 		]
 	);
 
@@ -764,7 +788,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 			<Flex
 				data-testid={`option-item-${id}`}
 				key={id}
-				className={settingsOptions === id ? "option-item selected" : "option-item"}
+				className={`option-item ${!isMobile && settingsOptions === id ? "selected" : ""} ${
+					isMobile ? "option-item-mobile" : ""
+				}`}
 				onClick={() => {
 					if (id === SettingOptionEnum.AWS_CLOUD_FORMATION) {
 						record(
@@ -801,57 +827,101 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 					setSettingsOptions(id);
 				}}
 			>
-				{icon}
-				<Flex gap={0} direction="column">
-					<Text fontSize="1rem" lineHeight="1.38rem">
-						{title}
-					</Text>
-					{defaultValue && (
-						<Text fontSize="1rem" lineHeight="1.38rem" variation="tertiary">
-							{defaultValue}{" "}
+				<Flex gap="0" alignItems="center">
+					{icon}
+					<Flex gap={0} direction="column">
+						<Text fontSize="1rem" lineHeight="1.38rem">
+							{title}
 						</Text>
-					)}
+						{defaultValue && (
+							<Text fontSize="1rem" lineHeight="1.38rem" variation="tertiary">
+								{defaultValue}{" "}
+							</Text>
+						)}
+					</Flex>
 				</Flex>
+				{isMobile && (
+					<Flex className="option-arrow">
+						<IconArrow />
+					</Flex>
+				)}
 			</Flex>
 		));
-	}, [optionItems, isUserAwsAccountConnected, settingsOptions, resetSearchAndFilters, setSettingsOptions, formValues]);
+	}, [
+		optionItems,
+		isUserAwsAccountConnected,
+		settingsOptions,
+		isMobile,
+		resetSearchAndFilters,
+		setSettingsOptions,
+		formValues
+	]);
 
 	const renderOptionDetails = useMemo(() => {
 		const [optionItem] = optionItems.filter(({ id }) => settingsOptions === id);
 
+		if (!optionItem) return null;
 		return (
 			<>
-				<Text fontSize="1rem" lineHeight="1.38rem" padding={"1.46rem 0rem 1.46rem 1.15rem"}>
-					{optionItem.title}
+				<Text className="option-title">
+					{isMobile && <IconBackArrow className="grey-icon back-arrow" onClick={() => setSettingsOptions(undefined)} />}
+					{optionItem?.title}
 				</Text>
 				<Divider className="title-divider" />
-				{optionItem.detailsComponent}
+				{optionItem?.detailsComponent}
 			</>
 		);
-	}, [optionItems, settingsOptions]);
+	}, [isMobile, optionItems, setSettingsOptions, settingsOptions]);
+
+	const modalCloseHandler = useCallback(() => {
+		!isMobile && setSettingsOptions(SettingOptionEnum.UNITS);
+		onClose();
+	}, [isMobile, onClose, setSettingsOptions]);
 
 	return (
 		<Modal
 			data-testid="settings-modal"
 			open={open}
-			onClose={() => {
-				setSettingsOptions(SettingOptionEnum.UNITS);
-				onClose();
-			}}
-			className="settings-modal"
+			onClose={modalCloseHandler}
+			className={`settings-modal ${isMobile ? "settings-modal-mobile" : ""} ${
+				!isDesktop ? "settings-modal-tablet" : ""
+			} `}
 			content={
-				<Flex className="settings-modal-content">
-					<Flex className="options-container">
-						<Text className="bold" fontSize="1.23rem" lineHeight="1.85rem" padding={"1.23rem 0rem 1.23rem 1.23rem"}>
-							{t("settings.text")}
-						</Text>
-						{renderOptionItems}
+				<>
+					{isMobile && !settingsOptions && (
+						<Flex direction="column" className="setting-title-container-mobile">
+							<Text className="option-title">
+								{isMobile && <IconBackArrow className="grey-icon back-arrow" onClick={modalCloseHandler} />}
+								{t("settings.text")}
+							</Text>
+							<Divider className="title-divider" />
+						</Flex>
+					)}
+					<Flex
+						className={`settings-modal-content ${!isDesktop ? "settings-modal-content-tablet" : ""} ${
+							isMobile ? "settings-modal-content-mobile" : ""
+						}`}
+					>
+						{(!settingsOptions || !isMobile) && (
+							<Flex className="options-container">
+								{!isMobile && (
+									<Text
+										className="bold"
+										fontSize="1.23rem"
+										lineHeight="1.85rem"
+										padding={"1.23rem 0rem 1.23rem 1.23rem"}
+									>
+										{t("settings.text")}
+									</Text>
+								)}
+								{renderOptionItems}
+							</Flex>
+						)}
+						{!isMobile && <Divider orientation="vertical" className="col-divider" />}
+						{!!settingsOptions && <Flex className="option-details-container">{renderOptionDetails}</Flex>}
 					</Flex>
 					<Divider orientation="vertical" className="col-divider" />
-					<Flex data-testid="option-details-container" className="option-details-container">
-						{renderOptionDetails}
-					</Flex>
-				</Flex>
+				</>
 			}
 		/>
 	);

@@ -5,10 +5,32 @@
 	max-width: 67.08rem;
 	max-height: 52.62rem;
 
-	.amplify-flex.content-container {
+	@media only screen and (max-width: 1023px) {
+		padding: 5%;
+		overflow-x: hidden;
+		max-width: unset;
+		max-height: unset;
+		border-radius: 0rem;
+	}
+
+	@media only screen and (max-width: 500px) {
+		padding-top: 8%;
+	}
+
+	.content-container {
 		gap: 0;
 		height: 100%;
 		padding: 4.31rem;
+
+		@media only screen and (max-width: 1023px) {
+			flex-direction: column;
+			overflow-y: auto;
+			overflow-x: hidden;
+		}
+
+		@media only screen and (max-width: 500px) {
+			padding: 5%;
+		}
 
 		.amplify-flex.left-col {
 			gap: 0;
@@ -17,12 +39,12 @@
 			flex-direction: column;
 			align-items: center;
 
-			.title-container {
-				text-align: center;
+			@media screen and (max-width: 1023px) {
+				max-width: none;
 			}
 
-			@media screen and (max-width: 960px) {
-				max-width: none;
+			.title-container {
+				text-align: center;
 			}
 		}
 
@@ -34,7 +56,7 @@
 			align-items: center;
 			margin-left: 6.15rem;
 
-			@media only screen and (max-width: 950px) {
+			@media only screen and (max-width: 1023px) {
 				width: 100%;
 				max-width: none;
 				margin: 2.31rem 0rem;
@@ -90,29 +112,5 @@
 				text-decoration: none;
 			}
 		}
-
-		@media only screen and (max-width: 950px) {
-			flex-direction: column;
-			overflow-y: auto;
-			overflow-x: hidden;
-		}
-
-		@media only screen and (max-width: 500px) {
-			padding: 5%;
-		}
-	}
-
-	@media only screen and (max-width: 950px) {
-		padding: 5%;
-		overflow-x: hidden;
-		width: 90% !important;
-		height: 90% !important;
-	}
-
-	@media only screen and (max-width: 500px) {
-		padding: 8%;
-		overflow-x: hidden;
-		width: 90% !important;
-		height: 90% !important;
 	}
 }
