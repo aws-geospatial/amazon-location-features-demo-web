@@ -3,7 +3,7 @@
 
 import React, { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { Autocomplete, ComboBoxOption, Flex, Placeholder, Text, View } from "@aws-amplify/ui-react";
+import { Autocomplete, Badge, ComboBoxOption, Flex, Placeholder, SwitchField, Text, View } from "@aws-amplify/ui-react";
 import { IconActionMenu, IconClose, IconDirections, IconPin, IconSearch } from "@demo/assets";
 import { Marker, NotFoundCard, SuggestionMarker } from "@demo/atomicui/molecules";
 import { useAmplifyMap, useAwsPlace } from "@demo/hooks";
@@ -48,6 +48,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const [value, setValue] = useState<string>("");
 	const [isFocused, setIsFocused] = useState(false);
+	const [isNLChecked, setIsNLChecked] = React.useState(false);
 	const autocompleteRef = useRef<HTMLInputElement | null>(null);
 	const { mapUnit: currentMapUnit, isCurrentLocationDisabled, currentLocationData, viewpoint } = useAmplifyMap();
 	const {
@@ -155,6 +156,11 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 			handleSearch(value, false, AnalyticsEventActionsEnum.SEARCH_ICON_CLICK);
 			autocompleteRef?.current?.focus();
 		}
+	};
+
+	const onNLPChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+		clearPoiList();
+		setValue(value);
 	};
 
 	const renderOption = (option: {
@@ -298,7 +304,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 					flexDirection: "column",
 					left: isSideMenuExpanded ? 252 : 20,
 					borderBottomLeftRadius: hideBorderRadius ? "0px" : "8px",
-					borderBottomRightRadius: hideBorderRadius ? "0px" : "8px"
+					borderBottomRightRadius: hideBorderRadius ? "0px" : "8px",
+					maxWidth: isNLChecked ? "500px" : "360px"
 				}}
 			>
 				<Flex gap={0} width="100%" height="100%" alignItems="center">
@@ -320,7 +327,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 						onBlur={() => setIsFocused(false)}
 						onSubmit={e => handleSearch(e, true, AnalyticsEventActionsEnum.ENTER_BUTTON)}
 						value={value}
-						onChange={onChange}
+						onChange={!isNLChecked ? onChange : onNLPChange}
 						onClear={clearPoiList}
 						placeholder={t("search.text") as string}
 						options={options || []}
@@ -339,12 +346,49 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 									))}
 								</Flex>
 							),
-							Empty:
+							Empty: !isNLChecked ? (
 								!!value && !suggestions?.length ? (
 									<Flex className="not-found-container">
 										<NotFoundCard />
 									</Flex>
 								) : null
+							) : (
+								<Flex
+									gap={0}
+									className="inner-search-component"
+									style={{
+										flexDirection: "column",
+										gap: "0"
+									}}
+								>
+									<Flex>
+										<h3>{t("try_asking.text") as string}:</h3>
+									</Flex>
+									<Flex
+										style={{
+											flexDirection: "column",
+											gap: "0.1px",
+											marginBottom: "20px",
+											fontStyle: "italic",
+											fontSize: "15px"
+										}}
+									>
+										<q>{t("nl_query_example_1.text") as string}</q>
+										<q>{t("nl_query_example_2.text") as string}</q>
+										<q>{t("nl_query_example_3.text") as string}</q>
+									</Flex>
+									<Flex
+										style={{
+											marginLeft: "60px"
+										}}
+									>
+										{t("nl_search_footer_label.text") as string}
+										<Badge size="small" variation="warning">
+											{t("prototype.text") as string}
+										</Badge>
+									</Flex>
+								</Flex>
+							)
 						}}
 						isLoading={isSearching}
 						innerEndComponent={
@@ -375,6 +419,79 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 										</>
 									)}
 								</Flex>
+							</Flex>
+						}
+						outerStartComponent={
+							<Flex
+								className="nl-search-container"
+								style={{
+									flexDirection: "column",
+									left: isSideMenuExpanded ? 0 : 0,
+									top: "44px",
+									borderBottomLeftRadius: hideBorderRadius ? "0px" : "8px",
+									borderBottomRightRadius: hideBorderRadius ? "0px" : "8px",
+									gap: "0.1px",
+									padding: "0.5em",
+									height: isNLChecked && !value ? "185px" : "40px",
+									flex: 1
+								}}
+							>
+								<Flex
+									gap={0}
+									width="100%"
+									height="100%"
+									alignItems="center"
+									style={{
+										borderBottom: isNLChecked && !value ? "1px solid var(--grey-color-3)" : ""
+										// marginLeft: "10px"
+									}}
+								>
+									<SwitchField
+										label={t("nl_search_label.text") as string}
+										labelPosition="end"
+										size="small"
+										isChecked={isNLChecked}
+										onChange={e => setIsNLChecked(e.target.checked)}
+										style={{
+											marginLeft: "10px"
+										}}
+									/>
+									<Badge size="small" variation="warning">
+										{t("prototype.text") as string}
+									</Badge>
+								</Flex>
+								{isNLChecked && !value ? (
+									<Flex
+										gap={0}
+										width="100%"
+										height="100%"
+										alignItems="start"
+										className="inner-search-component"
+										marginLeft="10px"
+										marginBottom="0.2em"
+										style={{
+											flexDirection: "column",
+											gap: "0"
+										}}
+									>
+										<h5>{t("try_asking.text") as string}:</h5>
+										<Flex
+											style={{
+												flexDirection: "column",
+												gap: "0.1px",
+												marginBottom: "12px",
+												fontStyle: "italic",
+												fontSize: "12px"
+											}}
+										>
+											<q>{t("nl_query_example_1.text") as string}</q>
+											<q>{t("nl_query_example_2.text") as string}</q>
+											<q>{t("nl_query_example_3.text") as string}</q>
+										</Flex>
+									</Flex>
+								) : (
+									<></>
+								)}
 							</Flex>
 						}
 						crossOrigin={undefined}

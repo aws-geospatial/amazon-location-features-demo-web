@@ -3553,5 +3553,26 @@
 	},
 	"samples__react-map-with-markers__cleanUp": {
 		"text": "To remove all of the resources created in this walkthrough, delete the CloudFormation stack named\n`react-map-with-geojson`."
+	},
+	"nl_search_label": {
+		"text": "Use AI search powered by Amazon Bedrock"
+	},
+	"nl_search_footer_label": {
+		"text": "Search Powered by Amazon Bedrock"
+	},
+	"prototype": {
+		"text": "Prototype"
+	},
+	"try_asking": {
+		"text": "Try Asking"
+	},
+	"nl_query_example_1": {
+		"text": "What are some places to get coffee in Boston?"
+	},
+	"nl_query_example_2": {
+		"text": "Where can I get a haircut?"
+	},
+	"nl_query_example_3": {
+		"text": "Find me some dinner spots around Vancouver?"
 	}
 }
