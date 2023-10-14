@@ -1,6 +1,19 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
+@keyframes animateWidth {
+	0% {
+		opacity: 0;
+		max-width: 40px;
+	}
+
+	100% {
+		opacity: 1;
+		max-width: 1000px;
+		/* Set this to a value larger than what the width could ever be */
+	}
+}
+
 .amplify-flex.map-styles-geofence-and-tracker-container {
 	gap: 0;
 	position: absolute;
@@ -9,7 +22,6 @@
 	z-index: 4;
 	flex-direction: column;
 	width: 2.46rem;
-	height: 7.38rem;
 	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.202633);
 	border-radius: 0.62rem;
 	background-color: var(--white-color);
@@ -31,6 +43,11 @@
 		border-top-right-radius: 0.62rem;
 		border-bottom-left-radius: 0rem;
 		border-bottom-right-radius: 0rem;
+
+		@media screen and (max-width: 1023px) {
+			border-bottom-left-radius: 0.62rem;
+			border-bottom-right-radius: 0.62rem;
+		}
 	}
 
 	.tracker-button {
@@ -38,10 +55,6 @@
 		border-top-right-radius: 0rem;
 		border-bottom-left-radius: 0.62rem;
 		border-bottom-right-radius: 0.62rem;
-	}
-
-	@media only screen and (max-width: 480px) {
-		right: 1rem;
 	}
 }
 
@@ -67,8 +80,8 @@
 
 .active,
 .active > svg {
-	background-color: var(--primary-color);
-	fill: var(--white-color);
+	background-color: var(--white-color) !important;
+	fill: var(--primary-color) !important;
 }
 
 .amplify-divider.amplify-divider--horizontal.button-divider {
@@ -81,6 +94,7 @@
 	top: 1.54rem;
 	right: 5.38rem;
 	z-index: 3;
+
 	.amplify-flex.map-styles-header {
 		gap: 0;
 		padding: 0rem 1.23rem;
@@ -120,33 +134,112 @@
 	&:not(.only-map-styles) {
 		.maps-container {
 			height: 31.1rem;
+
 			&.grab-visible {
 				height: 33.66rem;
 			}
+
 			overflow-y: scroll;
 			overflow-x: hidden;
+			-webkit-overflow-scrolling: touch;
 
 			.clear-filters-button {
 				color: var(--primary-color);
 				font-weight: 600;
+
 				&:hover {
 					color: var(--primary-contrast-color);
 				}
 			}
 		}
 	}
+
+	.responsive-map-footer {
+		position: fixed;
+		bottom: 0;
+		background: var(--white-color);
+		padding: 1.07rem 1.14rem 2.61rem 1.14rem;
+		align-items: flex-start;
+		width: 100%;
+		justify-content: space-between;
+		z-index: 9;
+		border-top: 1px solid var(--grey-color-3);
+		align-items: center;
+
+		.apply-button {
+			font-family: "AmazonEmber-Bold";
+			font-size: 1.07rem;
+			padding: 0.72rem 2.23rem;
+			text-align: center;
+		}
+
+		.clear-selection-button {
+			border: none;
+			background-color: transparent;
+			padding-left: 0;
+			padding-right: 0;
+			font-family: "AmazonEmber-Bold";
+			font-size: 1rem;
+			text-align: center;
+
+			&:active,
+			&:focus {
+				background-color: transparent;
+				box-shadow: none;
+			}
+		}
+	}
+
 	.maps-styles-search {
-		padding: 0 1.2rem;
 		margin: 1rem 0;
 		gap: 0;
+
+		&.responsive-search {
+			overflow-y: auto;
+			overflow-x: scroll;
+			-webkit-overflow-scrolling: touch;
+			margin-bottom: 0 !important;
+
+			&::-webkit-scrollbar {
+				display: none;
+			}
+		}
+
+		.map-providers-container-mobile {
+			padding: 0rem 0.6rem;
+			padding-left: 0;
+			margin-left: 0.55rem;
+
+			button {
+				border: 1px solid var(--grey-color-3);
+				padding: 0.3rem 1.84rem;
+				font-size: 1.23rem;
+
+				&.active-button {
+					border: 1px solid var(--primary-color);
+					background-color: transparent;
+					box-shadow: none;
+				}
+
+				&:active,
+				&:focus,
+				&:hover {
+					background-color: transparent;
+					box-shadow: none;
+				}
+			}
+		}
+
 		.amplify-input {
 			font-size: 14px;
 		}
+
 		&.with-filters {
 			.map-styles-search-field {
 				border-bottom-left-radius: 0;
 				border-bottom: none;
 			}
+
 			.filter-container {
 				border-bottom-right-radius: 0;
 				border-bottom: none;
@@ -159,26 +252,27 @@
 			border-bottom-left-radius: 0.6rem;
 			border-right: none;
 			width: 100%;
+			transition: width 0.2s;
+
 			::placeholder {
 				color: var(--grey-color);
 			}
+
 			.search-icon-container {
 				display: flex;
 				align-items: center;
 				height: 100%;
 				padding: 0.7rem;
-				.search-icon {
-					fill: var(--grey-light-color);
-					width: 1.5rem;
-					height: 1.5rem;
-				}
 			}
+
 			.amplify-field-group__inner-end {
 				display: flex;
 				align-items: center;
 				justify-content: flex-end;
+
 				.amplify-button.amplify-field-group__icon-button {
 					border-radius: 50%;
+
 					&:hover,
 					&:focus,
 					&:active {
@@ -186,6 +280,7 @@
 						box-shadow: none;
 					}
 				}
+
 				.amplify-icon {
 					font-size: 1.3rem;
 					color: var(--grey-light-color);
@@ -196,6 +291,13 @@
 				}
 			}
 		}
+
+		.search-bar-icon {
+			fill: var(--grey-light-color);
+			width: 1.5rem;
+			height: 1.5rem;
+		}
+
 		.filter-container {
 			display: flex;
 			align-items: center;
@@ -204,6 +306,7 @@
 			border-top-right-radius: 0.6rem;
 			border-bottom-right-radius: 0.6rem;
 			cursor: pointer;
+			z-index: 9;
 
 			.filter-icon-wrapper {
 				display: flex;
@@ -212,9 +315,11 @@
 				padding: 0 0.7rem;
 				height: 75%;
 				gap: 0;
+
 				.filter-bubble {
 					width: 8px;
 					height: 8px;
+
 					&.live {
 						background-color: orange;
 						border-radius: 50%;
@@ -224,14 +329,17 @@
 						left: -8px;
 					}
 				}
+
 				.filter-icon {
 					width: 1.6rem;
 					height: 1.6rem;
+
 					&.live {
 						path {
 							fill: var(--primary-color);
 						}
 					}
+
 					path {
 						fill: var(--grey-light-color);
 					}
@@ -239,12 +347,18 @@
 			}
 		}
 	}
+
 	.maps-filter-container {
 		margin: 0 1.2rem 1.2rem;
 		border: 1px solid var(--grey-color-3);
 		border-bottom-left-radius: 0.6rem;
 		border-bottom-right-radius: 0.6rem;
 		padding: 1rem 1.5rem;
+
+		&.responsive-filter {
+			animation: animateWidth 0.2s ease-in-out;
+			margin-bottom: 5rem;
+		}
 	}
 
 	.amplify-divider.amplify-divider--horizontal.mb-divider {
@@ -276,8 +390,15 @@
 			max-height: 6.31rem;
 			width: 100%;
 			height: 100%;
+
 			&.only-map {
-				min-width: 9rem;
+				min-width: auto;
+			}
+
+			&.hand-device-img {
+				min-width: 6.15rem;
+				max-width: 6.15rem;
+				height: 6.15rem;
 			}
 		}
 

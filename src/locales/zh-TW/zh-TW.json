@@ -2750,12 +2750,6 @@
   "welcome_modal__heading": {
     "text": "歡迎來到\n亞馬遜位置演示"
   },
-  "welcome_modal__item_1": {
-    "text": "通過使用亞馬遜位置演示應用程序，您同意該應用程序的"
-  },
-  "welcome_modal__item_3": {
-    "text": "供使用。"
-  },
   "search_box__searching_for_suggestions": {
     "text": "正在搜尋建議..."
   },
@@ -3395,6 +3389,12 @@
   "regions__ap_southeast__region": {
     "text": "亞太地區"
   },
+  "explore__connect_aws_account": {
+    "text": "連接到 AWS"
+  },
+  "explore__connect_description": {
+    "text": "透過連線至 AWS 雲端架構，存取追蹤和地理圍欄功能 "
+  },
   "samples__js-map-style-change__title": {
     "text": "切換地圖樣式"
   },
@@ -3553,5 +3553,32 @@
   },
   "samples__react-map-with-markers__cleanUp": {
     "text": "若要移除此逐步解說中建立的所有資源，請刪除名為的 CloudFormation 堆疊\n'反應地圖-與-地理信號'。"
+  },
+  "settings_modal_option__overview": {
+    "text": "探索亞馬遜位置的力量"
+  },
+  "settings_modal_option__samples": {
+    "text": "我們精選程式碼範例中的功能"
+  },
+  "settings_modal_option__settings": {
+    "text": "配置您的體驗"
+  },
+  "settings_modal_option__about": {
+    "text": "法律與歸因"
+  },
+  "map_buttons__clear_selections": {
+    "text": "清除選擇"
+  },
+  "map_buttons__apply_filters": {
+    "text": "套用篩選"
+  },
+  "welcome_modal__cta": {
+    "text": "開始探索"
+  },
+  "go": {
+    "text": "前往"
+  },
+  "more_options": {
+    "text": "更多選項"
   }
 }

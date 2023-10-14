@@ -5,6 +5,7 @@ import React from "react";
 
 import { Button, CheckboxField, Flex, Text } from "@aws-amplify/ui-react";
 import { Modal } from "@demo/atomicui/atoms";
+import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
 
@@ -20,6 +21,7 @@ export interface ConfirmationModalProps {
 	handleLearnMore?: () => void;
 	hideCancelButton?: boolean;
 	cancelationText?: string;
+	onCancel?: () => void;
 	showConfirmationCheckbox?: boolean;
 	confirmationCheckboxLabel?: string;
 	confirmationCheckboxValue?: string;
@@ -39,6 +41,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 	handleLearnMore = () => {},
 	hideCancelButton = false,
 	cancelationText,
+	onCancel,
 	showConfirmationCheckbox,
 	confirmationCheckboxLabel,
 	confirmationCheckboxValue,
@@ -47,13 +50,14 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 }) => {
 	const { t } = useTranslation();
 	const [isConfirmationChecked, setIsConfirmationChecked] = React.useState(false);
+	const { isMobile } = useDeviceMediaQuery();
 
 	return (
 		<Modal
 			data-testid="confirmation-modal-container"
 			open={open}
 			onClose={onClose}
-			className={`confirmation-modal ${className}`}
+			className={`confirmation-modal ${className} ${isMobile ? "confirmation-modal-mobile" : ""}`}
 			hideCloseIcon
 			content={
 				<Flex data-testid="confirmation-content" className="confirmation-content">
@@ -112,7 +116,11 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 						</Flex>
 					)}
 					{!hideCancelButton && (
-						<Flex data-testid="confirmation-cancel-button" className="confirmation-cancel-button" onClick={onClose}>
+						<Flex
+							data-testid="confirmation-cancel-button"
+							className="confirmation-cancel-button"
+							onClick={onCancel ? onCancel : onClose}
+						>
 							<Text className="bold" fontSize="1.08rem" textAlign="center">
 								{cancelationText || t("confirmation_modal__cancel.text")}
 							</Text>

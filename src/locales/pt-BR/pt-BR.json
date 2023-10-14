@@ -2750,12 +2750,6 @@
   "welcome_modal__heading": {
     "text": "Bem-vindo ao\nDemonstração de localização da"
   },
-  "welcome_modal__item_1": {
-    "text": "Ao usar o aplicativo Amazon Location Demo, você concorda com o"
-  },
-  "welcome_modal__item_3": {
-    "text": "para uso."
-  },
   "search_box__searching_for_suggestions": {
     "text": "Procurando sugestões..."
   },
@@ -3395,6 +3389,12 @@
   "regions__ap_southeast__region": {
     "text": "Ásia-Pacífico"
   },
+  "explore__connect_aws_account": {
+    "text": "Conecte-se à AWS"
+  },
+  "explore__connect_description": {
+    "text": "Acesse recursos de rastreamento e geofence conectando-se ao AWS CloudFormation "
+  },
   "samples__js-map-style-change__title": {
     "text": "Alternar estilos de mapa"
   },
@@ -3553,5 +3553,32 @@
   },
   "samples__react-map-with-markers__cleanUp": {
     "text": "Para remover todos os recursos criados neste passo a passo, exclua a pilha do CloudFormation chamada\n`mapa de reação com geojson`."
+  },
+  "settings_modal_option__overview": {
+    "text": "Explore o poder da localização na Amazon"
+  },
+  "settings_modal_option__samples": {
+    "text": "Nossos recursos em amostras de código selecionadas"
+  },
+  "settings_modal_option__settings": {
+    "text": "Configure sua experiência"
+  },
+  "settings_modal_option__about": {
+    "text": "Legal e atribuição"
+  },
+  "map_buttons__clear_selections": {
+    "text": "Seleção clara"
+  },
+  "map_buttons__apply_filters": {
+    "text": "Aplicar filtros"
+  },
+  "welcome_modal__cta": {
+    "text": "Comece a explorar"
+  },
+  "go": {
+    "text": "Vá"
+  },
+  "more_options": {
+    "text": "Mais opções"
   }
 }

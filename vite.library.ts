@@ -18,6 +18,7 @@ const packageNames = [
 	"react",
 	"react-dom",
 	"react-router-dom",
+	"react-spring-bottom-sheet",
 	"react-toastify",
 	"react-tooltip",
 	"zustand",

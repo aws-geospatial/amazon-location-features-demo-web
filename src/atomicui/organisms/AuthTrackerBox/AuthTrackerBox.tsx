@@ -4,11 +4,22 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button, Card, Flex, Loader, Text, View } from "@aws-amplify/ui-react";
-import { IconCar, IconClose, IconDroneSolid, IconInfoSolid, IconSegment, IconWalking } from "@demo/assets";
+import {
+	IconCar,
+	IconClose,
+	IconDroneSolid,
+	IconEdit,
+	IconInfoSolid,
+	IconMobileSolid,
+	IconSegment,
+	IconWalking
+} from "@demo/assets";
 import { GeofenceMarker } from "@demo/atomicui/molecules";
-import { useAwsGeofence, useAwsRoute, useAwsTracker, useMediaQuery, useWebSocketBanner } from "@demo/hooks";
+import { useAwsGeofence, useAwsRoute, useAwsTracker, useWebSocketBanner } from "@demo/hooks";
+import useBottomSheet from "@demo/hooks/useBottomSheet";
+import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { RouteDataType, TrackerType } from "@demo/types";
-import { EventTypeEnum } from "@demo/types/Enums";
+import { EventTypeEnum, ResponsiveUIEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
 import * as turf from "@turf/turf";
 import { Position } from "aws-sdk/clients/location";
@@ -22,6 +33,7 @@ import "./styles.scss";
 export const trackerTypes = [
 	{ type: TrackerType.CAR, icon: <IconCar width="1.54rem" height="1.54rem" /> },
 	{ type: TrackerType.WALK, icon: <IconWalking width="1.54rem" height="1.54rem" /> },
+	{ type: TrackerType.MOBILE, icon: <IconMobileSolid width="1.54rem" height="1.54rem" /> },
 	{ type: TrackerType.DRONE, icon: <IconDroneSolid width="1.54rem" height="1.54rem" /> }
 ];
 
@@ -55,8 +67,15 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
-	const isDesktop = useMediaQuery("(min-width: 1024px)");
+	const { setUI, bottomSheetCurrentHeight = 0 } = useBottomSheet();
+
+	const { isDesktop } = useDeviceMediaQuery();
 	const fetchGeofencesList = useCallback(async () => getGeofencesList(), [getGeofencesList]);
+
+	const _trackerTypes = useMemo(
+		() => trackerTypes.filter(item => (isDesktop ? item.type !== TrackerType.MOBILE : item.type !== TrackerType.WALK)),
+		[isDesktop]
+	);
 
 	useEffect(() => {
 		fetchGeofencesList();
@@ -76,6 +95,7 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 		setIsEditingRoute(false);
 		setTrackerPoints(undefined);
 		setShowAuthTrackerBox(false);
+		setUI(ResponsiveUIEnum.explore);
 	};
 
 	const onTrackerMarkerChange = (type: TrackerType) => {
@@ -169,9 +189,14 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 	const renderTrackerPointsList = useMemo(() => {
 		if (trackerPoints?.length) {
 			return (
-				<Flex gap={0} direction="column" maxHeight={window.innerHeight - 250} overflow="scroll">
+				<Flex
+					gap={0}
+					direction="column"
+					maxHeight={!isDesktop ? `${bottomSheetCurrentHeight - 220}px` : window.innerHeight - 250}
+					overflow="scroll"
+				>
 					{trackerPoints.map((point, idx) => {
-						const icon = trackerTypes.filter(({ type }) => selectedTrackerType === type)[0].icon;
+						const icon = _trackerTypes.filter(({ type }) => selectedTrackerType === type)[0].icon;
 
 						return (
 							<Flex key={idx} className="tracker-point-list-item">
@@ -186,12 +211,12 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 				</Flex>
 			);
 		}
-	}, [trackerPoints, selectedTrackerType]);
+	}, [trackerPoints, isDesktop, bottomSheetCurrentHeight, _trackerTypes, selectedTrackerType]);
 
 	const renderTrackerPointMarkers = useMemo(() => {
 		if (trackerPoints?.length) {
 			return trackerPoints.map((point, idx) => {
-				const icon = trackerTypes.filter(({ type }) => selectedTrackerType === type)[0].icon;
+				const icon = _trackerTypes.filter(({ type }) => selectedTrackerType === type)[0].icon;
 
 				return (
 					<Marker
@@ -215,7 +240,7 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 				);
 			});
 		}
-	}, [trackerPoints, selectedTrackerType, isPlaying, trackerPos]);
+	}, [trackerPoints, _trackerTypes, isPlaying, trackerPos, selectedTrackerType]);
 
 	const renderDottedLines = useMemo(() => {
 		if (isEditingRoute && trackerPoints && trackerPoints?.length > 1) {
@@ -255,19 +280,27 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 
 	return (
 		<>
-			<Card data-testid="auth-tracker-box-card" className="tracking-card" left="1.62rem">
+			<Card
+				data-testid="auth-tracker-box-card"
+				className={`tracking-card ${!isDesktop ? "tracking-card-mobile" : ""}`}
+				left="1.62rem"
+			>
 				<Flex className="tracking-card-header">
-					<Text fontFamily="AmazonEmber-Medium" fontSize="1.08rem">
+					<Text fontFamily="AmazonEmber-Medium" fontSize={!isDesktop ? "1.23rem" : "1.08rem"}>
 						{t("tracker.text")}
 					</Text>
-					<Flex gap={0} alignItems="center">
-						<Flex data-testid="auth-tracker-box-close" className="tracking-card-close" onClick={onClose}>
+					{isDesktop && (
+						<Flex
+							data-testid="auth-tracker-box-close"
+							className={`tracking-card-close ${!isDesktop ? "tracking-card-close-mobile" : ""}`}
+							onClick={onClose}
+						>
 							<IconClose />
 						</Flex>
-					</Flex>
+					)}
 				</Flex>
 				{Connection}
-				<Flex gap={0} alignItems="center" padding="1.23rem">
+				<Flex gap={0} alignItems="center" padding={isDesktop ? "1.23rem" : "0.5rem 1.23rem"}>
 					<IconInfoSolid className="icon-plus-rounded" />
 					<Text marginLeft="1.23rem" variation="tertiary" textAlign={isLtr ? "start" : "end"}>
 						{t("tracker_box__click_any_point.text")}
@@ -275,7 +308,7 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 				</Flex>
 				<Flex className="marker-container" justifyContent="space-between">
 					<Flex gap="0">
-						{trackerTypes.map(({ type, icon }, idx) => (
+						{_trackerTypes.map(({ type, icon }, idx) => (
 							<View key={`${type}-${idx}`}>
 								<View
 									className={selectedTrackerType === type ? "icon-container selected" : "icon-container"}
@@ -336,7 +369,11 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 										)}
 									</Button>
 									<Button className="edit-button" variation="primary" onClick={onEdit}>
-										{t("tracker_box__edit.text")}
+										{isDesktop ? (
+											t("tracker_box__edit.text")
+										) : (
+											<IconEdit className="edit-icon" width={20} height={20} />
+										)}
 									</Button>
 								</>
 							)}
@@ -362,7 +399,6 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 				setPoints={setPoints}
 				trackerPos={trackerPos}
 				setTrackerPos={setTrackerPos}
-				isDesktop={isDesktop}
 			/>
 		</>
 	);
