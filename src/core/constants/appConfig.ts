@@ -415,7 +415,8 @@ const appConfig = {
 		GET_DEVICE_POSITION_HISTORY_URL:
 			"https://docs.aws.amazon.com/location/latest/APIReference/API_GetDevicePositionHistory.html",
 		BATCH_DELETE_DEVICE_POSITION_HISTORY_URL:
-			"https://docs.aws.amazon.com/location/latest/APIReference/API_BatchDeleteDevicePositionHistory.html"
+			"https://docs.aws.amazon.com/location/latest/APIReference/API_BatchDeleteDevicePositionHistory.html",
+		NLP_BASE_URL: "https://h57jdz559a.execute-api.us-west-2.amazonaws.com/api"
 	}
 };
 
