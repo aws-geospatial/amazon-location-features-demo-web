@@ -5,6 +5,14 @@
 	max-width: 45.69rem;
 	max-height: 49.23rem;
 
+	@media screen and (max-width: 1023px) {
+		max-width: 100% !important;
+		max-height: 100% !important;
+		width: 100% !important;
+		height: 100% !important;
+		border-radius: 0;
+	}
+
 	.more-modal-content {
 		gap: 0;
 		height: 100%;
@@ -14,6 +22,11 @@
 			gap: 0;
 			width: 33.67%;
 			flex-direction: column;
+
+			@media only screen and (max-width: 430px) {
+				width: 100%;
+				height: calc(100vh - 21vh);
+			}
 
 			.option-item {
 				gap: 0;
@@ -28,6 +41,19 @@
 				@media only screen and (min-width: 1024px) {
 					&:hover {
 						background-color: rgba(0, 130, 150, 0.08);
+					}
+				}
+
+				&.option-item-mobile {
+					padding: 0.77rem 1.23rem;
+					justify-content: space-between;
+
+					.option-arrow {
+						width: 16px;
+
+						svg {
+							transform: rotate(270deg);
+						}
 					}
 				}
 
@@ -47,6 +73,21 @@
 			gap: 0;
 			width: 66.33%;
 			flex-direction: column;
+
+			@media only screen and (max-width: 430px) {
+				width: 100%;
+
+				.option-item {
+					font-family: "AmazonEmber-Bold" !important;
+					font-size: 1.23rem !important;
+					align-items: center !important;
+					display: flex !important;
+
+					.back-arrow {
+						margin-right: 1rem !important;
+					}
+				}
+			}
 
 			.amplify-button.amplify-field-group__control.amplify-button--primary.learn-more-button {
 				background-color: var(--secondary-button-bg-color);
@@ -76,6 +117,7 @@
 				line-height: 1.38rem;
 				color: var(--grey-color);
 				margin-top: 0.31rem;
+
 				a {
 					font-family: "AmazonEmber-Regular";
 					color: var(--primary-color);
@@ -84,15 +126,59 @@
 				}
 			}
 		}
+	}
 
-		.amplify-divider.amplify-divider--horizontal.title-divider {
-			border-bottom-width: 1px;
-			border-color: var(--light-color-2);
+	.amplify-divider.amplify-divider--horizontal.title-divider {
+		border-bottom-width: 1px;
+		border-color: var(--light-color-2);
+	}
+
+	.more-title-container-mobile {
+		flex-direction: column;
+		display: flex;
+		line-height: 1.38rem;
+		padding: 1.46rem 0 1.15rem;
+
+		.option-title {
+			display: flex;
+			font-family: "AmazonEmber-Bold";
+			font-size: 1.23rem;
+			align-items: center;
+			margin-left: 1.15rem;
+
+			svg {
+				margin-right: 1rem;
+			}
 		}
 	}
 
-	@media screen and (max-width: 960px) {
-		width: 90% !important;
-		height: 90% !important;
+	.tnc-container {
+		gap: 0;
+		flex-direction: column;
+		margin: 0rem 1.23rem;
+
+		svg {
+			width: 8.69re;
+			height: 1.54rem;
+			align-self: center;
+			margin-bottom: 1.85rem;
+		}
+
+		.text {
+			color: var(--grey-color);
+			margin-bottom: 1.23rem;
+
+			a {
+				font-family: "AmazonEmber-Regular";
+				color: var(--primary-color);
+				cursor: pointer;
+				text-decoration: none;
+			}
+		}
+
+		.copyright {
+			font-size: 0.77rem;
+			color: var(--grey-color);
+		}
 	}
 }

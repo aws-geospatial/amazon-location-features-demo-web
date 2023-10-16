@@ -5,18 +5,24 @@ import {
 	IconBackArrow,
 	IconClose,
 	IconGeofence,
-	IconGeofenceColor,
 	IconGeofenceMarkerDisabled,
 	IconNotificationBell,
 	IconRadar,
 	IconSegment,
-	IconTrackers,
 	Simulation
 } from "@demo/assets";
-import { DropdownEl } from "@demo/atomicui/atoms";
-import { ConfirmationModal, IconicInfoCard, NotificationsBox } from "@demo/atomicui/molecules";
+import { DropdownEl, Modal } from "@demo/atomicui/atoms";
+import {
+	ConfirmationModal,
+	IconicInfoCard,
+	NonStartUnauthSimulation,
+	NotificationsBox
+} from "@demo/atomicui/molecules";
 import { appConfig, busRoutesData } from "@demo/core";
-import { useAwsGeofence, useWebSocketBanner } from "@demo/hooks";
+import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
+import { useAwsGeofence, useUnauthSimulation, useWebSocketBanner } from "@demo/hooks";
+import useBottomSheet from "@demo/hooks/useBottomSheet";
+import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import i18n from "@demo/locales/i18n";
 import {
 	MenuItemEnum,
@@ -26,6 +32,7 @@ import {
 	TrackingHistoryType,
 	TrackingHistoryTypeEnum
 } from "@demo/types";
+import { ResponsiveUIEnum } from "@demo/types/Enums";
 import { format, parseISO } from "date-fns";
 import { LngLatBoundsLike } from "mapbox-gl";
 import { useTranslation } from "react-i18next";
@@ -35,11 +42,6 @@ import UnauthGeofencesSimulation from "./UnauthGeofencesSimulation";
 import UnauthRouteSimulation from "./UnauthRouteSimulation";
 import "./styles.scss";
 
-const {
-	MAP_RESOURCES: {
-		MAX_BOUNDS: { VANCOUVER }
-	}
-} = appConfig.default;
 const initialTrackingHistory: TrackingHistoryType = {
 	bus_route_01: [],
 	bus_route_02: [],
@@ -55,14 +57,28 @@ const busRoutesDropdown = [
 	{ value: "bus_route_05", label: "Bus 05 UBC" }
 ];
 
-interface UnauthSimulationProps {
+const {
+	MAP_RESOURCES: {
+		MAX_BOUNDS: { VANCOUVER }
+	}
+} = appConfig.default;
+
+export interface UnauthSimulationProps {
 	mapRef: MapRef | null;
 	from: MenuItemEnum;
 	setShowUnauthGeofenceBox: (b: boolean) => void;
 	setShowUnauthTrackerBox: (b: boolean) => void;
 	setShowConnectAwsAccountModal: (b: boolean) => void;
+	showStartUnauthSimulation: boolean;
+	setShowStartUnauthSimulation: (b: boolean) => void;
+	startSimulation: boolean;
+	setStartSimulation: (b: boolean) => void;
 	setShowUnauthSimulationBounds: (b: boolean) => void;
 	clearCredsAndLocationClient?: () => void;
+	isNotifications: boolean;
+	setIsNotifications: React.Dispatch<React.SetStateAction<boolean>>;
+	confirmCloseSimulation: boolean;
+	setConfirmCloseSimulation: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
@@ -71,16 +87,20 @@ const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 	setShowUnauthGeofenceBox,
 	setShowUnauthTrackerBox,
 	setShowConnectAwsAccountModal,
+	showStartUnauthSimulation,
+	setShowStartUnauthSimulation,
+	startSimulation,
+	setStartSimulation,
 	setShowUnauthSimulationBounds,
-	clearCredsAndLocationClient
+	clearCredsAndLocationClient,
+	isNotifications,
+	setIsNotifications,
+	confirmCloseSimulation,
+	setConfirmCloseSimulation
 }) => {
-	const [showUnauthSimulation, setShowUnauthSimulation] = useState(false);
-	const [startSimulation, setStartSimulation] = useState(false);
 	const [trackingHistory, setTrackingHistory] = useState<TrackingHistoryType>(initialTrackingHistory);
 	const [selectedRoutes, setSelectedRoutes] = useState<SelectOption[]>([busRoutesDropdown[0]]);
 	const [busSelectedValue, setBusSelectedValue] = useState<SelectOption>(busRoutesDropdown[0]);
-	const [isNotifications, setIsNotifications] = useState(false);
-	const [confirmCloseSimulation, setConfirmCloseSimulation] = useState(false);
 	const [isPlaying, setIsPlaying] = useState(true);
 	const { unauthNotifications, setUnauthNotifications } = useAwsGeofence();
 	const { Connection, isHidden } = useWebSocketBanner(
@@ -107,15 +127,73 @@ const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 		}, []),
 		startSimulation
 	);
+	const {
+		ui,
+		setUI,
+		setBottomSheetHeight,
+		setBottomSheetMinHeight,
+		bottomSheetHeight,
+		bottomSheetCurrentHeight = 0
+	} = useBottomSheet();
 	const { t } = useTranslation();
 	const currentLanguage = i18n.language;
 	const unauthSimulationCtaText = t("unauth_simulation__cta.text");
 	const trackingHistoryRef: Ref<HTMLDivElement> = useRef<HTMLDivElement>(null);
 	const selectedRoutesIds = useMemo(() => selectedRoutes.map(route => route.value), [selectedRoutes]);
+	const { isDesktop, isTablet } = useDeviceMediaQuery();
+	const isNotDesktop = !isDesktop && ui;
+	const nonStartRef = useRef<HTMLDivElement>(null);
+	const cardRef = useRef<HTMLDivElement>(null);
+	const { setHideGeofenceTrackerShortcut } = useUnauthSimulation();
+
+	const isNonStartUnauthSimulation =
+		(isNotDesktop &&
+			[ResponsiveUIEnum.non_start_unauthorized_geofence, ResponsiveUIEnum.non_start_unauthorized_tracker].includes(
+				ui
+			)) ||
+		!showStartUnauthSimulation;
+
+	const isBeforeStartSimulation =
+		isNotDesktop &&
+		[ResponsiveUIEnum.before_start_unauthorized_geofence, ResponsiveUIEnum.before_start_unauthorized_tracker].includes(
+			ui
+		);
 
 	useEffect(() => {
-		startSimulation && mapRef?.fitBounds(VANCOUVER as LngLatBoundsLike, { linear: true });
-	}, [startSimulation, mapRef]);
+		startSimulation &&
+			mapRef?.fitBounds(
+				isDesktop
+					? (VANCOUVER.DESKTOP as LngLatBoundsLike)
+					: isTablet
+					? (VANCOUVER.TABLET as LngLatBoundsLike)
+					: (VANCOUVER.MOBILE as LngLatBoundsLike),
+				{ linear: true }
+			);
+	}, [mapRef, startSimulation, isDesktop, isTablet]);
+
+	useEffect(() => {
+		if (
+			isNonStartUnauthSimulation &&
+			!isDesktop &&
+			bottomSheetHeight !== (nonStartRef?.current?.clientHeight || 230) + 10
+		) {
+			setBottomSheetMinHeight(nonStartRef?.current?.clientHeight || 230);
+			setBottomSheetHeight((nonStartRef?.current?.clientHeight || 230) + 10);
+		}
+
+		if (!isNonStartUnauthSimulation && !isBeforeStartSimulation && !isDesktop) {
+			setBottomSheetMinHeight(BottomSheetHeights.routes.min);
+		}
+	}, [
+		bottomSheetCurrentHeight,
+		bottomSheetHeight,
+		isBeforeStartSimulation,
+		isDesktop,
+		isNonStartUnauthSimulation,
+		setBottomSheetHeight,
+		setBottomSheetMinHeight,
+		ui
+	]);
 
 	const updateSelectedRoutes = useCallback(
 		(selectedRoute: SelectOption) => {
@@ -133,27 +211,33 @@ const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 		[selectedRoutes]
 	);
 
-	const handleClose = () => {
-		setShowUnauthSimulationBounds(false);
-		from === MenuItemEnum.GEOFENCE ? setShowUnauthGeofenceBox(false) : setShowUnauthTrackerBox(false);
+	const handleClose = useCallback(
+		() => (from === MenuItemEnum.GEOFENCE ? setShowUnauthGeofenceBox(false) : setShowUnauthTrackerBox(false)),
+		[from, setShowUnauthGeofenceBox, setShowUnauthTrackerBox]
+	);
+
+	const handleCta = () => {
+		setShowStartUnauthSimulation(true);
+		setHideGeofenceTrackerShortcut(true);
 	};
 
-	const handleCta = () => setShowUnauthSimulation(true);
-
 	const handleEnableLive = () => {
-		handleClose();
+		isDesktop && handleClose();
 		setShowConnectAwsAccountModal(true);
 	};
 
 	const onCloseHandler = () => {
 		clearCredsAndLocationClient && clearCredsAndLocationClient();
-		setShowUnauthSimulation(false);
+		setShowStartUnauthSimulation(false);
 		handleClose();
+		setHideGeofenceTrackerShortcut(false);
+		setConfirmCloseSimulation(false);
 	};
 
 	const StartSimulation = useCallback(() => {
 		return (
 			<Flex
+				data-testid="start-simulation"
 				position="relative"
 				height={`${
 					!["en"].includes(currentLanguage) ? `${currentLanguage === "pt-BR" ? "51.5rem" : "50rem"}` : "46rem"
@@ -226,8 +310,21 @@ const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 							variation="primary"
 							padding="0.923rem 0"
 							onClick={() => {
-								setStartSimulation(true);
-								setShowUnauthSimulationBounds(true);
+								if (isDesktop) {
+									setStartSimulation(true);
+									setShowUnauthSimulationBounds(true);
+								} else {
+									setStartSimulation(true);
+									setBottomSheetMinHeight(BottomSheetHeights.routes.max);
+									if (bottomSheetCurrentHeight < window.innerHeight * 0.4) {
+										setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+										setBottomSheetHeight(window.innerHeight * 0.4);
+									}
+									from === MenuItemEnum.TRACKER
+										? setUI(ResponsiveUIEnum.unauth_tracker)
+										: setUI(ResponsiveUIEnum.unauth_geofence);
+									setShowUnauthSimulationBounds(true);
+								}
 							}}
 							fontFamily="AmazonEmber-Medium"
 							fontSize="1.077rem"
@@ -240,7 +337,18 @@ const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 				</Flex>
 			</Flex>
 		);
-	}, [t, currentLanguage, setShowUnauthSimulationBounds]);
+	}, [
+		currentLanguage,
+		t,
+		isDesktop,
+		setStartSimulation,
+		setShowUnauthSimulationBounds,
+		setBottomSheetMinHeight,
+		bottomSheetCurrentHeight,
+		from,
+		setUI,
+		setBottomSheetHeight
+	]);
 
 	const renderGeofences = useMemo(
 		() =>
@@ -276,123 +384,135 @@ const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 		[isPlaying, selectedRoutesIds]
 	);
 
-	return (
+	const onBackHandler = useCallback(() => {
+		if (isNotifications) {
+			setIsNotifications(false);
+		} else {
+			setIsPlaying(false);
+			setConfirmCloseSimulation(true);
+		}
+	}, [isNotifications, setIsNotifications, setConfirmCloseSimulation]);
+
+	const BeforeStartSimulation = () => (
 		<>
-			{!showUnauthSimulation ? (
-				<Card
-					data-testid="unauth-simulation-card"
-					className="unauth-simulation-card"
-					left={21}
-					width={
-						unauthSimulationCtaText.length > 42 || "ja" === currentLanguage
-							? `${["pt-BR", "ja"].includes(currentLanguage) ? "37rem" : "31rem"}`
-							: ""
-					}
-				>
-					<Flex
-						data-testid="unauth-simulation-card-header-close"
-						className="unauth-simulation-card-header"
-						onClick={handleClose}
+			<Flex data-testid="before-start-simulation" justifyContent="flex-end" padding="0.77rem">
+				<Flex className="card-close">
+					<IconClose className="grey-icon" width={20} height={20} onClick={onCloseHandler} />
+				</Flex>
+			</Flex>
+			<StartSimulation />
+		</>
+	);
+
+	const ExitSimulation = () => (
+		<Flex className="confirmation-modal-container">
+			<ConfirmationModal
+				open={confirmCloseSimulation}
+				onClose={() => setConfirmCloseSimulation(false)}
+				onCancel={onCloseHandler}
+				heading={t("start_unauth_simulation__exit_simulation.text") as string}
+				description={
+					<Text
+						className="small-text"
+						variation="tertiary"
+						marginTop="1.23rem"
+						textAlign="center"
+						whiteSpace="pre-line"
 					>
-						<IconClose />
-					</Flex>
-					<Flex className="unauth-simulation-card-body">
-						{from === MenuItemEnum.GEOFENCE ? <IconGeofenceColor /> : <IconTrackers />}
-						<Text className="bold medium-text" marginTop="1.5rem">
-							{from === MenuItemEnum.GEOFENCE ? t("geofences.text") : t("trackers.text")}
-						</Text>
-						<Text className="small-text" color="var(--grey-color)" textAlign="center" marginTop="0.8rem">
-							{from === MenuItemEnum.GEOFENCE
-								? t("unauth_simulation__geofence_box_info.text")
-								: t("unauth_simulation__tracker_box_info.text")}
-						</Text>
-						<Button
-							data-testid="unauth-simulation-cta"
-							variation="primary"
-							marginTop="1.5rem"
-							isFullWidth
-							onClick={handleCta}
-							fontFamily="AmazonEmber-Medium"
-							fontSize="1.076rem"
-							minHeight="3.076rem"
-						>
-							{unauthSimulationCtaText}
-						</Button>
-					</Flex>
-					<Flex className="unauth-simulation-card-footer">
-						<Text
-							data-testid="unauth-simulation-enable-live"
-							className="small-text"
-							color="var(--primary-color)"
-							style={{ cursor: "pointer" }}
-							onClick={handleEnableLive}
-							fontFamily="AmazonEmber-Bold"
-							fontSize="1rem"
-						>{`${t("unauth_simulation__enable_live.text")} ${
-							from === MenuItemEnum.GEOFENCE ? t("geofences.text") : t("trackers.text")
-						}`}</Text>
-						<Text fontSize="0.77rem" marginTop="0.08rem" color="var(--grey-color)">
-							{t("unauth_simulation__disclaimer.text")}
-						</Text>
-					</Flex>
-				</Card>
-			) : (
-				<>
+						{t("start_unauth_simulation__exit_simulation_desc.text")}
+					</Text>
+				}
+				onConfirm={() => setConfirmCloseSimulation(false)}
+				confirmationText={t("start_unauth_simulation__stay_in_simulation.text") as string}
+				cancelationText={t("exit.text") as string}
+			/>
+		</Flex>
+	);
+
+	if (isNonStartUnauthSimulation) {
+		return (
+			<NonStartUnauthSimulation
+				from={from}
+				handleClose={handleClose}
+				handleCta={() => {
+					setUI(
+						from === MenuItemEnum.GEOFENCE
+							? ResponsiveUIEnum.before_start_unauthorized_geofence
+							: ResponsiveUIEnum.before_start_unauthorized_tracker
+					);
+					handleCta();
+				}}
+				handleEnableLive={handleEnableLive}
+				unauthSimulationCtaText={unauthSimulationCtaText}
+				startRef={nonStartRef}
+			/>
+		);
+	} else {
+		return (
+			<>
+				{isBeforeStartSimulation ? (
+					<Modal
+						open
+						onClose={() => {}}
+						hideCloseIcon
+						className={`unauthSimulation-card ${
+							isTablet ? "unauth-non-start-simulation-card-tablet" : "unauth-non-start-simulation-card-mobile"
+						}`}
+						content={<BeforeStartSimulation />}
+					/>
+				) : (
 					<Card
-						data-testid={`unauth-simulation-${startSimulation ? "started" : "not-started"}`}
-						className="unauthSimulation-card"
-						left="1.62rem"
-						overflow={startSimulation ? "inherit" : "hidden"}
+						data-testid="unauthSimulation-card"
+						className={`unauthSimulation-card ${!isDesktop ? "unauthSimulation-card-mobile" : ""}`}
+						left={isDesktop ? "1.62rem" : "0"}
+						overflow={startSimulation ? "initial" : "hidden"}
 					>
-						{!startSimulation ? (
-							<>
-								<Flex justifyContent="flex-end" padding="0.77rem">
-									<Flex className="card-close">
-										<IconClose className="close-icon" width={20} height={20} onClick={onCloseHandler} />
-									</Flex>
-								</Flex>
-								<StartSimulation />
-							</>
+						{!startSimulation &&
+						ui &&
+						![ResponsiveUIEnum.unauth_geofence, ResponsiveUIEnum.unauth_tracker].includes(ui) ? (
+							<BeforeStartSimulation />
 						) : (
-							<Flex className="simulation-container" direction="column" gap="0">
-								<Flex className="simulation-header" justifyContent="space-between">
-									<Flex alignItems="center" padding="0.6rem 0 0.6rem 1.2rem">
-										<IconBackArrow
-											data-testid="unauth-simulation-back-arrow"
-											className="back-icon"
-											cursor="pointer"
-											width={20}
-											height={20}
-											onClick={() => {
-												if (isNotifications) {
-													setIsNotifications(false);
-												} else {
-													setConfirmCloseSimulation(true);
-												}
-											}}
-										/>
-										<Text className="medium" fontSize="1.08rem" textAlign="center" marginLeft="0.5rem">
-											{t("start_unauth_simulation__t&g_simulation.text")}
-										</Text>
-									</Flex>
-									<Flex
-										padding="0.6rem"
-										className={isNotifications ? "bell-icon-container bell-active" : "bell-icon-container"}
-										onClick={() => setIsNotifications(n => !n)}
-										position="relative"
-									>
-										<IconNotificationBell className="bell-icon" width={20} height={20} />
-										{!isNotifications && !!unauthNotifications.length && <span className="notification-bubble" />}
-									</Flex>
+							<Flex data-testid="simulation-container" className="simulation-container" direction="column" gap="0">
+								<Flex
+									className={`simulation-header ${!isDesktop ? "simulation-header-mobile" : ""}`}
+									justifyContent="space-between"
+									direction={isDesktop ? "row" : "row-reverse"}
+								>
+									{isDesktop && (
+										<>
+											<Flex alignItems="center" padding="0.6rem 0 0.6rem 1.2rem">
+												<IconBackArrow
+													data-testid="unauth-simulation-back-arrow"
+													className="back-icon"
+													cursor="pointer"
+													width={20}
+													height={20}
+													onClick={onBackHandler}
+												/>
+												<Text className="medium" fontSize="1.08rem" textAlign="center" marginLeft="0.5rem">
+													{t("start_unauth_simulation__t&g_simulation.text")}
+												</Text>
+											</Flex>
+											<Flex
+												padding="0.6rem"
+												className={isNotifications ? "bell-icon-container bell-active" : "bell-icon-container"}
+												onClick={() => setIsNotifications(n => !n)}
+												position="relative"
+											>
+												<IconNotificationBell className="bell-icon" width={20} height={20} />
+												{!isNotifications && !!unauthNotifications.length && <span className="notification-bubble" />}
+											</Flex>
+										</>
+									)}
 								</Flex>
-								<Flex gap="0" direction="column" width="100%">
+								<Flex gap="0" direction="column" width="100%" ref={cardRef}>
 									{Connection}
 									{!isNotifications ? (
 										<Flex
 											padding="1.3rem"
 											direction="column"
 											gap="0"
-											maxHeight={isHidden ? "82vh" : "79vh"}
+											maxHeight={isDesktop ? (isHidden ? "82vh" : "79vh") : "fit-content"}
 											overflow={
 												!trackingHistory[busSelectedValue.value].length ||
 												(trackingHistoryRef?.current?.offsetHeight || 0) < 560
@@ -449,7 +569,11 @@ const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 													{t("start_unauth_simulation__no_tracking_history.text")}
 												</Flex>
 											)}
-											<Flex gap="0" className="tracking-history-container">
+											<Flex
+												gap="0"
+												className="tracking-history-container"
+												maxHeight={!isDesktop ? bottomSheetCurrentHeight - 210 : "100%"}
+											>
 												<Flex direction="column" gap="0" paddingLeft="0.2rem" paddingBottom="0.4rem">
 													{trackingHistory[busSelectedValue.value].map(
 														({ title, description, subDescription, type }, idx) => (
@@ -509,31 +633,12 @@ const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 							</Flex>
 						)}
 					</Card>
-					<Flex className="confirmation-modal-container">
-						<ConfirmationModal
-							open={confirmCloseSimulation}
-							onClose={onCloseHandler}
-							heading={t("start_unauth_simulation__exit_simulation.text") as string}
-							description={
-								<Text
-									className="small-text"
-									variation="tertiary"
-									marginTop="1.23rem"
-									textAlign="center"
-									whiteSpace="pre-line"
-								>
-									{t("start_unauth_simulation__exit_simulation_desc.text")}
-								</Text>
-							}
-							onConfirm={() => setConfirmCloseSimulation(false)}
-							confirmationText={t("start_unauth_simulation__stay_in_simulation.text") as string}
-							cancelationText={t("exit.text") as string}
-						/>
-					</Flex>
-				</>
-			)}
-		</>
-	);
+				)}
+
+				{isDesktop && <ExitSimulation />}
+			</>
+		);
+	}
 };
 
 export default UnauthSimulation;

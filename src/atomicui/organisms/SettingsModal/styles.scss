@@ -6,15 +6,63 @@
 	max-height: 49.23rem;
 	padding: 0 2px 2px 0;
 
+	&.settings-modal-tablet {
+		max-width: 100% !important;
+		max-height: 100% !important;
+		width: 100% !important;
+		height: 100% !important;
+		border-radius: 0;
+	}
+
+	&.settings-modal-mobile {
+		.modal-close {
+			display: none;
+		}
+	}
+
 	.settings-modal-content {
 		gap: 0;
 		height: 100%;
 		max-height: 49.23rem;
 
+		.option-title {
+			font-size: 1rem;
+			line-height: 1.38rem;
+			padding: 1.46rem 0rem 1.46rem 1.15rem;
+			display: flex;
+		}
+
+		&.settings-modal-content-tablet {
+			max-height: fit-content;
+		}
+
+		&.settings-modal-content-mobile {
+			.options-container,
+			.option-details-container {
+				width: 100%;
+			}
+
+			.option-details-container {
+				.option-title {
+					font-family: "AmazonEmber-Bold";
+					font-size: 1.23rem;
+					align-items: center;
+
+					.back-arrow {
+						margin-right: 1rem;
+					}
+				}
+			}
+		}
+
 		.options-container {
 			gap: 0;
 			width: 33.67%;
 			flex-direction: column;
+
+			&.language-switcher-container {
+				-webkit-overflow-scrolling: touch;
+			}
 
 			.option-item {
 				gap: 0;
@@ -25,6 +73,15 @@
 				border-left-width: 2px;
 				border-left-style: solid;
 				border-left-color: var(--white-color);
+
+				&.option-item-mobile {
+					justify-content: space-between;
+					.option-arrow {
+						svg {
+							transform: rotate(270deg);
+						}
+					}
+				}
 
 				svg {
 					fill: var(--grey-light-color);
@@ -165,9 +222,8 @@
 						display: flex;
 						justify-content: center;
 						align-items: center;
-
 					}
-					
+
 					.step-heading-rtl {
 						justify-content: flex-end;
 					}
@@ -200,10 +256,24 @@
 				}
 			}
 		}
+	}
 
-		.amplify-divider.amplify-divider--horizontal.title-divider {
-			border-bottom-width: 1px;
-			border-color: var(--light-color-2);
+	.setting-title-container-mobile {
+		flex-direction: column;
+		display: flex;
+		line-height: 1.38rem;
+		padding: 1.46rem 0rem;
+
+		.option-title {
+			display: flex;
+			font-family: "AmazonEmber-Bold";
+			font-size: 1.23rem;
+			align-items: center;
+			margin-left: 1.15rem;
+
+			svg {
+				margin-right: 1rem;
+			}
 		}
 	}
 

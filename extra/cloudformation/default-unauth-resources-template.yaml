@@ -31,6 +31,7 @@ Resources:
           - Action:
               - "mobiletargeting:PutEvents"
               - "mobiletargeting:UpdateEndpoint"
+              - "mobiletargeting:GetEndpoint"
             Effect: Allow
             Resource:
               - !Sub "arn:aws:mobiletargeting:${AWS::Region}:${AWS::AccountId}:apps/${AmazonLocationDemoPinpointApp}/*"

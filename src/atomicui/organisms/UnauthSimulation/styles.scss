@@ -1,59 +1,6 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-.amplify-card.unauth-simulation-card {
-	width: 27.7rem;
-	position: absolute;
-	top: 1.62rem;
-	overflow: hidden;
-	z-index: 4;
-
-	.unauth-simulation-card-header {
-		gap: 0;
-		height: 3.08rem;
-		padding: 0.77rem;
-		justify-content: end;
-		align-items: center;
-
-		svg {
-			fill: #8e8e93;
-			width: 1.54rem;
-			height: 1.54rem;
-			cursor: pointer;
-
-			&:hover {
-				fill: #008296;
-			}
-		}
-	}
-
-	.unauth-simulation-card-body {
-		gap: 0;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		padding: 0.26rem 1.85rem 1.85rem 1.85rem;
-
-		svg {
-			width: 4.71rem;
-			height: 5.57rem;
-		}
-	}
-
-	.unauth-simulation-card-footer {
-		gap: 0;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		padding: 1.38rem 1.85rem;
-		background-color: var(--light-color-2);
-	}
-
-	@media only screen and (max-width: 480px) {
-		width: 75%;
-	}
-}
-
 .amplify-card.unauthSimulation-card {
 	width: 27.69rem;
 	position: absolute;
@@ -94,12 +41,76 @@
 			}
 		}
 	}
+
+	&.unauthSimulation-card-mobile {
+		z-index: 23;
+		max-height: 100vh;
+		width: 100%;
+		box-shadow: none;
+		top: 3.1rem;
+	}
+
+	&.unauth-non-start-simulation-card-tablet {
+		overflow: hidden;
+		top: 0 !important;
+		width: 27.69rem !important;
+		height: auto !important;
+		z-index: 23;
+		box-shadow: none;
+	}
+
+	&.unauth-non-start-simulation-card-mobile {
+		overflow: hidden;
+		top: 0 !important;
+		width: 100% !important;
+		z-index: 23;
+		box-shadow: none;
+		border-radius: 0;
+		max-height: 100vh;
+	}
+
 	.simulation-container {
 		.simulation-header {
 			border-bottom: 1px solid var(--grey-color-3);
+
+			&.simulation-header-mobile {
+				border: 0;
+				width: 100%;
+
+				.amplify-flex {
+					position: absolute !important;
+					top: -9px;
+				}
+
+				.amplify-flex:nth-child(1) {
+					right: 0;
+					padding-top: 0.1rem !important;
+				}
+
+				.amplify-flex:nth-child(2) {
+					left: 0;
+					padding-top: 0.3rem !important;
+				}
+
+				.notification-bubble {
+					top: 5px;
+					right: 11px;
+				}
+
+				.bell-icon-container {
+					&.bell-active,
+					&:active,
+					&:focus,
+					&:hover {
+						background-color: transparent;
+						border-top-left-radius: 11px;
+					}
+				}
+			}
 		}
 		.tracking-history-container {
 			overflow-y: scroll;
+			-webkit-overflow-scrolling: touch;
 		}
 		.back-icon {
 			fill: var(--grey-color);

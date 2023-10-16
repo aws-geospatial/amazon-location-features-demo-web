@@ -54,8 +54,8 @@ const NotificationsBox: React.FC<NotificationsBoxProps> = ({
 				data-testid="notifications-list"
 			>
 				{!!unauthNotifications.length ? (
-					unauthNotifications?.map(({ busRouteId, stopName, createdAt }, idx) => {
-						const title = `Bus ${busRouteId.split("_")[2]}: Approaching ${stopName}`;
+					unauthNotifications?.map(({ busRouteId, stopName, createdAt, eventType }, idx) => {
+						const title = `Bus ${busRouteId.split("_")[2]}: ${eventType} ${stopName}`;
 						const isEnabled = selectedRoutesIds.includes(busRouteId);
 
 						return (

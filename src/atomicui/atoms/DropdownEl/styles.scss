@@ -17,6 +17,10 @@
 		background-color: transparent;
 		padding: 0.62rem 1rem;
 
+		@media only screen and (max-width: 1023px) {
+			max-width: unset;
+		}
+
 		&.dropdown-radioBox {
 			min-width: 100%;
 			justify-content: flex-end;
@@ -29,6 +33,7 @@
 			border-radius: 7px;
 			height: 40px;
 			justify-content: space-between;
+
 			.dropdown-label {
 				color: var(--grey-color);
 				font-family: "AmazonEmber-Regular";
@@ -44,6 +49,7 @@
 		&.bordered.dropdown-false {
 			background-color: var(--grey-color-4);
 			border: 1px solid var(--grey-color-3);
+
 			p {
 				color: var(--tertiary-color);
 			}
@@ -57,10 +63,6 @@
 			white-space: nowrap;
 			overflow: hidden;
 			text-overflow: ellipsis;
-		}
-
-		@media only screen and (max-width: 562px) {
-			max-width: 10.15rem;
 		}
 	}
 
@@ -79,6 +81,11 @@
 		margin-top: 0.62rem;
 		padding: 0;
 		z-index: 1;
+
+		@media only screen and (max-width: 562px) {
+			width: 12rem;
+			left: -10%;
+		}
 
 		.radio-li {
 			.amplify-text.amplify-radio__label {
@@ -104,15 +111,19 @@
 			box-shadow: none;
 			border: 1px solid var(--grey-color-5);
 			margin-top: -1px;
+
 			li {
 				padding: 0;
+
 				.option-checkbox {
 					width: 100%;
+
 					.amplify-flex.amplify-checkbox {
 						padding: 8px 16px;
 						width: 100%;
 						justify-content: left;
 					}
+
 					.amplify-text.amplify-checkbox__label {
 						font-size: 14px;
 						font-weight: 500;
@@ -122,13 +133,16 @@
 
 				.amplify-flex.amplify-radiogroup {
 					width: 100%;
+
 					.amplify-flex.amplify-radio {
 						width: 100%;
 						padding: 1rem;
 					}
+
 					.amplify-flex.amplify-radio.radio-option-end {
 						justify-content: flex-end;
 					}
+
 					.amplify-flex.amplify-radio.radio-option {
 						justify-content: flex-start;
 					}
@@ -148,15 +162,19 @@
 			max-height: 40rem;
 			box-shadow: none;
 			border: 1px solid var(--grey-color-5);
+
 			li {
 				padding: 0;
+
 				.option-checkbox {
 					width: 100%;
+
 					.amplify-flex.amplify-checkbox {
 						padding: 1rem 16px;
 						width: 100%;
 						justify-content: left;
 					}
+
 					.amplify-text.amplify-checkbox__label {
 						font-size: 14px;
 						font-weight: 500;
@@ -168,10 +186,12 @@
 						background: var(--light-color-2);
 						border: 1px solid var(--grey-color-2);
 					}
+
 					span {
 						display: flex;
 						justify-content: center;
 						align-items: center;
+
 						svg {
 							stroke-width: 4px;
 							stroke-linejoin: bevel;
@@ -181,9 +201,11 @@
 						}
 					}
 				}
+
 				.amplify-checkbox__button--focused::before {
 					border-color: var(--grey-color);
 				}
+
 				&:hover {
 					background-color: var(--primary-alpha-light-color);
 				}
@@ -197,10 +219,8 @@
 
 			&:hover {
 				background-color: var(--primary-alpha-light-color);
-			}
 
-			@media only screen and (min-width: 1024px) {
-				&:hover {
+				@media only screen and (min-width: 1023px) {
 					background-color: rgba(0, 130, 150, 0.08);
 				}
 			}
@@ -208,11 +228,6 @@
 
 		.selected {
 			background-color: rgba(0, 130, 150, 0.08);
-		}
-
-		@media only screen and (max-width: 562px) {
-			width: 12rem;
-			left: -10%;
 		}
 	}
 }

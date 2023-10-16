@@ -17,3 +17,4 @@ export * from "./GrabConfirmationModal";
 export * from "./IconicInfoCard";
 export * from "./NotificationsBox";
 export * from "./OpenDataConfirmationModal";
+export * from "./NonStartUnauthSimulation";

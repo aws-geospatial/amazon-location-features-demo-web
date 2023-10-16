@@ -1,5 +1,6 @@
 import {
 	Event,
+	GetEndpointCommand,
 	PinpointClient,
 	PutEventsCommand,
 	PutEventsRequest,
@@ -116,11 +117,19 @@ export const createOrUpdateEndpoint = async () => {
 	await sendEvent(putEventsCommand);
 };
 
+export const getEndpoint = async () => {
+	const getEndpointCommand = new GetEndpointCommand({
+		ApplicationId: PINPOINT_APPLICATION_ID,
+		EndpointId: endpointId!
+	});
+	await sendEvent(getEndpointCommand);
+};
+
 export const record: (input: RecordInput[], excludeAttributes?: string[]) => Promise<void> = async (
 	input,
 	excludeAttributes = []
 ) => {
-	const { [location.pathname.replaceAll("/", "_")]: pageViewIdentifier } = JSON.parse(
+	const { [location.pathname.replace(/\//g, "_")]: pageViewIdentifier } = JSON.parse(
 		localStorage.getItem(pageViewIdentifiersKey) || "{}"
 	);
 

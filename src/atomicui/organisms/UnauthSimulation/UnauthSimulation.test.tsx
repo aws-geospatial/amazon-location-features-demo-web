@@ -1,57 +1,97 @@
-import React from "react";
-
+import i18n from "@demo/locales/i18n";
 import { MenuItemEnum } from "@demo/types";
-import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, waitFor } from "@testing-library/react";
+import { I18nextProvider } from "react-i18next";
 
-import UnauthSimulation from "./UnauthSimulation";
+import UnauthSimulation, { UnauthSimulationProps } from "./UnauthSimulation";
+
+const mockProps: UnauthSimulationProps = {
+	mapRef: null,
+	from: MenuItemEnum.TRACKER,
+	setShowUnauthGeofenceBox: jest.fn(),
+	setShowUnauthTrackerBox: jest.fn(),
+	setShowConnectAwsAccountModal: jest.fn(),
+	showStartUnauthSimulation: true,
+	setShowStartUnauthSimulation: jest.fn(),
+	startSimulation: false,
+	setStartSimulation: jest.fn(),
+	setShowUnauthSimulationBounds: jest.fn(),
+	clearCredsAndLocationClient: jest.fn(),
+	isNotifications: false,
+	setIsNotifications: jest.fn(),
+	confirmCloseSimulation: false,
+	setConfirmCloseSimulation: jest.fn()
+};
 
 jest.mock("@demo/hooks", () => ({
 	useAwsGeofence: () => ({
-		unauthNotifications: null,
-		setUnauthNotifications: jest.fn()
+		unauthNotifications: [
+			{
+				busRouteId: "bus_route_1",
+				geofenceCollection: "bus_route_1",
+				stopName: "bus_route_stop_1",
+				coordinates: "-122.11, 144.11",
+				createdAt: "2021-08-11T18:00:00.000Z"
+			},
+			{
+				busRouteId: "bus_route_1",
+				geofenceCollection: "bus_route_1",
+				stopName: "bus_route_stop_1",
+				coordinates: "-122.11, 144.11",
+				createdAt: "2021-08-11T18:00:01.000Z"
+			}
+		],
+		setUnauthNotifications: jest.fn(),
+		getGeofencesList: jest.fn(),
+		evaluateGeofence: jest.fn()
+	}),
+	useUnauthSimulation: () => ({
+		setHideGeofenceTrackerShortcut: jest.fn()
 	}),
 	useWebSocketBanner: () => ({
-		Connection: jest.fn(),
+		Connection: <div data-testid="websocket-banner"></div>,
 		isHidden: false
 	})
 }));
 
 jest.mock("@demo/atomicui/molecules", () => ({
-	NotificationsBox: () => null,
 	ConfirmationModal: () => null,
-	IconicInfoCard: () => null
+	IconicInfoCard: () => null,
+	NonStartUnauthSimulation: () => null,
+	NotificationsBox: () => null
 }));
 
-describe("UnauthSimulation", () => {
-	const props = {
-		mapRef: null,
-		from: MenuItemEnum.TRACKER,
-		setShowUnauthGeofenceBox: jest.fn(),
-		setShowUnauthTrackerBox: jest.fn(),
-		setShowConnectAwsAccountModal: jest.fn(),
-		setShowUnauthSimulationBounds: jest.fn(),
-		clearCredsAndLocationClient: jest.fn()
+describe("<UnauthSimulation />", () => {
+	const renderComponent = () => {
+		return render(
+			<I18nextProvider i18n={i18n}>
+				<UnauthSimulation {...mockProps} />
+			</I18nextProvider>
+		);
 	};
 
-	const renderComponent = () => {
-		return render(<UnauthSimulation {...props} />);
-	};
-	it("renders the component without errors", () => {
-		renderComponent();
-		expect(screen.getByTestId("unauth-simulation-card")).toBeInTheDocument();
+	beforeEach(() => {
+		mockProps.startSimulation = false;
 	});
 
-	it("handles the simulation button is not clicked", () => {
+	it("should renders correclty", () => {
 		const { getByTestId } = renderComponent();
-		const container = getByTestId("unauth-simulation-card");
-		const cta = getByTestId("unauth-simulation-cta");
-		expect(container).toBeInTheDocument();
-		expect(cta).toBeInTheDocument();
+		expect(getByTestId("unauthSimulation-card")).toBeInTheDocument();
+		expect(getByTestId("before-start-simulation")).toBeInTheDocument();
+		expect(getByTestId("start-simulation")).toBeInTheDocument();
+		expect(getByTestId("start-simulation")).toBeInTheDocument();
 		act(() => {
-			fireEvent.click(cta);
+			fireEvent.click(getByTestId("start-simulation"));
 		});
 		waitFor(() => {
-			expect(getByTestId("unauth-simulation-not-started")).toBeInTheDocument();
+			expect(mockProps.setStartSimulation).toBeCalled();
+			expect(mockProps.setShowUnauthSimulationBounds).toBeCalled();
 		});
+	});
+
+	it("should renders correclty when startSimulation is true", () => {
+		mockProps.startSimulation = true;
+		const { getByTestId } = renderComponent();
+		expect(getByTestId("simulation-container")).toBeInTheDocument();
 	});
 });

@@ -8,7 +8,20 @@
 	overflow: hidden;
 	z-index: 4;
 
-	
+	&.tracking-card-mobile {
+		position: relative;
+		width: 100% !important;
+		box-shadow: none;
+		left: 0 !important;
+		overflow: initial;
+		top: 0;
+
+		.tracking-card-header {
+			border-bottom: none;
+			padding-top: 0;
+			padding-bottom: 0.2rem;
+		}
+	}
 
 	.tracking-card-header {
 		gap: 0;
@@ -118,6 +131,12 @@
 				font-size: 0.92rem;
 				font-family: "AmazonEmber-Bold";
 				margin-left: 0.62rem;
+
+				.edit-icon {
+					g > g {
+						fill: var(--primary-color);
+					}
+				}
 			}
 		}
 	}

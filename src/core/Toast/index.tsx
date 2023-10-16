@@ -11,24 +11,7 @@ export const ToastContainer = () => (
 		enableMultiContainer
 		containerId={"toast-container"}
 		position="top-center"
-		autoClose={10000}
-		hideProgressBar
-		newestOnTop={true}
-		closeOnClick
-		pauseOnFocusLoss
-		draggable={false}
-		pauseOnHover
-		theme="dark"
-	/>
-);
-
-export const UnauthSimulationToastContainer = () => (
-	<RTToastContainer
-		className={"unauth-simulation-toast-container"}
-		enableMultiContainer
-		containerId={"unauth-simulation-toast-container"}
-		position="top-center"
-		autoClose={3000}
+		autoClose={5000}
 		hideProgressBar
 		newestOnTop={false}
 		closeOnClick

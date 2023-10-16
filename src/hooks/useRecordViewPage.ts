@@ -17,7 +17,7 @@ const useRecordViewPage = (pageName: string) => {
 	useEffect(() => {
 		pageViewIdentifier = `${uuid.randomUUID()}__${pageName}`;
 		const pageViewIdentifiersObj = JSON.parse(localStorage.getItem(pageViewIdentifiersKey) || "{}");
-		pageViewIdentifiersObj[location.pathname.replaceAll("/", "_")] = pageViewIdentifier;
+		pageViewIdentifiersObj[location.pathname.replace(/\//g, "_")] = pageViewIdentifier;
 		localStorage.setItem(pageViewIdentifiersKey, JSON.stringify(pageViewIdentifiersObj));
 
 		const path = location.pathname;
