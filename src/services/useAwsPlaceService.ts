@@ -18,7 +18,8 @@ import { useTranslation } from "react-i18next";
 const {
 	MAP_RESOURCES: {
 		PLACE_INDEXES: { ESRI, HERE, GRAB }
-	}
+	},
+	ENV: { NL_BASE_URL, NL_API_KEY }
 } = appConfig;
 
 const useAwsPlaceService = () => {
@@ -83,6 +84,15 @@ const useAwsPlaceService = () => {
 				};
 
 				return await locationClient?.searchPlaceIndexForPosition(params).promise();
+			},
+			getNLPlacesByText: async (Text: string) => {
+				const response = await fetch(`${NL_BASE_URL}/places/ask?` + new URLSearchParams({ Text: Text }), {
+					method: "GET",
+					headers: {
+						"x-api-key": NL_API_KEY
+					}
+				});
+				return await response.json();
 			}
 		}),
 		[config, locationClient, currentMapProvider, viewpoint]

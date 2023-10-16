@@ -63,7 +63,9 @@ const appConfig = {
 		APPLE_APP_STORE_LINK: getEnv("VITE_APPLE_APP_STORE_LINK"),
 		GOOGLE_PLAY_STORE_LINK: getEnv("VITE_GOOGLE_PLAY_STORE_LINK"),
 		COUNTRY_EVALUATION_URL: import.meta.env.DEV ? "/doNotDelete.txt" : "assets/doNotDelete.txt",
-		APP_VERSION: getEnv("VITE_APP_VERSION")
+		APP_VERSION: getEnv("VITE_APP_VERSION"),
+		NL_BASE_URL: getEnv("VITE_NL_BASE_URL"),
+		NL_API_KEY: getEnv("VITE_NL_API_KEY")
 	},
 	PERSIST_STORAGE_KEYS: {
 		LOCAL_STORAGE_PREFIX: "amazon-location-web-demo_",
