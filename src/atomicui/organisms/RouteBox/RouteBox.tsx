@@ -1032,8 +1032,12 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 										<Flex
 											key={mode}
 											data-testid={`travel-mode-${mode}-icon-container`}
-											className={`travel-mode ${travelMode === mode ? "selected" : ""}`}
-											onClick={() => handleTravelModeChange(mode)}
+											className={`travel-mode ${travelMode === mode ? "selected" : ""} ${
+												!duration ? "no-duration" : ""
+											}`}
+											onClick={() => {
+												duration && handleTravelModeChange(mode);
+											}}
 										>
 											<IconComponent />
 											{duration ? <Text className="regular small-text duration-text">{duration}</Text> : null}

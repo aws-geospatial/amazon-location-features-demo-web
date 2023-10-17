@@ -1187,6 +1187,7 @@ const DemoPage: React.FC = () => {
 						setShowRouteBox={b => setShow(s => ({ ...s, routeBox: b }))}
 						isExpandRouteOptionsMobile={expandRouteOptionsMobile}
 						setExpandRouteOptionsMobile={setExpandRouteOptionsMobile}
+						setSearchBoxValue={setSearchBoxValue}
 					/>
 					<MapButtons
 						renderedUpon={TriggeredByEnum.DEMO_PAGE}

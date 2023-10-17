@@ -51,6 +51,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 	const isLtr = langDir === "ltr";
 	const isLanguageRTL = ["ar", "he"].includes(currentLang);
 	const POICardRef = useRef<HTMLDivElement>(null);
+	const [isLoading, setIsLoading] = useState(true);
 
 	const geodesicDistance = useMemo(
 		() =>
@@ -102,8 +103,13 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 			DistanceUnit: currentMapUnit === METRIC ? KILOMETERS : MILES,
 			TravelMode: TravelMode.CAR
 		};
-		const r = await getRoute(params as CalculateRouteRequest, TriggeredByEnum.PLACES_POPUP);
-		setRouteData(r);
+		try {
+			setIsLoading(true);
+			const r = await getRoute(params as CalculateRouteRequest, TriggeredByEnum.PLACES_POPUP);
+			setRouteData(r);
+		} finally {
+			setIsLoading(false);
+		}
 	}, [currentLocationData, longitude, latitude, currentMapUnit, getRoute]);
 
 	useEffect(() => {
@@ -175,16 +181,20 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 			return (
 				<Flex data-testid="here-message-container" gap={0} direction={"column"}>
 					<Flex className="localize-geofence-distance" gap="0.3rem" direction={isLanguageRTL ? "row-reverse" : "row"}>
-						<Text className="bold" variation="secondary" marginRight="0.3rem">
-							{localizeGeodesicDistance}
-						</Text>
-						<Text className="bold" variation="secondary">
-							{geodesicDistanceUnit}
+						{!isLoading && (
+							<Text className="bold" variation="secondary" marginRight="0.3rem">
+								{localizeGeodesicDistance}
+							</Text>
+						)}
+						{!isLoading && (
+							<Text className="bold" variation="secondary">
+								{geodesicDistanceUnit}
+							</Text>
+						)}
+						<Text style={{ marginTop: "0px" }} variation="info">
+							{isLoading ? "loading..." : t("popup__route_not_found.text")}
 						</Text>
 					</Flex>
-					<Text style={{ marginTop: "0px" }} variation="info">
-						{t("popup__route_not_found.text")}
-					</Text>
 				</Flex>
 			);
 		} else {
@@ -224,11 +234,12 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 		routeData,
 		isLtr,
 		t,
+		isLanguageRTL,
 		localizeGeodesicDistance,
 		geodesicDistanceUnit,
 		currentMapUnit,
-		currentLang,
-		isLanguageRTL
+		isLoading,
+		currentLang
 	]);
 
 	const address = useMemo(() => {
@@ -310,7 +321,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 
 	useEffect(() => {
 		if (!isDesktop) {
-			const ch = POICardRef?.current?.clientHeight || 230;
+			const ch = POICardRef?.current?.clientHeight || 140;
 			ui !== ResponsiveUIEnum.poi_card && setUI(ResponsiveUIEnum.poi_card);
 			setPOICard(<POIBody />);
 			setBottomSheetMinHeight(ch + 60);
