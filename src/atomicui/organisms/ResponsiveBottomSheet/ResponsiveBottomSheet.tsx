@@ -69,6 +69,7 @@ interface IProps {
 	setShowRouteBox: (b: boolean) => void;
 	isExpandRouteOptionsMobile: boolean;
 	setExpandRouteOptionsMobile: (b: boolean) => void;
+	setSearchBoxValue: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const ResponsiveBottomSheet: FC<IProps> = ({
@@ -109,7 +110,8 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	isEditingAuthRoute,
 	setShowRouteBox,
 	isExpandRouteOptionsMobile,
-	setExpandRouteOptionsMobile
+	setExpandRouteOptionsMobile,
+	setSearchBoxValue
 }) => {
 	const { isDesktop, isTablet, isMax556, isDesktopBrowser } = useDeviceMediaQuery();
 	const { unauthNotifications, isAddingGeofence } = useAwsGeofence();
@@ -283,7 +285,8 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 		resetAwsRouteStore();
 		setShowRouteBox(false);
 		setUI(ResponsiveUIEnum.explore);
-	}, [setUI, resetAwsRouteStore, setShowRouteBox]);
+		setSearchBoxValue("");
+	}, [setUI, resetAwsRouteStore, setShowRouteBox, setSearchBoxValue]);
 
 	const handleClose = useCallback(() => {
 		from === MenuItemEnum.GEOFENCE

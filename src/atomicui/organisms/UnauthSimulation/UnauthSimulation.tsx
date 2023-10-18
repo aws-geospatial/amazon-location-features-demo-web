@@ -232,6 +232,7 @@ const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 		handleClose();
 		setHideGeofenceTrackerShortcut(false);
 		setConfirmCloseSimulation(false);
+		!isDesktop && setUI(ResponsiveUIEnum.explore);
 	};
 
 	const StartSimulation = useCallback(() => {

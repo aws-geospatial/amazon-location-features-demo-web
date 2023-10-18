@@ -470,7 +470,6 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 							value={searchValue}
 							onChange={e => setSearchValue(e.target.value)}
 							onClick={() => {
-								console.log("clicked");
 								isHandDevice && setSearchWidth(searchDesktopWidth);
 								!!showFilter && setShowFilter(false);
 
