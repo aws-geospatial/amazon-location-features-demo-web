@@ -104,12 +104,13 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 					exact,
 					undefined,
 					TriggeredByEnum.PLACES_SEARCH,
-					action
+					action,
+					isNLChecked
 				);
 				setIsSearching(false);
 			}, 200);
 		},
-		[mapRef, setIsSearching, search]
+		[mapRef, setIsSearching, search, isNLChecked]
 	);
 
 	useEffect(() => {
