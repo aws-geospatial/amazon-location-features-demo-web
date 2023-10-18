@@ -198,8 +198,11 @@ const DemoPage: React.FC = () => {
 	const isGrabAvailableInRegion = useMemo(() => !!region && GRAB_SUPPORTED_AWS_REGIONS.includes(region), [region]);
 
 	const isGrabVisible = useMemo(
-		() => !isUserAwsAccountConnected || (isUserAwsAccountConnected && isGrabAvailableInRegion),
-		[isUserAwsAccountConnected, isGrabAvailableInRegion]
+		() =>
+			!show.unauthGeofenceBox &&
+			!show.unauthTrackerBox &&
+			(!isUserAwsAccountConnected || (isUserAwsAccountConnected && isGrabAvailableInRegion)),
+		[show.unauthGeofenceBox, show.unauthTrackerBox, isUserAwsAccountConnected, isGrabAvailableInRegion]
 	);
 
 	useEffect(() => {
@@ -1358,7 +1361,6 @@ const DemoPage: React.FC = () => {
 				}}
 				showDoNotAskAgainCheckbox
 				onConfirmationCheckboxOnChange={setDoNotAskGrabDisclaimer}
-				isUnauthSimulationOpen={show.unauthGeofenceBox || show.unauthTrackerBox}
 			/>
 			<UnauthSimulationDisclaimerModal
 				open={show.unauthSimulationDisclaimerModal}
