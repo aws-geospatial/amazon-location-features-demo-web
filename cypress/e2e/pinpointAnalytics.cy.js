@@ -37,8 +37,8 @@ describe("Should record user events correctly", () => {
 	it.only("should successfully create correct endpoint with the correct event to correct pinpoint application", () => {
 		cy.wait(10000);
 		cy.getAllLocalStorage().then(result => {
-			const pinpointIdentityPoolId = `${Cypress.env("PINPOINT_IDENTITY_POOL_ID")}`;
-			const pinpointApplicationId = `${Cypress.env("PINPOINT_APPLICATION_ID")}`;
+			const pinpointIdentityPoolId = Cypress.env("PINPOINT_IDENTITY_POOL_ID");
+			const pinpointApplicationId = Cypress.env("PINPOINT_APPLICATION_ID");
 			const analyticsEndpointId =
 				result[`${Cypress.env("WEB_DOMAIN")}`]["amazon-location-web-demo_analyticsEndpointId"];
 			cy.task("log", { pinpointIdentityPoolId, pinpointApplicationId, analyticsEndpointId });
