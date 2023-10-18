@@ -24,7 +24,7 @@
 		"build": "tsc && vite build && cp -r ./public/.well-known/ ./build/",
 		"preview": "vite preview",
 		"stylelint-check": "stylelint-config-prettier-check",
-		"cypress": "cypress run --browser chrome --headed --spec ./cypress/e2e/pinpointAnalytics.cy.js",
+		"cypress": "cypress run --browser chrome --headed",
 		"cypress run": "cypress run",
 		"cypress open": "cypress open",
 		"security-tests": "cd security-tests && npm install && node index.js && cd ../",
