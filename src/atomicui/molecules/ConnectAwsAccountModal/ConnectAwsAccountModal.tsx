@@ -13,18 +13,15 @@ import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { ConnectFormValuesType, EsriMapEnum, MapProviderEnum } from "@demo/types";
 import { AnalyticsEventActionsEnum, EventTypeEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
-import { transformCloudFormationLink } from "@demo/utils/transformCloudFormationLink";
 import { isAndroid, isIOS } from "react-device-detect";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
 
 const {
-	ENV: { CF_TEMPLATE },
 	ROUTES: { HELP },
 	MAP_RESOURCES: { GRAB_SUPPORTED_AWS_REGIONS },
 	LINKS: { AWS_TERMS_AND_CONDITIONS }
 } = appConfig;
-
 let scrollTimeout: NodeJS.Timer | undefined;
 
 export interface ConnectAwsAccountModalProps {
@@ -45,16 +42,16 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 		UserPoolId: "",
 		WebSocketUrl: ""
 	});
-	const [cloudFormationLink, setCloudFormationLink] = useState(CF_TEMPLATE);
-	const [stackRegion, setStackRegion] = useState<{ value: string; label: string }>();
 	const {
-		region,
 		isUserAwsAccountConnected,
 		setConnectFormValues,
 		setIsUserAwsAccountConnected,
 		clearCredentials,
 		onLogin,
-		validateFormValues
+		validateFormValues,
+		stackRegion,
+		cloudFormationLink,
+		handleStackRegion
 	} = useAmplifyAuth();
 	const { resetStore: resetAwsStore } = useAws();
 	const { mapProvider: currentMapProvider, setMapProvider, setMapStyle } = useAmplifyMap();
@@ -65,21 +62,6 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 	const isOverflowing = ["de", "es", "fr", "it", "pt-BR"].includes(i18n.language);
 	const { isDesktop, isDesktopBrowser } = useDeviceMediaQuery();
 	const contentRef = useRef<HTMLDivElement | null>(null);
-
-	const handleStackRegion = useCallback(
-		(option: { value: string; label: string }) => {
-			const { label, value } = option;
-
-			if (isDesktop) {
-				setStackRegion(option);
-			} else {
-				const translatedLabel = t(label);
-				const l = translatedLabel.slice(0, translatedLabel.indexOf(")") + 1);
-				setStackRegion({ label: l, value });
-			}
-		},
-		[isDesktop, t]
-	);
 
 	const handleScroll = useCallback(() => {
 		if (contentRef.current) {
@@ -104,16 +86,6 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 	}, [handleScroll, isDesktop, isDesktopBrowser, contentRef, open]);
 
 	useEffect(() => {
-		const regionOption = region && regionsData.find(option => option.value === region);
-
-		if (regionOption) {
-			const newUrl = transformCloudFormationLink(region);
-			setCloudFormationLink(newUrl);
-			handleStackRegion(regionOption);
-		}
-	}, [region, handleStackRegion]);
-
-	useEffect(() => {
 		if (isOverflowing) {
 			const targetElement = document.getElementsByClassName("left-col")[0];
 
@@ -136,11 +108,12 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 		isUserAwsAccountConnected && window.location.reload();
 	};
 
-	const _onSelect = (option: { value: string; label: string }) => {
-		const newUrl = transformCloudFormationLink(option.value);
-		setCloudFormationLink(newUrl);
-		handleStackRegion(option);
-	};
+	const _onSelect = useCallback(
+		(option: { value: string; label: string }) => {
+			handleStackRegion(option);
+		},
+		[handleStackRegion]
+	);
 
 	const isBtnEnabled = useMemo(
 		() => keyArr.filter(key => !!formValues[key as keyof typeof formValues]).length === keyArr.length,

@@ -11,6 +11,41 @@ Object.defineProperty(window, "location", {
 	value: { reload: jest.fn() }
 });
 
+const mockProps = {
+	renderedUpon: "",
+	openStylesCard: false,
+	setOpenStylesCard: jest.fn(),
+	onCloseSidebar: jest.fn(),
+	onOpenSignInModal: jest.fn(),
+	isGrabVisible: true,
+	showGrabDisclaimerModal: false,
+	onShowGridLoader: jest.fn(),
+	handleMapStyleChange: jest.fn(),
+	searchValue: "",
+	setSearchValue: jest.fn(),
+	selectedFilters: {
+		Providers: [],
+		Attribute: [],
+		Type: []
+	},
+	setSelectedFilters: jest.fn(),
+	isLoading: false,
+	onlyMapStyles: true,
+	resetSearchAndFilters: jest.fn(),
+	showOpenDataDisclaimerModal: false,
+	isAuthGeofenceBoxOpen: false,
+	onSetShowAuthGeofenceBox: jest.fn(),
+	isAuthTrackerDisclaimerModalOpen: false,
+	isAuthTrackerBoxOpen: false,
+	onShowAuthTrackerDisclaimerModal: jest.fn(),
+	onSetShowAuthTrackerBox: jest.fn(),
+	onShowUnauthSimulationDisclaimerModal: jest.fn(),
+	isUnauthGeofenceBoxOpen: false,
+	isUnauthTrackerBoxOpen: false,
+	onSetShowUnauthGeofenceBox: jest.fn(),
+	onSetShowUnauthTrackerBox: jest.fn()
+};
+
 describe("<SettingsModal />", () => {
 	let settingsModal: HTMLElement;
 
@@ -19,41 +54,6 @@ describe("<SettingsModal />", () => {
 	const handleMapProviderChange = jest.fn();
 	const handleCurrentLocationAndViewpoint = jest.fn();
 	const resetSearchAndFilters = jest.fn();
-
-	const props = {
-		renderedUpon: "",
-		openStylesCard: false,
-		setOpenStylesCard: jest.fn(),
-		onCloseSidebar: jest.fn(),
-		onOpenSignInModal: jest.fn(),
-		isGrabVisible: true,
-		showGrabDisclaimerModal: false,
-		onShowGridLoader: jest.fn(),
-		handleMapStyleChange: jest.fn(),
-		searchValue: "",
-		setSearchValue: jest.fn(),
-		selectedFilters: {
-			Providers: [],
-			Attribute: [],
-			Type: []
-		},
-		setSelectedFilters: jest.fn(),
-		isLoading: false,
-		onlyMapStyles: true,
-		resetSearchAndFilters: jest.fn(),
-		showOpenDataDisclaimerModal: false,
-		isAuthGeofenceBoxOpen: false,
-		onSetShowAuthGeofenceBox: jest.fn(),
-		isAuthTrackerDisclaimerModalOpen: false,
-		isAuthTrackerBoxOpen: false,
-		onShowAuthTrackerDisclaimerModal: jest.fn(),
-		onSetShowAuthTrackerBox: jest.fn(),
-		onShowUnauthSimulationDisclaimerModal: jest.fn(),
-		isUnauthGeofenceBoxOpen: false,
-		isUnauthTrackerBoxOpen: false,
-		onSetShowUnauthGeofenceBox: jest.fn(),
-		onSetShowUnauthTrackerBox: jest.fn()
-	};
 
 	const renderComponent = async (): Promise<RenderResult> => {
 		const renderedComponent = render(
@@ -66,7 +66,7 @@ describe("<SettingsModal />", () => {
 					handleMapProviderChange={handleMapProviderChange}
 					handleCurrentLocationAndViewpoint={handleCurrentLocationAndViewpoint}
 					resetSearchAndFilters={resetSearchAndFilters}
-					mapButtons={<MapButtons {...props} />}
+					mapButtons={<MapButtons {...mockProps} />}
 				/>
 			</I18nextProvider>
 		);
