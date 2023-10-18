@@ -41,6 +41,7 @@ describe("Should record user events correctly", () => {
 			const pinpointApplicationId = `${Cypress.env("PINPOINT_APPLICATION_ID")}`;
 			const analyticsEndpointId =
 				result[`${Cypress.env("WEB_DOMAIN")}`]["amazon-location-web-demo_analyticsEndpointId"];
+			cy.task("log", { pinpointIdentityPoolId, pinpointApplicationId, analyticsEndpointId });
 			cy.exec("node extra/fetch-pinpoint-analytics-events/index.js", {
 				failOnNonZeroExit: false,
 				env: {
@@ -49,7 +50,7 @@ describe("Should record user events correctly", () => {
 					ANALYTICS_ENDPOINT_ID: analyticsEndpointId
 				}
 			}).then(result => {
-				cy.task("log", { pinpointIdentityPoolId, pinpointApplicationId, analyticsEndpointId, result });
+				cy.task("log", { result });
 				const response = JSON.parse(result.stdout);
 				expect(response["$metadata"]["httpStatusCode"]).to.equal(200);
 				expect(response["EndpointResponse"]["ApplicationId"]).to.equal(pinpointApplicationId);
