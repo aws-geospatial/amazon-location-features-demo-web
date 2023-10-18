@@ -182,19 +182,19 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 				<Flex data-testid="here-message-container" gap={0} direction={"column"}>
 					<Flex className="localize-geofence-distance" gap="0.3rem" direction={isLanguageRTL ? "row-reverse" : "row"}>
 						{!isLoading && (
-							<Text className="bold" variation="secondary" marginRight="0.3rem">
-								{localizeGeodesicDistance}
-							</Text>
+							<>
+								<Text className="bold" variation="secondary" marginRight="0.3rem">
+									{localizeGeodesicDistance}
+								</Text>
+								<Text className="bold" variation="secondary">
+									{geodesicDistanceUnit}
+								</Text>
+							</>
 						)}
-						{!isLoading && (
-							<Text className="bold" variation="secondary">
-								{geodesicDistanceUnit}
-							</Text>
-						)}
-						<Text style={{ marginTop: "0px" }} variation="info">
-							{isLoading ? "loading..." : t("popup__route_not_found.text")}
-						</Text>
 					</Flex>
+					<Text style={{ marginTop: "0px" }} variation="info">
+						{!isLoading && t("popup__route_not_found.text")}
+					</Text>
 				</Flex>
 			);
 		} else {
