@@ -7,7 +7,6 @@ const main = async () => {
 		const pinpointApplicationId = process.env.PINPOINT_APPLICATION_ID;
 		const analyticsEndpointId = process.env.ANALYTICS_ENDPOINT_ID;
 		const region = pinpointIdentityPoolId.split(":")[0];
-		console.log({ pinpointIdentityPoolId, pinpointApplicationId, analyticsEndpointId, region });
 
 		const credentials = await fromCognitoIdentityPool({
 			identityPoolId: pinpointIdentityPoolId,
