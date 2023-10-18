@@ -34,23 +34,25 @@ describe("Should record user events correctly", () => {
 		});
 	});
 
-	it("should successfully create correct endpoint with the correct event to correct pinpoint application", () => {
+	it.only("should successfully create correct endpoint with the correct event to correct pinpoint application", () => {
 		cy.wait(10000);
 		cy.getAllLocalStorage().then(result => {
+			const pinpointIdentityPoolId = Cypress.env("PINPOINT_IDENTITY_POOL_ID");
+			const pinpointApplicationId = Cypress.env("PINPOINT_APPLICATION_ID");
 			const analyticsEndpointId =
 				result[`${Cypress.env("WEB_DOMAIN")}`]["amazon-location-web-demo_analyticsEndpointId"];
 			cy.exec("node extra/fetch-pinpoint-analytics-events/index.js", {
 				failOnNonZeroExit: false,
 				env: {
-					PINPOINT_IDENTITY_POOL_ID: Cypress.env("PINPOINT_IDENTITY_POOL_ID"),
-					PINPOINT_APPLICATION_ID: Cypress.env("PINPOINT_APPLICATION_ID"),
+					PINPOINT_IDENTITY_POOL_ID: pinpointIdentityPoolId,
+					PINPOINT_APPLICATION_ID: pinpointApplicationId,
 					ANALYTICS_ENDPOINT_ID: analyticsEndpointId
 				}
 			}).then(result => {
 				cy.task("log", { result });
 				const response = JSON.parse(result.stdout);
 				expect(response["$metadata"]["httpStatusCode"]).to.equal(200);
-				expect(response["EndpointResponse"]["ApplicationId"]).to.equal(Cypress.env("PINPOINT_APPLICATION_ID"));
+				expect(response["EndpointResponse"]["ApplicationId"]).to.equal(pinpointApplicationId);
 				expect(response["EndpointResponse"]["Id"]).to.equal(analyticsEndpointId);
 				expect(response["EndpointResponse"]["User"]["UserId"]).to.equal(`AnonymousUser:${analyticsEndpointId}`);
 			});
