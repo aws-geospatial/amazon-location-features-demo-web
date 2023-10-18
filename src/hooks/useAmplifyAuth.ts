@@ -14,9 +14,12 @@ import { errorHandler } from "@demo/utils/errorHandler";
 import { getDomainName } from "@demo/utils/getDomainName";
 import { clearStorage } from "@demo/utils/localstorageUtils";
 import { setClosestRegion } from "@demo/utils/regionUtils";
+import { transformCloudFormationLink } from "@demo/utils/transformCloudFormationLink";
 import { Amplify, Auth } from "aws-amplify";
 import AWS from "aws-sdk";
 import { useTranslation } from "react-i18next";
+
+import useDeviceMediaQuery from "./useDeviceMediaQuery";
 
 const {
 	POOLS,
@@ -37,6 +40,7 @@ const useAmplifyAuth = () => {
 	const { resetStore: resetAwsStore } = useAws();
 	const { resetStore: resetAmplifyMapStore } = useAmplifyMap();
 	const { t } = useTranslation();
+	const { isDesktop } = useDeviceMediaQuery();
 
 	useEffect(() => {
 		const localAppVersion = localStorage.getItem(LOCAL_APP_VERSION) || "";
@@ -307,6 +311,24 @@ const useAmplifyAuth = () => {
 			setIdentityPoolIdRegionAndWebSocketUrl: (identityPoolId?: string, region?: string, webSocketUrl?: string) => {
 				setState({ identityPoolId, region, webSocketUrl });
 			},
+			setStackRegion: (stackRegion?: { value: string; label: string }) => {
+				setState({ stackRegion });
+			},
+			setCloudFormationLink: (cloudFormationLink: string) => {
+				setState({ cloudFormationLink });
+			},
+			handleStackRegion: (option: { value: string; label: string }) => {
+				const { label, value } = option;
+				const newUrl = transformCloudFormationLink(value);
+
+				if (isDesktop) {
+					setState({ stackRegion: option, cloudFormationLink: newUrl });
+				} else {
+					const translatedLabel = t(label);
+					const l = translatedLabel.slice(0, translatedLabel.indexOf(")") + 1);
+					setState({ stackRegion: { label: l, value }, cloudFormationLink: newUrl });
+				}
+			},
 			resetStore: () => {
 				setState({
 					credentials: undefined,
@@ -316,7 +338,8 @@ const useAmplifyAuth = () => {
 					userDomain: undefined,
 					userPoolClientId: undefined,
 					userPoolId: undefined,
-					webSocketUrl: undefined
+					webSocketUrl: undefined,
+					stackRegion: undefined
 				});
 				setInitial();
 			}
@@ -331,7 +354,8 @@ const useAmplifyAuth = () => {
 			getCurrentSession,
 			resetAmplifyMapStore,
 			resetAwsStore,
-			t
+			t,
+			isDesktop
 		]
 	);
 

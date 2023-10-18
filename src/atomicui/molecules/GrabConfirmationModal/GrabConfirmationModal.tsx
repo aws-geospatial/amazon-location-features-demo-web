@@ -19,7 +19,6 @@ interface GrabConfirmationModalProps {
 	onConfirm: () => void;
 	showDoNotAskAgainCheckbox?: boolean;
 	onConfirmationCheckboxOnChange?: (e: boolean) => void;
-	isUnauthSimulationOpen: boolean;
 }
 
 const GrabConfirmationModal: React.FC<GrabConfirmationModalProps> = ({
@@ -27,14 +26,13 @@ const GrabConfirmationModal: React.FC<GrabConfirmationModalProps> = ({
 	onClose,
 	onConfirm,
 	showDoNotAskAgainCheckbox,
-	onConfirmationCheckboxOnChange,
-	isUnauthSimulationOpen
+	onConfirmationCheckboxOnChange
 }) => {
 	const { t } = useTranslation();
 
 	return (
 		<ConfirmationModal
-			className={`grab-confirmation-modal ${isUnauthSimulationOpen ? "increased-max-height" : ""}`}
+			className={"grab-confirmation-modal"}
 			open={open}
 			onClose={onClose}
 			heading={t("grab_cm__heading.text") as string}
@@ -49,17 +47,6 @@ const GrabConfirmationModal: React.FC<GrabConfirmationModalProps> = ({
 					>
 						{t("grab_cm__desc.text")}
 					</Text>
-					{isUnauthSimulationOpen && (
-						<Text
-							className="small-text bold"
-							variation="tertiary"
-							marginTop="1.23rem"
-							textAlign="center"
-							whiteSpace="pre-line"
-						>
-							{t("grab_cm__unauth_simulaiton.text")}
-						</Text>
-					)}
 				</>
 			}
 			onConfirm={onConfirm}

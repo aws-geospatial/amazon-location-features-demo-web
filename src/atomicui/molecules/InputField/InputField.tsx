@@ -23,6 +23,7 @@ interface InputFieldProps {
 	onBlur?: FocusEventHandler<HTMLInputElement>;
 	onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
 	searchInputRef?: React.RefObject<HTMLInputElement>;
+	name?: string;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -41,7 +42,8 @@ const InputField: React.FC<InputFieldProps> = ({
 	onBlur,
 	innerStartComponent,
 	searchInputRef,
-	onKeyDown
+	onKeyDown,
+	name
 }) => {
 	return (
 		<Flex gap={0} direction="column" width="100%" margin={containerMargin}>
@@ -65,6 +67,7 @@ const InputField: React.FC<InputFieldProps> = ({
 					onFocus={onFocus}
 					onBlur={onBlur}
 					onKeyDown={onKeyDown}
+					name={name}
 				/>
 				{innerEndComponent}
 			</Flex>

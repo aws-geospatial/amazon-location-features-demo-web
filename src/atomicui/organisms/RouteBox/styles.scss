@@ -52,6 +52,11 @@
 				border-radius: 0.62rem;
 				flex-shrink: 0;
 
+				&.no-duration {
+					background-color: var(--light-color-2);
+					pointer-events: none;
+				}
+
 				svg {
 					min-width: 1.23rem;
 					min-height: 1.23rem;
@@ -125,6 +130,14 @@
 			border-radius: 8px !important;
 			background-color: rgba(0, 130, 150, 0.08) !important;
 			border: none !important;
+
+			&.no-duration {
+				background-color: var(--light-color-2) !important;
+				border: 1px solid var(--grey-color-3) !important;
+				svg {
+					fill: #8e8e93 !important;
+				}
+			}
 
 			svg {
 				fill: #008296 !important;
