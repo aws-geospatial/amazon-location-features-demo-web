@@ -42,9 +42,9 @@ describe("Should record user events correctly", () => {
 			cy.exec("node extra/fetch-pinpoint-analytics-events/index.js", {
 				failOnNonZeroExit: false,
 				env: {
-					PINPOINT_IDENTITY_POOL_ID: `${Cypress.env("PINPOINT_IDENTITY_POOL_ID")}`,
-					PINPOINT_APPLICATION_ID: `${Cypress.env("PINPOINT_APPLICATION_ID")}`,
-					ANALYTICS_ENDPOINT_ID: `${analyticsEndpointId}`
+					PINPOINT_IDENTITY_POOL_ID: Cypress.env("PINPOINT_IDENTITY_POOL_ID"),
+					PINPOINT_APPLICATION_ID: Cypress.env("PINPOINT_APPLICATION_ID"),
+					ANALYTICS_ENDPOINT_ID: analyticsEndpointId
 				}
 			}).then(result => {
 				cy.task("log", { result });
