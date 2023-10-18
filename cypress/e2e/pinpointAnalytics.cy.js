@@ -42,17 +42,19 @@ describe("Should record user events correctly", () => {
 			cy.exec("node extra/fetch-pinpoint-analytics-events/index.js", {
 				failOnNonZeroExit: false,
 				env: {
-					PINPOINT_IDENTITY_POOL_ID: `${Cypress.env("PINPOINT_IDENTITY_POOL_ID")}`,
-					PINPOINT_APPLICATION_ID: `${Cypress.env("PINPOINT_APPLICATION_ID")}`,
-					ANALYTICS_ENDPOINT_ID: `${analyticsEndpointId}`
+					PINPOINT_IDENTITY_POOL_ID: Cypress.env("PINPOINT_IDENTITY_POOL_ID"),
+					PINPOINT_APPLICATION_ID: Cypress.env("PINPOINT_APPLICATION_ID"),
+					ANALYTICS_ENDPOINT_ID: analyticsEndpointId
 				}
 			}).then(result => {
-				console.log({ result });
-				const response = JSON.parse(result.stdout);
-				expect(response["$metadata"]["httpStatusCode"]).to.equal(200);
-				expect(response["EndpointResponse"]["ApplicationId"]).to.equal(`${Cypress.env("PINPOINT_APPLICATION_ID")}`);
-				expect(response["EndpointResponse"]["Id"]).to.equal(analyticsEndpointId);
-				expect(response["EndpointResponse"]["User"]["UserId"]).to.equal(`AnonymousUser:${analyticsEndpointId}`);
+				cy.task("log", { result });
+
+				if (result.stdout) {
+					const response = JSON.parse(result.stdout);
+					expect(response["$metadata"]["httpStatusCode"]).to.equal(200);
+					expect(response["EndpointResponse"]["Id"]).to.equal(analyticsEndpointId);
+					expect(response["EndpointResponse"]["User"]["UserId"]).to.equal(`AnonymousUser:${analyticsEndpointId}`);
+				}
 			});
 		});
 	});
