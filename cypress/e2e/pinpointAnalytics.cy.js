@@ -50,7 +50,7 @@ describe("Should record user events correctly", () => {
 				cy.task("log", { result });
 				const response = JSON.parse(result.stdout);
 				expect(response["$metadata"]["httpStatusCode"]).to.equal(200);
-				expect(response["EndpointResponse"]["ApplicationId"]).to.equal(`${Cypress.env("PINPOINT_APPLICATION_ID")}`);
+				expect(response["EndpointResponse"]["ApplicationId"]).to.equal(Cypress.env("PINPOINT_APPLICATION_ID"));
 				expect(response["EndpointResponse"]["Id"]).to.equal(analyticsEndpointId);
 				expect(response["EndpointResponse"]["User"]["UserId"]).to.equal(`AnonymousUser:${analyticsEndpointId}`);
 			});
