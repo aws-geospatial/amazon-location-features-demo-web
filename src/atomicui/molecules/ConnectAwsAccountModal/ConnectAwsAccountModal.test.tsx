@@ -12,7 +12,7 @@ Object.defineProperty(window, "location", {
 	value: { reload: mockReload }
 });
 
-const props: ConnectAwsAccountModalProps = {
+const mockProps: ConnectAwsAccountModalProps = {
 	open: true,
 	onClose: jest.fn(),
 	handleCurrentLocationAndViewpoint: jest.fn()
@@ -25,7 +25,10 @@ const mockUseAmplifyAuthData = {
 	setIsUserAwsAccountConnected: jest.fn(),
 	clearCredentials: jest.fn(),
 	onLogin: jest.fn(),
-	validateFormValues: jest.fn()
+	validateFormValues: jest.fn(),
+	stackRegion: "ap-southeast-1",
+	cloudFormationLink: "https://link.com",
+	handleStackRegion: jest.fn()
 };
 
 const mockUseAmplifyMapData = {
@@ -57,7 +60,7 @@ describe("<ConnectAwsAccountModal />", () => {
 	const renderComponent = () =>
 		render(
 			<I18nextProvider i18n={i18n} defaultNS={"fr"}>
-				<ConnectAwsAccountModal {...props} />
+				<ConnectAwsAccountModal {...mockProps} />
 			</I18nextProvider>
 		);
 
@@ -121,7 +124,7 @@ describe("<ConnectAwsAccountModal />", () => {
 			fireEvent.click(getByTestId("continue-to-explore"));
 		});
 		waitFor(() => {
-			expect(props.onClose).toHaveBeenCalled();
+			expect(mockProps.onClose).toHaveBeenCalled();
 			expect(mockReload).toHaveBeenCalled();
 		});
 	});
@@ -135,7 +138,7 @@ describe("<ConnectAwsAccountModal />", () => {
 			fireEvent.click(getByTestId("sign-in-button"));
 		});
 		waitFor(() => {
-			expect(props.onClose).toHaveBeenCalled();
+			expect(mockProps.onClose).toHaveBeenCalled();
 			expect(mockUseAmplifyAuthData.onLogin).toHaveBeenCalled();
 		});
 	});
@@ -154,7 +157,7 @@ describe("<ConnectAwsAccountModal />", () => {
 			fireEvent.click(getByTestId("modal-container"));
 		});
 		waitFor(() => {
-			expect(props.onClose).toHaveBeenCalled();
+			expect(mockProps.onClose).toHaveBeenCalled();
 			expect(mockUseAmplifyAuthData.onLogin).toHaveBeenCalled();
 		});
 	});

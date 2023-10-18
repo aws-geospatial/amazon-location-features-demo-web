@@ -29,7 +29,7 @@ import {
 } from "@demo/atomicui/organisms";
 import { DemoPlaceholderPage } from "@demo/atomicui/pages";
 import { showToast } from "@demo/core";
-import { appConfig } from "@demo/core/constants";
+import { appConfig, regionsData } from "@demo/core/constants";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import {
 	useAmplifyAuth,
@@ -80,6 +80,7 @@ import "./styles.scss";
 import { RefHandles } from "react-spring-bottom-sheet/dist/types";
 
 const {
+	POOLS,
 	PERSIST_STORAGE_KEYS: { SHOULD_CLEAR_CREDENTIALS, GEO_LOCATION_ALLOWED, FASTEST_REGION },
 	ROUTES: { DEMO },
 	MAP_RESOURCES: { MAX_BOUNDS, AMAZON_HQ, GRAB_SUPPORTED_AWS_REGIONS },
@@ -147,7 +148,8 @@ const DemoPage: React.FC = () => {
 		handleCurrentSession,
 		switchToGrabMapRegionStack,
 		isUserAwsAccountConnected,
-		switchToDefaultRegionStack
+		switchToDefaultRegionStack,
+		handleStackRegion
 	} = useAmplifyAuth();
 	const { locationClient, createLocationClient, iotClient, createIotClient, resetStore: resetAwsStore } = useAws();
 	const { attachPolicy } = useAwsIot();
@@ -193,13 +195,18 @@ const DemoPage: React.FC = () => {
 	const isLtr = langDir === "ltr";
 	const shouldClearCredentials = localStorage.getItem(SHOULD_CLEAR_CREDENTIALS) === "true";
 	const geoLocateTopValue = `-${bottomSheetCurrentHeight / peggedRemValue + extraGeoLocateTop}rem`;
-	const fastestRegion = localStorage.getItem(FASTEST_REGION);
+	const fallbackRegion = Object.values(POOLS)[0];
+	const fastestRegion = localStorage.getItem(FASTEST_REGION) ?? fallbackRegion;
+	const defaultRegion = regionsData.find(option => option.value === fastestRegion) as { value: string; label: string };
 
 	const isGrabAvailableInRegion = useMemo(() => !!region && GRAB_SUPPORTED_AWS_REGIONS.includes(region), [region]);
 
 	const isGrabVisible = useMemo(
-		() => !isUserAwsAccountConnected || (isUserAwsAccountConnected && isGrabAvailableInRegion),
-		[isUserAwsAccountConnected, isGrabAvailableInRegion]
+		() =>
+			!show.unauthGeofenceBox &&
+			!show.unauthTrackerBox &&
+			(!isUserAwsAccountConnected || (isUserAwsAccountConnected && isGrabAvailableInRegion)),
+		[show.unauthGeofenceBox, show.unauthTrackerBox, isUserAwsAccountConnected, isGrabAvailableInRegion]
 	);
 
 	useEffect(() => {
@@ -787,6 +794,16 @@ const DemoPage: React.FC = () => {
 		}
 	}, [currentMapProvider, isGrabVisible, setMapProvider, onMapProviderChange]);
 
+	/* Handled stack region and cloudformation link */
+	useEffect(() => {
+		currentMapProvider === MapProviderEnum.GRAB
+			? handleStackRegion({
+					value: "ap-southeast-1",
+					label: "regions__ap_southeast_1.text"
+			  })
+			: handleStackRegion(defaultRegion);
+	}, [currentMapProvider, handleStackRegion, defaultRegion]);
+
 	const onMapStyleChange = useCallback(
 		(mapStyle: EsriMapEnum | HereMapEnum | GrabMapEnum | OpenDataMapEnum) => {
 			const splitArr = mapStyle.split(".");
@@ -1187,6 +1204,7 @@ const DemoPage: React.FC = () => {
 						setShowRouteBox={b => setShow(s => ({ ...s, routeBox: b }))}
 						isExpandRouteOptionsMobile={expandRouteOptionsMobile}
 						setExpandRouteOptionsMobile={setExpandRouteOptionsMobile}
+						setSearchBoxValue={setSearchBoxValue}
 					/>
 					<MapButtons
 						renderedUpon={TriggeredByEnum.DEMO_PAGE}
@@ -1357,7 +1375,6 @@ const DemoPage: React.FC = () => {
 				}}
 				showDoNotAskAgainCheckbox
 				onConfirmationCheckboxOnChange={setDoNotAskGrabDisclaimer}
-				isUnauthSimulationOpen={show.unauthGeofenceBox || show.unauthTrackerBox}
 			/>
 			<UnauthSimulationDisclaimerModal
 				open={show.unauthSimulationDisclaimerModal}

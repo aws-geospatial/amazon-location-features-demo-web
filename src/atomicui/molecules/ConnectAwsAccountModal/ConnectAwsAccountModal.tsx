@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button, Flex, Link, Text, View } from "@aws-amplify/ui-react";
 import { IconAwsCloudFormation, IconCheckMarkCircle } from "@demo/assets";
@@ -13,17 +13,15 @@ import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { ConnectFormValuesType, EsriMapEnum, MapProviderEnum } from "@demo/types";
 import { AnalyticsEventActionsEnum, EventTypeEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
-import { transformCloudFormationLink } from "@demo/utils/transformCloudFormationLink";
+import { isAndroid, isIOS } from "react-device-detect";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
 
 const {
-	ENV: { CF_TEMPLATE },
 	ROUTES: { HELP },
 	MAP_RESOURCES: { GRAB_SUPPORTED_AWS_REGIONS },
 	LINKS: { AWS_TERMS_AND_CONDITIONS }
 } = appConfig;
-
 let scrollTimeout: NodeJS.Timer | undefined;
 
 export interface ConnectAwsAccountModalProps {
@@ -44,16 +42,16 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 		UserPoolId: "",
 		WebSocketUrl: ""
 	});
-	const [cloudFormationLink, setCloudFormationLink] = useState(CF_TEMPLATE);
-	const [stackRegion, setStackRegion] = useState<{ value: string; label: string }>();
 	const {
-		region,
 		isUserAwsAccountConnected,
 		setConnectFormValues,
 		setIsUserAwsAccountConnected,
 		clearCredentials,
 		onLogin,
-		validateFormValues
+		validateFormValues,
+		stackRegion,
+		cloudFormationLink,
+		handleStackRegion
 	} = useAmplifyAuth();
 	const { resetStore: resetAwsStore } = useAws();
 	const { mapProvider: currentMapProvider, setMapProvider, setMapStyle } = useAmplifyMap();
@@ -62,32 +60,30 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
 	const isOverflowing = ["de", "es", "fr", "it", "pt-BR"].includes(i18n.language);
-	const { isDesktop } = useDeviceMediaQuery();
+	const { isDesktop, isDesktopBrowser } = useDeviceMediaQuery();
+	const contentRef = useRef<HTMLDivElement | null>(null);
 
-	const handleStackRegion = useCallback(
-		(option: { value: string; label: string }) => {
-			const { label, value } = option;
-
-			if (isDesktop) {
-				setStackRegion(option);
-			} else {
-				const translatedLabel = t(label);
-				const l = translatedLabel.slice(0, translatedLabel.indexOf(")") + 1);
-				setStackRegion({ label: l, value });
+	const handleScroll = useCallback(() => {
+		if (contentRef.current) {
+			for (const key of Object.keys(formValues)) {
+				const inputField = document.querySelector(`input[name=${key}]`) as HTMLInputElement;
+				if (inputField) inputField.blur();
 			}
-		},
-		[isDesktop, t]
-	);
+		}
+	}, [formValues]);
 
 	useEffect(() => {
-		const regionOption = region && regionsData.find(option => option.value === region);
+		if (!isDesktop && (isAndroid || isIOS) && open) {
+			setTimeout(() => {
+				const currentContentRef = contentRef.current;
+				if (currentContentRef) currentContentRef.addEventListener("touchmove", handleScroll);
 
-		if (regionOption) {
-			const newUrl = transformCloudFormationLink(region);
-			setCloudFormationLink(newUrl);
-			handleStackRegion(regionOption);
+				return () => {
+					if (currentContentRef) currentContentRef.removeEventListener("touchmove", handleScroll);
+				};
+			}, 500);
 		}
-	}, [region, handleStackRegion]);
+	}, [handleScroll, isDesktop, isDesktopBrowser, contentRef, open]);
 
 	useEffect(() => {
 		if (isOverflowing) {
@@ -112,11 +108,12 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 		isUserAwsAccountConnected && window.location.reload();
 	};
 
-	const _onSelect = (option: { value: string; label: string }) => {
-		const newUrl = transformCloudFormationLink(option.value);
-		setCloudFormationLink(newUrl);
-		handleStackRegion(option);
-	};
+	const _onSelect = useCallback(
+		(option: { value: string; label: string }) => {
+			handleStackRegion(option);
+		},
+		[handleStackRegion]
+	);
 
 	const isBtnEnabled = useMemo(
 		() => keyArr.filter(key => !!formValues[key as keyof typeof formValues]).length === keyArr.length,
@@ -198,7 +195,7 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 			onClose={handleModalClose}
 			className="connect-aws-account-modal"
 			content={
-				<Flex className="content-container">
+				<Flex className="content-container" ref={contentRef}>
 					<Flex
 						className="left-col"
 						style={
@@ -371,6 +368,7 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 											value={formValues[key as keyof ConnectFormValuesType]}
 											onChange={e => onChangeFormValues(key, e.target.value.trim())}
 											dir={langDir}
+											name={key}
 										/>
 									);
 								})}

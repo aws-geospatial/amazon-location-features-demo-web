@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 
 import { Button, CheckboxField, Divider, Flex, Link, Radio, Text, View } from "@aws-amplify/ui-react";
 import {
@@ -32,13 +32,11 @@ import {
 } from "@demo/types";
 import { AnalyticsEventActionsEnum, EventTypeEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
-import { transformCloudFormationLink } from "@demo/utils/transformCloudFormationLink";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
 
 const {
 	POOLS,
-	ENV: { CF_TEMPLATE },
 	ROUTES: { HELP },
 	MAP_RESOURCES: {
 		MAP_STYLES: { ESRI_STYLES, HERE_STYLES },
@@ -47,10 +45,6 @@ const {
 	LINKS: { AWS_TERMS_AND_CONDITIONS },
 	PERSIST_STORAGE_KEYS: { FASTEST_REGION }
 } = appConfig;
-
-const fallbackRegion = Object.values(POOLS)[0];
-const region = localStorage.getItem(FASTEST_REGION) ?? fallbackRegion;
-const defaultRegion = regionsData.find(option => option.value === region) as { value: string; label: string };
 const { IMPERIAL, METRIC } = MapUnitEnum;
 const { ESRI, HERE, GRAB, OPEN_DATA } = MapProviderEnum;
 
@@ -75,18 +69,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 	mapButtons,
 	resetSearchAndFilters
 }) => {
-	const {
-		autoMapUnit,
-		setIsAutomaticMapUnit,
-		mapUnit: currentMapUnit,
-		setMapUnit,
-		mapProvider: currentMapProvider,
-		mapStyle: currentMapStyle,
-		setMapProvider,
-		setMapStyle,
-		resetStore: resetMapStore
-	} = useAmplifyMap();
-	const { defaultRouteOptions, setDefaultRouteOptions, setSettingsOptions, settingsOptions } = usePersistedData();
 	const [formValues, setFormValues] = useState<ConnectFormValuesType>({
 		IdentityPoolId: "",
 		UserDomain: "",
@@ -94,8 +76,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 		UserPoolId: "",
 		WebSocketUrl: ""
 	});
-	const [cloudFormationLink, setCloudFormationLink] = useState(CF_TEMPLATE);
-	const [stackRegion, setStackRegion] = useState<{ value: string; label: string }>(defaultRegion);
 	const {
 		isUserAwsAccountConnected,
 		validateFormValues,
@@ -109,8 +89,23 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 		onLogout,
 		autoRegion,
 		region: currentRegion,
-		setAutoRegion
+		setAutoRegion,
+		stackRegion,
+		cloudFormationLink,
+		handleStackRegion
 	} = useAmplifyAuth();
+	const {
+		autoMapUnit,
+		setIsAutomaticMapUnit,
+		mapUnit: currentMapUnit,
+		setMapUnit,
+		mapProvider: currentMapProvider,
+		mapStyle: currentMapStyle,
+		setMapProvider,
+		setMapStyle,
+		resetStore: resetMapStore
+	} = useAmplifyMap();
+	const { defaultRouteOptions, setDefaultRouteOptions, setSettingsOptions, settingsOptions } = usePersistedData();
 	const { resetStore: resetAwsStore } = useAws();
 	const { detachPolicy } = useAwsIot();
 	const keyArr = Object.keys(formValues);
@@ -118,33 +113,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
-	const fastestRegion = localStorage.getItem(FASTEST_REGION) || "";
+	const fallbackRegion = Object.values(POOLS)[0];
+	const fastestRegion = localStorage.getItem(FASTEST_REGION) ?? fallbackRegion;
 	const { isDesktop, isMobile } = useDeviceMediaQuery();
-
-	const handleStackRegion = useCallback(
-		(option: { value: string; label: string }) => {
-			const { label, value } = option;
-
-			if (isDesktop) {
-				setStackRegion(option);
-			} else {
-				const translatedLabel = t(label);
-				const l = translatedLabel.slice(0, translatedLabel.indexOf(")") + 1);
-				setStackRegion({ label: l, value });
-			}
-		},
-		[isDesktop, t]
-	);
-
-	useEffect(() => {
-		const regionOption = region && regionsData.find(option => option.value === region);
-
-		if (regionOption) {
-			const newUrl = transformCloudFormationLink(region);
-			setCloudFormationLink(newUrl);
-			handleStackRegion(regionOption);
-		}
-	}, [handleStackRegion]);
 
 	const handleAutoMapUnitChange = useCallback(() => {
 		setIsAutomaticMapUnit(true);
@@ -238,8 +209,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 
 	const _onSelect = useCallback(
 		(option: { value: string; label: string }) => {
-			const newUrl = transformCloudFormationLink(option.value);
-			setCloudFormationLink(newUrl);
 			handleStackRegion(option);
 		},
 		[handleStackRegion]
@@ -876,7 +845,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 	const modalCloseHandler = useCallback(() => {
 		!isMobile && setSettingsOptions(SettingOptionEnum.UNITS);
 		onClose();
-	}, [isMobile, onClose, setSettingsOptions]);
+	}, [isMobile, setSettingsOptions, onClose]);
 
 	return (
 		<Modal
