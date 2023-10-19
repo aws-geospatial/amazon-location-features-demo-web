@@ -374,6 +374,7 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 								})}
 								<Button
 									data-testid="connect-button"
+									className="aws-connect-button"
 									variation="primary"
 									width="100%"
 									height="3.08rem"
