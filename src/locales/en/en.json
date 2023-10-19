@@ -3574,5 +3574,20 @@
 	},
 	"nl_query_example_3": {
 		"text": "Find me some dinner spots around Vancouver?"
+	},
+	"nl_loader_sample_text_1": {
+		"text": "Buckle up for an adventure! Bedrock on the case."
+	},
+	"nl_loader_sample_text_2": {
+		"text": "Charting your course now! Thanks for waiting."
+	},
+	"nl_loader_sample_text_3": {
+		"text": "Letting Amazon Bedrock navigate this map trip!"
+	},
+	"nl_loader_sample_text_4": {
+		"text": "Consulting the atlas for your location."
+	},
+	"nl_loader_sample_text_5": {
+		"text": "Amazon Bedrock on mapping duty! Searching."
 	}
 }
