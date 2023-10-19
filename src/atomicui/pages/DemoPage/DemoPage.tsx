@@ -796,13 +796,15 @@ const DemoPage: React.FC = () => {
 
 	/* Handled stack region and cloudformation link */
 	useEffect(() => {
-		currentMapProvider === MapProviderEnum.GRAB
-			? handleStackRegion({
-					value: "ap-southeast-1",
-					label: "regions__ap_southeast_1.text"
-			  })
-			: handleStackRegion(defaultRegion);
-	}, [currentMapProvider, handleStackRegion, defaultRegion]);
+		if (defaultRegion) {
+			currentMapProvider === MapProviderEnum.GRAB
+				? handleStackRegion({
+						value: "ap-southeast-1",
+						label: "regions__ap_southeast_1.text"
+				  })
+				: handleStackRegion(defaultRegion);
+		}
+	}, [defaultRegion, currentMapProvider, handleStackRegion]);
 
 	const onMapStyleChange = useCallback(
 		(mapStyle: EsriMapEnum | HereMapEnum | GrabMapEnum | OpenDataMapEnum) => {
