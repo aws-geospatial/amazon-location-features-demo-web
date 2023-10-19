@@ -18,6 +18,7 @@ export interface DropdownElProps {
 	isRadioBox?: boolean;
 	arrowIconColor?: string;
 	label?: string;
+	width?: string;
 }
 
 const DropdownEl: React.FC<DropdownElProps> = ({
@@ -29,7 +30,8 @@ const DropdownEl: React.FC<DropdownElProps> = ({
 	isCheckbox = false,
 	isRadioBox = false,
 	arrowIconColor,
-	label
+	label,
+	width = "100%"
 }) => {
 	const [open, setOpen] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
@@ -60,7 +62,7 @@ const DropdownEl: React.FC<DropdownElProps> = ({
 	);
 
 	return (
-		<div ref={dropdownRef} className="dropdown-container">
+		<div ref={dropdownRef} className="dropdown-container" style={{ width }}>
 			<div
 				data-testid="dropdown-trigger"
 				className={

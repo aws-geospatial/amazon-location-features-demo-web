@@ -321,7 +321,11 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 				acc.push(
 					<SuggestionMarker
 						key={`${s.Hash}_${key}`}
-						active={s.Place?.Label === selectedMarker?.Place?.Label}
+						active={
+							s.Place?.Label === selectedMarker?.Place?.Label &&
+							s.Place?.Geometry?.Point![0] === selectedMarker?.Place?.Geometry.Point![0] &&
+							s.Place?.Geometry?.Point![1] === selectedMarker?.Place?.Geometry.Point![1]
+						}
 						searchValue={value}
 						setSearchValue={setValue}
 						{...s}
