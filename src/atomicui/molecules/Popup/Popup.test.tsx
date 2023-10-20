@@ -53,6 +53,7 @@ describe("<Popup/>", () => {
 				<Popup
 					active
 					info={{
+						Id: faker.random.alphaNumeric(10),
 						PlaceId: faker.random.word(),
 						Text: faker.random.words(3),
 						Distance: 11,

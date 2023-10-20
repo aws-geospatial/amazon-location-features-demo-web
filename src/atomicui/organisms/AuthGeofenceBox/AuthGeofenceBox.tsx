@@ -31,6 +31,7 @@ import {
 } from "@demo/types";
 import { AnalyticsEventActionsEnum, EventTypeEnum, ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
+import { uuid } from "@demo/utils/uuid";
 import * as turf from "@turf/turf";
 import { ListGeofenceResponseEntry, Place, Position } from "aws-sdk/clients/location";
 import { useTranslation } from "react-i18next";
@@ -217,7 +218,7 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({
 							key={`${PlaceId}-${idx}`}
 							className={idx === 0 ? "suggestion border-top" : "suggestion"}
 							onClick={() => {
-								onSelectSuggestion({ PlaceId, Text: text, Place });
+								onSelectSuggestion({ Id: uuid.randomUUID(), PlaceId, Text: text, Place });
 							}}
 						>
 							{PlaceId ? <IconPin /> : <IconSearch />}
