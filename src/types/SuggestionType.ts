@@ -4,6 +4,7 @@
 import { Place } from "aws-sdk/clients/location";
 
 export interface SuggestionType {
+	Id: string;
 	PlaceId?: string;
 	Text?: string;
 	Place?: Place;

@@ -32,8 +32,9 @@ interface Props {
 	setInfo: (info?: SuggestionType) => void;
 }
 const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo }) => {
-	const { setPOICard, setBottomSheetMinHeight, setBottomSheetHeight, setUI, bottomSheetHeight, ui } = useBottomSheet();
+	const [isLoading, setIsLoading] = useState(true);
 	const [routeData, setRouteData] = useState<CalculateRouteResponse>();
+	const { setPOICard, setBottomSheetMinHeight, setBottomSheetHeight, setUI, bottomSheetHeight, ui } = useBottomSheet();
 	const {
 		currentLocationData,
 		viewpoint,
@@ -43,7 +44,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 	} = useAmplifyMap();
 	const { clearPoiList } = useAwsPlace();
 	const { getRoute, setDirections, isFetchingRoute } = useAwsRoute();
-	const [longitude, latitude] = info.Place?.Geometry.Point as Position;
+	const [longitude, latitude] = useMemo(() => info.Place?.Geometry.Point as Position, [info]);
 	const { isDesktop } = useDeviceMediaQuery();
 	const { t, i18n } = useTranslation();
 	const currentLang = i18n.language;
@@ -51,7 +52,6 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 	const isLtr = langDir === "ltr";
 	const isLanguageRTL = ["ar", "he"].includes(currentLang);
 	const POICardRef = useRef<HTMLDivElement>(null);
-	const [isLoading, setIsLoading] = useState(true);
 
 	const geodesicDistance = useMemo(
 		() =>

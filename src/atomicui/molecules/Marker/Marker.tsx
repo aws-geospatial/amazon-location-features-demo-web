@@ -6,6 +6,7 @@ import React, { memo, useCallback, useEffect, useState } from "react";
 import { SuggestionMarker } from "@demo/atomicui/molecules";
 import { useAwsPlace } from "@demo/hooks";
 import { SuggestionType } from "@demo/types";
+import { uuid } from "@demo/utils/uuid";
 
 interface Props {
 	latitude: number;
@@ -22,7 +23,7 @@ const Marker: React.FC<Props> = ({ latitude, longitude, searchValue, setSearchVa
 
 	const loadPlaceInfo = useCallback(async () => {
 		const pd = await getPlaceDataByCoordinates([longitude, latitude]);
-		setInfo(pd?.Results[0]);
+		setInfo({ ...pd?.Results[0], Id: uuid.randomUUID() });
 	}, [getPlaceDataByCoordinates, latitude, longitude]);
 
 	useEffect(() => {
