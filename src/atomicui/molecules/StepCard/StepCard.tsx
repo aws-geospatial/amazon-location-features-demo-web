@@ -7,6 +7,7 @@ import { Flex, Text, View } from "@aws-amplify/ui-react";
 import { useAmplifyMap, useAwsPlace } from "@demo/hooks";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { MapUnitEnum, SuggestionType, TravelMode } from "@demo/types";
+import { uuid } from "@demo/utils/uuid";
 import { Position, Step } from "aws-sdk/clients/location";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
@@ -34,7 +35,7 @@ const StepCard: React.FC<StepCardProps> = ({ step, isFirst, isLast }) => {
 	const fetchPlaceData = useCallback(
 		async (coords: Position) => {
 			const pd = await getPlaceDataByCoordinates(coords);
-			setPlaceData(pd?.Results[0]);
+			setPlaceData({ ...pd?.Results[0], Id: uuid.randomUUID() });
 		},
 		[getPlaceDataByCoordinates]
 	);
