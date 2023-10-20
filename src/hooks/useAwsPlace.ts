@@ -11,6 +11,7 @@ import { EventTypeEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { calculateClusters, getHash, getPrecision, isGeoString } from "@demo/utils/geoCalculation";
+import { uuid } from "@demo/utils/uuid";
 import { Position } from "aws-sdk/clients/location";
 import { useTranslation } from "react-i18next";
 
@@ -34,7 +35,7 @@ const useAwsPlace = () => {
 					cb
 						? cb(data?.Results.map(({ PlaceId, Text }) => ({ PlaceId, Text })) as SuggestionType[])
 						: setState({
-								suggestions: data?.Results.map(({ PlaceId, Text }) => ({ PlaceId, Text }))
+								suggestions: data?.Results.map(({ PlaceId, Text }) => ({ PlaceId, Text, Id: uuid.randomUUID() }))
 						  });
 					setState({
 						bound: undefined
@@ -66,7 +67,8 @@ const useAwsPlace = () => {
 						const Hash = getHash(p.Place.Geometry.Point as Position, store.precision);
 						const sg = {
 							...p,
-							Hash
+							Hash,
+							Id: uuid.randomUUID()
 						} as SuggestionType;
 						clusters[Hash] = clusters[Hash] ? [...clusters[Hash], sg] : [sg];
 						return sg;
@@ -103,7 +105,7 @@ const useAwsPlace = () => {
 						? { longitude: data.Summary.Position[0] || 0, latitude: data.Summary.Position[1] || 0 }
 						: viewpoint;
 					const Hash = getHash([vPoint.longitude, vPoint.latitude], 10);
-					const suggestion = { ...data?.Results[0], Hash };
+					const suggestion = { ...data?.Results[0], Hash, Id: uuid.randomUUID() };
 					cb ? cb([suggestion]) : setState({ suggestions: [suggestion] });
 					setState({ bound: undefined });
 					setViewpoint(vPoint);
