@@ -97,7 +97,7 @@ body:has(.disable-body-scroll) {
 }
 
 @media (max-width: 1024px) {
-	.amplify-button--primary:not(.learn-more-button, .edit-button) {
+	.amplify-button--primary:not(.learn-more-button, .edit-button, .aws-connect-button) {
 		&:hover {
 			background-color: var(--primary-color) !important;
 			border-color: var(--primary-color) !important;

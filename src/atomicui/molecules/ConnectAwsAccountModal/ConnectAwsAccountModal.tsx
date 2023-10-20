@@ -201,7 +201,11 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 						style={
 							isDesktop
 								? isOverflowing
-									? { justifyContent: "none", overflowY: "auto" }
+									? {
+											justifyContent: "none",
+											overflowY: "auto",
+											overflowX: "hidden"
+									  }
 									: { justifyContent: "center" }
 								: isUserAwsAccountConnected
 								? { display: "none" }
@@ -225,13 +229,19 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 						>
 							{t("caam__desc.text")}
 						</Text>
-						<View>
+						<View className="body">
 							<Flex gap={0} justifyContent="flex-start" alignItems="center" marginTop="1rem">
 								<Text className="bold" fontSize="1.08rem" order={isLtr ? 1 : 2} whiteSpace="nowrap">
 									{t("caam__htct.text")}
 								</Text>
 								<Flex order={isLtr ? 2 : 1}>
-									<DropdownEl defaultOption={stackRegion} options={regionsData} onSelect={_onSelect} showSelected />
+									<DropdownEl
+										defaultOption={stackRegion}
+										options={regionsData}
+										onSelect={_onSelect}
+										showSelected
+										width={!isDesktop ? "60%" : "80%"}
+									/>
 								</Flex>
 							</Flex>
 							<View marginTop="1.23rem">
@@ -374,6 +384,7 @@ const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
 								})}
 								<Button
 									data-testid="connect-button"
+									className="aws-connect-button"
 									variation="primary"
 									width="100%"
 									height="3.08rem"
