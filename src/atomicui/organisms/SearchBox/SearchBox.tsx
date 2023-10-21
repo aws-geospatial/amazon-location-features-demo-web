@@ -314,12 +314,15 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		} else {
 			return Object.keys(clusters).reduce((acc, key) => {
 				const cluster = clusters[key];
-				const containsSelectedPoi = selectedMarker?.Hash?.includes(key);
-				const s = containsSelectedPoi ? cluster.find(i => i.Hash === selectedMarker?.Hash) || cluster[0] : cluster[0];
+				// const containsSelectedPoi = selectedMarker?.Hash?.includes(key);
+				// const s = containsSelectedPoi ? cluster.find(i => i.Hash === selectedMarker?.Hash) || cluster[0] : cluster[0];
+				const containsSelectedPoi = cluster.find(o => o.Id === selectedMarker?.Id) ? true : false;
+				const s = containsSelectedPoi ? cluster.find(o => o.Id === selectedMarker?.Id) || cluster[0] : cluster[0];
 
 				acc.push(
 					<SuggestionMarker
-						key={`${s.Hash}_${key}`}
+						// key={`${s.Hash}_${key}`}
+						key={s.Id}
 						active={s.Place?.Label === selectedMarker?.Place?.Label && s.Id === selectedMarker?.Id}
 						searchValue={value}
 						setSearchValue={setValue}

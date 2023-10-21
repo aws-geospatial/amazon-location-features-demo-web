@@ -127,14 +127,21 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 	const onClose = useCallback(
 		async (ui: ResponsiveUIEnum) => {
 			if (!isDesktop) {
-				setUI(ui);
 				setPOICard(undefined);
 				setInfo(undefined);
+				setUI(ui);
+				setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+				setBottomSheetHeight(window.innerHeight * 0.4);
+				setTimeout(() => {
+					setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+					setBottomSheetHeight(window.innerHeight);
+				}, 500);
 			}
+
 			await select(undefined);
 			onClosePopUp && onClosePopUp();
 		},
-		[isDesktop, select, onClosePopUp, setUI, setPOICard, setInfo]
+		[isDesktop, select, onClosePopUp, setPOICard, setInfo, setUI, setBottomSheetMinHeight, setBottomSheetHeight]
 	);
 
 	const onGetDirections = useCallback(() => {
@@ -256,18 +263,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 		() => (
 			<Flex ref={POICardRef} className={!isDesktop ? "poi-only-container" : ""} direction="column">
 				<View className="popup-icon-close-container">
-					<IconClose
-						onClick={() => {
-							onClose(ResponsiveUIEnum.search);
-							setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
-							setBottomSheetHeight(window.innerHeight * 0.4);
-
-							setTimeout(() => {
-								setBottomSheetMinHeight(BottomSheetHeights.explore.min);
-								setBottomSheetHeight(window.innerHeight);
-							}, 500);
-						}}
-					/>
+					<IconClose onClick={() => onClose(ResponsiveUIEnum.search)} />
 				</View>
 				{isDesktop && (
 					<View className="triangle-container">
@@ -306,17 +302,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 				</View>
 			</Flex>
 		),
-		[
-			address,
-			info.Place?.Label,
-			isDesktop,
-			onClose,
-			onGetDirections,
-			renderRouteInfo,
-			setBottomSheetHeight,
-			setBottomSheetMinHeight,
-			t
-		]
+		[address, info.Place?.Label, isDesktop, onClose, onGetDirections, renderRouteInfo, t]
 	);
 
 	useEffect(() => {

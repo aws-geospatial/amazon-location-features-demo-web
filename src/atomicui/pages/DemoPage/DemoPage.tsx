@@ -378,18 +378,18 @@ const DemoPage: React.FC = () => {
 					padding: {
 						top: 100,
 						bottom: 100,
-						left: 390,
-						right: 50
+						left: 400,
+						right: 100
 					},
 					speed: 5,
-					linear: false
+					linear: true
 			  }
 			: {
 					padding: {
-						top: 50,
+						top: 100,
 						bottom: 400,
-						left: 60,
-						right: 70
+						left: 100,
+						right: 100
 					},
 					speed: 5,
 					linear: true
