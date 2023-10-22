@@ -435,6 +435,15 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	const searchAndFilteredResults = searchStyles(stylesWithTitles, searchValue, selectedFilters);
 	const hasAnyFilterSelected =
 		!!selectedFilters.Providers.length || !!selectedFilters.Attribute.length || !!selectedFilters.Type.length;
+	const mapProviderArray = useMemo(() => {
+		return Object.values(MapProviderEnum).filter(mapProvider => {
+			if (isGrabVisible) {
+				return mapProvider;
+			} else {
+				return mapProvider !== MapProviderEnum.GRAB;
+			}
+		});
+	}, [isGrabVisible]);
 
 	const mapStyles = useMemo(
 		() => (
@@ -533,7 +542,7 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 						</Flex>
 						{searchWidth === searchHandDeviceWidth && (
 							<Flex gap="0.5rem" className="map-providers-container-mobile">
-								{Object.values(MapProviderEnum).map(provider => (
+								{mapProviderArray.map(provider => (
 									<Button
 										key={provider}
 										className={currentMapProvider === provider ? "active-button" : ""}
@@ -703,7 +712,8 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 			isLoading,
 			isLoadingImg,
 			isMobile,
-			onChangeStyle
+			onChangeStyle,
+			mapProviderArray
 		]
 	);
 

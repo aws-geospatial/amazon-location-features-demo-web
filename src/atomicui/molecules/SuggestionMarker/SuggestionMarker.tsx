@@ -18,6 +18,7 @@ interface Props extends SuggestionType {
 }
 
 const SuggestionMarker: React.FC<Props> = ({
+	Id,
 	PlaceId,
 	Text,
 	Place,
@@ -33,12 +34,12 @@ const SuggestionMarker: React.FC<Props> = ({
 	const getPlaceInfo = useCallback(
 		async (placeId: string) => {
 			const pd = await getPlaceData(placeId);
-			setInfo({ Place: pd?.Place });
+			setInfo({ Id, Place: pd?.Place });
 		},
-		[getPlaceData]
+		[Id, getPlaceData]
 	);
 
-	const setPlaceInfo = useCallback(() => setInfo({ Place }), [Place]);
+	const setPlaceInfo = useCallback(() => setInfo({ Id, Place }), [Id, Place]);
 
 	useEffect(() => {
 		if (PlaceId) {
@@ -55,15 +56,17 @@ const SuggestionMarker: React.FC<Props> = ({
 	}, [info, active, searchValue, setSearchValue]);
 
 	const select = useCallback(
-		async (id?: string) => {
-			if (id) {
-				const selectedMarker = suggestions?.find((i: SuggestionType) => i.PlaceId === id || i.Place?.Label === id);
+		async (str?: string) => {
+			if (str) {
+				const selectedMarker = suggestions?.find(
+					(i: SuggestionType) => i.PlaceId === str || (i.Place?.Label === str && i.Id === Id)
+				);
 				await setSelectedMarker(selectedMarker);
 			} else {
 				await setSelectedMarker(undefined);
 			}
 		},
-		[suggestions, setSelectedMarker]
+		[suggestions, setSelectedMarker, Id]
 	);
 
 	const markerDescription = useMemo(() => {
@@ -74,8 +77,10 @@ const SuggestionMarker: React.FC<Props> = ({
 	const isHovered = useMemo(
 		() =>
 			hoveredMarker &&
-			(hoveredMarker.PlaceId ? hoveredMarker.PlaceId === PlaceId : hoveredMarker.Place?.Label === Place?.Label),
-		[hoveredMarker, PlaceId, Place?.Label]
+			(hoveredMarker.PlaceId
+				? hoveredMarker.PlaceId === PlaceId
+				: hoveredMarker.Place?.Label === Place?.Label && hoveredMarker.Id === Id),
+		[hoveredMarker, PlaceId, Place?.Label, Id]
 	);
 
 	const setHover = useCallback(
@@ -108,7 +113,7 @@ const SuggestionMarker: React.FC<Props> = ({
 				{active || isHovered ? (
 					<IconSelected />
 				) : (
-					<IconSuggestion onMouseOver={() => setHover({ PlaceId, Text, ...rest })} />
+					<IconSuggestion onMouseOver={() => setHover({ Id, PlaceId, Text, ...rest })} />
 				)}
 				{active ? (
 					<Popup

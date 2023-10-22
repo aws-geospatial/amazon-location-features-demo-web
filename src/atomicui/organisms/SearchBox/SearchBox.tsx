@@ -13,7 +13,6 @@ import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { DistanceUnitEnum, MapUnitEnum, SuggestionType } from "@demo/types";
 import { AnalyticsEventActionsEnum, ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { calculateGeodesicDistance } from "@demo/utils/geoCalculation";
-import { uuid } from "@demo/utils/uuid";
 import { Units } from "@turf/turf";
 import { Location } from "aws-sdk";
 import { LngLat } from "mapbox-gl";
@@ -166,7 +165,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	}, []);
 
 	const selectSuggestion = useCallback(
-		async ({ text, label, placeid }: ComboBoxOption) => {
+		async ({ id, text, label, placeid }: ComboBoxOption) => {
 			if (!placeid) {
 				await handleSearch(text || label, true, AnalyticsEventActionsEnum.SUGGESTION_SELECTED);
 				setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
@@ -178,7 +177,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 				}, 500);
 			} else {
 				const selectedMarker = suggestions?.find(
-					(i: SuggestionType) => i.PlaceId === placeid || i.Place?.Label === placeid
+					(i: SuggestionType) => i.PlaceId === placeid || (i.Place?.Label === placeid && i.Id === id)
 				);
 
 				await setSelectedMarker(selectedMarker);
@@ -188,11 +187,11 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	);
 
 	const setHover = useCallback(
-		({ placeid }: ComboBoxOption) => {
+		({ id, placeid }: ComboBoxOption) => {
 			if (!placeid) return;
 
 			const selectedMarker = suggestions?.find(
-				(i: SuggestionType) => i.PlaceId === placeid || i.Place?.Label === placeid
+				(i: SuggestionType) => i.PlaceId === placeid || (i.Place?.Label === placeid && i.Id === id)
 			);
 			setHoveredMarker(selectedMarker);
 		},
@@ -276,9 +275,9 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 
 	const options = useMemo(
 		() =>
-			suggestions?.map(({ PlaceId, Text, Place }: SuggestionType) => {
+			suggestions?.map(({ Id, PlaceId, Text, Place }: SuggestionType) => {
 				return {
-					id: uuid.randomUUID(),
+					id: Id,
 					placeid: PlaceId || Place?.Label || "",
 					label: Text || Place?.Label || "",
 					country: Place?.Country || "",
@@ -315,17 +314,16 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		} else {
 			return Object.keys(clusters).reduce((acc, key) => {
 				const cluster = clusters[key];
-				const containsSelectedPoi = selectedMarker?.Hash?.includes(key);
-				const s = containsSelectedPoi ? cluster.find(i => i.Hash === selectedMarker?.Hash) || cluster[0] : cluster[0];
+				// const containsSelectedPoi = selectedMarker?.Hash?.includes(key);
+				// const s = containsSelectedPoi ? cluster.find(i => i.Hash === selectedMarker?.Hash) || cluster[0] : cluster[0];
+				const containsSelectedPoi = cluster.find(o => o.Id === selectedMarker?.Id) ? true : false;
+				const s = containsSelectedPoi ? cluster.find(o => o.Id === selectedMarker?.Id) || cluster[0] : cluster[0];
 
 				acc.push(
 					<SuggestionMarker
-						key={`${s.Hash}_${key}`}
-						active={
-							s.Place?.Label === selectedMarker?.Place?.Label &&
-							s.Place?.Geometry?.Point![0] === selectedMarker?.Place?.Geometry.Point![0] &&
-							s.Place?.Geometry?.Point![1] === selectedMarker?.Place?.Geometry.Point![1]
-						}
+						// key={`${s.Hash}_${key}`}
+						key={s.Id}
+						active={s.Place?.Label === selectedMarker?.Place?.Label && s.Id === selectedMarker?.Id}
 						searchValue={value}
 						setSearchValue={setValue}
 						{...s}

@@ -32,8 +32,9 @@ interface Props {
 	setInfo: (info?: SuggestionType) => void;
 }
 const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo }) => {
-	const { setPOICard, setBottomSheetMinHeight, setBottomSheetHeight, setUI, bottomSheetHeight, ui } = useBottomSheet();
+	const [isLoading, setIsLoading] = useState(true);
 	const [routeData, setRouteData] = useState<CalculateRouteResponse>();
+	const { setPOICard, setBottomSheetMinHeight, setBottomSheetHeight, setUI, bottomSheetHeight, ui } = useBottomSheet();
 	const {
 		currentLocationData,
 		viewpoint,
@@ -43,7 +44,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 	} = useAmplifyMap();
 	const { clearPoiList } = useAwsPlace();
 	const { getRoute, setDirections, isFetchingRoute } = useAwsRoute();
-	const [longitude, latitude] = info.Place?.Geometry.Point as Position;
+	const [longitude, latitude] = useMemo(() => info.Place?.Geometry.Point as Position, [info]);
 	const { isDesktop } = useDeviceMediaQuery();
 	const { t, i18n } = useTranslation();
 	const currentLang = i18n.language;
@@ -51,7 +52,6 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 	const isLtr = langDir === "ltr";
 	const isLanguageRTL = ["ar", "he"].includes(currentLang);
 	const POICardRef = useRef<HTMLDivElement>(null);
-	const [isLoading, setIsLoading] = useState(true);
 
 	const geodesicDistance = useMemo(
 		() =>
@@ -127,14 +127,21 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 	const onClose = useCallback(
 		async (ui: ResponsiveUIEnum) => {
 			if (!isDesktop) {
-				setUI(ui);
 				setPOICard(undefined);
 				setInfo(undefined);
+				setUI(ui);
+				setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+				setBottomSheetHeight(window.innerHeight * 0.4);
+				setTimeout(() => {
+					setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+					setBottomSheetHeight(window.innerHeight);
+				}, 500);
 			}
+
 			await select(undefined);
 			onClosePopUp && onClosePopUp();
 		},
-		[isDesktop, select, onClosePopUp, setUI, setPOICard, setInfo]
+		[isDesktop, select, onClosePopUp, setPOICard, setInfo, setUI, setBottomSheetMinHeight, setBottomSheetHeight]
 	);
 
 	const onGetDirections = useCallback(() => {
@@ -256,18 +263,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 		() => (
 			<Flex ref={POICardRef} className={!isDesktop ? "poi-only-container" : ""} direction="column">
 				<View className="popup-icon-close-container">
-					<IconClose
-						onClick={() => {
-							onClose(ResponsiveUIEnum.search);
-							setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
-							setBottomSheetHeight(window.innerHeight * 0.4);
-
-							setTimeout(() => {
-								setBottomSheetMinHeight(BottomSheetHeights.explore.min);
-								setBottomSheetHeight(window.innerHeight);
-							}, 500);
-						}}
-					/>
+					<IconClose onClick={() => onClose(ResponsiveUIEnum.search)} />
 				</View>
 				{isDesktop && (
 					<View className="triangle-container">
@@ -306,17 +302,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 				</View>
 			</Flex>
 		),
-		[
-			address,
-			info.Place?.Label,
-			isDesktop,
-			onClose,
-			onGetDirections,
-			renderRouteInfo,
-			setBottomSheetHeight,
-			setBottomSheetMinHeight,
-			t
-		]
+		[address, info.Place?.Label, isDesktop, onClose, onGetDirections, renderRouteInfo, t]
 	);
 
 	useEffect(() => {
