@@ -39,6 +39,7 @@ import {
 import { AnalyticsEventActionsEnum, ResponsiveUIEnum, TriggeredByEnum, UserAgentEnum } from "@demo/types/Enums";
 import { isUserDeviceIsAndroid } from "@demo/utils";
 import { humanReadableTime } from "@demo/utils/dateTimeUtils";
+import { uuid } from "@demo/utils/uuid";
 import { CalculateRouteRequest, LineString, Place, Position } from "aws-sdk/clients/location";
 import { isAndroid, isIOS } from "react-device-detect";
 import { useTranslation } from "react-i18next";
@@ -680,7 +681,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 					key={`${PlaceId}-${idx}`}
 					className="suggestion"
 					onClick={() => {
-						onSelectSuggestion({ PlaceId, Text, Place }, type);
+						onSelectSuggestion({ Id: uuid.randomUUID(), PlaceId, Text, Place }, type);
 					}}
 				>
 					{PlaceId ? <IconPin /> : <IconSearch />}

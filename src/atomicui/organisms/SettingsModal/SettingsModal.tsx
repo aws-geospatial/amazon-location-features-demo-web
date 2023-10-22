@@ -691,7 +691,13 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 											/>
 										);
 									})}
-									<Button variation="primary" width="100%" isDisabled={!isBtnEnabled} onClick={onConnect}>
+									<Button
+										className="aws-connect-button"
+										variation="primary"
+										width="100%"
+										isDisabled={!isBtnEnabled}
+										onClick={onConnect}
+									>
 										{t("caam__connect.text")}
 									</Button>
 									<Text marginTop="0.62rem">{t("caam__agree.text")}</Text>
@@ -872,7 +878,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 						}`}
 					>
 						{(!settingsOptions || !isMobile) && (
-							<Flex className="options-container">
+							<Flex className="options-container" style={{ overflowY: "auto" }}>
 								{!isMobile && (
 									<Text
 										className="bold"

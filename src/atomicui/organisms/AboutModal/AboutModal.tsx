@@ -118,6 +118,7 @@ const AboutModal: React.FC<AboutModalProps> = ({ open, onClose }) => {
 							className="learn-more-button"
 							variation="primary"
 							marginTop="1.15rem"
+							marginBottom="1.15rem"
 							width="100%"
 							onClick={() => window.open(SOFTWARE_ATTRIBUTIONS, "_blank")}
 						>
@@ -233,7 +234,11 @@ const AboutModal: React.FC<AboutModalProps> = ({ open, onClose }) => {
 							</Flex>
 						)}
 						{!isMobile && <Divider orientation="vertical" className="col-divider" />}
-						{!!selectedOption && <Flex className="option-details-container">{renderOptionDetails}</Flex>}
+						{!!selectedOption && (
+							<Flex className="option-details-container" style={{ overflowY: "auto" }}>
+								{renderOptionDetails}
+							</Flex>
+						)}
 					</Flex>
 				</>
 			}
