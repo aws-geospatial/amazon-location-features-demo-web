@@ -5,6 +5,7 @@ import React, { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState }
 
 import { Autocomplete, Badge, ComboBoxOption, Flex, Placeholder, SwitchField, Text, View } from "@aws-amplify/ui-react";
 import { IconActionMenu, IconClose, IconDirections, IconPin, IconSearch } from "@demo/assets";
+import { NLLoader } from "@demo/atomicui/atoms";
 import { Marker, NotFoundCard, SuggestionMarker } from "@demo/atomicui/molecules";
 import { useAmplifyMap, useAwsPlace } from "@demo/hooks";
 import { DistanceUnitEnum, MapUnitEnum, SuggestionType } from "@demo/types";
@@ -21,6 +22,13 @@ import "./styles.scss";
 
 const { METRIC } = MapUnitEnum;
 const { KILOMETERS, MILES } = DistanceUnitEnum;
+const nlLoadText = [
+	"nl_loader_sample_text_1.text",
+	"nl_loader_sample_text_2.text",
+	"nl_loader_sample_text_3.text",
+	"nl_loader_sample_text_4.text",
+	"nl_loader_sample_text_5.text"
+];
 
 interface SearchBoxProps {
 	mapRef: MapRef | null;
@@ -48,7 +56,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const [value, setValue] = useState<string>("");
 	const [isFocused, setIsFocused] = useState(false);
-	const [isNLChecked, setIsNLChecked] = React.useState(false);
+	const [isNLChecked, setIsNLChecked] = useState(false);
 	const autocompleteRef = useRef<HTMLInputElement | null>(null);
 	const { mapUnit: currentMapUnit, isCurrentLocationDisabled, currentLocationData, viewpoint } = useAmplifyMap();
 	const {
@@ -437,30 +445,44 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 									flex: 1
 								}}
 							>
-								<Flex
-									gap={0}
-									width="100%"
-									height="100%"
-									alignItems="center"
-									style={{
-										borderBottom: isNLChecked && !value ? "1px solid var(--grey-color-3)" : ""
-										// marginLeft: "10px"
-									}}
-								>
-									<SwitchField
-										label={t("nl_search_label.text") as string}
-										labelPosition="end"
-										size="small"
-										isChecked={isNLChecked}
-										onChange={e => setIsNLChecked(e.target.checked)}
+								{isSearching ? (
+									<Flex
+										gap={0}
+										width="100%"
+										height="100%"
+										alignItems="center"
 										style={{
 											marginLeft: "10px"
 										}}
-									/>
-									<Badge size="small" variation="warning">
-										{t("prototype.text") as string}
-									</Badge>
-								</Flex>
+									>
+										<NLLoader nlLoadText={nlLoadText}></NLLoader>
+									</Flex>
+								) : (
+									<Flex
+										gap={0}
+										width="100%"
+										height="100%"
+										alignItems="center"
+										style={{
+											borderBottom: isNLChecked && !value ? "1px solid var(--grey-color-3)" : ""
+											// marginLeft: "10px"
+										}}
+									>
+										<SwitchField
+											label={t("nl_search_label.text") as string}
+											labelPosition="end"
+											size="small"
+											isChecked={isNLChecked}
+											onChange={e => setIsNLChecked(e.target.checked)}
+											style={{
+												marginLeft: "10px"
+											}}
+										/>
+										<Badge size="small" variation="warning">
+											{t("prototype.text") as string}
+										</Badge>
+									</Flex>
+								)}
 								{isNLChecked && !value ? (
 									<Flex
 										gap={0}
