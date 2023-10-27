@@ -29,6 +29,7 @@ const NLLoader: React.FC<NLLoaderProps> = ({ nlLoadText }) => {
 			gap={0}
 			width="100%"
 			height="100%"
+			data-testid="nl-loader-container"
 			style={{
 				flexDirection: "column"
 			}}
@@ -38,8 +39,8 @@ const NLLoader: React.FC<NLLoaderProps> = ({ nlLoadText }) => {
 					fontSize: "12px"
 				}}
 			>
-				<AmplifyLoader size="large" />
-				{t(nlLoadText[loaderIdx] as string)}
+				<AmplifyLoader data-testid="nl-loader" size="large" />
+				<Flex data-testid="nl-loader-message">{t(nlLoadText[loaderIdx] as string)}</Flex>
 			</Flex>
 		</Flex>
 	);

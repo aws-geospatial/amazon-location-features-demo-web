@@ -62,4 +62,15 @@ describe("Search", () => {
 		cy.wait(2000);
 		cy.get("div").should("contain", "Failed to search place by text, 'Text' must have length at least 1");
 	});
+
+	it("should enable nl search and allow user to view POI after nl search", { scrollBehavior: false }, () => {
+		cy.get('[class="amplify-label amplify-switch__wrapper amplify-switch__wrapper--end"]').click();
+		cy.get('[placeholder="Search"]').click();
+		cy.wait(2000);
+		cy.get('[inputmode="search"]').type("Show me three pizza places near Eiffel Tower?").wait(5000).type("{enter}");
+		cy.wait(15000);
+		cy.get("div").should('contain', ["Pizza Fiorentina"]);
+		cy.get("div").should('contain', ["Pizza Iolanda"]);
+		cy.get("div").should('contain', ["Tina"]);
+	});
 });
