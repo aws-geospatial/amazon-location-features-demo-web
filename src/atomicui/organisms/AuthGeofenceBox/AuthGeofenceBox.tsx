@@ -126,7 +126,8 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({ mapRef, setShowAuthGe
 						exact,
 						sg => setSuggestions(sg),
 						TriggeredByEnum.GEOFENCE_MODULE,
-						AnalyticsEventActionsEnum.AUTOCOMPLETE
+						AnalyticsEventActionsEnum.AUTOCOMPLETE,
+						false
 					);
 				}, 200);
 			}

@@ -268,7 +268,8 @@ const RouteBox: React.FC<RouteBoxProps> = ({ mapRef, setShowRouteBox, isSideMenu
 								: setSuggestions({ ...suggestions, to: sg });
 						},
 						TriggeredByEnum.ROUTE_MODULE,
-						action
+						action,
+						false
 					);
 				}, 200);
 			}

@@ -9,7 +9,7 @@ import { NLLoader } from "@demo/atomicui/atoms";
 import { Marker, NotFoundCard, SuggestionMarker } from "@demo/atomicui/molecules";
 import { appConfig } from "@demo/core/constants";
 import { useAmplifyMap, useAwsPlace } from "@demo/hooks";
-import { DistanceUnitEnum, MapUnitEnum, SuggestionType } from "@demo/types";
+import { DistanceUnitEnum, MapProviderEnum, MapUnitEnum, SuggestionType } from "@demo/types";
 import { AnalyticsEventActionsEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { calculateGeodesicDistance } from "@demo/utils/geoCalculation";
 import { uuid } from "@demo/utils/uuid";
@@ -64,6 +64,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	const [isNLChecked, setIsNLChecked] = useState(false);
 	const autocompleteRef = useRef<HTMLInputElement | null>(null);
 	const { mapUnit: currentMapUnit, isCurrentLocationDisabled, currentLocationData, viewpoint } = useAmplifyMap();
+	const { mapProvider: currentMapProvider } = useAmplifyMap();
 	const {
 		clusters,
 		suggestions,
@@ -318,8 +319,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 					flexDirection: "column",
 					left: isSideMenuExpanded ? 252 : 20,
 					borderBottomLeftRadius: hideBorderRadius ? "0px" : "8px",
-					borderBottomRightRadius: hideBorderRadius ? "0px" : "8px",
-					maxWidth: isNLChecked ? "500px" : "360px"
+					borderBottomRightRadius: hideBorderRadius ? "0px" : "8px"
 				}}
 			>
 				<Flex gap={0} width="100%" height="100%" alignItems="center">
@@ -391,11 +391,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 										<q>{t("nl_query_example_2.text") as string}</q>
 										<q>{t("nl_query_example_3.text") as string}</q>
 									</Flex>
-									<Flex
-										style={{
-											marginLeft: "60px"
-										}}
-									>
+									<Flex>
 										{t("nl_search_footer_label.text") as string}
 										<Badge size="small" variation="warning">
 											{t("prototype.text") as string}
@@ -437,9 +433,11 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 						}
 						crossOrigin={undefined}
 					/>
-					{NL_BASE_URL && NL_API_KEY ? (
+					{NL_BASE_URL && NL_API_KEY && currentMapProvider === MapProviderEnum.ESRI ? (
 						<Flex
 							className="nl-search-container"
+							id="nl-search"
+							data-testid="nl-search"
 							style={{
 								flexDirection: "column",
 								left: isSideMenuExpanded ? 0 : 0,
@@ -448,7 +446,6 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 								borderBottomRightRadius: hideBorderRadius ? "0px" : "8px",
 								gap: "0.1px",
 								padding: "0.5em",
-								height: isNLChecked && !value ? "185px" : "40px",
 								flex: 1
 							}}
 						>
@@ -459,7 +456,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 									height="100%"
 									alignItems="center"
 									style={{
-										marginLeft: "10px"
+										marginLeft: "10px",
+										paddingTop: "5px"
 									}}
 								>
 									<NLLoader nlLoadText={nlLoadText}></NLLoader>
