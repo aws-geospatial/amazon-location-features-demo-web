@@ -7,4 +7,4 @@ export * from "./Loader";
 export * from "./Logo";
 export * from "./Modal";
 export * from "./DropdownEl";
-export * from "./NLLoader";
+export * from "./NLSearchLoader";

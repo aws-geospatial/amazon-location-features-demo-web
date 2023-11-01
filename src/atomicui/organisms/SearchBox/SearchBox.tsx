@@ -5,7 +5,7 @@ import React, { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState }
 
 import { Autocomplete, Badge, ComboBoxOption, Flex, Placeholder, SwitchField, Text, View } from "@aws-amplify/ui-react";
 import { IconActionMenu, IconClose, IconDirections, IconPin, IconSearch } from "@demo/assets";
-import { NLLoader } from "@demo/atomicui/atoms";
+import { NLSearchLoader } from "@demo/atomicui/atoms";
 import { Marker, NotFoundCard, SuggestionMarker } from "@demo/atomicui/molecules";
 import { appConfig } from "@demo/core/constants";
 import { useAmplifyMap, useAwsPlace } from "@demo/hooks";
@@ -456,11 +456,10 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 									height="100%"
 									alignItems="center"
 									style={{
-										marginLeft: "10px",
-										paddingTop: "5px"
+										marginLeft: "10px"
 									}}
 								>
-									<NLLoader nlLoadText={nlLoadText}></NLLoader>
+									<NLSearchLoader nlLoadText={nlLoadText}></NLSearchLoader>
 								</Flex>
 							) : (
 								<Flex

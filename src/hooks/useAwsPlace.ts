@@ -143,7 +143,7 @@ const useAwsPlace = () => {
 				cb: ((sg: SuggestionType[]) => void) | undefined,
 				triggeredBy: TriggeredByEnum,
 				action: string,
-				isNLSearchEnabled: boolean
+				isNLSearchEnabled = false
 			) => {
 				if (isGeoString(value)) {
 					await methods.searchPlacesByCoordinates(value, viewpoint, cb);

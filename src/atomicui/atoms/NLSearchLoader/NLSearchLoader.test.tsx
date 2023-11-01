@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 
-import NLLoader  from "./NLLoader";
+import NLSearchLoader  from "./NLSearchLoader";
 
 jest.setTimeout(10000);
 
@@ -15,7 +15,7 @@ const nlLoadText = [
 describe("<NLLoader/>", () => {
 
     beforeEach(() => {
-        render(<NLLoader nlLoadText={nlLoadText}/>);
+        render(<NLSearchLoader nlLoadText={nlLoadText}/>);
     });
     
 	it("should render successfully", () => {

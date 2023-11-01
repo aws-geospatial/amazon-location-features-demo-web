@@ -6,10 +6,10 @@ import React, { useEffect, useState } from "react";
 import { Loader as AmplifyLoader, Flex } from "@aws-amplify/ui-react";
 import { useTranslation } from "react-i18next";
 
-interface NLLoaderProps {
+interface NLSearchLoaderProps {
 	nlLoadText: string[];
 }
-const NLLoader: React.FC<NLLoaderProps> = ({ nlLoadText }) => {
+const NLSearchLoader: React.FC<NLSearchLoaderProps> = ({ nlLoadText }) => {
 	const [loaderIdx, setloaderIdx] = useState(0);
 	const { t } = useTranslation();
 
@@ -46,4 +46,4 @@ const NLLoader: React.FC<NLLoaderProps> = ({ nlLoadText }) => {
 	);
 };
 
-export default NLLoader;
+export default NLSearchLoader;
