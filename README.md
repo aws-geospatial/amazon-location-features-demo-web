@@ -146,3 +146,5 @@ Run all the test cases for all the components within the repo and provides a cov
 ## Licensing
 
 - This project is licensed under the MIT-0 License. See [LICENSE](https://github.com/aws-samples/amazon-location-samples/blob/main/LICENSE).
+
+Demo
