@@ -727,6 +727,7 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({
 									</Text>
 								</Flex>
 								<Flex
+									data-testid="auth-geofence-box-close-button"
 									className={`geofence-card-close ${!isDesktop ? "geofence-card-close-mobile" : ""}`}
 									onClick={onClose}
 								>

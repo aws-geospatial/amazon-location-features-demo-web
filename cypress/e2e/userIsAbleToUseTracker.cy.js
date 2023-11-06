@@ -66,7 +66,7 @@ describe("Tracker", () => {
 		cy.wait(5000);
 		cy.get("div").should("contain", `${geofenceName}`);
 		cy.wait(1000);
-		cy.get('[class="amplify-flex geofence-card-close"]').click();
+		cy.get('[data-testid="auth-geofence-box-close-button"]').click();
 		cy.wait(5000);
 		cy.get('[data-testid="hamburger-menu"]').click();
 		cy.wait(5000);
@@ -105,7 +105,7 @@ describe("Tracker", () => {
 		cy.wait(5000);
 		cy.get(`[data-testid="icon-trash-${geofenceName}"]`).click({ force: true });
 		cy.wait(5000);
-		cy.get('[class="amplify-flex geofence-card-close"]').click();
+		cy.get('[data-testid="auth-geofence-box-close-button"]').click();
 		cy.wait(5000);
 		cy.get('[data-testid="hamburger-menu"]').click();
 		cy.wait(5000);
