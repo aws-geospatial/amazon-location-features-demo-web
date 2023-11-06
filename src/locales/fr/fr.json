@@ -3580,5 +3580,41 @@
   },
   "more_options": {
     "text": "Plus d'options"
+  },
+  "nl_search_label": {
+    "text": "Utilisez la recherche par IA optimisée par Amazon Bedrock"
+  },
+  "nl_search_footer_label": {
+    "text": "Propulsé par Amazon Bedrock"
+  },
+  "prototype": {
+    "text": "Prototype"
+  },
+  "try_asking": {
+    "text": "Essayez de demander"
+  },
+  "nl_query_example_1": {
+    "text": "Quels sont les endroits où prendre un café à Boston ?"
+  },
+  "nl_query_example_2": {
+    "text": "Trouvez-moi des pizzerias à Paris ?"
+  },
+  "nl_query_example_3": {
+    "text": "Trouvez-moi des restaurants dans les environs de Vancouver ?"
+  },
+  "nl_loader_sample_text_1": {
+    "text": "Attachez vos ceintures pour partir à l'aventure ! La base de l'affaire."
+  },
+  "nl_loader_sample_text_2": {
+    "text": "Tracez votre voie dès maintenant ! Merci d'avoir attendu."
+  },
+  "nl_loader_sample_text_3": {
+    "text": "Laissez Amazon Bedrock parcourir cette carte !"
+  },
+  "nl_loader_sample_text_4": {
+    "text": "Consultez l'atlas de votre région."
+  },
+  "nl_loader_sample_text_5": {
+    "text": "Amazon Bedrock en charge de la cartographie ! À la recherche."
   }
 }

@@ -3567,7 +3567,7 @@
     "text": "Legale e attribuzione"
   },
   "map_buttons__clear_selections": {
-    "text": "Cancella selezione"
+    "text": "Selezione chiara"
   },
   "map_buttons__apply_filters": {
     "text": "Applica filtri"
@@ -3580,5 +3580,41 @@
   },
   "more_options": {
     "text": "Altre opzioni"
+  },
+  "nl_search_label": {
+    "text": "Usa la ricerca AI basata su Amazon Bedrock"
+  },
+  "nl_search_footer_label": {
+    "text": "Realizzato da Amazon Bedrock"
+  },
+  "prototype": {
+    "text": "Prototipo"
+  },
+  "try_asking": {
+    "text": "Prova a chiedere"
+  },
+  "nl_query_example_1": {
+    "text": "Quali sono i posti dove prendere un caffè a Boston?"
+  },
+  "nl_query_example_2": {
+    "text": "Mi trovi qualche pizzeria a Parigi?"
+  },
+  "nl_query_example_3": {
+    "text": "Mi trovi qualche posto per cenare a Vancouver?"
+  },
+  "nl_loader_sample_text_1": {
+    "text": "Allaccia le cinture per un'avventura! Bedrock sulla valigetta."
+  },
+  "nl_loader_sample_text_2": {
+    "text": "Stai tracciando subito il tuo percorso! Grazie per aver aspettato."
+  },
+  "nl_loader_sample_text_3": {
+    "text": "Lascia che Amazon Bedrock navighi in questo viaggio sulla mappa!"
+  },
+  "nl_loader_sample_text_4": {
+    "text": "Consulta l'atlante della tua posizione."
+  },
+  "nl_loader_sample_text_5": {
+    "text": "Amazon Bedrock al lavoro di mappatura! Ricerca."
   }
 }

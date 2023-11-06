@@ -3580,5 +3580,41 @@
   },
   "more_options": {
     "text": "更多選項"
+  },
+  "nl_search_label": {
+    "text": "使用由亞馬遜基石支持的 AI 搜索"
+  },
+  "nl_search_footer_label": {
+    "text": "由亞馬遜基石提供支持"
+  },
+  "prototype": {
+    "text": "原型"
+  },
+  "try_asking": {
+    "text": "嘗試詢問"
+  },
+  "nl_query_example_1": {
+    "text": "波士頓有哪些可以喝咖啡的地方？"
+  },
+  "nl_query_example_2": {
+    "text": "在巴黎找一些比薩店給我嗎？"
+  },
+  "nl_query_example_3": {
+    "text": "找我溫哥華附近吃飯的地方嗎？"
+  },
+  "nl_loader_sample_text_1": {
+    "text": "戴上衣服，展開冒險！錶殼上的基石。"
+  },
+  "nl_loader_sample_text_2": {
+    "text": "立即繪製您的課程圖表！謝謝等待"
+  },
+  "nl_loader_sample_text_3": {
+    "text": "讓亞馬遜 Bedrock 導航這次地圖之旅！"
+  },
+  "nl_loader_sample_text_4": {
+    "text": "查詢地圖集了解您的位置。"
+  },
+  "nl_loader_sample_text_5": {
+    "text": "亞馬遜基石正在製圖工作！搜尋。"
   }
 }

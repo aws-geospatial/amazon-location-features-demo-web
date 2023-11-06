@@ -3580,5 +3580,41 @@
   },
   "more_options": {
     "text": "אפשרויות נוספות"
+  },
+  "nl_search_label": {
+    "text": "השתמש בחיפוש AI המופעל על ידי אמזון Bedrock"
+  },
+  "nl_search_footer_label": {
+    "text": "מופעל על ידי אמזון Bedrock"
+  },
+  "prototype": {
+    "text": "אב טיפוס"
+  },
+  "try_asking": {
+    "text": "נסה לשאול"
+  },
+  "nl_query_example_1": {
+    "text": "מה יש כמה מקומות לשתות קפה בבוסטון?"
+  },
+  "nl_query_example_2": {
+    "text": "תמצא לי כמה פיצריות בפריז?"
+  },
+  "nl_query_example_3": {
+    "text": "תמצא לי כמה מקומות לארוחת ערב בסביבת ונקובר?"
+  },
+  "nl_loader_sample_text_1": {
+    "text": "התאחדו להרפתקה! סלע על התיק."
+  },
+  "nl_loader_sample_text_2": {
+    "text": "תרשים את המסלול שלך עכשיו! תודה שחיכית."
+  },
+  "nl_loader_sample_text_3": {
+    "text": "נותן לאמזון Bedrock לנווט בטיול המפה הזה!"
+  },
+  "nl_loader_sample_text_4": {
+    "text": "התייעצות עם האטלס עבור המיקום שלך."
+  },
+  "nl_loader_sample_text_5": {
+    "text": "סלע באמזון בתפקיד מיפוי! מחפש."
   }
 }

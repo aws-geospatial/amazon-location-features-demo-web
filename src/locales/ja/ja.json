@@ -3567,7 +3567,7 @@
     "text": "リーガルとアトリビューション"
   },
   "map_buttons__clear_selections": {
-    "text": "選択をクリア"
+    "text": "選択解除"
   },
   "map_buttons__apply_filters": {
     "text": "フィルターを適用"
@@ -3580,5 +3580,41 @@
   },
   "more_options": {
     "text": "その他のオプション"
+  },
+  "nl_search_label": {
+    "text": "Amazon Bedrockによる人工知能検索を利用する"
+  },
+  "nl_search_footer_label": {
+    "text": "アマゾン岩盤による電力供給"
+  },
+  "prototype": {
+    "text": "プロトタイプ"
+  },
+  "try_asking": {
+    "text": "聞いてみる"
+  },
+  "nl_query_example_1": {
+    "text": "ボストンでコーヒーが飲める場所はどこですか？"
+  },
+  "nl_query_example_2": {
+    "text": "パリでピザ屋を探して？"
+  },
+  "nl_query_example_3": {
+    "text": "バンクーバー周辺のディナースポットを探して?"
+  },
+  "nl_loader_sample_text_1": {
+    "text": "冒険に備えましょう！ケースの岩盤。"
+  },
+  "nl_loader_sample_text_2": {
+    "text": "今すぐコースをチャート化しましょう！お待たせしました。"
+  },
+  "nl_loader_sample_text_3": {
+    "text": "Amazon Bedrockにこのマップトリップをナビゲートさせてください！"
+  },
+  "nl_loader_sample_text_4": {
+    "text": "お住まいの地域のアトラスを調べてください。"
+  },
+  "nl_loader_sample_text_5": {
+    "text": "Amazon Bedrockがマッピング作業中！検索中。"
   }
 }
