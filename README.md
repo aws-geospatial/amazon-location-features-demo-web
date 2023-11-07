@@ -22,6 +22,8 @@
 > VITE_APPLE_APP_STORE_LINK<br />
 > VITE_GOOGLE_PLAY_STORE_LINK<br />
 > VITE_APP_VERSION<br />
+
+#### Env keys optional in `.env` file, see `.env.example` for reference
 > VITE_NL_BASE_URL<br />
 > VITE_NL_API_KEY<br />
 
