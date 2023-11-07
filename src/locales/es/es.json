@@ -3580,5 +3580,41 @@
   },
   "more_options": {
     "text": "Más opciones"
+  },
+  "nl_search_label": {
+    "text": "Utilice la búsqueda de inteligencia artificial con tecnología de Amazon Bedrock"
+  },
+  "nl_search_footer_label": {
+    "text": "Desarrollado por Amazon Bedrock"
+  },
+  "prototype": {
+    "text": "Prototipo"
+  },
+  "try_asking": {
+    "text": "Intenta preguntar"
+  },
+  "nl_query_example_1": {
+    "text": "¿Cuáles son algunos lugares para tomar café en Boston?"
+  },
+  "nl_query_example_2": {
+    "text": "¿Me puedes encontrar pizzerías en París?"
+  },
+  "nl_query_example_3": {
+    "text": "¿Encontrarme algunos lugares para cenar en Vancouver?"
+  },
+  "nl_loader_sample_text_1": {
+    "text": "¡Prepárate para una aventura! La base del caso."
+  },
+  "nl_loader_sample_text_2": {
+    "text": "¡Trazando tu rumbo ahora! Gracias por esperar."
+  },
+  "nl_loader_sample_text_3": {
+    "text": "¡Dejando que Amazon Bedrock navegue por este mapa!"
+  },
+  "nl_loader_sample_text_4": {
+    "text": "Consulta el atlas de tu ubicación."
+  },
+  "nl_loader_sample_text_5": {
+    "text": "¡Amazon Bedrock se encarga de cartografiar! ¿Buscando?."
   }
 }

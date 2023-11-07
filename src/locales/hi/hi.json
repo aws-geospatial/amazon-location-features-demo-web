@@ -3580,5 +3580,41 @@
   },
   "more_options": {
     "text": "और विकल्प"
+  },
+  "nl_search_label": {
+    "text": "Amazon Bedrock द्वारा संचालित AI खोज का उपयोग करें"
+  },
+  "nl_search_footer_label": {
+    "text": "Amazon Bedrock द्वारा संचालित"
+  },
+  "prototype": {
+    "text": "प्रोटोटाइप"
+  },
+  "try_asking": {
+    "text": "पूछने का प्रयास करें"
+  },
+  "nl_query_example_1": {
+    "text": "बोस्टन में कॉफी पाने के लिए कुछ जगहें कौन सी हैं?"
+  },
+  "nl_query_example_2": {
+    "text": "मुझे पेरिस में कुछ पिज़्ज़ा की जगहें ढूँढ़ें?"
+  },
+  "nl_query_example_3": {
+    "text": "मुझे वैंकूवर के आसपास कुछ डिनर स्पॉट ढूंढे?"
+  },
+  "nl_loader_sample_text_1": {
+    "text": "एडवेंचर के लिए कमर कस लें! बेडरॉक ऑन द केस।"
+  },
+  "nl_loader_sample_text_2": {
+    "text": "अपने कोर्स को अभी चार्ट करें! इंतज़ार करने के लिए धन्यवाद।"
+  },
+  "nl_loader_sample_text_3": {
+    "text": "Amazon Bedrock को इस मैप ट्रिप को नेविगेट करने दें!"
+  },
+  "nl_loader_sample_text_4": {
+    "text": "अपने स्थान के लिए एटलस से परामर्श करना।"
+  },
+  "nl_loader_sample_text_5": {
+    "text": "मैपिंग ड्यूटी पर Amazon Bedrock! खोज रहे हैं।"
   }
 }

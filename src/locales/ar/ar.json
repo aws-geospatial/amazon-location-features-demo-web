@@ -3580,5 +3580,41 @@
   },
   "more_options": {
     "text": "المزيد من الخيارات"
+  },
+  "nl_search_label": {
+    "text": "استخدم البحث بالذكاء الاصطناعي المدعوم من Amazon Bedrock"
+  },
+  "nl_search_footer_label": {
+    "text": "مدعوم من أمازون بيدروك"
+  },
+  "prototype": {
+    "text": "النموذج الأولي"
+  },
+  "try_asking": {
+    "text": "جرب السؤال"
+  },
+  "nl_query_example_1": {
+    "text": "ما هي بعض الأماكن لتناول القهوة في بوسطن؟"
+  },
+  "nl_query_example_2": {
+    "text": "ابحث لي عن بعض أماكن البيتزا في باريس?"
+  },
+  "nl_query_example_3": {
+    "text": "ابحث لي عن بعض أماكن العشاء حول فانكوفر?"
+  },
+  "nl_loader_sample_text_1": {
+    "text": "استعد للمغامرة! حجر الأساس على العلبة."
+  },
+  "nl_loader_sample_text_2": {
+    "text": "رسم دورتك الآن! شكرا على الانتظار."
+  },
+  "nl_loader_sample_text_3": {
+    "text": "السماح لـ Amazon Bedrock بالتنقل في رحلة الخريطة هذه!"
+  },
+  "nl_loader_sample_text_4": {
+    "text": "استشارة الأطلس الخاص بموقعك."
+  },
+  "nl_loader_sample_text_5": {
+    "text": "أمازون بيدروك في مهمة رسم الخرائط! البحث."
   }
 }

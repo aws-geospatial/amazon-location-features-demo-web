@@ -3580,5 +3580,41 @@
   },
   "more_options": {
     "text": "추가 옵션"
+  },
+  "nl_search_label": {
+    "text": "아마존 베드록에서 제공하는 AI 검색 사용"
+  },
+  "nl_search_footer_label": {
+    "text": "아마존 베드락 제공"
+  },
+  "prototype": {
+    "text": "프로토타입"
+  },
+  "try_asking": {
+    "text": "물어보세요"
+  },
+  "nl_query_example_1": {
+    "text": "보스턴에서 커피를 마실 수 있는 곳은 어디인가요?"
+  },
+  "nl_query_example_2": {
+    "text": "파리에 있는 피자 가게 좀 찾아줘?"
+  },
+  "nl_query_example_3": {
+    "text": "밴쿠버 주변의 저녁 식사 장소를 찾아주세요."
+  },
+  "nl_loader_sample_text_1": {
+    "text": "안전 벨트를 매고 모험을 떠나세요!케이스의 기반이 됐어요."
+  },
+  "nl_loader_sample_text_2": {
+    "text": "지금 바로 교육 과정을 차트로 작성하세요!기다려 주셔서 감사합니다."
+  },
+  "nl_loader_sample_text_3": {
+    "text": "아마존 베드록이 이 지도 여행을 안내해 드립니다!"
+  },
+  "nl_loader_sample_text_4": {
+    "text": "해당 지역의 아틀라스에 문의하십시오."
+  },
+  "nl_loader_sample_text_5": {
+    "text": "아마존 베드락, 지도 제작 작업 중!검색 중입니다."
   }
 }

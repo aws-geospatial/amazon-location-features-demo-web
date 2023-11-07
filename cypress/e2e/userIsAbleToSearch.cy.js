@@ -65,4 +65,13 @@ describe("Search", () => {
 		cy.wait(2000);
 		cy.get("div").should("contain", "Failed to search place by text, 'Text' must have length at least 1");
 	});
+
+	it("should enable nl search and allow user to view POI after nl search", { scrollBehavior: false }, () => {
+		cy.get('[id="nl-search"]').click();
+		cy.get('[placeholder="Search"]').click();
+		cy.wait(2000);
+		cy.get('[inputmode="search"]').type("Find me one starbucks in Vancouver?").wait(5000).type("{enter}");
+		cy.wait(15000);
+		cy.get("div").invoke('text').should('have.length.gt', 0)
+	});
 });

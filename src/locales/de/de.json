@@ -3580,5 +3580,41 @@
   },
   "more_options": {
     "text": "Mehr Optionen"
+  },
+  "nl_search_label": {
+    "text": "Verwenden Sie die von Amazon Bedrock unterstützte KI-Suche"
+  },
+  "nl_search_footer_label": {
+    "text": "Bereitgestellt von Amazon Bedrock"
+  },
+  "prototype": {
+    "text": "Prototyp"
+  },
+  "try_asking": {
+    "text": "Versuche zu fragen"
+  },
+  "nl_query_example_1": {
+    "text": "Welche Orte gibt es in Boston, um Kaffee zu trinken?"
+  },
+  "nl_query_example_2": {
+    "text": "Findest du mir ein paar Pizzerien in Paris?"
+  },
+  "nl_query_example_3": {
+    "text": "Findest du mir ein paar Restaurants in der Nähe von Vancouver?"
+  },
+  "nl_loader_sample_text_1": {
+    "text": "Schnall dich an für ein Abenteuer! Bedrock ist an dem Fall dran."
+  },
+  "nl_loader_sample_text_2": {
+    "text": "Stellen Sie jetzt Ihren Kurs ein! Danke fürs Warten."
+  },
+  "nl_loader_sample_text_3": {
+    "text": "Lassen Sie Amazon Bedrock diese Kartenreise navigieren!"
+  },
+  "nl_loader_sample_text_4": {
+    "text": "Konsultieren Sie den Atlas für Ihren Standort."
+  },
+  "nl_loader_sample_text_5": {
+    "text": "Amazon Bedrock im Kartodienst! Auf der Suche."
   }
 }
