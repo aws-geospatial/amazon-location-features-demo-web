@@ -4,6 +4,9 @@
 describe("Search", () => {
 	beforeEach(() => {
 		cy.visitDomain(`${Cypress.env("WEB_DOMAIN")}/demo`);
+		cy.wait(10000);
+		cy.get("reach-portal").invoke("remove"); // TODO: remove this after deployment
+		cy.wait(5000);
 	});
 
 	it("should allow user to view the list of search results once search is performed", { scrollBehavior: false }, () => {
