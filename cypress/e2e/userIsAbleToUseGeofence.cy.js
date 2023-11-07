@@ -18,7 +18,12 @@ describe("Geofence", () => {
 		cy.get('[placeholder="Enter WebSocketUrl"]').type(`${Cypress.env("WEB_SOCKET_URL")}`);
 		cy.get('[data-testid="connect-button"]').click();
 		cy.wait(5000);
-		cy.get("div").should("contain", "Your AWS account is now connected.");
+		cy.get('[data-testid="connect-aws-account-modal-container"]').should(
+			"contain",
+			"Your AWS account is now connected."
+		);
+		cy.get("reach-portal").invoke("remove"); // TODO: remove this after deployment
+		cy.wait(5000);
 		cy.get('[data-testid="sign-in-button"]').click();
 		cy.wait(5000);
 		cy.origin(`${Cypress.env("USER_DOMAIN")}`, () => {
@@ -37,10 +42,8 @@ describe("Geofence", () => {
 			});
 		});
 		cy.wait(5000);
-
 		cy.get('[data-testid="hamburger-menu"]').click();
 		cy.wait(5000);
-
 		cy.get("#root").then($root => {
 			const asd = $root.find('[class="amplify-button amplify-field-group__control amplify-button--primary"]');
 
@@ -50,7 +53,6 @@ describe("Geofence", () => {
 				cy.get('[data-testid="hamburger-menu"]').click();
 			}
 		});
-
 		cy.wait(5000);
 	});
 
@@ -75,13 +77,18 @@ describe("Geofence", () => {
 		cy.wait(5000);
 		cy.get('[data-testid="geofences-list-container"]').should("not.contain", `${geofenceName}`);
 		cy.wait(5000);
-		cy.get('[data-testid="auth-geofence-box-close-button"]').click();
+		// cy.get('[data-testid="auth-geofence-box-close-button"]').click();
+		cy.get('[class="amplify-flex geofence-card-close "]').click(); // TODO: remove this after deployment
 		cy.wait(5000);
 		cy.get('[data-testid="hamburger-menu"]').click();
+		cy.wait(5000);
+		cy.get("reach-portal").invoke("remove"); // TODO: remove this after deployment
 		cy.wait(5000);
 		cy.get('[data-testid="sign-out-button"]').click();
 		cy.wait(30000);
 		cy.get('[data-testid="hamburger-menu"]').click();
+		cy.wait(5000);
+		cy.get("reach-portal").invoke("remove"); // TODO: remove this after deployment
 		cy.wait(5000);
 		cy.get('[data-testid="disconnect-aws-account-button"]').click();
 	});
