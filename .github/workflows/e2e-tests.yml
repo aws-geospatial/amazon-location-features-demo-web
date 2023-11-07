@@ -1,6 +1,7 @@
 name: E2E_Tests
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -38,3 +39,4 @@ jobs:
           CYPRESS_COGNITO_EMAIL: ${{ secrets.COGNITO_EMAIL }}
           CYPRESS_COGNITO_PASSWORD: ${{ secrets.COGNITO_PASSWORD }}
         run: npm run cypress
+
