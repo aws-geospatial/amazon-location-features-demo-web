@@ -3576,5 +3576,41 @@
   },
   "more_options": {
     "text": "更多选项"
+  },
+  "nl_search_label": {
+    "text": "使用由亚马逊 Bedrock 提供支持的人工智能搜索"
+  },
+  "nl_search_footer_label": {
+    "text": "由亚马逊 Bedrock 提供支持"
+  },
+  "prototype": {
+    "text": "原型"
+  },
+  "try_asking": {
+    "text": "试着问"
+  },
+  "nl_query_example_1": {
+    "text": "波士顿有哪些地方可以喝咖啡？"
+  },
+  "nl_query_example_2": {
+    "text": "在巴黎给我找点披萨店？"
+  },
+  "nl_query_example_3": {
+    "text": "在温哥华附近给我找点吃饭的地方？"
+  },
+  "nl_loader_sample_text_1": {
+    "text": "系好安全带开始冒险吧！手机壳上的基石。"
+  },
+  "nl_loader_sample_text_2": {
+    "text": "立即规划您的路线！谢谢你的等待。"
+  },
+  "nl_loader_sample_text_3": {
+    "text": "让亚马逊 Bedrock 在这次地图之旅中导航！"
+  },
+  "nl_loader_sample_text_4": {
+    "text": "查阅您所在位置的地图集。"
+  },
+  "nl_loader_sample_text_5": {
+    "text": "亚马逊 Bedrock 正在执行测绘任务！正在搜索。"
   }
 }
