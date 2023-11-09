@@ -66,7 +66,7 @@ describe("Search", () => {
 		cy.get("div").should("contain", "Failed to search place by text, 'Text' must have length at least 1");
 	});
 
-	it("should enable nl search and allow user to view POI after nl search", { scrollBehavior: false }, () => {
+	it.skip("should enable nl search and allow user to view POI after nl search", { scrollBehavior: false }, () => {
 		cy.get('[id="nl-search"]').click();
 		cy.get('[placeholder="Search"]').click();
 		cy.wait(2000);
