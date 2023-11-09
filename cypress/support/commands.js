@@ -15,7 +15,26 @@ Cypress.Commands.add("visitDomain", domain => {
 					}
 			  })
 			: cy.visit(domain);
+		cy.wait(20000);
+		cy.get('[data-testid="welcome-modal-continue-button"]').click();
+	}
+});
 
+Cypress.Commands.add("visitDomainResponsive", domain => {
+	Cypress.on("uncaught:exception", () => {
+		return false;
+	});
+
+	if (typeof domain === "string") {
+		cy.viewport(400, 733);
+		domain.includes("dev")
+			? cy.visit(domain, {
+					auth: {
+						username: Cypress.env("WEB_DOMAIN_USERNAME"),
+						password: Cypress.env("WEB_DOMAIN_PASSWORD")
+					}
+			  })
+			: cy.visit(domain);
 		cy.wait(20000);
 		cy.get('[data-testid="welcome-modal-continue-button"]').click();
 	}

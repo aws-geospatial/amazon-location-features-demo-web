@@ -17,7 +17,7 @@ const ExploreButton: React.FC<IProps> = ({ text, icon, onClick }) => {
 
 	return (
 		<Flex
-			data-testid="explore-button-container"
+			data-testid={`explore-button-container-${text}`}
 			direction="column"
 			className={`explore-button-container ${["en"].includes(currentLanguage) ? "no-min-width-button" : ""}`}
 			gap="0"

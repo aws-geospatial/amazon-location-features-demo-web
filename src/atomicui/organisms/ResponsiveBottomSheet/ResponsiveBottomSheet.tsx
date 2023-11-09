@@ -361,7 +361,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 			switch (ui) {
 				case ResponsiveUIEnum.map_styles:
 					return (
-						<Flex className="map-header-mobile">
+						<Flex data-testid="bottomsheet-header" className="map-header-mobile">
 							<Flex justifyContent="flex-end">
 								<IconClose
 									width={20}
@@ -387,7 +387,11 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				case ResponsiveUIEnum.explore:
 				case ResponsiveUIEnum.before_start_unauthorized_geofence:
 				case ResponsiveUIEnum.before_start_unauthorized_tracker:
-					return <Flex width="100%">{SearchBoxEl(bottomSheetRef)}</Flex>;
+					return (
+						<Flex data-testid="bottomsheet-header" width="100%">
+							{SearchBoxEl(bottomSheetRef)}
+						</Flex>
+					);
 				case ResponsiveUIEnum.non_start_unauthorized_tracker:
 				case ResponsiveUIEnum.non_start_unauthorized_geofence:
 				case ResponsiveUIEnum.auth_tracker:
@@ -400,6 +404,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				case ResponsiveUIEnum.direction_to_routes:
 					return (
 						<Flex
+							data-testid="bottomsheet-header"
 							className="map-header-mobile"
 							justifyContent={
 								[ResponsiveUIEnum.unauth_geofence, ResponsiveUIEnum.unauth_tracker].includes(ui)
@@ -424,7 +429,11 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				case ResponsiveUIEnum.poi_card:
 					return null;
 				default:
-					return <Flex width="100%">{SearchBoxEl()}</Flex>;
+					return (
+						<Flex data-testid="bottomsheet-header" width="100%">
+							{SearchBoxEl()}
+						</Flex>
+					);
 			}
 		},
 		[SearchBoxEl, handleUIAction, isNotifications, setIsNotifications, setUI, t, unauthNotifications.length]
