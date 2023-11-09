@@ -92,7 +92,11 @@ const useAwsPlaceService = () => {
 						"x-api-key": NL_API_KEY
 					}
 				});
-				return await response.json();
+				const responseBody = await response.json();
+				if (response.status !== 200) {
+					throw new Error(responseBody.message);
+				}
+				return responseBody;
 			}
 		}),
 		[config, locationClient, currentMapProvider, viewpoint]
