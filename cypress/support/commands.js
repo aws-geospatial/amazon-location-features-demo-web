@@ -39,3 +39,13 @@ Cypress.Commands.add("visitDomainResponsive", domain => {
 		cy.get('[data-testid="welcome-modal-continue-button"]').click();
 	}
 });
+
+Cypress.Commands.add("expandBottomsheet", () => {
+	// cy.get('[data-testid="bottomsheet"]').then($el => {
+	// 	$el[0].style.setProperty("--rsbs-overlay-h", "723px");
+	// });
+	// TODO: remove after deployment to prod
+	cy.get('[class="bottom-sheet mobile add-overlay disable-body-scroll  no-dragging "]').then($el => {
+		$el[0].style.setProperty("--rsbs-overlay-h", "723px");
+	});
+});
