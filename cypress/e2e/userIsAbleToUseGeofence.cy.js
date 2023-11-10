@@ -80,11 +80,9 @@ describe("Geofence", () => {
 		cy.wait(5000);
 		cy.get('[data-testid="hamburger-menu"]').click();
 		cy.wait(5000);
-		cy.wait(5000);
 		cy.get('[data-testid="sign-out-button"]').click();
 		cy.wait(30000);
 		cy.get('[data-testid="hamburger-menu"]').click();
-		cy.wait(5000);
 		cy.wait(5000);
 		cy.get('[data-testid="disconnect-aws-account-button"]').click();
 	});
