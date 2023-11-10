@@ -4,8 +4,6 @@
 describe("Search", () => {
 	beforeEach(() => {
 		cy.visitDomain(`${Cypress.env("WEB_DOMAIN")}/demo`);
-		cy.wait(10000);
-		cy.get("reach-portal").invoke("remove"); // TODO: remove this after deployment
 		cy.wait(5000);
 	});
 
@@ -72,6 +70,6 @@ describe("Search", () => {
 		cy.wait(2000);
 		cy.get('[inputmode="search"]').type("Find me one starbucks in Vancouver?").wait(5000).type("{enter}");
 		cy.wait(15000);
-		cy.get("div").invoke('text').should('have.length.gt', 0)
+		cy.get("div").invoke("text").should("have.length.gt", 0);
 	});
 });
