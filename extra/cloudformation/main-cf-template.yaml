@@ -52,13 +52,11 @@ Resources:
         - amazonlocationdemo://signin/
         - https://location.aws.com/demo
         - http://localhost:3000/demo
-        - https://dev.amazonlocation.services/demo
       LogoutURLs:
         - amazon://signout/
         - amazonlocationdemo://signout/
         - https://location.aws.com/demo?sign_out=true
         - http://localhost:3000/demo?sign_out=true
-        - https://dev.amazonlocation.services/demo?sign_out=true
       AllowedOAuthFlows:
         - implicit
         - code
