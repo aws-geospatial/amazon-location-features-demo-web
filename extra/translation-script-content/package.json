@@ -9,7 +9,7 @@
 		"update-translate": "node update-translation.js"
 	},
 	"dependencies": {
-		"aws-amplify": "^5.3.5",
+		"aws-amplify": "^5.3.12",
 		"aws-sdk": "^2.1420.0",
 		"dotenv": "^16.3.1",
 		"stream-chain": "^2.2.5",
