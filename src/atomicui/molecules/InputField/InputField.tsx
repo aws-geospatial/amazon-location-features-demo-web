@@ -24,6 +24,7 @@ interface InputFieldProps {
 	onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
 	searchInputRef?: React.RefObject<HTMLInputElement>;
 	name?: string;
+	autocomplete?: string;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -43,7 +44,8 @@ const InputField: React.FC<InputFieldProps> = ({
 	innerStartComponent,
 	searchInputRef,
 	onKeyDown,
-	name
+	name,
+	autocomplete
 }) => {
 	return (
 		<Flex gap={0} direction="column" width="100%" margin={containerMargin}>
@@ -68,6 +70,7 @@ const InputField: React.FC<InputFieldProps> = ({
 					onBlur={onBlur}
 					onKeyDown={onKeyDown}
 					name={name}
+					autoComplete={autocomplete}
 				/>
 				{innerEndComponent}
 			</Flex>
