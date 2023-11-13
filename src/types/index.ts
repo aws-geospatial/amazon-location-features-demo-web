@@ -54,3 +54,4 @@ export type {
 	TrackingHistoryType,
 	NotificationHistoryItemtype
 } from "./UnauthSimulationTypes";
+export type { FeedbackValueType } from "./FeedbackModel";
