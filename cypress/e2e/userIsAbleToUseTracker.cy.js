@@ -21,7 +21,6 @@ describe("Tracker", () => {
 			"contain",
 			"Your AWS account is now connected."
 		);
-		cy.get("reach-portal").invoke("remove"); // TODO: remove this after deployment
 		cy.wait(5000);
 		cy.get('[data-testid="sign-in-button"]').click();
 		cy.wait(5000);
@@ -110,18 +109,13 @@ describe("Tracker", () => {
 		cy.wait(5000);
 		cy.get('[data-testid="geofences-list-container"]').should("not.contain", `${geofenceName}`);
 		cy.wait(5000);
-		// cy.get('[data-testid="auth-geofence-box-close-button"]').click();
-		cy.get('[class="amplify-flex geofence-card-close "]').click(); // TODO: remove this after deployment
+		cy.get('[data-testid="auth-geofence-box-close-button"]').click();
 		cy.wait(5000);
 		cy.get('[data-testid="hamburger-menu"]').click();
-		cy.wait(5000);
-		cy.get("reach-portal").invoke("remove"); // TODO: remove this after deployment
 		cy.wait(5000);
 		cy.get('[data-testid="sign-out-button"]').click();
 		cy.wait(30000);
 		cy.get('[data-testid="hamburger-menu"]').click();
-		cy.wait(5000);
-		cy.get("reach-portal").invoke("remove"); // TODO: remove this after deployment
 		cy.wait(5000);
 		cy.get('[data-testid="disconnect-aws-account-button"]').click();
 	});

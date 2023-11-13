@@ -18,7 +18,6 @@ describe("Connecting and Disconnecting AWS account", () => {
 			"contain",
 			"Your AWS account is now connected."
 		);
-		cy.get("reach-portal").invoke("remove"); // TODO: remove this after deployment
 		cy.wait(5000);
 		cy.get('[data-testid="sign-in-button"]').click();
 		cy.wait(5000);
@@ -54,7 +53,6 @@ describe("Connecting and Disconnecting AWS account", () => {
 
 	it("should allow user to connect, sign-in, sign-out and disconnect AWS account from sidebar", () => {
 		cy.get('[data-testid="hamburger-menu"]').click();
-		cy.get("reach-portal").invoke("remove"); // TODO: remove this after deployment
 		cy.wait(5000);
 		cy.get('[data-testid="sign-out-button"]').click();
 		cy.wait(5000);
@@ -67,7 +65,6 @@ describe("Connecting and Disconnecting AWS account", () => {
 		});
 		cy.wait(5000);
 		cy.get('[data-testid="hamburger-menu"]').click();
-		cy.get("reach-portal").invoke("remove"); // TODO: remove this after deployment
 		cy.wait(5000);
 		cy.get('[data-testid="disconnect-aws-account-button"]').click();
 		cy.wait(10000);
