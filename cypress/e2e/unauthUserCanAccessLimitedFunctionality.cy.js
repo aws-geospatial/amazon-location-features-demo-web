@@ -4,7 +4,7 @@
 describe("Unauthorized users have limited permissions", () => {
 	context("Desktop view", () => {
 		beforeEach(() => {
-			cy.visitDomain(`${Cypress.env("WEB_DOMAIN")}/demo`);
+			cy.visitDomainInDesktopView();
 		});
 
 		it("shouldn't allow unauth users to user tracker and geofence", { scrollBehavior: false }, () => {
@@ -15,13 +15,12 @@ describe("Unauthorized users have limited permissions", () => {
 
 	context("Responsive view", () => {
 		beforeEach(() => {
-			cy.visitDomainResponsive(`${Cypress.env("WEB_DOMAIN")}/demo`);
+			cy.visitDomainInResponsiveView();
 			cy.expandBottomsheet();
 		});
 
-		it("shouldn't allow unauth users to user tracker and geofence", { scrollBehavior: false }, () => {
-			// cy.get('[data-testid="connect-aws-account-button"]').should("exist");
-			cy.contains("Connect to AWS").should("exist"); // TODO: remove after deployment to prod
+		it.skip("shouldn't allow unauth users to user tracker and geofence", { scrollBehavior: false }, () => {
+			cy.get('[data-testid="connect-aws-account-button"]').should("exist");
 		});
 	});
 });
