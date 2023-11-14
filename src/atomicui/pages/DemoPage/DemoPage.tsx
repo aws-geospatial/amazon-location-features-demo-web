@@ -7,6 +7,7 @@ import { Flex, Text, View } from "@aws-amplify/ui-react";
 import { IconLocateMe, LogoDark, LogoLight } from "@demo/assets";
 import {
 	ConnectAwsAccountModal,
+	FeedbackModal,
 	GrabConfirmationModal,
 	MapButtons,
 	OpenDataConfirmationModal,
@@ -107,7 +108,8 @@ const initShow = {
 	unauthSimulationBounds: false,
 	unauthSimulationDisclaimerModal: false,
 	unauthSimulationExitModal: false,
-	startUnauthSimulation: false
+	startUnauthSimulation: false,
+	openFeedbackModal: false
 };
 let interval: NodeJS.Timer | undefined;
 let timeout: NodeJS.Timer | undefined;
@@ -1072,6 +1074,7 @@ const DemoPage: React.FC = () => {
 									}
 									onShowUnauthGeofenceBox={() => setShow(s => ({ ...s, unauthGeofenceBox: true }))}
 									onShowUnauthTrackerBox={() => setShow(s => ({ ...s, unauthTrackerBox: true }))}
+									onOpenFeedbackModal={() => setShow(s => ({ ...s, openFeedbackModal: true }))}
 								/>
 							)}
 							{show.routeBox ? (
@@ -1153,6 +1156,7 @@ const DemoPage: React.FC = () => {
 							isEditingAuthRoute={isEditingAuthRoute}
 							onCloseSidebar={() => setShow(s => ({ ...s, sidebar: false }))}
 							onOpenConnectAwsAccountModal={() => setShow(s => ({ ...s, connectAwsAccount: true }))}
+							//TODO: feedback form for mobile view
 							onOpenSignInModal={() => setShow(s => ({ ...s, signInModal: true }))}
 							onShowSettings={() => {
 								setShow(s => ({ ...s, settings: true }));
@@ -1284,6 +1288,7 @@ const DemoPage: React.FC = () => {
 				onClose={() => setShow(s => ({ ...s, connectAwsAccount: false }))}
 				handleCurrentLocationAndViewpoint={handleCurrentLocationAndViewpoint}
 			/>
+			<FeedbackModal open={show.openFeedbackModal} onClose={() => setShow(s => ({ ...s, openFeedbackModal: false }))} />
 			<SettingsModal
 				open={show.settings}
 				onClose={() => {

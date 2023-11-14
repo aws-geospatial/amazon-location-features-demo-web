@@ -18,7 +18,8 @@ import { Tooltip } from "react-tooltip";
 import "./styles.scss";
 
 const {
-	ROUTES: { DEMO, OVERVIEW }
+	ROUTES: { DEMO, OVERVIEW },
+	ENV: { NL_BASE_URL, NL_API_KEY }
 } = appConfig;
 
 interface SidebarProps {
@@ -33,6 +34,7 @@ interface SidebarProps {
 	onShowUnauthGeofenceBox: () => void;
 	onShowUnauthTrackerBox: () => void;
 	onShowUnauthSimulationDisclaimerModal: () => void;
+	onOpenFeedbackModal: () => void;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -46,7 +48,8 @@ const Sidebar: React.FC<SidebarProps> = ({
 	onShowAuthTrackerBox,
 	onShowUnauthSimulationDisclaimerModal,
 	onShowUnauthGeofenceBox,
-	onShowUnauthTrackerBox
+	onShowUnauthTrackerBox,
+	onOpenFeedbackModal
 }) => {
 	const { isUserAwsAccountConnected, credentials, onLogin, onLogout, onDisconnectAwsAccount, setAuthTokens } =
 		useAmplifyAuth();
@@ -73,6 +76,12 @@ const Sidebar: React.FC<SidebarProps> = ({
 			],
 			["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
 		);
+	};
+
+	const onClickFeedbackButton = () => {
+		onCloseSidebar();
+		//openFeedback Modal
+		onOpenFeedbackModal();
 	};
 
 	const onClickMenuItem = (menuItem: MenuItemEnum) => {
@@ -212,29 +221,67 @@ const Sidebar: React.FC<SidebarProps> = ({
 					</Button>
 				)}
 				{!isUserAwsAccountConnected && (
-					<Button
-						data-testid="connect-aws-account-button"
-						variation="primary"
-						fontFamily="AmazonEmber-Bold"
-						textAlign="center"
-						onClick={() => onConnectAwsAccount(AnalyticsEventActionsEnum.CONNECT_AWS_ACCOUNT_BUTTON_CLICKED)}
+					<Flex
+						style={{
+							flexDirection: "column"
+						}}
 					>
-						{t("connect_aws_account.text")}
-					</Button>
+						{NL_BASE_URL && NL_API_KEY ? (
+							<Button
+								data-testid="connect-aws-account-button"
+								variation="primary"
+								fontFamily="AmazonEmber-Bold"
+								textAlign="center"
+								onClick={() => onClickFeedbackButton()}
+							>
+								Provide Feedback
+							</Button>
+						) : (
+							<></>
+						)}
+						<Button
+							data-testid="connect-aws-account-button"
+							variation="primary"
+							fontFamily="AmazonEmber-Bold"
+							textAlign="center"
+							onClick={() => onConnectAwsAccount(AnalyticsEventActionsEnum.CONNECT_AWS_ACCOUNT_BUTTON_CLICKED)}
+						>
+							{t("connect_aws_account.text")}
+						</Button>
+					</Flex>
 				)}
 				{isUserAwsAccountConnected && !isAuthenticated && (
-					<Button
-						data-testid="disconnect-aws-account-button"
-						variation="primary"
-						fontFamily="AmazonEmber-Bold"
-						className="disconnect-button"
-						marginTop="8px"
-						textAlign="center"
-						onClick={onDisconnectAwsAccount}
-						fontSize={disconnectButtonText.length > 22 ? "0.92rem" : "1rem"}
+					<Flex
+						style={{
+							flexDirection: "column"
+						}}
 					>
-						{disconnectButtonText}
-					</Button>
+						{NL_BASE_URL && NL_API_KEY ? (
+							<Button
+								data-testid="connect-aws-account-button"
+								variation="primary"
+								fontFamily="AmazonEmber-Bold"
+								textAlign="center"
+								onClick={() => onClickFeedbackButton()}
+							>
+								Provide Feedback
+							</Button>
+						) : (
+							<></>
+						)}
+						<Button
+							data-testid="disconnect-aws-account-button"
+							variation="primary"
+							fontFamily="AmazonEmber-Bold"
+							className="disconnect-button"
+							marginTop="8px"
+							textAlign="center"
+							onClick={onDisconnectAwsAccount}
+							fontSize={disconnectButtonText.length > 22 ? "0.92rem" : "1rem"}
+						>
+							{disconnectButtonText}
+						</Button>
+					</Flex>
 				)}
 			</View>
 		</Card>

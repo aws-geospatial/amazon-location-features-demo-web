@@ -11,3 +11,4 @@ export { default as useAwsTrackerStore } from "./useAwsTrackerStore";
 export { default as usePersistedDataStore } from "./usePersistedDataStore";
 export { default as useBottomSheetStore } from "./useBottomSheetStore";
 export { default as useUnathSimulationStore } from "./useUnathSimulationStore";
+export { default as useFeedbackStore } from "./useFeedbackStore";

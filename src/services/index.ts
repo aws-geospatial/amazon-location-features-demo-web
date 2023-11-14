@@ -9,3 +9,4 @@ export { default as useAwsRouteService } from "./useAwsRouteService";
 export { default as useAwsGeofenceService } from "./useAwsGeofenceService";
 export { default as useWebSocketService } from "./useWebSocketService";
 export { default as useAwsIotService } from "./useAwsIotService";
+export { default as useFeedbackService } from "./useFeedbackService";

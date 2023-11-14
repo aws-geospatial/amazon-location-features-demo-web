@@ -1,0 +1,125 @@
+/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
+/* SPDX-License-Identifier: MIT-0 */
+
+.connect-aws-account-modal {
+	max-width: 67.08rem;
+	max-height: 52.62rem;
+
+	@media only screen and (max-width: 1023px) {
+		padding: 5%;
+		overflow-x: hidden;
+		max-width: unset;
+		max-height: unset;
+		border-radius: 0rem;
+	}
+
+	@media only screen and (max-width: 500px) {
+		padding-top: 8%;
+	}
+
+	.content-container {
+		gap: 0;
+		height: 100%;
+		padding: 4.31rem;
+
+		@media only screen and (max-width: 1023px) {
+			flex-direction: column;
+			overflow-y: auto;
+			overflow-x: hidden;
+		}
+
+		@media only screen and (max-width: 500px) {
+			padding: 5%;
+		}
+
+		.amplify-flex.left-col {
+			gap: 0;
+			width: 100%;
+			max-width: 27.69rem;
+			flex-direction: column;
+			align-items: center;
+
+			@media screen and (max-width: 1023px) {
+				max-width: none;
+			}
+
+			.title-container {
+				text-align: center;
+			}
+
+			.body {
+				width: 100%;
+				max-width: 27.69rem;
+
+				@media screen and (max-width: 1023px) {
+					max-width: none;
+				}
+			}
+		}
+
+		.amplify-flex.right-col {
+			gap: 0;
+			width: 100%;
+			max-width: 24.62rem;
+			flex-direction: column;
+			align-items: center;
+			margin-left: 6.15rem;
+
+			@media only screen and (max-width: 1023px) {
+				width: 100%;
+				max-width: none;
+				margin: 2.31rem 0rem;
+			}
+		}
+
+		.step-number {
+			min-width: 24px;
+			width: 100%;
+			max-width: 24px;
+			height: 24px;
+			border-radius: 4px;
+			background-color: var(--border-separator-color);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.hyperlink {
+			cursor: pointer !important;
+			color: var(--primary-color) !important;
+		}
+
+		.icon-check-mark-circle {
+			fill: var(--success);
+			width: 88px;
+			height: 88px;
+		}
+
+		.amplify-button.continue-to-explore {
+			margin-top: 8px !important;
+			color: var(--primary-color) !important;
+			background-color: var(--secondary-button-bg-color) !important;
+			border: 1px solid var(--primary-color) !important;
+		}
+
+		.amplify-button.continue-to-explore:hover {
+			color: var(--white-color) !important;
+			background-color: var(--primary-color) !important;
+		}
+
+		.amplify-text.step-two-description {
+			font-family: "AmazonEmber-Regular";
+			font-size: 1rem;
+			line-height: 1.38rem;
+			color: var(--grey-color);
+			margin-top: 0.31rem;
+
+			a {
+				font-family: "AmazonEmber-Bold";
+				color: var(--primary-color);
+				cursor: pointer;
+				text-decoration: none;
+			}
+		}
+	}
+}
