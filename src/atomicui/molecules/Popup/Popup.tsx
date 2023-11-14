@@ -261,7 +261,12 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 
 	const POIBody = useCallback(
 		() => (
-			<Flex ref={POICardRef} className={!isDesktop ? "poi-only-container" : ""} direction="column">
+			<Flex
+				data-testid="poi-body"
+				ref={POICardRef}
+				className={!isDesktop ? "poi-only-container" : ""}
+				direction="column"
+			>
 				<View className="popup-icon-close-container">
 					<IconClose onClick={() => onClose(ResponsiveUIEnum.search)} />
 				</View>

@@ -750,7 +750,7 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({
 					>
 						{!isDesktop && !isAddingGeofence && (
 							<Flex justifyContent="center" className="add-geofence-button-container-mobile">
-								<Button onClick={onAddGeofence} width="90%">
+								<Button data-testid="add-geofence-button-container-mobile" onClick={onAddGeofence} width="90%">
 									<IconPlus />
 									<Text className="bold" marginLeft={isDesktop ? 0 : "1rem"} textAlign={isLtr ? "start" : "end"}>
 										{t("geofence_box__add_geofence.text")}

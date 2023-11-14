@@ -26,4 +26,30 @@ describe("Sidebar", () => {
 			cy.wait(2000);
 		});
 	});
+
+	context("Responsive view", () => {
+		beforeEach(() => {
+			cy.visitDomainInResponsiveView();
+			cy.expandBottomsheet();
+		});
+
+		it.skip("should allow user to access the sidebar via hamburger menu", { scrollBehavior: false }, () => {
+			cy.get("div").should("contain", "Routes");
+			cy.wait(500);
+			cy.get("div").should("contain", "Map style");
+			cy.wait(500);
+			cy.get("div").should("contain", "Trackers");
+			cy.wait(500);
+			cy.get("div").should("contain", "Geofences");
+			cy.wait(500);
+			cy.get("div").should("contain", "Overview");
+			cy.wait(500);
+			cy.get("div").should("contain", "Samples");
+			cy.wait(500);
+			cy.get("div").should("contain", "Settings");
+			cy.wait(500);
+			cy.get("div").should("contain", "About");
+			cy.wait(2000);
+		});
+	});
 });

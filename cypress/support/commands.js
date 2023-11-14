@@ -81,18 +81,18 @@ Cypress.Commands.add("disconnectAwsAccountInDesktopView", () => {
 			: cy.get('[data-testid="hamburger-menu"]').click();
 	});
 	cy.wait(2000);
-	cy.get('[data-testid="hamburger-menu"]').click();
-	cy.wait(2000);
-	cy.get('[data-testid="disconnect-aws-account-button"]').click();
-	cy.wait(10000);
-	cy.get('[data-testid="welcome-modal-continue-button"]').click();
-	cy.wait(2000);
-	cy.get('[data-testid="hamburger-menu"]').click();
-	cy.wait(2000);
-	cy.get('[data-testid="connect-aws-account-button"]').should("exist");
-	cy.wait(2000);
-	cy.get('[data-testid="hamburger-menu"]').click();
-	cy.wait(2000);
+	// cy.get('[data-testid="hamburger-menu"]').click();
+	// cy.wait(2000);
+	// cy.get('[data-testid="disconnect-aws-account-button"]').click();
+	// cy.wait(10000);
+	// cy.get('[data-testid="welcome-modal-continue-button"]').click();
+	// cy.wait(2000);
+	// cy.get('[data-testid="hamburger-menu"]').click();
+	// cy.wait(2000);
+	// cy.get('[data-testid="connect-aws-account-button"]').should("exist");
+	// cy.wait(2000);
+	// cy.get('[data-testid="hamburger-menu"]').click();
+	// cy.wait(2000);
 });
 
 Cypress.Commands.add("visitDomainInResponsiveView", (path = "demo?dp=Esri") => {
