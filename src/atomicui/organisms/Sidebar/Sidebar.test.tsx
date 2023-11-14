@@ -21,7 +21,8 @@ const mockProps = {
 	onShowAuthTrackerBox: jest.fn(),
 	onShowUnauthSimulationDisclaimerModal: jest.fn(),
 	onShowUnauthGeofenceBox: jest.fn(),
-	onShowUnauthTrackerBox: jest.fn()
+	onShowUnauthTrackerBox: jest.fn(),
+	onOpenFeedbackModal: jest.fn()
 };
 
 describe("<Sidebar />", () => {
