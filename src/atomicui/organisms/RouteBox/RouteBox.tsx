@@ -1016,7 +1016,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 						<Flex className="travel-mode-button-container">
 							{!isInputFocused && isBothInputFilled && (
 								<Flex
-									data-testid="swap-icon-container"
+									data-testid="more-action-icon-container"
 									className="swap-icon-container more-action-icon-container"
 									onClick={() => {
 										setExpandRouteOptionsMobile && setExpandRouteOptionsMobile(true);

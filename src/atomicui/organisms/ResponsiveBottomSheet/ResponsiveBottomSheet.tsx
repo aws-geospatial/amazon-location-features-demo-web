@@ -410,6 +410,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 						>
 							{[ResponsiveUIEnum.unauth_geofence, ResponsiveUIEnum.unauth_tracker].includes(ui) && (
 								<Flex
+									data-testid="bottomsheet-header-notification-icon"
 									className={isNotifications ? "bell-icon-container bell-active" : "bell-icon-container"}
 									onClick={() => setIsNotifications(n => !n)}
 									position="relative"
@@ -418,7 +419,13 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 									{!isNotifications && !!unauthNotifications.length && <span className="notification-bubble" />}
 								</Flex>
 							)}
-							<IconClose width={20} height={20} fill="var(--grey-color)" onClick={handleUIAction} />
+							<IconClose
+								data-testid="bottomsheet-header-close-icon"
+								width={20}
+								height={20}
+								fill="var(--grey-color)"
+								onClick={handleUIAction}
+							/>
 						</Flex>
 					);
 				case ResponsiveUIEnum.poi_card:
@@ -576,6 +583,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 			{!isDesktop && isExitSimulation && <ExitSimulation />}
 
 			<BottomSheet
+				data-testid="bottomsheet"
 				open
 				ref={bottomSheetRef}
 				blocking={false}
@@ -604,7 +612,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				]}
 				maxHeight={bottomSheetHeight}
 				header={
-					<Flex data-amplify-theme="aws-location-theme" direction="column" gap="0">
+					<Flex data-testid="bottomsheet-header" data-amplify-theme="aws-location-theme" direction="column" gap="0">
 						{isMax556 && (
 							<Flex className="logo-mobile-container">
 								<Flex className="logo-mobile" onClick={handleLogoClick}>
