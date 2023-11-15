@@ -511,6 +511,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 										{!!options?.length &&
 											options.map((option, i) => (
 												<div
+													data-testid="search-suggestions"
 													key={i}
 													onClick={() => {
 														selectSuggestion({

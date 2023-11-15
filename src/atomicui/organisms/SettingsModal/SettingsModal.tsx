@@ -893,7 +893,11 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 							</Flex>
 						)}
 						{!isMobile && <Divider orientation="vertical" className="col-divider" />}
-						{!!settingsOptions && <Flex className="option-details-container">{renderOptionDetails}</Flex>}
+						{!!settingsOptions && (
+							<Flex data-testid="option-details-container" className="option-details-container">
+								{renderOptionDetails}
+							</Flex>
+						)}
 					</Flex>
 					<Divider orientation="vertical" className="col-divider" />
 				</>

@@ -182,6 +182,7 @@ const Explore: React.FC<IProps> = ({
 				<AwsAccountButton />
 			) : (
 				<Button
+					data-testid="connect-aws-account-button"
 					variation="primary"
 					width="100%"
 					height="3.07rem"

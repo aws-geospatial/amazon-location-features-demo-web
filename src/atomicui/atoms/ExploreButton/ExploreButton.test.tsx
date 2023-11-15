@@ -20,9 +20,9 @@ describe("<ExploreButton />", () => {
 
 	it("should render and fire onClick when clicked", () => {
 		const { getByTestId } = renderComponent();
-		expect(getByTestId("explore-button-container")).toBeInTheDocument();
+		expect(getByTestId(`explore-button-container-${mockProps.text}`)).toBeInTheDocument();
 		act(() => {
-			fireEvent.click(getByTestId("explore-button-container"));
+			fireEvent.click(getByTestId(`explore-button-container-${mockProps.text}`));
 		});
 		waitFor(() => {
 			expect(mockProps.onClick).toHaveBeenCalled();
