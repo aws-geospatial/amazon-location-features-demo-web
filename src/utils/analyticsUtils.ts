@@ -1,5 +1,6 @@
 import {
 	Event,
+	GetEndpointCommand,
 	PinpointClient,
 	PutEventsCommand,
 	PutEventsRequest,
@@ -114,6 +115,14 @@ export const createOrUpdateEndpoint = async () => {
 
 	const putEventsCommand = new UpdateEndpointCommand(input);
 	await sendEvent(putEventsCommand);
+};
+
+export const getEndpoint = async () => {
+	const getEndpointCommand = new GetEndpointCommand({
+		ApplicationId: PINPOINT_APPLICATION_ID,
+		EndpointId: endpointId!
+	});
+	await sendEvent(getEndpointCommand);
 };
 
 export const record: (input: RecordInput[], excludeAttributes?: string[]) => Promise<void> = async (

@@ -37,4 +37,6 @@ jobs:
           CYPRESS_WEB_SOCKET_URL: ${{ secrets.WEB_SOCKET_URL }}
           CYPRESS_COGNITO_EMAIL: ${{ secrets.COGNITO_EMAIL }}
           CYPRESS_COGNITO_PASSWORD: ${{ secrets.COGNITO_PASSWORD }}
+          PINPOINT_IDENTITY_POOL_ID: ${{ secrets.VITE_PINPOINT_IDENTITY_POOL_ID }}
+          PINPOINT_APPLICATION_ID: ${{ secrets.VITE_PINPOINT_APPLICATION_ID }}
         run: npm run cypress
