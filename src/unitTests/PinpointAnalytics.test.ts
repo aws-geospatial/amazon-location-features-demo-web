@@ -26,7 +26,7 @@ const {
 
 const region = PINPOINT_IDENTITY_POOL_ID.split(":")[0];
 
-const { createOrUpdateEndpoint, record } = jest.requireActual("@demo/utils/analyticsUtils");
+const { createOrUpdateEndpoint, getEndpoint, record } = jest.requireActual("@demo/utils/analyticsUtils");
 
 describe("PinpointAnalytics", () => {
 	let pinClient: PinpointClient;
@@ -61,20 +61,12 @@ describe("PinpointAnalytics", () => {
 		expect(error).toBeUndefined();
 	});
 
-	// Failure cases
-	/* disabled temporarily */
-	// it("should throw permission error on getEndpoint request", async () => {
-	// 	const error: any = await returnError(async () => {
-	// 		const command = new GetEndpointCommand({
-	// 			ApplicationId: PINPOINT_APPLICATION_ID,
-	// 			EndpointId: uuid.randomUUID()
-	// 		});
-	// 		await pinClient.send(command);
-	// 	});
-	// 	expect(error.$metadata.httpStatusCode).toBe(403);
-	// 	expect(error.message).toContain("not authorized to perform: mobiletargeting:GetEndpoint");
-	// });
+	it("should successfully get endpoint", async () => {
+		const error = await returnError(getEndpoint);
+		expect(error).toBeUndefined();
+	});
 
+	// Failure cases
 	it("should throw permission error on deleteEndpoint request", async () => {
 		const error: any = await returnError(async () => {
 			const command = new DeleteEndpointCommand({
