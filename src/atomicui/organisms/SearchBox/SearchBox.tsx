@@ -669,7 +669,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 											flex: 1
 										}}
 									>
-										{isSearching ? (
+										{isSearching && isNLChecked ? (
 											<Flex
 												gap={0}
 												width="100%"
