@@ -13,26 +13,65 @@ import {
 
 import { AuthGeofenceBox, AuthTrackerBox, RouteBox, SearchBox } from "@demo/atomicui/organisms";
 
-const ResponsiveBottomSheet = lazy(
-	() => import("@demo/atomicui/organisms/ResponsiveBottomSheet/ResponsiveBottomSheet")
+const ResponsiveBottomSheet = lazy(() =>
+	import("@demo/atomicui/organisms/ResponsiveBottomSheet").then(res => ({
+		default: res.ResponsiveBottomSheet
+	}))
 );
-const Sidebar = lazy(() => import("@demo/atomicui/organisms/Sidebar/Sidebar"));
-const UnauthSimulation = lazy(() => import("@demo/atomicui/organisms/UnauthSimulation/UnauthSimulation"));
-const SettingsModal = lazy(() => import("@demo/atomicui/organisms/SettingsModal/SettingsModal"));
-const AboutModal = lazy(() => import("@demo/atomicui/organisms/AboutModal/AboutModal"));
-
-const MapButtons = lazy(() => import("@demo/atomicui/molecules/MapButtons/MapButtons"));
-const OpenDataConfirmationModal = lazy(
-	() => import("@demo/atomicui/molecules/OpenDataConfirmationModal/OpenDataConfirmationModal")
+const Sidebar = lazy(() =>
+	import("@demo/atomicui/organisms/Sidebar").then(res => ({
+		default: res.Sidebar
+	}))
 );
-const GrabConfirmationModal = lazy(
-	() => import("@demo/atomicui/molecules/GrabConfirmationModal/GrabConfirmationModal")
+const UnauthSimulation = lazy(() =>
+	import("@demo/atomicui/organisms/UnauthSimulation").then(res => ({
+		default: res.UnauthSimulation
+	}))
 );
-const SignInModal = lazy(() => import("@demo/atomicui/molecules/SignInModal/SignInModal"));
-const WelcomeModal = lazy(() => import("@demo/atomicui/molecules/WelcomeModal/WelcomeModal"));
-const FeedbackModal = lazy(() => import("@demo/atomicui/molecules/FeedbackModal/FeedbackModal"));
-const ConnectAwsAccountModal = lazy(
-	() => import("@demo/atomicui/molecules/ConnectAwsAccountModal/ConnectAwsAccountModal")
+const SettingsModal = lazy(() =>
+	import("@demo/atomicui/organisms/SettingsModal").then(res => ({
+		default: res.SettingsModal
+	}))
+);
+const AboutModal = lazy(() =>
+	import("@demo/atomicui/organisms/AboutModal").then(res => ({
+		default: res.AboutModal
+	}))
+);
+const MapButtons = lazy(() =>
+	import("@demo/atomicui/molecules/MapButtons").then(res => ({
+		default: res.MapButtons
+	}))
+);
+const OpenDataConfirmationModal = lazy(() =>
+	import("@demo/atomicui/molecules/OpenDataConfirmationModal").then(res => ({
+		default: res.OpenDataConfirmationModal
+	}))
+);
+const GrabConfirmationModal = lazy(() =>
+	import("@demo/atomicui/molecules/GrabConfirmationModal").then(res => ({
+		default: res.GrabConfirmationModal
+	}))
+);
+const SignInModal = lazy(() =>
+	import("@demo/atomicui/molecules/SignInModal").then(res => ({
+		default: res.SignInModal
+	}))
+);
+const WelcomeModal = lazy(() =>
+	import("@demo/atomicui/molecules/WelcomeModal").then(res => ({
+		default: res.WelcomeModal
+	}))
+);
+const FeedbackModal = lazy(() =>
+	import("@demo/atomicui/molecules/FeedbackModal").then(res => ({
+		default: res.FeedbackModal
+	}))
+);
+const ConnectAwsAccountModal = lazy(() =>
+	import("@demo/atomicui/molecules/ConnectAwsAccountModal").then(res => ({
+		default: res.ConnectAwsAccountModal
+	}))
 );
 
 import { DemoPlaceholderPage } from "@demo/atomicui/pages";
