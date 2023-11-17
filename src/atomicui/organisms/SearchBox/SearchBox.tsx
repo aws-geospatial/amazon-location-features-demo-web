@@ -46,7 +46,8 @@ const nlLoadText = [
 ];
 
 const {
-	ENV: { NL_BASE_URL, NL_API_KEY }
+	ENV: { NL_BASE_URL, NL_API_KEY },
+	GET_PARAMS: { NL_TOGGLE }
 } = appConfig;
 
 interface SearchBoxProps {
@@ -183,6 +184,10 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	);
 
 	useEffect(() => {
+		if (new URLSearchParams(location.search).get(NL_TOGGLE) === "true") {
+			setIsNLChecked(true);
+		}
+
 		return () => {
 			if (timeoutIdRef.current) {
 				clearTimeout(timeoutIdRef.current);

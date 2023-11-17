@@ -98,7 +98,8 @@ const appConfig = {
 		ERROR_BOUNDARY: "/error"
 	},
 	GET_PARAMS: {
-		DATA_PROVIDER: "dp"
+		DATA_PROVIDER: "dp",
+		NL_TOGGLE: "nl"
 	},
 	MAP_RESOURCES: {
 		IMPERIAL_COUNTRIES: ["US", "GB", "LR", "MM"],
