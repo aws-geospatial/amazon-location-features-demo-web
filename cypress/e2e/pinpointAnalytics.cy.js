@@ -1,7 +1,7 @@
 describe("Should record user events correctly", () => {
 	context("Desktop view", () => {
 		beforeEach(() => {
-			cy.visitDomainInDesktopView(`${Cypress.env("WEB_DOMAIN")}/demo`);
+			cy.visitDomainInDesktopView();
 		});
 
 		it("should successfully send correct user event to pinpoint", () => {
