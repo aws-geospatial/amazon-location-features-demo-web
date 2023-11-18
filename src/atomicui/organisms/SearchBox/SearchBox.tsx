@@ -184,7 +184,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	);
 
 	useEffect(() => {
-		if (new URLSearchParams(location.search).get(NL_TOGGLE) === "true") {
+		if (new URLSearchParams(location.search).get(NL_TOGGLE) === "true" && NL_BASE_URL && NL_API_KEY) {
 			setIsNLChecked(true);
 		}
 
