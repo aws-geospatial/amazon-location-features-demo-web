@@ -11,11 +11,16 @@ import {
 	ConfirmationModal as UnauthSimulationExitModal
 } from "@demo/atomicui/molecules";
 
-import { AuthGeofenceBox, AuthTrackerBox, RouteBox, SearchBox } from "@demo/atomicui/organisms";
+import { AuthGeofenceBox, AuthTrackerBox, SearchBox } from "@demo/atomicui/organisms";
 
 const ResponsiveBottomSheet = lazy(() =>
 	import("@demo/atomicui/organisms/ResponsiveBottomSheet").then(res => ({
 		default: res.ResponsiveBottomSheet
+	}))
+);
+const RouteBox = lazy(() =>
+	import("@demo/atomicui/organisms/RouteBox").then(res => ({
+		default: res.RouteBox
 	}))
 );
 const Sidebar = lazy(() =>
@@ -1275,36 +1280,38 @@ const DemoPage: React.FC = () => {
 								setSearchBoxValue={setSearchBoxValue}
 							/>
 						)}
-						<MapButtons
-							renderedUpon={TriggeredByEnum.DEMO_PAGE}
-							openStylesCard={show.stylesCard}
-							setOpenStylesCard={b => setShow(s => ({ ...s, stylesCard: b }))}
-							onCloseSidebar={() => setShow(s => ({ ...s, sidebar: false }))}
-							onOpenSignInModal={() => setShow(s => ({ ...s, signInModal: true }))}
-							isGrabVisible={isGrabVisible}
-							showGrabDisclaimerModal={show.grabDisclaimerModal}
-							showOpenDataDisclaimerModal={show.openDataDisclaimerModal}
-							onShowGridLoader={() => setShow(s => ({ ...s, gridLoader: true }))}
-							handleMapStyleChange={onMapStyleChange}
-							searchValue={searchValue}
-							setSearchValue={setSearchValue}
-							selectedFilters={selectedFilters}
-							setSelectedFilters={setSelectedFilters}
-							resetSearchAndFilters={handleResetCallback}
-							isAuthGeofenceBoxOpen={show.authGeofenceBox}
-							onSetShowAuthGeofenceBox={(b: boolean) => setShow(s => ({ ...s, authGeofenceBox: b }))}
-							isAuthTrackerDisclaimerModalOpen={show.authTrackerDisclaimerModal}
-							isAuthTrackerBoxOpen={show.authTrackerBox}
-							onShowAuthTrackerDisclaimerModal={() => setShow(s => ({ ...s, authTrackerDisclaimerModal: true }))}
-							onSetShowAuthTrackerBox={(b: boolean) => setShow(s => ({ ...s, authTrackerBox: b }))}
-							onShowUnauthSimulationDisclaimerModal={() =>
-								setShow(s => ({ ...s, unauthSimulationDisclaimerModal: true }))
-							}
-							isUnauthGeofenceBoxOpen={show.unauthGeofenceBox}
-							isUnauthTrackerBoxOpen={show.unauthTrackerBox}
-							onSetShowUnauthGeofenceBox={(b: boolean) => setShow(s => ({ ...s, unauthGeofenceBox: b }))}
-							onSetShowUnauthTrackerBox={(b: boolean) => setShow(s => ({ ...s, unauthTrackerBox: b }))}
-						/>
+						{isDesktop && (
+							<MapButtons
+								renderedUpon={TriggeredByEnum.DEMO_PAGE}
+								openStylesCard={show.stylesCard}
+								setOpenStylesCard={b => setShow(s => ({ ...s, stylesCard: b }))}
+								onCloseSidebar={() => setShow(s => ({ ...s, sidebar: false }))}
+								onOpenSignInModal={() => setShow(s => ({ ...s, signInModal: true }))}
+								isGrabVisible={isGrabVisible}
+								showGrabDisclaimerModal={show.grabDisclaimerModal}
+								showOpenDataDisclaimerModal={show.openDataDisclaimerModal}
+								onShowGridLoader={() => setShow(s => ({ ...s, gridLoader: true }))}
+								handleMapStyleChange={onMapStyleChange}
+								searchValue={searchValue}
+								setSearchValue={setSearchValue}
+								selectedFilters={selectedFilters}
+								setSelectedFilters={setSelectedFilters}
+								resetSearchAndFilters={handleResetCallback}
+								isAuthGeofenceBoxOpen={show.authGeofenceBox}
+								onSetShowAuthGeofenceBox={(b: boolean) => setShow(s => ({ ...s, authGeofenceBox: b }))}
+								isAuthTrackerDisclaimerModalOpen={show.authTrackerDisclaimerModal}
+								isAuthTrackerBoxOpen={show.authTrackerBox}
+								onShowAuthTrackerDisclaimerModal={() => setShow(s => ({ ...s, authTrackerDisclaimerModal: true }))}
+								onSetShowAuthTrackerBox={(b: boolean) => setShow(s => ({ ...s, authTrackerBox: b }))}
+								onShowUnauthSimulationDisclaimerModal={() =>
+									setShow(s => ({ ...s, unauthSimulationDisclaimerModal: true }))
+								}
+								isUnauthGeofenceBoxOpen={show.unauthGeofenceBox}
+								isUnauthTrackerBoxOpen={show.unauthTrackerBox}
+								onSetShowUnauthGeofenceBox={(b: boolean) => setShow(s => ({ ...s, unauthGeofenceBox: b }))}
+								onSetShowUnauthTrackerBox={(b: boolean) => setShow(s => ({ ...s, unauthTrackerBox: b }))}
+							/>
+						)}
 						{GeoLocateIcon}
 						{isDesktop && (
 							<NavigationControl
