@@ -3616,5 +3616,35 @@
   },
   "nl_loader_sample_text_5": {
     "text": "亞馬遜基石正在製圖工作！搜尋。"
+  },
+  "fm__header": {
+    "text": "告訴我們您的想法？"
+  },
+  "fm__category": {
+    "text": "分類"
+  },
+  "fm__rating": {
+    "text": "評分"
+  },
+  "fm__feedback_header": {
+    "text": "反饋"
+  },
+  "fm__email_header": {
+    "text": "電子郵件"
+  },
+  "fm__opt_header": {
+    "text": "可選"
+  },
+  "fm__submit_feedback_btn": {
+    "text": "提交意見"
+  },
+  "fm__submit_feedback_alert": {
+    "text": "已提交的意見"
+  },
+  "fm__provide_feedback_btn": {
+    "text": "提供意見"
+  },
+  "fm__mobile_view_desc": {
+    "text": "告訴我們您對您的體驗的看法"
   }
 }

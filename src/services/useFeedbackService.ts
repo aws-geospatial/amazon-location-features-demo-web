@@ -25,7 +25,7 @@ const useFeedbackService = () => {
 						email: email
 					})
 				});
-				return await response.json();
+				return response;
 			}
 		}),
 		[]

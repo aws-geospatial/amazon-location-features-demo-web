@@ -3616,5 +3616,35 @@
   },
   "more_options": {
     "text": "More Options"
+  },
+  "fm__header": {
+    "text": "Tell us what you think?"
+  },
+  "fm__category": {
+    "text": "Category"
+  },
+  "fm__rating": {
+    "text": "Rating"
+  },
+  "fm__feedback_header": {
+    "text": "Feedback"
+  },
+  "fm__email_header": {
+    "text": "Email"
+  },
+  "fm__opt_header": {
+    "text": "Optional"
+  },
+  "fm__submit_feedback_btn": {
+    "text": "Submit Feedback"
+  },
+  "fm__submit_feedback_alert": {
+    "text": "Feedback Submitted"
+  },
+  "fm__provide_feedback_btn": {
+    "text": "Provide Feedback"
+  },
+  "fm__mobile_view_desc": {
+    "text": "Tell us what you think about your experience"
   }
 }

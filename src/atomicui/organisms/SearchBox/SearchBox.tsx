@@ -617,7 +617,11 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 												</Flex>
 												<Flex>
 													{t("nl_search_footer_label.text") as string}
-													<Badge size="small" variation="warning">
+													<Badge
+														size="small"
+														variation="warning"
+														style={{ backgroundColor: "#FF9900", color: "white" }}
+													>
 														{t("prototype.text") as string}
 													</Badge>
 												</Flex>
@@ -707,7 +711,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 														marginLeft: "10px"
 													}}
 												/>
-												<Badge size="small" variation="warning">
+												<Badge size="small" variation="warning" style={{ backgroundColor: "#FF9900", color: "white" }}>
 													{t("prototype.text") as string}
 												</Badge>
 											</Flex>

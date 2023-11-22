@@ -3616,5 +3616,35 @@
   },
   "nl_loader_sample_text_5": {
     "text": "Amazon Bedrock im Kartodienst! Auf der Suche."
+  },
+  "fm__header": {
+    "text": "Sag uns, was du denkst?"
+  },
+  "fm__category": {
+    "text": "Kategorie"
+  },
+  "fm__rating": {
+    "text": "Bewertung"
+  },
+  "fm__feedback_header": {
+    "text": "Rückmeldung"
+  },
+  "fm__email_header": {
+    "text": "E-Mail"
+  },
+  "fm__opt_header": {
+    "text": "Fakultativ"
+  },
+  "fm__submit_feedback_btn": {
+    "text": "Feedback abschicken"
+  },
+  "fm__submit_feedback_alert": {
+    "text": "Feedback übermittelt"
+  },
+  "fm__provide_feedback_btn": {
+    "text": "Feedback geben"
+  },
+  "fm__mobile_view_desc": {
+    "text": "Sag uns, was du über deine Erfahrung denkst"
   }
 }

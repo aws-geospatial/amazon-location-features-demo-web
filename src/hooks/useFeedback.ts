@@ -20,9 +20,13 @@ const useFeedback = () => {
 			submitFeedbackForm: async (category: string, rating: number, text: string, email?: string) => {
 				try {
 					setState({ isSubmitting: true });
-					await feedbackService.submitFeedback(category, rating, text, email);
+					const data = await feedbackService.submitFeedback(category, rating, text, email);
+					if (!data.ok) {
+						throw new Error("Request failed with status " + data.status);
+					}
+					return data.ok;
 				} catch (error) {
-					errorHandler(error, "failed to upload feedback!");
+					errorHandler(error, "failed to upload feedback");
 				} finally {
 					setState({ isSubmitting: false });
 				}

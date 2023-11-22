@@ -3612,5 +3612,35 @@
   },
   "nl_loader_sample_text_5": {
     "text": "亚马逊 Bedrock 正在执行测绘任务！正在搜索。"
+  },
+  "fm__header": {
+    "text": "告诉我们你的想法？"
+  },
+  "fm__category": {
+    "text": "类别"
+  },
+  "fm__rating": {
+    "text": "评分"
+  },
+  "fm__feedback_header": {
+    "text": "反馈"
+  },
+  "fm__email_header": {
+    "text": "电子邮件"
+  },
+  "fm__opt_header": {
+    "text": "可选"
+  },
+  "fm__submit_feedback_btn": {
+    "text": "提交反馈"
+  },
+  "fm__submit_feedback_alert": {
+    "text": "反馈已提交"
+  },
+  "fm__provide_feedback_btn": {
+    "text": "提供反馈"
+  },
+  "fm__mobile_view_desc": {
+    "text": "告诉我们你对你的经历的看法"
   }
 }

@@ -3616,5 +3616,35 @@
   },
   "nl_loader_sample_text_5": {
     "text": "아마존 베드락, 지도 제작 작업 중!검색 중입니다."
+  },
+  "fm__header": {
+    "text": "어떻게 생각하는지 말씀해 주세요."
+  },
+  "fm__category": {
+    "text": "카테고리"
+  },
+  "fm__rating": {
+    "text": "등급"
+  },
+  "fm__feedback_header": {
+    "text": "피드백"
+  },
+  "fm__email_header": {
+    "text": "이메일"
+  },
+  "fm__opt_header": {
+    "text": "선택 사항"
+  },
+  "fm__submit_feedback_btn": {
+    "text": "피드백 제출"
+  },
+  "fm__submit_feedback_alert": {
+    "text": "피드백 제출됨"
+  },
+  "fm__provide_feedback_btn": {
+    "text": "피드백 제공"
+  },
+  "fm__mobile_view_desc": {
+    "text": "경험에 대해 어떻게 생각하는지 말씀해 주세요"
   }
 }

@@ -3616,5 +3616,35 @@
   },
   "nl_loader_sample_text_5": {
     "text": "Amazon Bedrock en charge de la cartographie ! À la recherche."
+  },
+  "fm__header": {
+    "text": "Dites-nous ce que vous en pensez ?"
+  },
+  "fm__category": {
+    "text": "Catégorie"
+  },
+  "fm__rating": {
+    "text": "Évaluation"
+  },
+  "fm__feedback_header": {
+    "text": "Feedback"
+  },
+  "fm__email_header": {
+    "text": "Courrier électronique"
+  },
+  "fm__opt_header": {
+    "text": "Facultatif"
+  },
+  "fm__submit_feedback_btn": {
+    "text": "Soumettre des commentaires"
+  },
+  "fm__submit_feedback_alert": {
+    "text": "Feedback soumis"
+  },
+  "fm__provide_feedback_btn": {
+    "text": "Fournir des commentaires"
+  },
+  "fm__mobile_view_desc": {
+    "text": "Dites-nous ce que vous pensez de votre expérience"
   }
 }

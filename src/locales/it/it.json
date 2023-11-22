@@ -3616,5 +3616,35 @@
   },
   "nl_loader_sample_text_5": {
     "text": "Amazon Bedrock al lavoro di mappatura! Ricerca."
+  },
+  "fm__header": {
+    "text": "Dicci cosa ne pensi?"
+  },
+  "fm__category": {
+    "text": "Categoria"
+  },
+  "fm__rating": {
+    "text": "Valutazione"
+  },
+  "fm__feedback_header": {
+    "text": "Feedback"
+  },
+  "fm__email_header": {
+    "text": "Posta elettronica"
+  },
+  "fm__opt_header": {
+    "text": "Opzionale"
+  },
+  "fm__submit_feedback_btn": {
+    "text": "Invia feedback"
+  },
+  "fm__submit_feedback_alert": {
+    "text": "Feedback inviato"
+  },
+  "fm__provide_feedback_btn": {
+    "text": "Fornisci feedback"
+  },
+  "fm__mobile_view_desc": {
+    "text": "Dicci cosa pensi della tua esperienza"
   }
 }

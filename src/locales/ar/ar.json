@@ -3616,5 +3616,35 @@
   },
   "nl_loader_sample_text_5": {
     "text": "أمازون بيدروك في مهمة رسم الخرائط! البحث."
+  },
+  "fm__header": {
+    "text": "أخبرنا برأيك؟"
+  },
+  "fm__category": {
+    "text": "الفئة"
+  },
+  "fm__rating": {
+    "text": "تصنيف"
+  },
+  "fm__feedback_header": {
+    "text": "التغذية الراجعة"
+  },
+  "fm__email_header": {
+    "text": "البريد الإلكتروني"
+  },
+  "fm__opt_header": {
+    "text": "اختياري"
+  },
+  "fm__submit_feedback_btn": {
+    "text": "إرسال ملاحظات"
+  },
+  "fm__submit_feedback_alert": {
+    "text": "تم إرسال التعليقات"
+  },
+  "fm__provide_feedback_btn": {
+    "text": "تقديم ملاحظات"
+  },
+  "fm__mobile_view_desc": {
+    "text": "أخبرنا برأيك في تجربتك"
   }
 }
