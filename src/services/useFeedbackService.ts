@@ -4,12 +4,14 @@
 import { useMemo } from "react";
 
 import { appConfig } from "@demo/core/constants";
+import { useTranslation } from "react-i18next";
 
 const {
 	ENV: { NL_BASE_URL, NL_API_KEY }
 } = appConfig;
 
 const useFeedbackService = () => {
+	const { t } = useTranslation();
 	return useMemo(
 		() => ({
 			submitFeedback: async (category: string, rating: number, text: string, email?: string) => {
@@ -26,12 +28,12 @@ const useFeedbackService = () => {
 					})
 				});
 				if (!response.ok) {
-					throw new Error("Request failed with status " + response.status);
+					throw new Error((t("error_handler__failed_feedback_text_2.text") as string) + response.status);
 				}
 				return response.ok;
 			}
 		}),
-		[]
+		[t]
 	);
 };
 

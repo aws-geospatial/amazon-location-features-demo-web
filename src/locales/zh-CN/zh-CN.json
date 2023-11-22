@@ -3642,5 +3642,11 @@
   },
   "fm__mobile_view_desc": {
     "text": "告诉我们你对你的经历的看法"
+  },
+  "error_handler__failed_feedback_text": {
+    "text": "上传反馈失败"
+  },
+  "error_handler__failed_feedback_text_2": {
+    "text": "请求失败，状态为"
   }
 }

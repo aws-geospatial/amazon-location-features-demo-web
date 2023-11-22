@@ -3646,5 +3646,11 @@
   },
   "fm__mobile_view_desc": {
     "text": "Dites-nous ce que vous pensez de votre expérience"
+  },
+  "error_handler__failed_feedback_text": {
+    "text": "Impossible de télécharger les commentaires"
+  },
+  "error_handler__failed_feedback_text_2": {
+    "text": "La demande a échoué avec statut"
   }
 }

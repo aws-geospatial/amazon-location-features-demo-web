@@ -3646,5 +3646,11 @@
   },
   "fm__mobile_view_desc": {
     "text": "Conte-nos o que você acha da sua experiência"
+  },
+  "error_handler__failed_feedback_text": {
+    "text": "falha ao fazer o upload do feedback"
+  },
+  "error_handler__failed_feedback_text_2": {
+    "text": "Falha na solicitação com status"
   }
 }

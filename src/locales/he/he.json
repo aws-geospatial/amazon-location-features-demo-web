@@ -3646,5 +3646,11 @@
   },
   "fm__mobile_view_desc": {
     "text": "ספר לנו מה אתה חושב על החוויה שלך"
+  },
+  "error_handler__failed_feedback_text": {
+    "text": "העלאת משוב נכשלה"
+  },
+  "error_handler__failed_feedback_text_2": {
+    "text": "הבקשה נכשלה עם סטטוס"
   }
 }

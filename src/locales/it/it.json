@@ -3646,5 +3646,11 @@
   },
   "fm__mobile_view_desc": {
     "text": "Dicci cosa pensi della tua esperienza"
+  },
+  "error_handler__failed_feedback_text": {
+    "text": "caricamento del feedback non riuscito"
+  },
+  "error_handler__failed_feedback_text_2": {
+    "text": "Richiesta non riuscita con stato"
   }
 }

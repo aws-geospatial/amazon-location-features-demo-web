@@ -3646,5 +3646,11 @@
   },
   "fm__mobile_view_desc": {
     "text": "हमें बताएं कि आप अपने अनुभव के बारे में क्या सोचते हैं"
+  },
+  "error_handler__failed_feedback_text": {
+    "text": "फ़ीडबैक अपलोड करने में असफल"
+  },
+  "error_handler__failed_feedback_text_2": {
+    "text": "स्थिति के साथ अनुरोध विफल हुआ"
   }
 }
