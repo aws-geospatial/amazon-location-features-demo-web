@@ -458,7 +458,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 										dataTestId="search-box-input"
 										searchInputRef={searchInputRef}
 										value={value}
-										onChange={onChange}
+										onChange={!isNLChecked ? onChange : onNLPChange}
 										dir={langDir}
 										onKeyDown={e => e.stopPropagation()}
 										onFocus={simpleSearchOnFocus}
@@ -490,21 +490,110 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 										</Button>
 									)}
 								</Flex>
+								{!isSearching ? (
+									<Flex gap={0} padding="0 0.61rem 0.61rem" alignItems="center">
+										<SwitchField
+											label={t("nl_search_label.text") as string}
+											labelPosition="end"
+											size="small"
+											isChecked={isNLChecked}
+											onChange={e => setIsNLChecked(e.target.checked)}
+											style={{
+												marginLeft: "10px"
+											}}
+										/>
+										<Badge size="small" variation="warning" style={{ backgroundColor: "#FF9900", color: "white" }}>
+											{t("prototype.text") as string}
+										</Badge>
+									</Flex>
+								) : (
+									<></>
+								)}
+								{isNLChecked && !value ? (
+									<Flex
+										gap={0}
+										width="100%"
+										alignItems="start"
+										paddingLeft="10px"
+										style={{
+											flexDirection: "column"
+										}}
+									>
+										<h5>{t("try_asking.text") as string}:</h5>
+										<Flex
+											style={{
+												flexDirection: "column",
+												gap: "0.1px",
+												marginBottom: "12px",
+												fontStyle: "italic",
+												fontSize: "12px"
+											}}
+										>
+											<q>{t("nl_query_example_1.text") as string}</q>
+											<q>{t("nl_query_example_2.text") as string}</q>
+											<q>{t("nl_query_example_3.text") as string}</q>
+										</Flex>
+									</Flex>
+								) : (
+									<></>
+								)}
 							</form>
 							<Flex gap="0" direction="column">
 								{isSearching ? (
-									<Flex className="search-loader-container">
-										{Array.from({ length: 5 }).map((_, index) => (
-											<Flex className="skeleton-container" key={index}>
-												<Placeholder />
-												<Placeholder width="65%" />
-											</Flex>
-										))}
-									</Flex>
+									!isNLChecked ? (
+										<Flex className="search-loader-container">
+											{Array.from({ length: 5 }).map((_, index) => (
+												<Flex className="skeleton-container" key={index}>
+													<Placeholder />
+													<Placeholder width="65%" />
+												</Flex>
+											))}
+										</Flex>
+									) : (
+										<Flex
+											gap={0}
+											padding="0 0.61rem 0.61rem"
+											alignItems="center"
+											style={{
+												marginLeft: "10px"
+											}}
+										>
+											<NLSearchLoader nlLoadText={nlLoadText}></NLSearchLoader>
+										</Flex>
+									)
 								) : !isSearching && !!value && !suggestions?.length ? (
-									<Flex className="not-found-container">
-										<NotFoundCard />
-									</Flex>
+									!isNLChecked ? (
+										<Flex className="not-found-container">
+											<NotFoundCard />
+										</Flex>
+									) : (
+										<Flex
+											gap={0}
+											width="100%"
+											alignItems="start"
+											paddingLeft="10px"
+											style={{
+												flexDirection: "column"
+											}}
+										>
+											<Flex>
+												<h5>{t("try_asking.text") as string}:</h5>
+											</Flex>
+											<Flex
+												style={{
+													flexDirection: "column",
+													gap: "0.1px",
+													marginBottom: "12px",
+													fontStyle: "italic",
+													fontSize: "12px"
+												}}
+											>
+												<q>{t("nl_query_example_1.text") as string}</q>
+												<q>{t("nl_query_example_2.text") as string}</q>
+												<q>{t("nl_query_example_3.text") as string}</q>
+											</Flex>
+										</Flex>
+									)
 								) : (
 									<Flex
 										gap="0"

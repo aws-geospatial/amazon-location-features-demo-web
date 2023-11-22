@@ -21,10 +21,7 @@ const useFeedback = () => {
 				try {
 					setState({ isSubmitting: true });
 					const data = await feedbackService.submitFeedback(category, rating, text, email);
-					if (!data.ok) {
-						throw new Error("Request failed with status " + data.status);
-					}
-					return data.ok;
+					return data;
 				} catch (error) {
 					errorHandler(error, "failed to upload feedback");
 				} finally {
