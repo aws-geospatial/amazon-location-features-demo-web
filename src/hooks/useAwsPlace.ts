@@ -7,7 +7,7 @@ import { useAmplifyMap } from "@demo/hooks";
 import { useAwsPlaceService } from "@demo/services";
 import { useAwsPlaceStore } from "@demo/stores";
 import { ClustersType, SuggestionType, ViewPointType } from "@demo/types";
-import { EventTypeEnum, TriggeredByEnum } from "@demo/types/Enums";
+import { AnalyticsPlaceSearchTypeEnum, EventTypeEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { calculateClusters, getHash, getPrecision, isGeoString } from "@demo/utils/geoCalculation";
@@ -151,14 +151,15 @@ const useAwsPlace = () => {
 				action: string,
 				isNLSearchEnabled = false
 			) => {
+				let placeSearchType = AnalyticsPlaceSearchTypeEnum.TEXT;
 				if (isGeoString(value)) {
 					await methods.searchPlacesByCoordinates(value, viewpoint, cb);
-				} else if (exact) {
-					if (isNLSearchEnabled) {
-						await methods.searchNLPlacesByText(value, viewpoint, cb);
-					} else {
-						await methods.searchPlacesByText(value, viewpoint, cb);
-					}
+					placeSearchType = AnalyticsPlaceSearchTypeEnum.COORDINATES;
+				} else if (exact && isNLSearchEnabled) {
+					await methods.searchNLPlacesByText(value, viewpoint, cb);
+					placeSearchType = AnalyticsPlaceSearchTypeEnum.NATURAL_LANGUAGE_TEXT;
+				} else if (exact && !isNLSearchEnabled) {
+					await methods.searchPlacesByText(value, viewpoint, cb);
 				} else if (value?.length) {
 					await methods.searchPlaceSuggestions(value, viewpoint, cb);
 				}
@@ -168,7 +169,7 @@ const useAwsPlace = () => {
 						EventType: EventTypeEnum.PLACE_SEARCH,
 						Attributes: {
 							exact: String(exact),
-							type: isGeoString(value) ? "Coordinates" : "Text",
+							type: placeSearchType,
 							triggeredBy,
 							action
 						}
