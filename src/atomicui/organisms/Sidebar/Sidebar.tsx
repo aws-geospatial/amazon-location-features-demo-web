@@ -234,7 +234,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 								textAlign="center"
 								onClick={() => onClickFeedbackButton()}
 							>
-								Provide Feedback
+								{t("fm__provide_feedback_btn.text")}
 							</Button>
 						) : (
 							<></>
@@ -264,7 +264,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 								textAlign="center"
 								onClick={() => onClickFeedbackButton()}
 							>
-								Provide Feedback
+								{t("fm__provide_feedback_btn.text")}
 							</Button>
 						) : (
 							<></>

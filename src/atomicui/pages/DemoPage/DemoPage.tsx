@@ -1156,7 +1156,7 @@ const DemoPage: React.FC = () => {
 							isEditingAuthRoute={isEditingAuthRoute}
 							onCloseSidebar={() => setShow(s => ({ ...s, sidebar: false }))}
 							onOpenConnectAwsAccountModal={() => setShow(s => ({ ...s, connectAwsAccount: true }))}
-							//TODO: feedback form for mobile view
+							onOpenFeedbackModal={() => setShow(s => ({ ...s, openFeedbackModal: true }))}
 							onOpenSignInModal={() => setShow(s => ({ ...s, signInModal: true }))}
 							onShowSettings={() => {
 								setShow(s => ({ ...s, settings: true }));

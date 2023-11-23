@@ -3616,5 +3616,41 @@
   },
   "nl_loader_sample_text_5": {
     "text": "סלע באמזון בתפקיד מיפוי! מחפש."
+  },
+  "fm__header": {
+    "text": "תגיד לנו מה אתה חושב?"
+  },
+  "fm__category": {
+    "text": "קטגוריה"
+  },
+  "fm__rating": {
+    "text": "דירוג"
+  },
+  "fm__feedback_header": {
+    "text": "משוב"
+  },
+  "fm__email_header": {
+    "text": "דוא\"ל"
+  },
+  "fm__opt_header": {
+    "text": "אופציונלי"
+  },
+  "fm__submit_feedback_btn": {
+    "text": "שלח משוב"
+  },
+  "fm__submit_feedback_alert": {
+    "text": "משוב הוגש"
+  },
+  "fm__provide_feedback_btn": {
+    "text": "לספק משוב"
+  },
+  "fm__mobile_view_desc": {
+    "text": "ספר לנו מה אתה חושב על החוויה שלך"
+  },
+  "error_handler__failed_feedback_text": {
+    "text": "העלאת משוב נכשלה"
+  },
+  "error_handler__failed_feedback_text_2": {
+    "text": "הבקשה נכשלה עם סטטוס"
   }
 }

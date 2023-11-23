@@ -3616,5 +3616,41 @@
   },
   "nl_loader_sample_text_5": {
     "text": "Amazon Bedrockがマッピング作業中！検索中。"
+  },
+  "fm__header": {
+    "text": "ご意見をお聞かせください。"
+  },
+  "fm__category": {
+    "text": "カテゴリー"
+  },
+  "fm__rating": {
+    "text": "格付け"
+  },
+  "fm__feedback_header": {
+    "text": "フィードバック"
+  },
+  "fm__email_header": {
+    "text": "電子メール"
+  },
+  "fm__opt_header": {
+    "text": "[オプション]"
+  },
+  "fm__submit_feedback_btn": {
+    "text": "フィードバックを送信"
+  },
+  "fm__submit_feedback_alert": {
+    "text": "フィードバックが送信されました"
+  },
+  "fm__provide_feedback_btn": {
+    "text": "フィードバックを送信"
+  },
+  "fm__mobile_view_desc": {
+    "text": "あなたの経験についてどう思うか教えてください"
+  },
+  "error_handler__failed_feedback_text": {
+    "text": "フィードバックをアップロードできませんでした"
+  },
+  "error_handler__failed_feedback_text_2": {
+    "text": "リクエストはステータスで失敗しました"
   }
 }

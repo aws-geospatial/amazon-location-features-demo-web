@@ -6,11 +6,13 @@ import { useMemo } from "react";
 import { useFeedbackService } from "@demo/services";
 import { useFeedbackStore } from "@demo/stores";
 import { errorHandler } from "@demo/utils/errorHandler";
+import { useTranslation } from "react-i18next";
 
 const useFeedback = () => {
 	const store = useFeedbackStore();
 	const { setState } = useFeedbackStore;
 	const feedbackService = useFeedbackService();
+	const { t } = useTranslation();
 
 	const methods = useMemo(
 		() => ({
@@ -20,9 +22,10 @@ const useFeedback = () => {
 			submitFeedbackForm: async (category: string, rating: number, text: string, email?: string) => {
 				try {
 					setState({ isSubmitting: true });
-					await feedbackService.submitFeedback(category, rating, text, email);
+					const data = await feedbackService.submitFeedback(category, rating, text, email);
+					return data;
 				} catch (error) {
-					errorHandler(error, "failed to upload feedback!");
+					errorHandler(error, t("error_handler__failed_feedback_text.text") as string);
 				} finally {
 					setState({ isSubmitting: false });
 				}
@@ -31,7 +34,7 @@ const useFeedback = () => {
 				setState({ isSubmitting });
 			}
 		}),
-		[feedbackService, setState]
+		[feedbackService, setState, t]
 	);
 	return useMemo(() => ({ ...methods, ...store }), [methods, store]);
 };
