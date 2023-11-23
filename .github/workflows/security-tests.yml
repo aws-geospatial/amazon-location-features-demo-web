@@ -31,4 +31,6 @@ jobs:
           COGNITO_PASSWORD: ${{ secrets.COGNITO_PASSWORD }}
           IAM_AUTH_ROLE_NAME: ${{ secrets.IAM_AUTH_ROLE_NAME }}
           IAM_UNAUTH_ROLE_NAME: ${{ secrets.IAM_UNAUTH_ROLE_NAME }}
+          NL_BASE_URL: ${{ secrets.NL_BASE_URL }}
+          NL_API_KEY: ${{ secrets.NL_API_KEY }}
         run: cd security-tests/ ; npm run test

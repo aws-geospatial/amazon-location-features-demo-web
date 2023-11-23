@@ -15,10 +15,12 @@ VITE_AWS_COGNITO_USERNAME_TEST=<VITE_AWS_COGNITO_USERNAME_TEST><br />
 VITE_AWS_COGNITO_PASSWORD_TEST=<VITE_AWS_COGNITO_PASSWORD_TEST><br />
 VITE_AWS_IAM_AUTH_ROLE_NAME_TEST=<VITE_AWS_IAM_AUTH_ROLE_NAME_TEST><br />
 VITE_AWS_IAM_UNAUTH_ROLE_NAME_TEST=<VITE_AWS_IAM_UNAUTH_ROLE_NAME_TEST><br />
+VITE_NL_BASE_URL=<NL_BASE_URL><br />
+VITE_NL_API_KEY=<NL_API_KEY><br />
 
 ## Configure
 >cd security-tests/<br />
-yarn run-test<br />
+npm run test<br />
 
 ## Description
 This project is a sample application to test the policies created by CF template for unauth and auth cognito roles.
