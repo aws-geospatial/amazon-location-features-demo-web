@@ -38,6 +38,7 @@ interface IProps {
 	updateUIInfo: (ui: ResponsiveUIEnum) => void;
 	onCloseSidebar: () => void;
 	onOpenConnectAwsAccountModal: () => void;
+	onOpenFeedbackModal: () => void;
 	onOpenSignInModal: () => void;
 	onShowAuthGeofenceBox: () => void;
 	onShowAuthTrackerBox: () => void;
@@ -58,6 +59,7 @@ const Explore: React.FC<IProps> = ({
 	updateUIInfo,
 	onCloseSidebar,
 	onOpenConnectAwsAccountModal,
+	onOpenFeedbackModal,
 	onOpenSignInModal,
 	onShowAuthGeofenceBox,
 	onShowAuthTrackerBox,
@@ -167,6 +169,11 @@ const Explore: React.FC<IProps> = ({
 		onShowAboutModal();
 	};
 
+	const onClickFeedback = () => {
+		onCloseSidebar();
+		onOpenFeedbackModal();
+	};
+
 	const ConnectAccount = ({ isAuthenticated = false }) => (
 		<>
 			<Flex alignItems="center">
@@ -251,7 +258,12 @@ const Explore: React.FC<IProps> = ({
 			description: t("settings_modal_option__settings.text"),
 			onClickHandler: onClickSettings
 		},
-		{ title: t("about.text"), description: t("settings_modal_option__about.text"), onClickHandler: onClickMore }
+		{ title: t("about.text"), description: t("settings_modal_option__about.text"), onClickHandler: onClickMore },
+		{
+			title: t("fm__provide_feedback_btn.text"),
+			description: t("fm__mobile_view_desc.text"),
+			onClickHandler: onClickFeedback
+		}
 	];
 
 	const exploreButtons = [

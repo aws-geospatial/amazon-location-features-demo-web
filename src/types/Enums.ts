@@ -63,6 +63,12 @@ export enum EventTypeEnum {
 	HELP_SEARCH = "HELP_SEARCH"
 }
 
+export enum AnalyticsPlaceSearchTypeEnum {
+	COORDINATES = "Coordinates",
+	NATURAL_LANGUAGE_TEXT = "NaturalLanguageText",
+	TEXT = "Text"
+}
+
 export enum AnalyticsSessionStatus {
 	CREATED = "CREATED",
 	NOT_CREATED = "NOT_CREATED",

@@ -3616,5 +3616,41 @@
   },
   "nl_loader_sample_text_5": {
     "text": "मैपिंग ड्यूटी पर Amazon Bedrock! खोज रहे हैं।"
+  },
+  "fm__header": {
+    "text": "हमें बताओ कि तुम क्या सोचते हो?"
+  },
+  "fm__category": {
+    "text": "केटेगरी"
+  },
+  "fm__rating": {
+    "text": "रेटिंग"
+  },
+  "fm__feedback_header": {
+    "text": "फ़ीडबैक"
+  },
+  "fm__email_header": {
+    "text": "ईमेल"
+  },
+  "fm__opt_header": {
+    "text": "ऐच्छिक"
+  },
+  "fm__submit_feedback_btn": {
+    "text": "फ़ीडबैक सबमिट करें"
+  },
+  "fm__submit_feedback_alert": {
+    "text": "फीडबैक सबमिट किया गया"
+  },
+  "fm__provide_feedback_btn": {
+    "text": "फ़ीडबैक प्रदान करें"
+  },
+  "fm__mobile_view_desc": {
+    "text": "हमें बताएं कि आप अपने अनुभव के बारे में क्या सोचते हैं"
+  },
+  "error_handler__failed_feedback_text": {
+    "text": "फ़ीडबैक अपलोड करने में असफल"
+  },
+  "error_handler__failed_feedback_text_2": {
+    "text": "स्थिति के साथ अनुरोध विफल हुआ"
   }
 }

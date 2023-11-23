@@ -3616,5 +3616,41 @@
   },
   "nl_loader_sample_text_5": {
     "text": "¡Amazon Bedrock se encarga de cartografiar! ¿Buscando?."
+  },
+  "fm__header": {
+    "text": "¿Cuéntanos qué piensas?"
+  },
+  "fm__category": {
+    "text": "Categoría"
+  },
+  "fm__rating": {
+    "text": "Calificación"
+  },
+  "fm__feedback_header": {
+    "text": "Retroalimentación"
+  },
+  "fm__email_header": {
+    "text": "Correo electrónico"
+  },
+  "fm__opt_header": {
+    "text": "Opcional"
+  },
+  "fm__submit_feedback_btn": {
+    "text": "Enviar comentarios"
+  },
+  "fm__submit_feedback_alert": {
+    "text": "Comentarios enviados"
+  },
+  "fm__provide_feedback_btn": {
+    "text": "Proporcionar comentarios"
+  },
+  "fm__mobile_view_desc": {
+    "text": "Cuéntanos qué opinas de tu experiencia"
+  },
+  "error_handler__failed_feedback_text": {
+    "text": "no se pudo subir el comentario"
+  },
+  "error_handler__failed_feedback_text_2": {
+    "text": "Error en la solicitud con el estado"
   }
 }

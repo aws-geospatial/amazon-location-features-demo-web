@@ -35,6 +35,7 @@ interface IProps {
 	RouteBox: (ref?: React.MutableRefObject<RefHandles | null>) => JSX.Element;
 	onCloseSidebar: () => void;
 	onOpenConnectAwsAccountModal: () => void;
+	onOpenFeedbackModal: () => void;
 	onOpenSignInModal: () => void;
 	onShowAuthGeofenceBox: () => void;
 	onShowAuthTrackerBox: () => void;
@@ -78,6 +79,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	RouteBox,
 	onCloseSidebar,
 	onOpenConnectAwsAccountModal,
+	onOpenFeedbackModal,
 	onOpenSignInModal,
 	onShowAuthGeofenceBox,
 	onShowAuthTrackerBox,
@@ -475,6 +477,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 										updateUIInfo={setUI}
 										onCloseSidebar={onCloseSidebar}
 										onOpenConnectAwsAccountModal={onOpenConnectAwsAccountModal}
+										onOpenFeedbackModal={onOpenFeedbackModal}
 										onOpenSignInModal={onOpenSignInModal}
 										onShowAuthGeofenceBox={onShowAuthGeofenceBox}
 										onShowAuthTrackerBox={onShowAuthTrackerBox}
@@ -500,6 +503,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 			UnauthSimulationUI,
 			onCloseSidebar,
 			onOpenConnectAwsAccountModal,
+			onOpenFeedbackModal,
 			onOpenSignInModal,
 			onShowAboutModal,
 			onShowAuthGeofenceBox,

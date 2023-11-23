@@ -102,3 +102,5 @@ export { ReactComponent as IconMoreVertical } from "./icon-more-vertical.svg";
 export { ReactComponent as IconMoveUp } from "./icon-move-up.svg";
 export { ReactComponent as IconMoveDown } from "./icon-move-down.svg";
 export { ReactComponent as IconMoveStill } from "./icon-move-still.svg";
+export { ReactComponent as IconStar } from "./icon-star.svg";
+export { ReactComponent as IconStarFilled } from "./icon-star-filled.svg";
