@@ -22,7 +22,7 @@ import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useAmplifyMap, useAwsPlace } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
-import { DistanceUnitEnum, MapUnitEnum, SuggestionType } from "@demo/types";
+import { DistanceUnitEnum, MapProviderEnum, MapUnitEnum, SuggestionType } from "@demo/types";
 import { AnalyticsEventActionsEnum, ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { calculateGeodesicDistance } from "@demo/utils/geoCalculation";
 import { Units } from "@turf/turf";
@@ -86,6 +86,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	const [isNLChecked, setIsNLChecked] = useState(false);
 	const autocompleteRef = useRef<HTMLInputElement | null>(null);
 	const { mapUnit: currentMapUnit, isCurrentLocationDisabled, currentLocationData, viewpoint } = useAmplifyMap();
+	const { mapProvider: currentMapProvider } = useAmplifyMap();
 	const {
 		clusters,
 		suggestions,
@@ -750,7 +751,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 									}
 									crossOrigin={undefined}
 								/>
-								{NL_BASE_URL && NL_API_KEY ? (
+								{NL_BASE_URL && NL_API_KEY && currentMapProvider !== MapProviderEnum.GRAB ? (
 									<Flex
 										className="nl-search-container"
 										id="nl-search"
