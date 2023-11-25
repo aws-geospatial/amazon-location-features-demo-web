@@ -87,12 +87,14 @@ const useAwsPlaceService = () => {
 			},
 			getNLPlacesByText: async (Text: string) => {
 				const BiasPosition = [viewpoint?.longitude as number, viewpoint?.latitude as number];
+				const mapProvider = currentMapProvider === MapProviderEnum.HERE ? "Here" : currentMapProvider;
 				const response = await fetch(
 					`${NL_BASE_URL}/places/ask?` +
 						new URLSearchParams([
 							["Text", Text],
 							["BiasPosition", BiasPosition[0].toString()],
-							["BiasPosition", BiasPosition[1].toString()]
+							["BiasPosition", BiasPosition[1].toString()],
+							["DataSource", mapProvider]
 						]),
 					{
 						method: "GET",

@@ -751,7 +751,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 									}
 									crossOrigin={undefined}
 								/>
-								{NL_BASE_URL && NL_API_KEY && currentMapProvider === MapProviderEnum.ESRI ? (
+								{NL_BASE_URL && NL_API_KEY && currentMapProvider !== MapProviderEnum.GRAB ? (
 									<Flex
 										className="nl-search-container"
 										id="nl-search"
