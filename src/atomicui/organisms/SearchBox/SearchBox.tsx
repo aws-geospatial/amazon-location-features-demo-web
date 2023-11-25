@@ -496,7 +496,11 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 										</Button>
 									)}
 								</Flex>
-								{!isSearching ? (
+								{!isSearching &&
+								NL_BASE_URL &&
+								NL_API_KEY &&
+								currentMapProvider !== MapProviderEnum.GRAB &&
+								currentMapProvider !== MapProviderEnum.HERE ? (
 									<Flex gap={0} padding="0 0.61rem 0.61rem" alignItems="center">
 										<SwitchField
 											label={t("nl_search_label.text") as string}
