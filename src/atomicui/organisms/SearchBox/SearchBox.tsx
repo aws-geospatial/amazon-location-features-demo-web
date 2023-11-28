@@ -156,6 +156,12 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		}
 	}, [ui, isDesktop, bottomSheetRef, setBottomSheetMinHeight]);
 
+	useEffect(() => {
+		if (currentMapProvider === MapProviderEnum.GRAB || currentMapProvider === MapProviderEnum.HERE) {
+			setIsNLChecked(false);
+		}
+	}, [isNLChecked, currentMapProvider]);
+
 	const handleSearch = useCallback(
 		async (value: string, exact = false, action: string) => {
 			setSearchingState(!!value?.length);
@@ -490,7 +496,11 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 										</Button>
 									)}
 								</Flex>
-								{!isSearching ? (
+								{!isSearching &&
+								NL_BASE_URL &&
+								NL_API_KEY &&
+								currentMapProvider !== MapProviderEnum.GRAB &&
+								currentMapProvider !== MapProviderEnum.HERE ? (
 									<Flex gap={0} padding="0 0.61rem 0.61rem" alignItems="center">
 										<SwitchField
 											label={t("nl_search_label.text") as string}
@@ -751,7 +761,10 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 									}
 									crossOrigin={undefined}
 								/>
-								{NL_BASE_URL && NL_API_KEY && currentMapProvider === MapProviderEnum.ESRI ? (
+								{NL_BASE_URL &&
+								NL_API_KEY &&
+								currentMapProvider !== MapProviderEnum.GRAB &&
+								currentMapProvider !== MapProviderEnum.HERE ? (
 									<Flex
 										className="nl-search-container"
 										id="nl-search"
