@@ -77,7 +77,10 @@ export default defineConfig(() => {
 			sourcemap: true,
 			lib: {
 				entry: {
-					"demo-page": path.resolve(__dirname, "src/index.ts")
+					"demo-page": path.resolve(__dirname, "src/index.ts"),
+					core: path.resolve(__dirname, "src/core/index.ts"),
+					utils: path.resolve(__dirname, "src/utils/index.ts"),
+					types: path.resolve(__dirname, "src/types/index.ts")
 				},
 				name: "DemoPage",
 				formats: ["es"],
