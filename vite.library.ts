@@ -80,7 +80,8 @@ export default defineConfig(() => {
 					"demo-page": path.resolve(__dirname, "src/index.ts"),
 					core: path.resolve(__dirname, "src/core/index.ts"),
 					utils: path.resolve(__dirname, "src/utils/index.ts"),
-					types: path.resolve(__dirname, "src/types/index.ts")
+					types: path.resolve(__dirname, "src/types/index.ts"),
+					hooks: path.resolve(__dirname, "src/hooks/index.ts"),
 				},
 				name: "DemoPage",
 				formats: ["es"],
