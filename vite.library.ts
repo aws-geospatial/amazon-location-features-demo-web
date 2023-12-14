@@ -74,7 +74,8 @@ export default defineConfig(() => {
 		},
 		build: {
 			outDir: "./lib",
-			sourcemap: true,
+			sourcemap: false,
+			minify: true,
 			lib: {
 				entry: {
 					"demo-page": path.resolve(__dirname, "src/index.ts"),
