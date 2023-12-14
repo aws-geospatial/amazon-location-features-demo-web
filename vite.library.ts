@@ -81,7 +81,7 @@ export default defineConfig(() => {
 					core: path.resolve(__dirname, "src/core/index.ts"),
 					utils: path.resolve(__dirname, "src/utils/index.ts"),
 					types: path.resolve(__dirname, "src/types/index.ts"),
-					hooks: path.resolve(__dirname, "src/hooks/index.ts"),
+					hooks: path.resolve(__dirname, "src/hooks/index.ts")
 				},
 				name: "DemoPage",
 				formats: ["es"],
@@ -89,6 +89,17 @@ export default defineConfig(() => {
 			},
 			rollupOptions: {
 				external: packageNames,
+				manualChunks: id => {
+					const chunkId = Math.random().toString(36).substr(2, 5);
+					if (id.includes("react")) {
+						return "vendor-react";
+					}
+					if (id.includes("node_modules")) {
+						console.log(`${chunkId} ${id}`);
+						return `vendor-${chunkId}`;
+					}
+					return chunkId;
+				},
 				output: {
 					globals: {
 						react: "React",

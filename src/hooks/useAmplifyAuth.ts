@@ -16,7 +16,7 @@ import { clearStorage } from "@demo/utils/localstorageUtils";
 import { setClosestRegion } from "@demo/utils/regionUtils";
 import { transformCloudFormationLink } from "@demo/utils/transformCloudFormationLink";
 import { Amplify, Auth } from "aws-amplify";
-import AWS from "aws-sdk";
+import CognitoIdentity from "aws-sdk/clients/cognitoidentity";
 import { useTranslation } from "react-i18next";
 
 import useDeviceMediaQuery from "./useDeviceMediaQuery";
@@ -73,7 +73,7 @@ const useAmplifyAuth = () => {
 				}
 			},
 			validateIdentityPoolIdAndRegion: (IdentityPoolId: string, successCb?: () => void) => {
-				const cognitoidentity = new AWS.CognitoIdentity({ region: IdentityPoolId.split(":")[0] });
+				const cognitoidentity = new CognitoIdentity({ region: IdentityPoolId.split(":")[0] });
 				cognitoidentity.getId(
 					{
 						IdentityPoolId

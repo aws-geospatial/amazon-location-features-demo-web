@@ -2,7 +2,8 @@
 /* SPDX-License-Identifier: MIT-0 */
 
 import { IStateProps } from "@demo/types";
-import { Iot, Location } from "aws-sdk";
+import Iot from "aws-sdk/clients/iot";
+import Location from "aws-sdk/clients/location";
 
 import createStore from "./createStore";
 

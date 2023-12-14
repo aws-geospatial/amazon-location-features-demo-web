@@ -26,7 +26,7 @@ import { DistanceUnitEnum, MapProviderEnum, MapUnitEnum, SuggestionType } from "
 import { AnalyticsEventActionsEnum, ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { calculateGeodesicDistance } from "@demo/utils/geoCalculation";
 import { Units } from "@turf/turf";
-import { Location } from "aws-sdk";
+import Location from "aws-sdk/clients/location";
 import { LngLat } from "mapbox-gl";
 import { isAndroid, isIOS } from "react-device-detect";
 import { useTranslation } from "react-i18next";

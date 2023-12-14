@@ -4,7 +4,7 @@
 import { useMemo } from "react";
 
 import { useAws } from "@demo/hooks";
-import { Iot } from "aws-sdk";
+import Iot from "aws-sdk/clients/iot";
 
 const useAwsIotService = () => {
 	const { iotClient } = useAws();

@@ -4,15 +4,16 @@
 import { useMemo } from "react";
 
 import { ICredentials } from "@aws-amplify/core";
-import AWS from "aws-sdk";
+import Iot from "aws-sdk/clients/iot";
+import Location from "aws-sdk/clients/location";
 
 const useAwsService = () => {
 	return useMemo(
 		() => ({
 			createLocationClient: (credentials: ICredentials, region: string) =>
-				new AWS.Location({ credentials, region, signatureCache: false }),
+				new Location({ credentials, region, signatureCache: false }),
 			createIotClient: (credentials: ICredentials, region: string) =>
-				new AWS.Iot({ credentials, region, signatureCache: false })
+				new Iot({ credentials, region, signatureCache: false })
 		}),
 		[]
 	);
