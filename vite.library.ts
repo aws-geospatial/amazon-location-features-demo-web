@@ -90,17 +90,28 @@ export default defineConfig(() => {
 			},
 			rollupOptions: {
 				external: packageNames,
-				// manualChunks: id => {
-				// 	const chunkId = Math.random().toString(36).substr(2, 5);
-				// 	if (id.includes("react")) {
-				// 		return "vendor-react";
-				// 	}
-				// 	if (id.includes("node_modules")) {
-				// 		console.log(`${chunkId} ${id}`);
-				// 		return `vendor-${chunkId}`;
-				// 	}
-				// 	return chunkId;
-				// },
+				manualChunks: id => {
+					// Handle node_modules
+					if (id.includes("node_modules")) {
+						const directories = id.split(path.sep);
+						const packageNameIndex = directories.lastIndexOf("node_modules") + 1;
+						const packageName = directories.pop().trim().replace(".", "_");
+
+						if (packageName.startsWith("@")) {
+							return `vendor-${directories[packageNameIndex]}-${directories[packageNameIndex + 1]}`;
+						}
+						return `vendor-${packageName}`;
+					} else {
+						// Handle your source files, assuming they're in the `src` directory
+						const srcIndex = id.indexOf(path.sep + "src" + path.sep);
+						if (srcIndex !== -1) {
+							const chunkName = id.slice(srcIndex + 5).split(path.sep)[0];
+							return `src-${chunkName}`;
+						}
+					}
+					// Entry modules or any other file falling outside the above categories
+					return "main";
+				},
 				output: {
 					globals: {
 						react: "React",
