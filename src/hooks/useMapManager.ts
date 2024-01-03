@@ -314,15 +314,17 @@ const useMapManager = ({
 
 	const handleOpenDataMapChange = useCallback(
 		(mapStyle?: OpenDataMapEnum) => {
-			if (doNotAskOpenDataDisclaimerModal) setDoNotAskOpenDataDisclaimerModal(!doNotAskOpenDataDisclaimer);
+			doNotAskOpenDataDisclaimerModal && setDoNotAskOpenDataDisclaimerModal(!doNotAskOpenDataDisclaimer);
 			setOpenDataDisclaimerModal(false);
 			setGridLoader(true);
+
 			if (currentMapProvider === MapProviderEnum.GRAB && !isUserAwsAccountConnected && fastestRegion !== region) {
 				switchToDefaultRegionStack();
 				resetAwsStore();
 				setIsCurrentLocationDisabled(false);
 				!isDesktop && setBottomSheetOpen();
 			}
+
 			setMapProvider(MapProviderEnum.OPEN_DATA);
 			setMapStyle(
 				(typeof mapStyle === "string" ? mapStyle : undefined) ||
@@ -360,8 +362,9 @@ const useMapManager = ({
 
 	const handleGrabMapChange = useCallback(
 		(mapStyle?: GrabMapEnum) => {
-			if (doNotAskGrabDisclaimerModal) setDoNotAskGrabDisclaimerModal(!doNotAskGrabDisclaimer);
-			else setGrabDisclaimerModal(false);
+			doNotAskGrabDisclaimerModal && setDoNotAskGrabDisclaimerModal(!doNotAskGrabDisclaimer);
+			setGrabDisclaimerModal(false);
+			setGridLoader(true);
 
 			if (!isUserAwsAccountConnected && !isGrabAvailableInRegion) {
 				switchToGrabMapRegionStack();
@@ -374,7 +377,6 @@ const useMapManager = ({
 				(typeof mapStyle === "string" ? mapStyle : undefined) ||
 					(tempMapStyle ? tempMapStyle : GrabMapEnum.GRAB_STANDARD_LIGHT)
 			);
-			setGridLoader(true);
 			resetAppState();
 			handleCurrentLocationAndViewpoint();
 		},
