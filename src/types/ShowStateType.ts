@@ -1,7 +1,4 @@
-import { GrabMapEnum, OpenDataMapEnum } from "@demo/types";
-
 export type ShowStateType = {
-	gridLoader: boolean;
 	sidebar: boolean;
 	routeBox: boolean;
 	signInModal: boolean;
@@ -12,9 +9,6 @@ export type ShowStateType = {
 	stylesCard: boolean;
 	authTrackerDisclaimerModal: boolean;
 	about: boolean;
-	grabDisclaimerModal: boolean;
-	openDataDisclaimerModal: boolean;
-	mapStyle?: GrabMapEnum | OpenDataMapEnum;
 	unauthGeofenceBox: boolean;
 	unauthTrackerBox: boolean;
 	unauthSimulationBounds: boolean;
