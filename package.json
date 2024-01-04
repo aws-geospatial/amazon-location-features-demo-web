@@ -43,7 +43,7 @@
 		"@turf/turf": "6.5.0",
 		"@types/react-window": "1.8.5",
 		"aws-amplify": "4.3.43",
-		"aws-sdk": "2.1248.0",
+		"aws-sdk": "2.1518.0",
 		"date-fns": "2.29.3",
 		"i18next": "23.2.8",
 		"i18next-browser-languagedetector": "7.1.0",
