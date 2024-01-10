@@ -108,7 +108,7 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 					onCloseSidebar={() => {}}
 					onOpenSignInModal={() => {}}
 					isGrabVisible={isGrabVisible}
-					showGrabDisclaimerModal={show.grabDisclaimerModal}
+					showGrabDisclaimerModal={false}
 					onShowGridLoader={() => {}}
 					handleMapStyleChange={() => {}}
 					searchValue={searchValue}
@@ -156,7 +156,7 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 						onCloseSidebar={() => {}}
 						onOpenSignInModal={() => {}}
 						isGrabVisible={isGrabVisible}
-						showGrabDisclaimerModal={show.grabDisclaimerModal}
+						showGrabDisclaimerModal={false}
 						onShowGridLoader={() => {}}
 						handleMapStyleChange={() => {}}
 						searchValue={searchValue}
