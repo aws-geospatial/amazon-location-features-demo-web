@@ -15,3 +15,5 @@ export { default as useRecordViewPage } from "./useRecordViewPage";
 export { default as useUnauthSimulation } from "./useUnauthSimulation";
 export { default as useWebSocketBanner } from "./useWebsocketBanner";
 export { default as useFeedback } from "./useFeedback";
+export { default as useCredsManager } from "./useCredsManager";
+export { default as useMapManager } from "./useMapManager";
