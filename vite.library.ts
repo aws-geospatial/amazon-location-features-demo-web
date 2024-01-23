@@ -4,6 +4,7 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
 import eslint from "vite-plugin-eslint";
+import Inspect from "vite-plugin-inspect";
 import svgr from "vite-plugin-svgr";
 
 const packageNames = [
@@ -47,7 +48,11 @@ export default defineConfig(() => {
 				fix: true,
 				failOnError: false
 			}),
-			dts({ insertTypesEntry: true })
+			dts({ insertTypesEntry: true }),
+			Inspect({
+				build: true,
+				outputDir: ".vite-inspect"
+			})
 		],
 		define: {
 			"process.env": process.env,
