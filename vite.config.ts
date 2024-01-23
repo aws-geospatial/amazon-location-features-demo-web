@@ -3,6 +3,7 @@ import path from "path";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import eslint from "vite-plugin-eslint";
+import Inspect from "vite-plugin-inspect";
 import svgr from "vite-plugin-svgr";
 
 export default defineConfig(() => {
@@ -13,6 +14,10 @@ export default defineConfig(() => {
 			eslint({
 				fix: true,
 				failOnError: false
+			}),
+			Inspect({
+				build: true,
+				outputDir: ".vite-inspect"
 			})
 		],
 		resolve: {

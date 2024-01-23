@@ -3652,5 +3652,29 @@
   },
   "error_handler__failed_feedback_text_2": {
     "text": "Error en la solicitud con el estado"
+  },
+  "migration": {
+    "text": "Migración"
+  },
+  "migrate_from_google_maps": {
+    "text": "Migrar desde Google Maps"
+  },
+  "feature_comparison": {
+    "text": "Comparación de funciones"
+  },
+  "migrate_a_web_app": {
+    "text": "Migrar una aplicación web"
+  },
+  "migrate_an_android_app": {
+    "text": "Migrar una aplicación de Android"
+  },
+  "migrate_an_ios_app": {
+    "text": "Migrar una aplicación iOS"
+  },
+  "migrate_a_web_service": {
+    "text": "Migrar un servicio web"
+  },
+  "pricing": {
+    "text": "Fijación"
   }
 }

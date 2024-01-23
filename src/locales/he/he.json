@@ -3652,5 +3652,29 @@
   },
   "error_handler__failed_feedback_text_2": {
     "text": "הבקשה נכשלה עם סטטוס"
+  },
+  "migration": {
+    "text": "הגירה"
+  },
+  "migrate_from_google_maps": {
+    "text": "העבר ממפות גוגל"
+  },
+  "feature_comparison": {
+    "text": "השוואת תכונות"
+  },
+  "migrate_a_web_app": {
+    "text": "העברת אפליקציית אינטרנט"
+  },
+  "migrate_an_android_app": {
+    "text": "העבר אפליקציית אנדרואיד"
+  },
+  "migrate_an_ios_app": {
+    "text": "העבר אפליקציית iOS"
+  },
+  "migrate_a_web_service": {
+    "text": "העברת שירות אינטרנט"
+  },
+  "pricing": {
+    "text": "תמחור"
   }
 }

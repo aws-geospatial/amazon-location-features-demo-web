@@ -145,7 +145,6 @@ const Sidebar: React.FC<SidebarProps> = ({
 					<IconClose data-testid="icon-close" onClick={onCloseSidebar} />
 				</View>
 			</Flex>
-
 			<View as="ul" className="side-bar__menu">
 				<Flex
 					className="link-item"

@@ -3652,5 +3652,29 @@
   },
   "error_handler__failed_feedback_text_2": {
     "text": "リクエストはステータスで失敗しました"
+  },
+  "migration": {
+    "text": "マイグレーション"
+  },
+  "migrate_from_google_maps": {
+    "text": "Google マップからの移行"
+  },
+  "feature_comparison": {
+    "text": "機能比較"
+  },
+  "migrate_a_web_app": {
+    "text": "Web アプリの移行"
+  },
+  "migrate_an_android_app": {
+    "text": "Android アプリを移行する"
+  },
+  "migrate_an_ios_app": {
+    "text": "iOS アプリの移行"
+  },
+  "migrate_a_web_service": {
+    "text": "Web サービスの移行"
+  },
+  "pricing": {
+    "text": "価格設定"
   }
 }
