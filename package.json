@@ -101,7 +101,6 @@
 		"vite": "3.2.7",
 		"vite-plugin-dts": "2.3.0",
 		"vite-plugin-eslint": "1.7.0",
-		"vite-plugin-inspect": "^0.8.1",
 		"vite-plugin-svgr": "2.2.1"
 	},
 	"engines": {
