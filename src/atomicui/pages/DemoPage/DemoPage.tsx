@@ -1278,6 +1278,7 @@ const DemoPage: React.FC = () => {
 								isExpandRouteOptionsMobile={expandRouteOptionsMobile}
 								setExpandRouteOptionsMobile={setExpandRouteOptionsMobile}
 								setSearchBoxValue={setSearchBoxValue}
+								onOpenFeedbackModal={() => setShow(s => ({ ...s, openFeedbackModal: true }))}
 							/>
 						)}
 						{isDesktop && (
