@@ -101,17 +101,6 @@ export default defineConfig(() => {
 						"react-dom": "ReactDOM"
 					}
 				}
-				// manualChunks: id => {
-				// 	const chunkId = Math.random().toString(36).substr(2, 5);
-				// 	if (id.includes("react")) {
-				// 		return "vendor-react";
-				// 	}
-				// 	if (id.includes("node_modules")) {
-				// 		console.log(`${chunkId} ${id}`);
-				// 		return `vendor-${chunkId}`;
-				// 	}
-				// 	return chunkId;
-				// }
 			}
 		},
 		optimizeDeps: {
