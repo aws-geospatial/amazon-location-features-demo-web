@@ -53,7 +53,7 @@ const useAwsGeofenceService = () => {
 						{
 							DeviceId: DEVICE_ID_WEB,
 							Position,
-							SampleTime: new Date().toISOString() as unknown as Date,
+							SampleTime: new Date(),
 							PositionProperties: {
 								region: IdentityId.split(":")[0],
 								id: IdentityId.split(":")[1]

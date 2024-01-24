@@ -2,33 +2,17 @@
 	"name": "amazon-location-features-demo-web",
 	"private": true,
 	"version": "0.0.0",
+	"type": "module",
 	"files": [
 		"lib"
 	],
-	"type": "module",
-	"main": "./lib/demo-page.es.js",
-	"module": "./lib/demo-page.es.js",
+	"main": "./lib/demo-lib.es.js",
+	"module": "./lib/demo-lib.es.js",
 	"types": "./lib/index.d.ts",
 	"exports": {
 		".": {
-			"import": "./lib/demo-page.es.js",
-			"require": "./lib/demo-page.es.js"
-		},
-		"./lib/core.es.js": {
-			"import": "./lib/core.es.js",
-			"require": "./lib/core.es.js"
-		},
-		"./lib/utils.es.js": {
-			"import": "./lib/utils.es.js",
-			"require": "./lib/utils.es.js"
-		},
-		"./lib/types.es.js": {
-			"import": "./lib/types.es.js",
-			"require": "./lib/types.es.js"
-		},
-		"./lib/hooks.es.js": {
-			"import": "./lib/hooks.es.js",
-			"require": "./lib/hooks.es.js"
+			"import": "./lib/demo-lib.es.js",
+			"require": "./lib/demo-lib.es.js"
 		},
 		"./lib/style.css": {
 			"import": "./lib/style.css",

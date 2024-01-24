@@ -1,4 +1,4 @@
-import path from "path";
+import { resolve } from "path";
 
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
@@ -6,43 +6,6 @@ import dts from "vite-plugin-dts";
 import eslint from "vite-plugin-eslint";
 import Inspect from "vite-plugin-inspect";
 import svgr from "vite-plugin-svgr";
-
-const excludedDeps = [
-	/* Core deps */
-	"@aws-amplify/ui-react",
-	"@aws-sdk/client-cognito-identity",
-	"@aws-sdk/client-iot",
-	"@aws-sdk/client-location",
-	"@aws-sdk/client-pinpoint",
-	"@aws-sdk/credential-providers",
-	"@turf/turf",
-	"aws-amplify",
-	"date-fns",
-	"i18next",
-	"i18next-browser-languagedetector",
-	"mapbox-gl-draw-circle",
-	"ngeohash",
-	"ramda",
-	"react",
-	"react-device-detect",
-	"react-dom",
-	"react-i18next",
-	"react-router-dom",
-	"react-spring-bottom-sheet",
-	"react-toastify",
-	"react-tooltip",
-	"zustand",
-	/* Other deps */
-	"react-map-gl",
-	"react/jsx-runtime",
-	"@aws-amplify/pubsub",
-	"zustand/middleware",
-	"@turf/distance",
-	"@mapbox/mapbox-gl-draw",
-	"react/jsx-dev-runtime",
-	"mapbox-gl",
-	"styled-components"
-];
 
 export default defineConfig(() => {
 	return {
@@ -66,16 +29,16 @@ export default defineConfig(() => {
 		},
 		resolve: {
 			alias: {
-				"@demo/assets": path.resolve(__dirname, "./src/assets"),
-				"@demo/core": path.resolve(__dirname, "./src/core"),
-				"@demo/atomicui": path.resolve(__dirname, "./src/atomicui"),
-				"@demo/hooks": path.resolve(__dirname, "./src/hooks"),
-				"@demo/services": path.resolve(__dirname, "./src/services"),
-				"@demo/stores": path.resolve(__dirname, "./src/stores"),
-				"@demo/types": path.resolve(__dirname, "./src/types"),
-				"@demo/theme": path.resolve(__dirname, "./src/theme"),
-				"@demo/utils": path.resolve(__dirname, "./src/utils"),
-				"@demo/locales": path.resolve(__dirname, "./src/locales"),
+				"@demo/assets": resolve(__dirname, "./src/assets"),
+				"@demo/core": resolve(__dirname, "./src/core"),
+				"@demo/atomicui": resolve(__dirname, "./src/atomicui"),
+				"@demo/hooks": resolve(__dirname, "./src/hooks"),
+				"@demo/services": resolve(__dirname, "./src/services"),
+				"@demo/stores": resolve(__dirname, "./src/stores"),
+				"@demo/types": resolve(__dirname, "./src/types"),
+				"@demo/theme": resolve(__dirname, "./src/theme"),
+				"@demo/utils": resolve(__dirname, "./src/utils"),
+				"@demo/locales": resolve(__dirname, "./src/locales"),
 				"./runtimeConfig": "./runtimeConfig.browser"
 			}
 		},
@@ -88,18 +51,50 @@ export default defineConfig(() => {
 			minify: true,
 			lib: {
 				entry: {
-					"demo-page": path.resolve(__dirname, "src/index.ts")
-					// core: path.resolve(__dirname, "src/core/index.ts"),
-					// utils: path.resolve(__dirname, "src/utils/index.ts"),
-					// types: path.resolve(__dirname, "src/types/index.ts"),
-					// hooks: path.resolve(__dirname, "src/hooks/index.ts")
+					"demo-lib": resolve(__dirname, "src/index.ts")
 				},
-				name: "DemoPage",
+				name: "DemoLib",
 				formats: ["es"],
 				fileName: (format, name) => `${name}.${format}.js`
 			},
 			rollupOptions: {
-				external: excludedDeps,
+				emptyOutDir: true,
+				external: [
+					/* Core deps */
+					"@aws-amplify/ui-react",
+					"@aws-sdk/client-cognito-identity",
+					"@aws-sdk/client-iot",
+					"@aws-sdk/client-location",
+					"@aws-sdk/client-pinpoint",
+					"@aws-sdk/credential-providers",
+					"@turf/turf",
+					"aws-amplify",
+					"date-fns",
+					"i18next",
+					"i18next-browser-languagedetector",
+					"mapbox-gl-draw-circle",
+					"ngeohash",
+					"ramda",
+					"react",
+					"react-device-detect",
+					"react-dom",
+					"react-i18next",
+					"react-router-dom",
+					"react-spring-bottom-sheet",
+					"react-toastify",
+					"react-tooltip",
+					"zustand",
+					/* Other deps */
+					"react-map-gl",
+					"react/jsx-runtime",
+					"@aws-amplify/pubsub",
+					"zustand/middleware",
+					"@turf/distance",
+					"@mapbox/mapbox-gl-draw",
+					"react/jsx-dev-runtime",
+					"mapbox-gl",
+					"styled-components"
+				],
 				output: {
 					globals: {
 						react: "React",
@@ -117,8 +112,7 @@ export default defineConfig(() => {
 				// 	}
 				// 	return chunkId;
 				// }
-			},
-			emptyOutDir: true
+			}
 		},
 		optimizeDeps: {
 			disabled: false
