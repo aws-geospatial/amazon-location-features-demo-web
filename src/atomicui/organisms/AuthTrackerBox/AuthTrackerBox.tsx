@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button, Card, Flex, Loader, Text, View } from "@aws-amplify/ui-react";
 import {
@@ -22,7 +22,6 @@ import { RouteDataType, TrackerType } from "@demo/types";
 import { EventTypeEnum, ResponsiveUIEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
 import * as turf from "@turf/turf";
-import { Position } from "aws-sdk/clients/location";
 import { useTranslation } from "react-i18next";
 import { Layer, MapRef, Marker, Source } from "react-map-gl";
 import { Tooltip } from "react-tooltip";
@@ -43,16 +42,12 @@ export interface AuthTrackerBoxProps {
 	clearCredsAndLocationClient?: () => void;
 }
 
-const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
-	mapRef,
-	setShowAuthTrackerBox,
-	clearCredsAndLocationClient
-}) => {
+const AuthTrackerBox: FC<AuthTrackerBoxProps> = ({ mapRef, setShowAuthTrackerBox, clearCredsAndLocationClient }) => {
 	const [isSaved, setIsSaved] = useState(false);
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [routeData, setRouteData] = useState<RouteDataType | undefined>(undefined);
-	const [points, setPoints] = useState<Position[] | undefined>(undefined);
-	const [trackerPos, setTrackerPos] = useState<Position | undefined>(undefined);
+	const [points, setPoints] = useState<number[][] | undefined>(undefined);
+	const [trackerPos, setTrackerPos] = useState<number[] | undefined>(undefined);
 	const { isFetchingRoute } = useAwsRoute();
 	const { geofences, getGeofencesList } = useAwsGeofence();
 	const {
@@ -138,11 +133,12 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 
 	const renderGeofenceMarkers = useMemo(() => {
 		if (geofences?.length) {
-			return geofences.map(({ GeofenceId, Geometry: { Circle } }, idx) => {
-				if (Circle) {
+			return geofences.map(({ GeofenceId, Geometry }, idx) => {
+				if (Geometry?.Circle) {
+					const { Circle } = Geometry;
 					const { Center } = Circle;
 
-					return <GeofenceMarker key={idx} lng={Center[0]} lat={Center[1]} description={GeofenceId} />;
+					return <GeofenceMarker key={idx} lng={Center![0]} lat={Center![1]} description={GeofenceId!} />;
 				}
 			});
 		}
@@ -150,10 +146,11 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 
 	const renderGeofences = useMemo(() => {
 		if (geofences?.length) {
-			return geofences.map(({ GeofenceId, Geometry: { Circle } }, idx) => {
-				if (Circle) {
+			return geofences.map(({ GeofenceId, Geometry }, idx) => {
+				if (Geometry?.Circle) {
+					const { Circle } = Geometry;
 					const { Center, Radius } = Circle;
-					const circle = turf.circle(Center, Radius, { steps: 50, units: "meters" });
+					const circle = turf.circle(Center!, Radius!, { steps: 50, units: "meters" });
 					const line = turf.lineString(circle.geometry.coordinates[0]);
 
 					return (

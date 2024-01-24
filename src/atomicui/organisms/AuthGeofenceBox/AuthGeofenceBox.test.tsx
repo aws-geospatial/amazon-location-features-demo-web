@@ -1,7 +1,7 @@
+import { ListGeofenceResponseEntry } from "@aws-sdk/client-location";
 import i18n from "@demo/locales/i18n";
 import { faker } from "@faker-js/faker";
 import { act, fireEvent, render, waitFor } from "@testing-library/react";
-import { ListGeofenceResponseEntry } from "aws-sdk/clients/location";
 import { I18nextProvider } from "react-i18next";
 
 import AuthGeofenceBox, { AuthGeofenceBoxProps } from "./AuthGeofenceBox";

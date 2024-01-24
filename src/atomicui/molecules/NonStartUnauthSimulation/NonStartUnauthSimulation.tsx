@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC, RefObject } from "react";
 
 import { Button, Card, Flex, Text } from "@aws-amplify/ui-react";
 import { IconClose, IconGeofenceColor, IconTrackers } from "@demo/assets";
@@ -15,7 +15,7 @@ export interface NonStartUnauthSimulationProps {
 	handleCta: () => void;
 	handleEnableLive: () => void;
 	from: MenuItemEnum;
-	startRef: React.RefObject<HTMLDivElement>;
+	startRef: RefObject<HTMLDivElement>;
 }
 
 const NonStartUnauthSimulation: FC<NonStartUnauthSimulationProps> = ({

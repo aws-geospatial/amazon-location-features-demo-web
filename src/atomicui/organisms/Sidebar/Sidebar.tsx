@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React from "react";
+import { FC } from "react";
 
 import { Button, Card, Flex, Text, View } from "@aws-amplify/ui-react";
 import { IconClose, IconCompass, IconGear, IconGeofence, IconInfo, IconLockSolid, IconRadar } from "@demo/assets";
@@ -37,7 +37,7 @@ interface SidebarProps {
 	onOpenFeedbackModal: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({
+const Sidebar: FC<SidebarProps> = ({
 	onCloseSidebar,
 	onOpenConnectAwsAccountModal,
 	onOpenSignInModal,

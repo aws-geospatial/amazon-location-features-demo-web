@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React from "react";
+import { FC, ReactNode, useState } from "react";
 
 import { Button, CheckboxField, Flex, Text } from "@aws-amplify/ui-react";
 import { Modal } from "@demo/atomicui/atoms";
@@ -14,7 +14,7 @@ export interface ConfirmationModalProps {
 	open: boolean;
 	onClose: () => void;
 	heading?: string;
-	description?: string | React.ReactNode;
+	description?: string | ReactNode;
 	onConfirm: () => void;
 	confirmationText?: string;
 	showLearnMore?: boolean;
@@ -29,7 +29,7 @@ export interface ConfirmationModalProps {
 	confirmationCheckboxOnChange?: (e: boolean) => void;
 }
 
-const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
+const ConfirmationModal: FC<ConfirmationModalProps> = ({
 	className = "",
 	open,
 	onClose,
@@ -49,7 +49,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 	confirmationCheckboxOnChange = () => {}
 }) => {
 	const { t } = useTranslation();
-	const [isConfirmationChecked, setIsConfirmationChecked] = React.useState(false);
+	const [isConfirmationChecked, setIsConfirmationChecked] = useState(false);
 	const { isMobile } = useDeviceMediaQuery();
 
 	return (

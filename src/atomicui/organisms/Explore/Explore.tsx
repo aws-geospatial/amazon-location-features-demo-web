@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React from "react";
+import { FC, MutableRefObject } from "react";
 
 import { Button, Divider, Flex, Text } from "@aws-amplify/ui-react";
 import {
@@ -48,14 +48,14 @@ interface IProps {
 	onShowUnauthGeofenceBox: () => void;
 	onShowUnauthTrackerBox: () => void;
 	onshowUnauthSimulationDisclaimerModal: () => void;
-	bottomSheetRef?: React.MutableRefObject<RefHandles | null>;
+	bottomSheetRef?: MutableRefObject<RefHandles | null>;
 }
 
 const {
 	ROUTES: { SAMPLES, OVERVIEW }
 } = appConfig;
 
-const Explore: React.FC<IProps> = ({
+const Explore: FC<IProps> = ({
 	updateUIInfo,
 	onCloseSidebar,
 	onOpenConnectAwsAccountModal,

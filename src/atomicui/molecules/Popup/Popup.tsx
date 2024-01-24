@@ -1,21 +1,20 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button, Flex, Placeholder, Text, View } from "@aws-amplify/ui-react";
+import { CalculateRouteRequest, CalculateRouteResponse } from "@aws-sdk/client-location";
 import { IconCar, IconClose, IconCopyPages, IconDirections, IconInfo } from "@demo/assets";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useAmplifyMap, useAwsPlace, useAwsRoute } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { DistanceUnitEnum, MapProviderEnum, MapUnitEnum, SuggestionType, TravelMode } from "@demo/types";
-
 import { ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { humanReadableTime } from "@demo/utils/dateTimeUtils";
 import { calculateGeodesicDistance } from "@demo/utils/geoCalculation";
 import { Units } from "@turf/turf";
-import { CalculateRouteRequest, CalculateRouteResponse, Position } from "aws-sdk/clients/location";
 import { useTranslation } from "react-i18next";
 import { Popup as PopupGl } from "react-map-gl";
 import { Tooltip } from "react-tooltip";
@@ -31,7 +30,7 @@ interface Props {
 	onClosePopUp?: () => void;
 	setInfo: (info?: SuggestionType) => void;
 }
-const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo }) => {
+const Popup: FC<Props> = ({ active, info, select, onClosePopUp, setInfo }) => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [routeData, setRouteData] = useState<CalculateRouteResponse>();
 	const { setPOICard, setBottomSheetMinHeight, setBottomSheetHeight, setUI, bottomSheetHeight, ui } = useBottomSheet();
@@ -44,7 +43,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 	} = useAmplifyMap();
 	const { clearPoiList } = useAwsPlace();
 	const { getRoute, setDirections, isFetchingRoute } = useAwsRoute();
-	const [longitude, latitude] = useMemo(() => info.Place?.Geometry.Point as Position, [info]);
+	const [longitude, latitude] = useMemo(() => info.Place?.Geometry?.Point as number[], [info]);
 	const { isDesktop } = useDeviceMediaQuery();
 	const { t, i18n } = useTranslation();
 	const currentLang = i18n.language;
@@ -98,7 +97,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 			DeparturePosition: [
 				currentLocationData?.currentLocation?.longitude,
 				currentLocationData?.currentLocation?.latitude
-			] as Position,
+			] as number[],
 			DestinationPosition: [longitude, latitude],
 			DistanceUnit: currentMapUnit === METRIC ? KILOMETERS : MILES,
 			TravelMode: TravelMode.CAR
@@ -205,7 +204,7 @@ const Popup: React.FC<Props> = ({ active, info, select, onClosePopUp, setInfo })
 				</Flex>
 			);
 		} else {
-			const timeInSeconds = routeData?.Summary.DurationSeconds || 0;
+			const timeInSeconds = routeData?.Summary?.DurationSeconds || 0;
 
 			return (
 				<View data-testid="route-info-container" className="route-info">

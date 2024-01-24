@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React from "react";
+import { FC, ReactNode } from "react";
 
 import { Card, CardProps, Flex } from "@aws-amplify/ui-react";
 import { IconClose } from "@demo/assets";
@@ -12,12 +12,12 @@ interface ModalProps extends CardProps {
 	onClose: () => void;
 	modalContainerPosition?: string;
 	modalContainerClass?: string;
-	content: React.ReactNode;
+	content: ReactNode;
 	hideCloseIcon?: boolean;
 	disableBodyScrollWhenModalIsOpen?: boolean;
 }
 
-const Modal: React.FC<ModalProps> = ({
+const Modal: FC<ModalProps> = ({
 	open,
 	onClose,
 	modalContainerClass = "",

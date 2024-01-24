@@ -1,4 +1,4 @@
-import React from "react";
+import { FC } from "react";
 
 import { Flex, Text } from "@aws-amplify/ui-react";
 import { IconBellSolid, IconGeofenceMarkerDisabled } from "@demo/assets";
@@ -15,7 +15,7 @@ interface NotificationsBoxProps {
 	setUnauthNotifications: (n: NotificationHistoryItemtype | undefined) => void;
 }
 
-const NotificationsBox: React.FC<NotificationsBoxProps> = ({
+const NotificationsBox: FC<NotificationsBoxProps> = ({
 	maxHeight = 30,
 	selectedRoutesIds,
 	unauthNotifications,

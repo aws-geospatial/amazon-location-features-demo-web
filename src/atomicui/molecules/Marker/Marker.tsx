@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { memo, useCallback, useEffect, useState } from "react";
+import { FC, memo, useCallback, useEffect, useState } from "react";
 
 import { SuggestionMarker } from "@demo/atomicui/molecules";
 import { useAwsPlace } from "@demo/hooks";
@@ -15,7 +15,7 @@ interface Props {
 	setSearchValue: (v: string) => void;
 }
 
-const Marker: React.FC<Props> = ({ latitude, longitude, searchValue, setSearchValue }) => {
+const Marker: FC<Props> = ({ latitude, longitude, searchValue, setSearchValue }) => {
 	const [info, setInfo] = useState<SuggestionType>();
 	const { getPlaceDataByCoordinates, setMarker, marker, selectedMarker } = useAwsPlace();
 
@@ -23,7 +23,7 @@ const Marker: React.FC<Props> = ({ latitude, longitude, searchValue, setSearchVa
 
 	const loadPlaceInfo = useCallback(async () => {
 		const pd = await getPlaceDataByCoordinates([longitude, latitude]);
-		setInfo({ ...pd?.Results[0], Id: uuid.randomUUID() });
+		setInfo({ ...pd?.Results![0], Id: uuid.randomUUID() });
 	}, [getPlaceDataByCoordinates, latitude, longitude]);
 
 	useEffect(() => {

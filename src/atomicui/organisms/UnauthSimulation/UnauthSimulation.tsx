@@ -1,4 +1,4 @@
-import React, { Ref, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Dispatch, FC, Ref, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button, Card, Flex, Text } from "@aws-amplify/ui-react";
 import {
@@ -76,12 +76,12 @@ export interface UnauthSimulationProps {
 	setShowUnauthSimulationBounds: (b: boolean) => void;
 	clearCredsAndLocationClient?: () => void;
 	isNotifications: boolean;
-	setIsNotifications: React.Dispatch<React.SetStateAction<boolean>>;
+	setIsNotifications: Dispatch<SetStateAction<boolean>>;
 	confirmCloseSimulation: boolean;
-	setConfirmCloseSimulation: React.Dispatch<React.SetStateAction<boolean>>;
+	setConfirmCloseSimulation: Dispatch<SetStateAction<boolean>>;
 }
 
-const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
+const UnauthSimulation: FC<UnauthSimulationProps> = ({
 	mapRef,
 	from,
 	setShowUnauthGeofenceBox,

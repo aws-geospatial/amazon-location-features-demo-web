@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React from "react";
+import { FC } from "react";
 
 import { Button, Flex, Text } from "@aws-amplify/ui-react";
 import { IconGeofence, IconRoute } from "@demo/assets";
@@ -18,7 +18,7 @@ interface SignInModalProps {
 	onClose: () => void;
 }
 
-const SignInModal: React.FC<SignInModalProps> = ({ open, onClose }) => {
+const SignInModal: FC<SignInModalProps> = ({ open, onClose }) => {
 	const { onLogin } = useAmplifyAuth();
 	const { t } = useTranslation();
 	const { isMobile } = useDeviceMediaQuery();

@@ -1,6 +1,8 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
+import { FC } from "react";
+
 import { Flex, View, ViewProps } from "@aws-amplify/ui-react";
 import { LogoSmall } from "@demo/assets";
 import { useTranslation } from "react-i18next";
@@ -10,7 +12,7 @@ interface LogoProps extends ViewProps {
 	onClick?: () => void;
 }
 
-const Logo: React.FC<LogoProps> = ({ onClick, ...props }) => {
+const Logo: FC<LogoProps> = ({ onClick, ...props }) => {
 	const { t } = useTranslation();
 
 	return (

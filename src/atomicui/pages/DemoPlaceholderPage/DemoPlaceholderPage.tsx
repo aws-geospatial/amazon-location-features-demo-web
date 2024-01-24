@@ -1,4 +1,4 @@
-import React from "react";
+import { FC } from "react";
 
 import { Divider, Flex, View } from "@aws-amplify/ui-react";
 import { IconLocateMe, IconMinus, IconZoomPlus, LogoLight } from "@demo/assets";
@@ -25,7 +25,7 @@ interface DemoPlaceholderPageProps {
 	setValue: (value: string) => void;
 }
 
-const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
+const DemoPlaceholderPage: FC<DemoPlaceholderPageProps> = ({
 	show,
 	isGrabVisible,
 	searchValue,

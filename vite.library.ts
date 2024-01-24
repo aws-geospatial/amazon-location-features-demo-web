@@ -7,22 +7,32 @@ import eslint from "vite-plugin-eslint";
 import Inspect from "vite-plugin-inspect";
 import svgr from "vite-plugin-svgr";
 
-const packageNames = [
+const excludedDeps = [
+	/* Core deps */
 	"@aws-amplify/ui-react",
+	"@aws-sdk/client-cognito-identity",
+	"@aws-sdk/client-iot",
+	"@aws-sdk/client-location",
+	"@aws-sdk/client-pinpoint",
+	"@aws-sdk/credential-providers",
 	"@turf/turf",
 	"aws-amplify",
-	"aws-sdk",
 	"date-fns",
+	"i18next",
+	"i18next-browser-languagedetector",
 	"mapbox-gl-draw-circle",
 	"ngeohash",
 	"ramda",
 	"react",
+	"react-device-detect",
 	"react-dom",
+	"react-i18next",
 	"react-router-dom",
 	"react-spring-bottom-sheet",
 	"react-toastify",
 	"react-tooltip",
 	"zustand",
+	/* Other deps */
 	"react-map-gl",
 	"react/jsx-runtime",
 	"@aws-amplify/pubsub",
@@ -31,12 +41,7 @@ const packageNames = [
 	"@mapbox/mapbox-gl-draw",
 	"react/jsx-dev-runtime",
 	"mapbox-gl",
-	"styled-components",
-	"i18next",
-	"i18next-browser-languagedetector",
-	"react-device-detect",
-	"@aws-sdk/credential-providers",
-	"react-i18next"
+	"styled-components"
 ];
 
 export default defineConfig(() => {
@@ -50,7 +55,7 @@ export default defineConfig(() => {
 			}),
 			dts({ insertTypesEntry: true }),
 			Inspect({
-				build: true,
+				build: false,
 				outputDir: ".vite-inspect"
 			})
 		],
@@ -83,35 +88,35 @@ export default defineConfig(() => {
 			minify: true,
 			lib: {
 				entry: {
-					"demo-page": path.resolve(__dirname, "src/index.ts"),
-					core: path.resolve(__dirname, "src/core/index.ts"),
-					utils: path.resolve(__dirname, "src/utils/index.ts"),
-					types: path.resolve(__dirname, "src/types/index.ts"),
-					hooks: path.resolve(__dirname, "src/hooks/index.ts")
+					"demo-page": path.resolve(__dirname, "src/index.ts")
+					// core: path.resolve(__dirname, "src/core/index.ts"),
+					// utils: path.resolve(__dirname, "src/utils/index.ts"),
+					// types: path.resolve(__dirname, "src/types/index.ts"),
+					// hooks: path.resolve(__dirname, "src/hooks/index.ts")
 				},
 				name: "DemoPage",
 				formats: ["es"],
 				fileName: (format, name) => `${name}.${format}.js`
 			},
 			rollupOptions: {
-				external: packageNames,
-				manualChunks: id => {
-					const chunkId = Math.random().toString(36).substr(2, 5);
-					if (id.includes("react")) {
-						return "vendor-react";
-					}
-					if (id.includes("node_modules")) {
-						console.log(`${chunkId} ${id}`);
-						return `vendor-${chunkId}`;
-					}
-					return chunkId;
-				},
+				external: excludedDeps,
 				output: {
 					globals: {
 						react: "React",
 						"react-dom": "ReactDOM"
 					}
 				}
+				// manualChunks: id => {
+				// 	const chunkId = Math.random().toString(36).substr(2, 5);
+				// 	if (id.includes("react")) {
+				// 		return "vendor-react";
+				// 	}
+				// 	if (id.includes("node_modules")) {
+				// 		console.log(`${chunkId} ${id}`);
+				// 		return `vendor-${chunkId}`;
+				// 	}
+				// 	return chunkId;
+				// }
 			},
 			emptyOutDir: true
 		},

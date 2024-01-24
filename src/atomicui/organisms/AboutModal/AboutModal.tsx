@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button, Divider, Flex, Text } from "@aws-amplify/ui-react";
 import { IconArrow, IconBackArrow, IconPoweredByAws1 } from "@demo/assets";
@@ -34,7 +34,7 @@ interface AboutModalProps {
 	onClose: () => void;
 }
 
-const AboutModal: React.FC<AboutModalProps> = ({ open, onClose }) => {
+const AboutModal: FC<AboutModalProps> = ({ open, onClose }) => {
 	const [selectedOption, setSelectedOption] = useState<AboutOptionEnum | undefined>(AboutOptionEnum.ATTRIBUTION);
 	const { mapProvider } = useAmplifyMap();
 	const { t, i18n } = useTranslation();

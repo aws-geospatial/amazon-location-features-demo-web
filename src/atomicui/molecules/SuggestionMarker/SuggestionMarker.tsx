@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { FC, memo, useCallback, useEffect, useMemo, useState } from "react";
 
 import { View } from "@aws-amplify/ui-react";
 import { IconSelected, IconSuggestion } from "@demo/assets";
@@ -17,7 +17,7 @@ interface Props extends SuggestionType {
 	setSearchValue: (v: string) => void;
 }
 
-const SuggestionMarker: React.FC<Props> = ({
+const SuggestionMarker: FC<Props> = ({
 	Id,
 	PlaceId,
 	Text,
@@ -90,7 +90,7 @@ const SuggestionMarker: React.FC<Props> = ({
 		[setHoveredMarker]
 	);
 
-	if (info && info.Place?.Geometry.Point) {
+	if (info && info.Place?.Geometry?.Point) {
 		return (
 			<Marker
 				style={{

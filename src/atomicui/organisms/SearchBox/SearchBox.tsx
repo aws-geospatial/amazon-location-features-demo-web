@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ChangeEvent, FC, FormEvent, MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
 	Autocomplete,
@@ -14,6 +14,7 @@ import {
 	Text,
 	View
 } from "@aws-amplify/ui-react";
+import { PlaceGeometry } from "@aws-sdk/client-location";
 import { IconActionMenu, IconClose, IconDirections, IconPin, IconSearch } from "@demo/assets";
 import { NLSearchLoader } from "@demo/atomicui/atoms";
 import { InputField, Marker, NotFoundCard, SuggestionMarker } from "@demo/atomicui/molecules";
@@ -26,7 +27,6 @@ import { DistanceUnitEnum, MapProviderEnum, MapUnitEnum, SuggestionType } from "
 import { AnalyticsEventActionsEnum, ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { calculateGeodesicDistance } from "@demo/utils/geoCalculation";
 import { Units } from "@turf/turf";
-import Location from "aws-sdk/clients/location";
 import { LngLat } from "mapbox-gl";
 import { isAndroid, isIOS } from "react-device-detect";
 import { useTranslation } from "react-i18next";
@@ -63,10 +63,10 @@ interface SearchBoxProps {
 	isSettingsOpen: boolean;
 	isStylesCardOpen: boolean;
 	isSimpleSearch?: boolean;
-	bottomSheetRef?: React.MutableRefObject<RefHandles | null>;
+	bottomSheetRef?: MutableRefObject<RefHandles | null>;
 }
 
-const SearchBox: React.FC<SearchBoxProps> = ({
+const SearchBox: FC<SearchBoxProps> = ({
 	mapRef,
 	value,
 	setValue,
@@ -267,7 +267,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 		const separateIndex = id !== "" ? label.indexOf(",") : -1;
 		const title = separateIndex > -1 ? label.substring(0, separateIndex) : label;
 		const address = separateIndex > 1 ? label.substring(separateIndex + 1).trim() : null;
-		const _geometry = geometry ? (JSON.parse(geometry) as Location.PlaceGeometry) : undefined;
+		const _geometry = geometry ? (JSON.parse(geometry) as PlaceGeometry) : undefined;
 		const destCoords = _geometry?.Point ? _geometry?.Point : undefined;
 		const geodesicDistance = destCoords
 			? calculateGeodesicDistance(
@@ -438,7 +438,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
 	);
 
 	const onFormSubmit = useCallback(
-		(e: React.FormEvent<HTMLFormElement>) => {
+		(e: FormEvent<HTMLFormElement>) => {
 			e.preventDefault();
 			handleSearch(value, true, AnalyticsEventActionsEnum.ENTER_BUTTON);
 			if (!!options?.length) {

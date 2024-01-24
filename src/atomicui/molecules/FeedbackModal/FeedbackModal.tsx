@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Alert, Button, Flex, Loader, SelectField, Text, TextAreaField, View } from "@aws-amplify/ui-react";
 import { IconStar, IconStarFilled } from "@demo/assets";
@@ -30,7 +30,7 @@ export interface FeedbackModalProps {
 	onClose: () => void;
 }
 
-const FeedbackModal: React.FC<FeedbackModalProps> = ({ open, onClose }) => {
+const FeedbackModal: FC<FeedbackModalProps> = ({ open, onClose }) => {
 	const [formValues, setFormValues] = useState<FeedbackValueType>({
 		category: feedbackCategories[0].id,
 		rating: 0,

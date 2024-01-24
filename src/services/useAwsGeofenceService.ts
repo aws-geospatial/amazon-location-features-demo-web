@@ -3,16 +3,15 @@
 
 import { useMemo } from "react";
 
-import { appConfig } from "@demo/core/constants";
-import { useAws } from "@demo/hooks";
 import {
 	BatchDeleteGeofenceRequest,
 	BatchEvaluateGeofencesRequest,
 	GeofenceGeometry,
 	ListGeofencesRequest,
-	Position,
 	PutGeofenceRequest
-} from "aws-sdk/clients/location";
+} from "@aws-sdk/client-location";
+import { appConfig } from "@demo/core/constants";
+import { useAws } from "@demo/hooks";
 
 const {
 	MAP_RESOURCES: { GEOFENCE_COLLECTION, DEVICE_ID_WEB }
@@ -28,7 +27,7 @@ const useAwsGeofenceService = () => {
 					CollectionName: geofenceCollection || GEOFENCE_COLLECTION
 				};
 
-				return await locationClient?.listGeofences(params).promise();
+				return await locationClient?.listGeofences(params);
 			},
 			putGeofence: async (GeofenceId: string, Geometry: GeofenceGeometry) => {
 				const params: PutGeofenceRequest = {
@@ -37,7 +36,7 @@ const useAwsGeofenceService = () => {
 					Geometry
 				};
 
-				return await locationClient?.putGeofence(params).promise();
+				return await locationClient?.putGeofence(params);
 			},
 			deleteGeofence: async (GeofenceId: string) => {
 				const params: BatchDeleteGeofenceRequest = {
@@ -45,9 +44,9 @@ const useAwsGeofenceService = () => {
 					GeofenceIds: [GeofenceId]
 				};
 
-				return await locationClient?.batchDeleteGeofence(params).promise();
+				return await locationClient?.batchDeleteGeofence(params);
 			},
-			evaluateGeofence: async (Position: Position, IdentityId: string, geofenceCollection?: string) => {
+			evaluateGeofence: async (Position: number[], IdentityId: string, geofenceCollection?: string) => {
 				const params: BatchEvaluateGeofencesRequest = {
 					CollectionName: geofenceCollection || GEOFENCE_COLLECTION,
 					DevicePositionUpdates: [
@@ -63,7 +62,7 @@ const useAwsGeofenceService = () => {
 					]
 				};
 
-				return await locationClient?.batchEvaluateGeofences(params).promise();
+				return await locationClient?.batchEvaluateGeofences(params);
 			}
 		}),
 		[locationClient]

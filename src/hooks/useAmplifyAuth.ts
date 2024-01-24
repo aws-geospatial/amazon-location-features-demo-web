@@ -3,6 +3,7 @@
 
 import { useEffect, useMemo } from "react";
 
+import { CognitoIdentity } from "@aws-sdk/client-cognito-identity";
 import { appConfig, showToast } from "@demo/core";
 import { useAmplifyMap, useAws } from "@demo/hooks";
 import { useAmplifyAuthService } from "@demo/services";
@@ -16,7 +17,6 @@ import { clearStorage } from "@demo/utils/localstorageUtils";
 import { setClosestRegion } from "@demo/utils/regionUtils";
 import { transformCloudFormationLink } from "@demo/utils/transformCloudFormationLink";
 import { Amplify, Auth } from "aws-amplify";
-import CognitoIdentity from "aws-sdk/clients/cognitoidentity";
 import { useTranslation } from "react-i18next";
 
 import useDeviceMediaQuery from "./useDeviceMediaQuery";

@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { useCallback, useMemo, useState } from "react";
+import { FC, useCallback, useMemo, useState } from "react";
 
 import { Button, CheckboxField, Divider, Flex, Link, Radio, Text, View } from "@aws-amplify/ui-react";
 import {
@@ -59,7 +59,7 @@ interface SettingsModalProps {
 	resetSearchAndFilters: () => void;
 }
 
-const SettingsModal: React.FC<SettingsModalProps> = ({
+const SettingsModal: FC<SettingsModalProps> = ({
 	open,
 	onClose,
 	resetAppState,

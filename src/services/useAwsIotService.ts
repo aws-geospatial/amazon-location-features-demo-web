@@ -3,8 +3,8 @@
 
 import { useMemo } from "react";
 
+import { AttachPolicyRequest } from "@aws-sdk/client-iot";
 import { useAws } from "@demo/hooks";
-import Iot from "aws-sdk/clients/iot";
 
 const useAwsIotService = () => {
 	const { iotClient } = useAws();
@@ -12,20 +12,20 @@ const useAwsIotService = () => {
 	return useMemo(
 		() => ({
 			attachPolicy: async (identityId: string, unauthUser = false) => {
-				const params: Iot.AttachPolicyRequest = {
+				const params: AttachPolicyRequest = {
 					policyName: unauthUser ? "AmazonLocationIotPolicyUnauth" : "AmazonLocationIotPolicy",
 					target: identityId
 				};
 
-				return await iotClient?.attachPolicy(params).promise();
+				return await iotClient?.attachPolicy(params);
 			},
 			detachPolicy: async (identityId: string, unauthUser = false) => {
-				const params: Iot.AttachPolicyRequest = {
+				const params: AttachPolicyRequest = {
 					policyName: unauthUser ? "AmazonLocationIotPolicyUnauth" : "AmazonLocationIotPolicy",
 					target: identityId
 				};
 
-				return await iotClient?.detachPolicy(params).promise();
+				return await iotClient?.detachPolicy(params);
 			}
 		}),
 		[iotClient]

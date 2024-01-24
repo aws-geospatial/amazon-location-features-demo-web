@@ -3,7 +3,6 @@
 
 import turfHaversineDistance from "@turf/distance";
 import { Coord, Units } from "@turf/turf";
-import { Position } from "aws-sdk/clients/location";
 import Geohash from "ngeohash";
 
 import { ClustersType, SuggestionType } from "../types";
@@ -15,14 +14,14 @@ export const isGeoString = (v: string): boolean => {
 };
 
 // calculate geohash by coordinates and precision
-export const getHash = (point: Position, precision = 6): string => Geohash.encode(point[1], point[0], precision);
+export const getHash = (point: number[], precision = 6): string => Geohash.encode(point[1], point[0], precision);
 
 // group poi in clusters by geohash based on precision level
 export const calculateClusters = (suggestions: SuggestionType[], precision: number): ClustersType => {
 	return suggestions.reduce((acc, currentValue) => {
 		const hash = currentValue.Hash
 			? currentValue.Hash.substring(0, precision)
-			: getHash(currentValue.Place?.Geometry.Point as Position, precision);
+			: getHash(currentValue.Place?.Geometry?.Point as number[], precision);
 		acc[hash] = acc[hash] ? [...acc[hash], currentValue] : [currentValue];
 		return acc;
 	}, {} as ClustersType);

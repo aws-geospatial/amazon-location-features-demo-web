@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { Suspense, lazy, useCallback, useEffect, useMemo, useRef } from "react";
+import { FC, MutableRefObject, Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Flex, Text, View } from "@aws-amplify/ui-react";
 import { IconLocateMe, LogoDark, LogoLight } from "@demo/assets";
@@ -169,25 +169,25 @@ let switchToMapProvider = searchParams.get(DATA_PROVIDER);
 const peggedRemValue = 13;
 const extraGeoLocateTop = 2.6;
 
-const DemoPage: React.FC = () => {
+const DemoPage: FC = () => {
 	const {} = useRecordViewPage("DemoPage");
-	const [show, setShow] = React.useState<ShowStateType>(initShow);
-	const [isUnauthNotifications, setUnauthIsNotifications] = React.useState(false);
-	const [confirmCloseUnauthSimulation, setConfirmCloseUnauthSimulation] = React.useState(false);
-	const [searchValue, setSearchValue] = React.useState("");
-	const [doNotAskGrabDisclaimer, setDoNotAskGrabDisclaimer] = React.useState(false);
-	const [doNotAskOpenDataDisclaimer, setDoNotAskOpenDataDisclaimer] = React.useState(false);
-	const [triggerOnClose, setTriggerOnClose] = React.useState(false);
-	const [triggerOnReset, setTriggerOnReset] = React.useState(false);
-	const [expandRouteOptionsMobile, setExpandRouteOptionsMobile] = React.useState(false);
-	const [isEditingAuthRoute, setIsEditingAuthRoute] = React.useState(false);
-	const [selectedFilters, setSelectedFilters] = React.useState<MapStyleFilterTypes>({
+	const [show, setShow] = useState<ShowStateType>(initShow);
+	const [isUnauthNotifications, setUnauthIsNotifications] = useState(false);
+	const [confirmCloseUnauthSimulation, setConfirmCloseUnauthSimulation] = useState(false);
+	const [searchValue, setSearchValue] = useState("");
+	const [doNotAskGrabDisclaimer, setDoNotAskGrabDisclaimer] = useState(false);
+	const [doNotAskOpenDataDisclaimer, setDoNotAskOpenDataDisclaimer] = useState(false);
+	const [triggerOnClose, setTriggerOnClose] = useState(false);
+	const [triggerOnReset, setTriggerOnReset] = useState(false);
+	const [expandRouteOptionsMobile, setExpandRouteOptionsMobile] = useState(false);
+	const [isEditingAuthRoute, setIsEditingAuthRoute] = useState(false);
+	const [selectedFilters, setSelectedFilters] = useState<MapStyleFilterTypes>({
 		Providers: [],
 		Attribute: [],
 		Type: []
 	});
-	const [startSimulation, setStartSimulation] = React.useState(false);
-	const [searchBoxValue, setSearchBoxValue] = React.useState("");
+	const [startSimulation, setStartSimulation] = useState(false);
+	const [searchBoxValue, setSearchBoxValue] = useState("");
 	const mapViewRef = useRef<MapRef | null>(null);
 	const geolocateControlRef = useRef<GeolocateControlRef | null>(null);
 	const {
@@ -450,7 +450,7 @@ const DemoPage: React.FC = () => {
 
 		if (suggestions && bound) {
 			mapViewRef.current?.fitBounds(bound as [number, number, number, number], options);
-		} else if ((show.routeBox || ui === ResponsiveUIEnum.routes) && routeData?.Summary.RouteBBox) {
+		} else if ((show.routeBox || ui === ResponsiveUIEnum.routes) && routeData?.Summary?.RouteBBox) {
 			const boundingBox = routeData.Summary.RouteBBox;
 			mapViewRef.current?.fitBounds(
 				[
@@ -958,7 +958,7 @@ const DemoPage: React.FC = () => {
 	);
 
 	const searchBoxEl = useCallback(
-		(isSimpleSearch = false, bottomSheetRef?: React.MutableRefObject<RefHandles | null>) => (
+		(isSimpleSearch = false, bottomSheetRef?: MutableRefObject<RefHandles | null>) => (
 			<SearchBox
 				mapRef={mapViewRef?.current}
 				value={searchBoxValue}
@@ -1171,8 +1171,8 @@ const DemoPage: React.FC = () => {
 						)}
 						{!isDesktop && (
 							<ResponsiveBottomSheet
-								SearchBoxEl={(ref?: React.MutableRefObject<RefHandles | null>) => searchBoxEl(true, ref)}
-								MapButtons={(ref?: React.MutableRefObject<RefHandles | null>) => (
+								SearchBoxEl={(ref?: MutableRefObject<RefHandles | null>) => searchBoxEl(true, ref)}
+								MapButtons={(ref?: MutableRefObject<RefHandles | null>) => (
 									<MapButtons
 										renderedUpon={TriggeredByEnum.SETTINGS_MODAL}
 										openStylesCard={show.stylesCard}
@@ -1208,7 +1208,7 @@ const DemoPage: React.FC = () => {
 									/>
 								)}
 								mapRef={mapViewRef?.current}
-								RouteBox={(ref?: React.MutableRefObject<RefHandles | null>) => (
+								RouteBox={(ref?: MutableRefObject<RefHandles | null>) => (
 									<RouteBox
 										mapRef={mapViewRef?.current}
 										setShowRouteBox={b => setShow(s => ({ ...s, routeBox: b }))}

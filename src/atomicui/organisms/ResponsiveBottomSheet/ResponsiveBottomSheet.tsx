@@ -1,7 +1,19 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { FC, Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+	Dispatch,
+	FC,
+	MutableRefObject,
+	SetStateAction,
+	Suspense,
+	lazy,
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+	useState
+} from "react";
 
 import { Flex, Text } from "@aws-amplify/ui-react";
 import { IconClose, IconNotificationBell, LogoDark, LogoLight } from "@demo/assets";
@@ -34,9 +46,9 @@ const { DEMO } = appConfig.default.ROUTES;
 
 interface IProps {
 	mapRef: MapRef | null;
-	SearchBoxEl: (ref?: React.MutableRefObject<RefHandles | null>) => JSX.Element;
-	MapButtons: (ref?: React.MutableRefObject<RefHandles | null>) => JSX.Element;
-	RouteBox: (ref?: React.MutableRefObject<RefHandles | null>) => JSX.Element;
+	SearchBoxEl: (ref?: MutableRefObject<RefHandles | null>) => JSX.Element;
+	MapButtons: (ref?: MutableRefObject<RefHandles | null>) => JSX.Element;
+	RouteBox: (ref?: MutableRefObject<RefHandles | null>) => JSX.Element;
 	onCloseSidebar: () => void;
 	onOpenConnectAwsAccountModal: () => void;
 	onOpenFeedbackModal: () => void;
@@ -58,23 +70,23 @@ interface IProps {
 	AuthTrackerBox: JSX.Element;
 	handleLogoClick: () => Window | null;
 	show: ShowStateType;
-	setShow: React.Dispatch<React.SetStateAction<ShowStateType>>;
+	setShow: Dispatch<SetStateAction<ShowStateType>>;
 	startSimulation: boolean;
-	setStartSimulation: React.Dispatch<React.SetStateAction<boolean>>;
+	setStartSimulation: Dispatch<SetStateAction<boolean>>;
 	isNotifications: boolean;
-	setIsNotifications: React.Dispatch<React.SetStateAction<boolean>>;
+	setIsNotifications: Dispatch<SetStateAction<boolean>>;
 	confirmCloseSimulation: boolean;
-	setConfirmCloseSimulation: React.Dispatch<React.SetStateAction<boolean>>;
+	setConfirmCloseSimulation: Dispatch<SetStateAction<boolean>>;
 	setShowAuthTrackerBox: (b: boolean) => void;
 	clearCredsAndLocationClient?: () => void;
 	setShowAuthGeofenceBox: (b: boolean) => void;
-	setTriggerOnClose: React.Dispatch<React.SetStateAction<boolean>>;
-	setTriggerOnReset: React.Dispatch<React.SetStateAction<boolean>>;
+	setTriggerOnClose: Dispatch<SetStateAction<boolean>>;
+	setTriggerOnReset: Dispatch<SetStateAction<boolean>>;
 	isEditingAuthRoute: boolean;
 	setShowRouteBox: (b: boolean) => void;
 	isExpandRouteOptionsMobile: boolean;
 	setExpandRouteOptionsMobile: (b: boolean) => void;
-	setSearchBoxValue: React.Dispatch<React.SetStateAction<string>>;
+	setSearchBoxValue: Dispatch<SetStateAction<string>>;
 }
 
 const ResponsiveBottomSheet: FC<IProps> = ({

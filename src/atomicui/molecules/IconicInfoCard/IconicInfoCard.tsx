@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import { FC, ReactElement } from "react";
 
 import { Flex, Text } from "@aws-amplify/ui-react";
 import "./styles.scss";
@@ -16,7 +16,7 @@ export interface IconicInfoCardProps {
 	onClickHandler?: () => void;
 }
 
-const IconicInfoCard: React.FC<IconicInfoCardProps> = ({
+const IconicInfoCard: FC<IconicInfoCardProps> = ({
 	IconComponent,
 	title,
 	description,

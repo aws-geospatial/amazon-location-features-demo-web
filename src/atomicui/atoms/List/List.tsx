@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 
 import { Flex, Link, Text, View, ViewProps } from "@aws-amplify/ui-react";
 import { uuid } from "@demo/utils/uuid";
@@ -34,7 +34,7 @@ interface LinkWrapperProps {
 	className?: string;
 }
 
-const LinkWrapper: React.FC<LinkWrapperProps> = ({ isExternalLink = false, linkTo = "#", children, className }) => {
+const LinkWrapper: FC<LinkWrapperProps> = ({ isExternalLink = false, linkTo = "#", children, className }) => {
 	if (isExternalLink) {
 		return (
 			<Link isExternal={linkTo === "#" ? false : true} href={linkTo} className={`${className} amplify-text`}>
@@ -55,7 +55,7 @@ const LinkWrapper: React.FC<LinkWrapperProps> = ({ isExternalLink = false, linkT
 	);
 };
 
-const List: React.FC<ListProps> = ({
+const List: FC<ListProps> = ({
 	listArray,
 	useDefaultStyles = false,
 	labelIsIcon = false,

@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React from "react";
+import { FC } from "react";
 
 import { Button, Flex, Text } from "@aws-amplify/ui-react";
 import { IconPoweredByAws1, LogoSmall } from "@demo/assets";
@@ -19,7 +19,7 @@ interface WelcomeModalProps {
 	onClose: () => void;
 }
 
-const WelcomeModal: React.FC<WelcomeModalProps> = ({ open, onClose }) => {
+const WelcomeModal: FC<WelcomeModalProps> = ({ open, onClose }) => {
 	const { t } = useTranslation();
 
 	return (

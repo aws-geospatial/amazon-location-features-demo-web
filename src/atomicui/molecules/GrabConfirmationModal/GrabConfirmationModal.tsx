@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React from "react";
+import { FC } from "react";
 
 import { Text } from "@aws-amplify/ui-react";
 import { ConfirmationModal } from "@demo/atomicui/molecules";
@@ -21,7 +21,7 @@ interface GrabConfirmationModalProps {
 	onConfirmationCheckboxOnChange?: (e: boolean) => void;
 }
 
-const GrabConfirmationModal: React.FC<GrabConfirmationModalProps> = ({
+const GrabConfirmationModal: FC<GrabConfirmationModalProps> = ({
 	open,
 	onClose,
 	onConfirm,

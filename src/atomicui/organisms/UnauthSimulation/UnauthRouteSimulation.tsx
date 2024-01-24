@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
 
 import { View } from "@aws-amplify/ui-react";
 import { IconBusActive, IconBusInactive } from "@demo/assets";
@@ -16,7 +16,7 @@ interface UnauthRouteSimulationProps {
 	updateTrackingHistory: (id: string, newTrackingHistory: TrackingHistoryItemtype) => void;
 }
 
-const UnauthRouteSimulation: React.FC<UnauthRouteSimulationProps> = ({
+const UnauthRouteSimulation: FC<UnauthRouteSimulationProps> = ({
 	id,
 	// name,
 	geofenceCollection,

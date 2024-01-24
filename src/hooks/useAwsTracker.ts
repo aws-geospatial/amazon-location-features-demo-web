@@ -5,7 +5,6 @@ import { useMemo } from "react";
 
 import { useAwsTrackerStore } from "@demo/stores";
 import { TrackerType } from "@demo/types";
-import { Position } from "aws-sdk/clients/location";
 
 const useAwsTracker = () => {
 	const store = useAwsTrackerStore();
@@ -17,7 +16,7 @@ const useAwsTracker = () => {
 			setIsEditingRoute: (isEditingRoute: boolean) => {
 				setState({ isEditingRoute });
 			},
-			setTrackerPoints: (trackerPoint?: Position) => {
+			setTrackerPoints: (trackerPoint?: number[]) => {
 				if (trackerPoint) {
 					setState(s => ({
 						trackerPoints: s.trackerPoints?.length ? [...s.trackerPoints, trackerPoint] : [trackerPoint]

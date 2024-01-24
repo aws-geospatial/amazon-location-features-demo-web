@@ -1,7 +1,19 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+	ChangeEvent,
+	Dispatch,
+	FC,
+	MutableRefObject,
+	SetStateAction,
+	memo,
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+	useState
+} from "react";
 
 import {
 	Button,
@@ -69,7 +81,7 @@ export interface MapButtonsProps {
 	searchValue: string;
 	setSearchValue: (s: string) => void;
 	selectedFilters: MapStyleFilterTypes;
-	setSelectedFilters: React.Dispatch<React.SetStateAction<MapStyleFilterTypes>>;
+	setSelectedFilters: Dispatch<SetStateAction<MapStyleFilterTypes>>;
 	isLoading?: boolean;
 	onlyMapStyles?: boolean;
 	resetSearchAndFilters?: () => void;
@@ -88,10 +100,10 @@ export interface MapButtonsProps {
 	isUnauthTrackerBoxOpen: boolean;
 	onSetShowUnauthGeofenceBox: (b: boolean) => void;
 	onSetShowUnauthTrackerBox: (b: boolean) => void;
-	bottomSheetRef?: React.MutableRefObject<RefHandles | null>;
+	bottomSheetRef?: MutableRefObject<RefHandles | null>;
 }
 
-const MapButtons: React.FC<MapButtonsProps> = ({
+const MapButtons: FC<MapButtonsProps> = ({
 	renderedUpon,
 	openStylesCard,
 	setOpenStylesCard,
@@ -376,12 +388,12 @@ const MapButtons: React.FC<MapButtonsProps> = ({
 	/**
 	 * Handles changes to filter checkboxes by updating the selected filters state.
 	 *
-	 * @param {React.ChangeEvent<HTMLInputElement>} e - The change event from the input element.
+	 * @param {ChangeEvent<HTMLInputElement>} e - The change event from the input element.
 	 * @param {string} filterCategory - The category of the filter being changed (e.g., 'Providers', 'Attribute', 'Type').
 	 */
 
 	const handleFilterChange = useCallback(
-		(e: React.ChangeEvent<HTMLInputElement>, filterCategory: string) => {
+		(e: ChangeEvent<HTMLInputElement>, filterCategory: string) => {
 			const { name, checked } = e.target;
 			const key = filterCategory as keyof MapStyleFilterTypes;
 
