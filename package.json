@@ -6,15 +6,15 @@
 	"files": [
 		"lib"
 	],
-	"main": "./lib/demo-lib.es.js",
-	"module": "./lib/demo-lib.es.js",
+	"main": "./lib/index.es.js",
+	"module": "./lib/index.es.js",
 	"types": "./lib/index.d.ts",
 	"exports": {
 		".": {
-			"import": "./lib/demo-lib.es.js",
-			"require": "./lib/demo-lib.es.js"
+			"import": "./lib/index.es.js",
+			"require": "./lib/index.es.js"
 		},
-		"./lib/style.css": {
+		"./style.css": {
 			"import": "./lib/style.css",
 			"require": "./lib/style.css"
 		}

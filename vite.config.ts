@@ -35,9 +35,6 @@ export default defineConfig(() => {
 				"./runtimeConfig": "./runtimeConfig.browser"
 			}
 		},
-		server: {
-			port: 3000
-		},
 		build: {
 			outDir: "./build",
 			sourcemap: false,
@@ -46,6 +43,9 @@ export default defineConfig(() => {
 		},
 		optimizeDeps: {
 			disabled: false
+		},
+		server: {
+			port: 3000
 		}
 	};
 });

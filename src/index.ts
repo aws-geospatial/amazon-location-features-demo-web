@@ -1,4 +1,3 @@
-import DemoPage from "./atomicui/pages/DemoPage/DemoPage";
 import appConfig from "./core/constants/appConfig";
 import useAmplifyAuth from "./hooks/useAmplifyAuth";
 import useAmplifyMap from "./hooks/useAmplifyMap";
@@ -14,8 +13,9 @@ import { record } from "./utils/analyticsUtils";
 import { debounce } from "./utils/debounce";
 import { clearStorage } from "./utils/localstorageUtils";
 
+export * as theme from "./theme";
+export { default as DemoPage } from "./atomicui/pages/DemoPage/DemoPage";
 export {
-	DemoPage,
 	appConfig as demoAppConfig,
 	useAmplifyAuth,
 	useAmplifyMap,

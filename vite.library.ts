@@ -42,17 +42,12 @@ export default defineConfig(() => {
 				"./runtimeConfig": "./runtimeConfig.browser"
 			}
 		},
-		server: {
-			port: 3000
-		},
 		build: {
 			outDir: "./lib",
 			sourcemap: false,
 			minify: true,
 			lib: {
-				entry: {
-					"demo-lib": resolve(__dirname, "src/index.ts")
-				},
+				entry: resolve(__dirname, "src/index.ts"),
 				name: "DemoLib",
 				formats: ["es"],
 				fileName: (format, name) => `${name}.${format}.js`
@@ -105,6 +100,9 @@ export default defineConfig(() => {
 		},
 		optimizeDeps: {
 			disabled: false
+		},
+		server: {
+			port: 3000
 		}
 	};
 });
