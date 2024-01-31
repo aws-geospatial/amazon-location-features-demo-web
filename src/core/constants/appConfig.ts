@@ -68,12 +68,12 @@ const appConfig = {
 		NL_API_KEY: getEnv("VITE_NL_API_KEY")
 	},
 	PERSIST_STORAGE_KEYS: {
-		LOCAL_STORAGE_PREFIX: "amazon-location-web-demo_",
-		AMPLIFY_AUTH_DATA: "AmplifyAuthData",
-		AMPLIFY_MAP_DATA: "AmplifyMapData",
-		PERSISTED_DATA: "PersistedData",
-		GEO_LOCATION_ALLOWED: "GeoLocationAllowed",
-		SHOULD_CLEAR_CREDENTIALS: "ShouldClearCredentials",
+		LOCAL_STORAGE_PREFIX: "amazon-location_",
+		AMPLIFY_AUTH_DATA: "amplifyAuthData",
+		AMPLIFY_MAP_DATA: "amplifyMapData",
+		PERSISTED_DATA: "persistedData",
+		GEO_LOCATION_ALLOWED: "geoLocationAllowed",
+		SHOULD_CLEAR_CREDENTIALS: "shouldClearCredentials",
 		ANALYTICS_ENDPOINT_ID: "analyticsEndpointId",
 		ANALYTICS_CREDS: "analyticsCreds",
 		PAGE_VIEW_IDENTIFIERS: "pageViewIdentifiers",
@@ -83,17 +83,15 @@ const appConfig = {
 	ROUTES: {
 		DEFAULT: "/",
 		DEMO: "/demo",
+		NL_DEMO: "/demo?dp=Esri&nl=true",
+		NOT_FOUND: "/404",
+		ERROR_BOUNDARY: "/error",
 		OVERVIEW: "/overview",
-		PRODUCT: "/product",
 		SAMPLES: "/samples",
 		SAMPLE_DETAILS: "/sample/:sampleId",
 		HELP: "/demo/help",
 		TERMS: "/demo/terms",
-		SOFTWARE_ATTRIBUTIONS: "/demo/software-attributions",
-		UNAUTHORIZED: "/401",
-		FORBIDDEN: "/403",
-		NOT_FOUND: "/404",
-		ERROR_BOUNDARY: "/error"
+		SOFTWARE_ATTRIBUTIONS: "/demo/software-attributions"
 	},
 	GET_PARAMS: {
 		DATA_PROVIDER: "dp",
