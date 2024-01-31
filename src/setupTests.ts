@@ -63,8 +63,6 @@ jest.mock("@demo/core/constants/appConfig", () => ({
 		HELP: "/demo/help",
 		TERMS: "/demo/terms",
 		SOFTWARE_ATTRIBUTIONS: "/showcase/software-attributions",
-		BLOG: "/blog",
-		NEW: "/new",
 		UNAUTHORIZED: "/401",
 		FORBIDDEN: "/403",
 		NOT_FOUND: "/404",

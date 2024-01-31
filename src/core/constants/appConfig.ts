@@ -90,8 +90,6 @@ const appConfig = {
 		HELP: "/demo/help",
 		TERMS: "/demo/terms",
 		SOFTWARE_ATTRIBUTIONS: "/demo/software-attributions",
-		BLOG: "/blog",
-		NEW: "/new",
 		UNAUTHORIZED: "/401",
 		FORBIDDEN: "/403",
 		NOT_FOUND: "/404",
