@@ -41,7 +41,6 @@ const useAmplifyAuth = () => {
 	const { resetStore: resetAmplifyMapStore } = useAmplifyMap();
 	const { t } = useTranslation();
 	const { isDesktop } = useDeviceMediaQuery();
-	console.log({ pathname: window.location.pathname });
 
 	useEffect(() => {
 		const localAppVersion = localStorage.getItem(LOCAL_APP_VERSION) || "";
