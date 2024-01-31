@@ -44,11 +44,12 @@ const useAmplifyAuth = () => {
 
 	useEffect(() => {
 		const localAppVersion = localStorage.getItem(LOCAL_APP_VERSION) || "";
+		let reload = false;
 
 		if (localAppVersion !== APP_VERSION) {
 			localStorage.clear();
 			localStorage.setItem(LOCAL_APP_VERSION, APP_VERSION);
-			window.location.reload();
+			reload = true;
 		}
 
 		if (!store.identityPoolId) {
@@ -58,9 +59,11 @@ const useAmplifyAuth = () => {
 				const identityPoolId = POOLS[region];
 				const webSocketUrl = WEB_SOCKET_URLS[region];
 				setState({ identityPoolId, region, webSocketUrl });
-				window.location.reload();
+				reload = true;
 			})();
 		}
+
+		reload && window.location.reload();
 	}, [store.identityPoolId, setState]);
 
 	const methods = useMemo(
