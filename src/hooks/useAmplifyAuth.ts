@@ -41,6 +41,7 @@ const useAmplifyAuth = () => {
 	const { resetStore: resetAmplifyMapStore } = useAmplifyMap();
 	const { t } = useTranslation();
 	const { isDesktop } = useDeviceMediaQuery();
+	console.log({ pathname: window.location.pathname });
 
 	useEffect(() => {
 		const localAppVersion = localStorage.getItem(LOCAL_APP_VERSION) || "";
@@ -48,9 +49,10 @@ const useAmplifyAuth = () => {
 		if (localAppVersion !== APP_VERSION) {
 			localStorage.clear();
 			localStorage.setItem(LOCAL_APP_VERSION, APP_VERSION);
+			window.location.reload();
 		}
 
-		if (!store.identityPoolId) {
+		if (window.location.pathname === DEMO && !store.identityPoolId) {
 			(async () => {
 				await setClosestRegion();
 				const region = localStorage.getItem(FASTEST_REGION) ?? fallbackRegion;
