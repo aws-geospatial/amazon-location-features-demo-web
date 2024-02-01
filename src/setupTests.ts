@@ -68,7 +68,7 @@ jest.mock("@demo/core/constants/appConfig", () => ({
 		SAMPLE_DETAILS: "/sample/:sampleId",
 		HELP: "/demo/help",
 		TERMS: "/demo/terms",
-		SOFTWARE_ATTRIBUTIONS: "/showcase/software-attributions"
+		SOFTWARE_ATTRIBUTIONS: "/demo/software-attributions"
 	},
 	GET_PARAMS: {
 		DATA_PROVIDER: "data_provider"
