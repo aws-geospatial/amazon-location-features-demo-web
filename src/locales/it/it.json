@@ -3676,5 +3676,11 @@
   },
   "pricing": {
     "text": "Prezzi"
+  },
+  "migration_desc": {
+    "text": "Sposta facilmente la tua app con il nostro servizio"
+  },
+  "pricing_desc": {
+    "text": "Informazioni sul budget attraverso il confronto"
   }
 }

@@ -3676,5 +3676,11 @@
   },
   "pricing": {
     "text": "Preços"
+  },
+  "migration_desc": {
+    "text": "Mude perfeitamente seu aplicativo com nosso serviço"
+  },
+  "pricing_desc": {
+    "text": "Informações orçamentárias por meio de comparação"
   }
 }

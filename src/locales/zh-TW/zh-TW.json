@@ -3676,5 +3676,11 @@
   },
   "pricing": {
     "text": "定價"
+  },
+  "migration_desc": {
+    "text": "透過我們的服務順暢地改變您的應用程"
+  },
+  "pricing_desc": {
+    "text": "透過比較進行預算洞察"
   }
 }

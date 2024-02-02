@@ -3676,5 +3676,11 @@
   },
   "pricing": {
     "text": "価格設定"
+  },
+  "migration_desc": {
+    "text": "当社のサービスでアプリをシームレスにシフト"
+  },
+  "pricing_desc": {
+    "text": "比較による予算の洞察"
   }
 }

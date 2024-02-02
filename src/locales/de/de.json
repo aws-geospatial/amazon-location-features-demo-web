@@ -3676,5 +3676,11 @@
   },
   "pricing": {
     "text": "Preisgestaltung"
+  },
+  "migration_desc": {
+    "text": "Verschiebe deine App nahtlos mit unserem Service"
+  },
+  "pricing_desc": {
+    "text": "Budgeteinblicke durch Vergleich"
   }
 }

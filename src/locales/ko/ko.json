@@ -3676,5 +3676,11 @@
   },
   "pricing": {
     "text": "가격 책정"
+  },
+  "migration_desc": {
+    "text": "당사 서비스를 통해 앱을 원활하게 전환하세요"
+  },
+  "pricing_desc": {
+    "text": "비교를 통한 예산 인사이트"
   }
 }

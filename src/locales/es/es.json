@@ -3676,5 +3676,11 @@
   },
   "pricing": {
     "text": "Fijación"
+  },
+  "migration_desc": {
+    "text": "Cambie su aplicación sin problemas con nuestro servicio"
+  },
+  "pricing_desc": {
+    "text": "Información sobre el presupuesto a través de la comparación"
   }
 }

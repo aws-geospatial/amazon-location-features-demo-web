@@ -3676,5 +3676,11 @@
   },
   "pricing": {
     "text": "Tarification"
+  },
+  "migration_desc": {
+    "text": "Changez facilement votre application grâce à notre service"
+  },
+  "pricing_desc": {
+    "text": "Informations sur le budget grâce à la comparaison"
   }
 }

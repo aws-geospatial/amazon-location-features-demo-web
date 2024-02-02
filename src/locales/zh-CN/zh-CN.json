@@ -3672,5 +3672,11 @@
   },
   "pricing": {
     "text": "定价"
+  },
+  "migration_desc": {
+    "text": "使用我们的服务无缝转移您的应用程序"
+  },
+  "pricing_desc": {
+    "text": "通过比较获得预算见解"
   }
 }
