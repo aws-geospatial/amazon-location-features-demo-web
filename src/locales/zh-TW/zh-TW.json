@@ -3678,9 +3678,24 @@
     "text": "定價"
   },
   "migration_desc": {
-    "text": "透過我們的服務順暢地改變您的應用程"
+    "text": "從谷歌地圖移轉"
   },
   "pricing_desc": {
-    "text": "透過比較進行預算洞察"
+    "text": "計算預估成本"
+  },
+  "web_app": {
+    "text": "網路應用程式"
+  },
+  "android_app": {
+    "text": "安卓應用程式"
+  },
+  "ios_app": {
+    "text": "iOS 應用程式"
+  },
+  "web_service": {
+    "text": "網路服務"
+  },
+  "feature_comparison_description": {
+    "text": "深度比較"
   }
 }

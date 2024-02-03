@@ -3678,9 +3678,24 @@
     "text": "가격 책정"
   },
   "migration_desc": {
-    "text": "당사 서비스를 통해 앱을 원활하게 전환하세요"
+    "text": "Google 지도에서 마이그레이션하기"
   },
   "pricing_desc": {
-    "text": "비교를 통한 예산 인사이트"
+    "text": "예상 비용 계산하기"
+  },
+  "web_app": {
+    "text": "웹 앱"
+  },
+  "android_app": {
+    "text": "안드로이드 앱"
+  },
+  "ios_app": {
+    "text": "iOS 앱"
+  },
+  "web_service": {
+    "text": "웹 서비스"
+  },
+  "feature_comparison_description": {
+    "text": "심층 비교"
   }
 }

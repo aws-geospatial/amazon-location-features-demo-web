@@ -3678,9 +3678,24 @@
     "text": "التسعير"
   },
   "migration_desc": {
-    "text": "قم بتحويل تطبيقك بسلاسة من خلال خدمتنا"
+    "text": "الترحيل من خرائط Google"
   },
   "pricing_desc": {
-    "text": "رؤى الميزانية من خلال المقارنة"
+    "text": "احسب التكلفة المقدرة"
+  },
+  "web_app": {
+    "text": "تطبيق الويب"
+  },
+  "android_app": {
+    "text": "تطبيق أندرويد"
+  },
+  "ios_app": {
+    "text": "تطبيق iOS"
+  },
+  "web_service": {
+    "text": "خدمة الويب"
+  },
+  "feature_comparison_description": {
+    "text": "مقارنة متعمقة"
   }
 }

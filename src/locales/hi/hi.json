@@ -3678,9 +3678,24 @@
     "text": "मूल्य निर्धारण"
   },
   "migration_desc": {
-    "text": "हमारी सेवा के साथ अपने ऐप को आसानी से शिफ्ट करें"
+    "text": "Google मानचित्र से माइग्रेट करें"
   },
   "pricing_desc": {
-    "text": "तुलना के माध्यम से बजट की जानकारी"
+    "text": "अपनी अनुमानित लागत की गणना करें"
+  },
+  "web_app": {
+    "text": "वेब ऐप"
+  },
+  "android_app": {
+    "text": "एंड्राइड ऐप"
+  },
+  "ios_app": {
+    "text": "iOS ऐप"
+  },
+  "web_service": {
+    "text": "वेब सर्विस"
+  },
+  "feature_comparison_description": {
+    "text": "गहराई से तुलना करें"
   }
 }

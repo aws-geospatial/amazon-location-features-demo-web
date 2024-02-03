@@ -3678,9 +3678,24 @@
     "text": "Preços"
   },
   "migration_desc": {
-    "text": "Mude perfeitamente seu aplicativo com nosso serviço"
+    "text": "Migrar do Google Maps"
   },
   "pricing_desc": {
-    "text": "Informações orçamentárias por meio de comparação"
+    "text": "Calcule seu custo estimado"
+  },
+  "web_app": {
+    "text": "Aplicativo Web"
+  },
+  "android_app": {
+    "text": "Aplicativo Android"
+  },
+  "ios_app": {
+    "text": "Aplicativo iOS"
+  },
+  "web_service": {
+    "text": "Serviço Web"
+  },
+  "feature_comparison_description": {
+    "text": "Comparação aprofundada"
   }
 }

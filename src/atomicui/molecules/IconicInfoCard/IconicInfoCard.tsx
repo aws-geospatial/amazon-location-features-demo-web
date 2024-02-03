@@ -14,6 +14,8 @@ export interface IconicInfoCardProps {
 	gap?: string;
 	direction?: "row" | "row-reverse" | string;
 	onClickHandler?: () => void;
+	titleColor?: string;
+	isTitleBold?: boolean;
 }
 
 const IconicInfoCard: FC<IconicInfoCardProps> = ({
@@ -26,7 +28,9 @@ const IconicInfoCard: FC<IconicInfoCardProps> = ({
 	subDescription = "",
 	gap = "large",
 	direction = "row",
-	onClickHandler
+	onClickHandler,
+	titleColor = "",
+	isTitleBold = false
 }) => {
 	return (
 		<Flex
@@ -39,7 +43,13 @@ const IconicInfoCard: FC<IconicInfoCardProps> = ({
 		>
 			{IconComponent}
 			<Flex direction="column" gap={subDescription ? 0 : "3px"} marginLeft={textContainerMarginLeft}>
-				<Text fontSize="1rem" variation="secondary" data-testid="iconic-info-card-title">
+				<Text
+					className={isTitleBold ? "bold" : "regular"}
+					fontSize="1rem"
+					variation="secondary"
+					data-testid="iconic-info-card-title"
+					color={titleColor}
+				>
 					{title}
 				</Text>
 				{description && (

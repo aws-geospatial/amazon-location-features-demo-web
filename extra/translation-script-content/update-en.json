@@ -1,8 +1,17 @@
 {
-	"migration_desc": {
-		"text": "Seamlessly shift your app with our service"
+	"web_app": {
+		"text": "Web App"
 	},
-	"pricing_desc": {
-		"text": "Budget insights through comparison"
+	"android_app": {
+		"text": "Android App"
+	},
+	"ios_app": {
+		"text": "iOS App"
+	},
+	"web_service": {
+		"text": "Web Service"
+	},
+	"feature_comparison_description": {
+		"text": "In depth comparison"
 	}
 }

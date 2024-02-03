@@ -3674,9 +3674,24 @@
     "text": "定价"
   },
   "migration_desc": {
-    "text": "使用我们的服务无缝转移您的应用程序"
+    "text": "从谷歌地图迁移"
   },
   "pricing_desc": {
-    "text": "通过比较获得预算见解"
+    "text": "计算您的预估成本"
+  },
+  "web_app": {
+    "text": "网络应用程序"
+  },
+  "android_app": {
+    "text": "安卓应用程序"
+  },
+  "ios_app": {
+    "text": "iOS 应用程序"
+  },
+  "web_service": {
+    "text": "网络服务"
+  },
+  "feature_comparison_description": {
+    "text": "深度对比"
   }
 }

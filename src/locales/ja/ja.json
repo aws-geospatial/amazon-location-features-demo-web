@@ -3678,9 +3678,24 @@
     "text": "価格設定"
   },
   "migration_desc": {
-    "text": "当社のサービスでアプリをシームレスにシフト"
+    "text": "Google マップからの移行"
   },
   "pricing_desc": {
-    "text": "比較による予算の洞察"
+    "text": "推定費用を計算"
+  },
+  "web_app": {
+    "text": "ウェブアプリ"
+  },
+  "android_app": {
+    "text": "アンドロイドアプリ"
+  },
+  "ios_app": {
+    "text": "iOS アプリ"
+  },
+  "web_service": {
+    "text": "ウェブサービス"
+  },
+  "feature_comparison_description": {
+    "text": "詳細な比較"
   }
 }

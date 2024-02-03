@@ -3678,9 +3678,24 @@
     "text": "Fijación"
   },
   "migration_desc": {
-    "text": "Cambie su aplicación sin problemas con nuestro servicio"
+    "text": "Migrar desde Google Maps"
   },
   "pricing_desc": {
-    "text": "Información sobre el presupuesto a través de la comparación"
+    "text": "Calcule su costo estimado"
+  },
+  "web_app": {
+    "text": "Aplicación web"
+  },
+  "android_app": {
+    "text": "Aplicación Android"
+  },
+  "ios_app": {
+    "text": "Aplicación iOS"
+  },
+  "web_service": {
+    "text": "Servicio web"
+  },
+  "feature_comparison_description": {
+    "text": "Comparación en profundidad"
   }
 }

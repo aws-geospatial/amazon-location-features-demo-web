@@ -105,3 +105,6 @@ export { ReactComponent as IconMoveStill } from "./icon-move-still.svg";
 export { ReactComponent as IconStar } from "./icon-star.svg";
 export { ReactComponent as IconStarFilled } from "./icon-star-filled.svg";
 export { ReactComponent as IconArrowRight } from "./icon-arrow-right.svg";
+export { ReactComponent as IconBrowser } from "./icon-browser.svg";
+export { ReactComponent as IconBrandApple } from "./icon-brand-apple.svg";
+export { ReactComponent as IconBrandAndroid } from "./icon-brand-android.svg";
