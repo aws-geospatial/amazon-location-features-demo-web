@@ -7,6 +7,7 @@ import {
 	FC,
 	MutableRefObject,
 	SetStateAction,
+	lazy,
 	memo,
 	useCallback,
 	useEffect,
@@ -28,7 +29,6 @@ import {
 	View
 } from "@aws-amplify/ui-react";
 import { IconClose, IconFilterFunnel, IconGeofencePlusSolid, IconMapSolid, IconRadar, IconSearch } from "@demo/assets";
-import { NotFoundCard } from "@demo/atomicui/molecules";
 import { appConfig } from "@demo/core/constants";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useAmplifyAuth, useAmplifyMap, useAwsGeofence, useUnauthSimulation } from "@demo/hooks";
@@ -51,6 +51,10 @@ import { useTranslation } from "react-i18next";
 import { RefHandles } from "react-spring-bottom-sheet/dist/types";
 import { Tooltip } from "react-tooltip";
 import "./styles.scss";
+
+const NotFoundCard = lazy(() =>
+	import("@demo/atomicui/molecules/NotFoundCard").then(module => ({ default: module.NotFoundCard }))
+);
 
 const { GRAB } = MapProviderEnum;
 const {

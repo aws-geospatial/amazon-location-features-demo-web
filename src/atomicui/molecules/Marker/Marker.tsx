@@ -1,12 +1,15 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { FC, memo, useCallback, useEffect, useState } from "react";
+import { FC, lazy, memo, useCallback, useEffect, useState } from "react";
 
-import { SuggestionMarker } from "@demo/atomicui/molecules";
 import { useAwsPlace } from "@demo/hooks";
 import { SuggestionType } from "@demo/types";
 import { uuid } from "@demo/utils/uuid";
+
+const SuggestionMarker = lazy(() =>
+	import("@demo/atomicui/molecules/SuggestionMarker").then(module => ({ default: module.SuggestionMarker }))
+);
 
 interface Props {
 	latitude: number;

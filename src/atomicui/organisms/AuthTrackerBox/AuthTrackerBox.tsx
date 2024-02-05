@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { FC, useCallback, useEffect, useMemo, useState } from "react";
+import { FC, lazy, useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button, Card, Flex, Loader, Text, View } from "@aws-amplify/ui-react";
 import {
@@ -14,7 +14,6 @@ import {
 	IconSegment,
 	IconWalking
 } from "@demo/assets";
-import { GeofenceMarker } from "@demo/atomicui/molecules";
 import { useAwsGeofence, useAwsRoute, useAwsTracker, useWebSocketBanner } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
@@ -25,9 +24,14 @@ import * as turf from "@turf/turf";
 import { useTranslation } from "react-i18next";
 import { Layer, MapRef, Marker, Source } from "react-map-gl";
 import { Tooltip } from "react-tooltip";
-
-import AuthTrackerSimulation from "./AuthTrackerSimulation";
 import "./styles.scss";
+
+const GeofenceMarker = lazy(() =>
+	import("@demo/atomicui/molecules/GeofenceMarker").then(module => ({ default: module.GeofenceMarker }))
+);
+const AuthTrackerSimulation = lazy(() =>
+	import("./AuthTrackerSimulation").then(module => ({ default: module.default }))
+);
 
 export const trackerTypes = [
 	{ type: TrackerType.CAR, icon: <IconCar width="1.54rem" height="1.54rem" /> },

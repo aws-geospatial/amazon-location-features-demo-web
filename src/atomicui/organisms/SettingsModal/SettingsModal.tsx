@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { FC, useCallback, useMemo, useState } from "react";
+import { FC, lazy, useCallback, useMemo, useState } from "react";
 
 import { Button, CheckboxField, Divider, Flex, Link, Radio, Text, View } from "@aws-amplify/ui-react";
 import {
@@ -16,8 +16,6 @@ import {
 	IconPeopleArrows,
 	IconShuffle
 } from "@demo/assets";
-import { DropdownEl, Modal } from "@demo/atomicui/atoms";
-import { InputField } from "@demo/atomicui/molecules";
 import { appConfig, languageSwitcherData, regionsData } from "@demo/core/constants";
 import { useAmplifyAuth, useAmplifyMap, useAws, useAwsIot, usePersistedData } from "@demo/hooks";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
@@ -34,6 +32,14 @@ import { AnalyticsEventActionsEnum, EventTypeEnum, TriggeredByEnum } from "@demo
 import { record } from "@demo/utils/analyticsUtils";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
+
+const DropdownEl = lazy(() =>
+	import("@demo/atomicui/atoms/DropdownEl").then(module => ({ default: module.DropdownEl }))
+);
+const Modal = lazy(() => import("@demo/atomicui/atoms/Modal").then(module => ({ default: module.Modal })));
+const InputField = lazy(() =>
+	import("@demo/atomicui/molecules/InputField").then(module => ({ default: module.InputField }))
+);
 
 const {
 	POOLS,

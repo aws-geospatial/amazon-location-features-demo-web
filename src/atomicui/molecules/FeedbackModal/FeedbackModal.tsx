@@ -1,18 +1,21 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { FC, lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Alert, Button, Flex, Loader, SelectField, Text, TextAreaField, View } from "@aws-amplify/ui-react";
 import { IconStar, IconStarFilled } from "@demo/assets";
-import { Modal } from "@demo/atomicui/atoms";
-import { InputField } from "@demo/atomicui/molecules";
 import { useFeedback } from "@demo/hooks";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { ConnectFormValuesType, FeedbackValueType } from "@demo/types";
 import { isAndroid, isIOS } from "react-device-detect";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
+
+const Modal = lazy(() => import("@demo/atomicui/atoms/Modal").then(module => ({ default: module.Modal })));
+const InputField = lazy(() =>
+	import("@demo/atomicui/molecules/InputField").then(module => ({ default: module.InputField }))
+);
 
 const feedbackCategories = [
 	{ id: "General", label: "General" },
@@ -22,7 +25,6 @@ const feedbackCategories = [
 	{ id: "Routes", label: "Routes" },
 	{ id: "TrackingGeofencing", label: "Tracking & Geofencing" }
 ];
-
 let scrollTimeout: NodeJS.Timer | undefined;
 
 export interface FeedbackModalProps {

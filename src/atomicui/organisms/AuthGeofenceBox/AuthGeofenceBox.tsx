@@ -7,6 +7,7 @@ import {
 	FC,
 	MouseEvent,
 	SetStateAction,
+	lazy,
 	useCallback,
 	useEffect,
 	useMemo,
@@ -26,7 +27,6 @@ import {
 	IconSearch,
 	IconTrash
 } from "@demo/assets";
-import { GeofenceMarker, InputField, NotFoundCard } from "@demo/atomicui/molecules";
 import { showToast } from "@demo/core";
 import { appConfig } from "@demo/core/constants";
 import { useAmplifyMap, useAwsGeofence, useAwsPlace } from "@demo/hooks";
@@ -48,9 +48,18 @@ import * as turf from "@turf/turf";
 import { useTranslation } from "react-i18next";
 import { Layer, LngLat, MapRef, Source } from "react-map-gl";
 import { Tooltip } from "react-tooltip";
-
-import CircleDrawControl from "./CircleDrawControl";
 import "./styles.scss";
+
+const GeofenceMarker = lazy(() =>
+	import("@demo/atomicui/molecules/GeofenceMarker").then(module => ({ default: module.GeofenceMarker }))
+);
+const InputField = lazy(() =>
+	import("@demo/atomicui/molecules/InputField").then(module => ({ default: module.InputField }))
+);
+const NotFoundCard = lazy(() =>
+	import("@demo/atomicui/molecules/NotFoundCard").then(module => ({ default: module.NotFoundCard }))
+);
+const CircleDrawControl = lazy(() => import("./CircleDrawControl").then(module => ({ default: module.default })));
 
 const { IMPERIAL, METRIC } = MapUnitEnum;
 const { MILES, MILES_SHORT, FEET, FEET_SHORT, KILOMETERS, KILOMETERS_SHORT, METERS, METERS_SHORT } = DistanceUnitEnum;

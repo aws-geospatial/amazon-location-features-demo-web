@@ -5,10 +5,11 @@ import { FC, memo, useCallback, useEffect, useMemo, useState } from "react";
 
 import { View } from "@aws-amplify/ui-react";
 import { IconSelected, IconSuggestion } from "@demo/assets";
-import { Popup } from "@demo/atomicui/molecules";
 import { useAwsPlace } from "@demo/hooks";
 import { SuggestionType } from "@demo/types";
 import { Marker } from "react-map-gl";
+
+import { Popup } from "../Popup";
 
 interface Props extends SuggestionType {
 	active?: boolean;

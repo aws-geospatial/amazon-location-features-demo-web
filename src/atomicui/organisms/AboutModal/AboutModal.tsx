@@ -1,17 +1,18 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { FC, useCallback, useEffect, useMemo, useState } from "react";
+import { FC, lazy, useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button, Divider, Flex, Text } from "@aws-amplify/ui-react";
 import { IconArrow, IconBackArrow, IconPoweredByAws1 } from "@demo/assets";
-import { Modal } from "@demo/atomicui/atoms";
 import { aboutModalData, appConfig } from "@demo/core/constants";
 import { useAmplifyMap } from "@demo/hooks";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { AboutOptionEnum, MapProviderEnum } from "@demo/types/Enums";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
+
+const Modal = lazy(() => import("@demo/atomicui/atoms/Modal").then(module => ({ default: module.Modal })));
 
 const {
 	ROUTES: { SOFTWARE_ATTRIBUTIONS },

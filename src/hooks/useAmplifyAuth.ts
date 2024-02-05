@@ -4,7 +4,8 @@
 import { useEffect, useMemo } from "react";
 
 import { CognitoIdentity } from "@aws-sdk/client-cognito-identity";
-import { appConfig, showToast } from "@demo/core";
+import { showToast } from "@demo/core";
+import appConfig from "@demo/core/constants/appConfig";
 import { useAmplifyMap, useAws } from "@demo/hooks";
 import { useAmplifyAuthService } from "@demo/services";
 import { useAmplifyAuthStore } from "@demo/stores";
@@ -25,10 +26,9 @@ const {
 	POOLS,
 	WEB_SOCKET_URLS,
 	ROUTES: { DEMO, ERROR_BOUNDARY },
-	PERSIST_STORAGE_KEYS: { FASTEST_REGION, LOCAL_APP_VERSION },
-	MAP_RESOURCES: { GRAB_SUPPORTED_AWS_REGIONS },
-	ENV: { APP_VERSION }
-} = appConfig.default;
+	PERSIST_STORAGE_KEYS: { FASTEST_REGION },
+	MAP_RESOURCES: { GRAB_SUPPORTED_AWS_REGIONS }
+} = appConfig;
 
 const fallbackRegion = POOLS[Object.keys(POOLS)[0]];
 
@@ -43,15 +43,7 @@ const useAmplifyAuth = () => {
 	const { isDesktop } = useDeviceMediaQuery();
 
 	useEffect(() => {
-		const localAppVersion = localStorage.getItem(LOCAL_APP_VERSION) || "";
-
-		if (localAppVersion !== APP_VERSION) {
-			localStorage.clear();
-			localStorage.setItem(LOCAL_APP_VERSION, APP_VERSION);
-			window.location.reload();
-		}
-
-		if (!store.identityPoolId) {
+		if (window.location.pathname === DEMO && !store.identityPoolId) {
 			(async () => {
 				await setClosestRegion();
 				const region = localStorage.getItem(FASTEST_REGION) ?? fallbackRegion;

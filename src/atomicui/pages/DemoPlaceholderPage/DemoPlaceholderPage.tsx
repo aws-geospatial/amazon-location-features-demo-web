@@ -1,20 +1,31 @@
-import { FC } from "react";
+import { FC, lazy } from "react";
 
 import { Divider, Flex, View } from "@aws-amplify/ui-react";
 import { IconLocateMe, IconMinus, IconZoomPlus, LogoLight } from "@demo/assets";
-import { MapButtons } from "@demo/atomicui/molecules";
-import {
-	AuthGeofenceBox,
-	AuthTrackerBox,
-	RouteBox,
-	SearchBox,
-	SettingsModal,
-	Sidebar,
-	UnauthSimulation
-} from "@demo/atomicui/organisms";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { MapStyleFilterTypes, MenuItemEnum, ShowStateType } from "@demo/types";
 import "./styles.scss";
+
+const MapButtons = lazy(() =>
+	import("@demo/atomicui/molecules/MapButtons").then(module => ({ default: module.MapButtons }))
+);
+const Sidebar = lazy(() => import("@demo/atomicui/organisms/Sidebar").then(module => ({ default: module.Sidebar })));
+const SettingsModal = lazy(() =>
+	import("@demo/atomicui/organisms/SettingsModal").then(module => ({ default: module.SettingsModal }))
+);
+const SearchBox = lazy(() =>
+	import("@demo/atomicui/organisms/SearchBox").then(module => ({ default: module.SearchBox }))
+);
+const RouteBox = lazy(() => import("@demo/atomicui/organisms/RouteBox").then(module => ({ default: module.RouteBox })));
+const UnauthSimulation = lazy(() =>
+	import("@demo/atomicui/organisms/UnauthSimulation").then(module => ({ default: module.UnauthSimulation }))
+);
+const AuthGeofenceBox = lazy(() =>
+	import("@demo/atomicui/organisms/AuthGeofenceBox").then(module => ({ default: module.AuthGeofenceBox }))
+);
+const AuthTrackerBox = lazy(() =>
+	import("@demo/atomicui/organisms/AuthTrackerBox").then(module => ({ default: module.AuthTrackerBox }))
+);
 
 interface DemoPlaceholderPageProps {
 	show: ShowStateType;
@@ -108,7 +119,7 @@ const DemoPlaceholderPage: FC<DemoPlaceholderPageProps> = ({
 					onCloseSidebar={() => {}}
 					onOpenSignInModal={() => {}}
 					isGrabVisible={isGrabVisible}
-					showGrabDisclaimerModal={show.grabDisclaimerModal}
+					showGrabDisclaimerModal={false}
 					onShowGridLoader={() => {}}
 					handleMapStyleChange={() => {}}
 					searchValue={searchValue}
@@ -156,7 +167,7 @@ const DemoPlaceholderPage: FC<DemoPlaceholderPageProps> = ({
 						onCloseSidebar={() => {}}
 						onOpenSignInModal={() => {}}
 						isGrabVisible={isGrabVisible}
-						showGrabDisclaimerModal={show.grabDisclaimerModal}
+						showGrabDisclaimerModal={false}
 						onShowGridLoader={() => {}}
 						handleMapStyleChange={() => {}}
 						searchValue={searchValue}

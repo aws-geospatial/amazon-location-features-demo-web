@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { FC, MutableRefObject } from "react";
+import { FC, MutableRefObject, lazy } from "react";
 
 import { Button, Divider, Flex, Text } from "@aws-amplify/ui-react";
 import {
@@ -12,8 +12,6 @@ import {
 	IconMapSolid,
 	IconRadar
 } from "@demo/assets";
-import { ExploreButton } from "@demo/atomicui/atoms";
-import { IconicInfoCard } from "@demo/atomicui/molecules";
 import { appConfig } from "@demo/core/constants";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useAmplifyAuth, useAmplifyMap, useAwsIot } from "@demo/hooks";
@@ -31,8 +29,19 @@ import { record } from "@demo/utils";
 import { isAndroid, isIOS } from "react-device-detect";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import "./styles.scss";
 import { RefHandles } from "react-spring-bottom-sheet/dist/types";
+import "./styles.scss";
+
+const ExploreButton = lazy(() =>
+	import("@demo/atomicui/atoms/ExploreButton").then(module => ({ default: module.ExploreButton }))
+);
+const IconicInfoCard = lazy(() =>
+	import("@demo/atomicui/molecules/IconicInfoCard").then(module => ({ default: module.IconicInfoCard }))
+);
+
+const {
+	ROUTES: { SAMPLES, OVERVIEW }
+} = appConfig;
 
 interface IProps {
 	updateUIInfo: (ui: ResponsiveUIEnum) => void;
@@ -50,10 +59,6 @@ interface IProps {
 	onshowUnauthSimulationDisclaimerModal: () => void;
 	bottomSheetRef?: MutableRefObject<RefHandles | null>;
 }
-
-const {
-	ROUTES: { SAMPLES, OVERVIEW }
-} = appConfig;
 
 const Explore: FC<IProps> = ({
 	updateUIInfo,

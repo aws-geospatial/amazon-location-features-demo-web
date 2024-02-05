@@ -17,8 +17,7 @@ import {
 
 import { Flex, Text } from "@aws-amplify/ui-react";
 import { IconClose, IconNotificationBell, LogoDark, LogoLight } from "@demo/assets";
-import { ConfirmationModal } from "@demo/atomicui/molecules";
-import { appConfig } from "@demo/core";
+import appConfig from "@demo/core/constants/appConfig";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useAmplifyMap, useAwsGeofence, useAwsRoute, useAwsTracker, usePersistedData } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
@@ -29,20 +28,21 @@ import { useTranslation } from "react-i18next";
 import { MapRef } from "react-map-gl";
 import { useLocation } from "react-router-dom";
 import { BottomSheet } from "react-spring-bottom-sheet";
-
 import { RefHandles } from "react-spring-bottom-sheet/dist/types";
+import "react-spring-bottom-sheet/dist/style.css";
+import "./styles.scss";
 
-import { Explore } from "../Explore";
+const Explore = lazy(() => import("../Explore").then(module => ({ default: module.Explore })));
 const UnauthSimulation = lazy(() =>
-	import("@demo/atomicui/organisms/UnauthSimulation").then(res => ({
-		default: res.UnauthSimulation
-	}))
+	import("../UnauthSimulation").then(module => ({ default: module.UnauthSimulation }))
+);
+const ConfirmationModal = lazy(() =>
+	import("@demo/atomicui/molecules/ConfirmationModal").then(module => ({ default: module.ConfirmationModal }))
 );
 
-import "./styles.scss";
-import "react-spring-bottom-sheet/dist/style.css";
-
-const { DEMO } = appConfig.default.ROUTES;
+const {
+	ROUTES: { DEMO }
+} = appConfig;
 
 interface IProps {
 	mapRef: MapRef | null;

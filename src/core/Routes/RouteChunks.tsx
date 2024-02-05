@@ -8,7 +8,7 @@ import { Navigate, RouteObject } from "react-router-dom";
 
 const { ERROR_BOUNDARY, DEFAULT, DEMO } = appConfig.ROUTES;
 
-const DemoPage = lazy(() => import("@demo/atomicui/pages/DemoPage").then(res => ({ default: res.DemoPage })));
+const DemoPage = lazy(() => import("@demo/atomicui/pages/DemoPage").then(module => ({ default: module.DemoPage })));
 
 const RouteChunks: RouteObject[] = [
 	{

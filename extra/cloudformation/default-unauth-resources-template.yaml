@@ -132,43 +132,50 @@ Resources:
               StringEquals:
                 "sts:ExternalId": !Ref "AWS::AccountId"
       Path: "/"
-      Policies:
-        - PolicyName: firehose_delivery_policy
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Effect: Allow
-                Action:
-                  - "s3:AbortMultipartUpload"
-                  - "s3:GetBucketLocation"
-                  - "s3:GetObject"
-                  - "s3:ListBucket"
-                  - "s3:ListBucketMultipartUploads"
-                  - "s3:PutObject"
-                Resource:
-                  - !Join
-                    - ""
-                    - - "arn:aws:s3:::"
-                      - !Ref AmazonLocationDemoKinesisBucket
-                  - !Join
-                    - ""
-                    - - "arn:aws:s3:::"
-                      - !Ref AmazonLocationDemoKinesisBucket
-                      - "/*"
-              - Effect: Allow
-                Action: "logs:PutLogEvents"
-                Resource:
-                  - !Join
-                    - ""
-                    - - "arn:aws:logs:"
-                      - !Ref "AWS::Region"
-                      - ":"
-                      - !Ref "AWS::AccountId"
-                      - "log-group:/aws/kinesisfirehose/KDF-"
+
+  FirehoseS3AccessPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: FirehoseS3AccessPolicy
+      Roles:
+        - !Ref AmazonLocationKinesisDeliveryRole
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - "s3:AbortMultipartUpload"
+              - "s3:GetBucketLocation"
+              - "s3:GetObject"
+              - "s3:ListBucket"
+              - "s3:ListBucketMultipartUploads"
+              - "s3:PutObject"
+            Resource:
+              - !Join
+                - ""
+                - - "arn:aws:s3:::"
+                  - !Ref AmazonLocationDemoKinesisBucket
+              - !Join
+                - ""
+                - - "arn:aws:s3:::"
+                  - !Ref AmazonLocationDemoKinesisBucket
+                  - "/*"
+          - Effect: Allow
+            Action:
+              - "logs:PutLogEvents"
+            Resource:
+              - !Join
+                - ""
+                - - "arn:aws:logs:"
+                  - !Ref "AWS::Region"
+                  - ":"
+                  - !Ref "AWS::AccountId"
+                  - "log-group:/aws/kinesisfirehose/KDF-"
 
   AmazonLocationDemoPinpointStreamRole:
     Condition: EnablePinTranslate
-    DependsOn: AmazonLocationDemoKinesisStream
+    DependsOn: 
+    - AmazonLocationDemoKinesisStream
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -180,27 +187,38 @@ Resources:
               Service: pinpoint.amazonaws.com
             Action: "sts:AssumeRole"
       Path: "/"
-      Policies:
-        - PolicyName: pinpoint_stream_policy
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Effect: Allow
-                Action:
-                  - kinesis:PutRecords
-                  - kinesis:DescribeStream
-                Resource:
-                  - !GetAtt AmazonLocationDemoKinesisStream.Arn
-        - PolicyName: kms_decrypt_policy
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Effect: Allow
-                Action:
-                  - kms:Decrypt
-                  - kms:GenerateDataKey
-                Resource:
-                  - !GetAtt AmazonLocationDemoKMS.Arn
+  
+  AmazonLocationDemoPinpointStreamPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: StreamAccessPolicy
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - kinesis:PutRecords
+              - kinesis:DescribeStream
+            Resource:
+              - !GetAtt AmazonLocationDemoKinesisStream.Arn
+      Roles:
+        - !Ref AmazonLocationDemoPinpointStreamRole
+
+  AmazonLocationDemoPinpointStreamKMSAccessPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: KMSAccessPolicy
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - kms:Decrypt
+              - kms:GenerateDataKey
+            Resource:
+              - !GetAtt AmazonLocationDemoKMS.Arn
+      Roles:
+        - !Ref AmazonLocationDemoPinpointStreamRole
 
   CognitoIdentityPool:
     Type: "AWS::Cognito::IdentityPool"
@@ -217,6 +235,20 @@ Resources:
           - CognitoIdentityPoolUnauthRole
           - Arn
 
+  AmazonLocationDemoLoggingBucket:
+    Condition: EnablePinTranslate
+    Type: "AWS::S3::Bucket"
+    DeletionPolicy: RetainExceptOnCreate
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Sub "location.aws.com.demo.bucket.logs.${AWS::AccountId}"
+      VersioningConfiguration:
+        Status: Enabled  
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: aws:kms
+
   AmazonLocationDemoKinesisBucket:
     Condition: EnablePinTranslate
     Type: "AWS::S3::Bucket"
@@ -226,6 +258,9 @@ Resources:
       BucketName: !Sub "location.aws.com.demo.kinesis.${AWS::AccountId}"
       VersioningConfiguration:
         Status: Enabled
+      LoggingConfiguration:
+        DestinationBucketName: !Ref AmazonLocationDemoLoggingBucket
+        LogFilePrefix: kinesis-bucket-logs      
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
@@ -256,6 +291,54 @@ Resources:
             Condition:
               "Null":
                 s3:x-amz-server-side-encryption: "true"
+          - Sid: DenyUnsecureTransport
+            Effect: Deny
+            Principal: "*"
+            Action: "s3:*"
+            Resource: 
+              - !Sub "arn:aws:s3:::${AmazonLocationDemoKinesisBucket}/*"
+              - !Sub "arn:aws:s3:::${AmazonLocationDemoKinesisBucket}"
+            Condition:
+              Bool:
+                "aws:SecureTransport": false
+                "aws:SourceArn": !Sub "arn:aws:s3:::${AmazonLocationDemoKinesisBucket}"        
+                
+  AmazonLocationDemoLoggingBucketPolicy:
+    Condition: EnablePinTranslate
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref AmazonLocationDemoLoggingBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Id: PutObjPolicy
+        Statement:
+          - Sid: DenyIncorrectEncryptionHeader
+            Effect: Deny
+            Principal: "*"
+            Action: "s3:PutObject"
+            Resource: !Sub "arn:aws:s3:::${AmazonLocationDemoLoggingBucket}/*"
+            Condition:
+              "StringNotEquals":
+                s3:x-amz-server-side-encryption: "aws:kms"
+          - Sid: DenyUnEncryptedObjectUploads
+            Effect: Deny
+            Principal: "*"
+            Action: "s3:PutObject"
+            Resource: !Sub "arn:aws:s3:::${AmazonLocationDemoLoggingBucket}/*"
+            Condition:
+              "Null":
+                s3:x-amz-server-side-encryption: "true"
+          - Sid: DenyUnsecureTransport
+            Effect: Deny
+            Principal: "*"
+            Action: "s3:*"
+            Resource: 
+              - !Sub "arn:aws:s3:::${AmazonLocationDemoLoggingBucket}/*"
+              - !Sub "arn:aws:s3:::${AmazonLocationDemoLoggingBucket}"
+            Condition:
+              Bool:
+                "aws:SecureTransport": false
+                "aws:SourceArn": !Sub "arn:aws:s3:::${AmazonLocationDemoLoggingBucket}"                     
 
   AmazonLocationDemoKMS:
     Type: AWS::KMS::Key
@@ -313,7 +396,9 @@ Resources:
       Name: location.aws.com.demo.app
 
   AmazonLocationDemoPinpointAppStream:
-    DependsOn: AmazonLocationDemoPinpointStreamRole
+    DependsOn:
+    - AmazonLocationDemoPinpointStreamKMSAccessPolicy
+    - AmazonLocationDemoPinpointStreamPolicy
     Condition: EnablePinTranslate
     Type: AWS::Pinpoint::EventStream
     Properties:
@@ -647,7 +732,9 @@ Resources:
               request.write(responseBody);
               request.end();
           }
-    DependsOn: AmazonLocationDemoIoTPolicy
+    DependsOn: 
+    - AmazonLocationDemoIoTPolicy
+    - AmazonLocationLambdaExecutionPolicy
   AmazonLocationDemoIoTPublisherLambda:
     Type: AWS::Lambda::Function
     Properties:
@@ -706,6 +793,7 @@ Resources:
       Role: !GetAtt [AmazonLocationLambdaExecutionRole, Arn]
       Runtime: nodejs16.x
       Timeout: 30
+      
   AmazonLocationLambdaExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -718,20 +806,25 @@ Resources:
                 - lambda.amazonaws.com
             Action:
               - "sts:AssumeRole"
-      Path: /
-      Policies:
-        - PolicyName: root
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Action:
-                  - "iot:*"
-                  - "iot:Publish"
-                  - "logs:CreateLogGroup"
-                  - "logs:CreateLogStream"
-                  - "logs:PutLogEvents"
-                Resource: "*"
+      Path: "/"
+
+  AmazonLocationLambdaExecutionPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: LambdaExecutionPolicy
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - "iot:*"
+              - "iot:Publish"
+              - "logs:CreateLogGroup"
+              - "logs:CreateLogStream"
+              - "logs:PutLogEvents"
+            Resource: "*"
+      Roles:
+        - !Ref AmazonLocationLambdaExecutionRole
 
   AmazonLocationDemoLambdaInvokePermission:
     Type: AWS::Lambda::Permission
@@ -754,7 +847,7 @@ Resources:
       ServiceToken: !GetAtt AmazonLocationGeoFenceLambda.Arn
 
   AmazonLocationGeoFenceLambda:
-    DependsOn: AmazonLocationGeoFenceLambdaExecutionRole
+    DependsOn: AmazonLocationGeoFenceLambdaExecutionPolicy
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: AmazonLocationDemoGeofenceCreator
@@ -801,7 +894,7 @@ Resources:
                                 'Geometry': {
                                     'Circle': {
                                         'Center': coordinates,
-                                        'Radius': 80
+                                        'Radius': 200
                                     }
                                     }
                                 },
@@ -842,22 +935,40 @@ Resources:
                 - lambda.amazonaws.com
             Action:
               - "sts:AssumeRole"
-      Path: /
-      Policies:
-        - PolicyName: root
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Action:
-                  - "geo:BatchPutGeofence"
-                  - "geo:ListGeofenceCollections"
-                  - "geo:CreateGeofenceCollection"
-                  - "geo:DeleteGeofenceCollection"
-                  - "logs:CreateLogGroup"
-                  - "logs:CreateLogStream"
-                  - "logs:PutLogEvents"
-                Resource: "*"
+      Path: "/"
+
+  AmazonLocationGeoFenceLambdaExecutionPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: LambdaExecutionPolicy
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - "geo:BatchPutGeofence"
+              - "geo:ListGeofenceCollections"
+              - "geo:CreateGeofenceCollection"
+              - "geo:DeleteGeofenceCollection"
+            Resource: "*"
+      Roles:
+        - !Ref AmazonLocationGeoFenceLambdaExecutionRole
+
+  AmazonLocationGeoFenceLambdaCloudWatchLogsPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: CloudWatchLogsPolicy
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - "logs:CreateLogGroup"
+              - "logs:CreateLogStream"
+              - "logs:PutLogEvents"
+            Resource: "*"
+      Roles:
+        - !Ref AmazonLocationGeoFenceLambdaExecutionRole
 
 Outputs:
   Region:

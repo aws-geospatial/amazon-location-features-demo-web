@@ -1,13 +1,14 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { FC, ReactNode, useState } from "react";
+import { FC, ReactNode, lazy, useState } from "react";
 
 import { Button, CheckboxField, Flex, Text } from "@aws-amplify/ui-react";
-import { Modal } from "@demo/atomicui/atoms";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
+
+const Modal = lazy(() => import("@demo/atomicui/atoms/Modal").then(module => ({ default: module.Modal })));
 
 export interface ConfirmationModalProps {
 	className?: string;
