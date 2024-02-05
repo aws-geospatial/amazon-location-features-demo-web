@@ -38,11 +38,11 @@
 		"translate-content-update": "cd extra/translation-script-content && npm install && node update-translation.js && cd ../../"
 	},
 	"dependencies": {
-		"@aws-amplify/ui-react": "3.6.1",
+		"@aws-amplify/ui-react": "6.1.2",
 		"@aws-sdk/credential-providers": "3.370.0",
 		"@turf/turf": "6.5.0",
 		"@types/react-window": "1.8.5",
-		"aws-amplify": "4.3.43",
+		"aws-amplify": "6.0.13",
 		"aws-sdk": "2.1518.0",
 		"date-fns": "2.29.3",
 		"i18next": "23.2.8",
