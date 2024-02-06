@@ -61,8 +61,6 @@ const Sidebar: React.FC<SidebarProps> = ({
 	const disconnectButtonText = t("disconnect_aws_account.text");
 	const { setUI } = useBottomSheet();
 
-	const sidebarData = marketingMenuOptionsData.filter(v => t(v.label) !== t("demo.text"));
-
 	const onConnectAwsAccount = (action: AnalyticsEventActionsEnum) => {
 		onCloseSidebar();
 		onOpenConnectAwsAccountModal();
@@ -195,7 +193,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 					<Text>{t("about.text")}</Text>
 				</Flex>
 			</View>
-			<List listArray={sidebarData} className="verticle-list side-bar__external-menu" hideIcons />
+			<List listArray={marketingMenuOptionsData} className="verticle-list side-bar__external-menu" hideIcons />
 			<View className="button-wrapper">
 				{isUserAwsAccountConnected && (
 					<Button

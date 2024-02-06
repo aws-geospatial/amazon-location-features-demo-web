@@ -4,14 +4,12 @@
 import IconCodeMenu from "@demo/assets/icons/icon-code-menu-icon.svg";
 import IconCompassMenu from "@demo/assets/icons/icon-compass-menu-icon.svg";
 import IconDollarSolid from "@demo/assets/icons/icon-dollar-solid.svg";
-import IconPlayMenu from "@demo/assets/icons/icon-play-menu-icon.svg";
 import IconSwap from "@demo/assets/icons/icon-swap.svg";
 
 import appConfig from "@demo/core/constants/appConfig";
 
 const {
 	ENV: {
-		GOOGLE_PLAY_STORE_LINK,
 		MIGRATE_FROM_GOOGLE_MAPS_PAGE,
 		FEATURE_COMPARISON_PAGE,
 		MIGRATE_A_WEB_APP_PAGE,
@@ -22,7 +20,6 @@ const {
 	},
 	ROUTES: {
 		OVERVIEW,
-		DEMO,
 		SAMPLES,
 		MIGRATE_FROM_GOOGLE_MAPS,
 		FEATURE_COMPARISON,
@@ -45,7 +42,6 @@ type MenuItem = {
 
 const routeToEnvMapping = {
 	[OVERVIEW]: "1",
-	[DEMO]: "1",
 	[SAMPLES]: "1",
 	[MIGRATE_FROM_GOOGLE_MAPS]: MIGRATE_FROM_GOOGLE_MAPS_PAGE,
 	[FEATURE_COMPARISON]: FEATURE_COMPARISON_PAGE,
@@ -65,24 +61,6 @@ let marketingMenuOptionsData: MenuItem[] = [
 		iconBeforeLink: IconCompassMenu,
 		iconContainerClass: "menu-item-icon",
 		isExternalLink: false
-	},
-	{
-		label: "demo.text",
-		link: DEMO,
-		iconBeforeLink: IconPlayMenu,
-		iconContainerClass: "menu-item-icon",
-		subMenu: [
-			{
-				label: "web.text",
-				link: DEMO,
-				isExternalLink: true
-			},
-			{
-				label: "android.text",
-				link: GOOGLE_PLAY_STORE_LINK,
-				isExternalLink: true
-			}
-		]
 	},
 	{
 		label: "samples.text",
