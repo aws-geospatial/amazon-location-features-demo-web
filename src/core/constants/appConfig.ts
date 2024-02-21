@@ -65,7 +65,14 @@ const appConfig = {
 		COUNTRY_EVALUATION_URL: import.meta.env.DEV ? "/doNotDelete.txt" : "assets/doNotDelete.txt",
 		APP_VERSION: getEnv("VITE_APP_VERSION"),
 		NL_BASE_URL: getEnv("VITE_NL_BASE_URL"),
-		NL_API_KEY: getEnv("VITE_NL_API_KEY")
+		NL_API_KEY: getEnv("VITE_NL_API_KEY"),
+		MIGRATE_FROM_GOOGLE_MAPS_PAGE: getEnv("VITE_MIGRATE_FROM_GOOGLE_MAPS_PAGE"),
+		FEATURE_COMPARISON_PAGE: getEnv("VITE_FEATURE_COMPARISON_PAGE"),
+		MIGRATE_A_WEB_APP_PAGE: getEnv("VITE_MIGRATE_A_WEB_APP_PAGE"),
+		MIGRATE_AN_ANDROID_APP_PAGE: getEnv("VITE_MIGRATE_AN_ANDROID_APP_PAGE"),
+		MIGRATE_AN_IOS_APP_PAGE: getEnv("VITE_MIGRATE_AN_IOS_APP_PAGE"),
+		MIGRATE_A_WEB_SERVICE_PAGE: getEnv("VITE_MIGRATE_A_WEB_SERVICE_PAGE"),
+		PRICING_PAGE: getEnv("VITE_PRICING_PAGE")
 	},
 	PERSIST_STORAGE_KEYS: {
 		LOCAL_STORAGE_PREFIX: "amazon-location_",
@@ -91,7 +98,14 @@ const appConfig = {
 		SAMPLE_DETAILS: "/sample/:sampleId",
 		HELP: "/demo/help",
 		TERMS: "/demo/terms",
-		SOFTWARE_ATTRIBUTIONS: "/demo/software-attributions"
+		SOFTWARE_ATTRIBUTIONS: "/demo/software-attributions",
+		MIGRATE_FROM_GOOGLE_MAPS: "/migrate-from-google-maps",
+		FEATURE_COMPARISON: "/feature-comparison",
+		MIGRATE_A_WEB_APP: "/migrate-a-web-app",
+		MIGRATE_AN_ANDROID_APP: "/migrate-an-android-app",
+		MIGRATE_AN_IOS_APP: "/migrate-an-ios-app",
+		MIGRATE_A_WEB_SERVICE: "/migrate-a-web-service",
+		PRICING: "/pricing"
 	},
 	GET_PARAMS: {
 		DATA_PROVIDER: "dp",

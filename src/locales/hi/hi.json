@@ -3652,5 +3652,50 @@
   },
   "error_handler__failed_feedback_text_2": {
     "text": "स्थिति के साथ अनुरोध विफल हुआ"
+  },
+  "migration": {
+    "text": "माइग्रेशन"
+  },
+  "migrate_from_google_maps": {
+    "text": "Google मानचित्र से माइग्रेट करें"
+  },
+  "feature_comparison": {
+    "text": "फ़ीचर तुलना"
+  },
+  "migrate_a_web_app": {
+    "text": "वेब ऐप्लिकेशन माइग्रेट करें"
+  },
+  "migrate_an_android_app": {
+    "text": "Android ऐप माइग्रेट करें"
+  },
+  "migrate_an_ios_app": {
+    "text": "iOS ऐप माइग्रेट करें"
+  },
+  "migrate_a_web_service": {
+    "text": "वेब सेवा माइग्रेट करें"
+  },
+  "pricing": {
+    "text": "मूल्य निर्धारण"
+  },
+  "migration_desc": {
+    "text": "Google मानचित्र से माइग्रेट करें"
+  },
+  "pricing_desc": {
+    "text": "अपनी अनुमानित लागत की गणना करें"
+  },
+  "web_app": {
+    "text": "वेब ऐप"
+  },
+  "android_app": {
+    "text": "एंड्राइड ऐप"
+  },
+  "ios_app": {
+    "text": "iOS ऐप"
+  },
+  "web_service": {
+    "text": "वेब सर्विस"
+  },
+  "feature_comparison_description": {
+    "text": "गहराई से तुलना करें"
   }
 }

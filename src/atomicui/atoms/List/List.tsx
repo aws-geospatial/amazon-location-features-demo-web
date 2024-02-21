@@ -4,6 +4,7 @@
 import { FC, ReactNode } from "react";
 
 import { Flex, Link, Text, View, ViewProps } from "@aws-amplify/ui-react";
+import { IconArrowRight } from "@demo/assets";
 import { uuid } from "@demo/utils/uuid";
 import { omit } from "ramda";
 import { useTranslation } from "react-i18next";
@@ -17,6 +18,7 @@ interface ListArr {
 	subMenu?: {
 		label: string;
 		link?: string;
+		isExternalLink?: boolean;
 	}[];
 }
 
@@ -32,9 +34,16 @@ interface LinkWrapperProps {
 	linkTo: string;
 	children: ReactNode;
 	className?: string;
+	hasSubMenuItems?: boolean;
 }
 
-const LinkWrapper: FC<LinkWrapperProps> = ({ isExternalLink = false, linkTo = "#", children, className }) => {
+const LinkWrapper: React.FC<LinkWrapperProps> = ({
+	isExternalLink = false,
+	linkTo = "#",
+	children,
+	className,
+	hasSubMenuItems = false
+}) => {
 	if (isExternalLink) {
 		return (
 			<Link isExternal={linkTo === "#" ? false : true} href={linkTo} className={`${className} amplify-text`}>
@@ -47,10 +56,13 @@ const LinkWrapper: FC<LinkWrapperProps> = ({ isExternalLink = false, linkTo = "#
 		<NavLink
 			to={linkTo}
 			className={({ isActive }) =>
-				`${className} navigation-link ${isActive ? "amplify-text isActive" : "amplify-text"}`
+				`${className} navigation-link ${isActive && linkTo !== "#" ? "amplify-text isActive" : "amplify-text"}`
 			}
+			style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
+			target="_self"
 		>
 			{children}
+			{hasSubMenuItems && <IconArrowRight width="0.8rem" height="0.8rem" fill="var(--primary-color)" />}
 		</NavLink>
 	);
 };
@@ -64,6 +76,7 @@ const List: FC<ListProps> = ({
 }) => {
 	const { t } = useTranslation();
 	let ulClass = props.className;
+
 	/* Download css only if the component useDefaultStyles prop is true */
 	const shouldUseDefaultStyles = Boolean(useDefaultStyles);
 	if (shouldUseDefaultStyles) {
@@ -72,41 +85,37 @@ const List: FC<ListProps> = ({
 	}
 
 	const checkIfExternalLink = (link: string): boolean =>
-		!!(
-			link?.startsWith("https://") ||
-			link?.startsWith("http://") ||
-			link?.startsWith("#") ||
-			link?.startsWith("/showcase")
-		);
+		!!(link?.startsWith("https://") || link?.startsWith("http://") || link?.startsWith("#"));
 
 	return (
 		<View data-testid="list-container" as="ul" className={ulClass} {...omit(["className"], props)}>
 			{listArray.map(item => {
 				const isExternalLink = checkIfExternalLink(item?.link || "#");
+				const hasSubMenuItems = !!item.subMenu?.length;
 
 				return (
-					<li key={uuid.randomUUID()} className="list-item">
+					<li data-testid={item.label} key={uuid.randomUUID()} className="list-item">
 						{hideIcons ? null : (
 							<Flex data-testid="list-item-icon-before-link" className={item.iconContainerClass}>
 								<img loading="lazy" src={item.iconBeforeLink} />
 							</Flex>
 						)}
 						<LinkWrapper
-							className={item.subMenu?.length ? "link-with-sub-links" : ""}
+							className={hasSubMenuItems ? "link-with-sub-links" : ""}
 							isExternalLink={isExternalLink}
 							linkTo={item?.link || "#"}
+							hasSubMenuItems={!!hasSubMenuItems}
 						>
 							{labelIsIcon ? <img loading="lazy" src={item.label} /> : t(item.label)}
 						</LinkWrapper>
-
-						{item.subMenu?.length && (
+						{hasSubMenuItems && (
 							<View className="sub-menu-container">
-								{item.subMenu.map((subMenuItem, index) => (
+								{item.subMenu?.map((subMenuItem, index) => (
 									<Link
 										key={String(index)}
 										className="sub-menu-item"
 										href={subMenuItem.link!}
-										isExternal={checkIfExternalLink(subMenuItem.link || "#")}
+										isExternal={checkIfExternalLink(subMenuItem.link || "#") || !!subMenuItem?.isExternalLink}
 									>
 										<Text className="sub-menu-item-label">{t(subMenuItem.label)}</Text>
 									</Link>

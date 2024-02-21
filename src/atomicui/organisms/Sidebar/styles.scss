@@ -143,3 +143,36 @@
 .button-wrapper > .disconnect-button:focus {
 	background-color: var(--red-color);
 }
+
+.list-item {
+	.sub-menu-container {
+		display: none;
+		position: absolute;
+		top: 340px;
+		left: 225px;
+		padding: 10px;
+		background-color: white;
+		border: solid 1px var(--grey-color-3);
+		border-top: none;
+		width: max-content;
+		border-radius: 10px;
+
+		.sub-menu-item {
+			text-decoration: none;
+
+			.sub-menu-item-label {
+				cursor: pointer;
+
+				&:hover {
+					color: var(--active-menu);
+				}
+			}
+		}
+	}
+
+	&:hover {
+		.sub-menu-container {
+			display: block;
+		}
+	}
+}
