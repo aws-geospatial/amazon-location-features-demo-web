@@ -9,7 +9,7 @@ import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import * as turf from "@turf/turf";
 import { CircleMode, DirectMode, DragCircleMode, SimpleSelectMode } from "mapbox-gl-draw-circle";
-import { LngLatBoundsLike, useControl, useMap } from "react-map-gl";
+import { IControl, LngLatBoundsLike, useControl, useMap } from "react-map-gl";
 
 const draw = new MapboxDraw({
 	displayControlsDefault: false,
@@ -119,7 +119,7 @@ const CircleDrawControl: FC<CircleDrawControlProps> = ({ geofenceCenter, radiusI
 			map.on("draw.create", drawCreate);
 			map.on("draw.update", drawUpdate);
 
-			return draw;
+			return draw as unknown as IControl;
 		},
 		({ map }) => {
 			map.off("draw.create", drawCreate);
