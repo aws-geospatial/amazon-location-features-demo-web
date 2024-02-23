@@ -1,17 +1,1 @@
-{
-	"web_app": {
-		"text": "Web App"
-	},
-	"android_app": {
-		"text": "Android App"
-	},
-	"ios_app": {
-		"text": "iOS App"
-	},
-	"web_service": {
-		"text": "Web Service"
-	},
-	"feature_comparison_description": {
-		"text": "In depth comparison"
-	}
-}
+{}

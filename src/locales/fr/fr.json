@@ -3659,9 +3659,6 @@
   "migrate_from_google_maps": {
     "text": "Migrer depuis Google Maps"
   },
-  "feature_comparison": {
-    "text": "Comparaison des fonctionnalités"
-  },
   "migrate_a_web_app": {
     "text": "Migrer une application Web"
   },
@@ -3694,8 +3691,5 @@
   },
   "web_service": {
     "text": "Service Web"
-  },
-  "feature_comparison_description": {
-    "text": "Comparaison approfondie"
   }
 }

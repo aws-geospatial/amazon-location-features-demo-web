@@ -58,7 +58,6 @@ interface IProps {
 const {
 	ENV: {
 		MIGRATE_FROM_GOOGLE_MAPS_PAGE,
-		FEATURE_COMPARISON_PAGE,
 		MIGRATE_A_WEB_APP_PAGE,
 		MIGRATE_AN_ANDROID_APP_PAGE,
 		MIGRATE_AN_IOS_APP_PAGE,
@@ -69,7 +68,6 @@ const {
 		OVERVIEW,
 		SAMPLES,
 		MIGRATE_FROM_GOOGLE_MAPS,
-		FEATURE_COMPARISON,
 		MIGRATE_A_WEB_APP,
 		MIGRATE_AN_ANDROID_APP,
 		MIGRATE_AN_IOS_APP,
@@ -286,7 +284,6 @@ const Explore: FC<IProps> = ({
 				onClickHandler: () => setIsMigrationMenuExapnded(!isMigrationMenuExapnded),
 				isEnabled:
 					!!parseInt(MIGRATE_FROM_GOOGLE_MAPS_PAGE) ||
-					!!parseInt(FEATURE_COMPARISON_PAGE) ||
 					!!parseInt(MIGRATE_A_WEB_APP_PAGE) ||
 					!!parseInt(MIGRATE_AN_ANDROID_APP_PAGE) ||
 					!!parseInt(MIGRATE_AN_IOS_APP_PAGE) ||
@@ -297,19 +294,6 @@ const Explore: FC<IProps> = ({
 						description: t("migrate_from_google_maps.text"),
 						onClickHandler: () => navigate(MIGRATE_FROM_GOOGLE_MAPS),
 						isEnabled: !!parseInt(MIGRATE_FROM_GOOGLE_MAPS_PAGE),
-						iconComponent: (
-							<IconBrowser
-								style={{ alignSelf: "flex-start", margin: "0.15rem 0rem 0rem 0.8rem" }}
-								width={18}
-								height={18}
-							/>
-						)
-					},
-					{
-						title: t("feature_comparison.text"),
-						description: t("feature_comparison_description.text"),
-						onClickHandler: () => navigate(FEATURE_COMPARISON),
-						isEnabled: !!parseInt(FEATURE_COMPARISON_PAGE),
 						iconComponent: (
 							<IconBrowser
 								style={{ alignSelf: "flex-start", margin: "0.15rem 0rem 0rem 0.8rem" }}
