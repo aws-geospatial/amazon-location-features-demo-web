@@ -3655,9 +3655,6 @@
   "migrate_from_google_maps": {
     "text": "从谷歌地图迁移"
   },
-  "feature_comparison": {
-    "text": "功能对比"
-  },
   "migrate_a_web_app": {
     "text": "迁移 Web 应用程序"
   },
@@ -3690,8 +3687,5 @@
   },
   "web_service": {
     "text": "网络服务"
-  },
-  "feature_comparison_description": {
-    "text": "深度对比"
   }
 }

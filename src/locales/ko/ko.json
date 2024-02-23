@@ -3659,9 +3659,6 @@
   "migrate_from_google_maps": {
     "text": "Google 지도에서 마이그레이션하기"
   },
-  "feature_comparison": {
-    "text": "기능 비교"
-  },
   "migrate_a_web_app": {
     "text": "웹 앱 마이그레이션"
   },
@@ -3694,8 +3691,5 @@
   },
   "web_service": {
     "text": "웹 서비스"
-  },
-  "feature_comparison_description": {
-    "text": "심층 비교"
   }
 }

@@ -3659,9 +3659,6 @@
   "migrate_from_google_maps": {
     "text": "الترحيل من خرائط Google"
   },
-  "feature_comparison": {
-    "text": "مقارنة الميزات"
-  },
   "migrate_a_web_app": {
     "text": "ترحيل تطبيق ويب"
   },
@@ -3694,8 +3691,5 @@
   },
   "web_service": {
     "text": "خدمة الويب"
-  },
-  "feature_comparison_description": {
-    "text": "مقارنة متعمقة"
   }
 }

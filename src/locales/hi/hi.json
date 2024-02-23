@@ -3659,9 +3659,6 @@
   "migrate_from_google_maps": {
     "text": "Google मानचित्र से माइग्रेट करें"
   },
-  "feature_comparison": {
-    "text": "फ़ीचर तुलना"
-  },
   "migrate_a_web_app": {
     "text": "वेब ऐप्लिकेशन माइग्रेट करें"
   },
@@ -3694,8 +3691,5 @@
   },
   "web_service": {
     "text": "वेब सर्विस"
-  },
-  "feature_comparison_description": {
-    "text": "गहराई से तुलना करें"
   }
 }

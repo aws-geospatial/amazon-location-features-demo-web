@@ -3659,9 +3659,6 @@
   "migrate_from_google_maps": {
     "text": "Google マップからの移行"
   },
-  "feature_comparison": {
-    "text": "機能比較"
-  },
   "migrate_a_web_app": {
     "text": "Web アプリの移行"
   },
@@ -3694,8 +3691,5 @@
   },
   "web_service": {
     "text": "ウェブサービス"
-  },
-  "feature_comparison_description": {
-    "text": "詳細な比較"
   }
 }

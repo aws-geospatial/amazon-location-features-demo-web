@@ -11,7 +11,6 @@ import appConfig from "@demo/core/constants/appConfig";
 const {
 	ENV: {
 		MIGRATE_FROM_GOOGLE_MAPS_PAGE,
-		FEATURE_COMPARISON_PAGE,
 		MIGRATE_A_WEB_APP_PAGE,
 		MIGRATE_AN_ANDROID_APP_PAGE,
 		MIGRATE_AN_IOS_APP_PAGE,
@@ -22,7 +21,6 @@ const {
 		OVERVIEW,
 		SAMPLES,
 		MIGRATE_FROM_GOOGLE_MAPS,
-		FEATURE_COMPARISON,
 		MIGRATE_A_WEB_APP,
 		MIGRATE_AN_ANDROID_APP,
 		MIGRATE_AN_IOS_APP,
@@ -44,7 +42,6 @@ const routeToEnvMapping = {
 	[OVERVIEW]: "1",
 	[SAMPLES]: "1",
 	[MIGRATE_FROM_GOOGLE_MAPS]: MIGRATE_FROM_GOOGLE_MAPS_PAGE,
-	[FEATURE_COMPARISON]: FEATURE_COMPARISON_PAGE,
 	[MIGRATE_A_WEB_APP]: MIGRATE_A_WEB_APP_PAGE,
 	[MIGRATE_AN_ANDROID_APP]: MIGRATE_AN_ANDROID_APP_PAGE,
 	[MIGRATE_AN_IOS_APP]: MIGRATE_AN_IOS_APP_PAGE,
@@ -79,11 +76,6 @@ let marketingMenuOptionsData: MenuItem[] = [
 			{
 				label: "migrate_from_google_maps.text",
 				link: MIGRATE_FROM_GOOGLE_MAPS,
-				isExternalLink: false
-			},
-			{
-				label: "feature_comparison.text",
-				link: FEATURE_COMPARISON,
 				isExternalLink: false
 			},
 			{
