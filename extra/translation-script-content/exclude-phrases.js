@@ -48,5 +48,6 @@ export const excludedPhrases = [
 	"ap-south-1",
 	"ap-northeast-1",
 	"Amazon Location Service",
-	"Google"
+	"Google Maps",
+	"MapLibre"
 ];
