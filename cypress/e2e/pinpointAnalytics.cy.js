@@ -6,8 +6,7 @@ describe("Should record user events correctly", () => {
 	it("should successfully send correct user event to pinpoint", () => {
 		cy.wait(10000);
 		cy.getAllLocalStorage().then(result => {
-			const analyticsEndpointId =
-				result[`${Cypress.env("WEB_DOMAIN")}`]["amazon-location-web-demo_analyticsEndpointId"];
+			const analyticsEndpointId = result[`${Cypress.env("WEB_DOMAIN")}`]["amazon-location_analyticsEndpointId"];
 			cy.get('[data-testid="hamburger-menu"]').click();
 			cy.wait(2000);
 			cy.contains("Settings").click();
@@ -37,8 +36,7 @@ describe("Should record user events correctly", () => {
 	it("should successfully create correct endpoint with the correct event to correct pinpoint application", () => {
 		cy.wait(10000);
 		cy.getAllLocalStorage().then(result => {
-			const analyticsEndpointId =
-				result[`${Cypress.env("WEB_DOMAIN")}`]["amazon-location-web-demo_analyticsEndpointId"];
+			const analyticsEndpointId = result[`${Cypress.env("WEB_DOMAIN")}`]["amazon-location_analyticsEndpointId"];
 			cy.exec("node extra/fetch-pinpoint-analytics-events/index.js", {
 				failOnNonZeroExit: false,
 				env: {
