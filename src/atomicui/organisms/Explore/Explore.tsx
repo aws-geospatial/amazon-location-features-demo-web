@@ -1,14 +1,18 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React from "react";
+import { FC, Fragment, MutableRefObject, useCallback, useMemo, useState } from "react";
 
 import { Button, Divider, Flex, Text } from "@aws-amplify/ui-react";
 import {
 	IconArrow,
 	IconAwsCloudFormation,
+	IconBrandAndroid,
+	IconBrandApple,
+	IconBrowser,
 	IconDirections,
 	IconGeofencePlusSolid,
+	IconGlobe,
 	IconMapSolid,
 	IconRadar
 } from "@demo/assets";
@@ -31,8 +35,8 @@ import { record } from "@demo/utils";
 import { isAndroid, isIOS } from "react-device-detect";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import "./styles.scss";
 import { RefHandles } from "react-spring-bottom-sheet/dist/types";
+import "./styles.scss";
 
 interface IProps {
 	updateUIInfo: (ui: ResponsiveUIEnum) => void;
@@ -48,14 +52,31 @@ interface IProps {
 	onShowUnauthGeofenceBox: () => void;
 	onShowUnauthTrackerBox: () => void;
 	onshowUnauthSimulationDisclaimerModal: () => void;
-	bottomSheetRef?: React.MutableRefObject<RefHandles | null>;
+	bottomSheetRef?: MutableRefObject<RefHandles | null>;
 }
 
 const {
-	ROUTES: { SAMPLES, OVERVIEW }
+	ENV: {
+		MIGRATE_FROM_GOOGLE_MAPS_PAGE,
+		MIGRATE_A_WEB_APP_PAGE,
+		MIGRATE_AN_ANDROID_APP_PAGE,
+		MIGRATE_AN_IOS_APP_PAGE,
+		MIGRATE_A_WEB_SERVICE_PAGE,
+		PRICING_PAGE
+	},
+	ROUTES: {
+		OVERVIEW,
+		SAMPLES,
+		MIGRATE_FROM_GOOGLE_MAPS,
+		MIGRATE_A_WEB_APP,
+		MIGRATE_AN_ANDROID_APP,
+		MIGRATE_AN_IOS_APP,
+		MIGRATE_A_WEB_SERVICE,
+		PRICING
+	}
 } = appConfig;
 
-const Explore: React.FC<IProps> = ({
+const Explore: FC<IProps> = ({
 	updateUIInfo,
 	onCloseSidebar,
 	onOpenConnectAwsAccountModal,
@@ -71,6 +92,7 @@ const Explore: React.FC<IProps> = ({
 	onshowUnauthSimulationDisclaimerModal,
 	bottomSheetRef
 }) => {
+	const [isMigrationMenuExapnded, setIsMigrationMenuExapnded] = useState(false);
 	const { t, i18n } = useTranslation();
 	const currentLanguage = i18n.language;
 	const langDir = i18n.dir();
@@ -159,20 +181,20 @@ const Explore: React.FC<IProps> = ({
 
 	const _onLogin = async () => await onLogin();
 
-	const onClickSettings = () => {
+	const onClickSettings = useCallback(() => {
 		onCloseSidebar();
 		onShowSettings();
-	};
+	}, [onCloseSidebar, onShowSettings]);
 
-	const onClickMore = () => {
+	const onClickMore = useCallback(() => {
 		onCloseSidebar();
 		onShowAboutModal();
-	};
+	}, [onCloseSidebar, onShowAboutModal]);
 
-	const onClickFeedback = () => {
+	const onClickFeedback = useCallback(() => {
 		onCloseSidebar();
 		onOpenFeedbackModal();
-	};
+	}, [onCloseSidebar, onOpenFeedbackModal]);
 
 	const ConnectAccount = ({ isAuthenticated = false }) => (
 		<>
@@ -242,29 +264,192 @@ const Explore: React.FC<IProps> = ({
 		</Button>
 	);
 
-	const exploreMoreOptions = [
-		{
-			title: t("header__overview.text"),
-			description: t("settings_modal_option__overview.text"),
-			onClickHandler: () => navigate(OVERVIEW)
-		},
-		{
-			title: t("samples.text"),
-			description: t("settings_modal_option__samples.text"),
-			onClickHandler: () => navigate(SAMPLES)
-		},
-		{
-			title: t("settings.text"),
-			description: t("settings_modal_option__settings.text"),
-			onClickHandler: onClickSettings
-		},
-		{ title: t("about.text"), description: t("settings_modal_option__about.text"), onClickHandler: onClickMore },
-		{
-			title: t("fm__provide_feedback_btn.text"),
-			description: t("fm__mobile_view_desc.text"),
-			onClickHandler: onClickFeedback
-		}
-	];
+	const exploreMoreOptions = useMemo(
+		() => [
+			{
+				title: t("header__overview.text"),
+				description: t("settings_modal_option__overview.text"),
+				onClickHandler: () => navigate(OVERVIEW),
+				isEnabled: true
+			},
+			{
+				title: t("samples.text"),
+				description: t("settings_modal_option__samples.text"),
+				onClickHandler: () => navigate(SAMPLES),
+				isEnabled: true
+			},
+			{
+				title: t("migration.text"),
+				description: t("migration_desc.text"),
+				onClickHandler: () => setIsMigrationMenuExapnded(!isMigrationMenuExapnded),
+				isEnabled:
+					!!parseInt(MIGRATE_FROM_GOOGLE_MAPS_PAGE) ||
+					!!parseInt(MIGRATE_A_WEB_APP_PAGE) ||
+					!!parseInt(MIGRATE_AN_ANDROID_APP_PAGE) ||
+					!!parseInt(MIGRATE_AN_IOS_APP_PAGE) ||
+					!!parseInt(MIGRATE_A_WEB_SERVICE_PAGE),
+				subMenu: [
+					{
+						title: t("header__overview.text"),
+						description: t("migrate_from_google_maps.text"),
+						onClickHandler: () => navigate(MIGRATE_FROM_GOOGLE_MAPS),
+						isEnabled: !!parseInt(MIGRATE_FROM_GOOGLE_MAPS_PAGE),
+						iconComponent: (
+							<IconBrowser
+								style={{ alignSelf: "flex-start", margin: "0.15rem 0rem 0rem 0.8rem" }}
+								width={18}
+								height={18}
+							/>
+						)
+					},
+					{
+						title: t("web_app.text"),
+						description: t("migrate_a_web_app.text"),
+						onClickHandler: () => navigate(MIGRATE_A_WEB_APP),
+						isEnabled: !!parseInt(MIGRATE_A_WEB_APP_PAGE),
+						iconComponent: (
+							<IconBrowser
+								style={{ alignSelf: "flex-start", margin: "0.15rem 0rem 0rem 0.8rem" }}
+								width={18}
+								height={18}
+							/>
+						)
+					},
+					{
+						title: t("android_app.text"),
+						description: t("migrate_an_android_app.text"),
+						onClickHandler: () => navigate(MIGRATE_AN_ANDROID_APP),
+						isEnabled: !!parseInt(MIGRATE_AN_ANDROID_APP_PAGE),
+						iconComponent: (
+							<IconBrandAndroid
+								style={{ alignSelf: "flex-start", margin: "0.15rem 0rem 0rem 0.8rem" }}
+								width={18}
+								height={18}
+							/>
+						)
+					},
+					{
+						title: t("ios_app.text"),
+						description: t("migrate_an_ios_app.text"),
+						onClickHandler: () => navigate(MIGRATE_AN_IOS_APP),
+						isEnabled: !!parseInt(MIGRATE_AN_IOS_APP_PAGE),
+						iconComponent: (
+							<IconBrandApple
+								style={{ alignSelf: "flex-start", margin: "0.15rem 0rem 0rem 0.8rem" }}
+								width={18}
+								height={18}
+							/>
+						)
+					},
+					{
+						title: t("web_service.text"),
+						description: t("migrate_a_web_service.text"),
+						onClickHandler: () => navigate(MIGRATE_A_WEB_SERVICE),
+						isEnabled: !!parseInt(MIGRATE_A_WEB_SERVICE_PAGE),
+						iconComponent: (
+							<IconGlobe
+								style={{ alignSelf: "flex-start", margin: "0.15rem 0rem 0rem 0.8rem" }}
+								fill="var(--primary-color)"
+								width={18}
+								height={18}
+							/>
+						)
+					}
+				]
+			},
+			{
+				title: t("pricing.text"),
+				description: t("pricing_desc.text"),
+				onClickHandler: () => navigate(PRICING),
+				isEnabled: !!parseInt(PRICING_PAGE)
+			},
+			{
+				title: t("settings.text"),
+				description: t("settings_modal_option__settings.text"),
+				onClickHandler: onClickSettings,
+				isEnabled: true
+			},
+			{
+				title: t("about.text"),
+				description: t("settings_modal_option__about.text"),
+				onClickHandler: onClickMore,
+				isEnabled: true
+			},
+			{
+				title: t("fm__provide_feedback_btn.text"),
+				description: t("fm__mobile_view_desc.text"),
+				onClickHandler: onClickFeedback,
+				isEnabled: true
+			}
+		],
+		[isMigrationMenuExapnded, navigate, onClickFeedback, onClickMore, onClickSettings, t]
+	);
+
+	const renderExploreMoreOptions = useMemo(() => {
+		return exploreMoreOptions.map((option, idx) => {
+			if (option.isEnabled) {
+				if (option.subMenu?.length) {
+					return (
+						<Fragment key={idx}>
+							<IconicInfoCard
+								gap="0"
+								IconComponent={
+									<IconArrow className={isMigrationMenuExapnded ? "up-icon" : "reverse-icon"} width={20} height={20} />
+								}
+								title={option.title}
+								titleColor={isMigrationMenuExapnded ? "var(--primary-color)" : ""}
+								description={option.description}
+								cardMargin={
+									idx === 0 && (!isUserAwsAccountConnected || !isAuthenticated) ? "2rem 0 0.923rem 0" : "0.923rem 0"
+								}
+								direction="row-reverse"
+								cardAlignItems="center"
+								onClickHandler={option.onClickHandler}
+							/>
+							{isMigrationMenuExapnded &&
+								option.subMenu.map((subOption, subIdx) => {
+									if (subOption.isEnabled) {
+										return (
+											<IconicInfoCard
+												key={subIdx}
+												gap="0"
+												IconComponent={subOption.iconComponent}
+												title={subOption.title}
+												description={subOption.description}
+												cardMargin={
+													idx === 0 && (!isUserAwsAccountConnected || !isAuthenticated)
+														? "2rem 0 0.923rem 0"
+														: "0.923rem 0"
+												}
+												cardAlignItems="center"
+												onClickHandler={subOption.onClickHandler}
+												isTitleBold
+											/>
+										);
+									}
+								})}
+						</Fragment>
+					);
+				} else {
+					return (
+						<IconicInfoCard
+							key={idx}
+							gap="0"
+							IconComponent={<IconArrow className="reverse-icon" width={20} height={20} />}
+							title={option.title}
+							description={option.description}
+							cardMargin={
+								idx === 0 && (!isUserAwsAccountConnected || !isAuthenticated) ? "2rem 0 0.923rem 0" : "0.923rem 0"
+							}
+							direction="row-reverse"
+							cardAlignItems="center"
+							onClickHandler={option.onClickHandler}
+						/>
+					);
+				}
+			}
+		});
+	}, [exploreMoreOptions, isAuthenticated, isMigrationMenuExapnded, isUserAwsAccountConnected]);
 
 	const exploreButtons = [
 		{
@@ -335,23 +520,8 @@ const Explore: React.FC<IProps> = ({
 				</Flex>
 			)}
 			<Flex direction="column" gap="0" margin="0 1rem" className="explore-more-options">
-				{exploreMoreOptions.map((option, index) => (
-					<IconicInfoCard
-						key={index}
-						gap="0"
-						IconComponent={<IconArrow className="reverse-icon" width={20} height={20} />}
-						title={option.title}
-						description={option.description}
-						cardMargin={
-							index === 0 && (!isUserAwsAccountConnected || !isAuthenticated) ? "2rem 0 0.923rem 0" : "0.923rem 0"
-						}
-						direction="row-reverse"
-						cardAlignItems="center"
-						onClickHandler={option.onClickHandler}
-					/>
-				))}
+				{renderExploreMoreOptions}
 			</Flex>
-
 			{isUserAwsAccountConnected && isAuthenticated && (
 				<>
 					<Divider className="title-divider" />

@@ -3652,5 +3652,44 @@
   },
   "error_handler__failed_feedback_text_2": {
     "text": "請求失敗，具有狀態"
+  },
+  "migration": {
+    "text": "移轉"
+  },
+  "migrate_from_google_maps": {
+    "text": "從谷歌地圖移轉"
+  },
+  "migrate_a_web_app": {
+    "text": "移轉 Web 應用程式"
+  },
+  "migrate_an_android_app": {
+    "text": "移轉安卓應用程式"
+  },
+  "migrate_an_ios_app": {
+    "text": "移轉 iOS 應用程式"
+  },
+  "migrate_a_web_service": {
+    "text": "移轉 Web 服務"
+  },
+  "pricing": {
+    "text": "定價"
+  },
+  "migration_desc": {
+    "text": "從谷歌地圖移轉"
+  },
+  "pricing_desc": {
+    "text": "計算預估成本"
+  },
+  "web_app": {
+    "text": "網路應用程式"
+  },
+  "android_app": {
+    "text": "安卓應用程式"
+  },
+  "ios_app": {
+    "text": "iOS 應用程式"
+  },
+  "web_service": {
+    "text": "網路服務"
   }
 }

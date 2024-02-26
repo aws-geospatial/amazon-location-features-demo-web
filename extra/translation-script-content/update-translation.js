@@ -1,8 +1,8 @@
 import fs from "fs";
 import path from "path";
 
-import { Amplify, Auth } from "aws-amplify";
-import AWS from "aws-sdk";
+import { TranslateClient, TranslateTextCommand } from "@aws-sdk/client-translate";
+import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
 
 import * as dotenv from "dotenv";
 
@@ -14,17 +14,14 @@ dotenv.config({ path: "./.env" });
 const region = process.env.AWS_REGION;
 const identityPoolId = process.env.IDENTITY_POOL_ID;
 
-Amplify.configure({
-	Auth: {
+const fetchCredentials = async () =>
+	await fromCognitoIdentityPool({
 		identityPoolId,
-		region
-	}
-});
-
-const fetchCredentials = async () => await Auth.currentUserCredentials();
+		clientConfig: { region }
+	})();
 
 let credentials;
-let translate;
+let translateClient;
 
 const main = async () => {
 	try {
@@ -34,17 +31,11 @@ const main = async () => {
 			throw new Error("update-en.json file is empty.");
 		} else {
 			credentials = await fetchCredentials();
-			translate = new AWS.Translate({
-				credentials,
-				region
-			});
+			translateClient = new TranslateClient({ credentials, region });
 
-			const initCredsAndTranslate = async () => {
+			const initCredsAndTranslateClient = async () => {
 				credentials = await fetchCredentials();
-				translate = new AWS.Translate({
-					credentials,
-					region
-				});
+				translateClient = new TranslateClient({ credentials, region });
 			};
 
 			const localesDirectory = "src/locales";
@@ -63,11 +54,17 @@ const main = async () => {
 				};
 
 				try {
-					const response = await translate.translateText(params).promise();
+					const isCredsExpired = !credentials.expiration || new Date(credentials.expiration) <= new Date();
+
+					if (isCredsExpired) {
+						await initCredsAndTranslateClient();
+					}
+
+					const command = new TranslateTextCommand(params);
+					const response = await translateClient.send(command);
 					return response.TranslatedText;
 				} catch (error) {
 					console.error("translateText()", { error });
-					errors?.code === "ExpiredTokenException" && initCredsAndTranslate();
 				}
 			};
 
@@ -100,6 +97,7 @@ const main = async () => {
 				fs.mkdirSync(dirPath, { recursive: true });
 
 				let existingJson = {};
+
 				try {
 					// Read existing language file if it exists
 					existingJson = JSON.parse(fs.readFileSync(outputPath, "utf8"));

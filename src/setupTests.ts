@@ -1,7 +1,6 @@
-// jest-dom adds custom jest matchers for asserting on DOM nodes.
-// allows you to do things like:
-// expect(element).toHaveTextContent(/react/i)
-// learn more: https://github.com/testing-library/jest-dom
+/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
+/* SPDX-License-Identifier: MIT-0 */
+
 import "@testing-library/jest-dom";
 import { faker } from "@faker-js/faker";
 
@@ -40,38 +39,52 @@ jest.mock("@demo/core/constants/appConfig", () => ({
 		CF_TEMPLATE: "https://www.example.com?region=us-east-1",
 		APPLE_APP_STORE_LINK: "",
 		GOOGLE_PLAY_STORE_LINK: "",
-		COUNTRY_EVALUATION_URL: ""
+		COUNTRY_EVALUATION_URL: "",
+		APP_VERSION: "",
+		NL_BASE_URL: "",
+		NL_API_KEY: "",
+		MIGRATE_FROM_GOOGLE_MAPS_PAGE: "1",
+		MIGRATE_A_WEB_APP_PAGE: "1",
+		MIGRATE_AN_ANDROID_APP_PAGE: "1",
+		MIGRATE_AN_IOS_APP_PAGE: "1",
+		MIGRATE_A_WEB_SERVICE_PAGE: "1",
+		PRICING_PAGE: "1"
 	},
 	PERSIST_STORAGE_KEYS: {
-		LOCAL_STORAGE_PREFIX: "amazon-location-web-demo_",
-		AMPLIFY_AUTH_DATA: "AmplifyAuthData",
-		AMPLIFY_MAP_DATA: "AmplifyMapData",
-		PERSISTED_DATA: "PersistedData",
-		GEO_LOCATION_ALLOWED: "GeoLocationAllowed",
-		SHOULD_CLEAR_CREDENTIALS: "ShouldClearCredentials",
+		LOCAL_STORAGE_PREFIX: "amazon-location_",
+		AMPLIFY_AUTH_DATA: "amplifyAuthData",
+		AMPLIFY_MAP_DATA: "amplifyMapData",
+		PERSISTED_DATA: "persistedData",
+		GEO_LOCATION_ALLOWED: "geoLocationAllowed",
+		SHOULD_CLEAR_CREDENTIALS: "shouldClearCredentials",
 		ANALYTICS_ENDPOINT_ID: "analyticsEndpointId",
 		ANALYTICS_CREDS: "analyticsCreds",
-		PAGE_VIEW_IDENTIFIERS: "pageViewIdentifiers"
+		PAGE_VIEW_IDENTIFIERS: "pageViewIdentifiers",
+		FASTEST_REGION: "fastestRegion",
+		LOCAL_APP_VERSION: "localAppVersion"
 	},
 	ROUTES: {
 		DEFAULT: "/",
 		DEMO: "/demo",
+		NL_DEMO: "/demo?dp=Esri&nl=true",
+		NOT_FOUND: "/404",
+		ERROR_BOUNDARY: "/error",
 		OVERVIEW: "/overview",
-		PRODUCT: "/product",
 		SAMPLES: "/samples",
 		SAMPLE_DETAILS: "/sample/:sampleId",
 		HELP: "/demo/help",
 		TERMS: "/demo/terms",
-		SOFTWARE_ATTRIBUTIONS: "/showcase/software-attributions",
-		BLOG: "/blog",
-		NEW: "/new",
-		UNAUTHORIZED: "/401",
-		FORBIDDEN: "/403",
-		NOT_FOUND: "/404",
-		ERROR_BOUNDARY: "/error"
+		SOFTWARE_ATTRIBUTIONS: "/demo/software-attributions",
+		MIGRATE_FROM_GOOGLE_MAPS: "/migrate-from-google-maps",
+		MIGRATE_A_WEB_APP: "/migrate-a-web-app",
+		MIGRATE_AN_ANDROID_APP: "/migrate-an-android-app",
+		MIGRATE_AN_IOS_APP: "/migrate-an-ios-app",
+		MIGRATE_A_WEB_SERVICE: "/migrate-a-web-service",
+		PRICING: "/pricing"
 	},
 	GET_PARAMS: {
-		DATA_PROVIDER: "data_provider"
+		DATA_PROVIDER: "dp",
+		NL_TOGGLE: "nl"
 	},
 	MAP_RESOURCES: {
 		IMPERIAL_COUNTRIES: ["US", "GB", "LR", "MM"],
