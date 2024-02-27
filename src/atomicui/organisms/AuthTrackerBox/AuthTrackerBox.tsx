@@ -13,7 +13,7 @@ import {
 	IconMobileSolid,
 	IconSegment,
 	IconWalking
-} from "@demo/assets";
+} from "@demo/assets/svgs";
 import { useAwsGeofence, useAwsRoute, useAwsTracker, useWebSocketBanner } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";

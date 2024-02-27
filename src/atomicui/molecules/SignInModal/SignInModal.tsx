@@ -4,7 +4,7 @@
 import { FC, lazy } from "react";
 
 import { Button, Flex, Text } from "@aws-amplify/ui-react";
-import { IconGeofence, IconRoute } from "@demo/assets";
+import { IconGeofence, IconRoute } from "@demo/assets/svgs";
 import { useAmplifyAuth } from "@demo/hooks";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { EventTypeEnum, TriggeredByEnum } from "@demo/types/Enums";

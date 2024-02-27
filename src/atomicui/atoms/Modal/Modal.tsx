@@ -4,7 +4,7 @@
 import { FC, ReactNode } from "react";
 
 import { Card, CardProps, Flex } from "@aws-amplify/ui-react";
-import { IconClose } from "@demo/assets";
+import { IconClose } from "@demo/assets/svgs";
 import "./styles.scss";
 
 interface ModalProps extends CardProps {

@@ -16,7 +16,7 @@ import {
 } from "react";
 
 import { Flex, Text } from "@aws-amplify/ui-react";
-import { IconClose, IconNotificationBell, LogoDark, LogoLight } from "@demo/assets";
+import { IconClose, IconNotificationBell, LogoDark, LogoLight } from "@demo/assets/svgs";
 import appConfig from "@demo/core/constants/appConfig";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useAmplifyMap, useAwsGeofence, useAwsRoute, useAwsTracker, usePersistedData } from "@demo/hooks";

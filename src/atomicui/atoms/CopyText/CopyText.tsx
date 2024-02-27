@@ -3,7 +3,7 @@
 
 import { forwardRef, useState } from "react";
 
-import { IconCopy, IconTickCircle } from "@demo/assets";
+import { IconCopy, IconTickCircle } from "@demo/assets/svgs";
 import "./styles.scss";
 
 interface CopyTextProps {

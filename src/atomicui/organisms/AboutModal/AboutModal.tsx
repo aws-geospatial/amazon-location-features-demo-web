@@ -4,7 +4,7 @@
 import { FC, lazy, useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button, Divider, Flex, Text } from "@aws-amplify/ui-react";
-import { IconArrow, IconBackArrow, IconPoweredByAws1 } from "@demo/assets";
+import { IconArrow, IconBackArrow, IconPoweredByAws1 } from "@demo/assets/svgs";
 import { aboutModalData, appConfig } from "@demo/core/constants";
 import { useAmplifyMap } from "@demo/hooks";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";

@@ -5,7 +5,7 @@ import { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from "rea
 
 import { Button, Flex, Placeholder, Text, View } from "@aws-amplify/ui-react";
 import { CalculateRouteRequest, CalculateRouteResponse } from "@aws-sdk/client-location";
-import { IconCar, IconClose, IconCopyPages, IconDirections, IconInfo } from "@demo/assets";
+import { IconCar, IconClose, IconCopyPages, IconDirections, IconInfo } from "@demo/assets/svgs";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useAmplifyMap, useAwsPlace, useAwsRoute } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";

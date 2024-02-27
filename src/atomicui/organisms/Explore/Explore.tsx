@@ -15,7 +15,7 @@ import {
 	IconGlobe,
 	IconMapSolid,
 	IconRadar
-} from "@demo/assets";
+} from "@demo/assets/svgs";
 import { appConfig } from "@demo/core/constants";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useAmplifyAuth, useAmplifyMap, useAwsIot } from "@demo/hooks";

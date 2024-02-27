@@ -4,7 +4,7 @@
 import { FC, ReactNode } from "react";
 
 import { Text, View } from "@aws-amplify/ui-react";
-import { IconSearch } from "@demo/assets";
+import { IconSearch } from "@demo/assets/svgs";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
 

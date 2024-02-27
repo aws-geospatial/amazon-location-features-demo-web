@@ -15,7 +15,7 @@ import {
 	IconPaintroller,
 	IconPeopleArrows,
 	IconShuffle
-} from "@demo/assets";
+} from "@demo/assets/svgs";
 import { appConfig, languageSwitcherData, regionsData } from "@demo/core/constants";
 import { useAmplifyAuth, useAmplifyMap, useAws, useAwsIot, usePersistedData } from "@demo/hooks";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";

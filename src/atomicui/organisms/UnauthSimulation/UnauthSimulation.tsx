@@ -10,7 +10,7 @@ import {
 	IconRadar,
 	IconSegment,
 	Simulation
-} from "@demo/assets";
+} from "@demo/assets/svgs";
 import { appConfig, busRoutesData } from "@demo/core/constants";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useAwsGeofence, useUnauthSimulation, useWebSocketBanner } from "@demo/hooks";

@@ -1,7 +1,7 @@
 import { FC, lazy } from "react";
 
 import { Divider, Flex, View } from "@aws-amplify/ui-react";
-import { IconLocateMe, IconMinus, IconZoomPlus, LogoLight } from "@demo/assets";
+import { IconLocateMe, IconMinus, IconZoomPlus, LogoLight } from "@demo/assets/svgs";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { MapStyleFilterTypes, MenuItemEnum, ShowStateType } from "@demo/types";
 import "./styles.scss";

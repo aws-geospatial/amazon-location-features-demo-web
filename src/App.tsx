@@ -4,10 +4,11 @@
 import { StrictMode, Suspense } from "react";
 
 import { Loader } from "@aws-amplify/ui-react";
-import { AppWrapper, RouteChunks, ToastContainer } from "@demo/core";
+import { AppWrapper } from "@demo/core/AppWrapper";
+import { RouteChunks } from "@demo/core/Routes";
+import { ToastContainer } from "@demo/core/Toast";
+import { appConfig } from "@demo/core/constants";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-
-import appConfig from "./core/constants/appConfig";
 
 const {
 	PERSIST_STORAGE_KEYS: { LOCAL_APP_VERSION },

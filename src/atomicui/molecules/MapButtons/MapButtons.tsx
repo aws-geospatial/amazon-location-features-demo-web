@@ -28,7 +28,14 @@ import {
 	Text,
 	View
 } from "@aws-amplify/ui-react";
-import { IconClose, IconFilterFunnel, IconGeofencePlusSolid, IconMapSolid, IconRadar, IconSearch } from "@demo/assets";
+import {
+	IconClose,
+	IconFilterFunnel,
+	IconGeofencePlusSolid,
+	IconMapSolid,
+	IconRadar,
+	IconSearch
+} from "@demo/assets/svgs";
 import { appConfig } from "@demo/core/constants";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useAmplifyAuth, useAmplifyMap, useAwsGeofence, useUnauthSimulation } from "@demo/hooks";

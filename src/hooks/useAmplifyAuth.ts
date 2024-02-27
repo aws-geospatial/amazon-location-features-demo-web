@@ -4,7 +4,7 @@
 import { useEffect, useMemo } from "react";
 
 import { CognitoIdentity } from "@aws-sdk/client-cognito-identity";
-import { showToast } from "@demo/core";
+import { showToast } from "@demo/core/Toast";
 import appConfig from "@demo/core/constants/appConfig";
 import { useAmplifyMap, useAws } from "@demo/hooks";
 import { useAmplifyAuthService } from "@demo/services";

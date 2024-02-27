@@ -4,7 +4,7 @@
 import { FC, lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button, Flex, Link, Text, View } from "@aws-amplify/ui-react";
-import { IconAwsCloudFormation, IconCheckMarkCircle } from "@demo/assets";
+import { IconAwsCloudFormation, IconCheckMarkCircle } from "@demo/assets/svgs";
 import { appConfig, regionsData } from "@demo/core/constants";
 import { useAmplifyAuth, useAmplifyMap, useAws } from "@demo/hooks";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";

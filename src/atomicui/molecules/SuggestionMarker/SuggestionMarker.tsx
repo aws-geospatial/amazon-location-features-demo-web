@@ -4,7 +4,7 @@
 import { FC, memo, useCallback, useEffect, useMemo, useState } from "react";
 
 import { View } from "@aws-amplify/ui-react";
-import { IconSelected, IconSuggestion } from "@demo/assets";
+import { IconSelected, IconSuggestion } from "@demo/assets/svgs";
 import { useAwsPlace } from "@demo/hooks";
 import { SuggestionType } from "@demo/types";
 import { Marker } from "react-map-gl";

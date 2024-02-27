@@ -1,7 +1,7 @@
 import { FC, lazy } from "react";
 
 import { Flex, Text } from "@aws-amplify/ui-react";
-import { IconBellSolid, IconGeofenceMarkerDisabled } from "@demo/assets";
+import { IconBellSolid, IconGeofenceMarkerDisabled } from "@demo/assets/svgs";
 import { NotificationHistoryItemtype } from "@demo/types";
 import { format } from "date-fns";
 import { useTranslation } from "react-i18next";

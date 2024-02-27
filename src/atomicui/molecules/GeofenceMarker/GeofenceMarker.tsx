@@ -4,7 +4,7 @@
 import { FC } from "react";
 
 import { Text, View } from "@aws-amplify/ui-react";
-import { IconGeofenceMarker } from "@demo/assets";
+import { IconGeofenceMarker } from "@demo/assets/svgs";
 import { Marker } from "react-map-gl";
 
 interface GeofenceMarkerProps {

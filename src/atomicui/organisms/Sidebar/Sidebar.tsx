@@ -4,7 +4,7 @@
 import { FC, lazy } from "react";
 
 import { Button, Card, Flex, Text, View } from "@aws-amplify/ui-react";
-import { IconClose, IconCompass, IconGear, IconGeofence, IconInfo, IconLockSolid, IconRadar } from "@demo/assets";
+import { IconClose, IconCompass, IconGear, IconGeofence, IconInfo, IconLockSolid, IconRadar } from "@demo/assets/svgs";
 import { appConfig, marketingMenuOptionsData } from "@demo/core/constants";
 import { useAmplifyAuth, useAmplifyMap, useAwsIot } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";

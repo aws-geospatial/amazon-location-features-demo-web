@@ -4,7 +4,7 @@
 import { FC } from "react";
 
 import { Flex, View, ViewProps } from "@aws-amplify/ui-react";
-import { LogoSmall } from "@demo/assets";
+import { LogoSmall } from "@demo/assets/svgs";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
 

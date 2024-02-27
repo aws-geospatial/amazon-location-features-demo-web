@@ -19,8 +19,8 @@ import {
 	IconSegment,
 	IconTruckSolid,
 	IconWalking
-} from "@demo/assets";
-import { appConfig } from "@demo/core";
+} from "@demo/assets/svgs";
+import { appConfig } from "@demo/core/constants";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useAmplifyMap, useAwsPlace, useAwsRoute, usePersistedData } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
@@ -57,7 +57,7 @@ const { ANDROID } = UserAgentEnum;
 
 const {
 	ENV: { GOOGLE_PLAY_STORE_LINK }
-} = appConfig.default;
+} = appConfig;
 
 interface RouteBoxProps {
 	mapRef: MapRef | null;

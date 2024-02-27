@@ -4,7 +4,7 @@
 import { FC, lazy } from "react";
 
 import { Button, Flex, Text } from "@aws-amplify/ui-react";
-import { IconPoweredByAws1, LogoSmall } from "@demo/assets";
+import { IconPoweredByAws1, LogoSmall } from "@demo/assets/svgs";
 import { appConfig } from "@demo/core/constants";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";

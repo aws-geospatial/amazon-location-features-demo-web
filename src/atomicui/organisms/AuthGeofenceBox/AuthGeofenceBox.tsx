@@ -26,8 +26,8 @@ import {
 	IconPlus,
 	IconSearch,
 	IconTrash
-} from "@demo/assets";
-import { showToast } from "@demo/core";
+} from "@demo/assets/svgs";
+import { showToast } from "@demo/core/Toast";
 import { appConfig } from "@demo/core/constants";
 import { useAmplifyMap, useAwsGeofence, useAwsPlace } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";

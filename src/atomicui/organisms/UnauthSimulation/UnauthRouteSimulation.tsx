@@ -1,7 +1,7 @@
 import { FC, useEffect, useMemo, useRef, useState } from "react";
 
 import { View } from "@aws-amplify/ui-react";
-import { IconBusActive, IconBusInactive } from "@demo/assets";
+import { IconBusActive, IconBusInactive } from "@demo/assets/svgs";
 import { useAwsGeofence } from "@demo/hooks";
 import { TrackingHistoryItemtype, TrackingHistoryTypeEnum } from "@demo/types";
 import { Layer, LayerProps, Marker, Source } from "react-map-gl";

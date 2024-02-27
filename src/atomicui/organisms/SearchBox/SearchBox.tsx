@@ -15,7 +15,7 @@ import {
 	View
 } from "@aws-amplify/ui-react";
 import { PlaceGeometry } from "@aws-sdk/client-location";
-import { IconActionMenu, IconClose, IconDirections, IconPin, IconSearch } from "@demo/assets";
+import { IconActionMenu, IconClose, IconDirections, IconPin, IconSearch } from "@demo/assets/svgs";
 import { NLSearchLoader } from "@demo/atomicui/atoms";
 import { InputField, Marker, NotFoundCard, SuggestionMarker } from "@demo/atomicui/molecules";
 import { appConfig } from "@demo/core/constants";

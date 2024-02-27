@@ -4,6 +4,7 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
 import eslint from "vite-plugin-eslint";
+import viteImagemin from "vite-plugin-imagemin";
 import Inspect from "vite-plugin-inspect";
 import svgr from "vite-plugin-svgr";
 
@@ -17,6 +18,33 @@ export default defineConfig(() => {
 				failOnError: false
 			}),
 			dts({ insertTypesEntry: true }),
+			viteImagemin({
+				svgo: {
+					plugins: [
+						{
+							name: "removeViewBox"
+						},
+						{
+							name: "removeEmptyAttrs",
+							active: false
+						}
+					]
+				},
+				gifsicle: {
+					optimizationLevel: 7
+				},
+				mozjpeg: false,
+				optipng: {
+					optimizationLevel: 7
+				},
+				pngquant: {
+					speed: 11
+				},
+				webp: {
+					quality: 75,
+					method: 6
+				}
+			}),
 			Inspect({
 				build: false,
 				outputDir: ".vite-inspect"

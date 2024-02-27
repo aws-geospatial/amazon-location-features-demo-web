@@ -4,7 +4,7 @@
 import { FC, lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Alert, Button, Flex, Loader, SelectField, Text, TextAreaField, View } from "@aws-amplify/ui-react";
-import { IconStar, IconStarFilled } from "@demo/assets";
+import { IconStar, IconStarFilled } from "@demo/assets/svgs";
 import { useFeedback } from "@demo/hooks";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { ConnectFormValuesType, FeedbackValueType } from "@demo/types";
