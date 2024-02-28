@@ -3652,5 +3652,44 @@
   },
   "error_handler__failed_feedback_text_2": {
     "text": "فشل الطلب مع الحالة"
+  },
+  "migration": {
+    "text": "الهجرة"
+  },
+  "migrate_from_google_maps": {
+    "text": "الترحيل من خرائط Google"
+  },
+  "migrate_a_web_app": {
+    "text": "ترحيل تطبيق ويب"
+  },
+  "migrate_an_android_app": {
+    "text": "قم بترحيل تطبيق Android"
+  },
+  "migrate_an_ios_app": {
+    "text": "قم بترحيل تطبيق iOS"
+  },
+  "migrate_a_web_service": {
+    "text": "ترحيل خدمة ويب"
+  },
+  "pricing": {
+    "text": "التسعير"
+  },
+  "migration_desc": {
+    "text": "الترحيل من خرائط Google"
+  },
+  "pricing_desc": {
+    "text": "احسب التكلفة المقدرة"
+  },
+  "web_app": {
+    "text": "تطبيق الويب"
+  },
+  "android_app": {
+    "text": "تطبيق أندرويد"
+  },
+  "ios_app": {
+    "text": "تطبيق iOS"
+  },
+  "web_service": {
+    "text": "خدمة الويب"
   }
 }

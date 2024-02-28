@@ -3652,5 +3652,44 @@
   },
   "error_handler__failed_feedback_text_2": {
     "text": "요청 실패 (상태 표시)"
+  },
+  "migration": {
+    "text": "마이그레이션"
+  },
+  "migrate_from_google_maps": {
+    "text": "Google 지도에서 마이그레이션하기"
+  },
+  "migrate_a_web_app": {
+    "text": "웹 앱 마이그레이션"
+  },
+  "migrate_an_android_app": {
+    "text": "안드로이드 앱 이전"
+  },
+  "migrate_an_ios_app": {
+    "text": "iOS 앱 마이그레이션"
+  },
+  "migrate_a_web_service": {
+    "text": "웹 서비스 마이그레이션"
+  },
+  "pricing": {
+    "text": "가격 책정"
+  },
+  "migration_desc": {
+    "text": "Google 지도에서 마이그레이션하기"
+  },
+  "pricing_desc": {
+    "text": "예상 비용 계산하기"
+  },
+  "web_app": {
+    "text": "웹 앱"
+  },
+  "android_app": {
+    "text": "안드로이드 앱"
+  },
+  "ios_app": {
+    "text": "iOS 앱"
+  },
+  "web_service": {
+    "text": "웹 서비스"
   }
 }
