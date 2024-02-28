@@ -36,7 +36,7 @@ import { ResponsiveUIEnum } from "@demo/types/Enums";
 import { format, parseISO } from "date-fns";
 import { LngLatBoundsLike } from "mapbox-gl";
 import { useTranslation } from "react-i18next";
-import { MapRef } from "react-map-gl";
+import { GeolocateControlRef, MapRef } from "react-map-gl";
 
 import UnauthGeofencesSimulation from "./UnauthGeofencesSimulation";
 import UnauthRouteSimulation from "./UnauthRouteSimulation";
@@ -79,6 +79,7 @@ export interface UnauthSimulationProps {
 	setIsNotifications: React.Dispatch<React.SetStateAction<boolean>>;
 	confirmCloseSimulation: boolean;
 	setConfirmCloseSimulation: React.Dispatch<React.SetStateAction<boolean>>;
+	geolocateControlRef: React.MutableRefObject<GeolocateControlRef | null>;
 }
 
 const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
@@ -96,7 +97,8 @@ const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 	isNotifications,
 	setIsNotifications,
 	confirmCloseSimulation,
-	setConfirmCloseSimulation
+	setConfirmCloseSimulation,
+	geolocateControlRef
 }) => {
 	const [trackingHistory, setTrackingHistory] = useState<TrackingHistoryType>(initialTrackingHistory);
 	const [selectedRoutes, setSelectedRoutes] = useState<SelectOption[]>([busRoutesDropdown[0]]);
@@ -232,7 +234,10 @@ const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 		handleClose();
 		setHideGeofenceTrackerShortcut(false);
 		setConfirmCloseSimulation(false);
+		setStartSimulation(false);
+		setShowUnauthSimulationBounds(false);
 		!isDesktop && setUI(ResponsiveUIEnum.explore);
+		geolocateControlRef.current?.trigger();
 	};
 
 	const StartSimulation = useCallback(() => {

@@ -46,7 +46,7 @@ const {
 const searchParams = new URLSearchParams(window.location.search);
 let switchToMapProvider = searchParams.get(DATA_PROVIDER);
 
-type UseMapManagerProps = {
+interface UseMapManagerProps {
 	mapViewRef: React.MutableRefObject<MapRef | null>;
 	geolocateControlRef: React.MutableRefObject<GeolocateControlRef | null>;
 	isUnauthGeofenceBoxOpen: boolean;
@@ -57,7 +57,7 @@ type UseMapManagerProps = {
 	closeRouteBox: () => void;
 	resetAppStateCb: () => void;
 	setUnauthSimulationExitModal: (b: boolean) => void;
-};
+}
 
 const useMapManager = ({
 	mapViewRef,
