@@ -82,6 +82,7 @@ const DemoPlaceholderPage: React.FC<DemoPlaceholderPageProps> = ({
 								setIsNotifications={() => {}}
 								confirmCloseSimulation={false}
 								setConfirmCloseSimulation={() => {}}
+								geolocateControlRef={{ current: null }}
 							/>
 						) : (
 							<SearchBox

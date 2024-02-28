@@ -604,6 +604,7 @@ const DemoPage: React.FC = () => {
 							isExpandRouteOptionsMobile={expandRouteOptionsMobile}
 							setExpandRouteOptionsMobile={setExpandRouteOptionsMobile}
 							setSearchBoxValue={setSearchBoxValue}
+							geolocateControlRef={geolocateControlRef}
 						/>
 					)}
 					<MapButtons
