@@ -92,6 +92,8 @@ Resources:
         Statement:
           - Action: "sts:AssumeRoleWithWebIdentity"
             Condition:
+              "StringEquals":
+                "cognito-identity.amazonaws.com:aud": !Ref AmazonLocationDemoCognitoIdentityPool
               "ForAnyValue:StringLike":
                 "cognito-identity.amazonaws.com:amr": unauthenticated
             Effect: Allow

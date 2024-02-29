@@ -97,7 +97,7 @@
 		"stylelint-order": "5.0.0",
 		"stylelint-prettier": "2.0.0",
 		"typescript": "4.9.3",
-		"vite": "3.2.7",
+		"vite": "3.2.8",
 		"vite-plugin-dts": "2.3.0",
 		"vite-plugin-eslint": "1.7.0",
 		"vite-plugin-imagemin": "^0.6.1",
