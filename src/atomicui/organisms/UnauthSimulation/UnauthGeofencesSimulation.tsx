@@ -11,12 +11,14 @@ interface UnauthGeofencesSimulationProps {
 	id: string;
 	name: string;
 	geofenceCollection: string;
+	trackerPos: number[];
 }
 
 const UnauthGeofencesSimulation: React.FC<UnauthGeofencesSimulationProps> = ({
 	id,
 	// name,
-	geofenceCollection
+	geofenceCollection,
+	trackerPos
 }) => {
 	const [geofences, setGeofences] = useState<Array<ListGeofenceResponseEntry> | undefined>(undefined);
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -44,6 +46,7 @@ const UnauthGeofencesSimulation: React.FC<UnauthGeofencesSimulationProps> = ({
 					const { Center, Radius } = Circle;
 					const circle = turf.circle(Center, Radius, { steps: 50, units: "meters" });
 					const line = turf.lineString(circle.geometry.coordinates[0]);
+					const isTrackerInGeofence = turf.booleanPointInPolygon(turf.point(trackerPos), circle);
 
 					return (
 						<View key={idx}>
@@ -53,7 +56,7 @@ const UnauthGeofencesSimulation: React.FC<UnauthGeofencesSimulationProps> = ({
 									type="fill"
 									paint={{
 										"fill-opacity": 0.4,
-										"fill-color": "#30b8c0"
+										"fill-color": isTrackerInGeofence ? "#EAD1A2" : "#30b8c0"
 									}}
 								/>
 							</Source>
@@ -63,8 +66,8 @@ const UnauthGeofencesSimulation: React.FC<UnauthGeofencesSimulationProps> = ({
 									type="line"
 									layout={{ "line-cap": "round", "line-join": "round" }}
 									paint={{
-										"line-color": "transparent",
-										"line-width": 0
+										"line-color": isTrackerInGeofence ? "#FF9900" : "transparent",
+										"line-width": isTrackerInGeofence ? 2 : 0
 									}}
 								/>
 							</Source>
@@ -73,7 +76,7 @@ const UnauthGeofencesSimulation: React.FC<UnauthGeofencesSimulationProps> = ({
 				}
 			});
 		}
-	}, [geofences]);
+	}, [geofences, trackerPos]);
 
 	return <View key={id}>{renderGeofences}</View>;
 };

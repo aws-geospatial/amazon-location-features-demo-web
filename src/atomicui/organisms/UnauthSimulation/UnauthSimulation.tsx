@@ -18,16 +18,18 @@ import {
 	NonStartUnauthSimulation,
 	NotificationsBox
 } from "@demo/atomicui/molecules";
-import { appConfig, busRoutesData } from "@demo/core";
+import { appConfig, busRoutesData } from "@demo/core/constants";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useAwsGeofence, useUnauthSimulation, useWebSocketBanner } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import i18n from "@demo/locales/i18n";
 import {
+	IdxType,
 	MenuItemEnum,
 	NotificationHistoryItemtype,
 	SelectOption,
+	TrackerPosType,
 	TrackingHistoryItemtype,
 	TrackingHistoryType,
 	TrackingHistoryTypeEnum
@@ -42,6 +44,25 @@ import UnauthGeofencesSimulation from "./UnauthGeofencesSimulation";
 import UnauthRouteSimulation from "./UnauthRouteSimulation";
 import "./styles.scss";
 
+const {
+	MAP_RESOURCES: {
+		MAX_BOUNDS: { VANCOUVER }
+	}
+} = appConfig;
+const initialIdx: IdxType = {
+	bus_route_01: 0,
+	bus_route_02: 0,
+	bus_route_03: 0,
+	bus_route_04: 0,
+	bus_route_05: 0
+};
+const initialTrackerPos: TrackerPosType = {
+	bus_route_01: busRoutesData[0].coordinates[0],
+	bus_route_02: busRoutesData[1].coordinates[0],
+	bus_route_03: busRoutesData[2].coordinates[0],
+	bus_route_04: busRoutesData[3].coordinates[0],
+	bus_route_05: busRoutesData[4].coordinates[0]
+};
 const initialTrackingHistory: TrackingHistoryType = {
 	bus_route_01: [],
 	bus_route_02: [],
@@ -56,12 +77,6 @@ const busRoutesDropdown = [
 	{ value: "bus_route_04", label: "Bus 04 Knight" },
 	{ value: "bus_route_05", label: "Bus 05 UBC" }
 ];
-
-const {
-	MAP_RESOURCES: {
-		MAX_BOUNDS: { VANCOUVER }
-	}
-} = appConfig.default;
 
 export interface UnauthSimulationProps {
 	mapRef: MapRef | null;
@@ -100,6 +115,8 @@ const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 	setConfirmCloseSimulation,
 	geolocateControlRef
 }) => {
+	const [idx, setIdx] = useState(initialIdx);
+	const [trackerPos, setTrackerPos] = useState(initialTrackerPos);
 	const [trackingHistory, setTrackingHistory] = useState<TrackingHistoryType>(initialTrackingHistory);
 	const [selectedRoutes, setSelectedRoutes] = useState<SelectOption[]>([busRoutesDropdown[0]]);
 	const [busSelectedValue, setBusSelectedValue] = useState<SelectOption>(busRoutesDropdown[0]);
@@ -116,13 +133,13 @@ const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 				return {
 					...prevState,
 					[n.busRouteId]: [
-						...prevState[n.busRouteId],
 						{
 							type: TrackingHistoryTypeEnum.BUS_STOP,
 							title,
 							description: n.coordinates,
 							subDescription: n.createdAt
-						}
+						},
+						...prevState[n.busRouteId]
 					]
 				};
 			});
@@ -361,9 +378,15 @@ const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 			busRoutesData
 				.filter(({ id }) => selectedRoutesIds.includes(id))
 				.map(({ id, name, geofenceCollection }) => (
-					<UnauthGeofencesSimulation key={id} id={id} name={name} geofenceCollection={geofenceCollection} />
+					<UnauthGeofencesSimulation
+						key={id}
+						id={id}
+						name={name}
+						geofenceCollection={geofenceCollection}
+						trackerPos={trackerPos[id]}
+					/>
 				)),
-		[selectedRoutesIds]
+		[selectedRoutesIds, trackerPos]
 	);
 
 	const renderRoutes = useMemo(
@@ -379,15 +402,19 @@ const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 						coordinates={coordinates}
 						isPlaying={isPlaying}
 						disabled={!selectedRoutesIds.includes(id)}
+						idx={idx[id]}
+						setIdx={idx => setIdx(s => ({ ...s, [id]: idx }))}
+						trackerPos={trackerPos[id]}
+						setTrackerPos={pos => setTrackerPos(s => ({ ...s, [id]: pos }))}
 						updateTrackingHistory={(id: string, newTrackingHistory: TrackingHistoryItemtype) =>
 							setTrackingHistory(prevState => ({
 								...prevState,
-								[id]: [...prevState[id], newTrackingHistory]
+								[id]: [newTrackingHistory, ...prevState[id]]
 							}))
 						}
 					/>
 				)),
-		[isPlaying, selectedRoutesIds]
+		[isPlaying, selectedRoutesIds, idx, trackerPos]
 	);
 
 	const onBackHandler = useCallback(() => {
