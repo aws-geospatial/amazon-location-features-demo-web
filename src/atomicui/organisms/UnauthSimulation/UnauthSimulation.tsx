@@ -243,6 +243,7 @@ const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
 				height={`${
 					!["en"].includes(currentLanguage) ? `${currentLanguage === "pt-BR" ? "51.5rem" : "50rem"}` : "46rem"
 				}`}
+				overflow={window.innerHeight <= 600 ? "auto" : "none"}
 			>
 				<Flex className="start-simulation-container">
 					<Flex justifyContent="center">
