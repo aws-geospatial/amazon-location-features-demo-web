@@ -52,14 +52,14 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 	const [isConfirmationChecked, setIsConfirmationChecked] = React.useState(false);
 	const { isMobile } = useDeviceMediaQuery();
 	const { language } = i18n;
-	const isLongLanguage = ["de", "es", "fr", "it", "pt-BR"].includes(language);
+	const isLongLang = ["de", "es", "fr", "it", "pt-BR"].includes(language);
 
 	return (
 		<Modal
 			data-testid="confirmation-modal-container"
 			className={`confirmation-modal ${className} ${isMobile ? "confirmation-modal-mobile" : ""}`}
 			style={{
-				maxHeight: isLongLanguage ? "27.69rem" : "23.69rem"
+				maxHeight: isLongLang ? "27.69rem" : "23.69rem"
 			}}
 			open={open}
 			onClose={onClose}
