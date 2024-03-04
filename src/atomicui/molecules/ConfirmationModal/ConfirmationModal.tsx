@@ -48,16 +48,21 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 	confirmationCheckboxName,
 	confirmationCheckboxOnChange = () => {}
 }) => {
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 	const [isConfirmationChecked, setIsConfirmationChecked] = React.useState(false);
 	const { isMobile } = useDeviceMediaQuery();
+	const { language } = i18n;
+	const isLongLanguage = ["de", "es", "fr", "it", "pt-BR"].includes(language);
 
 	return (
 		<Modal
 			data-testid="confirmation-modal-container"
+			className={`confirmation-modal ${className} ${isMobile ? "confirmation-modal-mobile" : ""}`}
+			style={{
+				maxHeight: isLongLanguage ? "27.69rem" : "23.69rem"
+			}}
 			open={open}
 			onClose={onClose}
-			className={`confirmation-modal ${className} ${isMobile ? "confirmation-modal-mobile" : ""}`}
 			hideCloseIcon
 			content={
 				<Flex data-testid="confirmation-content" className="confirmation-content">
