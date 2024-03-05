@@ -11,8 +11,8 @@ import { excludedKeys } from "./excluded-keys.js";
 
 dotenv.config({ path: "./.env" });
 
-const region = process.env.AWS_REGION;
 const identityPoolId = process.env.IDENTITY_POOL_ID;
+const region = identityPoolId.split(":")[0];
 
 const fetchCredentials = async () =>
 	await fromCognitoIdentityPool({
