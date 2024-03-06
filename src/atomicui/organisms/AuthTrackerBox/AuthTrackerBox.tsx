@@ -4,16 +4,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button, Card, Flex, Loader, Text, View } from "@aws-amplify/ui-react";
-import {
-	IconCar,
-	IconClose,
-	IconDroneSolid,
-	IconEdit,
-	IconInfoSolid,
-	IconMobileSolid,
-	IconSegment,
-	IconWalking
-} from "@demo/assets";
+import { IconCar, IconClose, IconDroneSolid, IconEdit, IconMobileSolid, IconSegment, IconWalking } from "@demo/assets";
 import { GeofenceMarker } from "@demo/atomicui/molecules";
 import { useAwsGeofence, useAwsRoute, useAwsTracker, useWebSocketBanner } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
@@ -301,7 +292,7 @@ const AuthTrackerBox: React.FC<AuthTrackerBoxProps> = ({
 				</Flex>
 				{Connection}
 				<Flex gap={0} alignItems="center" padding={isDesktop ? "1.23rem" : "0.5rem 1.23rem"}>
-					<IconInfoSolid className="icon-plus-rounded" />
+					<Flex className="icon-info-solid-primary" />
 					<Text marginLeft="1.23rem" variation="tertiary" textAlign={isLtr ? "start" : "end"}>
 						{t("tracker_box__click_any_point.text")}
 					</Text>

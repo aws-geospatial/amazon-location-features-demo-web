@@ -66,10 +66,11 @@
 		}
 	}
 
-	.icon-plus-rounded {
+	.icon-info-solid-primary {
 		min-width: 1.54rem;
 		min-height: 1.54rem;
-		fill: var(--primary-color);
+		background: url("/src/assets/icons/icon-info-solid-primary.svg") center center no-repeat;
+		background-size: contain;
 	}
 
 	.marker-container {

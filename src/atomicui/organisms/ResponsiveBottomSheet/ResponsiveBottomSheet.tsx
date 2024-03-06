@@ -14,7 +14,7 @@ import {
 } from "react";
 
 import { Flex, Text } from "@aws-amplify/ui-react";
-import { IconClose, IconNotificationBell, LogoDark, LogoLight } from "@demo/assets";
+import { IconClose, IconNotificationBell } from "@demo/assets";
 import { ConfirmationModal } from "@demo/atomicui/molecules";
 import appConfig from "@demo/core/constants/appConfig";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
@@ -630,9 +630,10 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 					<Flex data-testid="bottomsheet-header" data-amplify-theme="aws-location-theme" direction="column" gap="0">
 						{isMax556 && (
 							<Flex className="logo-mobile-container">
-								<Flex className="logo-mobile" onClick={handleLogoClick}>
-									{mapStyle.toLowerCase().includes("dark") ? <LogoDark /> : <LogoLight />}
-								</Flex>
+								<Flex
+									className={`logo-mobile ${mapStyle.toLowerCase().includes("dark") ? "dark-logo" : "light-logo"}`}
+									onClick={handleLogoClick}
+								/>
 							</Flex>
 						)}
 						{bottomSheetHeader(ui)}
