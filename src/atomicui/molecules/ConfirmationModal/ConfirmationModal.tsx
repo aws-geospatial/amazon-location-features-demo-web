@@ -59,7 +59,8 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 			data-testid="confirmation-modal-container"
 			className={`confirmation-modal ${className} ${isMobile ? "confirmation-modal-mobile" : ""}`}
 			style={{
-				maxHeight: isLongLang ? "27.69rem" : "23.69rem"
+				maxHeight: isLongLang ? "40rem" : "35rem",
+				height: "min-content"
 			}}
 			open={open}
 			onClose={onClose}

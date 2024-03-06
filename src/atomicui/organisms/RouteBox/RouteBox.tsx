@@ -851,6 +851,34 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 		[currentLang, routeDataForMobile, t, isDesktop]
 	);
 
+	const renderTravelModes = useMemo(() => {
+		return (
+			<Flex gap="0">
+				{iconsByTravelMode.map(({ mode, IconComponent }) => {
+					const duration = getDuration(mode);
+
+					return (
+						<Flex
+							key={mode}
+							data-testid={`travel-mode-${mode}-icon-container`}
+							className={`travel-mode ${travelMode === mode ? "selected" : ""} ${!duration ? "no-duration" : ""}`}
+							onClick={() => {
+								if (duration) {
+									const rd = routeDataForMobile?.find(r => r.hasOwnProperty(mode))![mode];
+									setTravelMode(mode);
+									setRouteData({ Legs: rd!.Legs, Summary: rd!.Summary, travelMode: mode });
+								}
+							}}
+						>
+							<IconComponent />
+							{duration ? <Text className="regular small-text duration-text">{duration}</Text> : null}
+						</Flex>
+					);
+				})}
+			</Flex>
+		);
+	}, [getDuration, iconsByTravelMode, routeDataForMobile, setRouteData, travelMode]);
+
 	if (expandRouteOptionsMobile) {
 		return (
 			<>
@@ -1025,27 +1053,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 									<IconMoreVertical className="icon-more-vertical" />
 								</Flex>
 							)}
-							<Flex gap="0">
-								{iconsByTravelMode.map(({ mode, IconComponent }) => {
-									const duration = getDuration(mode);
-
-									return (
-										<Flex
-											key={mode}
-											data-testid={`travel-mode-${mode}-icon-container`}
-											className={`travel-mode ${travelMode === mode ? "selected" : ""} ${
-												!duration ? "no-duration" : ""
-											}`}
-											onClick={() => {
-												duration && handleTravelModeChange(mode);
-											}}
-										>
-											<IconComponent />
-											{duration ? <Text className="regular small-text duration-text">{duration}</Text> : null}
-										</Flex>
-									);
-								})}
-							</Flex>
+							{renderTravelModes}
 						</Flex>
 					)}
 					{isDesktop &&
