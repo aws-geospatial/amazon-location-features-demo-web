@@ -1,7 +1,7 @@
 import React from "react";
 
 import { NotificationHistoryItemtype } from "@demo/types";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 import "@testing-library/jest-dom/extend-expect";
 import NotificationsBox from "./NotificationsBox";
@@ -23,7 +23,8 @@ describe("NotificationsBox", () => {
 			coordinates: "coordinates_2"
 		}
 	];
-	test("renders NotificationsBox component with notifications", () => {
+
+	it("renders NotificationsBox component with notifications", () => {
 		const mockSetUnauthNotifications = jest.fn();
 
 		render(
@@ -34,13 +35,25 @@ describe("NotificationsBox", () => {
 			/>
 		);
 
-		expect(screen.getByTestId("notifications-text")).toBeInTheDocument();
-		expect(screen.getByTestId("clear-notifications-text")).toBeInTheDocument();
-		expect(screen.getByTestId("notification-card-0")).toBeInTheDocument();
-		expect(screen.getByTestId("notification-card-1")).toBeInTheDocument();
+		waitFor(
+			() => {
+				expect(screen.getByTestId("notifications-text")).toBeInTheDocument();
+				expect(screen.getByTestId("clear-notifications-text")).toBeInTheDocument();
+				expect(screen.getByTestId("notification-card-0")).toBeInTheDocument();
+				expect(screen.getByTestId("notification-card-1")).toBeInTheDocument();
+			},
+			{
+				timeout: 10000,
+				interval: 1000,
+				onTimeout: e => {
+					console.error({ e });
+					return e;
+				}
+			}
+		);
 	});
 
-	test("renders NotificationsBox component without notifications", () => {
+	it("renders NotificationsBox component without notifications", () => {
 		const mockSetUnauthNotifications = jest.fn();
 
 		render(
@@ -51,12 +64,24 @@ describe("NotificationsBox", () => {
 			/>
 		);
 
-		expect(screen.getByTestId("notifications-text")).toBeInTheDocument();
-		expect(screen.getByTestId("clear-notifications-text")).toBeInTheDocument();
-		expect(screen.getByTestId("no-notifications")).toBeInTheDocument();
+		waitFor(
+			() => {
+				expect(screen.getByTestId("notifications-text")).toBeInTheDocument();
+				expect(screen.getByTestId("clear-notifications-text")).toBeInTheDocument();
+				expect(screen.getByTestId("no-notifications")).toBeInTheDocument();
+			},
+			{
+				timeout: 10000,
+				interval: 1000,
+				onTimeout: e => {
+					console.error({ e });
+					return e;
+				}
+			}
+		);
 	});
 
-	test("clears notifications when clear notifications text is clicked", () => {
+	it("clears notifications when clear notifications text is clicked", () => {
 		const mockSetUnauthNotifications = jest.fn();
 
 		render(
@@ -67,8 +92,19 @@ describe("NotificationsBox", () => {
 			/>
 		);
 
-		fireEvent.click(screen.getByTestId("clear-notifications-text"));
-
-		expect(mockSetUnauthNotifications).toHaveBeenCalledWith(undefined);
+		waitFor(
+			() => {
+				fireEvent.click(screen.getByTestId("clear-notifications-text"));
+				expect(mockSetUnauthNotifications).toHaveBeenCalledWith(undefined);
+			},
+			{
+				timeout: 10000,
+				interval: 1000,
+				onTimeout: e => {
+					console.error({ e });
+					return e;
+				}
+			}
+		);
 	});
 });

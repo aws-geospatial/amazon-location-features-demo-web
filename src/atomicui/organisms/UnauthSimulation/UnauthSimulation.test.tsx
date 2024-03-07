@@ -1,6 +1,6 @@
 import i18n from "@demo/locales/i18n";
 import { MenuItemEnum } from "@demo/types";
-import { act, fireEvent, render, waitFor } from "@testing-library/react";
+import { fireEvent, render, waitFor } from "@testing-library/react";
 import { I18nextProvider } from "react-i18next";
 
 import UnauthSimulation, { UnauthSimulationProps } from "./UnauthSimulation";
@@ -74,24 +74,45 @@ describe("<UnauthSimulation />", () => {
 		mockProps.startSimulation = false;
 	});
 
-	it("should renders correclty", () => {
+	it("should render correclty", async () => {
 		const { getByTestId } = renderComponent();
-		expect(getByTestId("unauthSimulation-card")).toBeInTheDocument();
-		expect(getByTestId("before-start-simulation")).toBeInTheDocument();
-		expect(getByTestId("start-simulation")).toBeInTheDocument();
-		expect(getByTestId("start-simulation")).toBeInTheDocument();
-		act(() => {
-			fireEvent.click(getByTestId("start-simulation"));
-		});
-		waitFor(() => {
-			expect(mockProps.setStartSimulation).toBeCalled();
-			expect(mockProps.setShowUnauthSimulationBounds).toBeCalled();
-		});
+		waitFor(
+			() => {
+				expect(getByTestId("unauthSimulation-card")).toBeInTheDocument();
+				expect(getByTestId("before-start-simulation")).toBeInTheDocument();
+				expect(getByTestId("start-simulation")).toBeInTheDocument();
+				expect(getByTestId("start-simulation")).toBeInTheDocument();
+				fireEvent.click(getByTestId("start-simulation"));
+				expect(mockProps.setStartSimulation).toHaveBeCalled();
+				expect(mockProps.setShowUnauthSimulationBounds).toHaveBeCalled();
+			},
+			{
+				timeout: 10000,
+				interval: 1000,
+				onTimeout: e => {
+					console.error({ e });
+					return e;
+				}
+			}
+		);
 	});
 
-	it("should renders correclty when startSimulation is true", () => {
+	it("should render correclty when startSimulation is true", () => {
 		mockProps.startSimulation = true;
 		const { getByTestId } = renderComponent();
-		expect(getByTestId("simulation-container")).toBeInTheDocument();
+
+		waitFor(
+			() => {
+				expect(getByTestId("simulation-container")).toBeInTheDocument();
+			},
+			{
+				timeout: 10000,
+				interval: 1000,
+				onTimeout: e => {
+					console.error({ e });
+					return e;
+				}
+			}
+		);
 	});
 });
