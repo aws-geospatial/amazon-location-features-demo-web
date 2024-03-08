@@ -10,9 +10,11 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"aws-amplify": "^6.0.7",
-		"aws-sdk": "^2.1352.0",
-		"dotenv": "^16.0.3",
-		"ramda": "^0.29.0"
+		"@aws-sdk/client-cognito-identity": "3.529.1",
+		"@aws-sdk/client-iam": "3.529.1",
+		"@aws-sdk/credential-providers": "3.529.1",
+		"aws-amplify": "5.0.25",
+		"dotenv": "16.0.3",
+		"ramda": "0.29.0"
 	}
 }

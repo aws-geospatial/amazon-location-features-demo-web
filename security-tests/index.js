@@ -1,5 +1,7 @@
+import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
+import { GetRolePolicyCommand, IAMClient, ListRolePoliciesCommand } from "@aws-sdk/client-iam";
+import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
 import { Amplify, Auth } from "aws-amplify";
-import AWS from "aws-sdk";
 import * as dotenv from "dotenv";
 import * as R from "ramda";
 
@@ -9,7 +11,7 @@ dotenv.config();
 
 const identityPoolId = process.env.IDENTITY_POOL_ID;
 const userPoolId = process.env.USER_POOL_ID;
-const userPoolWebClientId = process.env.USER_POOL_CLIENT_ID;
+const userPoolClientId = process.env.USER_POOL_CLIENT_ID;
 const username = process.env.COGNITO_EMAIL;
 const password = process.env.COGNITO_PASSWORD;
 const authRoleName = process.env.IAM_AUTH_ROLE_NAME;
@@ -21,33 +23,44 @@ Amplify.configure({
 		identityPoolId,
 		region,
 		userPoolId,
-		userPoolWebClientId
+		userPoolWebClientId: userPoolClientId
 	}
 });
 
-const fetchCredentials = async () => await Auth.currentUserCredentials();
-
-const signIn = async () => await Auth.signIn(username, password);
-
 const completeNewPassword = async (user, newPassword) => await Auth.completeNewPassword(user, newPassword);
 
-const listRolePolicies = async (iamClient, roleName) =>
-	await iamClient.listRolePolicies({ RoleName: roleName }).promise();
+const listRolePolicies = async (iamClient, roleName) => {
+	const command = new ListRolePoliciesCommand({ RoleName: roleName });
+	const response = await iamClient.send(command);
+	return response;
+};
 
-const getRolePolicy = async (iamClient, policyName, roleName) =>
-	await iamClient.getRolePolicy({ PolicyName: policyName, RoleName: roleName }).promise();
+const getRolePolicy = async (iamClient, policyName, roleName) => {
+	const command = new GetRolePolicyCommand({ PolicyName: policyName, RoleName: roleName });
+	const response = await iamClient.send(command);
+	return response;
+};
 
 const main = async () => {
 	try {
-		const user = await signIn();
+		const user = await Auth.signIn(username, password);
 
 		if (user.challengeName === "NEW_PASSWORD_REQUIRED") {
 			await completeNewPassword(user, password);
 		}
 
-		const credentialsAuth = await fetchCredentials();
-		const iamClientAuth = new AWS.IAM({
-			credentials: credentialsAuth,
+		const session = await Auth.currentSession();
+		const idToken = session.getIdToken().getJwtToken();
+		const cognitoIdentityClient = new CognitoIdentityClient({ region });
+		const awsAuthCredentials = await fromCognitoIdentityPool({
+			client: cognitoIdentityClient,
+			identityPoolId,
+			logins: {
+				[`cognito-idp.${region}.amazonaws.com/${userPoolId}`]: idToken
+			}
+		})();
+		const iamClient = new IAMClient({
+			credentials: awsAuthCredentials,
 			region,
 			signatureCache: false
 		});
@@ -55,12 +68,8 @@ const main = async () => {
 		// List authenticated role policies
 		console.log("----------------------------------------");
 		console.log("Testing authenticated permissions...");
-		const listRolePoliciesResAuth = await listRolePolicies(iamClientAuth, authRoleName);
-		const getRolePolicyResAuth = await getRolePolicy(
-			iamClientAuth,
-			listRolePoliciesResAuth.PolicyNames[0],
-			authRoleName
-		);
+		const listRolePoliciesResAuth = await listRolePolicies(iamClient, authRoleName);
+		const getRolePolicyResAuth = await getRolePolicy(iamClient, listRolePoliciesResAuth.PolicyNames[0], authRoleName);
 		const policyDocumentAuth = JSON.parse(decodeURIComponent(getRolePolicyResAuth.PolicyDocument));
 
 		if (
@@ -75,9 +84,9 @@ const main = async () => {
 
 		// List unauthenticated role policies
 		console.log("Testing unauthenticated permissions...");
-		const listRolePoliciesResUnauth = await listRolePolicies(iamClientAuth, unauthRoleName);
+		const listRolePoliciesResUnauth = await listRolePolicies(iamClient, unauthRoleName);
 		const getRolePolicyResUnauth = await getRolePolicy(
-			iamClientAuth,
+			iamClient,
 			listRolePoliciesResUnauth.PolicyNames[0],
 			unauthRoleName
 		);
