@@ -31,4 +31,4 @@ jobs:
           COGNITO_PASSWORD: ${{ secrets.COGNITO_PASSWORD }}
           IAM_AUTH_ROLE_NAME: ${{ secrets.IAM_AUTH_ROLE_NAME }}
           IAM_UNAUTH_ROLE_NAME: ${{ secrets.IAM_UNAUTH_ROLE_NAME }}
-        run: npm run test
+        run: cd security-tests/ ; npm run test
