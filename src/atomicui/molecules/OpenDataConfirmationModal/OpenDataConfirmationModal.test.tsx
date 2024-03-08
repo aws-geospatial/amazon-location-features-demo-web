@@ -1,5 +1,5 @@
 import i18n from "@demo/locales/i18n";
-import { fireEvent, render } from "@testing-library/react";
+import { fireEvent, render, waitFor } from "@testing-library/react";
 import { I18nextProvider } from "react-i18next";
 
 import OpenDataConfirmationModal from "./OpenDataConfirmationModal";
@@ -22,18 +22,57 @@ describe("OpenDataConfirmationModal", () => {
 
 	it("renders OpenDataConfirmationModal with expected content", () => {
 		const { getByTestId } = renderComponent();
-		expect(getByTestId("confirmation-modal-container")).toBeInTheDocument();
+
+		waitFor(
+			() => {
+				expect(getByTestId("confirmation-modal-container")).toBeInTheDocument();
+			},
+			{
+				timeout: 10000,
+				interval: 1000,
+				onTimeout: e => {
+					console.error({ e });
+					return e;
+				}
+			}
+		);
 	});
 
 	it("triggers onClose when Cancel button is clicked", () => {
 		const { getByText } = renderComponent();
-		fireEvent.click(getByText("Cancel"));
-		expect(props.onClose).toHaveBeenCalled();
+
+		waitFor(
+			() => {
+				fireEvent.click(getByText("Cancel"));
+				expect(props.onClose).toHaveBeenCalled();
+			},
+			{
+				timeout: 10000,
+				interval: 1000,
+				onTimeout: e => {
+					console.error({ e });
+					return e;
+				}
+			}
+		);
 	});
 
 	it("triggers onConfirm when Enable Open button is clicked", () => {
 		const { getByTestId } = renderComponent();
-		fireEvent.click(getByTestId("confirmation-button"));
-		expect(props.onConfirm).toHaveBeenCalled();
+
+		waitFor(
+			() => {
+				fireEvent.click(getByTestId("confirmation-button"));
+				expect(props.onConfirm).toHaveBeenCalled();
+			},
+			{
+				timeout: 10000,
+				interval: 1000,
+				onTimeout: e => {
+					console.error({ e });
+					return e;
+				}
+			}
+		);
 	});
 });

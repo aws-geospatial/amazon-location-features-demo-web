@@ -1,9 +1,8 @@
-import React from "react";
+import { FC } from "react";
 
 import { Flex, Text } from "@aws-amplify/ui-react";
-
-import "./styles.scss";
 import { useTranslation } from "react-i18next";
+import "./styles.scss";
 
 interface IProps {
 	text: string;
@@ -11,7 +10,7 @@ interface IProps {
 	onClick: () => void;
 }
 
-const ExploreButton: React.FC<IProps> = ({ text, icon, onClick }) => {
+const ExploreButton: FC<IProps> = ({ text, icon, onClick }) => {
 	const { i18n } = useTranslation();
 	const currentLanguage = i18n.language;
 

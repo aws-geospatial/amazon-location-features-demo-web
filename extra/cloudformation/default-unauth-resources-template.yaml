@@ -15,6 +15,8 @@ Resources:
         Statement:
           - Action: "sts:AssumeRoleWithWebIdentity"
             Condition:
+              "StringEquals":
+                "cognito-identity.amazonaws.com:aud": !Ref CognitoIdentityPool
               "ForAnyValue:StringLike":
                 "cognito-identity.amazonaws.com:amr": unauthenticated
             Effect: Allow
@@ -45,6 +47,7 @@ Resources:
       PolicyName: !Sub "TranslateUnauthRoleIamPolicy-${AWS::StackName}"
       Roles:
         - !Ref CognitoIdentityPoolUnauthRole
+
   CognitoIdentityPoolUnauthRoleIamPolicy:
     Type: "AWS::IAM::Policy"
     Properties:
@@ -134,6 +137,7 @@ Resources:
       Path: "/"
 
   FirehoseS3AccessPolicy:
+    Condition: EnablePinTranslate
     Type: AWS::IAM::Policy
     Properties:
       PolicyName: FirehoseS3AccessPolicy
@@ -174,8 +178,8 @@ Resources:
 
   AmazonLocationDemoPinpointStreamRole:
     Condition: EnablePinTranslate
-    DependsOn: 
-    - AmazonLocationDemoKinesisStream
+    DependsOn:
+      - AmazonLocationDemoKinesisStream
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -187,8 +191,9 @@ Resources:
               Service: pinpoint.amazonaws.com
             Action: "sts:AssumeRole"
       Path: "/"
-  
+
   AmazonLocationDemoPinpointStreamPolicy:
+    Condition: EnablePinTranslate
     Type: AWS::IAM::Policy
     Properties:
       PolicyName: StreamAccessPolicy
@@ -205,6 +210,7 @@ Resources:
         - !Ref AmazonLocationDemoPinpointStreamRole
 
   AmazonLocationDemoPinpointStreamKMSAccessPolicy:
+    Condition: EnablePinTranslate
     Type: AWS::IAM::Policy
     Properties:
       PolicyName: KMSAccessPolicy
@@ -243,7 +249,7 @@ Resources:
     Properties:
       BucketName: !Sub "location.aws.com.demo.bucket.logs.${AWS::AccountId}"
       VersioningConfiguration:
-        Status: Enabled  
+        Status: Enabled
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
@@ -260,7 +266,7 @@ Resources:
         Status: Enabled
       LoggingConfiguration:
         DestinationBucketName: !Ref AmazonLocationDemoLoggingBucket
-        LogFilePrefix: kinesis-bucket-logs      
+        LogFilePrefix: kinesis-bucket-logs
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
@@ -295,14 +301,14 @@ Resources:
             Effect: Deny
             Principal: "*"
             Action: "s3:*"
-            Resource: 
+            Resource:
               - !Sub "arn:aws:s3:::${AmazonLocationDemoKinesisBucket}/*"
               - !Sub "arn:aws:s3:::${AmazonLocationDemoKinesisBucket}"
             Condition:
               Bool:
                 "aws:SecureTransport": false
-                "aws:SourceArn": !Sub "arn:aws:s3:::${AmazonLocationDemoKinesisBucket}"        
-                
+                "aws:SourceArn": !Sub "arn:aws:s3:::${AmazonLocationDemoKinesisBucket}"
+
   AmazonLocationDemoLoggingBucketPolicy:
     Condition: EnablePinTranslate
     Type: AWS::S3::BucketPolicy
@@ -332,13 +338,13 @@ Resources:
             Effect: Deny
             Principal: "*"
             Action: "s3:*"
-            Resource: 
+            Resource:
               - !Sub "arn:aws:s3:::${AmazonLocationDemoLoggingBucket}/*"
               - !Sub "arn:aws:s3:::${AmazonLocationDemoLoggingBucket}"
             Condition:
               Bool:
                 "aws:SecureTransport": false
-                "aws:SourceArn": !Sub "arn:aws:s3:::${AmazonLocationDemoLoggingBucket}"                     
+                "aws:SourceArn": !Sub "arn:aws:s3:::${AmazonLocationDemoLoggingBucket}"
 
   AmazonLocationDemoKMS:
     Type: AWS::KMS::Key
@@ -397,8 +403,8 @@ Resources:
 
   AmazonLocationDemoPinpointAppStream:
     DependsOn:
-    - AmazonLocationDemoPinpointStreamKMSAccessPolicy
-    - AmazonLocationDemoPinpointStreamPolicy
+      - AmazonLocationDemoPinpointStreamKMSAccessPolicy
+      - AmazonLocationDemoPinpointStreamPolicy
     Condition: EnablePinTranslate
     Type: AWS::Pinpoint::EventStream
     Properties:
@@ -592,6 +598,7 @@ Resources:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: /aws/events/AmazonLocationMonitor-GeofenceCollection
+
   AmazonLocationDemoEventRule:
     Type: AWS::Events::Rule
     Properties:
@@ -732,9 +739,10 @@ Resources:
               request.write(responseBody);
               request.end();
           }
-    DependsOn: 
-    - AmazonLocationDemoIoTPolicy
-    - AmazonLocationLambdaExecutionPolicy
+    DependsOn:
+      - AmazonLocationDemoIoTPolicy
+      - AmazonLocationLambdaExecutionPolicy
+
   AmazonLocationDemoIoTPublisherLambda:
     Type: AWS::Lambda::Function
     Properties:
@@ -793,7 +801,7 @@ Resources:
       Role: !GetAtt [AmazonLocationLambdaExecutionRole, Arn]
       Runtime: nodejs16.x
       Timeout: 30
-      
+
   AmazonLocationLambdaExecutionRole:
     Type: AWS::IAM::Role
     Properties:

@@ -1,7 +1,15 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { FocusEventHandler, KeyboardEventHandler } from "react";
+import {
+	ChangeEvent,
+	FC,
+	FocusEventHandler,
+	HTMLInputTypeAttribute,
+	KeyboardEventHandler,
+	ReactNode,
+	RefObject
+} from "react";
 
 import { Flex, Text } from "@aws-amplify/ui-react";
 import "./styles.scss";
@@ -13,21 +21,21 @@ interface InputFieldProps {
 	label?: string;
 	placeholder?: string;
 	value: string;
-	onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-	innerEndComponent?: React.ReactNode;
-	innerStartComponent?: React.ReactNode;
-	type?: React.HTMLInputTypeAttribute;
+	onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+	innerEndComponent?: ReactNode;
+	innerStartComponent?: ReactNode;
+	type?: HTMLInputTypeAttribute;
 	disabled?: boolean;
 	dir?: "rtl" | "ltr";
 	onFocus?: FocusEventHandler<HTMLInputElement>;
 	onBlur?: FocusEventHandler<HTMLInputElement>;
 	onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
-	searchInputRef?: React.RefObject<HTMLInputElement>;
+	searchInputRef?: RefObject<HTMLInputElement>;
 	name?: string;
 	autocomplete?: string;
 }
 
-const InputField: React.FC<InputFieldProps> = ({
+const InputField: FC<InputFieldProps> = ({
 	dataTestId,
 	containerMargin,
 	labelMargin = "0px 0px 8px 0px",

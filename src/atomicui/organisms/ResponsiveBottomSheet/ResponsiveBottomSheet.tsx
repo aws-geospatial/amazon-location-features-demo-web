@@ -1,38 +1,54 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+	Dispatch,
+	FC,
+	MutableRefObject,
+	SetStateAction,
+	Suspense,
+	lazy,
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+	useState
+} from "react";
 
 import { Flex, Text } from "@aws-amplify/ui-react";
-import { IconClose, IconNotificationBell, LogoDark, LogoLight } from "@demo/assets";
-import { ConfirmationModal } from "@demo/atomicui/molecules";
-import { appConfig } from "@demo/core";
+import { IconClose, IconNotificationBell, LogoDark, LogoLight } from "@demo/assets/svgs";
+import appConfig from "@demo/core/constants/appConfig";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
-import { useAmplifyMap, useAwsGeofence, useAwsRoute, useAwsTracker } from "@demo/hooks";
+import { useAmplifyMap, useAwsGeofence, useAwsRoute, useAwsTracker, usePersistedData } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { ShowStateType } from "@demo/types";
-import { MenuItemEnum, ResponsiveUIEnum } from "@demo/types/Enums";
+import { MenuItemEnum, ResponsiveUIEnum, SettingOptionEnum } from "@demo/types/Enums";
 import { useTranslation } from "react-i18next";
 import { MapRef } from "react-map-gl";
 import { useLocation } from "react-router-dom";
 import { BottomSheet } from "react-spring-bottom-sheet";
-
 import { RefHandles } from "react-spring-bottom-sheet/dist/types";
-
-import { Explore } from "../Explore";
-import { UnauthSimulation } from "../UnauthSimulation";
-
-import "./styles.scss";
 import "react-spring-bottom-sheet/dist/style.css";
+import "./styles.scss";
 
-const { DEMO } = appConfig.default.ROUTES;
+const Explore = lazy(() => import("../Explore").then(module => ({ default: module.Explore })));
+const UnauthSimulation = lazy(() =>
+	import("../UnauthSimulation").then(module => ({ default: module.UnauthSimulation }))
+);
+const ConfirmationModal = lazy(() =>
+	import("@demo/atomicui/molecules/ConfirmationModal").then(module => ({ default: module.ConfirmationModal }))
+);
+
+const {
+	ROUTES: { DEMO }
+} = appConfig;
 
 interface IProps {
 	mapRef: MapRef | null;
-	SearchBoxEl: (ref?: React.MutableRefObject<RefHandles | null>) => JSX.Element;
-	MapButtons: (ref?: React.MutableRefObject<RefHandles | null>) => JSX.Element;
-	RouteBox: (ref?: React.MutableRefObject<RefHandles | null>) => JSX.Element;
+	SearchBoxEl: (ref?: MutableRefObject<RefHandles | null>) => JSX.Element;
+	MapButtons: (ref?: MutableRefObject<RefHandles | null>) => JSX.Element;
+	RouteBox: (ref?: MutableRefObject<RefHandles | null>) => JSX.Element;
 	onCloseSidebar: () => void;
 	onOpenConnectAwsAccountModal: () => void;
 	onOpenFeedbackModal: () => void;
@@ -54,23 +70,23 @@ interface IProps {
 	AuthTrackerBox: JSX.Element;
 	handleLogoClick: () => Window | null;
 	show: ShowStateType;
-	setShow: React.Dispatch<React.SetStateAction<ShowStateType>>;
+	setShow: Dispatch<SetStateAction<ShowStateType>>;
 	startSimulation: boolean;
-	setStartSimulation: React.Dispatch<React.SetStateAction<boolean>>;
+	setStartSimulation: Dispatch<SetStateAction<boolean>>;
 	isNotifications: boolean;
-	setIsNotifications: React.Dispatch<React.SetStateAction<boolean>>;
+	setIsNotifications: Dispatch<SetStateAction<boolean>>;
 	confirmCloseSimulation: boolean;
-	setConfirmCloseSimulation: React.Dispatch<React.SetStateAction<boolean>>;
+	setConfirmCloseSimulation: Dispatch<SetStateAction<boolean>>;
 	setShowAuthTrackerBox: (b: boolean) => void;
 	clearCredsAndLocationClient?: () => void;
 	setShowAuthGeofenceBox: (b: boolean) => void;
-	setTriggerOnClose: React.Dispatch<React.SetStateAction<boolean>>;
-	setTriggerOnReset: React.Dispatch<React.SetStateAction<boolean>>;
+	setTriggerOnClose: Dispatch<SetStateAction<boolean>>;
+	setTriggerOnReset: Dispatch<SetStateAction<boolean>>;
 	isEditingAuthRoute: boolean;
 	setShowRouteBox: (b: boolean) => void;
 	isExpandRouteOptionsMobile: boolean;
 	setExpandRouteOptionsMobile: (b: boolean) => void;
-	setSearchBoxValue: React.Dispatch<React.SetStateAction<string>>;
+	setSearchBoxValue: Dispatch<SetStateAction<string>>;
 }
 
 const ResponsiveBottomSheet: FC<IProps> = ({
@@ -115,7 +131,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	setExpandRouteOptionsMobile,
 	setSearchBoxValue
 }) => {
-	const { isDesktop, isTablet, isMax556, isDesktopBrowser } = useDeviceMediaQuery();
+	const { isDesktop, isMobile, isTablet, isMax556, isDesktopBrowser } = useDeviceMediaQuery();
 	const { unauthNotifications, isAddingGeofence } = useAwsGeofence();
 	const { t } = useTranslation();
 	const location = useLocation();
@@ -130,6 +146,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 		setUI,
 		setBottomSheetMinHeight
 	} = useBottomSheet();
+	const { setSettingsOptions } = usePersistedData();
 	const { resetStore: resetAwsRouteStore } = useAwsRoute();
 	const { setIsEditingRoute, setTrackerPoints } = useAwsTracker();
 	const { mapStyle } = useAmplifyMap();
@@ -212,6 +229,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 
 		const handleWindowResize = () => {
 			resizeObserver.observe(document.body);
+			isMobile ? setSettingsOptions(undefined) : setSettingsOptions(SettingOptionEnum.UNITS);
 		};
 
 		window.addEventListener("resize", handleWindowResize);
@@ -220,7 +238,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 			window.removeEventListener("resize", handleWindowResize);
 			resizeObserver.disconnect();
 		};
-	}, [setBottomSheetCurrentHeight, setBottomSheetHeight, bottomSheetHeight]);
+	}, [setBottomSheetCurrentHeight, setBottomSheetHeight, bottomSheetHeight, isMobile, setSettingsOptions]);
 
 	useEffect(() => {
 		const resizeObserver = new ResizeObserver(entries => {
@@ -444,6 +462,41 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 			switch (ui) {
 				case ResponsiveUIEnum.map_styles:
 					return MapButtons(bottomSheetRef);
+				// 	(
+				// 	<MapButtons
+				// 		renderedUpon={TriggeredByEnum.SETTINGS_MODAL}
+				// 		openStylesCard={show.stylesCard}
+				// 		setOpenStylesCard={b => setShow(s => ({ ...s, stylesCard: b }))}
+				// 		onCloseSidebar={() => setShow(s => ({ ...s, sidebar: false }))}
+				// 		onOpenSignInModal={() => setShow(s => ({ ...s, signInModal: true }))}
+				// 		isGrabVisible={isGrabVisible}
+				// 		showGrabDisclaimerModal={show.grabDisclaimerModal}
+				// 		showOpenDataDisclaimerModal={show.openDataDisclaimerModal}
+				// 		onShowGridLoader={() => setShow(s => ({ ...s, gridLoader: true }))}
+				// 		handleMapStyleChange={onMapStyleChange}
+				// 		searchValue={mapSearchValue}
+				// 		setSearchValue={setMapSearchValue}
+				// 		selectedFilters={selectedFilters}
+				// 		setSelectedFilters={setSelectedFilters}
+				// 		handleMapProviderChange={handleMapProviderChange}
+				// 		isAuthTrackerBoxOpen={show.authTrackerBox}
+				// 		isAuthTrackerDisclaimerModalOpen={show.authTrackerDisclaimerModal}
+				// 		onShowAuthTrackerDisclaimerModal={() => setShow(s => ({ ...s, authTrackerDisclaimerModal: true }))}
+				// 		isAuthGeofenceBoxOpen={show.authGeofenceBox}
+				// 		onSetShowAuthGeofenceBox={(b: boolean) => setShow(s => ({ ...s, authGeofenceBox: b }))}
+				// 		onSetShowAuthTrackerBox={(b: boolean) => setShow(s => ({ ...s, authTrackerBox: b }))}
+				// 		onShowUnauthSimulationDisclaimerModal={() =>
+				// 			setShow(s => ({ ...s, unauthSimulationDisclaimerModal: true }))
+				// 		}
+				// 		isUnauthGeofenceBoxOpen={show.unauthGeofenceBox}
+				// 		isUnauthTrackerBoxOpen={show.unauthTrackerBox}
+				// 		onSetShowUnauthGeofenceBox={(b: boolean) => setShow(s => ({ ...s, unauthGeofenceBox: b }))}
+				// 		onSetShowUnauthTrackerBox={(b: boolean) => setShow(s => ({ ...s, unauthTrackerBox: b }))}
+				// 		onlyMapStyles
+				// 		isHandDevice
+				// 		bottomSheetRef={bottomSheetRef}
+				// 	/>
+				// );
 				case ResponsiveUIEnum.routes:
 				case ResponsiveUIEnum.direction_to_routes:
 					return RouteBox(bottomSheetRef);
@@ -652,7 +705,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				onSpringEnd={() => setArrowDirection("no-dragging")}
 			>
 				<Flex data-amplify-theme="aws-location-theme" direction="column" gap="0">
-					{bottomSheetBody(ui)}
+					<Suspense fallback={null}>{bottomSheetBody(ui)}</Suspense>
 				</Flex>
 			</BottomSheet>
 		</>

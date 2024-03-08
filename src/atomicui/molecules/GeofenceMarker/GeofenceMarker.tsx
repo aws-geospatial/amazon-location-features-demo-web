@@ -1,10 +1,10 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React from "react";
+import { FC } from "react";
 
 import { Text, View } from "@aws-amplify/ui-react";
-import { IconGeofenceMarker } from "@demo/assets";
+import { IconGeofenceMarker } from "@demo/assets/svgs";
 import { Marker } from "react-map-gl";
 
 interface GeofenceMarkerProps {
@@ -16,7 +16,7 @@ interface GeofenceMarkerProps {
 	hideDescription?: boolean;
 }
 
-const GeofenceMarker: React.FC<GeofenceMarkerProps> = ({
+const GeofenceMarker: FC<GeofenceMarkerProps> = ({
 	lng,
 	lat,
 	description,

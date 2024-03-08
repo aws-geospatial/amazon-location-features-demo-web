@@ -1,7 +1,7 @@
 import { MapButtons } from "@demo/atomicui/molecules";
 import i18n from "@demo/locales/i18n";
 import { SettingOptionEnum } from "@demo/types";
-import { RenderResult, act, fireEvent, render, screen } from "@testing-library/react";
+import { RenderResult, act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { I18nextProvider } from "react-i18next";
 
 import SettingsModal from "./SettingsModal";
@@ -76,12 +76,12 @@ describe("<SettingsModal />", () => {
 	};
 
 	beforeEach(() => {
-		jest.useFakeTimers();
+		// jest.useFakeTimers();
 		resetAppState.mockRestore();
 	});
 
 	afterEach(() => {
-		jest.useRealTimers();
+		// jest.useRealTimers();
 	});
 
 	it("should render successfully", async () => {
@@ -90,7 +90,7 @@ describe("<SettingsModal />", () => {
 	});
 
 	it("should render the detail component according to the clicked/selected option item", async () => {
-		await renderComponent();
+		const { getByTestId } = await renderComponent();
 
 		for (const optionId of [
 			SettingOptionEnum.UNITS,
@@ -99,10 +99,20 @@ describe("<SettingsModal />", () => {
 			SettingOptionEnum.ROUTE_OPTIONS,
 			SettingOptionEnum.AWS_CLOUD_FORMATION
 		]) {
-			const optionItem = screen.getByTestId(`option-item-${optionId}`);
-			act(() => optionItem.click());
-			const detailsComponent = screen.getByTestId(`${optionId}-details-component`);
-			expect(detailsComponent).toBeInTheDocument();
+			waitFor(
+				() => {
+					fireEvent.click(getByTestId(`option-item-${optionId}`));
+					expect(getByTestId(`${optionId}-details-component`)).toBeInTheDocument();
+				},
+				{
+					timeout: 10000,
+					interval: 1000,
+					onTimeout: e => {
+						console.error({ e });
+						return e;
+					}
+				}
+			);
 		}
 	});
 

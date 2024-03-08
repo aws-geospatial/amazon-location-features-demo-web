@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import { FC, ReactElement } from "react";
 
 import { Flex, Text } from "@aws-amplify/ui-react";
 import "./styles.scss";
@@ -6,7 +6,7 @@ import "./styles.scss";
 export interface IconicInfoCardProps {
 	IconComponent?: ReactElement;
 	title: string;
-	description: string;
+	description?: string;
 	textContainerMarginLeft?: string;
 	cardMargin?: string;
 	cardAlignItems?: string;
@@ -14,9 +14,11 @@ export interface IconicInfoCardProps {
 	gap?: string;
 	direction?: "row" | "row-reverse" | string;
 	onClickHandler?: () => void;
+	titleColor?: string;
+	isTitleBold?: boolean;
 }
 
-const IconicInfoCard: React.FC<IconicInfoCardProps> = ({
+const IconicInfoCard: FC<IconicInfoCardProps> = ({
 	IconComponent,
 	title,
 	description,
@@ -26,7 +28,9 @@ const IconicInfoCard: React.FC<IconicInfoCardProps> = ({
 	subDescription = "",
 	gap = "large",
 	direction = "row",
-	onClickHandler
+	onClickHandler,
+	titleColor = "",
+	isTitleBold = false
 }) => {
 	return (
 		<Flex
@@ -39,17 +43,25 @@ const IconicInfoCard: React.FC<IconicInfoCardProps> = ({
 		>
 			{IconComponent}
 			<Flex direction="column" gap={subDescription ? 0 : "3px"} marginLeft={textContainerMarginLeft}>
-				<Text fontSize="1rem" variation="secondary" data-testid="iconic-info-card-title">
+				<Text
+					className={isTitleBold ? "bold" : "regular"}
+					fontSize="1rem"
+					variation="secondary"
+					data-testid="iconic-info-card-title"
+					color={titleColor}
+				>
 					{title}
 				</Text>
-				<Text
-					color={"var(--grey-color)"}
-					fontSize="1rem"
-					variation="tertiary"
-					data-testid="iconic-info-card-description"
-				>
-					{description}
-				</Text>
+				{description && (
+					<Text
+						color={"var(--grey-color)"}
+						fontSize="1rem"
+						variation="tertiary"
+						data-testid="iconic-info-card-description"
+					>
+						{description}
+					</Text>
+				)}
 				{subDescription && (
 					<Text
 						color="var(--grey-color)"

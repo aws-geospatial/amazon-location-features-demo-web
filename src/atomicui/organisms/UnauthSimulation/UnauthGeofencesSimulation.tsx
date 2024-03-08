@@ -1,10 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useState, useTransition } from "react";
+import { FC, memo, useCallback, useEffect, useMemo, useState, useTransition } from "react";
 
 import { View } from "@aws-amplify/ui-react";
-// import { GeofenceMarker } from "@demo/atomicui/molecules";
+import { ListGeofenceResponseEntry } from "@aws-sdk/client-location";
 import { useAwsGeofence } from "@demo/hooks";
 import * as turf from "@turf/turf";
-import { ListGeofenceResponseEntry } from "aws-sdk/clients/location";
 import { Layer, Source } from "react-map-gl";
 
 interface UnauthGeofencesSimulationProps {
@@ -13,7 +12,7 @@ interface UnauthGeofencesSimulationProps {
 	geofenceCollection: string;
 }
 
-const UnauthGeofencesSimulation: React.FC<UnauthGeofencesSimulationProps> = ({
+const UnauthGeofencesSimulation: FC<UnauthGeofencesSimulationProps> = ({
 	id,
 	// name,
 	geofenceCollection
@@ -39,10 +38,11 @@ const UnauthGeofencesSimulation: React.FC<UnauthGeofencesSimulationProps> = ({
 
 	const renderGeofences = useMemo(() => {
 		if (geofences?.length) {
-			return geofences.map(({ GeofenceId, Geometry: { Circle } }, idx) => {
-				if (Circle) {
+			return geofences.map(({ GeofenceId, Geometry }, idx) => {
+				if (Geometry?.Circle) {
+					const { Circle } = Geometry;
 					const { Center, Radius } = Circle;
-					const circle = turf.circle(Center, Radius, { steps: 50, units: "meters" });
+					const circle = turf.circle(Center!, Radius!, { steps: 50, units: "meters" });
 					const line = turf.lineString(circle.geometry.coordinates[0]);
 
 					return (
@@ -78,4 +78,4 @@ const UnauthGeofencesSimulation: React.FC<UnauthGeofencesSimulationProps> = ({
 	return <View key={id}>{renderGeofences}</View>;
 };
 
-export default React.memo(UnauthGeofencesSimulation);
+export default memo(UnauthGeofencesSimulation);

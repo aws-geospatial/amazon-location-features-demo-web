@@ -2,12 +2,11 @@
 /* SPDX-License-Identifier: MIT-0 */
 
 import { FeatureCollection, Polygon } from "@turf/turf";
-import { Position } from "aws-sdk/clients/location";
 
 import { CirclreDrawTypeEnum } from "./Enums";
 
 export type CirclePropertiesType = {
-	center: Position;
+	center: number[];
 	isCircle: boolean;
 	radiusInKm: number;
 };
@@ -15,7 +14,7 @@ export type CirclePropertiesType = {
 export type CircleDrawEventType = {
 	features: Array<{
 		geometry: {
-			coordinates: Array<Position>;
+			coordinates: Array<number[]>;
 			type: string;
 		};
 		id: string;
