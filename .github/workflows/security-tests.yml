@@ -20,7 +20,7 @@ jobs:
         uses: actions/setup-node@v3
 
       - name: Install Dependencies
-        run: npm install
+        run: cd security-tests/ ; npm install
 
       - name: Run Security test
         env:
