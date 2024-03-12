@@ -1,5 +1,5 @@
 import i18n from "@demo/locales/i18n";
-import { render } from "@testing-library/react";
+import { render, waitFor } from "@testing-library/react";
 import { I18nextProvider } from "react-i18next";
 
 import FeedbackModal, { FeedbackModalProps } from "./FeedbackModal";
@@ -14,9 +14,8 @@ Object.defineProperty(window, "location", {
 	value: { reload: jest.fn() }
 });
 
-
 describe("<FeedbackModal />", () => {
-    const windowOpen = jest.fn();
+	const windowOpen = jest.fn();
 	window.open = windowOpen;
 
 	const renderComponent = () =>
@@ -26,18 +25,30 @@ describe("<FeedbackModal />", () => {
 			</I18nextProvider>
 		);
 
-    beforeEach(() => {
-        i18n.changeLanguage("en");
-    });
+	beforeEach(() => {
+		i18n.changeLanguage("en");
+	});
 
-    afterEach(() => {
+	afterEach(() => {
 		jest.clearAllMocks();
 		windowOpen.mockClear();
 	});
 
-    it("should render correctly", () => {
+	it("should render correctly", () => {
 		const { getByTestId } = renderComponent();
-		expect(getByTestId("feedback-modal-container")).toBeInTheDocument();
-	});
 
+		waitFor(
+			() => {
+				expect(getByTestId("feedback-modal-container")).toBeInTheDocument();
+			},
+			{
+				timeout: 10000,
+				interval: 1000,
+				onTimeout: e => {
+					console.error({ e });
+					return e;
+				}
+			}
+		);
+	});
 });

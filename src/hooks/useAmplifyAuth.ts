@@ -3,7 +3,8 @@
 
 import { useEffect, useMemo } from "react";
 
-import { showToast } from "@demo/core";
+import { CognitoIdentity } from "@aws-sdk/client-cognito-identity";
+import { showToast } from "@demo/core/Toast";
 import appConfig from "@demo/core/constants/appConfig";
 import { useAmplifyMap, useAws } from "@demo/hooks";
 import { useAmplifyAuthService } from "@demo/services";
@@ -17,7 +18,6 @@ import { clearStorage } from "@demo/utils/localstorageUtils";
 import { setClosestRegion } from "@demo/utils/regionUtils";
 import { transformCloudFormationLink } from "@demo/utils/transformCloudFormationLink";
 import { Amplify, Auth } from "aws-amplify";
-import AWS from "aws-sdk";
 import { useTranslation } from "react-i18next";
 
 import useDeviceMediaQuery from "./useDeviceMediaQuery";
@@ -65,7 +65,7 @@ const useAmplifyAuth = () => {
 				}
 			},
 			validateIdentityPoolIdAndRegion: (IdentityPoolId: string, successCb?: () => void) => {
-				const cognitoidentity = new AWS.CognitoIdentity({ region: IdentityPoolId.split(":")[0] });
+				const cognitoidentity = new CognitoIdentity({ region: IdentityPoolId.split(":")[0] });
 				cognitoidentity.getId(
 					{
 						IdentityPoolId

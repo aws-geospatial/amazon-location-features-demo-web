@@ -1,11 +1,10 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React from "react";
+import { FC, lazy } from "react";
 
 import { Button, Card, Flex, Text, View } from "@aws-amplify/ui-react";
-import { IconClose, IconCompass, IconGear, IconGeofence, IconInfo, IconLockSolid, IconRadar } from "@demo/assets";
-import { List, Logo } from "@demo/atomicui/atoms";
+import { IconClose, IconCompass, IconGear, IconGeofence, IconInfo, IconLockSolid, IconRadar } from "@demo/assets/svgs";
 import { appConfig, marketingMenuOptionsData } from "@demo/core/constants";
 import { useAmplifyAuth, useAmplifyMap, useAwsIot } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
@@ -17,9 +16,11 @@ import { useNavigate } from "react-router-dom";
 import { Tooltip } from "react-tooltip";
 import "./styles.scss";
 
+const List = lazy(() => import("@demo/atomicui/atoms/List").then(module => ({ default: module.List })));
+const Logo = lazy(() => import("@demo/atomicui/atoms/Logo").then(module => ({ default: module.Logo })));
+
 const {
-	ROUTES: { DEMO, OVERVIEW },
-	ENV: { NL_BASE_URL, NL_API_KEY }
+	ROUTES: { DEMO, OVERVIEW }
 } = appConfig;
 
 interface SidebarProps {
@@ -37,7 +38,7 @@ interface SidebarProps {
 	onOpenFeedbackModal: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({
+const Sidebar: FC<SidebarProps> = ({
 	onCloseSidebar,
 	onOpenConnectAwsAccountModal,
 	onOpenSignInModal,
@@ -61,8 +62,6 @@ const Sidebar: React.FC<SidebarProps> = ({
 	const disconnectButtonText = t("disconnect_aws_account.text");
 	const { setUI } = useBottomSheet();
 
-	const sidebarData = marketingMenuOptionsData.filter(v => t(v.label) !== t("demo.text"));
-
 	const onConnectAwsAccount = (action: AnalyticsEventActionsEnum) => {
 		onCloseSidebar();
 		onOpenConnectAwsAccountModal();
@@ -80,7 +79,6 @@ const Sidebar: React.FC<SidebarProps> = ({
 
 	const onClickFeedbackButton = () => {
 		onCloseSidebar();
-		//openFeedback Modal
 		onOpenFeedbackModal();
 	};
 
@@ -145,7 +143,6 @@ const Sidebar: React.FC<SidebarProps> = ({
 					<IconClose data-testid="icon-close" onClick={onCloseSidebar} />
 				</View>
 			</Flex>
-
 			<View as="ul" className="side-bar__menu">
 				<Flex
 					className="link-item"
@@ -196,93 +193,74 @@ const Sidebar: React.FC<SidebarProps> = ({
 					<Text>{t("about.text")}</Text>
 				</Flex>
 			</View>
-			<List listArray={sidebarData} className="verticle-list side-bar__external-menu" hideIcons />
+			<List listArray={marketingMenuOptionsData} className="verticle-list side-bar__external-menu" hideIcons />
 			<View className="button-wrapper">
-				{isUserAwsAccountConnected && (
+				{isUserAwsAccountConnected ? (
+					<>
+						<Button
+							data-testid={isAuthenticated ? "sign-out-button" : "sign-in-button"}
+							variation="primary"
+							fontFamily="AmazonEmber-Bold"
+							textAlign="center"
+							onClick={async () => {
+								if (isAuthenticated) {
+									_onLogout();
+								} else {
+									await record(
+										[
+											{ EventType: EventTypeEnum.SIGN_IN_STARTED, Attributes: { triggeredBy: TriggeredByEnum.SIDEBAR } }
+										],
+										["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
+									);
+
+									_onLogin();
+								}
+							}}
+						>
+							{isAuthenticated ? t("sign_out.text") : t("sign_in.text")}
+						</Button>
+						{!isAuthenticated && (
+							<Flex
+								style={{
+									flexDirection: "column"
+								}}
+							>
+								<Button
+									data-testid="disconnect-aws-account-button"
+									variation="primary"
+									fontFamily="AmazonEmber-Bold"
+									className="disconnect-button"
+									marginTop="8px"
+									textAlign="center"
+									onClick={onDisconnectAwsAccount}
+									fontSize={disconnectButtonText.length > 22 ? "0.92rem" : "1rem"}
+								>
+									{disconnectButtonText}
+								</Button>
+							</Flex>
+						)}
+					</>
+				) : (
 					<Button
-						data-testid={isAuthenticated ? "sign-out-button" : "sign-in-button"}
+						data-testid="connect-aws-account-button"
 						variation="primary"
 						fontFamily="AmazonEmber-Bold"
 						textAlign="center"
-						onClick={async () => {
-							if (isAuthenticated) {
-								_onLogout();
-							} else {
-								await record(
-									[{ EventType: EventTypeEnum.SIGN_IN_STARTED, Attributes: { triggeredBy: TriggeredByEnum.SIDEBAR } }],
-									["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
-								);
-
-								_onLogin();
-							}
-						}}
+						onClick={() => onConnectAwsAccount(AnalyticsEventActionsEnum.CONNECT_AWS_ACCOUNT_BUTTON_CLICKED)}
 					>
-						{isAuthenticated ? t("sign_out.text") : t("sign_in.text")}
+						{t("connect_aws_account.text")}
 					</Button>
 				)}
-				{!isUserAwsAccountConnected && (
-					<Flex
-						style={{
-							flexDirection: "column"
-						}}
-					>
-						{NL_BASE_URL && NL_API_KEY ? (
-							<Button
-								data-testid="connect-aws-account-button"
-								variation="primary"
-								fontFamily="AmazonEmber-Bold"
-								textAlign="center"
-								onClick={() => onClickFeedbackButton()}
-							>
-								{t("fm__provide_feedback_btn.text")}
-							</Button>
-						) : (
-							<></>
-						)}
-						<Button
-							data-testid="connect-aws-account-button"
-							variation="primary"
-							fontFamily="AmazonEmber-Bold"
-							textAlign="center"
-							onClick={() => onConnectAwsAccount(AnalyticsEventActionsEnum.CONNECT_AWS_ACCOUNT_BUTTON_CLICKED)}
-						>
-							{t("connect_aws_account.text")}
-						</Button>
-					</Flex>
-				)}
-				{isUserAwsAccountConnected && !isAuthenticated && (
-					<Flex
-						style={{
-							flexDirection: "column"
-						}}
-					>
-						{NL_BASE_URL && NL_API_KEY ? (
-							<Button
-								data-testid="connect-aws-account-button"
-								variation="primary"
-								fontFamily="AmazonEmber-Bold"
-								textAlign="center"
-								onClick={() => onClickFeedbackButton()}
-							>
-								{t("fm__provide_feedback_btn.text")}
-							</Button>
-						) : (
-							<></>
-						)}
-						<Button
-							data-testid="disconnect-aws-account-button"
-							variation="primary"
-							fontFamily="AmazonEmber-Bold"
-							className="disconnect-button"
-							marginTop="8px"
-							textAlign="center"
-							onClick={onDisconnectAwsAccount}
-							fontSize={disconnectButtonText.length > 22 ? "0.92rem" : "1rem"}
-						>
-							{disconnectButtonText}
-						</Button>
-					</Flex>
-				)}
+				<Button
+					data-testid="connect-aws-account-button"
+					variation="primary"
+					fontFamily="AmazonEmber-Bold"
+					textAlign="center"
+					marginTop="0.62rem"
+					onClick={() => onClickFeedbackButton()}
+				>
+					{t("fm__provide_feedback_btn.text")}
+				</Button>
 			</View>
 		</Card>
 	);

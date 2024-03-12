@@ -3,12 +3,12 @@
 
 import { useMemo } from "react";
 
+import { GeofenceGeometry, ListGeofenceResponseEntry } from "@aws-sdk/client-location";
 import { useAwsGeofenceService } from "@demo/services";
 import { useAmplifyAuthStore, useAwsGeofenceStore } from "@demo/stores";
 import { EventTypeEnum, NotificationHistoryItemtype } from "@demo/types";
 import { record } from "@demo/utils/analyticsUtils";
 import { errorHandler } from "@demo/utils/errorHandler";
-import { GeofenceGeometry, ListGeofenceResponseEntry, Position } from "aws-sdk/clients/location";
 import { useTranslation } from "react-i18next";
 
 const useAwsGeofence = () => {
@@ -81,7 +81,7 @@ const useAwsGeofence = () => {
 					setState({ isDeletingGeofence: false });
 				}
 			},
-			evaluateGeofence: async (Position: Position, geofenceCollection?: string) => {
+			evaluateGeofence: async (Position: number[], geofenceCollection?: string) => {
 				try {
 					await geofenceService.evaluateGeofence(Position, authStore.credentials!.identityId, geofenceCollection);
 				} catch (error) {

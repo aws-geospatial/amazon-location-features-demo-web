@@ -3,7 +3,7 @@
 
 export type FeedbackValueType = {
 	category: string;
-    rating: number;
+	rating: number;
 	text: string;
 	email: string;
 };

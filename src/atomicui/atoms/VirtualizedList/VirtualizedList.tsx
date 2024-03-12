@@ -1,7 +1,7 @@
-import React, { FC, useEffect, useRef, useState } from "react";
+import { FC, ReactNode, useEffect, useRef, useState } from "react";
 
 const VirtualizedList: FC<{ listData: JSX.Element[] }> = ({ listData }) => {
-	const [visibleItems, setVisibleItems] = useState<React.ReactNode[]>([]);
+	const [visibleItems, setVisibleItems] = useState<ReactNode[]>([]);
 	const containerRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {

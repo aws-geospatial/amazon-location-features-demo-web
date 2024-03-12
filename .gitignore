@@ -33,3 +33,4 @@ allure-results
 *.sw?
 .env
 cypress.env.json
+.vite-inspect

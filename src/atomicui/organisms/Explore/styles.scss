@@ -31,7 +31,12 @@
 	.explore-more-options {
 		.reverse-icon {
 			transform: rotate(270deg);
-			fill: #8e8e93;
+			fill: var(--grey-color);
+		}
+
+		.up-icon {
+			transform: rotate(180deg);
+			fill: var(--primary-color);
 		}
 	}
 
