@@ -15,7 +15,7 @@ import {
 	useState
 } from "react";
 
-import { Flex, Text } from "@aws-amplify/ui-react";
+import { Flex, Loader, Text } from "@aws-amplify/ui-react";
 import { IconClose, IconNotificationBell, LogoDark, LogoLight } from "@demo/assets/svgs";
 import appConfig from "@demo/core/constants/appConfig";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
@@ -462,41 +462,6 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 			switch (ui) {
 				case ResponsiveUIEnum.map_styles:
 					return MapButtons(bottomSheetRef);
-				// 	(
-				// 	<MapButtons
-				// 		renderedUpon={TriggeredByEnum.SETTINGS_MODAL}
-				// 		openStylesCard={show.stylesCard}
-				// 		setOpenStylesCard={b => setShow(s => ({ ...s, stylesCard: b }))}
-				// 		onCloseSidebar={() => setShow(s => ({ ...s, sidebar: false }))}
-				// 		onOpenSignInModal={() => setShow(s => ({ ...s, signInModal: true }))}
-				// 		isGrabVisible={isGrabVisible}
-				// 		showGrabDisclaimerModal={show.grabDisclaimerModal}
-				// 		showOpenDataDisclaimerModal={show.openDataDisclaimerModal}
-				// 		onShowGridLoader={() => setShow(s => ({ ...s, gridLoader: true }))}
-				// 		handleMapStyleChange={onMapStyleChange}
-				// 		searchValue={mapSearchValue}
-				// 		setSearchValue={setMapSearchValue}
-				// 		selectedFilters={selectedFilters}
-				// 		setSelectedFilters={setSelectedFilters}
-				// 		handleMapProviderChange={handleMapProviderChange}
-				// 		isAuthTrackerBoxOpen={show.authTrackerBox}
-				// 		isAuthTrackerDisclaimerModalOpen={show.authTrackerDisclaimerModal}
-				// 		onShowAuthTrackerDisclaimerModal={() => setShow(s => ({ ...s, authTrackerDisclaimerModal: true }))}
-				// 		isAuthGeofenceBoxOpen={show.authGeofenceBox}
-				// 		onSetShowAuthGeofenceBox={(b: boolean) => setShow(s => ({ ...s, authGeofenceBox: b }))}
-				// 		onSetShowAuthTrackerBox={(b: boolean) => setShow(s => ({ ...s, authTrackerBox: b }))}
-				// 		onShowUnauthSimulationDisclaimerModal={() =>
-				// 			setShow(s => ({ ...s, unauthSimulationDisclaimerModal: true }))
-				// 		}
-				// 		isUnauthGeofenceBoxOpen={show.unauthGeofenceBox}
-				// 		isUnauthTrackerBoxOpen={show.unauthTrackerBox}
-				// 		onSetShowUnauthGeofenceBox={(b: boolean) => setShow(s => ({ ...s, unauthGeofenceBox: b }))}
-				// 		onSetShowUnauthTrackerBox={(b: boolean) => setShow(s => ({ ...s, unauthTrackerBox: b }))}
-				// 		onlyMapStyles
-				// 		isHandDevice
-				// 		bottomSheetRef={bottomSheetRef}
-				// 	/>
-				// );
 				case ResponsiveUIEnum.routes:
 				case ResponsiveUIEnum.direction_to_routes:
 					return RouteBox(bottomSheetRef);
@@ -705,7 +670,20 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				onSpringEnd={() => setArrowDirection("no-dragging")}
 			>
 				<Flex data-amplify-theme="aws-location-theme" direction="column" gap="0">
-					<Suspense fallback={null}>{bottomSheetBody(ui)}</Suspense>
+					<Suspense
+						fallback={
+							<Loader
+								width="40px"
+								height="40px"
+								position="absolute"
+								top="50%"
+								left="50%"
+								transform="translate(-50%, -50%)"
+							/>
+						}
+					>
+						{bottomSheetBody(ui)}
+					</Suspense>
 				</Flex>
 			</BottomSheet>
 		</>

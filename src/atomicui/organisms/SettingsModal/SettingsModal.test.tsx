@@ -76,12 +76,7 @@ describe("<SettingsModal />", () => {
 	};
 
 	beforeEach(() => {
-		// jest.useFakeTimers();
 		resetAppState.mockRestore();
-	});
-
-	afterEach(() => {
-		// jest.useRealTimers();
 	});
 
 	it("should render successfully", async () => {
