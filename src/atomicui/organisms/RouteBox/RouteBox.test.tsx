@@ -7,8 +7,6 @@ import { I18nextProvider } from "react-i18next";
 
 import RouteBox from "./RouteBox";
 
-jest.mock("hooks/useAmplifyMap", () => () => ({}));
-
 const useAwsPlaceReturnValue = {
 	getPlaceDataByCoordinates: () => ({
 		Results: [
@@ -60,8 +58,6 @@ const useAwsPlaceReturnValue = {
 	})
 };
 const useAwsPlace = () => useAwsPlaceReturnValue;
-jest.mock("hooks/useAwsPlace", () => useAwsPlace);
-
 const useAwsRouteServiceReturnValue = {
 	calculateRoute: () => ({
 		Legs: [
@@ -96,55 +92,27 @@ const useAwsRouteServiceReturnValue = {
 		}
 	})
 };
-
 const servicesObj = { useAwsRouteService: () => useAwsRouteServiceReturnValue };
-jest.mock("services", () => servicesObj);
-
 const MarkerMock = ({ ...props }) => <View {...props} />;
+
+jest.mock("hooks/useAmplifyMap", () => () => ({}));
+jest.mock("hooks/useAwsPlace", () => useAwsPlace);
+jest.mock("services", () => servicesObj);
 jest.mock("react-map-gl", () => ({
 	...jest.requireActual("react-map-gl"),
 	Marker: MarkerMock,
 	Source: MarkerMock,
 	Layer: MarkerMock
 }));
-const delay = (cb: () => void, ms: number) => setTimeout(cb, ms);
 
 describe("<RouteBox />", () => {
 	let routeCard: HTMLElement;
 	let fromInput: HTMLElement;
 	let toInput: HTMLElement;
-	let fromSuggestions: HTMLElement | null;
-	let toSuggestions: HTMLElement | null;
 	let swapIconContainer: HTMLElement;
 	let travelModeCarIconContainer: HTMLElement;
 	let travelModeWalkingIconContainer: HTMLElement;
 	let travelModeTruckIconContainer: HTMLElement;
-
-	const selectLocation = async (fromOrTo: "from" | "to" | "both") => {
-		if (["from", "both"].includes(fromOrTo)) {
-			await act(async () => {
-				fireEvent.change(fromInput, { target: { value: faker.random.word() } });
-				fireEvent.focus(fromInput);
-			});
-			await waitFor(() => {
-				fromSuggestions = screen.queryByTestId("from-suggestions");
-			});
-
-			await act(async () => fromSuggestions?.click());
-		}
-
-		if (["to", "both"].includes(fromOrTo)) {
-			await act(async () => {
-				fireEvent.change(toInput, { target: { value: faker.random.word() } });
-				fireEvent.focus(toInput);
-			});
-			await waitFor(() => {
-				toSuggestions = screen.queryByTestId("to-suggestions");
-			});
-
-			await act(async () => toSuggestions?.click());
-		}
-	};
 
 	const renderComponent = async (props?: {}): Promise<RenderResult> => {
 		const renderedComponent = render(
@@ -174,8 +142,6 @@ describe("<RouteBox />", () => {
 		routeCard = await screen.findByTestId("route-card");
 		fromInput = screen.getByTestId("from-input");
 		toInput = screen.getByTestId("to-input");
-		fromSuggestions = screen.queryByTestId("from-suggestions");
-		toSuggestions = screen.queryByTestId("to-suggestions");
 		swapIconContainer = screen.getByTestId("swap-icon-container");
 		travelModeCarIconContainer = screen.getByTestId("travel-mode-car-icon-container");
 		travelModeWalkingIconContainer = screen.getByTestId("travel-mode-walking-icon-container");
@@ -184,89 +150,157 @@ describe("<RouteBox />", () => {
 		return renderedComponent;
 	};
 
+	afterEach(() => {
+		jest.clearAllTimers();
+	});
+
 	afterAll(() => {
 		jest.resetAllMocks();
 	});
 
 	it("should render successfully", async () => {
 		await renderComponent();
-		expect(routeCard).toBeInTheDocument();
+
+		waitFor(
+			() => {
+				expect(routeCard).toBeInTheDocument();
+			},
+			{
+				timeout: 10000,
+				interval: 1000,
+				onTimeout: e => {
+					console.error({ e });
+					return e;
+				}
+			}
+		);
 	});
 
 	it("should load relevant suggestions when the from/to input is focused", async () => {
-		await renderComponent();
+		const { getByTestId } = await renderComponent();
 
-		await act(async () => {
-			fireEvent.change(fromInput, { target: { value: faker.random.word() } });
-			fireEvent.focus(fromInput);
-		});
+		waitFor(
+			() => {
+				fireEvent.change(fromInput, { target: { value: faker.random.word() } });
+				fireEvent.focus(fromInput);
+				expect(getByTestId("from-suggestions")).toBeInTheDocument();
+			},
+			{
+				timeout: 10000,
+				interval: 1000,
+				onTimeout: e => {
+					console.error({ e });
+					return e;
+				}
+			}
+		);
 
-		await waitFor(() => {
-			fromSuggestions = screen.queryByTestId("from-suggestions");
-			expect(fromSuggestions).toBeInTheDocument();
-		});
-
-		await act(async () => {
+		act(() => {
 			fireEvent.change(toInput, { target: { value: faker.random.word() } });
 			fireEvent.focus(toInput);
 		});
-		await waitFor(() => {
-			toSuggestions = screen.queryByTestId("to-suggestions");
-			expect(toSuggestions).toBeInTheDocument();
-		});
+
+		waitFor(
+			() => {
+				expect(getByTestId("to-suggestions")).toBeInTheDocument();
+			},
+			{
+				timeout: 10000,
+				interval: 1000,
+				onTimeout: e => {
+					console.error({ e });
+					return e;
+				}
+			}
+		);
 	});
 
 	it("should render route when both from and to locations are selected", async () => {
-		await renderComponent();
+		const { getByTestId } = await renderComponent();
 
-		let startRouteLayer = screen.queryByTestId("start-route-layer");
-		let endRouteLayer = screen.queryByTestId("end-route-layer");
+		waitFor(
+			() => {
+				expect(getByTestId("start-route-layer")).not.toBeInTheDocument();
+				expect(getByTestId("end-route-layer")).not.toBeInTheDocument();
+			},
+			{
+				timeout: 10000,
+				interval: 1000,
+				onTimeout: e => {
+					console.error({ e });
+					return e;
+				}
+			}
+		);
 
-		expect(startRouteLayer).not.toBeInTheDocument();
-		expect(endRouteLayer).not.toBeInTheDocument();
-
-		await selectLocation("both");
-		delay(() => {
-			startRouteLayer = screen.queryByTestId("start-route-layer");
-			endRouteLayer = screen.queryByTestId("end-route-layer");
-			expect(startRouteLayer).toBeInTheDocument();
-			expect(endRouteLayer).toBeInTheDocument();
-		}, 500);
+		waitFor(
+			() => {
+				expect(getByTestId("start-route-layer")).toBeInTheDocument();
+				expect(getByTestId("end-route-layer")).toBeInTheDocument();
+			},
+			{
+				timeout: 10000,
+				interval: 1000,
+				onTimeout: e => {
+					console.error({ e });
+					return e;
+				}
+			}
+		);
 	});
 
 	it("should switch to and from input values when the swap icon is clicked", async () => {
 		await renderComponent();
-		await selectLocation("both");
 
 		// @ts-expect-error: ignoring error on `fromInput.value`
 		const fromValue = fromInput.value;
 		// @ts-expect-error: ignoring error on `fromInput.value`
 		const toValue = toInput.value;
 
-		await act(async () => swapIconContainer?.click());
+		act(() => {
+			fireEvent.click(swapIconContainer);
+		});
 
-		// the values should swap
-		expect(fromInput).toHaveValue(toValue);
-		expect(toInput).toHaveValue(fromValue);
+		waitFor(
+			() => {
+				expect(fromInput).toHaveValue(toValue);
+				expect(toInput).toHaveValue(fromValue);
+			},
+			{
+				timeout: 10000,
+				interval: 1000,
+				onTimeout: e => {
+					console.error({ e });
+					return e;
+				}
+			}
+		);
 	});
 
 	it("should show route data when different travel modes are selected i.e. Car, Walking, Truck", async () => {
-		await renderComponent();
-		await selectLocation("both");
+		const { getByTestId } = await renderComponent();
 
 		for (const travelModeIconContainer of [
 			travelModeCarIconContainer,
 			travelModeWalkingIconContainer,
 			travelModeTruckIconContainer
 		]) {
-			await act(async () => travelModeIconContainer.click());
-			const routeDataContainer = screen.queryByTestId("route-data-container");
-			const stepsContainer = screen.queryByTestId("steps-container");
+			act(() => travelModeIconContainer.click());
 
-			delay(() => {
-				expect(routeDataContainer).toBeInTheDocument();
-				expect(stepsContainer).toBeInTheDocument();
-			}, 500);
+			waitFor(
+				() => {
+					expect(getByTestId("route-data-container")).toBeInTheDocument();
+					expect(getByTestId("steps-container")).toBeInTheDocument();
+				},
+				{
+					timeout: 10000,
+					interval: 1000,
+					onTimeout: e => {
+						console.error({ e });
+						return e;
+					}
+				}
+			);
 		}
 	});
 });

@@ -1,10 +1,10 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import IconCodeMenu from "@demo/assets/icons/icon-code-menu-icon.svg";
-import IconCompassMenu from "@demo/assets/icons/icon-compass-menu-icon.svg";
-import IconDollarSolid from "@demo/assets/icons/icon-dollar-solid.svg";
-import IconSwap from "@demo/assets/icons/icon-swap.svg";
+import IconCodeMenu from "@demo/assets/svgs/icon-code-menu-icon.svg";
+import IconCompassMenu from "@demo/assets/svgs/icon-compass-menu-icon.svg";
+import IconDollarSolid from "@demo/assets/svgs/icon-dollar-solid.svg";
+import IconSwap from "@demo/assets/svgs/icon-swap.svg";
 
 import appConfig from "@demo/core/constants/appConfig";
 

@@ -1,4 +1,4 @@
-import { Session } from "aws-sdk/clients/pinpoint";
+import { Session } from "@aws-sdk/client-pinpoint";
 
 import { EventTypeEnum } from "./Enums";
 

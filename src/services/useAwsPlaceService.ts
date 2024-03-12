@@ -3,16 +3,15 @@
 
 import { useMemo } from "react";
 
-import { appConfig } from "@demo/core/constants";
-import { useAmplifyMap, useAws } from "@demo/hooks";
-import { MapProviderEnum } from "@demo/types";
 import {
 	GetPlaceRequest,
-	Position,
 	SearchPlaceIndexForPositionRequest,
 	SearchPlaceIndexForSuggestionsRequest,
 	SearchPlaceIndexForTextRequest
-} from "aws-sdk/clients/location";
+} from "@aws-sdk/client-location";
+import { appConfig } from "@demo/core/constants";
+import { useAmplifyMap, useAws } from "@demo/hooks";
+import { MapProviderEnum } from "@demo/types";
 import { useTranslation } from "react-i18next";
 
 const {
@@ -55,7 +54,7 @@ const useAwsPlaceService = () => {
 					Text
 				};
 
-				return await locationClient?.searchPlaceIndexForSuggestions(params).promise();
+				return await locationClient?.searchPlaceIndexForSuggestions(params);
 			},
 			getPlaceById: async (PlaceId: string) => {
 				const params: GetPlaceRequest = {
@@ -63,7 +62,7 @@ const useAwsPlaceService = () => {
 					PlaceId
 				};
 
-				return await locationClient?.getPlace(params).promise();
+				return await locationClient?.getPlace(params);
 			},
 			getPlacesByText: async (Text: string) => {
 				const params: SearchPlaceIndexForTextRequest = {
@@ -75,15 +74,15 @@ const useAwsPlaceService = () => {
 					Text
 				};
 
-				return await locationClient?.searchPlaceIndexForText(params).promise();
+				return await locationClient?.searchPlaceIndexForText(params);
 			},
-			getPlaceByCoordinates: async (Position: Position) => {
+			getPlaceByCoordinates: async (Position: number[]) => {
 				const params: SearchPlaceIndexForPositionRequest = {
 					...config,
 					Position
 				};
 
-				return await locationClient?.searchPlaceIndexForPosition(params).promise();
+				return await locationClient?.searchPlaceIndexForPosition(params);
 			},
 			getNLPlacesByText: async (Text: string) => {
 				const BiasPosition = [viewpoint?.longitude as number, viewpoint?.latitude as number];

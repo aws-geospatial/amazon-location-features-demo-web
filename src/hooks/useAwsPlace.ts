@@ -3,6 +3,7 @@
 
 import { useMemo } from "react";
 
+import { SearchForTextResult } from "@aws-sdk/client-location";
 import { useAmplifyMap } from "@demo/hooks";
 import { useAwsPlaceService } from "@demo/services";
 import { useAwsPlaceStore } from "@demo/stores";
@@ -12,7 +13,6 @@ import { record } from "@demo/utils/analyticsUtils";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { calculateClusters, getHash, getPrecision, isGeoString } from "@demo/utils/geoCalculation";
 import { uuid } from "@demo/utils/uuid";
-import { Position, SearchForTextResult } from "aws-sdk/clients/location";
 import { useTranslation } from "react-i18next";
 
 const useAwsPlace = () => {
@@ -33,9 +33,9 @@ const useAwsPlace = () => {
 					setState({ isSearching: true });
 					const data = await placesService.getPlaceSuggestions(value);
 					cb
-						? cb(data?.Results.map(({ PlaceId, Text }) => ({ PlaceId, Text })) as SuggestionType[])
+						? cb(data?.Results?.map(({ PlaceId, Text }) => ({ PlaceId, Text })) as SuggestionType[])
 						: setState({
-								suggestions: data?.Results.map(({ PlaceId, Text }) => ({ PlaceId, Text, Id: uuid.randomUUID() }))
+								suggestions: data?.Results?.map(({ PlaceId, Text }) => ({ PlaceId, Text, Id: uuid.randomUUID() }))
 						  });
 					setState({
 						bound: undefined
@@ -64,7 +64,7 @@ const useAwsPlace = () => {
 					const data = await placesService.getPlacesByText(value);
 					const clusters: ClustersType = {};
 					const suggestions = data?.Results?.map(p => {
-						const Hash = getHash(p.Place.Geometry.Point as Position, store.precision);
+						const Hash = getHash(p.Place?.Geometry?.Point as number[], store.precision);
 						const sg = {
 							...p,
 							Hash,
@@ -75,7 +75,7 @@ const useAwsPlace = () => {
 					});
 					cb ? cb(suggestions as SuggestionType[]) : setState({ suggestions });
 					setState({
-						bound: data?.Summary.ResultBBox,
+						bound: data?.Summary?.ResultBBox,
 						clusters
 					});
 					setViewpoint(viewpoint);
@@ -91,7 +91,7 @@ const useAwsPlace = () => {
 					const data = await placesService.getNLPlacesByText(value);
 					const clusters: ClustersType = {};
 					const suggestions = data?.Results?.map((p: SearchForTextResult) => {
-						const Hash = getHash(p.Place.Geometry.Point as Position, store.precision);
+						const Hash = getHash(p.Place?.Geometry?.Point as number[], store.precision);
 						const sg = {
 							...p,
 							Hash,
@@ -112,7 +112,7 @@ const useAwsPlace = () => {
 					setState({ isSearching: false });
 				}
 			},
-			getPlaceDataByCoordinates: async (input: Position) => {
+			getPlaceDataByCoordinates: async (input: number[]) => {
 				try {
 					return await placesService.getPlaceByCoordinates(input);
 				} catch (error) {
@@ -129,9 +129,9 @@ const useAwsPlace = () => {
 					const [lat, lng] = value.split(",");
 					const data = await placesService.getPlaceByCoordinates([parseFloat(lng), parseFloat(lat)]);
 
-					if (!!data?.Results.length) {
+					if (!!data?.Results?.length) {
 						const vPoint = data
-							? { longitude: data.Summary.Position[0] || 0, latitude: data.Summary.Position[1] || 0 }
+							? { longitude: data.Summary?.Position![0] || 0, latitude: data.Summary?.Position![1] || 0 }
 							: viewpoint;
 						const Hash = getHash([vPoint.longitude, vPoint.latitude], 10);
 						const suggestion = { ...data?.Results[0], Hash, Id: uuid.randomUUID() };
@@ -203,17 +203,17 @@ const useAwsPlace = () => {
 
 				if (!selectedMarker.PlaceId) {
 					const { Place } = selectedMarker;
-					coords = Place?.Geometry.Point;
+					coords = Place?.Geometry?.Point;
 				} else {
 					try {
 						const pd = await placesService.getPlaceById(selectedMarker.PlaceId);
-						coords = pd?.Place.Geometry.Point;
+						coords = pd?.Place?.Geometry?.Point;
 					} catch (error) {
 						errorHandler(error, t("error_handler__failed_fetch_place_id_marker.text") as string);
 					}
 				}
 
-				const [longitude, latitude] = coords as Position;
+				const [longitude, latitude] = coords as number[];
 				setState({ selectedMarker, hoveredMarker: undefined, zoom: 15 });
 				setViewpoint({ longitude, latitude });
 			},

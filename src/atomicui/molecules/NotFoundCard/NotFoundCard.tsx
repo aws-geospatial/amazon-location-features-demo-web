@@ -1,8 +1,10 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
+import { FC, ReactNode } from "react";
+
 import { Text, View } from "@aws-amplify/ui-react";
-import { IconSearch } from "@demo/assets";
+import { IconSearch } from "@demo/assets/svgs";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
 
@@ -12,17 +14,10 @@ interface IProps {
 	textFontSize?: string;
 	textMargin?: string;
 	textPadding?: string;
-	actionButton?: React.ReactNode;
+	actionButton?: ReactNode;
 }
 
-const NotFoundCard: React.FC<IProps> = ({
-	title,
-	text,
-	textFontSize,
-	textMargin,
-	actionButton,
-	textPadding = "1.23rem"
-}) => {
+const NotFoundCard: FC<IProps> = ({ title, text, textFontSize, textMargin, actionButton, textPadding = "1.23rem" }) => {
 	const { t } = useTranslation();
 
 	return (

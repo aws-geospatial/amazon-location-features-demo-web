@@ -59,12 +59,12 @@
 		height: 2.08rem;
 
 		&.dark-logo {
-			background: url("/src/assets/icons/LogoDark.svg") center center no-repeat;
+			background: url("/src/assets/svgs/LogoDark.svg") center center no-repeat;
 			background-size: contain;
 		}
 
 		&.light-logo {
-			background: url("/src/assets/icons/LogoLight.svg") center center no-repeat;
+			background: url("/src/assets/svgs/LogoLight.svg") center center no-repeat;
 			background-size: contain;
 		}
 	}
@@ -84,21 +84,21 @@
 
 	&.dragging-up {
 		[data-rsbs-header]:before {
-			background: url("/src/assets/icons/icon-move-up.svg") center center no-repeat;
+			background: url("/src/assets/svgs/icon-move-up.svg") center center no-repeat;
 			background-size: contain;
 		}
 	}
 
 	&.dragging-down {
 		[data-rsbs-header]:before {
-			background: url("/src/assets/icons/icon-move-down.svg") center center no-repeat;
+			background: url("/src/assets/svgs/icon-move-down.svg") center center no-repeat;
 			background-size: contain;
 		}
 	}
 
 	&.no-dragging {
 		[data-rsbs-header]:before {
-			background: url("/src/assets/icons/icon-move-still.svg") center center no-repeat;
+			background: url("/src/assets/svgs/icon-move-still.svg") center center no-repeat;
 			background-size: contain;
 		}
 	}

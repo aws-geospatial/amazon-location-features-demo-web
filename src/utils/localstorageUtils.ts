@@ -1,8 +1,8 @@
-import { appConfig } from "@demo/core";
+import { appConfig } from "@demo/core/constants";
 
 const {
 	PERSIST_STORAGE_KEYS: { LOCAL_STORAGE_PREFIX, ANALYTICS_ENDPOINT_ID, ANALYTICS_CREDS }
-} = appConfig.default;
+} = appConfig;
 
 const endpointIdKey = `${LOCAL_STORAGE_PREFIX}${ANALYTICS_ENDPOINT_ID}`;
 const analyticsCredsKey = `${LOCAL_STORAGE_PREFIX}${ANALYTICS_CREDS}`;

@@ -2,48 +2,49 @@
 	"name": "amazon-location-features-demo-web",
 	"private": true,
 	"version": "0.0.0",
+	"type": "module",
 	"files": [
 		"lib"
 	],
-	"type": "module",
-	"main": "./lib/demo-page.es.js",
-	"module": "./lib/demo-page.es.js",
+	"main": "./lib/index.es.js",
+	"module": "./lib/index.es.js",
 	"types": "./lib/index.d.ts",
 	"exports": {
 		".": {
-			"import": "./lib/demo-page.es.js",
-			"require": "./lib/demo-page.es.js"
+			"import": "./lib/index.es.js",
+			"require": "./lib/index.es.js"
 		},
-		"./lib/style.css": {
+		"./style.css": {
 			"import": "./lib/style.css",
 			"require": "./lib/style.css"
 		}
 	},
 	"scripts": {
 		"dev": "vite",
+		"lib": "tsc && vite build --config vite.library.ts",
+		"local-lib": "tsc && vite build --config vite.library.ts && node extra/prepare-local-lib/index.js",
 		"build": "tsc && vite build && cp -r ./public/.well-known/ ./build/",
-		"preview": "vite preview",
-		"stylelint-check": "stylelint-config-prettier-check",
 		"cypress": "cypress run --browser chrome --headed",
 		"cypress run": "cypress run",
 		"cypress open": "cypress open",
-		"security-tests": "cd security-tests && npm install && node index.js && cd ../",
-		"test": "react-scripts test",
-		"coverage": "react-scripts test --coverage --watchAll",
-		"ci-test": "CI=true react-scripts test",
 		"prepare": "husky install",
-		"lib": "tsc && vite build --config vite.library.ts",
-		"local-lib": "tsc && vite build --config vite.library.ts && node extra/prepare-local-lib/index.js",
+		"test": "react-scripts test",
+		"ci-test": "CI=true react-scripts test",
+		"coverage": "react-scripts test --coverage --watchAll",
+		"security-tests": "cd security-tests && npm install && node index.js && cd ../",
+		"stylelint-check": "stylelint-config-prettier-check",
 		"translate-content": "cd extra/translation-script-content && npm install && node index.js && cd ../../",
 		"translate-content-update": "cd extra/translation-script-content && npm install && node update-translation.js && cd ../../"
 	},
 	"dependencies": {
 		"@aws-amplify/ui-react": "3.6.1",
+		"@aws-sdk/client-cognito-identity": "3.496.0",
+		"@aws-sdk/client-iot": "3.496.0",
+		"@aws-sdk/client-location": "3.496.0",
+		"@aws-sdk/client-pinpoint": "3.496.0",
 		"@aws-sdk/credential-providers": "3.370.0",
 		"@turf/turf": "6.5.0",
-		"@types/react-window": "1.8.5",
 		"aws-amplify": "4.3.43",
-		"aws-sdk": "2.1518.0",
 		"date-fns": "2.29.3",
 		"i18next": "23.2.8",
 		"i18next-browser-languagedetector": "7.1.0",
@@ -58,8 +59,6 @@
 		"react-spring-bottom-sheet": "3.5.0-alpha.0",
 		"react-toastify": "9.1.1",
 		"react-tooltip": "5.10.0",
-		"react-virtualized-auto-sizer": "1.0.20",
-		"react-window": "1.8.9",
 		"zustand": "4.3.9"
 	},
 	"devDependencies": {
@@ -101,6 +100,8 @@
 		"vite": "3.2.8",
 		"vite-plugin-dts": "2.3.0",
 		"vite-plugin-eslint": "1.7.0",
+		"vite-plugin-imagemin": "^0.6.1",
+		"vite-plugin-inspect": "^0.8.1",
 		"vite-plugin-svgr": "2.2.1"
 	},
 	"engines": {

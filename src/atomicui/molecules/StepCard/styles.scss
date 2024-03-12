@@ -14,7 +14,7 @@
 		transform: translateY(-50%);
 		width: 16px;
 		height: 16px;
-		background: url("/src/assets/icons/icon-segment.svg") center center no-repeat;
+		background: url("/src/assets/svgs/icon-segment.svg") center center no-repeat;
 		background-size: contain;
 		margin-right: 10px;
 		z-index: 9;
@@ -42,7 +42,7 @@
 	}
 
 	&.isLast:before {
-		background: url("/src/assets/icons/icon-destination.svg") center center no-repeat;
+		background: url("/src/assets/svgs/icon-destination.svg") center center no-repeat;
 	}
 	&.isLast:after {
 		top: 0;

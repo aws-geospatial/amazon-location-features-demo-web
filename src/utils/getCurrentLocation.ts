@@ -1,12 +1,12 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { showToast } from "@demo/core";
+import { showToast } from "@demo/core/Toast";
 
 import { appConfig } from "@demo/core/constants";
 import i18n from "@demo/locales/i18n";
 import { CurrentLocationDataType, MapProviderEnum, ToastType, ViewPointType } from "@demo/types";
-import * as R from "ramda";
+import { pick } from "ramda";
 
 const {
 	PERSIST_STORAGE_KEYS: { GEO_LOCATION_ALLOWED },
@@ -49,7 +49,7 @@ export const getCurrentLocation = (
 			},
 			error => {
 				const errorObj = {
-					...R.pick(["code", "message", "PERMISSION_DENIED", "POSITION_UNAVAILABLE", "TIMEOUT"], error)
+					...pick(["code", "message", "PERMISSION_DENIED", "POSITION_UNAVAILABLE", "TIMEOUT"], error)
 				};
 
 				switch (errorObj.code) {

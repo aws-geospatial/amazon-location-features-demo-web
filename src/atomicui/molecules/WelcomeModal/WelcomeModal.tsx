@@ -1,14 +1,15 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React from "react";
+import { FC, lazy } from "react";
 
 import { Button, Flex, Text } from "@aws-amplify/ui-react";
-import { IconPoweredByAws1, LogoSmall } from "@demo/assets";
-import { Modal } from "@demo/atomicui/atoms";
+import { IconPoweredByAws1, LogoSmall } from "@demo/assets/svgs";
 import { appConfig } from "@demo/core/constants";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
+
+const Modal = lazy(() => import("@demo/atomicui/atoms/Modal").then(module => ({ default: module.Modal })));
 
 const {
 	LINKS: { AWS_CUSTOMER_AGREEMENT, AWS_ACCEPTABLE_USE_POLICY, AWS_PRIVACY_NOTICE }
@@ -19,7 +20,7 @@ interface WelcomeModalProps {
 	onClose: () => void;
 }
 
-const WelcomeModal: React.FC<WelcomeModalProps> = ({ open, onClose }) => {
+const WelcomeModal: FC<WelcomeModalProps> = ({ open, onClose }) => {
 	const { t } = useTranslation();
 
 	return (

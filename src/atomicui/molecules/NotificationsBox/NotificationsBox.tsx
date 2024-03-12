@@ -1,12 +1,15 @@
-import React from "react";
+import { FC, lazy } from "react";
 
 import { Flex, Text } from "@aws-amplify/ui-react";
-import { IconBellSolid, IconGeofenceMarkerDisabled } from "@demo/assets";
-import { IconicInfoCard } from "@demo/atomicui/molecules";
+import { IconBellSolid, IconGeofenceMarkerDisabled } from "@demo/assets/svgs";
 import { NotificationHistoryItemtype } from "@demo/types";
 import { format } from "date-fns";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
+
+const IconicInfoCard = lazy(() =>
+	import("@demo/atomicui/molecules/IconicInfoCard").then(module => ({ default: module.IconicInfoCard }))
+);
 
 interface NotificationsBoxProps {
 	maxHeight?: number;
@@ -15,7 +18,7 @@ interface NotificationsBoxProps {
 	setUnauthNotifications: (n: NotificationHistoryItemtype | undefined) => void;
 }
 
-const NotificationsBox: React.FC<NotificationsBoxProps> = ({
+const NotificationsBox: FC<NotificationsBoxProps> = ({
 	maxHeight = 30,
 	selectedRoutesIds,
 	unauthNotifications,

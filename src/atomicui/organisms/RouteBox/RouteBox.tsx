@@ -1,9 +1,10 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ChangeEvent, FC, MutableRefObject, lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button, Card, CheckboxField, Flex, Text, View } from "@aws-amplify/ui-react";
+import { CalculateRouteRequest, Place } from "@aws-sdk/client-location";
 import {
 	IconArrowDownUp,
 	IconBicycleSolid,
@@ -18,10 +19,8 @@ import {
 	IconSegment,
 	IconTruckSolid,
 	IconWalking
-} from "@demo/assets";
-
-import { NotFoundCard, StepCard } from "@demo/atomicui/molecules";
-import { appConfig } from "@demo/core";
+} from "@demo/assets/svgs";
+import { appConfig } from "@demo/core/constants";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useAmplifyMap, useAwsPlace, useAwsRoute, usePersistedData } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
@@ -40,7 +39,6 @@ import { AnalyticsEventActionsEnum, ResponsiveUIEnum, TriggeredByEnum, UserAgent
 import { isUserDeviceIsAndroid } from "@demo/utils";
 import { humanReadableTime } from "@demo/utils/dateTimeUtils";
 import { uuid } from "@demo/utils/uuid";
-import { CalculateRouteRequest, LineString, Place, Position } from "aws-sdk/clients/location";
 import { isAndroid, isIOS } from "react-device-detect";
 import { useTranslation } from "react-i18next";
 import { Layer, LayerProps, LngLat, MapRef, Marker as ReactMapGlMarker, Source } from "react-map-gl";
@@ -48,13 +46,18 @@ import { RefHandles } from "react-spring-bottom-sheet/dist/types";
 import { Tooltip } from "react-tooltip";
 import "./styles.scss";
 
+const NotFoundCard = lazy(() =>
+	import("@demo/atomicui/molecules/NotFoundCard").then(module => ({ default: module.NotFoundCard }))
+);
+const StepCard = lazy(() => import("@demo/atomicui/molecules/StepCard").then(module => ({ default: module.StepCard })));
+
 const { METRIC } = MapUnitEnum;
 const { KILOMETERS, MILES } = DistanceUnitEnum;
 const { ANDROID } = UserAgentEnum;
 
 const {
 	ENV: { GOOGLE_PLAY_STORE_LINK }
-} = appConfig.default;
+} = appConfig;
 
 interface RouteBoxProps {
 	mapRef: MapRef | null;
@@ -63,10 +66,10 @@ interface RouteBoxProps {
 	isDirection?: boolean;
 	expandRouteOptionsMobile?: boolean;
 	setExpandRouteOptionsMobile?: (b: boolean) => void;
-	bottomSheetRef?: React.MutableRefObject<RefHandles | null>;
+	bottomSheetRef?: MutableRefObject<RefHandles | null>;
 }
 
-const RouteBox: React.FC<RouteBoxProps> = ({
+const RouteBox: FC<RouteBoxProps> = ({
 	mapRef,
 	setShowRouteBox,
 	isSideMenuExpanded,
@@ -234,7 +237,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 	]);
 
 	const getDestDept = useCallback(() => {
-		const obj: { DeparturePosition: Position | undefined; DestinationPosition: Position | undefined } = {
+		const obj: { DeparturePosition: number[] | undefined; DestinationPosition: number[] | undefined } = {
 			DeparturePosition: undefined,
 			DestinationPosition: undefined
 		};
@@ -244,21 +247,21 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 				obj.DeparturePosition = [
 					currentLocationData?.currentLocation?.longitude,
 					currentLocationData?.currentLocation?.latitude
-				] as Position;
-				obj.DestinationPosition = [placeData.to.Geometry.Point?.[0], placeData.to.Geometry.Point?.[1]] as Position;
+				] as number[];
+				obj.DestinationPosition = [placeData.to.Geometry?.Point?.[0], placeData.to.Geometry?.Point?.[1]] as number[];
 				return obj;
 			} else if (placeData.from && !placeData.to) {
-				obj.DeparturePosition = [placeData.from.Geometry.Point?.[0], placeData.from.Geometry.Point?.[1]] as Position;
+				obj.DeparturePosition = [placeData.from.Geometry?.Point?.[0], placeData.from.Geometry?.Point?.[1]] as number[];
 				obj.DestinationPosition = [
 					currentLocationData?.currentLocation?.longitude,
 					currentLocationData?.currentLocation?.latitude
-				] as Position;
+				] as number[];
 				return obj;
 			}
 		} else {
 			if (placeData.from && placeData.to) {
-				obj.DeparturePosition = [placeData.from.Geometry.Point?.[0], placeData.from.Geometry.Point?.[1]] as Position;
-				obj.DestinationPosition = [placeData.to.Geometry.Point?.[0], placeData.to.Geometry.Point?.[1]] as Position;
+				obj.DeparturePosition = [placeData.from.Geometry?.Point?.[0], placeData.from.Geometry?.Point?.[1]] as number[];
+				obj.DestinationPosition = [placeData.to.Geometry?.Point?.[0], placeData.to.Geometry?.Point?.[1]] as number[];
 				return obj;
 			}
 		}
@@ -347,7 +350,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 
 	useEffect(() => {
 		if (directions) {
-			directions.info.Place?.Geometry.Point &&
+			directions.info.Place?.Geometry?.Point &&
 				setValue({
 					from:
 						!currentLocationData?.error && !directions.isEsriLimitation && !isCurrentLocationDisabled
@@ -360,7 +363,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 			!currentLocationData?.error && setIsCurrentLocationSelected(true);
 			setTimeout(() => {
 				setPlaceData({ from: undefined, to: directions.info.Place });
-				setRoutePositions(directions.info.Place?.Geometry.Point, InputType.TO);
+				setRoutePositions(directions.info.Place?.Geometry?.Point, InputType.TO);
 				!currentLocationData?.error && calculateRouteData();
 			}, 1000);
 		}
@@ -505,8 +508,8 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 	const onSwap = () => {
 		setValue({ from: value.to, to: value.from });
 		setPlaceData({ from: placeData.to, to: placeData.from });
-		setRoutePositions(placeData.to?.Geometry.Point, InputType.FROM);
-		setRoutePositions(placeData.from?.Geometry.Point, InputType.TO);
+		setRoutePositions(placeData.to?.Geometry?.Point, InputType.FROM);
+		setRoutePositions(placeData.from?.Geometry?.Point, InputType.TO);
 		setRouteData(undefined);
 		setRouteDataForMobile(undefined);
 	};
@@ -621,7 +624,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 			if (type === InputType.FROM) {
 				if (suggestions.from) {
 					setPlaceData({ ...placeData, from: suggestions.from[0].Place });
-					suggestions.from[0].Place?.Geometry.Point &&
+					suggestions.from[0].Place?.Geometry?.Point &&
 						setRoutePositions(
 							[suggestions.from[0].Place?.Geometry.Point[0], suggestions.from[0].Place?.Geometry.Point[1]],
 							type
@@ -632,7 +635,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 			} else {
 				if (suggestions.to) {
 					setPlaceData({ ...placeData, to: suggestions.to[0].Place });
-					suggestions.to[0].Place?.Geometry.Point &&
+					suggestions.to[0].Place?.Geometry?.Point &&
 						setRoutePositions(
 							[suggestions.to[0].Place.Geometry.Point[0], suggestions.to[0].Place.Geometry.Point[1]],
 							type
@@ -648,17 +651,17 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 
 			if (type === InputType.FROM) {
 				setPlaceData({ ...placeData, from: pd.Place });
-				setValue({ ...value, from: pd.Place.Label || "" });
+				setValue({ ...value, from: pd.Place?.Label || "" });
 				setSuggestions({ ...suggestions, from: undefined });
 			} else {
 				setPlaceData({ ...placeData, to: pd.Place });
-				setValue({ ...value, to: pd.Place.Label || "" });
+				setValue({ ...value, to: pd.Place?.Label || "" });
 				setSuggestions({ ...suggestions, to: undefined });
 			}
 
 			setInputFocused({ from: false, to: false });
-			pd.Place.Geometry.Point &&
-				setRoutePositions([pd?.Place.Geometry.Point[0] as number, pd?.Place.Geometry.Point[1] as number], type);
+			pd.Place?.Geometry?.Point &&
+				setRoutePositions([pd?.Place?.Geometry?.Point[0] as number, pd.Place?.Geometry.Point[1] as number], type);
 		}
 
 		setTimeout(() => {
@@ -697,12 +700,12 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 		if (routeData) {
 			return (
 				<View data-testid="steps-container" className={`steps-container ${!isDesktop ? "steps-container-mobile" : ""}`}>
-					{routeData.Legs[0].Steps.map((s, idx) => (
+					{routeData.Legs![0].Steps?.map((s, idx) => (
 						<StepCard
 							key={idx}
 							step={s}
 							isFirst={idx === 0}
-							isLast={idx + 1 === routeData.Legs[0].Steps.length}
+							isLast={idx + 1 === routeData.Legs![0].Steps?.length}
 							travelMode={travelMode as TravelMode}
 						/>
 					))}
@@ -758,8 +761,8 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 							: !isCurrentLocationDisabled
 							? [currentLocationData?.currentLocation?.longitude, currentLocationData?.currentLocation?.latitude]
 							: undefined,
-						routeData.Legs[0].StartPosition
-					] as LineString
+						routeData.Legs![0].StartPosition
+					] as number[][]
 				}
 			};
 			const endLineJson:
@@ -773,11 +776,11 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 				geometry: {
 					type: "LineString",
 					coordinates: [
-						routeData.Legs[0].EndPosition,
+						routeData.Legs![0].EndPosition,
 						routePositions.to
 							? routePositions.to
 							: [currentLocationData?.currentLocation?.longitude, currentLocationData?.currentLocation?.latitude]
-					] as LineString
+					] as number[][]
 				}
 			};
 			const startEndLayerProps: LayerProps = {
@@ -799,7 +802,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 				properties: {},
 				geometry: {
 					type: "LineString",
-					coordinates: routeData.Legs[0].Geometry?.LineString as LineString
+					coordinates: routeData.Legs![0].Geometry?.LineString as number[][]
 				}
 			};
 			const mapStyleLayers = mapRef?.getStyle().layers || [];
@@ -1131,7 +1134,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 											direction={isLanguageRTL ? "row-reverse" : "row"}
 											justifyContent={isLanguageRTL ? "flex-end" : "flex-start"}
 										>
-											<Text className="distance">{routeData.Summary.Distance.toFixed(2)}</Text>
+											<Text className="distance">{routeData.Summary?.Distance?.toFixed(2)}</Text>
 											<Text className="distance">
 												{currentMapUnit === METRIC
 													? t("geofence_box__km__short.text")
@@ -1141,7 +1144,7 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 									</View>
 									<View className="duration">
 										<Text className="regular-text">
-											{humanReadableTime(routeData.Summary.DurationSeconds * 1000, currentLang, t, !isDesktop)}
+											{humanReadableTime(routeData.Summary!.DurationSeconds! * 1000, currentLang, t, !isDesktop)}
 										</Text>
 									</View>
 								</View>
@@ -1149,10 +1152,10 @@ const RouteBox: React.FC<RouteBoxProps> = ({
 								<Flex className={"route-info-mobile  border-bottom"}>
 									<Flex className="time-and-distance">
 										<Text className="bold small-text">
-											{humanReadableTime(routeData.Summary.DurationSeconds * 1000, currentLang, t, !isDesktop)}
+											{humanReadableTime(routeData.Summary!.DurationSeconds! * 1000, currentLang, t, !isDesktop)}
 										</Text>
 										<Flex gap={0}>
-											<Text className="regular small-text">{routeData.Summary.Distance.toFixed(2)}</Text>
+											<Text className="regular small-text">{routeData.Summary!.Distance!.toFixed(2)}</Text>
 											<Text className="regular small-text">
 												&nbsp;
 												{currentMapUnit === METRIC

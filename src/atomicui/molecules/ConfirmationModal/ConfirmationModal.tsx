@@ -1,20 +1,21 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React from "react";
+import { FC, ReactNode, lazy, useState } from "react";
 
 import { Button, CheckboxField, Flex, Text } from "@aws-amplify/ui-react";
-import { Modal } from "@demo/atomicui/atoms";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
+
+const Modal = lazy(() => import("@demo/atomicui/atoms/Modal").then(module => ({ default: module.Modal })));
 
 export interface ConfirmationModalProps {
 	className?: string;
 	open: boolean;
 	onClose: () => void;
 	heading?: string;
-	description?: string | React.ReactNode;
+	description?: string | ReactNode;
 	onConfirm: () => void;
 	confirmationText?: string;
 	showLearnMore?: boolean;
@@ -29,7 +30,7 @@ export interface ConfirmationModalProps {
 	confirmationCheckboxOnChange?: (e: boolean) => void;
 }
 
-const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
+const ConfirmationModal: FC<ConfirmationModalProps> = ({
 	className = "",
 	open,
 	onClose,
@@ -49,7 +50,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 	confirmationCheckboxOnChange = () => {}
 }) => {
 	const { t, i18n } = useTranslation();
-	const [isConfirmationChecked, setIsConfirmationChecked] = React.useState(false);
+	const [isConfirmationChecked, setIsConfirmationChecked] = useState(false);
 	const { isMobile } = useDeviceMediaQuery();
 	const { language } = i18n;
 	const isLongLang = ["de", "es", "fr", "it", "pt-BR"].includes(language);

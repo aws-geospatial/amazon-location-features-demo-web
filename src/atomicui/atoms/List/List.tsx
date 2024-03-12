@@ -1,10 +1,10 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 
 import { Flex, Link, Text, View, ViewProps } from "@aws-amplify/ui-react";
-import { IconArrowRight } from "@demo/assets";
+import { IconArrowRight } from "@demo/assets/svgs";
 import { uuid } from "@demo/utils/uuid";
 import { omit } from "ramda";
 import { useTranslation } from "react-i18next";
@@ -67,7 +67,7 @@ const LinkWrapper: React.FC<LinkWrapperProps> = ({
 	);
 };
 
-const List: React.FC<ListProps> = ({
+const List: FC<ListProps> = ({
 	listArray,
 	useDefaultStyles = false,
 	labelIsIcon = false,

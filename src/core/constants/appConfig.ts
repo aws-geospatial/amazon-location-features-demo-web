@@ -19,7 +19,7 @@ import {
 	OpenDataStandardLight,
 	OpenDataVisualizationDark,
 	OpenDataVisualizationLight
-} from "@demo/assets";
+} from "@demo/assets/pngs";
 import {
 	AttributeEnum,
 	EsriMapEnum,
