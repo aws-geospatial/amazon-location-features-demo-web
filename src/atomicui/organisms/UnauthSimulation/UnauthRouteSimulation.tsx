@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useRef, useState } from "react";
+import { FC, useEffect, useMemo, useRef } from "react";
 
 import { View } from "@aws-amplify/ui-react";
 import { IconBusActive, IconBusInactive } from "@demo/assets/svgs";
@@ -13,6 +13,10 @@ interface UnauthRouteSimulationProps {
 	coordinates: number[][];
 	isPlaying: boolean;
 	disabled: boolean;
+	idx: number;
+	setIdx: (idx: number) => void;
+	trackerPos: number[];
+	setTrackerPos: (pos: number[]) => void;
 	updateTrackingHistory: (id: string, newTrackingHistory: TrackingHistoryItemtype) => void;
 }
 
@@ -23,10 +27,12 @@ const UnauthRouteSimulation: FC<UnauthRouteSimulationProps> = ({
 	coordinates,
 	isPlaying,
 	disabled,
+	idx,
+	setIdx,
+	trackerPos,
+	setTrackerPos,
 	updateTrackingHistory
 }) => {
-	const [idx, setIdx] = useState(0);
-	const [trackerPos, setTrackerPos] = useState(coordinates[0]);
 	const timeoutId = useRef<NodeJS.Timeout | null>(null);
 	const { evaluateGeofence } = useAwsGeofence();
 

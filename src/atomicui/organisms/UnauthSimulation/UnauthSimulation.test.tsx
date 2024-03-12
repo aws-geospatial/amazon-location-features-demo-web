@@ -20,7 +20,8 @@ const mockProps: UnauthSimulationProps = {
 	isNotifications: false,
 	setIsNotifications: jest.fn(),
 	confirmCloseSimulation: false,
-	setConfirmCloseSimulation: jest.fn()
+	setConfirmCloseSimulation: jest.fn(),
+	geolocateControlRef: { current: { trigger: jest.fn() } }
 };
 
 jest.mock("@demo/hooks", () => ({
