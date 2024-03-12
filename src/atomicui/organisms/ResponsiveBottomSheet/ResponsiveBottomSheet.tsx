@@ -15,7 +15,7 @@ import {
 	useState
 } from "react";
 
-import { Flex, Text } from "@aws-amplify/ui-react";
+import { Flex, Loader, Text } from "@aws-amplify/ui-react";
 import { IconClose, IconNotificationBell, LogoDark, LogoLight } from "@demo/assets/svgs";
 import appConfig from "@demo/core/constants/appConfig";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
@@ -670,7 +670,20 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				onSpringEnd={() => setArrowDirection("no-dragging")}
 			>
 				<Flex data-amplify-theme="aws-location-theme" direction="column" gap="0">
-					<Suspense fallback={<>LOADINGGG!!!</>}>{bottomSheetBody(ui)}</Suspense>
+					<Suspense
+						fallback={
+							<Loader
+								width="40px"
+								height="40px"
+								position="absolute"
+								top="50%"
+								left="50%"
+								transform="translate(-50%, -50%)"
+							/>
+						}
+					>
+						{bottomSheetBody(ui)}
+					</Suspense>
 				</Flex>
 			</BottomSheet>
 		</>

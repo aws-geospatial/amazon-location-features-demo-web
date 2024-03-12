@@ -1,4 +1,4 @@
-import { Dispatch, FC, Ref, SetStateAction, lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Dispatch, FC, Ref, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button, Card, Flex, Text } from "@aws-amplify/ui-react";
 import {
@@ -11,8 +11,13 @@ import {
 	IconSegment,
 	Simulation
 } from "@demo/assets/svgs";
-import { DropdownEl } from "@demo/atomicui/atoms";
-import { NotificationsBox } from "@demo/atomicui/molecules";
+import { DropdownEl, Modal } from "@demo/atomicui/atoms";
+import {
+	ConfirmationModal,
+	IconicInfoCard,
+	NonStartUnauthSimulation,
+	NotificationsBox
+} from "@demo/atomicui/molecules";
 import { appConfig, busRoutesData } from "@demo/core/constants";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useAwsGeofence, useUnauthSimulation, useWebSocketBanner } from "@demo/hooks";
@@ -36,19 +41,6 @@ import { MapRef } from "react-map-gl";
 import UnauthGeofencesSimulation from "./UnauthGeofencesSimulation";
 import UnauthRouteSimulation from "./UnauthRouteSimulation";
 import "./styles.scss";
-
-const Modal = lazy(() => import("@demo/atomicui/atoms/Modal").then(module => ({ default: module.Modal })));
-const ConfirmationModal = lazy(() =>
-	import("@demo/atomicui/molecules/ConfirmationModal").then(module => ({ default: module.ConfirmationModal }))
-);
-const IconicInfoCard = lazy(() =>
-	import("@demo/atomicui/molecules/IconicInfoCard").then(module => ({ default: module.IconicInfoCard }))
-);
-const NonStartUnauthSimulation = lazy(() =>
-	import("@demo/atomicui/molecules/NonStartUnauthSimulation").then(module => ({
-		default: module.NonStartUnauthSimulation
-	}))
-);
 
 const initialTrackingHistory: TrackingHistoryType = {
 	bus_route_01: [],

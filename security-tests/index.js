@@ -1,12 +1,14 @@
-import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
+import crypto from "crypto";
+
 import { GetRolePolicyCommand, IAMClient, ListRolePoliciesCommand } from "@aws-sdk/client-iam";
-import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
-import { Amplify, Auth } from "aws-amplify";
+import { Amplify } from "aws-amplify";
+import { confirmSignIn, fetchAuthSession, signIn } from "aws-amplify/auth";
 import * as dotenv from "dotenv";
 import * as R from "ramda";
 
 import { policies } from "./constants/index.js";
 
+global.crypto = crypto;
 dotenv.config();
 
 const identityPoolId = process.env.IDENTITY_POOL_ID;
@@ -20,14 +22,24 @@ const region = identityPoolId.split(":")[0];
 
 Amplify.configure({
 	Auth: {
-		identityPoolId,
-		region,
-		userPoolId,
-		userPoolWebClientId: userPoolClientId
+		Cognito: {
+			identityPoolId,
+			region,
+			userPoolId,
+			userPoolClientId
+		}
 	}
 });
 
-const completeNewPassword = async (user, newPassword) => await Auth.completeNewPassword(user, newPassword);
+const handleSignIn = async ({ username, password }) => {
+	const user = await signIn({ username, password });
+
+	if (user.nextStep.signInStep === "CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED") {
+		await confirmSignIn({
+			challengeResponse: password
+		});
+	}
+};
 
 const listRolePolicies = async (iamClient, roleName) => {
 	const command = new ListRolePoliciesCommand({ RoleName: roleName });
@@ -43,24 +55,10 @@ const getRolePolicy = async (iamClient, policyName, roleName) => {
 
 const main = async () => {
 	try {
-		const user = await Auth.signIn(username, password);
-
-		if (user.challengeName === "NEW_PASSWORD_REQUIRED") {
-			await completeNewPassword(user, password);
-		}
-
-		const session = await Auth.currentSession();
-		const idToken = session.getIdToken().getJwtToken();
-		const cognitoIdentityClient = new CognitoIdentityClient({ region });
-		const awsAuthCredentials = await fromCognitoIdentityPool({
-			client: cognitoIdentityClient,
-			identityPoolId,
-			logins: {
-				[`cognito-idp.${region}.amazonaws.com/${userPoolId}`]: idToken
-			}
-		})();
+		await handleSignIn({ username, password });
+		const session = await fetchAuthSession();
 		const iamClient = new IAMClient({
-			credentials: awsAuthCredentials,
+			credentials: session.credentials,
 			region,
 			signatureCache: false
 		});
