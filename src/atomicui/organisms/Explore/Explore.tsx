@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { FC, Fragment, MutableRefObject, useCallback, useMemo, useState } from "react";
+import { FC, Fragment, MutableRefObject, lazy, useCallback, useMemo, useState } from "react";
 
 import { Button, Divider, Flex, Text } from "@aws-amplify/ui-react";
 import {
@@ -15,9 +15,7 @@ import {
 	IconGlobe,
 	IconMapSolid,
 	IconRadar
-} from "@demo/assets";
-import { ExploreButton } from "@demo/atomicui/atoms";
-import { IconicInfoCard } from "@demo/atomicui/molecules";
+} from "@demo/assets/svgs";
 import { appConfig } from "@demo/core/constants";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useAmplifyAuth, useAmplifyMap, useAwsIot } from "@demo/hooks";
@@ -38,22 +36,12 @@ import { useNavigate } from "react-router-dom";
 import { RefHandles } from "react-spring-bottom-sheet/dist/types";
 import "./styles.scss";
 
-interface IProps {
-	updateUIInfo: (ui: ResponsiveUIEnum) => void;
-	onCloseSidebar: () => void;
-	onOpenConnectAwsAccountModal: () => void;
-	onOpenFeedbackModal: () => void;
-	onOpenSignInModal: () => void;
-	onShowAuthGeofenceBox: () => void;
-	onShowAuthTrackerBox: () => void;
-	onShowSettings: () => void;
-	onShowTrackingDisclaimerModal: () => void;
-	onShowAboutModal: () => void;
-	onShowUnauthGeofenceBox: () => void;
-	onShowUnauthTrackerBox: () => void;
-	onshowUnauthSimulationDisclaimerModal: () => void;
-	bottomSheetRef?: MutableRefObject<RefHandles | null>;
-}
+const ExploreButton = lazy(() =>
+	import("@demo/atomicui/atoms/ExploreButton").then(module => ({ default: module.ExploreButton }))
+);
+const IconicInfoCard = lazy(() =>
+	import("@demo/atomicui/molecules/IconicInfoCard").then(module => ({ default: module.IconicInfoCard }))
+);
 
 const {
 	ENV: {
@@ -75,6 +63,23 @@ const {
 		PRICING
 	}
 } = appConfig;
+
+interface IProps {
+	updateUIInfo: (ui: ResponsiveUIEnum) => void;
+	onCloseSidebar: () => void;
+	onOpenConnectAwsAccountModal: () => void;
+	onOpenFeedbackModal: () => void;
+	onOpenSignInModal: () => void;
+	onShowAuthGeofenceBox: () => void;
+	onShowAuthTrackerBox: () => void;
+	onShowSettings: () => void;
+	onShowTrackingDisclaimerModal: () => void;
+	onShowAboutModal: () => void;
+	onShowUnauthGeofenceBox: () => void;
+	onShowUnauthTrackerBox: () => void;
+	onshowUnauthSimulationDisclaimerModal: () => void;
+	bottomSheetRef?: MutableRefObject<RefHandles | null>;
+}
 
 const Explore: FC<IProps> = ({
 	updateUIInfo,

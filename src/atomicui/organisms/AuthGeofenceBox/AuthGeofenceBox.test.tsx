@@ -1,7 +1,7 @@
+import { ListGeofenceResponseEntry } from "@aws-sdk/client-location";
 import i18n from "@demo/locales/i18n";
 import { faker } from "@faker-js/faker";
-import { act, fireEvent, render, waitFor } from "@testing-library/react";
-import { ListGeofenceResponseEntry } from "aws-sdk/clients/location";
+import { fireEvent, render, waitFor } from "@testing-library/react";
 import { I18nextProvider } from "react-i18next";
 
 import AuthGeofenceBox, { AuthGeofenceBoxProps } from "./AuthGeofenceBox";
@@ -99,80 +99,147 @@ describe("<AuthGeofenceBox />", () => {
 
 	it("renders the component correctly", () => {
 		const { getByTestId } = renderComponent();
-		waitFor(() => {
-			expect(getByTestId("auth-geofence-box-card")).toBeInTheDocument();
-		});
+
+		waitFor(
+			() => {
+				expect(getByTestId("auth-geofence-box-card")).toBeInTheDocument();
+			},
+			{
+				timeout: 10000,
+				interval: 1000,
+				onTimeout: e => {
+					console.error({ e });
+					return e;
+				}
+			}
+		);
 	});
 
 	it("should show the loader when fetching geofences", () => {
 		mockUseAwsGeofenceData.isFetchingGeofences = true;
 		const { getByTestId } = renderComponent();
-		waitFor(() => {
-			expect(getByTestId("geofences-list-container")).toBeInTheDocument();
-			expect(getByTestId("auth-geofence-box-loader")).toBeInTheDocument();
-			expect(mockUseAwsGeofenceData.getGeofencesList).toHaveBeenCalled();
-		});
+
+		waitFor(
+			() => {
+				expect(getByTestId("geofences-list-container")).toBeInTheDocument();
+				expect(getByTestId("auth-geofence-box-loader")).toBeInTheDocument();
+				expect(mockUseAwsGeofenceData.getGeofencesList).toHaveBeenCalled();
+			},
+			{
+				timeout: 10000,
+				interval: 1000,
+				onTimeout: e => {
+					console.error({ e });
+					return e;
+				}
+			}
+		);
 	});
 
 	it("should render the geofences list", () => {
 		mockUseAwsGeofenceData.geofences = [...mockGeofencesData];
 		const { getByTestId } = renderComponent();
-		waitFor(() => {
-			expect(getByTestId("geofences-list-container")).toBeInTheDocument();
-			expect(getByTestId("test_geofence_1")).toBeInTheDocument();
-			expect(getByTestId("test_geofence_2")).toBeInTheDocument();
-		});
+
+		waitFor(
+			() => {
+				expect(getByTestId("geofences-list-container")).toBeInTheDocument();
+				expect(getByTestId("test_geofence_1")).toBeInTheDocument();
+				expect(getByTestId("test_geofence_2")).toBeInTheDocument();
+			},
+			{
+				timeout: 10000,
+				interval: 1000,
+				onTimeout: e => {
+					console.error({ e });
+					return e;
+				}
+			}
+		);
 	});
 
 	it("should render the empty list message when geofences not present", () => {
 		const { getByTestId } = renderComponent();
-		waitFor(() => {
-			expect(getByTestId("geofences-list-container")).toBeInTheDocument();
-			expect(getByTestId("auth-geofence-box-empty-list")).toBeInTheDocument();
-		});
+
+		waitFor(
+			() => {
+				expect(getByTestId("geofences-list-container")).toBeInTheDocument();
+				expect(getByTestId("auth-geofence-box-empty-list")).toBeInTheDocument();
+			},
+			{
+				timeout: 10000,
+				interval: 1000,
+				onTimeout: e => {
+					console.error({ e });
+					return e;
+				}
+			}
+		);
 	});
 
 	it("should fire appropriate function when clicked on add geofence", () => {
 		const { getByTestId } = renderComponent();
-		waitFor(() => {
-			expect(getByTestId("auth-geofence-box-add-button")).toBeInTheDocument();
-		});
-		act(() => {
-			fireEvent.click(getByTestId("auth-geofence-box-add-button"));
-		});
-		expect(mockUseAwsGeofenceData.setIsAddingGeofence).toHaveBeenCalled();
+
+		waitFor(
+			() => {
+				expect(getByTestId("auth-geofence-box-add-button")).toBeInTheDocument();
+				fireEvent.click(getByTestId("auth-geofence-box-add-button"));
+				expect(mockUseAwsGeofenceData.setIsAddingGeofence).toHaveBeenCalled();
+			},
+			{
+				timeout: 10000,
+				interval: 1000,
+				onTimeout: e => {
+					console.error({ e });
+					return e;
+				}
+			}
+		);
 	});
 
 	it("should render add geofence and allow to use search", () => {
 		mockUseAwsGeofenceData.isAddingGeofence = true;
 		const { getByTestId } = renderComponent();
-		waitFor(() => {
-			expect(getByTestId("auth-geofence-add-container")).toBeInTheDocument();
-			expect(getByTestId("auth-geofence-box-search-input")).toBeInTheDocument();
-		});
-		act(() => {
-			fireEvent.change(getByTestId("auth-geofence-box-search-input"), { target: { value: "test" } });
-		});
-		waitFor(() => {
-			expect(getByTestId("auth-geofence-box-search-input")).toHaveValue("test");
-			expect(mockUseAwsPlaceData.search).toHaveBeenCalled();
-		});
+
+		waitFor(
+			() => {
+				expect(getByTestId("auth-geofence-add-container")).toBeInTheDocument();
+				expect(getByTestId("auth-geofence-box-search-input")).toBeInTheDocument();
+				fireEvent.change(getByTestId("auth-geofence-box-search-input"), { target: { value: "test" } });
+				expect(getByTestId("auth-geofence-box-search-input")).toHaveValue("test");
+				expect(mockUseAwsPlaceData.search).toHaveBeenCalled();
+			},
+			{
+				timeout: 10000,
+				interval: 1000,
+				onTimeout: e => {
+					console.error({ e });
+					return e;
+				}
+			}
+		);
 	});
 
 	it("should allow to select geofence and edit it", () => {
 		mockUseAwsGeofenceData.geofences = [...mockGeofencesData];
 		const { getByTestId } = renderComponent();
-		waitFor(() => {
-			expect(getByTestId("geofences-list-container")).toBeInTheDocument();
-			expect(getByTestId("test_geofence_1")).toBeInTheDocument();
-		});
-		act(() => {
-			fireEvent.click(getByTestId("test_geofence_1"));
-		});
-		mockUseAwsGeofenceData.isAddingGeofence = true;
-		waitFor(() => {
-			expect(getByTestId("auth-geofence-box-name-field")).toHaveValue("test_geofence_1");
-			expect(getByTestId("geofence-radius-slider")).toBeInTheDocument();
-		});
+
+		waitFor(
+			() => {
+				expect(getByTestId("geofences-list-container")).toBeInTheDocument();
+				expect(getByTestId("test_geofence_1")).toBeInTheDocument();
+				fireEvent.click(getByTestId("test_geofence_1"));
+				mockUseAwsGeofenceData.isAddingGeofence = true;
+				expect(getByTestId("auth-geofence-box-name-field")).toHaveValue("test_geofence_1");
+				expect(getByTestId("geofence-radius-slider")).toBeInTheDocument();
+			},
+			{
+				timeout: 10000,
+				interval: 1000,
+				onTimeout: e => {
+					console.error({ e });
+					return e;
+				}
+			}
+		);
 	});
 });

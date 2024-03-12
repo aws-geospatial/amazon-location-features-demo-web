@@ -108,3 +108,6 @@ export { ReactComponent as IconArrowRight } from "./icon-arrow-right.svg";
 export { ReactComponent as IconBrowser } from "./icon-browser.svg";
 export { ReactComponent as IconBrandApple } from "./icon-brand-apple.svg";
 export { ReactComponent as IconBrandAndroid } from "./icon-brand-android.svg";
+export { ReactComponent as IconDollarSolid } from "./icon-dollar-solid.svg";
+export { ReactComponent as IconSwap } from "./icon-swap.svg";
+export { ReactComponent as Simulation } from "./simulation.svg";

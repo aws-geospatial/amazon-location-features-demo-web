@@ -6,6 +6,8 @@ import {
 	FC,
 	MutableRefObject,
 	SetStateAction,
+	Suspense,
+	lazy,
 	useCallback,
 	useEffect,
 	useMemo,
@@ -13,27 +15,30 @@ import {
 	useState
 } from "react";
 
-import { Flex, Text } from "@aws-amplify/ui-react";
-import { IconClose, IconNotificationBell, LogoDark, LogoLight } from "@demo/assets";
-import { ConfirmationModal } from "@demo/atomicui/molecules";
+import { Flex, Loader, Text } from "@aws-amplify/ui-react";
+import { IconClose, IconNotificationBell, LogoDark, LogoLight } from "@demo/assets/svgs";
 import appConfig from "@demo/core/constants/appConfig";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
-import { useAmplifyMap, useAwsGeofence, useAwsRoute, useAwsTracker } from "@demo/hooks";
+import { useAmplifyMap, useAwsGeofence, useAwsRoute, useAwsTracker, usePersistedData } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { ShowStateType } from "@demo/types";
-import { MenuItemEnum, ResponsiveUIEnum } from "@demo/types/Enums";
+import { MenuItemEnum, ResponsiveUIEnum, SettingOptionEnum } from "@demo/types/Enums";
 import { useTranslation } from "react-i18next";
 import { MapRef } from "react-map-gl";
 import { useLocation } from "react-router-dom";
 import { BottomSheet } from "react-spring-bottom-sheet";
-
 import { RefHandles } from "react-spring-bottom-sheet/dist/types";
-
-import { Explore } from "../Explore";
-import { UnauthSimulation } from "../UnauthSimulation";
-import "./styles.scss";
 import "react-spring-bottom-sheet/dist/style.css";
+import "./styles.scss";
+
+const Explore = lazy(() => import("../Explore").then(module => ({ default: module.Explore })));
+const UnauthSimulation = lazy(() =>
+	import("../UnauthSimulation").then(module => ({ default: module.UnauthSimulation }))
+);
+const ConfirmationModal = lazy(() =>
+	import("@demo/atomicui/molecules/ConfirmationModal").then(module => ({ default: module.ConfirmationModal }))
+);
 
 const {
 	ROUTES: { DEMO }
@@ -126,7 +131,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	setExpandRouteOptionsMobile,
 	setSearchBoxValue
 }) => {
-	const { isDesktop, isTablet, isMax556, isDesktopBrowser } = useDeviceMediaQuery();
+	const { isDesktop, isMobile, isTablet, isMax556, isDesktopBrowser } = useDeviceMediaQuery();
 	const { unauthNotifications, isAddingGeofence } = useAwsGeofence();
 	const { t } = useTranslation();
 	const location = useLocation();
@@ -141,6 +146,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 		setUI,
 		setBottomSheetMinHeight
 	} = useBottomSheet();
+	const { setSettingsOptions } = usePersistedData();
 	const { resetStore: resetAwsRouteStore } = useAwsRoute();
 	const { setIsEditingRoute, setTrackerPoints } = useAwsTracker();
 	const { mapStyle } = useAmplifyMap();
@@ -223,6 +229,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 
 		const handleWindowResize = () => {
 			resizeObserver.observe(document.body);
+			isMobile ? setSettingsOptions(undefined) : setSettingsOptions(SettingOptionEnum.UNITS);
 		};
 
 		window.addEventListener("resize", handleWindowResize);
@@ -231,7 +238,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 			window.removeEventListener("resize", handleWindowResize);
 			resizeObserver.disconnect();
 		};
-	}, [setBottomSheetCurrentHeight, setBottomSheetHeight, bottomSheetHeight]);
+	}, [setBottomSheetCurrentHeight, setBottomSheetHeight, bottomSheetHeight, isMobile, setSettingsOptions]);
 
 	useEffect(() => {
 		const resizeObserver = new ResizeObserver(entries => {
@@ -663,7 +670,20 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				onSpringEnd={() => setArrowDirection("no-dragging")}
 			>
 				<Flex data-amplify-theme="aws-location-theme" direction="column" gap="0">
-					{bottomSheetBody(ui)}
+					<Suspense
+						fallback={
+							<Loader
+								width="40px"
+								height="40px"
+								position="absolute"
+								top="50%"
+								left="50%"
+								transform="translate(-50%, -50%)"
+							/>
+						}
+					>
+						{bottomSheetBody(ui)}
+					</Suspense>
 				</Flex>
 			</BottomSheet>
 		</>

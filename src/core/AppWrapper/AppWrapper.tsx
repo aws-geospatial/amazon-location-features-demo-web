@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { ReactNode, useMemo } from "react";
+import { FC, ReactNode, useMemo } from "react";
 
 import { ThemeProvider } from "@aws-amplify/ui-react";
 import { appConfig } from "@demo/core/constants";
@@ -24,7 +24,7 @@ interface AppWrapperProps {
 	children?: ReactNode;
 }
 
-const AppWrapper: React.FC<AppWrapperProps> = ({ children }) => {
+const AppWrapper: FC<AppWrapperProps> = ({ children }) => {
 	const { identityPoolId, region, userPoolId, userPoolClientId, userDomain, configureAmplify } = useAmplifyAuth();
 
 	const amplifyConfig = useMemo(

@@ -1,14 +1,13 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { useCallback, useEffect } from "react";
+import { FC, useCallback, useEffect } from "react";
 
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { CircleDrawEventType, CircleFeatureType } from "@demo/types";
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import * as turf from "@turf/turf";
-import { Position } from "aws-sdk/clients/location";
 import { CircleMode, DirectMode, DragCircleMode, SimpleSelectMode } from "mapbox-gl-draw-circle";
 import { IControl, LngLatBoundsLike, useControl, useMap } from "react-map-gl";
 
@@ -60,13 +59,13 @@ const draw = new MapboxDraw({
 });
 
 interface CircleDrawControlProps {
-	geofenceCenter?: Position;
+	geofenceCenter?: number[];
 	radiusInM: number;
 	onCreate: (e: CircleDrawEventType) => void;
 	onUpdate: (e: CircleDrawEventType) => void;
 }
 
-const CircleDrawControl: React.FC<CircleDrawControlProps> = ({ geofenceCenter, radiusInM, onCreate, onUpdate }) => {
+const CircleDrawControl: FC<CircleDrawControlProps> = ({ geofenceCenter, radiusInM, onCreate, onUpdate }) => {
 	const { current: mapRef } = useMap();
 	const { isDesktop, isTablet } = useDeviceMediaQuery();
 

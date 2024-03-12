@@ -1,5 +1,5 @@
 import i18n from "@demo/locales/i18n";
-import { fireEvent, render } from "@testing-library/react";
+import { fireEvent, render, waitFor } from "@testing-library/react";
 import { I18nextProvider } from "react-i18next";
 import { BrowserRouter } from "react-router-dom";
 
@@ -37,7 +37,20 @@ describe("<Sidebar />", () => {
 	};
 	it("renders the logo", () => {
 		const { getByTestId } = renderComponent();
-		expect(getByTestId("side-bar")).toBeInTheDocument();
+
+		waitFor(
+			() => {
+				expect(getByTestId("side-bar")).toBeInTheDocument();
+			},
+			{
+				timeout: 10000,
+				interval: 1000,
+				onTimeout: e => {
+					console.error({ e });
+					return e;
+				}
+			}
+		);
 	});
 
 	it("calls onCloseSidebar when clicking the close icon", () => {

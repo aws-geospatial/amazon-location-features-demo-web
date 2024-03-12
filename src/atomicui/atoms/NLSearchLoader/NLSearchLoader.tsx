@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
 import { Loader as AmplifyLoader, Flex } from "@aws-amplify/ui-react";
 import { useTranslation } from "react-i18next";
@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 interface NLSearchLoaderProps {
 	nlLoadText: string[];
 }
-const NLSearchLoader: React.FC<NLSearchLoaderProps> = ({ nlLoadText }) => {
+const NLSearchLoader: FC<NLSearchLoaderProps> = ({ nlLoadText }) => {
 	const [loaderIdx, setloaderIdx] = useState(0);
 	const { t } = useTranslation();
 

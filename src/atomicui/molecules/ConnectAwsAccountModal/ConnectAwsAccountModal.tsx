@@ -1,10 +1,10 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button, Flex, Link, Text, View } from "@aws-amplify/ui-react";
-import { IconAwsCloudFormation, IconCheckMarkCircle } from "@demo/assets";
+import { IconAwsCloudFormation, IconCheckMarkCircle } from "@demo/assets/svgs";
 import { DropdownEl, Modal } from "@demo/atomicui/atoms";
 import { InputField } from "@demo/atomicui/molecules";
 import { appConfig, regionsData } from "@demo/core/constants";
@@ -30,7 +30,7 @@ export interface ConnectAwsAccountModalProps {
 	handleCurrentLocationAndViewpoint: (b: boolean) => void;
 }
 
-const ConnectAwsAccountModal: React.FC<ConnectAwsAccountModalProps> = ({
+const ConnectAwsAccountModal: FC<ConnectAwsAccountModalProps> = ({
 	open,
 	onClose,
 	handleCurrentLocationAndViewpoint

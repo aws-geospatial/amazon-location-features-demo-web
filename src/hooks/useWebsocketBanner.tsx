@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 
 import { Flex, Text } from "@aws-amplify/ui-react";
-import { IconClose } from "@demo/assets";
+import { IconClose } from "@demo/assets/svgs";
 import { useWebSocketService } from "@demo/services";
 import { NotificationHistoryItemtype } from "@demo/types";
 import { t } from "i18next";
