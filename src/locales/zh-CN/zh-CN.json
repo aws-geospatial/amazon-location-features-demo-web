@@ -3648,5 +3648,44 @@
   },
   "error_handler__failed_feedback_text_2": {
     "text": "请求失败，状态为"
+  },
+  "migration": {
+    "text": "移民"
+  },
+  "migrate_from_google_maps": {
+    "text": "从谷歌地图迁移"
+  },
+  "migrate_a_web_app": {
+    "text": "迁移 Web 应用程序"
+  },
+  "migrate_an_android_app": {
+    "text": "迁移安卓应用程序"
+  },
+  "migrate_an_ios_app": {
+    "text": "迁移 iOS 应用程序"
+  },
+  "migrate_a_web_service": {
+    "text": "迁移 Web 服务"
+  },
+  "pricing": {
+    "text": "定价"
+  },
+  "migration_desc": {
+    "text": "从谷歌地图迁移"
+  },
+  "pricing_desc": {
+    "text": "计算您的预估成本"
+  },
+  "web_app": {
+    "text": "网络应用程序"
+  },
+  "android_app": {
+    "text": "安卓应用程序"
+  },
+  "ios_app": {
+    "text": "iOS 应用程序"
+  },
+  "web_service": {
+    "text": "网络服务"
   }
 }

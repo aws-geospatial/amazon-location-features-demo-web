@@ -1,9 +1,9 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { useState } from "react";
+import { forwardRef, useState } from "react";
 
-import { IconCopy, IconTickCircle } from "@demo/assets";
+import { IconCopy, IconTickCircle } from "@demo/assets/svgs";
 import "./styles.scss";
 
 interface CopyTextProps {
@@ -13,7 +13,7 @@ interface CopyTextProps {
 	tickIconColor?: string;
 }
 
-const CopyText = React.forwardRef<HTMLSpanElement | null, CopyTextProps>(
+const CopyText = forwardRef<HTMLSpanElement | null, CopyTextProps>(
 	({ text, iconSize = 18, copyIconColor = "var(--grey-light-color)", tickIconColor = "var(--green-color)" }, ref) => {
 		const [isCopied, setIsCopied] = useState<boolean>(false);
 

@@ -3652,5 +3652,44 @@
   },
   "error_handler__failed_feedback_text_2": {
     "text": "Request failed with status"
+  },
+  "migration": {
+    "text": "Migration"
+  },
+  "migrate_from_google_maps": {
+    "text": "Migrate from Google Maps"
+  },
+  "migrate_a_web_app": {
+    "text": "Migrate a Web App"
+  },
+  "migrate_an_android_app": {
+    "text": "Migrate an Android App"
+  },
+  "migrate_an_ios_app": {
+    "text": "Migrate an iOS App"
+  },
+  "migrate_a_web_service": {
+    "text": "Migrate a Web service"
+  },
+  "pricing": {
+    "text": "Pricing"
+  },
+  "migration_desc": {
+    "text": "Migrate from Google Maps"
+  },
+  "pricing_desc": {
+    "text": "Calculate your estimated cost"
+  },
+  "web_app": {
+    "text": "Web App"
+  },
+  "android_app": {
+    "text": "Android App"
+  },
+  "ios_app": {
+    "text": "iOS App"
+  },
+  "web_service": {
+    "text": "Web Service"
   }
 }

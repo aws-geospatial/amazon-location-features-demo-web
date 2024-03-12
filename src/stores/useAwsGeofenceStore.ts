@@ -1,8 +1,8 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
+import { ListGeofenceResponseEntry } from "@aws-sdk/client-location";
 import { IStateProps, NotificationHistoryItemtype } from "@demo/types";
-import { ListGeofenceResponseEntry } from "aws-sdk/clients/location";
 
 import createStore from "./createStore";
 

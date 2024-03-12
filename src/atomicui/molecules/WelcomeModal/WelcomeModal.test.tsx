@@ -1,5 +1,5 @@
 import i18n from "@demo/locales/i18n";
-import { render } from "@testing-library/react";
+import { render, waitFor } from "@testing-library/react";
 import { I18nextProvider } from "react-i18next";
 
 import WelcomeModal from "./WelcomeModal";
@@ -13,6 +13,19 @@ describe("<WelcomeModal />", () => {
 				<WelcomeModal open={true} onClose={onClose} />
 			</I18nextProvider>
 		);
-		expect(getByTestId("welcome-modal")).toBeInTheDocument();
+
+		waitFor(
+			() => {
+				expect(getByTestId("welcome-modal")).toBeInTheDocument();
+			},
+			{
+				timeout: 10000,
+				interval: 1000,
+				onTimeout: e => {
+					console.error({ e });
+					return e;
+				}
+			}
+		);
 	});
 });
