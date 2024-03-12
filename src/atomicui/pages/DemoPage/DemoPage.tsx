@@ -420,7 +420,8 @@ const DemoPage: FC = () => {
 						top: isMobile ? geoLocateTopValue : isDesktop ? "-9.5rem" : "-2.5rem",
 						right: isMobile ? "-0.3rem" : isDesktop ? "0.75rem" : "0rem",
 						margin: 0,
-						borderRadius: "0.62rem"
+						borderRadius: "0.62rem",
+						display: show.unauthSimulationBounds ? "none" : "block"
 					}}
 					position="bottom-right"
 					ref={geolocateControlRef}
@@ -440,7 +441,8 @@ const DemoPage: FC = () => {
 			geoLocateTopValue,
 			onGeoLocate,
 			onGeoLocateError,
-			getCurrentGeoLocation
+			getCurrentGeoLocation,
+			show.unauthSimulationBounds
 		]
 	);
 
@@ -461,6 +463,7 @@ const DemoPage: FC = () => {
 				setIsNotifications={setUnauthIsNotifications}
 				confirmCloseSimulation={confirmCloseUnauthSimulation}
 				setConfirmCloseSimulation={setConfirmCloseUnauthSimulation}
+				geolocateControlRef={geolocateControlRef}
 			/>
 		),
 		[
@@ -673,6 +676,7 @@ const DemoPage: FC = () => {
 							setExpandRouteOptionsMobile={setExpandRouteOptionsMobile}
 							setSearchBoxValue={setSearchBoxValue}
 							onOpenFeedbackModal={() => setShow(s => ({ ...s, openFeedbackModal: true }))}
+							geolocateControlRef={geolocateControlRef}
 						/>
 					)}
 					{isDesktop && (
