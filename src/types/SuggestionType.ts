@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { Place } from "aws-sdk/clients/location";
+import { Place } from "@aws-sdk/client-location";
 
 export interface SuggestionType {
 	Id: string;

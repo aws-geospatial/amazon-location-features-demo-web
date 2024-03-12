@@ -1,11 +1,10 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React from "react";
+import { FC, lazy } from "react";
 
 import { Button, Card, Flex, Text, View } from "@aws-amplify/ui-react";
-import { IconClose, IconCompass, IconGear, IconGeofence, IconInfo, IconLockSolid, IconRadar } from "@demo/assets";
-import { List, Logo } from "@demo/atomicui/atoms";
+import { IconClose, IconCompass, IconGear, IconGeofence, IconInfo, IconLockSolid, IconRadar } from "@demo/assets/svgs";
 import { appConfig, marketingMenuOptionsData } from "@demo/core/constants";
 import { useAmplifyAuth, useAmplifyMap, useAwsIot } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
@@ -16,6 +15,9 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { Tooltip } from "react-tooltip";
 import "./styles.scss";
+
+const List = lazy(() => import("@demo/atomicui/atoms/List").then(module => ({ default: module.List })));
+const Logo = lazy(() => import("@demo/atomicui/atoms/Logo").then(module => ({ default: module.Logo })));
 
 const {
 	ROUTES: { DEMO, OVERVIEW }
@@ -36,7 +38,7 @@ interface SidebarProps {
 	onOpenFeedbackModal: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({
+const Sidebar: FC<SidebarProps> = ({
 	onCloseSidebar,
 	onOpenConnectAwsAccountModal,
 	onOpenSignInModal,

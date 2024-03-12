@@ -1,12 +1,15 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React from "react";
+import { FC, lazy } from "react";
 
 import { Text } from "@aws-amplify/ui-react";
-import { ConfirmationModal } from "@demo/atomicui/molecules";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
+
+const ConfirmationModal = lazy(() =>
+	import("@demo/atomicui/molecules/ConfirmationModal").then(module => ({ default: module.ConfirmationModal }))
+);
 
 interface OpenDataConfirmationModalProps {
 	open: boolean;
@@ -16,7 +19,7 @@ interface OpenDataConfirmationModalProps {
 	onConfirmationCheckboxOnChange?: (e: boolean) => void;
 }
 
-const OpenDataConfirmationModal: React.FC<OpenDataConfirmationModalProps> = ({
+const OpenDataConfirmationModal: FC<OpenDataConfirmationModalProps> = ({
 	open,
 	onClose,
 	onConfirm,

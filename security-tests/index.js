@@ -1,15 +1,19 @@
-import { Amplify, Auth } from "aws-amplify";
-import AWS from "aws-sdk";
+import crypto from "crypto";
+
+import { GetRolePolicyCommand, IAMClient, ListRolePoliciesCommand } from "@aws-sdk/client-iam";
+import { Amplify } from "aws-amplify";
+import { confirmSignIn, fetchAuthSession, signIn } from "aws-amplify/auth";
 import * as dotenv from "dotenv";
 import * as R from "ramda";
 
 import { policies } from "./constants/index.js";
 
+global.crypto = crypto;
 dotenv.config();
 
 const identityPoolId = process.env.IDENTITY_POOL_ID;
 const userPoolId = process.env.USER_POOL_ID;
-const userPoolWebClientId = process.env.USER_POOL_CLIENT_ID;
+const userPoolClientId = process.env.USER_POOL_CLIENT_ID;
 const username = process.env.COGNITO_EMAIL;
 const password = process.env.COGNITO_PASSWORD;
 const authRoleName = process.env.IAM_AUTH_ROLE_NAME;
@@ -18,36 +22,43 @@ const region = identityPoolId.split(":")[0];
 
 Amplify.configure({
 	Auth: {
-		identityPoolId,
-		region,
-		userPoolId,
-		userPoolWebClientId
+		Cognito: {
+			identityPoolId,
+			region,
+			userPoolId,
+			userPoolClientId
+		}
 	}
 });
 
-const fetchCredentials = async () => await Auth.currentUserCredentials();
+const handleSignIn = async ({ username, password }) => {
+	const user = await signIn({ username, password });
 
-const signIn = async () => await Auth.signIn(username, password);
+	if (user.nextStep.signInStep === "CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED") {
+		await confirmSignIn({
+			challengeResponse: password
+		});
+	}
+};
 
-const completeNewPassword = async (user, newPassword) => await Auth.completeNewPassword(user, newPassword);
+const listRolePolicies = async (iamClient, roleName) => {
+	const command = new ListRolePoliciesCommand({ RoleName: roleName });
+	const response = await iamClient.send(command);
+	return response;
+};
 
-const listRolePolicies = async (iamClient, roleName) =>
-	await iamClient.listRolePolicies({ RoleName: roleName }).promise();
-
-const getRolePolicy = async (iamClient, policyName, roleName) =>
-	await iamClient.getRolePolicy({ PolicyName: policyName, RoleName: roleName }).promise();
+const getRolePolicy = async (iamClient, policyName, roleName) => {
+	const command = new GetRolePolicyCommand({ PolicyName: policyName, RoleName: roleName });
+	const response = await iamClient.send(command);
+	return response;
+};
 
 const main = async () => {
 	try {
-		const user = await signIn();
-
-		if (user.challengeName === "NEW_PASSWORD_REQUIRED") {
-			await completeNewPassword(user, password);
-		}
-
-		const credentialsAuth = await fetchCredentials();
-		const iamClientAuth = new AWS.IAM({
-			credentials: credentialsAuth,
+		await handleSignIn({ username, password });
+		const session = await fetchAuthSession();
+		const iamClient = new IAMClient({
+			credentials: session.credentials,
 			region,
 			signatureCache: false
 		});
@@ -55,12 +66,8 @@ const main = async () => {
 		// List authenticated role policies
 		console.log("----------------------------------------");
 		console.log("Testing authenticated permissions...");
-		const listRolePoliciesResAuth = await listRolePolicies(iamClientAuth, authRoleName);
-		const getRolePolicyResAuth = await getRolePolicy(
-			iamClientAuth,
-			listRolePoliciesResAuth.PolicyNames[0],
-			authRoleName
-		);
+		const listRolePoliciesResAuth = await listRolePolicies(iamClient, authRoleName);
+		const getRolePolicyResAuth = await getRolePolicy(iamClient, listRolePoliciesResAuth.PolicyNames[0], authRoleName);
 		const policyDocumentAuth = JSON.parse(decodeURIComponent(getRolePolicyResAuth.PolicyDocument));
 
 		if (
@@ -75,9 +82,9 @@ const main = async () => {
 
 		// List unauthenticated role policies
 		console.log("Testing unauthenticated permissions...");
-		const listRolePoliciesResUnauth = await listRolePolicies(iamClientAuth, unauthRoleName);
+		const listRolePoliciesResUnauth = await listRolePolicies(iamClient, unauthRoleName);
 		const getRolePolicyResUnauth = await getRolePolicy(
-			iamClientAuth,
+			iamClient,
 			listRolePoliciesResUnauth.PolicyNames[0],
 			unauthRoleName
 		);

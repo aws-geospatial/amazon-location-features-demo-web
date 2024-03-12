@@ -1,9 +1,22 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+	ChangeEvent,
+	Dispatch,
+	FC,
+	MouseEvent,
+	SetStateAction,
+	lazy,
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+	useState
+} from "react";
 
 import { Button, Card, Flex, Loader, SelectField, SliderField, Text, View } from "@aws-amplify/ui-react";
+import { ListGeofenceResponseEntry, Place } from "@aws-sdk/client-location";
 import {
 	IconBackArrow,
 	IconClose,
@@ -13,9 +26,8 @@ import {
 	IconPlus,
 	IconSearch,
 	IconTrash
-} from "@demo/assets";
-import { GeofenceMarker, InputField, NotFoundCard } from "@demo/atomicui/molecules";
-import { showToast } from "@demo/core";
+} from "@demo/assets/svgs";
+import { showToast } from "@demo/core/Toast";
 import { appConfig } from "@demo/core/constants";
 import { useAmplifyMap, useAwsGeofence, useAwsPlace } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
@@ -33,13 +45,21 @@ import { AnalyticsEventActionsEnum, EventTypeEnum, ResponsiveUIEnum, TriggeredBy
 import { record } from "@demo/utils/analyticsUtils";
 import { uuid } from "@demo/utils/uuid";
 import * as turf from "@turf/turf";
-import { ListGeofenceResponseEntry, Place, Position } from "aws-sdk/clients/location";
 import { useTranslation } from "react-i18next";
 import { Layer, LngLat, MapRef, Source } from "react-map-gl";
 import { Tooltip } from "react-tooltip";
-
-import CircleDrawControl from "./CircleDrawControl";
 import "./styles.scss";
+
+const GeofenceMarker = lazy(() =>
+	import("@demo/atomicui/molecules/GeofenceMarker").then(module => ({ default: module.GeofenceMarker }))
+);
+const InputField = lazy(() =>
+	import("@demo/atomicui/molecules/InputField").then(module => ({ default: module.InputField }))
+);
+const NotFoundCard = lazy(() =>
+	import("@demo/atomicui/molecules/NotFoundCard").then(module => ({ default: module.NotFoundCard }))
+);
+const CircleDrawControl = lazy(() => import("./CircleDrawControl").then(module => ({ default: module.default })));
 
 const { IMPERIAL, METRIC } = MapUnitEnum;
 const { MILES, MILES_SHORT, FEET, FEET_SHORT, KILOMETERS, KILOMETERS_SHORT, METERS, METERS_SHORT } = DistanceUnitEnum;
@@ -51,14 +71,14 @@ export interface AuthGeofenceBoxProps {
 	mapRef: MapRef | null;
 	setShowAuthGeofenceBox: (b: boolean) => void;
 	isEditingAuthRoute: boolean;
-	setIsEditingAuthRoute: React.Dispatch<React.SetStateAction<boolean>>;
+	setIsEditingAuthRoute: Dispatch<SetStateAction<boolean>>;
 	triggerOnClose?: boolean;
 	triggerOnReset?: boolean;
-	setTriggerOnClose?: React.Dispatch<React.SetStateAction<boolean>>;
-	setTriggerOnReset?: React.Dispatch<React.SetStateAction<boolean>>;
+	setTriggerOnClose?: Dispatch<SetStateAction<boolean>>;
+	setTriggerOnReset?: Dispatch<SetStateAction<boolean>>;
 }
 
-const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({
+const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 	mapRef,
 	setShowAuthGeofenceBox,
 	triggerOnClose,
@@ -77,7 +97,7 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({
 	const [radiusInM, setRadiusInM] = useState(RadiusInM.DEFAULT);
 	const [suggestions, setSuggestions] = useState<SuggestionType[] | undefined>(undefined);
 	const [place, setPlace] = useState<Place | undefined>(undefined);
-	const [geofenceCenter, setGeofenceCenter] = useState<Position | undefined>(undefined);
+	const [geofenceCenter, setGeofenceCenter] = useState<number[] | undefined>(undefined);
 	const [current, setCurrent] = useState<{ value: string | undefined; radiusInM: number | undefined }>({
 		value: undefined,
 		radiusInM: undefined
@@ -170,7 +190,7 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({
 	}, []);
 
 	const onChange = useCallback(
-		async ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
+		async ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
 			setValue(value);
 			await handleSearch(value, false);
 		},
@@ -180,7 +200,7 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({
 	const onSearch = useCallback(async () => !!value && (await handleSearch(value)), [value, handleSearch]);
 
 	const setCirclePropertiesFromSuggestion = (place: Place) => {
-		setGeofenceCenter(place.Geometry.Point);
+		setGeofenceCenter(place.Geometry?.Point);
 		setValue(place?.Label || "");
 		setSuggestions(undefined);
 	};
@@ -194,7 +214,7 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({
 
 				if (pd) {
 					setPlace(pd.Place);
-					setCirclePropertiesFromSuggestion(pd.Place);
+					setCirclePropertiesFromSuggestion(pd.Place as Place);
 				}
 			} else if (!Text && Place) {
 				setPlace(Place);
@@ -246,14 +266,14 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({
 		}
 	}, [geofenceCenter, createGeofence, name, radiusInM, resetAll]);
 
-	const onChangeName = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
+	const onChangeName = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
 		if (value.length <= 20) {
 			setName(value.trim());
 		}
 	};
 
 	const onChangeRadius = useCallback(
-		(e: React.ChangeEvent<HTMLInputElement>) => {
+		(e: ChangeEvent<HTMLInputElement>) => {
 			const radius = Number(e.target.value);
 			const lowerLimit =
 				currentMapUnit === IMPERIAL
@@ -493,7 +513,7 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({
 	]);
 
 	const onDelete = useCallback(
-		async (e: React.MouseEvent<HTMLDivElement, MouseEvent>, GeofenceId: string) => {
+		async (e: MouseEvent, GeofenceId: string) => {
 			e.stopPropagation();
 			await deleteGeofence(GeofenceId);
 		},
@@ -514,7 +534,7 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({
 	}, [setIsAddingGeofence]);
 
 	const onClickGeofenceItem = useCallback(
-		(GeofenceId: string, Center: Position, Radius: number) => {
+		(GeofenceId: string, Center: number[], Radius: number) => {
 			setValue(`${Center[1]}, ${Center[0]}`);
 			setName(GeofenceId);
 			setGeofenceCenter(Center);
@@ -532,14 +552,15 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({
 	);
 
 	const renderGeofenceListItem = useCallback(
-		({ GeofenceId, Geometry: { Circle } }: ListGeofenceResponseEntry, idx: number) => {
-			if (Circle) {
+		({ GeofenceId, Geometry }: ListGeofenceResponseEntry, idx: number) => {
+			if (Geometry?.Circle) {
+				const { Circle } = Geometry;
 				const { Center, Radius } = Circle;
 				const [westBound, southBound, eastBound, northBound] = MAX_BOUNDS.GRAB;
 				const isWithinGrabBounds =
-					Center[1] >= southBound && Center[1] <= northBound && Center[0] >= westBound && Center[0] <= eastBound;
+					Center![1] >= southBound && Center![1] <= northBound && Center![0] >= westBound && Center![0] <= eastBound;
 				const isDisabled = currentMapProvider === MapProviderEnum.GRAB && !isWithinGrabBounds;
-				const circle = turf.circle(Center, Radius, { steps: 50, units: "meters" });
+				const circle = turf.circle(Center!, Radius!, { steps: 50, units: "meters" });
 				const line = turf.lineString(circle.geometry.coordinates[0]);
 
 				return (
@@ -552,7 +573,7 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({
 							gap={0}
 							padding="10px 0px 10px 10px"
 							alignItems="center"
-							onClick={isDisabled ? () => {} : () => onClickGeofenceItem(GeofenceId, Center, Radius)}
+							onClick={isDisabled ? () => {} : () => onClickGeofenceItem(GeofenceId!, Center!, Radius!)}
 							data-tooltip-id="geofence-item"
 							data-tooltip-place="right"
 							data-tooltip-position-strategy="fixed"
@@ -565,7 +586,7 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({
 							<div
 								data-testid={`icon-trash-${GeofenceId}`}
 								className={isDisabled ? "icon-trash-container-diabled" : "icon-trash-container"}
-								onClick={isDisabled ? () => {} : e => onDelete(e, GeofenceId)}
+								onClick={isDisabled ? () => {} : e => onDelete(e, GeofenceId!)}
 							>
 								<IconTrash />
 							</div>
@@ -650,8 +671,9 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({
 
 	const renderGeofenceMarkers = useMemo(() => {
 		if (geofences?.length) {
-			return geofences.map(({ GeofenceId, Geometry: { Circle } }, idx) => {
-				if (Circle) {
+			return geofences.map(({ GeofenceId, Geometry }, idx) => {
+				if (Geometry?.Circle) {
+					const { Circle } = Geometry;
 					const { Center, Radius } = Circle;
 
 					if (isEditingAuthRoute && name === GeofenceId) return null;
@@ -659,11 +681,11 @@ const AuthGeofenceBox: React.FC<AuthGeofenceBoxProps> = ({
 					return (
 						<GeofenceMarker
 							key={idx}
-							lng={Center[0]}
-							lat={Center[1]}
-							description={GeofenceId}
+							lng={Center![0]}
+							lat={Center![1]}
+							description={GeofenceId!}
 							showPointer={true}
-							onClick={() => onClickGeofenceItem(GeofenceId, Center, Radius)}
+							onClick={() => onClickGeofenceItem(GeofenceId!, Center!, Radius!)}
 						/>
 					);
 				}

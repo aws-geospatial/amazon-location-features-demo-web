@@ -1,4 +1,4 @@
-import React, { Ref, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Dispatch, FC, Ref, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button, Card, Flex, Text } from "@aws-amplify/ui-react";
 import {
@@ -10,7 +10,7 @@ import {
 	IconRadar,
 	IconSegment,
 	Simulation
-} from "@demo/assets";
+} from "@demo/assets/svgs";
 import { DropdownEl, Modal } from "@demo/atomicui/atoms";
 import {
 	ConfirmationModal,
@@ -18,7 +18,7 @@ import {
 	NonStartUnauthSimulation,
 	NotificationsBox
 } from "@demo/atomicui/molecules";
-import { appConfig, busRoutesData } from "@demo/core";
+import { appConfig, busRoutesData } from "@demo/core/constants";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useAwsGeofence, useUnauthSimulation, useWebSocketBanner } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
@@ -56,12 +56,11 @@ const busRoutesDropdown = [
 	{ value: "bus_route_04", label: "Bus 04 Knight" },
 	{ value: "bus_route_05", label: "Bus 05 UBC" }
 ];
-
 const {
 	MAP_RESOURCES: {
 		MAX_BOUNDS: { VANCOUVER }
 	}
-} = appConfig.default;
+} = appConfig;
 
 export interface UnauthSimulationProps {
 	mapRef: MapRef | null;
@@ -76,12 +75,12 @@ export interface UnauthSimulationProps {
 	setShowUnauthSimulationBounds: (b: boolean) => void;
 	clearCredsAndLocationClient?: () => void;
 	isNotifications: boolean;
-	setIsNotifications: React.Dispatch<React.SetStateAction<boolean>>;
+	setIsNotifications: Dispatch<SetStateAction<boolean>>;
 	confirmCloseSimulation: boolean;
-	setConfirmCloseSimulation: React.Dispatch<React.SetStateAction<boolean>>;
+	setConfirmCloseSimulation: Dispatch<SetStateAction<boolean>>;
 }
 
-const UnauthSimulation: React.FC<UnauthSimulationProps> = ({
+const UnauthSimulation: FC<UnauthSimulationProps> = ({
 	mapRef,
 	from,
 	setShowUnauthGeofenceBox,

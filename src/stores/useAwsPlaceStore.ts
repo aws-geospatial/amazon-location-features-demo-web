@@ -2,14 +2,13 @@
 /* SPDX-License-Identifier: MIT-0 */
 
 import { ClustersType, IStateProps, SuggestionType, ViewPointType } from "@demo/types";
-import { Double } from "aws-sdk/clients/location";
 
 import createStore from "./createStore";
 
 interface AwsPlaceStoreProps {
 	isSearching: boolean;
 	isFetchingPlaceData: boolean;
-	bound?: Double[];
+	bound?: number[];
 	clusters?: ClustersType;
 	clusterZoom: number;
 	precision: number;

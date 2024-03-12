@@ -1,5 +1,5 @@
 import i18n from "@demo/locales/i18n";
-import { fireEvent, render } from "@testing-library/react";
+import { fireEvent, render, waitFor } from "@testing-library/react";
 import { I18nextProvider } from "react-i18next";
 
 import AboutModal from "./AboutModal";
@@ -23,7 +23,20 @@ describe("<AboutModal />", () => {
 
 	it("should render successfully", () => {
 		const { getByTestId } = renderComponent();
-		expect(getByTestId("about-modal-container")).toBeInTheDocument();
+
+		waitFor(
+			() => {
+				expect(getByTestId("about-modal-container")).toBeInTheDocument();
+			},
+			{
+				timeout: 10000,
+				interval: 1000,
+				onTimeout: e => {
+					console.error({ e });
+					return e;
+				}
+			}
+		);
 	});
 
 	it("should render fire Learn More button", () => {

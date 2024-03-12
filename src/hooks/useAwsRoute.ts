@@ -3,13 +3,13 @@
 
 import { useMemo } from "react";
 
+import { CalculateRouteRequest } from "@aws-sdk/client-location";
 import { useAwsRouteService } from "@demo/services";
 import { useAmplifyMapStore, useAwsRouteStore } from "@demo/stores";
 import { InputType, RouteDataType, SuggestionType } from "@demo/types";
 import { EventTypeEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
 import { errorHandler } from "@demo/utils/errorHandler";
-import { CalculateRouteRequest, Position } from "aws-sdk/clients/location";
 import { useTranslation } from "react-i18next";
 
 const useAwsRoute = () => {
@@ -50,7 +50,7 @@ const useAwsRoute = () => {
 					record([{ EventType: EventTypeEnum.ROUTE_SEARCH, Attributes: recordAttributes }]);
 				}
 			},
-			setRoutePositions: (p: Position | undefined, type: InputType) => {
+			setRoutePositions: (p: number[] | undefined, type: InputType) => {
 				setState(s => ({
 					routePositions:
 						type === InputType.FROM ? { from: p, to: s.routePositions?.to } : { from: s.routePositions?.from, to: p }

@@ -1,14 +1,14 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+import { CalculateRouteRequest } from "@aws-sdk/client-location";
 import { useAmplifyMap, useAwsGeofence, useAwsRoute, useAwsTracker, usePersistedData } from "@demo/hooks";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { DistanceUnitEnum, MapUnitEnum, RouteDataType, TrackerType, TravelMode } from "@demo/types";
 import { TriggeredByEnum } from "@demo/types/Enums";
 import * as turf from "@turf/turf";
-import { CalculateRouteRequest, Position } from "aws-sdk/clients/location";
 import { Layer, LayerProps, MapRef, Marker, Source } from "react-map-gl";
 
 import { trackerTypes } from "./AuthTrackerBox";
@@ -24,13 +24,13 @@ interface AuthTrackerSimulationProps {
 	isPlaying: boolean;
 	setIsPlaying: (b: boolean) => void;
 	selectedTrackerType: TrackerType;
-	points?: Position[];
-	setPoints: (p?: Position[]) => void;
-	trackerPos?: Position;
-	setTrackerPos: (tp?: Position) => void;
+	points?: number[][];
+	setPoints: (p?: number[][]) => void;
+	trackerPos?: number[];
+	setTrackerPos: (tp?: number[]) => void;
 }
 
-const AuthTrackerSimulation: React.FC<AuthTrackerSimulationProps> = ({
+const AuthTrackerSimulation: FC<AuthTrackerSimulationProps> = ({
 	mapRef,
 	isSaved,
 	routeData,
@@ -147,8 +147,8 @@ const AuthTrackerSimulation: React.FC<AuthTrackerSimulationProps> = ({
 
 	useEffect(() => {
 		if (routeData && !points) {
-			const pointsArr: Position[] = [];
-			routeData.Legs.forEach(({ Geometry }) => Geometry?.LineString?.forEach(coords => pointsArr.push(coords)));
+			const pointsArr: number[][] = [];
+			routeData.Legs?.forEach(({ Geometry }) => Geometry?.LineString?.forEach(coords => pointsArr.push(coords)));
 			pointsArr.length && setPoints(pointsArr);
 		}
 	}, [routeData, points, setPoints]);
@@ -191,13 +191,13 @@ const AuthTrackerSimulation: React.FC<AuthTrackerSimulationProps> = ({
 
 	useEffect(() => {
 		if (routeData) {
-			const boundingBox = routeData.Summary.RouteBBox;
+			const boundingBox = routeData.Summary?.RouteBBox;
 
 			isDesktop
 				? mapRef?.fitBounds(
 						[
-							[boundingBox[0], boundingBox[1]],
-							[boundingBox[2], boundingBox[3]]
+							[boundingBox![0], boundingBox![1]],
+							[boundingBox![2], boundingBox![3]]
 						],
 						{
 							padding: {
@@ -213,8 +213,8 @@ const AuthTrackerSimulation: React.FC<AuthTrackerSimulationProps> = ({
 				: isTablet
 				? mapRef?.fitBounds(
 						[
-							[boundingBox[0], boundingBox[1]],
-							[boundingBox[2], boundingBox[3]]
+							[boundingBox![0], boundingBox![1]],
+							[boundingBox![2], boundingBox![3]]
 						],
 						{
 							padding: {
@@ -229,8 +229,8 @@ const AuthTrackerSimulation: React.FC<AuthTrackerSimulationProps> = ({
 				  )
 				: mapRef?.fitBounds(
 						[
-							[boundingBox[0], boundingBox[1]],
-							[boundingBox[2], boundingBox[3]]
+							[boundingBox![0], boundingBox![1]],
+							[boundingBox![2], boundingBox![3]]
 						],
 						{
 							padding: {
@@ -343,4 +343,4 @@ const AuthTrackerSimulation: React.FC<AuthTrackerSimulationProps> = ({
 	);
 };
 
-export default React.memo(AuthTrackerSimulation);
+export default memo(AuthTrackerSimulation);

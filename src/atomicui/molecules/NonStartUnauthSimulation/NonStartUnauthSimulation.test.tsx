@@ -1,3 +1,5 @@
+import { RefObject } from "react";
+
 import i18n from "@demo/locales/i18n";
 import { MenuItemEnum } from "@demo/types";
 import { faker } from "@faker-js/faker";
@@ -12,7 +14,7 @@ const mockProps: NonStartUnauthSimulationProps = {
 	handleCta: jest.fn(),
 	handleEnableLive: jest.fn(),
 	from: MenuItemEnum.GEOFENCE,
-	startRef: { current: document.createElement("div") } as React.RefObject<HTMLDivElement>
+	startRef: { current: document.createElement("div") } as RefObject<HTMLDivElement>
 };
 
 describe("<NonStartUnauthSimulation />", () => {

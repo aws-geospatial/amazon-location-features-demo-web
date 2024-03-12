@@ -2,13 +2,12 @@
 /* SPDX-License-Identifier: MIT-0 */
 
 import { IStateProps, TrackerType } from "@demo/types";
-import { Position } from "aws-sdk/clients/location";
 
 import createStore from "./createStore";
 
 export interface AwsTrackerStoreProps {
 	isEditingRoute: boolean;
-	trackerPoints?: Array<Position>;
+	trackerPoints?: Array<number[]>;
 	selectedTrackerType: TrackerType;
 }
 

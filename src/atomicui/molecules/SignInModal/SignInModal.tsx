@@ -1,11 +1,10 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import React from "react";
+import { FC, lazy } from "react";
 
 import { Button, Flex, Text } from "@aws-amplify/ui-react";
-import { IconGeofence, IconRoute } from "@demo/assets";
-import { Modal } from "@demo/atomicui/atoms";
+import { IconGeofence, IconRoute } from "@demo/assets/svgs";
 import { useAmplifyAuth } from "@demo/hooks";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { EventTypeEnum, TriggeredByEnum } from "@demo/types/Enums";
@@ -13,12 +12,14 @@ import { record } from "@demo/utils/analyticsUtils";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
 
+const Modal = lazy(() => import("@demo/atomicui/atoms/Modal").then(module => ({ default: module.Modal })));
+
 interface SignInModalProps {
 	open: boolean;
 	onClose: () => void;
 }
 
-const SignInModal: React.FC<SignInModalProps> = ({ open, onClose }) => {
+const SignInModal: FC<SignInModalProps> = ({ open, onClose }) => {
 	const { onLogin } = useAmplifyAuth();
 	const { t } = useTranslation();
 	const { isMobile } = useDeviceMediaQuery();
