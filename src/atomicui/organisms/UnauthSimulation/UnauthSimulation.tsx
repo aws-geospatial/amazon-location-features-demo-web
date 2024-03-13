@@ -1,4 +1,15 @@
-import { Dispatch, FC, Ref, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+	Dispatch,
+	FC,
+	MutableRefObject,
+	Ref,
+	SetStateAction,
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+	useState
+} from "react";
 
 import { Button, Card, Flex, Text } from "@aws-amplify/ui-react";
 import {
@@ -24,9 +35,11 @@ import { useAwsGeofence, useUnauthSimulation, useWebSocketBanner } from "@demo/h
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import {
+	IdxType,
 	MenuItemEnum,
 	NotificationHistoryItemtype,
 	SelectOption,
+	TrackerPosType,
 	TrackingHistoryItemtype,
 	TrackingHistoryType,
 	TrackingHistoryTypeEnum
@@ -35,12 +48,26 @@ import { ResponsiveUIEnum } from "@demo/types/Enums";
 import { format, parseISO } from "date-fns";
 import { LngLatBoundsLike } from "mapbox-gl";
 import { useTranslation } from "react-i18next";
-import { MapRef } from "react-map-gl";
+import { GeolocateControlRef, MapRef } from "react-map-gl";
 
 import UnauthGeofencesSimulation from "./UnauthGeofencesSimulation";
 import UnauthRouteSimulation from "./UnauthRouteSimulation";
 import "./styles.scss";
 
+const initialIdx: IdxType = {
+	bus_route_01: 0,
+	bus_route_02: 0,
+	bus_route_03: 0,
+	bus_route_04: 0,
+	bus_route_05: 0
+};
+const initialTrackerPos: TrackerPosType = {
+	bus_route_01: busRoutesData[0].coordinates[0],
+	bus_route_02: busRoutesData[1].coordinates[0],
+	bus_route_03: busRoutesData[2].coordinates[0],
+	bus_route_04: busRoutesData[3].coordinates[0],
+	bus_route_05: busRoutesData[4].coordinates[0]
+};
 const initialTrackingHistory: TrackingHistoryType = {
 	bus_route_01: [],
 	bus_route_02: [],
@@ -77,6 +104,7 @@ export interface UnauthSimulationProps {
 	setIsNotifications: Dispatch<SetStateAction<boolean>>;
 	confirmCloseSimulation: boolean;
 	setConfirmCloseSimulation: Dispatch<SetStateAction<boolean>>;
+	geolocateControlRef: MutableRefObject<GeolocateControlRef | null>;
 }
 
 const UnauthSimulation: FC<UnauthSimulationProps> = ({
@@ -94,8 +122,11 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 	isNotifications,
 	setIsNotifications,
 	confirmCloseSimulation,
-	setConfirmCloseSimulation
+	setConfirmCloseSimulation,
+	geolocateControlRef
 }) => {
+	const [idx, setIdx] = useState(initialIdx);
+	const [trackerPos, setTrackerPos] = useState(initialTrackerPos);
 	const [trackingHistory, setTrackingHistory] = useState<TrackingHistoryType>(initialTrackingHistory);
 	const [selectedRoutes, setSelectedRoutes] = useState<SelectOption[]>([busRoutesDropdown[0]]);
 	const [busSelectedValue, setBusSelectedValue] = useState<SelectOption>(busRoutesDropdown[0]);
@@ -112,13 +143,13 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 				return {
 					...prevState,
 					[n.busRouteId]: [
-						...prevState[n.busRouteId],
 						{
 							type: TrackingHistoryTypeEnum.BUS_STOP,
 							title,
 							description: n.coordinates,
 							subDescription: n.createdAt
-						}
+						},
+						...prevState[n.busRouteId]
 					]
 				};
 			});
@@ -231,7 +262,10 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 		handleClose();
 		setHideGeofenceTrackerShortcut(false);
 		setConfirmCloseSimulation(false);
+		setStartSimulation(false);
+		setShowUnauthSimulationBounds(false);
 		!isDesktop && setUI(ResponsiveUIEnum.explore);
+		geolocateControlRef.current?.trigger();
 	};
 
 	const StartSimulation = useCallback(() => {
@@ -354,9 +388,15 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 			busRoutesData
 				.filter(({ id }) => selectedRoutesIds.includes(id))
 				.map(({ id, name, geofenceCollection }) => (
-					<UnauthGeofencesSimulation key={id} id={id} name={name} geofenceCollection={geofenceCollection} />
+					<UnauthGeofencesSimulation
+						key={id}
+						id={id}
+						name={name}
+						geofenceCollection={geofenceCollection}
+						trackerPos={trackerPos[id]}
+					/>
 				)),
-		[selectedRoutesIds]
+		[selectedRoutesIds, trackerPos]
 	);
 
 	const renderRoutes = useMemo(
@@ -372,15 +412,19 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 						coordinates={coordinates}
 						isPlaying={isPlaying}
 						disabled={!selectedRoutesIds.includes(id)}
+						idx={idx[id]}
+						setIdx={idx => setIdx(s => ({ ...s, [id]: idx }))}
+						trackerPos={trackerPos[id]}
+						setTrackerPos={pos => setTrackerPos(s => ({ ...s, [id]: pos }))}
 						updateTrackingHistory={(id: string, newTrackingHistory: TrackingHistoryItemtype) =>
 							setTrackingHistory(prevState => ({
 								...prevState,
-								[id]: [...prevState[id], newTrackingHistory]
+								[id]: [newTrackingHistory, ...prevState[id]]
 							}))
 						}
 					/>
 				)),
-		[isPlaying, selectedRoutesIds]
+		[isPlaying, selectedRoutesIds, idx, trackerPos]
 	);
 
 	const onBackHandler = useCallback(() => {

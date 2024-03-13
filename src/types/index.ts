@@ -52,6 +52,8 @@ export type { SelectOption } from "./SelectOption";
 export type {
 	TrackingHistoryItemtype,
 	TrackingHistoryType,
-	NotificationHistoryItemtype
+	NotificationHistoryItemtype,
+	IdxType,
+	TrackerPosType
 } from "./UnauthSimulationTypes";
 export type { FeedbackValueType } from "./FeedbackModel";

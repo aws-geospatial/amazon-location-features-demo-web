@@ -19,3 +19,11 @@ export type NotificationHistoryItemtype = {
 	createdAt: string;
 	eventType?: "Entered" | "Exited";
 };
+
+export type IdxType = {
+	[busRouteId: string]: number;
+};
+
+export type TrackerPosType = {
+	[busRouteId: string]: number[];
+};

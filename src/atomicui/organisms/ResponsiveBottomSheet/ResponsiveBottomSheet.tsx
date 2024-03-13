@@ -25,7 +25,7 @@ import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { ShowStateType } from "@demo/types";
 import { MenuItemEnum, ResponsiveUIEnum, SettingOptionEnum } from "@demo/types/Enums";
 import { useTranslation } from "react-i18next";
-import { MapRef } from "react-map-gl";
+import { GeolocateControlRef, MapRef } from "react-map-gl";
 import { useLocation } from "react-router-dom";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import { RefHandles } from "react-spring-bottom-sheet/dist/types";
@@ -87,6 +87,7 @@ interface IProps {
 	isExpandRouteOptionsMobile: boolean;
 	setExpandRouteOptionsMobile: (b: boolean) => void;
 	setSearchBoxValue: Dispatch<SetStateAction<string>>;
+	geolocateControlRef: MutableRefObject<GeolocateControlRef | null>;
 }
 
 const ResponsiveBottomSheet: FC<IProps> = ({
@@ -129,7 +130,8 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	setShowRouteBox,
 	isExpandRouteOptionsMobile,
 	setExpandRouteOptionsMobile,
-	setSearchBoxValue
+	setSearchBoxValue,
+	geolocateControlRef
 }) => {
 	const { isDesktop, isMobile, isTablet, isMax556, isDesktopBrowser } = useDeviceMediaQuery();
 	const { unauthNotifications, isAddingGeofence } = useAwsGeofence();
@@ -285,6 +287,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				setIsNotifications={setIsNotifications}
 				confirmCloseSimulation={confirmCloseSimulation}
 				setConfirmCloseSimulation={setConfirmCloseSimulation}
+				geolocateControlRef={geolocateControlRef}
 			/>
 		),
 		[
@@ -297,7 +300,8 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 			setStartSimulation,
 			show.startUnauthSimulation,
 			show.unauthGeofenceBox,
-			startSimulation
+			startSimulation,
+			geolocateControlRef
 		]
 	);
 
