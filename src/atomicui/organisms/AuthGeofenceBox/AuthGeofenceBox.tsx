@@ -17,16 +17,7 @@ import {
 
 import { Button, Card, Flex, Loader, SelectField, SliderField, Text, View } from "@aws-amplify/ui-react";
 import { ListGeofenceResponseEntry, Place } from "@aws-sdk/client-location";
-import {
-	IconBackArrow,
-	IconClose,
-	IconGeofenceMarker,
-	IconGeofenceMarkerDisabled,
-	IconPin,
-	IconPlus,
-	IconSearch,
-	IconTrash
-} from "@demo/assets/svgs";
+import { IconBackArrow, IconClose, IconPin, IconPlus, IconSearch, IconTrash } from "@demo/assets/svgs";
 import { showToast } from "@demo/core/Toast";
 import { appConfig } from "@demo/core/constants";
 import { useAmplifyMap, useAwsGeofence, useAwsPlace } from "@demo/hooks";
@@ -568,7 +559,7 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 						<Flex
 							data-testid={GeofenceId}
 							key={idx}
-							className={idx !== geofences!.length - 1 ? "geofence-item border-bottom" : "geofence-item"}
+							className={`geofence-item${idx !== geofences!.length - 1 ? " border-bottom" : ""}`}
 							style={isDisabled ? { opacity: 0.3 } : {}}
 							gap={0}
 							padding="10px 0px 10px 10px"
@@ -579,7 +570,7 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 							data-tooltip-position-strategy="fixed"
 							data-tooltip-content={isDisabled ? t("tooltip__disabled_geofence.text") : ""}
 						>
-							{isDisabled ? <IconGeofenceMarkerDisabled style={{ margin: "0rem 0.5rem" }} /> : <IconGeofenceMarker />}
+							<Flex className={isDisabled ? "icon-geofence-marker-disabled" : "icon-geofence-marker"} />
 							<Flex gap={0} direction="column">
 								<Text>{GeofenceId}</Text>
 							</Flex>

@@ -15,7 +15,7 @@ import {
 	View
 } from "@aws-amplify/ui-react";
 import { PlaceGeometry } from "@aws-sdk/client-location";
-import { IconActionMenu, IconClose, IconDirections, IconPin, IconSearch } from "@demo/assets/svgs";
+import { IconActionMenu, IconClose, IconDirections, IconSearch } from "@demo/assets/svgs";
 import { NLSearchLoader } from "@demo/atomicui/atoms";
 import { InputField, Marker, NotFoundCard, SuggestionMarker } from "@demo/atomicui/molecules";
 import { appConfig } from "@demo/core/constants";
@@ -296,7 +296,7 @@ const SearchBox: FC<SearchBoxProps> = ({
 
 		return (
 			<Flex data-testid={`suggestion-${id}`} key={id} className="option-container" onMouseOver={() => setHover(option)}>
-				{!placeid ? <IconSearch /> : <IconPin />}
+				<Flex className={`icon ${!placeid ? "icon-search-gray" : "icon-pin-gray"}`} />
 				<View className="option-details">
 					<Text>{title}</Text>
 					{geodesicDistanceUnit ? (

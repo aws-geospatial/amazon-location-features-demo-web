@@ -128,14 +128,17 @@ const useAwsPlace = () => {
 					setState({ isSearching: true });
 					const [lat, lng] = value.split(",");
 					const data = await placesService.getPlaceByCoordinates([parseFloat(lng), parseFloat(lat)]);
-					const vPoint = data
-						? { longitude: data.Summary?.Position![0] || 0, latitude: data.Summary?.Position![1] || 0 }
-						: viewpoint;
-					const Hash = getHash([vPoint.longitude, vPoint.latitude], 10);
-					const suggestion = { ...data?.Results![0], Hash, Id: uuid.randomUUID() };
-					cb ? cb([suggestion]) : setState({ suggestions: [suggestion] });
-					setState({ bound: undefined });
-					setViewpoint(vPoint);
+
+					if (!!data?.Results?.length) {
+						const vPoint = data
+							? { longitude: data.Summary?.Position![0] || 0, latitude: data.Summary?.Position![1] || 0 }
+							: viewpoint;
+						const Hash = getHash([vPoint.longitude, vPoint.latitude], 10);
+						const suggestion = { ...data?.Results[0], Hash, Id: uuid.randomUUID() };
+						cb ? cb([suggestion]) : setState({ suggestions: [suggestion] });
+						setState({ bound: undefined });
+						setViewpoint(vPoint);
+					}
 				} catch (error) {
 					errorHandler(error, t("error_handler__failed_search_place_coords.text") as string);
 				} finally {

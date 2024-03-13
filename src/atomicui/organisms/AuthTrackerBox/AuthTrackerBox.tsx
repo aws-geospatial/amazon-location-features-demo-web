@@ -9,7 +9,6 @@ import {
 	IconClose,
 	IconDroneSolid,
 	IconEdit,
-	IconInfoSolid,
 	IconMobileSolid,
 	IconSegment,
 	IconWalking
@@ -302,7 +301,7 @@ const AuthTrackerBox: FC<AuthTrackerBoxProps> = ({ mapRef, setShowAuthTrackerBox
 				</Flex>
 				{Connection}
 				<Flex gap={0} alignItems="center" padding={isDesktop ? "1.23rem" : "0.5rem 1.23rem"}>
-					<IconInfoSolid className="icon-plus-rounded" />
+					<Flex className="icon-info-solid-primary" />
 					<Text marginLeft="1.23rem" variation="tertiary" textAlign={isLtr ? "start" : "end"}>
 						{t("tracker_box__click_any_point.text")}
 					</Text>
