@@ -166,7 +166,7 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 	} = useBottomSheet();
 	const { t, i18n } = useTranslation();
 	const { language } = i18n;
-	const isLongLang = ["de", "es", "fr", "it", "pt-BR"].includes(language);
+	const isTallLang = ["de", "es", "fr", "it", "pt-BR"].includes(language);
 	const unauthSimulationCtaText = t("unauth_simulation__cta.text");
 	const trackingHistoryRef: Ref<HTMLDivElement> = useRef<HTMLDivElement>(null);
 	const selectedRoutesIds = useMemo(() => selectedRoutes.map(route => route.value), [selectedRoutes]);
@@ -274,7 +274,7 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 				data-testid="start-simulation"
 				position="relative"
 				height="46rem"
-				overflow={window.innerHeight <= 600 || isLongLang ? "auto" : "none"}
+				overflow={window.innerHeight <= 600 || isTallLang ? "auto" : "none"}
 			>
 				<Flex className="start-simulation-container">
 					<Flex justifyContent="center">
@@ -371,7 +371,7 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 			</Flex>
 		);
 	}, [
-		isLongLang,
+		isTallLang,
 		t,
 		isDesktop,
 		setStartSimulation,
