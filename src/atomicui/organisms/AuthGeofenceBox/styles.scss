@@ -231,6 +231,21 @@
 			&:hover {
 				background-color: var(--ghost-white);
 			}
+
+			.icon-geofence-marker-disabled {
+				background: url("/src/assets/svgs/icon-geofence-marker-disabled.svg") center center no-repeat;
+				background-size: contain;
+				min-width: 1.54rem;
+				min-height: 1.54rem;
+				margin: 0rem 0.5rem;
+			}
+
+			.icon-geofence-marker {
+				background: url("/src/assets/svgs/icon-geofence-marker.svg") center center no-repeat;
+				background-size: contain;
+				min-width: 2.45rem;
+				min-height: 2.45rem;
+			}
 		}
 
 		.icon-trash-container {

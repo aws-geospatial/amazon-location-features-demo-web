@@ -57,6 +57,16 @@
 	.logo-mobile {
 		width: 11.54rem;
 		height: 2.08rem;
+
+		&.dark-logo {
+			background: url("/src/assets/svgs/LogoDark.svg") center center no-repeat;
+			background-size: contain;
+		}
+
+		&.light-logo {
+			background: url("/src/assets/svgs/LogoLight.svg") center center no-repeat;
+			background-size: contain;
+		}
 	}
 
 	.map-header-mobile {

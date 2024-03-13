@@ -34,7 +34,6 @@ import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useAwsGeofence, useUnauthSimulation, useWebSocketBanner } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
-import i18n from "@demo/locales/i18n";
 import {
 	IdxType,
 	MenuItemEnum,
@@ -165,8 +164,9 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 		bottomSheetHeight,
 		bottomSheetCurrentHeight = 0
 	} = useBottomSheet();
-	const { t } = useTranslation();
-	const currentLanguage = i18n.language;
+	const { t, i18n } = useTranslation();
+	const { language } = i18n;
+	const isTallLang = ["de", "es", "fr", "it", "pt-BR"].includes(language);
 	const unauthSimulationCtaText = t("unauth_simulation__cta.text");
 	const trackingHistoryRef: Ref<HTMLDivElement> = useRef<HTMLDivElement>(null);
 	const selectedRoutesIds = useMemo(() => selectedRoutes.map(route => route.value), [selectedRoutes]);
@@ -273,9 +273,8 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 			<Flex
 				data-testid="start-simulation"
 				position="relative"
-				height={`${
-					!["en"].includes(currentLanguage) ? `${currentLanguage === "pt-BR" ? "51.5rem" : "50rem"}` : "46rem"
-				}`}
+				height="46rem"
+				overflow={window.innerHeight <= 600 || isTallLang ? "auto" : "none"}
 			>
 				<Flex className="start-simulation-container">
 					<Flex justifyContent="center">
@@ -372,7 +371,7 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 			</Flex>
 		);
 	}, [
-		currentLanguage,
+		isTallLang,
 		t,
 		isDesktop,
 		setStartSimulation,
