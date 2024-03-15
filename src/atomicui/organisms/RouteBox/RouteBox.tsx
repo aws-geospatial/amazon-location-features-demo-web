@@ -1001,11 +1001,11 @@ const RouteBox: FC<RouteBoxProps> = ({
 							gap={0}
 						>
 							<Flex className="marker-container" order={isLtr ? 1 : 3}>
-								<IconMyLocation />
+								<Flex className="icon-my-location" />
 								{[...Array(3)].map((_, index) => (
 									<View key={index} className="dashed-line" />
 								))}
-								<IconDestination />
+								<Flex className="icon-destination" />
 							</Flex>
 							<Flex className="inputs-container" order={2}>
 								<input
