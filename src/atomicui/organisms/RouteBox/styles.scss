@@ -190,8 +190,21 @@
 			.marker-container {
 				margin: 0.5rem 0;
 
+				.icon-my-location {
+					background: url("/src/assets/svgs/icon-my-location.svg") center center no-repeat;
+					background-size: contain;
+					width: 16px;
+					height: 16px;
+				}
 				.dashed-line {
 					height: 3px;
+				}
+
+				.icon-destination {
+					background: url("/src/assets/svgs/icon-destination.svg") center center no-repeat;
+					background-size: contain;
+					width: 16px;
+					height: 16px;
 				}
 			}
 		}
@@ -201,7 +214,9 @@
 			flex-direction: column;
 			align-items: center;
 
-			svg {
+			.icon-my-location {
+				background: url("/src/assets/svgs/icon-my-location.svg") center center no-repeat;
+				background-size: contain;
 				width: 16px;
 				height: 16px;
 			}
@@ -212,6 +227,13 @@
 				height: 6px;
 				background-color: var(--grey-color-1);
 				margin: 2px 0px;
+			}
+
+			.icon-destination {
+				background: url("/src/assets/svgs/icon-destination.svg") center center no-repeat;
+				background-size: contain;
+				width: 16px;
+				height: 16px;
 			}
 		}
 
