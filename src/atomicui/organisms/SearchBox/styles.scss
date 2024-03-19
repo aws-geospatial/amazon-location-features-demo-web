@@ -316,9 +316,11 @@ input.amplify-input.amplify-field-group__control {
 }
 
 .inner-end-component {
-	svg {
-		fill: var(--grey-light-color);
-		outline: none;
+	.icon-search {
+		background: url("/src/assets/svgs/icon-search-gray.svg") center center no-repeat;
+		background-size: contain;
+		width: 1.53rem;
+		height: 1.85rem;
 	}
 
 	&.simple-search {
