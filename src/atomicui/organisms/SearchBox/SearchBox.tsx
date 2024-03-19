@@ -15,7 +15,7 @@ import {
 	View
 } from "@aws-amplify/ui-react";
 import { PlaceGeometry } from "@aws-sdk/client-location";
-import { IconActionMenu, IconClose, IconDirections, IconSearch } from "@demo/assets/svgs";
+import { IconActionMenu, IconClose, IconDirections } from "@demo/assets/svgs";
 import { NLSearchLoader } from "@demo/atomicui/atoms";
 import { InputField, Marker, NotFoundCard, SuggestionMarker } from "@demo/atomicui/molecules";
 import { appConfig } from "@demo/core/constants";
@@ -477,7 +477,7 @@ const SearchBox: FC<SearchBoxProps> = ({
 												alignItems="center"
 												margin="0 0.3rem 0 0.8rem"
 											>
-												<IconSearch data-tooltip-content={t("search.text")} width="1.53rem" />
+												<Flex className="icon-search" data-tooltip-content={t("search.text")} />
 											</Flex>
 										}
 										innerEndComponent={
@@ -732,7 +732,8 @@ const SearchBox: FC<SearchBoxProps> = ({
 										<Flex className="inner-end-components">
 											<>
 												<Flex className="icon inner-end-component" onClick={onSearch}>
-													<IconSearch
+													<Flex
+														className="icon-search"
 														data-tooltip-id="search-button"
 														data-tooltip-place="bottom"
 														data-tooltip-content={t("search.text")}

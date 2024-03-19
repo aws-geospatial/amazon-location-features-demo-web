@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { ChangeEvent, FC, MutableRefObject, lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ChangeEvent, FC, MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button, Card, CheckboxField, Flex, Text, View } from "@aws-amplify/ui-react";
 import { CalculateRouteRequest, Place } from "@aws-sdk/client-location";
@@ -20,6 +20,7 @@ import {
 	IconTruckSolid,
 	IconWalking
 } from "@demo/assets/svgs";
+import { NotFoundCard, StepCard } from "@demo/atomicui/molecules";
 import { appConfig } from "@demo/core/constants";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useAmplifyMap, useAwsPlace, useAwsRoute, usePersistedData } from "@demo/hooks";
@@ -46,10 +47,10 @@ import { RefHandles } from "react-spring-bottom-sheet/dist/types";
 import { Tooltip } from "react-tooltip";
 import "./styles.scss";
 
-const NotFoundCard = lazy(() =>
-	import("@demo/atomicui/molecules/NotFoundCard").then(module => ({ default: module.NotFoundCard }))
-);
-const StepCard = lazy(() => import("@demo/atomicui/molecules/StepCard").then(module => ({ default: module.StepCard })));
+// const NotFoundCard = lazy(() =>
+// 	import("@demo/atomicui/molecules/NotFoundCard").then(module => ({ default: module.NotFoundCard }))
+// );
+// const StepCard = lazy(() => import("@demo/atomicui/molecules/StepCard").then(module => ({ default: module.StepCard })));
 
 const { METRIC } = MapUnitEnum;
 const { KILOMETERS, MILES } = DistanceUnitEnum;
