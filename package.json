@@ -37,14 +37,14 @@
 		"translate-content-update": "cd extra/translation-script-content && npm install && node update-translation.js && cd ../../"
 	},
 	"dependencies": {
-		"@aws-amplify/ui-react": "3.6.1",
+		"@aws-amplify/ui-react": "6.1.6",
 		"@aws-sdk/client-cognito-identity": "3.496.0",
 		"@aws-sdk/client-iot": "3.496.0",
 		"@aws-sdk/client-location": "3.496.0",
 		"@aws-sdk/client-pinpoint": "3.496.0",
 		"@aws-sdk/credential-providers": "3.370.0",
 		"@turf/turf": "6.5.0",
-		"aws-amplify": "4.3.43",
+		"aws-amplify": "6.0.21",
 		"date-fns": "2.29.3",
 		"i18next": "23.2.8",
 		"i18next-browser-languagedetector": "7.1.0",
