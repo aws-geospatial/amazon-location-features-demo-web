@@ -59,7 +59,7 @@ describe("Geofence", () => {
 		cy.get('[class="amplify-flex geofence-button"]').click();
 		cy.get('[placeholder="Enter address or coordinates"]').type("Rio Tinto Perth Western Australia");
 		cy.wait(4000);
-		cy.contains("Rio Tinto Operations Centre").click();
+		cy.contains("Rio Tinto").click();
 		cy.wait(5000);
 		cy.get('[placeholder="Type unique Geofence Name"]').type(`${geofenceName}`);
 		cy.wait(5000);
