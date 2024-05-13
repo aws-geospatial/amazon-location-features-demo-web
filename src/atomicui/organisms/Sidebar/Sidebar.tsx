@@ -252,7 +252,7 @@ const Sidebar: FC<SidebarProps> = ({
 					</Button>
 				)}
 				<Button
-					data-testid="connect-aws-account-button"
+					data-testid="provide-feedback-button"
 					variation="primary"
 					fontFamily="AmazonEmber-Bold"
 					textAlign="center"
