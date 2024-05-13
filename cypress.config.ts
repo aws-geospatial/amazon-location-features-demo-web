@@ -1,6 +1,6 @@
 import { defineConfig } from "cypress";
 import { cypressBrowserPermissionsPlugin } from "cypress-browser-permissions";
-import { beforeRunHook, afterRunHook } from "cypress-mochawesome-reporter/lib";
+import { afterRunHook, beforeRunHook } from "cypress-mochawesome-reporter/lib";
 
 export default defineConfig({
 	viewportWidth: 1024,
