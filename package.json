@@ -59,7 +59,8 @@
 		"react-spring-bottom-sheet": "3.5.0-alpha.0",
 		"react-toastify": "9.1.1",
 		"react-tooltip": "5.10.0",
-		"zustand": "4.3.9"
+		"zustand": "4.3.9",
+		"cypress-mochawesome-reporter": "3.8.2"
 	},
 	"devDependencies": {
 		"@faker-js/faker": "7.6.0",

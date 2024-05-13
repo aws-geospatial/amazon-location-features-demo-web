@@ -18,6 +18,7 @@ build
 coverage
 cypress/screenshots
 cypress/videos
+cypress/reports
 allure-report
 allure-results
 
