@@ -6,7 +6,7 @@ describe("Connecting and Disconnecting AWS account", () => {
 		beforeEach(() => {
 			cy.visitDomain(`${Cypress.env("WEB_DOMAIN")}/demo`);
 			cy.get('[data-testid="hamburger-menu"]').click();
-			cy.get('[data-testid="connect-aws-account-button"]').first().click();
+			cy.get('[data-testid="connect-aws-account-button"]').click();
 			cy.wait(5000);
 			cy.get('[placeholder="Enter IdentityPoolId"]').type(`${Cypress.env("IDENTITY_POOL_ID")}`);
 			cy.get('[placeholder="Enter UserDomain"]').type(`${Cypress.env("USER_DOMAIN")}`);
@@ -80,7 +80,7 @@ describe("Connecting and Disconnecting AWS account", () => {
 		beforeEach(() => {
 			cy.visitDomainInResponsiveView(`${Cypress.env("WEB_DOMAIN")}/demo`);
 			cy.openResponsiveMenu('[data-testid="bottomsheet"]');
-			cy.get('[data-testid="connect-aws-account-button"]').first().click();
+			cy.get('[data-testid="connect-aws-account-button"]').click();
 			cy.wait(5000);
 			cy.get('[placeholder="Enter IdentityPoolId"]').type(`${Cypress.env("IDENTITY_POOL_ID")}`);
 			cy.get('[placeholder="Enter UserDomain"]').type(`${Cypress.env("USER_DOMAIN")}`);
