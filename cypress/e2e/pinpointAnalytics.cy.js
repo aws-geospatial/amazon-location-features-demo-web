@@ -1,13 +1,18 @@
+/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
+/* SPDX-License-Identifier: MIT-0 */
+
+import { Viewport } from "../support/constants";
+
 describe("Should record user events correctly", () => {
 	context("Desktop view", () => {
 		beforeEach(() => {
 			cy.visitDomain(`${Cypress.env("WEB_DOMAIN")}/demo`);
 		});
-	
+
 		it("PPA-001 - should successfully send correct user event to pinpoint", () => {
-			cy.sendCorrectEventToPinpoint(false);
+			cy.sendCorrectEventToPinpoint(Viewport.DESKTOP);
 		});
-	
+
 		it("PPA-002 - should successfully create correct endpoint with the correct event to correct pinpoint application", () => {
 			cy.getAllLocalStorage().then(result => {
 				const analyticsEndpointId = result[`${Cypress.env("WEB_DOMAIN")}`]["amazon-location_analyticsEndpointId"];
@@ -20,7 +25,7 @@ describe("Should record user events correctly", () => {
 					}
 				}).then(result => {
 					cy.task("log", { result });
-	
+
 					if (result.stdout) {
 						const response = JSON.parse(result.stdout);
 						expect(response["$metadata"]["httpStatusCode"]).to.equal(200);
@@ -36,9 +41,9 @@ describe("Should record user events correctly", () => {
 		beforeEach(() => {
 			cy.visitDomainInResponsiveView(`${Cypress.env("WEB_DOMAIN")}/demo`);
 		});
-	
+
 		it("PPA-003 - should successfully send correct user event to pinpoint", () => {
-			cy.sendCorrectEventToPinpoint(true);
+			cy.sendCorrectEventToPinpoint(Viewport.RESPONSIVE);
 		});
 	});
 });

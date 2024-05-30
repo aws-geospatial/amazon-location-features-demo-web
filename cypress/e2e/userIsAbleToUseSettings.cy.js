@@ -1,6 +1,8 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
+import { Viewport } from "../support/constants";
+
 describe("Settings", () => {
 	context("Desktop view", () => {
 		beforeEach(() => {
@@ -8,19 +10,19 @@ describe("Settings", () => {
 			cy.get('[data-testid="hamburger-menu"]').click();
 			cy.contains("Settings").click();
 		});
-	
+
 		it("ST-001 - should allow user toggle default units for map", { scrollBehavior: false }, () => {
-			cy.toggleDefaultUnitsForMap(false);
+			cy.toggleDefaultUnitsForMap(Viewport.DESKTOP);
 		});
-	
+
 		it("ST-002 - should allow user to select map data provider", { scrollBehavior: false }, () => {
 			cy.selectMapDataProvider();
 		});
-	
+
 		it("ST-003 - should allow user to select map style", { scrollBehavior: false }, () => {
-			cy.selectMapStyle(false);
+			cy.selectMapStyle(Viewport.DESKTOP);
 		});
-	
+
 		it("ST-004 - should allow user to set default route options from settings", { scrollBehavior: false }, () => {
 			cy.checkDefaultRouteOptions();
 		});
@@ -32,19 +34,19 @@ describe("Settings", () => {
 			cy.openResponsiveMenu('[data-testid="bottomsheet"]');
 			cy.contains("Settings").click();
 		});
-	
+
 		it("ST-005 - should allow user toggle default units for map", { scrollBehavior: false }, () => {
-			cy.toggleDefaultUnitsForMap(true);
+			cy.toggleDefaultUnitsForMap(Viewport.RESPONSIVE);
 		});
-	
+
 		it("ST-006 - should allow user to select map data provider", { scrollBehavior: false }, () => {
 			cy.selectMapDataProvider();
 		});
-	
+
 		it("ST-007 - should allow user to select map style", { scrollBehavior: false }, () => {
-			cy.selectMapStyle(true);
+			cy.selectMapStyle(Viewport.RESPONSIVE);
 		});
-	
+
 		it("ST-008 - should allow user to set default route options from settings", { scrollBehavior: false }, () => {
 			cy.checkDefaultRouteOptions();
 		});
