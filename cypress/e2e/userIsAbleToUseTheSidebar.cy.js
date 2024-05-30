@@ -3,7 +3,7 @@
 
 describe("Sidebar", () => {
 	context("Desktop view", () => {
-		it("should allow user to access the sidebar via hamburger menu", { scrollBehavior: false }, () => {
+		it("SB-001 - should allow user to access the sidebar via hamburger menu", { scrollBehavior: false }, () => {
 			cy.visitDomain(`${Cypress.env("WEB_DOMAIN")}/demo`);
 			cy.get('[data-testid="hamburger-menu"]').click();
 			cy.get("div").should("contain", "Demo")
@@ -16,7 +16,7 @@ describe("Sidebar", () => {
 	});
 
 	context("Responsive view", () => {
-		it("should allow user to access the Bottom Sheet (sidebar) in responsive menu", { scrollBehavior: false }, () => {
+		it("SB-002 - should allow user to access the Bottom Sheet (sidebar) in responsive menu", { scrollBehavior: false }, () => {
 			cy.visitDomainInResponsiveView(`${Cypress.env("WEB_DOMAIN")}/demo`);
 			cy.openResponsiveMenu('[data-testid="bottomsheet"]');
 			cy.get('[data-testid="explore-button-container-Map style"]').should("contain", "Map style");

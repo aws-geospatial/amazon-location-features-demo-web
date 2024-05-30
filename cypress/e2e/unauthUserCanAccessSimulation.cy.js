@@ -7,33 +7,8 @@ describe("Unauth Simulation", () => {
 			cy.visitDomain(`${Cypress.env("WEB_DOMAIN")}/demo`);
 		});
 	
-		it("should allow user to use unauth simulation", () => {
-			cy.get('[data-testid="hamburger-menu"]').click();
-			cy.wait(2000);
-			cy.contains("Geofence").click();
-			cy.wait(2000);
-			cy.get('[data-testid="unauth-simulation-cta"]').click();
-			cy.wait(2000);
-			cy.get('[data-testid="start-simulation-btn"]').click();
-			cy.wait(2000);
-			cy.get(
-				'[class="Toastify__toast Toastify__toast-theme--dark Toastify__toast--info Toastify__toast--close-on-click enter-geofence"]',
-				{ timeout: 20000 }
-			)
-				.should("be.visible")
-				.click({ multiple: true, force: true });
-			cy.get(
-				'[class="Toastify__toast Toastify__toast-theme--dark Toastify__toast--info Toastify__toast--close-on-click exit-geofence"]',
-				{ timeout: 20000 }
-			)
-				.should("be.visible")
-				.click({ multiple: true, force: true });
-			cy.wait(2000);
-			cy.get('[data-testid="pause-button"]').click();
-			cy.wait(2000);
-			cy.get('[data-testid="unauth-simulation-back-arrow"]').click();
-			cy.wait(2000);
-			cy.get('[data-testid="confirmation-cancel-button"]').click();
+		it("US-001 - should allow user to use unauth simulation", () => {
+			cy.useUnauthSimulation(false)
 		});
 	});
 
@@ -42,32 +17,8 @@ describe("Unauth Simulation", () => {
 			cy.visitDomainInResponsiveView(`${Cypress.env("WEB_DOMAIN")}/demo`);
 		});
 	
-		it("should allow user to use unauth simulation", () => {
-			cy.openResponsiveMenu('[data-testid="bottomsheet"]');
-			cy.contains("Geofence").click();
-			cy.wait(2000);
-			cy.get('[data-testid="unauth-simulation-cta"]').click();
-			cy.wait(2000);
-			cy.get('[data-testid="start-simulation-btn"]').click();
-			cy.wait(2000);
-			cy.get(
-				'[class="Toastify__toast Toastify__toast-theme--dark Toastify__toast--info Toastify__toast--close-on-click enter-geofence"]',
-				{ timeout: 20000 }
-			)
-				.should("be.visible")
-				.click({ multiple: true, force: true });
-			cy.get(
-				'[class="Toastify__toast Toastify__toast-theme--dark Toastify__toast--info Toastify__toast--close-on-click exit-geofence"]',
-				{ timeout: 20000 }
-			)
-				.should("be.visible")
-				.click({ multiple: true, force: true });
-			cy.wait(2000);
-			cy.get('[data-testid="pause-button"]').click();
-			cy.wait(2000);
-			cy.get('[data-testid="bottomsheet-header-close-icon"]').click();
-			cy.wait(2000);
-			cy.get('[data-testid="confirmation-cancel-button"]').click();
+		it("US-002 - should allow user to use unauth simulation", () => {
+			cy.useUnauthSimulation(true)
 		});
 	});
 });

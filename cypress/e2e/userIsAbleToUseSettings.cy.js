@@ -9,30 +9,20 @@ describe("Settings", () => {
 			cy.contains("Settings").click();
 		});
 	
-		it("should allow user toggle default units for map", { scrollBehavior: false }, () => {
-			cy.get('[data-testid="option-item-Units"]').click();
-			cy.get('[data-testid="unit-imperial-radio"]').click({ force: true });
-			cy.get('[data-testid="option-item-Units"]').contains("Imperial");
+		it("ST-001 - should allow user toggle default units for map", { scrollBehavior: false }, () => {
+			cy.toggleDefaultUnitsForMap(false);
 		});
 	
-		it("should allow user to select map data provider", { scrollBehavior: false }, () => {
-			cy.get('[data-testid="option-item-Data provider"]').click();
-			cy.get('[data-testid="option-details-container"]').contains("Esri");
-			cy.get('[data-testid="option-details-container"]').contains("HERE");
-			cy.get('[data-testid="option-details-container"]').contains("GrabMaps");
-			cy.get('[data-testid="option-details-container"]').contains("OpenData");
+		it("ST-002 - should allow user to select map data provider", { scrollBehavior: false }, () => {
+			cy.selectMapDataProvider();
 		});
 	
-		it("should allow user to select map style", { scrollBehavior: false }, () => {
-			cy.get('[data-testid="option-item-Map style"]').click();
-			cy.contains("Streets").click();
-			cy.get('[data-testid="option-item-Map style"]').contains("Streets");
+		it("ST-003 - should allow user to select map style", { scrollBehavior: false }, () => {
+			cy.selectMapStyle(false);
 		});
 	
-		it("should allow user to set default route options from settings", { scrollBehavior: false }, () => {
-			cy.get('[data-testid="option-item-Default route options"]').click();
-			cy.get("div").should("contain", "Avoid tolls");
-			cy.get("div").should("contain", "Avoid ferries");
+		it("ST-004 - should allow user to set default route options from settings", { scrollBehavior: false }, () => {
+			cy.checkDefaultRouteOptions();
 		});
 	});
 
@@ -43,32 +33,20 @@ describe("Settings", () => {
 			cy.contains("Settings").click();
 		});
 	
-		it("should allow user toggle default units for map", { scrollBehavior: false }, () => {
-			cy.get('[data-testid="option-item-Units"]').click();
-			cy.get('[data-testid="unit-imperial-radio"]').click({ force: true });
-			cy.get('[class="grey-icon back-arrow"]').click();
-			cy.get('[data-testid="option-item-Units"]').contains("Imperial");
+		it("ST-005 - should allow user toggle default units for map", { scrollBehavior: false }, () => {
+			cy.toggleDefaultUnitsForMap(true);
 		});
 	
-		it("should allow user to select map data provider", { scrollBehavior: false }, () => {
-			cy.get('[data-testid="option-item-Data provider"]').click();
-			cy.get('[data-testid="option-details-container"]').contains("Esri");
-			cy.get('[data-testid="option-details-container"]').contains("HERE");
-			cy.get('[data-testid="option-details-container"]').contains("GrabMaps");
-			cy.get('[data-testid="option-details-container"]').contains("OpenData");
+		it("ST-006 - should allow user to select map data provider", { scrollBehavior: false }, () => {
+			cy.selectMapDataProvider();
 		});
 	
-		it("should allow user to select map style", { scrollBehavior: false }, () => {
-			cy.get('[data-testid="option-item-Map style"]').click();
-			cy.contains("Streets").click();
-			cy.get('[class="grey-icon back-arrow"]').click();
-			cy.get('[data-testid="option-item-Map style"]').contains("Streets");
+		it("ST-007 - should allow user to select map style", { scrollBehavior: false }, () => {
+			cy.selectMapStyle(true);
 		});
 	
-		it("should allow user to set default route options from settings", { scrollBehavior: false }, () => {
-			cy.get('[data-testid="option-item-Default route options"]').click();
-			cy.get("div").should("contain", "Avoid tolls");
-			cy.get("div").should("contain", "Avoid ferries");
+		it("ST-008 - should allow user to set default route options from settings", { scrollBehavior: false }, () => {
+			cy.checkDefaultRouteOptions();
 		});
 	});
 });

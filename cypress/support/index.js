@@ -2,3 +2,7 @@
 /* SPDX-License-Identifier: MIT-0 */
 
 import "./commands";
+import "./routeSupport";
+import "./settingSupport";
+import "./trackerAndGeofenceSupport";
+import "./MapDataAndStylesShortcutSupport";
