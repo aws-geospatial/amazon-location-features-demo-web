@@ -15,7 +15,7 @@ describe("Unauthorized users have limited permissions", () => {
 	context("Responsive view", () => {
 		it("UULP-002 - shouldn't allow unauth users to use tracker and geofence", { scrollBehavior: false }, () => {
 			cy.visitDomainInResponsiveView(`${Cypress.env("WEB_DOMAIN")}/demo`);
-			cy.openResponsiveMenu('[data-testid="bottomsheet"]')
+			cy.openResponsiveMenu('[data-testid="bottomsheet"]');
 			cy.get(awsAccountButtonLocator).should("exist");
 		});
 	});
