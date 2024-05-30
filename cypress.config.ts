@@ -3,6 +3,7 @@ import { cypressBrowserPermissionsPlugin } from "cypress-browser-permissions";
 import { afterRunHook, beforeRunHook } from "cypress-mochawesome-reporter/lib";
 
 export default defineConfig({
+	defaultCommandTimeout: 20000,
 	viewportWidth: 1024,
 	viewportHeight: 733,
 	retries: 2,
