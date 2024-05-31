@@ -369,11 +369,12 @@ const MapButtons: FC<MapButtonsProps> = ({
 			// Filter styles based on keyword and selected filters
 			const filteredGroup = styles.filter(item => {
 				const { filters, name } = item as MapStyle;
+
 				const matchesKeyword =
 					filters.provider.toLowerCase().includes(lowerCaseKeyword) ||
 					filters.attribute.some(attr => attr.toLowerCase().includes(lowerCaseKeyword)) ||
 					filters.type.some(type => type.toLowerCase().includes(lowerCaseKeyword)) ||
-					name.toLowerCase().includes(lowerCaseKeyword);
+					t(name).toLowerCase().includes(lowerCaseKeyword);
 
 				const matchesFilters =
 					(selectedFilters.Providers.length === 0 || selectedFilters.Providers.includes(filters.provider)) &&

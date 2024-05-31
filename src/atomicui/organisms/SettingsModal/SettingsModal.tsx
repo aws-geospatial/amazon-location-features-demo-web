@@ -401,7 +401,7 @@ const SettingsModal: FC<SettingsModalProps> = ({
 						data-testid={`${SettingOptionEnum.MAP_STYLE}-details-component`}
 						gap={0}
 						direction="column"
-						overflow="scroll"
+						overflow="hidden scroll"
 					>
 						{mapButtons}
 					</Flex>
@@ -418,7 +418,7 @@ const SettingsModal: FC<SettingsModalProps> = ({
 						gap={0}
 						direction="column"
 						padding="0rem 1.15rem"
-						overflow="scroll"
+						overflow="hidden scroll"
 						className="language-switcher-container"
 					>
 						{languageSwitcherData.map(({ value, label }, idx) => (
