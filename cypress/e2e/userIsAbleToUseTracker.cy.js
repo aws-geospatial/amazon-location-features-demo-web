@@ -5,10 +5,10 @@ import { faker } from "@faker-js/faker";
 
 import { Viewport } from "../support/constants";
 
-const geofenceName = faker.random.word();
-
 describe("Tracker", () => {
 	context("Desktop view", () => {
+		const geofenceName = faker.random.word();
+
 		beforeEach(() => {
 			cy.visitDomain(`${Cypress.env("WEB_DOMAIN")}/demo`);
 			cy.connectAwsAccount(Viewport.DESKTOP);
@@ -20,6 +20,8 @@ describe("Tracker", () => {
 	});
 
 	context("Responsive view", () => {
+		const geofenceName = faker.random.word();
+
 		beforeEach(() => {
 			cy.visitDomainInResponsiveView(`${Cypress.env("WEB_DOMAIN")}/demo`);
 			cy.connectAwsAccount(Viewport.RESPONSIVE);
