@@ -1,4 +1,5 @@
 Cypress.Commands.add("searchRouteAndSelectCurrentLocation", () => {
+	cy.wait(20000);
 	cy.get('[placeholder="From"]').click();
 	cy.get("div").should("contain", "Current location");
 	cy.get('[placeholder="From"]').type("Empire State Building", { delay: 200 });
@@ -16,6 +17,7 @@ Cypress.Commands.add("swapDepartureAndDestinationAddresses", () => {
 	cy.wait(2000);
 	cy.get('[placeholder="To"]').click().type("Gramercy Park", { delay: 200 });
 	cy.contains("Gramercy Park").click({ force: true });
+	cy.wait(10000);
 	cy.get('[class="mapboxgl-marker mapboxgl-marker-anchor-center"]').eq(0).should("be.visible");
 	cy.get('[class="mapboxgl-marker mapboxgl-marker-anchor-center"]').eq(1).should("be.visible");
 	cy.get('[class="amplify-flex swap-icon-container"]').click();
