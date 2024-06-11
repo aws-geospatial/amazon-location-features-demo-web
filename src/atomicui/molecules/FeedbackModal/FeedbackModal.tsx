@@ -18,7 +18,6 @@ import "./styles.scss";
 const feedbackCategories = [
 	{ id: "General", label: "General" },
 	{ id: "Places", label: "Places" },
-	{ id: "NaturalLanguageSearch", label: "Natural Language Search" },
 	{ id: "Maps", label: "Maps" },
 	{ id: "Routes", label: "Routes" },
 	{ id: "TrackingGeofencing", label: "Tracking & Geofencing" }
