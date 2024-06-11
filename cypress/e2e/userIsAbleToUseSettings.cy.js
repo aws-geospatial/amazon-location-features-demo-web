@@ -1,40 +1,54 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
+import { Viewport } from "../support/constants";
+
 describe("Settings", () => {
-	beforeEach(() => {
-		cy.visitDomain(`${Cypress.env("WEB_DOMAIN")}/demo`);
-		cy.get('[data-testid="hamburger-menu"]').click();
-		cy.contains("Settings").click();
+	context("Desktop view", () => {
+		beforeEach(() => {
+			cy.visitDomain(`${Cypress.env("WEB_DOMAIN")}/demo`);
+			cy.get('[data-testid="hamburger-menu"]').click();
+			cy.contains("Settings").click();
+		});
+
+		it("ST-001 - should allow user toggle default units for map", { scrollBehavior: false }, () => {
+			cy.toggleDefaultUnitsForMap(Viewport.DESKTOP);
+		});
+
+		it("ST-002 - should allow user to select map data provider", { scrollBehavior: false }, () => {
+			cy.selectMapDataProvider();
+		});
+
+		it("ST-003 - should allow user to select map style", { scrollBehavior: false }, () => {
+			cy.selectMapStyle(Viewport.DESKTOP);
+		});
+
+		it("ST-004 - should allow user to set default route options from settings", { scrollBehavior: false }, () => {
+			cy.checkDefaultRouteOptions();
+		});
 	});
 
-	it("should allow user toggle default units for map", { scrollBehavior: false }, () => {
-		cy.get('[data-testid="option-item-Units"]').click();
-		cy.get('[data-testid="unit-imperial-radio"]').click({ force: true });
-		cy.get('[data-testid="option-item-Units"]').contains("Imperial");
-	});
+	context("Responsive view", () => {
+		beforeEach(() => {
+			cy.visitDomainInResponsiveView(`${Cypress.env("WEB_DOMAIN")}/demo`);
+			cy.openResponsiveMenu('[data-testid="bottomsheet"]');
+			cy.contains("Settings").click();
+		});
 
-	it.only("should allow user to select map data provider", { scrollBehavior: false }, () => {
-		cy.get('[data-testid="option-item-Data provider"]').click();
-		cy.get('[class="amplify-flex option-details-container"]').contains("Esri");
-		cy.get('[class="amplify-flex option-details-container"]').contains("HERE");
-		cy.get('[class="amplify-flex option-details-container"]').contains("GrabMaps");
-		cy.get('[class="amplify-flex option-details-container"]').contains("OpenData");
-		// cy.get('[data-testid="option-details-container"]').contains("Esri");
-		// cy.get('[data-testid="option-details-container"]').contains("HERE");
-		// cy.get('[data-testid="option-details-container"]').contains("GrabMaps");
-		// cy.get('[data-testid="option-details-container"]').contains("OpenData");
-	});
+		it("ST-005 - should allow user toggle default units for map", { scrollBehavior: false }, () => {
+			cy.toggleDefaultUnitsForMap(Viewport.RESPONSIVE);
+		});
 
-	it("should allow user to select map style", { scrollBehavior: false }, () => {
-		cy.get('[data-testid="option-item-Map style"]').click();
-		cy.contains("Streets").click();
-		cy.get('[data-testid="option-item-Map style"]').contains("Streets");
-	});
+		it("ST-006 - should allow user to select map data provider", { scrollBehavior: false }, () => {
+			cy.selectMapDataProvider();
+		});
 
-	it("should allow user to set default route options from settings", { scrollBehavior: false }, () => {
-		cy.get('[data-testid="option-item-Default route options"]').click();
-		cy.get("div").should("contain", "Avoid tolls");
-		cy.get("div").should("contain", "Avoid ferries");
+		it("ST-007 - should allow user to select map style", { scrollBehavior: false }, () => {
+			cy.selectMapStyle(Viewport.RESPONSIVE);
+		});
+
+		it("ST-008 - should allow user to set default route options from settings", { scrollBehavior: false }, () => {
+			cy.checkDefaultRouteOptions();
+		});
 	});
 });
