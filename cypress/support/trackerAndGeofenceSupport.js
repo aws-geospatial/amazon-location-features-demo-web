@@ -5,6 +5,7 @@ Cypress.Commands.add("addTrackerAndGeofenceEnterExit", (isResponsive, geofenceNa
 	} else {
 		cy.get('[class="amplify-flex geofence-button"]').click();
 	}
+	cy.wait(5000);
 	cy.get('[placeholder="Enter address or coordinates"]').type("Empire State Building", { delay: 200 });
 	cy.wait(5000);
 	cy.contains("Empire State Building").click();
@@ -75,6 +76,7 @@ Cypress.Commands.add("addEditAndDeleteGeofence", (isResponsive, geofenceName) =>
 		cy.get('[class="amplify-flex geofence-button"]').click();
 		cy.get('[class="amplify-loader"]').should("not.exist");
 	}
+	cy.wait(4000);
 	cy.get('[placeholder="Enter address or coordinates"]').type("Rio Tinto Perth Western Australia", { delay: 200 });
 	cy.wait(4000);
 	isResponsive ? cy.get('[class="amplify-flex suggestion border-top"]').click() : cy.contains("Rio Tinto").click();
