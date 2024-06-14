@@ -378,6 +378,8 @@ Resources:
   AmazonLocationDemoKinesisStream:
     Condition: EnablePinTranslate
     Type: AWS::Kinesis::Stream
+    DeletionPolicy: RetainExceptOnCreate
+    UpdateReplacePolicy: Retain
     Properties:
       Name: location.aws.com.demo.app
       RetentionPeriodHours: 24
