@@ -868,65 +868,67 @@ Resources:
           from pip._internal import main
 
           main(['install', '-I', '-q', 'boto3', '--target', '/tmp/', '--no-cache-dir', '--disable-pip-version-check'])
-          sys.path.insert(0,'/tmp/')                        
+          sys.path.insert(0, '/tmp/')
           import json, boto3
           import urllib.request
           import cfnresponse
+
+          def delete_geofences(client, routes):
+              for route in routes:
+                  collectionName = ('location.aws.com.demo.geofences.' + route['geofenceCollection'])
+                  try:
+                      client.delete_geofence_collection(CollectionName=collectionName)
+                  except client.exceptions.ResourceNotFoundException:
+                      pass  # If the collection does not exist, continue
 
           def lambda_handler(event, context):
               client = boto3.client("location")
               geojson_url = "https://amazon-location-resources-setup.s3.amazonaws.com/BusRoutesData/busRoutesData.json"
               with urllib.request.urlopen(geojson_url) as response:
                   data = json.load(response)
-              routes = data['busRoutesData']                
+              routes = data['busRoutesData']
 
-              if event['RequestType'] == "Create":
-                for route in routes:
-                    id = route['id']
-                    collectionName = ('location.aws.com.demo.geofences.' + route['geofenceCollection'])
-                    geofence_collection = client.create_geofence_collection(
-                        CollectionName=collectionName,
-                        Description="You created this resource by running Amazon Location Demo's CloudFormation template."
-                    )
-                    
-                    for i in route['stopCoordinates']:
-                        coordinates = i['geometry']['coordinates']
-                        stopName = i['properties']['stop_name']
-                        geo_id = (id + '-' + str(i['id']))
-                        geofence_data = client.batch_put_geofence(
-                        CollectionName=collectionName,
-                        Entries=[
-                            {
-                                'GeofenceId': geo_id,
-                                'GeofenceProperties': { 
-                                        'stop_name' : stopName 
+              if event['RequestType'] in ["Create", "Update"]:
+                  # On Update, first delete the existing geofences if any
+                  if event['RequestType'] == "Update":
+                      delete_geofences(client, routes)
+                  
+                  # Create or recreate geofences
+                  for route in routes:
+                      id = route['id']
+                      collectionName = ('location.aws.com.demo.geofences.' + route['geofenceCollection'])
+                      client.create_geofence_collection(CollectionName=collectionName, Description="You created this resource by running Amazon Location Demo's CloudFormation template.")
+                      
+                      for i in route['stopCoordinates']:
+                          coordinates = i['geometry']['coordinates']
+                          stopName = i['properties']['stop_name']
+                          geo_id = (id + '-' + str(i['id']))
+                          client.batch_put_geofence(
+                              CollectionName=collectionName,
+                              Entries=[
+                                  {
+                                      'GeofenceId': geo_id,
+                                      'GeofenceProperties': {
+                                          'stop_name': stopName
+                                      },
+                                      'Geometry': {
+                                          'Circle': {
+                                              'Center': coordinates,
+                                              'Radius': 200
+                                          }
+                                      }
                                   },
-                                'Geometry': {
-                                    'Circle': {
-                                        'Center': coordinates,
-                                        'Radius': 200
-                                    }
-                                    }
-                                },
-                            ]
-                        )
-                responseValue = 120
-                responseData = {}
-                responseData['Data'] = responseValue
-                cfnresponse.send(event, context, cfnresponse.SUCCESS, 
-                  responseData, 'AmazonLocationDemoGeofenceCreator')                        
-              if event['RequestType'] == "Delete":
-                for route in routes:
-                    id = route['id']
-                    collectionName = ('location.aws.com.demo.geofences.' + route['geofenceCollection'])
-                    geofence_collection = client.delete_geofence_collection(
-                        CollectionName=collectionName
-                    )
-                responseValue = 120
-                responseData = {}
-                responseData['Data'] = responseValue
-                cfnresponse.send(event, context, cfnresponse.SUCCESS, 
-                  responseData, 'AmazonLocationDemoGeofenceCreator')
+                              ]
+                          )
+                  responseValue = 120
+                  responseData = {'Data': responseValue}
+                  cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData, 'AmazonLocationDemoGeofenceCreator')
+              
+              elif event['RequestType'] == "Delete":
+                  delete_geofences(client, routes)
+                  responseValue = 120
+                  responseData = {'Data': responseValue}
+                  cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData, 'AmazonLocationDemoGeofenceCreator')
 
       Handler: index.lambda_handler
       Role: !GetAtt [AmazonLocationGeoFenceLambdaExecutionRole, Arn]
