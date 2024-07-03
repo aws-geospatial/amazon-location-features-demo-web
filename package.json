@@ -107,6 +107,12 @@
 	"engines": {
 		"node": ">=14.x.x"
 	},
+	"overrides": {
+		"braces": "^3.0.3",
+		"lodash": "^4.17.21",
+		"minimist": "^1.2.8",
+		"underscore": "^1.12.1"
+	},
 	"jest": {
 		"moduleNameMapper": {
 			"^@demo/(.*)$": "<rootDir>/src/$1",
