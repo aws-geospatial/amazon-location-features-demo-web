@@ -157,6 +157,23 @@ Run all the test cases for all the components within the repo.
 
 Run all the test cases for all the components within the repo and provides a coverage report.
 
-## Licensing
+## Security
 
-- This project is licensed under the MIT-0 License. See [LICENSE](https://github.com/aws-samples/amazon-location-samples/blob/main/LICENSE).
+See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
+
+## Getting Help
+
+The best way to interact with our team is through GitHub.
+You can [open an issue](https://github.com/aws-geospatial/amazon-location-features-demo-web/issues/new) and choose from one of our templates for
+[bug reports](https://github.com/aws-geospatial/amazon-location-features-demo-web/issues/new?assignees=&labels=bug%2C+needs-triage&template=---bug-report.md&title=),
+[feature requests](https://github.com/aws-geospatial/amazon-location-features-demo-web/issues/new?assignees=&labels=feature-request&template=---feature-request.md&title=)
+or [guidance](https://github.com/aws-geospatial/amazon-location-features-demo-web/issues/new?assignees=&labels=guidance%2C+needs-triage&template=---questions---help.md&title=).
+If you have a support plan with [AWS Support](https://aws.amazon.com/premiumsupport/), you can also create a new support case.
+
+## Contributing
+
+We welcome community contributions and pull requests. See [CONTRIBUTING.md](CONTRIBUTING.md) for information on how to set up a development environment and submit code.
+
+## License
+
+This library is licensed under the MIT-0 License. See the [LICENSE](LICENSE) file.
