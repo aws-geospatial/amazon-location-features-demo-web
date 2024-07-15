@@ -1,4 +1,4 @@
-name: Unit_Tests
+name: Unit tests
 
 on:
   push:
@@ -8,21 +8,21 @@ on:
     branches: [main]
 
 jobs:
-  e2e-tests:
-    name: Unit-Testing
+  unit-tests:
+    name: Unit tests
     runs-on: ubuntu-20.04
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Node
+      - name: Setup node
         uses: actions/setup-node@v3
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: npm install
 
-      - name: Run Unit Tests
+      - name: Run unit tests
         env:
           VITE_PINPOINT_IDENTITY_POOL_ID: ${{ secrets.VITE_PINPOINT_IDENTITY_POOL_ID }}
           VITE_PINPOINT_APPLICATION_ID: ${{ secrets.VITE_PINPOINT_APPLICATION_ID }}
