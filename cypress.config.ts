@@ -4,9 +4,9 @@ import { afterRunHook, beforeRunHook } from "cypress-mochawesome-reporter/lib";
 
 export default defineConfig({
 	defaultCommandTimeout: 20000,
-	viewportWidth: 1024,
+	viewportWidth: 1440,
 	viewportHeight: 733,
-	retries: 2,
+	retries: 3,
 	video: false,
 	env: {
 		browserPermissions: {

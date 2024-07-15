@@ -16,7 +16,7 @@ Cypress.Commands.add("visitDomain", domain => {
 			  })
 			: cy.visit(domain);
 
-		cy.wait(20000);
+		cy.wait(10000);
 		cy.get('[data-testid="welcome-modal-continue-button"]').click();
 	}
 });

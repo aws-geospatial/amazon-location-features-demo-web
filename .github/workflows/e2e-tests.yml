@@ -1,4 +1,4 @@
-name: E2E_Tests
+name: E2E tests
 
 on:
   push:
@@ -9,23 +9,51 @@ on:
 
 jobs:
   e2e-tests:
-    name: E2E-Testing
+    name: E2E tests
     runs-on: ubuntu-20.04
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Node
+      - name: Setup node
         uses: actions/setup-node@v3
 
-      - name: Install Dependencies
-        run: npm install
+      - name: Create .env file
+        run: |
+          echo "VITE_AWS_COGNITO_IDENTITY_POOL_IDS=${{ secrets.VITE_AWS_COGNITO_IDENTITY_POOL_IDS }}" > .env
+          echo "VITE_AWS_WEB_SOCKET_URLS=${{ secrets.VITE_AWS_WEB_SOCKET_URLS }}" >> .env
+          echo "VITE_PINPOINT_IDENTITY_POOL_ID=${{ secrets.VITE_PINPOINT_IDENTITY_POOL_ID }}" >> .env
+          echo "VITE_PINPOINT_APPLICATION_ID=${{ secrets.VITE_PINPOINT_APPLICATION_ID }}" >> .env
+          echo "VITE_AWS_CF_TEMPLATE=${{ secrets.VITE_AWS_CF_TEMPLATE }}" >> .env
+          echo "VITE_APPLE_APP_STORE_LINK=${{ secrets.VITE_APPLE_APP_STORE_LINK }}" >> .env
+          echo "VITE_GOOGLE_PLAY_STORE_LINK=${{ secrets.VITE_GOOGLE_PLAY_STORE_LINK }}" >> .env
+          echo "VITE_DATA_FILES_URL=${{ secrets.VITE_DATA_FILES_URL }}" >> .env
+          echo "VITE_SAMPLES_LIST_FILENAME=${{ secrets.VITE_SAMPLES_LIST_FILENAME }}" >> .env
+          echo "VITE_APP_VERSION=${{ secrets.VITE_APP_VERSION }}" >> .env
+          echo "VITE_MIGRATE_FROM_GOOGLE_MAPS_PAGE=${{ secrets.VITE_MIGRATE_FROM_GOOGLE_MAPS_PAGE }}" >> .env
+          echo "VITE_MIGRATE_A_WEB_APP_PAGE=${{ secrets.VITE_MIGRATE_A_WEB_APP_PAGE }}" >> .env
+          echo "VITE_MIGRATE_AN_ANDROID_APP_PAGE=${{ secrets.VITE_MIGRATE_AN_ANDROID_APP_PAGE }}" >> .env
+          echo "VITE_MIGRATE_AN_IOS_APP_PAGE=${{ secrets.VITE_MIGRATE_AN_IOS_APP_PAGE }}" >> .env
+          echo "VITE_MIGRATE_A_WEB_SERVICE_PAGE=${{ secrets.VITE_MIGRATE_A_WEB_SERVICE_PAGE }}" >> .env
+          echo "VITE_PRICING_PAGE=${{ secrets.VITE_PRICING_PAGE }}" >> .env
+          echo "VITE_CUSTOM_ASSETS_URL=${{ secrets.VITE_CUSTOM_ASSETS_URL }}" >> .env
 
-      - name: Setup Cypress
-        run: npm install cypress --save-dev
+      - name: Clone the amazon-location-web-marketing repository
+        run: |
+          mkdir -p ../amazon-location-web-marketing-temp
+          git clone --branch main https://${{ secrets.GH_USERNAME }}:${{ secrets.GH_PAT }}@github.com/aws-geospatial/amazon-location-web-marketing.git ../amazon-location-web-marketing-temp
 
-      - name: Run Cypress test
+      - name: Create build
+        run: npm run create-build-with-demo-lib
+
+      - name: Run build
+        run: |
+          npm run start-build &
+          echo "Server started"
+          sleep 10
+
+      - name: Run cypress tests
         env:
           CYPRESS_WEB_DOMAIN: ${{ secrets.WEB_DOMAIN }}
           CYPRESS_WEB_DOMAIN_USERNAME: ${{ secrets.WEB_DOMAIN_USERNAME }}
@@ -40,3 +68,17 @@ jobs:
           PINPOINT_IDENTITY_POOL_ID: ${{ secrets.VITE_PINPOINT_IDENTITY_POOL_ID }}
           PINPOINT_APPLICATION_ID: ${{ secrets.VITE_PINPOINT_APPLICATION_ID }}
         run: npm run cypress
+
+      - name: Upload cypress report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-reports
+          path: cypress/reports
+
+      - name: Upload cypress screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
