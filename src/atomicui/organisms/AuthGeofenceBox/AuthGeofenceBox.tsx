@@ -37,7 +37,7 @@ import { record } from "@demo/utils/analyticsUtils";
 import { uuid } from "@demo/utils/uuid";
 import * as turf from "@turf/turf";
 import { useTranslation } from "react-i18next";
-import { Layer, LngLat, MapRef, Source } from "react-map-gl";
+import { Layer, MapRef, Source } from "react-map-gl";
 import { Tooltip } from "react-tooltip";
 import "./styles.scss";
 
@@ -55,7 +55,10 @@ const CircleDrawControl = lazy(() => import("./CircleDrawControl").then(module =
 const { IMPERIAL, METRIC } = MapUnitEnum;
 const { MILES, MILES_SHORT, FEET, FEET_SHORT, KILOMETERS, KILOMETERS_SHORT, METERS, METERS_SHORT } = DistanceUnitEnum;
 const {
-	MAP_RESOURCES: { MAX_BOUNDS }
+	MAP_RESOURCES: {
+		MAX_BOUNDS,
+		AMAZON_HQ: { US }
+	}
 } = appConfig;
 
 export interface AuthGeofenceBoxProps {
@@ -151,7 +154,14 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 	const handleSearch = useCallback(
 		async (value: string, exact = false) => {
 			if (value.length >= 3) {
-				const { lng: longitude, lat: latitude } = mapRef?.getCenter() as LngLat;
+				let longitude = US.longitude;
+				let latitude = US.latitude;
+
+				if (!!mapRef) {
+					const { lng, lat } = mapRef.getCenter();
+					longitude = lng;
+					latitude = lat;
+				}
 
 				if (timeoutIdRef.current) {
 					clearTimeout(timeoutIdRef.current);
