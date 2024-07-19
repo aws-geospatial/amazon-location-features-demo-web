@@ -7,6 +7,8 @@ describe("Route", () => {
 	context("Desktop view", () => {
 		beforeEach(() => {
 			cy.visitDomain(`${Cypress.env("WEB_DOMAIN")}/demo`);
+			cy.reload();
+			cy.wait(10000);
 			cy.get('[class="amplify-flex icon outter-end-component"]').click();
 			cy.wait(2000);
 		});
@@ -39,6 +41,8 @@ describe("Route", () => {
 	context("Responsive view", () => {
 		beforeEach(() => {
 			cy.visitDomainInResponsiveView(`${Cypress.env("WEB_DOMAIN")}/demo`);
+			cy.reload();
+			cy.wait(10000);
 			cy.get('[data-testid="explore-button-container-Routes"]').click();
 			cy.wait(2000);
 		});

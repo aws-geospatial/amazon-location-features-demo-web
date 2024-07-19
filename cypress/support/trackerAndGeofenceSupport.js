@@ -1,16 +1,38 @@
+Cypress.Commands.add("checkSignIn", isResponsive => {
+	cy.get("#root").then($root => {
+		if ($root.find('[data-testid="sign-in-button"]').length > 0) {
+			isResponsive
+				? cy.get('[data-testid="sign-in-button"]').first().click({ force: true })
+				: cy.get('[data-testid="sign-in-button"]').click();
+			cy.wait(15000);
+			isResponsive
+				? cy.get('[data-testid="explore-button-container-Geofences"]').click()
+				: cy.get('[class="amplify-flex geofence-button"]').click();
+			cy.wait(10000);
+		}
+	});
+});
+
 Cypress.Commands.add("addTrackerAndGeofenceEnterExit", (isResponsive, geofenceName) => {
 	if (isResponsive) {
 		cy.get('[data-testid="explore-button-container-Geofences"]').click();
-		cy.get('[data-testid="add-geofence-button-container-mobile"]', { timeout: 30000 }).click();
+		cy.wait(10000);
+		cy.checkSignIn(isResponsive);
+		cy.get('[data-testid="add-geofence-button-container-mobile"]').click();
 	} else {
 		cy.get('[class="amplify-flex geofence-button"]').click();
+		cy.wait(10000);
+		cy.checkSignIn(isResponsive);
 	}
-	cy.get('[placeholder="Enter address or coordinates"]', { timeout: 30000 }).type("Empire State Building", {
+	cy.wait(5000);
+	cy.get('[placeholder="Enter address or coordinates"]').type("Empire State Building", {
 		delay: 200
 	});
 	cy.wait(5000);
-	cy.contains("Empire State Building").click();
-	cy.get('[placeholder="Type unique Geofence Name"]').type(`${geofenceName}`, { force: true });
+	cy.get('[class="amplify-flex suggestion border-top"]').click();
+	cy.wait(2000);
+	cy.get('[placeholder="Type unique Geofence Name"]').type(`${geofenceName}`);
+	cy.wait(2000);
 	cy.contains("Save").click();
 	cy.wait(5000);
 	cy.get("div").should("contain", `${geofenceName}`);
@@ -18,12 +40,12 @@ Cypress.Commands.add("addTrackerAndGeofenceEnterExit", (isResponsive, geofenceNa
 		cy.get('[data-testid="bottomsheet-header-close-icon"]').click();
 		cy.openResponsiveMenu('[data-testid="bottomsheet"]');
 	} else {
-		// cy.get('[data-testid="auth-geofence-box-close-button"]').click();
-		cy.get('[class="amplify-flex geofence-card-close "]').click(); // TODO: remove this after deployment
+		cy.get('[data-testid="auth-geofence-box-close-button"]').click();
 		cy.get('[data-testid="hamburger-menu"]').click();
 	}
 	cy.wait(5000);
 	cy.contains("Tracker").click();
+	cy.wait(5000);
 	cy.contains("Continue").click();
 	cy.wait(5000);
 	cy.get('[class="mapboxgl-canvas"]').click("left", { force: true });
@@ -33,6 +55,7 @@ Cypress.Commands.add("addTrackerAndGeofenceEnterExit", (isResponsive, geofenceNa
 	cy.get('[class="mapboxgl-canvas"]').click("right", { force: true });
 	cy.wait(5000);
 	cy.contains("Save").click();
+	cy.wait(5000);
 	cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary play-pause-button"]').click();
 	cy.get(
 		'[class="Toastify__toast Toastify__toast-theme--dark Toastify__toast--info Toastify__toast--close-on-click enter-geofence"]',
@@ -72,18 +95,23 @@ Cypress.Commands.add("addTrackerAndGeofenceEnterExit", (isResponsive, geofenceNa
 Cypress.Commands.add("addEditAndDeleteGeofence", (isResponsive, geofenceName) => {
 	if (isResponsive) {
 		cy.get('[data-testid="explore-button-container-Geofences"]').click();
-		cy.get('[data-testid="add-geofence-button-container-mobile"]', { timeout: 30000 }).click();
+		cy.wait(10000);
+		cy.checkSignIn(isResponsive);
+		cy.get('[data-testid="add-geofence-button-container-mobile"]').click();
 	} else {
 		cy.get('[class="amplify-flex geofence-button"]').click();
-		cy.get('[class="amplify-loader"]').should("not.exist");
+		cy.wait(10000);
+		cy.checkSignIn(isResponsive);
 	}
-	cy.get('[placeholder="Enter address or coordinates"]', { timeout: 30000 }).type("Rio Tinto Perth Western Australia", {
+	cy.wait(5000);
+	cy.get('[placeholder="Enter address or coordinates"]').type("Seattle", {
 		delay: 200
 	});
-	cy.wait(4000);
-	isResponsive ? cy.get('[class="amplify-flex suggestion border-top"]').click() : cy.contains("Rio Tinto").click();
-	cy.get('[placeholder="Type unique Geofence Name"]').type(`${geofenceName}`);
 	cy.wait(5000);
+	cy.get('[class="amplify-flex suggestion border-top"]').click();
+	cy.wait(2000);
+	cy.get('[placeholder="Type unique Geofence Name"]').type(`${geofenceName}`);
+	cy.wait(2000);
 	cy.contains("Save").click();
 	cy.wait(5000);
 	cy.get("div").should("contain", `${geofenceName}`);
