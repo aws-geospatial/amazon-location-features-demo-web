@@ -17,6 +17,7 @@ import {
 } from "@demo/types";
 
 import { OpenDataMapEnum } from "@demo/types/Enums";
+import { getCountryCode } from "@demo/utils/countryUtil";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { useTranslation } from "react-i18next";
 
@@ -59,9 +60,10 @@ const useAmplifyMap = () => {
 			setIsAutomaticMapUnit: (selected: boolean) => {
 				setState(s => ({ autoMapUnit: { ...s.autoMapUnit, selected } }));
 			},
-			setAutomaticMapUnit: () => {
-				const isMetric = !IMPERIAL_COUNTRIES.includes(navigator.language.split("-")[1]);
-				const mapUnit = isMetric ? METRIC : IMPERIAL;
+			setAutomaticMapUnit: async () => {
+				const countryCode = await getCountryCode();
+				const isImperial = !!countryCode && IMPERIAL_COUNTRIES.includes(countryCode);
+				const mapUnit = isImperial ? IMPERIAL : METRIC;
 				setState(s => ({ autoMapUnit: { ...s.autoMapUnit, system: mapUnit }, mapUnit }));
 			},
 			setMapUnit: (mapUnit: MapUnitEnum) => {
