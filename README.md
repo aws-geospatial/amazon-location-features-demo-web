@@ -78,34 +78,44 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 7. Once, the stack is created → Go to outputs of the stack & Copy them all.
 8. Now, Browse to Github [amazon-location-features-demo-web](https://github.com/aws-geospatial/amazon-location-features-demo-web) repo.
 9. Under the repo settings → Go to Secrets & Variables → Click on Actions.
-10. Now, Add/Update the values in secrets as per the output values gathered from the cloudformation
-
+10. Now, Add/Update the values in secrets as per the output values gathered from the cloudformation.
+11. Add all keys from `.env` file to the secrets section of the repo as well from the above Requirements section.
+12. Also create a Personal Access Token (PAT) from [here](https://github.com/settings/tokens), which will be added against `GH_PAT` and the username against `GH_USERNAME` in the secrets section of the repo.
 ```
-WEB_DOMAIN: "https://location.aws.com" // Production URL
-WEB_DOMAIN_USERNAME: "XXXXX" // This is the username for the web domain (only required for dev and qa environments, not needed for prod environment)
-WEB_DOMAIN_PASSWORD: "XXXXX" // This is the password for the web domain (only required for dev and qa environments, not needed for prod environment)
-IDENTITY_POOL_ID: "XX-XXXX-X:XXXXXXXX-XXXX-1234-abcd-1234567890ab" // Stack output as IdentityPoolId
-USER_DOMAIN: "https://XXXXXXXXXXXX.XXXX.XX-XXXX-X.amazoncognito.com/" // Stack output as UserDomain
-USER_POOL_CLIENT_ID: "XXXXXXXXXXXX" // Stack output as UserPoolClientId
-USER_POOL_ID: "XX-XXXX-X_XXXXXXXXXX" // Stack output as UserPoolId
-WEB_SOCKET_URL: "XXXXXXXXXXX-ats.iot.us-east-1.amazonaws.com" // Stack output as WebSocketUrl
-COGNITO_EMAIL: "abc@xyz.com" // Stack output as UserEmail
-COGNITO_PASSWORD: "XXXXXX" // This is the password for the cognito user (received on registered email)
-VITE_PINPOINT_IDENTITY_POOL_ID: "XX-XXXX-X:XXXXXXXX-XXXX-1234-abcd-1234567890ab" // Same as VITE_PINPOINT_IDENTITY_POOL_ID
-VITE_PINPOINT_APPLICATION_ID: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" // Same as VITE_PINPOINT_APPLICATION_ID
+> WEB_DOMAIN: "http://localhost:3000"
+> WEB_DOMAIN_USERNAME: "XXXXX" // This is the username for the web domain (only required for dev and qa environments, not needed for prod environment)
+> WEB_DOMAIN_PASSWORD: "XXXXX" // This is the password for the web domain (only required for dev and qa environments, not needed for prod environment)
+> IDENTITY_POOL_ID: "XX-XXXX-X:XXXXXXXX-XXXX-1234-abcd-1234567890ab" // Stack output as IdentityPoolId
+> USER_DOMAIN: "https://XXXXXXXXXXXX.XXXX.XX-XXXX-X.amazoncognito.com/" // Stack output as UserDomain
+> USER_POOL_CLIENT_ID: "XXXXXXXXXXXX" // Stack output as UserPoolClientId
+> USER_POOL_ID: "XX-XXXX-X_XXXXXXXXXX" // Stack output as UserPoolId
+> WEB_SOCKET_URL: "XXXXXXXXXXX-ats.iot.us-east-1.amazonaws.com" // Stack output as WebSocketUrl
+> COGNITO_EMAIL: "abc@xyz.com" // Stack output as UserEmail
+> COGNITO_PASSWORD: "XXXXXX" // This is the password for the cognito user (received on registered email)
+> VITE_AWS_COGNITO_IDENTITY_POOL_IDS
+> VITE_AWS_WEB_SOCKET_URLS
+> VITE_PINPOINT_IDENTITY_POOL_ID
+> VITE_PINPOINT_APPLICATION_ID
+> VITE_AWS_CF_TEMPLATE
+> VITE_APPLE_APP_STORE_LINK
+> VITE_GOOGLE_PLAY_STORE_LINK
+> VITE_DATA_FILES_URL
+> VITE_SAMPLES_LIST_FILENAME
+> VITE_APP_VERSION
+> VITE_MIGRATE_FROM_GOOGLE_MAPS_PAGE
+> VITE_MIGRATE_A_WEB_APP_PAGE
+> VITE_MIGRATE_AN_ANDROID_APP_PAGE
+> VITE_MIGRATE_AN_IOS_APP_PAGE
+> VITE_MIGRATE_A_WEB_SERVICE_PAGE
+> VITE_PRICING_PAGE
+> VITE_CUSTOM_ASSETS_URL
+> GH_USERNAME: XXXXXXXX
+> GH_PAT: ghp_XXXXXXXXXXXXXXXXXXXXXX
 ```
 
 #### `npm run cypress`
 
 Runs Cypress tests to completion in a headed chrome browser.
-
-#### `npm run cypress run`
-
-Runs Cypress tests to completion. By default, `cypress run` will run all tests headlessly. https://docs.cypress.io/guides/guides/command-line#cypress-run
-
-#### `npm run cypress open`
-
-Runs Cypress tests to completion in a browser which can be specified in the `options`. https://docs.cypress.io/guides/guides/command-line#cypress-open
 
 ## Security Tests
 
@@ -122,13 +132,13 @@ Runs Cypress tests to completion in a browser which can be specified in the `opt
 #### If you are configuring Github actions for the Security tests, make sure to add the below env keys to the secrets section of the repo. You will need to use the values from the stack that was created when setting up the E2E tests.
 
 ```
-IDENTITY_POOL_ID: "XX-XXXX-X:XXXXXXXX-XXXX-1234-abcd-1234567890ab" // Stack output as IdentityPoolId
-USER_POOL_ID: "XX-XXXX-X_XXXXXXXXXX" // Stack output as UserPoolId
-USER_POOL_CLIENT_ID: "XXXXXXXXXXXX" // Stack output as UserPoolClientId
-COGNITO_EMAIL: "abc@xyz.com" // Stack output as UserEmail
-COGNITO_PASSWORD: "XXXXXX" // This is the password for the cognito user (received on registered email)
-IAM_AUTH_ROLE_NAME: "amazon-location-resources-AmazonLocationDemoCognit-XXXXXXXX" // Stack output as IAMAuthRoleName
-IAM_UNAUTH_ROLE_NAME: "amazon-location-resources-AmazonLocationDemoCognit-XXXXXXXX" // Stack output as IAMUnAuthRoleName
+> IDENTITY_POOL_ID: "XX-XXXX-X:XXXXXXXX-XXXX-1234-abcd-1234567890ab" // Stack output as IdentityPoolId
+> USER_POOL_ID: "XX-XXXX-X_XXXXXXXXXX" // Stack output as UserPoolId
+> USER_POOL_CLIENT_ID: "XXXXXXXXXXXX" // Stack output as UserPoolClientId
+> COGNITO_EMAIL: "abc@xyz.com" // Stack output as UserEmail
+> COGNITO_PASSWORD: "XXXXXX" // This is the password for the cognito user (received on registered email)
+> IAM_AUTH_ROLE_NAME: "amazon-location-resources-AmazonLocationDemoCognit-XXXXXXXX" // Stack output as IAMAuthRoleName
+> IAM_UNAUTH_ROLE_NAME: "amazon-location-resources-AmazonLocationDemoCognit-XXXXXXXX" // Stack output as IAMUnAuthRoleName
 ```
 
 #### `npm run security-tests`
@@ -145,8 +155,8 @@ Runs Security tests insuring policies match the expected values.
 #### If you are configuring Github actions for the Unit tests, make sure to add the below env keys to the secrets section of the repo. You will need to use the values from the stack that was created when setting up the app env in the very first step (These should already exist if you have setup secrets for E2E tests).
 
 ```
-VITE_PINPOINT_IDENTITY_POOL_ID: "XX-XXXX-X:XXXXXXXX-XXXX-1234-abcd-1234567890ab" // Same as VITE_PINPOINT_IDENTITY_POOL_ID
-VITE_PINPOINT_APPLICATION_ID: "XXXXXXXX" // Same as VITE_PINPOINT_APPLICATION_ID
+> VITE_PINPOINT_IDENTITY_POOL_ID: "XX-XXXX-X:XXXXXXXX-XXXX-1234-abcd-1234567890ab" // Same as VITE_PINPOINT_IDENTITY_POOL_ID
+> VITE_PINPOINT_APPLICATION_ID: "XXXXXXXX" // Same as VITE_PINPOINT_APPLICATION_ID
 ```
 
 #### `npm run test`
