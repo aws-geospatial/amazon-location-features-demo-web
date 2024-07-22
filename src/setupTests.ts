@@ -87,7 +87,7 @@ jest.mock("@demo/core/constants/appConfig", () => ({
 		NL_TOGGLE: "nl"
 	},
 	MAP_RESOURCES: {
-		IMPERIAL_COUNTRIES: ["US", "LR", "MM"],
+		IMPERIAL_COUNTRIES: ["US", "GB", "LR", "MM"],
 		GRAB_SUPPORTED_AWS_REGIONS: ["ap-southeast-1"],
 		AMAZON_HQ: {
 			US: { longitude: -122.3408586, latitude: 47.6149975 },
