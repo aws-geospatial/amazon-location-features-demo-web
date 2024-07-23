@@ -38,7 +38,6 @@ Cypress.Commands.add("addTrackerAndGeofenceEnterExit", (isResponsive, geofenceNa
 	cy.get("div").should("contain", `${geofenceName}`);
 	if (isResponsive) {
 		cy.get('[data-testid="bottomsheet-header-close-icon"]').click();
-		cy.openResponsiveMenu('[data-testid="bottomsheet"]');
 	} else {
 		cy.get('[data-testid="auth-geofence-box-close-button"]').click();
 		cy.get('[data-testid="hamburger-menu"]').click();
@@ -50,7 +49,9 @@ Cypress.Commands.add("addTrackerAndGeofenceEnterExit", (isResponsive, geofenceNa
 	cy.wait(5000);
 	cy.get('[class="mapboxgl-canvas"]').click("left", { force: true });
 	cy.wait(5000);
-	cy.get('[class="mapboxgl-canvas"]').click("right", { force: true });
+	isResponsive
+		? cy.get('[class="mapboxgl-canvas"]').click(200, 200, { force: true })
+		: cy.get('[class="mapboxgl-canvas"]').click("right", { force: true });
 	cy.wait(5000);
 	cy.get('[class="mapboxgl-canvas"]').click("right", { force: true });
 	cy.wait(5000);

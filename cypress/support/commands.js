@@ -62,7 +62,9 @@ Cypress.Commands.add("connectAwsAccount", isResponsive => {
 	cy.get('[placeholder="Enter WebSocketUrl"]').type(`${Cypress.env("WEB_SOCKET_URL")}`);
 	cy.get('[data-testid="connect-button"]').click();
 	cy.get('[data-testid="connect-aws-account-modal-container"]').should("contain", "Your AWS account is now connected.");
-	cy.get('[data-testid="sign-in-button"]').click();
+	isResponsive
+		? cy.get('[data-testid="sign-in-button"]').first().click()
+		: cy.get('[data-testid="sign-in-button"]').click();
 	cy.wait(5000);
 	cy.origin(`${Cypress.env("USER_DOMAIN")}`, { args: { isResponsive } }, ({ isResponsive }) => {
 		isResponsive
