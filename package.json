@@ -45,7 +45,7 @@
 		"@aws-sdk/client-pinpoint": "3.496.0",
 		"@aws-sdk/credential-providers": "3.370.0",
 		"@turf/turf": "6.5.0",
-		"aws-amplify": "4.3.43",
+		"aws-amplify": "5.3.19",
 		"cypress-mochawesome-reporter": "3.8.2",
 		"date-fns": "2.29.3",
 		"i18next": "23.2.8",
@@ -110,15 +110,26 @@
 		"node": ">=14.x.x"
 	},
 	"overrides": {
+		"ava": "^3.0.0",
 		"braces": "^3.0.3",
+		"@cypress/request": "^3.0.0",
+		"fast-xml-parser": "^4.1.2",
+		"got": "^11.8.5",
+		"json5": "^1.0.2",
 		"lodash": "^4.17.21",
 		"minimist": "^1.2.8",
-		"underscore": "^1.12.1"
+		"nth-check": "^2.0.1",
+		"postcss": "^8.4.31",
+		"semver": "^5.7.2",
+		"trim-newlines": "^3.0.1",
+		"underscore": "^1.12.1",
+		"underscore.string": "^3.3.5"
 	},
 	"jest": {
 		"moduleNameMapper": {
 			"^@demo/(.*)$": "<rootDir>/src/$1",
-			"\\.(css|scss)$": "<rootDir>/__mocks__/styleMock.ts"
+			"\\.(css|scss)$": "<rootDir>/__mocks__/styleMock.ts",
+			"^axios$": "axios/dist/node/axios.cjs"
 		},
 		"collectCoverageFrom": [
 			"**/*.{js,jsx,ts,tsx}",
