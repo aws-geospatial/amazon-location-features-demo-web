@@ -42,7 +42,6 @@ const useAmplifyMap = () => {
 				const countryCode = await getCountryCode();
 				const isImperial = !!countryCode && IMPERIAL_COUNTRIES.includes(countryCode);
 				const mapUnit = isImperial ? IMPERIAL : METRIC;
-				console.log({ mapUnit });
 				setState(s => ({ autoMapUnit: { ...s.autoMapUnit, system: mapUnit }, mapUnit }));
 			})();
 		}
