@@ -92,9 +92,7 @@ const useMapManager = ({
 		isCurrentLocationDisabled,
 		setIsCurrentLocationDisabled,
 		setCurrentLocation,
-		setViewpoint,
-		autoMapUnit,
-		setAutomaticMapUnit
+		setViewpoint
 	} = useAmplifyMap();
 	const { setMarker, marker, selectedMarker, clearPoiList, setZoom, setSelectedMarker } = useAwsPlace();
 	const {
@@ -121,10 +119,6 @@ const useMapManager = ({
 			(!isUserAwsAccountConnected || (isUserAwsAccountConnected && isGrabAvailableInRegion)),
 		[isUnauthGeofenceBoxOpen, isUnauthTrackerBoxOpen, isUserAwsAccountConnected, isGrabAvailableInRegion]
 	);
-
-	useEffect(() => {
-		autoMapUnit.selected && setAutomaticMapUnit();
-	}, [autoMapUnit.selected, setAutomaticMapUnit]);
 
 	const onLoad = useCallback(() => {
 		clearPoiList();
