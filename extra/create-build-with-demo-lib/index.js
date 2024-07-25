@@ -52,6 +52,7 @@ async function main() {
 		console.log("Done.");
 	} catch (error) {
 		console.error(`Error: ${error.message}`);
+		throw new Error(`Error: ${error}`);
 	}
 }
 
