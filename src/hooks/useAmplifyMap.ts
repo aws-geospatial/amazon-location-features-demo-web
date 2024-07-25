@@ -34,7 +34,6 @@ const useAmplifyMap = () => {
 	const { setState } = useAmplifyMapStore;
 	const mapsService = useAmplifyMapService();
 	const { t } = useTranslation();
-	console.log({ autoMapUnit: store.autoMapUnit });
 
 	useEffect(() => {
 		if (store.autoMapUnit.selected) {
