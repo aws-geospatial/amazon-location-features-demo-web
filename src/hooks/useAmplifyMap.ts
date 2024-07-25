@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 import { appConfig } from "@demo/core/constants";
 import { useAmplifyMapStore } from "@demo/stores";
@@ -30,6 +30,17 @@ const useAmplifyMap = () => {
 	const { setInitial } = store;
 	const { setState } = useAmplifyMapStore;
 
+	useEffect(() => {
+		if (store.autoMapUnit.selected) {
+			(async () => {
+				const countryCode = await getCountryCode();
+				const isImperial = !!countryCode && IMPERIAL_COUNTRIES.includes(countryCode);
+				const mapUnit = isImperial ? IMPERIAL : METRIC;
+				setState(s => ({ autoMapUnit: { ...s.autoMapUnit, system: mapUnit }, mapUnit }));
+			})();
+		}
+	}, [setState, store.autoMapUnit.selected]);
+
 	const methods = useMemo(
 		() => ({
 			setCurrentLocation: (currentLocationData: CurrentLocationDataType) => {
@@ -40,12 +51,6 @@ const useAmplifyMap = () => {
 			},
 			setIsAutomaticMapUnit: (selected: boolean) => {
 				setState(s => ({ autoMapUnit: { ...s.autoMapUnit, selected } }));
-			},
-			setAutomaticMapUnit: async () => {
-				const countryCode = await getCountryCode();
-				const isImperial = !!countryCode && IMPERIAL_COUNTRIES.includes(countryCode);
-				const mapUnit = isImperial ? IMPERIAL : METRIC;
-				setState(s => ({ autoMapUnit: { ...s.autoMapUnit, system: mapUnit }, mapUnit }));
 			},
 			setMapUnit: (mapUnit: MapUnitEnum) => {
 				setState({ mapUnit });
