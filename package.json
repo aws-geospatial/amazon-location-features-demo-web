@@ -29,7 +29,7 @@
 		"start-build": "npx serve -s build -l 3000",
 		"cypress": "cypress run --browser chrome --headed",
 		"security-tests": "cd security-tests && npm install && node index.js && cd ../",
-		"test": "react-scripts test",
+		"test": "react-scripts test  --transformIgnorePatterns \"node_modules/(?!axios)/\"",
 		"ci-test": "CI=true react-scripts test",
 		"coverage": "react-scripts test --coverage --watchAll",
 		"prepare": "husky install",
@@ -45,7 +45,7 @@
 		"@aws-sdk/client-pinpoint": "3.496.0",
 		"@aws-sdk/credential-providers": "3.370.0",
 		"@turf/turf": "6.5.0",
-		"aws-amplify": "5.3.19",
+		"aws-amplify": "4.3.43",
 		"cypress-mochawesome-reporter": "3.8.2",
 		"date-fns": "2.29.3",
 		"i18next": "23.2.8",
@@ -111,6 +111,7 @@
 	},
 	"overrides": {
 		"ava": "^3.0.0",
+		"axios": "^0.28.0",
 		"braces": "^3.0.3",
 		"@cypress/request": "^3.0.0",
 		"fast-xml-parser": "^4.1.2",
@@ -128,8 +129,7 @@
 	"jest": {
 		"moduleNameMapper": {
 			"^@demo/(.*)$": "<rootDir>/src/$1",
-			"\\.(css|scss)$": "<rootDir>/__mocks__/styleMock.ts",
-			"^axios$": "axios/dist/node/axios.cjs"
+			"\\.(css|scss)$": "<rootDir>/__mocks__/styleMock.ts"
 		},
 		"collectCoverageFrom": [
 			"**/*.{js,jsx,ts,tsx}",
