@@ -29,7 +29,7 @@
 		"start-build": "npx serve -s build -l 3000",
 		"cypress": "cypress run --browser chrome --headed",
 		"security-tests": "cd security-tests && npm install && node index.js && cd ../",
-		"test": "react-scripts test",
+		"test": "react-scripts test  --transformIgnorePatterns \"node_modules/(?!axios)/\"",
 		"ci-test": "CI=true react-scripts test",
 		"coverage": "react-scripts test --coverage --watchAll",
 		"prepare": "husky install",
@@ -110,10 +110,21 @@
 		"node": ">=14.x.x"
 	},
 	"overrides": {
+		"ava": "^3.0.0",
+		"axios": "^0.28.0",
 		"braces": "^3.0.3",
+		"@cypress/request": "^3.0.0",
+		"fast-xml-parser": "^4.1.2",
+		"got": "^11.8.5",
+		"json5": "^1.0.2",
 		"lodash": "^4.17.21",
 		"minimist": "^1.2.8",
-		"underscore": "^1.12.1"
+		"nth-check": "^2.0.1",
+		"postcss": "^8.4.31",
+		"semver": "^5.7.2",
+		"trim-newlines": "^3.0.1",
+		"underscore": "^1.12.1",
+		"underscore.string": "^3.3.5"
 	},
 	"jest": {
 		"moduleNameMapper": {
