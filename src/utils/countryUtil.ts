@@ -1,8 +1,12 @@
+/* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
+/* SPDX-License-Identifier: MIT-0 */
+
 import { appConfig } from "@demo/core/constants";
 
 import sleep from "./sleep";
 
 let failCount = 0;
+let countryCode = "";
 
 const {
 	ENV: { COUNTRY_EVALUATION_URL }
@@ -10,8 +14,13 @@ const {
 
 export const getCountryCode: () => Promise<string | undefined> = async () => {
 	try {
+		if (countryCode) {
+			return countryCode === "Unknown" ? undefined : countryCode;
+		}
+
 		const response = await fetch(COUNTRY_EVALUATION_URL);
 		const country = response.headers.get("x-country");
+		countryCode = country || "Unknown";
 
 		failCount = 0;
 
@@ -22,7 +31,7 @@ export const getCountryCode: () => Promise<string | undefined> = async () => {
 		}
 	} catch (error) {
 		failCount++;
-		console.log("error: ", error);
+		console.error("error: ", error);
 
 		// try three times before failing
 		if (failCount === 3) {
