@@ -7,7 +7,6 @@ import { ThemeProvider } from "@aws-amplify/ui-react";
 import { appConfig } from "@demo/core/constants";
 import { useAmplifyAuth } from "@demo/hooks";
 import { appTheme } from "@demo/theme";
-import { EsriMapEnum } from "@demo/types";
 
 import "@aws-amplify/ui-react/styles.css";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -16,8 +15,7 @@ import "react-tooltip/dist/react-tooltip.css";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 const {
-	ROUTES: { DEMO },
-	MAP_RESOURCES: { MAP_ITEMS }
+	ROUTES: { DEMO }
 } = appConfig;
 
 interface AppWrapperProps {
@@ -47,16 +45,7 @@ const AppWrapper: FC<AppWrapperProps> = ({ children }) => {
 					: {
 							identityPoolId,
 							region
-					  },
-			geo: {
-				AmazonLocationService: {
-					maps: {
-						items: MAP_ITEMS,
-						default: EsriMapEnum.ESRI_LIGHT
-					},
-					region
-				}
-			}
+					  }
 		}),
 		[identityPoolId, region, userPoolId, userPoolClientId, userDomain]
 	);
