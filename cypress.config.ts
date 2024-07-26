@@ -8,6 +8,7 @@ export default defineConfig({
 	viewportHeight: 733,
 	retries: 3,
 	video: false,
+	experimentalMemoryManagement: true,
 	env: {
 		browserPermissions: {
 			notifications: "allow",
