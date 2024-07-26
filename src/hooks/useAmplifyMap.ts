@@ -4,7 +4,6 @@
 import { useEffect, useMemo } from "react";
 
 import { appConfig } from "@demo/core/constants";
-import { useAmplifyMapService } from "@demo/services";
 import { useAmplifyMapStore } from "@demo/stores";
 import {
 	CurrentLocationDataType,
@@ -18,8 +17,6 @@ import {
 
 import { OpenDataMapEnum } from "@demo/types/Enums";
 import { getCountryCode } from "@demo/utils/countryUtil";
-import { errorHandler } from "@demo/utils/errorHandler";
-import { useTranslation } from "react-i18next";
 
 const {
 	MAP_RESOURCES: { IMPERIAL_COUNTRIES },
@@ -32,8 +29,6 @@ const useAmplifyMap = () => {
 	const store = useAmplifyMapStore();
 	const { setInitial } = store;
 	const { setState } = useAmplifyMapStore;
-	const mapsService = useAmplifyMapService();
-	const { t } = useTranslation();
 
 	useEffect(() => {
 		if (store.autoMapUnit.selected) {
@@ -48,20 +43,6 @@ const useAmplifyMap = () => {
 
 	const methods = useMemo(
 		() => ({
-			getDefaultMap: () => {
-				try {
-					return mapsService.getDefaultMap();
-				} catch (error) {
-					errorHandler(error, t("error_handler__failed_fetch_default_map.text") as string);
-				}
-			},
-			getAvailableMaps: () => {
-				try {
-					return mapsService.getAvailableMaps();
-				} catch (error) {
-					errorHandler(error, t("error_handler__failed_fetch_available_map.text") as string);
-				}
-			},
 			setCurrentLocation: (currentLocationData: CurrentLocationDataType) => {
 				setState({ currentLocationData });
 			},
@@ -95,7 +76,7 @@ const useAmplifyMap = () => {
 				setInitial();
 			}
 		}),
-		[mapsService, setState, setInitial, t]
+		[setState, setInitial]
 	);
 
 	return useMemo(() => ({ ...methods, ...store }), [methods, store]);

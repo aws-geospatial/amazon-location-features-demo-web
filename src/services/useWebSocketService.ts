@@ -83,12 +83,12 @@ const useWebSocketService = (
 								stopName = "",
 								coordinates = []
 							}
-						} = data;
+						} = data as any;
 
 						if (source === "aws.geo") {
 							if (stopName) {
 								/* Unauth simulation events */
-								const unauthEvent = { ...data.value };
+								const unauthEvent = { ...(data.value as Record<string, unknown>) };
 								const busRouteId = geofenceId.split("-")[0];
 
 								if (trackerEventType === "ENTER") {
@@ -102,7 +102,7 @@ const useWebSocketService = (
 										});
 								}
 
-								if (unauthEvents.length === 0 || !unauthEvents.some(equals(unauthEvent))) {
+								if (unauthEvents.length === 0 || !unauthEvents.some(equals(unauthEvent as unknown))) {
 									setUnauthNotifications({
 										busRouteId,
 										geofenceCollection,
@@ -132,9 +132,9 @@ const useWebSocketService = (
 								});
 							} else {
 								/* Auth simulation events */
-								const authEvent = { ...data.value };
+								const authEvent = { ...(data.value as Record<string, unknown>) };
 
-								if (authEvents.length === 0 || !authEvents.some(equals(authEvent))) {
+								if (authEvents.length === 0 || !authEvents.some(equals(authEvent as unknown))) {
 									showToast({
 										content:
 											i18n.dir() === "ltr"
