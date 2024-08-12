@@ -2,7 +2,6 @@
 /* SPDX-License-Identifier: MIT-0 */
 
 import IconCodeMenu from "@demo/assets/svgs/icon-code-menu-icon.svg";
-import IconCompassMenu from "@demo/assets/svgs/icon-compass-menu-icon.svg";
 import IconDollarSolid from "@demo/assets/svgs/icon-dollar-solid.svg";
 import IconSwap from "@demo/assets/svgs/icon-swap.svg";
 
@@ -18,7 +17,6 @@ const {
 		PRICING_PAGE
 	},
 	ROUTES: {
-		OVERVIEW,
 		SAMPLES,
 		MIGRATE_FROM_GOOGLE_MAPS,
 		MIGRATE_A_WEB_APP,
@@ -39,7 +37,6 @@ type MenuItem = {
 };
 
 const routeToEnvMapping = {
-	[OVERVIEW]: "1",
 	[SAMPLES]: "1",
 	[MIGRATE_FROM_GOOGLE_MAPS]: MIGRATE_FROM_GOOGLE_MAPS_PAGE,
 	[MIGRATE_A_WEB_APP]: MIGRATE_A_WEB_APP_PAGE,
@@ -52,13 +49,6 @@ const routeToEnvMapping = {
 const shouldIncludeMenuItem = (menuItem: MenuItem) => !!parseInt(routeToEnvMapping[menuItem?.link]);
 
 let marketingMenuOptionsData: MenuItem[] = [
-	{
-		label: "header__overview.text",
-		link: OVERVIEW,
-		iconBeforeLink: IconCompassMenu,
-		iconContainerClass: "menu-item-icon",
-		isExternalLink: false
-	},
 	{
 		label: "samples.text",
 		link: SAMPLES,
