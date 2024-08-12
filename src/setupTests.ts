@@ -69,7 +69,6 @@ jest.mock("@demo/core/constants/appConfig", () => ({
 		NL_DEMO: "/demo?dp=Esri&nl=true",
 		NOT_FOUND: "/404",
 		ERROR_BOUNDARY: "/error",
-		OVERVIEW: "/overview",
 		SAMPLES: "/samples",
 		SAMPLE_DETAILS: "/sample/:sampleId",
 		HELP: "/demo/help",
@@ -101,47 +100,6 @@ jest.mock("@demo/core/constants/appConfig", () => ({
 				[-123.061047, 49.303531] // northeast corner
 			]
 		},
-		// MAP_ITEMS: {
-		// 	[EsriMapEnum.ESRI_DARK_GRAY_CANVAS]: {
-		// 		style: EsriMapStyleEnum[EsriMapEnum.ESRI_DARK_GRAY_CANVAS]
-		// 	},
-		// 	[EsriMapEnum.ESRI_IMAGERY]: {
-		// 		style: EsriMapStyleEnum[EsriMapEnum.ESRI_IMAGERY]
-		// 	},
-		// 	[EsriMapEnum.ESRI_LIGHT]: {
-		// 		style: EsriMapStyleEnum[EsriMapEnum.ESRI_LIGHT]
-		// 	},
-		// 	[EsriMapEnum.ESRI_LIGHT_GRAY_CANVAS]: {
-		// 		style: EsriMapStyleEnum[EsriMapEnum.ESRI_LIGHT_GRAY_CANVAS]
-		// 	},
-		// 	[EsriMapEnum.ESRI_NAVIGATION]: {
-		// 		style: EsriMapStyleEnum[EsriMapEnum.ESRI_NAVIGATION]
-		// 	},
-		// 	[EsriMapEnum.ESRI_STREET_MAP]: {
-		// 		style: EsriMapStyleEnum[EsriMapEnum.ESRI_STREET_MAP]
-		// 	},
-		// 	[HereMapEnum.HERE_EXPLORE]: {
-		// 		style: HereMapStyleEnum[HereMapEnum.HERE_EXPLORE]
-		// 	},
-		// 	[HereMapEnum.HERE_CONTRAST]: {
-		// 		style: HereMapStyleEnum[HereMapEnum.HERE_CONTRAST]
-		// 	},
-		// 	[HereMapEnum.HERE_EXPLORE_TRUCK]: {
-		// 		style: HereMapStyleEnum[HereMapEnum.HERE_EXPLORE_TRUCK]
-		// 	},
-		// 	[HereMapEnum.HERE_HYBRID]: {
-		// 		style: HereMapStyleEnum[HereMapEnum.HERE_HYBRID]
-		// 	},
-		// 	[HereMapEnum.HERE_IMAGERY]: {
-		// 		style: HereMapStyleEnum[HereMapEnum.HERE_IMAGERY]
-		// 	},
-		// 	[GrabMapEnum.GRAB_STANDARD_LIGHT]: {
-		// 		style: GrabMapStyleEnum[GrabMapEnum.GRAB_STANDARD_LIGHT]
-		// 	},
-		// 	[GrabMapEnum.GRAB_STANDARD_DARK]: {
-		// 		style: GrabMapStyleEnum[GrabMapEnum.GRAB_STANDARD_DARK]
-		// 	}
-		// },
 		MAP_STYLES: {
 			ESRI_STYLES: [
 				{ id: "location.aws.com.demo.maps.Esri.Light", image: "", name: "Light" },

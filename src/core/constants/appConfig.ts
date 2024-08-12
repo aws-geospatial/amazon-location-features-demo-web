@@ -92,7 +92,6 @@ const appConfig = {
 		NL_DEMO: "/demo?dp=Esri&nl=true",
 		NOT_FOUND: "/404",
 		ERROR_BOUNDARY: "/error",
-		OVERVIEW: "/overview",
 		SAMPLES: "/samples",
 		SAMPLE_DETAILS: "/sample/:sampleId",
 		HELP: "/demo/help",
