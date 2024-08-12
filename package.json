@@ -46,7 +46,7 @@
 		"@aws-sdk/credential-providers": "3.370.0",
 		"@turf/turf": "6.5.0",
 		"aws-amplify": "5.3.19",
-		"aws-iot-device-sdk-v2": "1.20.0",
+		"aws-iot-device-sdk-v2": "^1.20.0",
 		"date-fns": "2.29.3",
 		"i18next": "23.2.8",
 		"i18next-browser-languagedetector": "7.1.0",
