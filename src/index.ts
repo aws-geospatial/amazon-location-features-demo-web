@@ -12,16 +12,16 @@ import { record } from "./utils/analyticsUtils";
 import { debounce } from "./utils/debounce";
 import { clearStorage } from "./utils/localstorageUtils";
 
-const useAmplifyAuth = {
+const useAmplifyAuth = () => ({
 	configureAmplify: () => {},
 	...useAuth
-};
-const useAmplifyMap = useMap;
-const useAws = useClient;
-const useAwsGeofence = useGeofence;
-const useAwsPlace = usePlace;
-const useAwsRoute = useRoute;
-const useAwsTracker = useTracker;
+});
+const useAmplifyMap = () => useMap();
+const useAws = () => useClient();
+const useAwsGeofence = () => useGeofence();
+const useAwsPlace = () => usePlace();
+const useAwsRoute = () => useRoute();
+const useAwsTracker = () => useTracker();
 
 export * as theme from "./theme";
 export { default as DemoPage } from "./atomicui/pages/DemoPage/DemoPage";
