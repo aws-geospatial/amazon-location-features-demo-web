@@ -498,7 +498,7 @@ const useMapManager = ({
 			});
 		}
 
-		if (defaultRegion !== stackRegion) {
+		if (defaultRegion.value !== stackRegion?.value) {
 			handleStackRegion(defaultRegion);
 		}
 	}, [defaultRegion, currentMapProvider, handleStackRegion, stackRegion]);
