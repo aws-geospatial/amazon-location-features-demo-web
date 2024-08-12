@@ -3,32 +3,32 @@
 
 import { useMemo } from "react";
 
-import { ICredentials } from "@aws-amplify/core";
-import { useAwsService } from "@demo/services";
-import { useAwsStore } from "@demo/stores";
+import { useClientService } from "@demo/services";
+import { useClientStore } from "@demo/stores";
+import { CognitoIdentityCredentials } from "@demo/types";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { useTranslation } from "react-i18next";
 
-const useAws = () => {
-	const store = useAwsStore();
+const useClient = () => {
+	const store = useClientStore();
 	const { setInitial } = store;
-	const { setState } = useAwsStore;
-	const { createLocationClient, createIotClient } = useAwsService();
+	const { setState } = useClientStore;
+	const clientService = useClientService();
 	const { t } = useTranslation();
 
 	const methods = useMemo(
 		() => ({
-			createLocationClient: (credentials: ICredentials, region: string) => {
+			createLocationClient: (credentials: CognitoIdentityCredentials, region: string) => {
 				try {
-					const locationClient = createLocationClient(credentials, region);
+					const locationClient = clientService.createLocationClient(credentials, region);
 					setState({ locationClient });
 				} catch (error) {
 					errorHandler(error, t("error_handler__failed_create_location_client.text") as string);
 				}
 			},
-			createIotClient: (credentials: ICredentials, region: string) => {
+			createIotClient: (credentials: CognitoIdentityCredentials, region: string) => {
 				try {
-					const iotClient = createIotClient(credentials, region);
+					const iotClient = clientService.createIotClient(credentials, region);
 					setState({ iotClient });
 				} catch (error) {
 					errorHandler(error, t("error_handler__failed_create_iot_client.text") as string);
@@ -39,10 +39,10 @@ const useAws = () => {
 				setInitial();
 			}
 		}),
-		[setInitial, setState, createLocationClient, createIotClient, t]
+		[clientService, setState, t, setInitial]
 	);
 
 	return { ...methods, ...store };
 };
 
-export default useAws;
+export default useClient;

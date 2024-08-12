@@ -5,7 +5,7 @@ import { FC, lazy } from "react";
 
 import { Button, Flex, Text } from "@aws-amplify/ui-react";
 import { IconGeofence, IconRoute } from "@demo/assets/svgs";
-import { useAmplifyAuth } from "@demo/hooks";
+import { useAuth } from "@demo/hooks";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { EventTypeEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
@@ -20,7 +20,7 @@ interface SignInModalProps {
 }
 
 const SignInModal: FC<SignInModalProps> = ({ open, onClose }) => {
-	const { onLogin } = useAmplifyAuth();
+	const { onLogin } = useAuth();
 	const { t } = useTranslation();
 	const { isMobile } = useDeviceMediaQuery();
 
@@ -61,7 +61,7 @@ const SignInModal: FC<SignInModalProps> = ({ open, onClose }) => {
 								],
 								["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
 							);
-
+							onClose();
 							onLogin();
 						}}
 					>

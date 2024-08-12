@@ -21,7 +21,7 @@ const props: AuthTrackerBoxProps = {
 		fitBounds: () => {}
 	},
 	setShowAuthTrackerBox: jest.fn(),
-	clearCredsAndLocationClient: jest.fn()
+	clearCredsAndClients: jest.fn()
 };
 
 const mockGeofencesData = [
@@ -51,16 +51,16 @@ const mockGeofencesData = [
 	}
 ];
 
-const mockUseAwsGeofenceData = {
+const mockUseGeofenceData = {
 	geofences: mockGeofencesData,
 	getGeofencesList: jest.fn()
 };
 
-const mockUseAwsRouteData = {
+const mockUseRouteData = {
 	isFetchingRoute: false
 };
 
-const mockUseAwsTrackerData = {
+const mockUseTrackerData = {
 	selectedTrackerType: TrackerType.CAR,
 	setSelectedTrackerType: jest.fn(),
 	isEditingRoute: false,
@@ -70,9 +70,9 @@ const mockUseAwsTrackerData = {
 };
 
 jest.mock("@demo/hooks", () => ({
-	useAwsGeofence: () => mockUseAwsGeofenceData,
-	useAwsRoute: () => mockUseAwsRouteData,
-	useAwsTracker: () => mockUseAwsTrackerData,
+	useGeofence: () => mockUseGeofenceData,
+	useRoute: () => mockUseRouteData,
+	useTracker: () => mockUseTrackerData,
 	useMediaQuery: () => true,
 	useWebSocketBanner: () => ({
 		Connection: <div data-testid="websocket-banner" />,

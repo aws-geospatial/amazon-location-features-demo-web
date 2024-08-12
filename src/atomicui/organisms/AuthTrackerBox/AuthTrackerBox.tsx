@@ -13,7 +13,7 @@ import {
 	IconSegment,
 	IconWalking
 } from "@demo/assets/svgs";
-import { useAwsGeofence, useAwsRoute, useAwsTracker, useWebSocketBanner } from "@demo/hooks";
+import { useGeofence, useRoute, useTracker, useWebSocketBanner } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { RouteDataType, TrackerType } from "@demo/types";
@@ -42,17 +42,17 @@ export const trackerTypes = [
 export interface AuthTrackerBoxProps {
 	mapRef: MapRef | null;
 	setShowAuthTrackerBox: (b: boolean) => void;
-	clearCredsAndLocationClient?: () => void;
+	clearCredsAndClients?: () => void;
 }
 
-const AuthTrackerBox: FC<AuthTrackerBoxProps> = ({ mapRef, setShowAuthTrackerBox, clearCredsAndLocationClient }) => {
+const AuthTrackerBox: FC<AuthTrackerBoxProps> = ({ mapRef, setShowAuthTrackerBox, clearCredsAndClients }) => {
 	const [isSaved, setIsSaved] = useState(false);
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [routeData, setRouteData] = useState<RouteDataType | undefined>(undefined);
 	const [points, setPoints] = useState<number[][] | undefined>(undefined);
 	const [trackerPos, setTrackerPos] = useState<number[] | undefined>(undefined);
-	const { isFetchingRoute } = useAwsRoute();
-	const { geofences, getGeofencesList } = useAwsGeofence();
+	const { isFetchingRoute } = useRoute();
+	const { geofences, getGeofencesList } = useGeofence();
 	const {
 		selectedTrackerType,
 		setSelectedTrackerType,
@@ -60,7 +60,7 @@ const AuthTrackerBox: FC<AuthTrackerBoxProps> = ({ mapRef, setShowAuthTrackerBox
 		setIsEditingRoute,
 		trackerPoints,
 		setTrackerPoints
-	} = useAwsTracker();
+	} = useTracker();
 	const { Connection } = useWebSocketBanner();
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
@@ -89,7 +89,7 @@ const AuthTrackerBox: FC<AuthTrackerBoxProps> = ({ mapRef, setShowAuthTrackerBox
 	};
 
 	const onClose = () => {
-		clearCredsAndLocationClient && clearCredsAndLocationClient();
+		clearCredsAndClients && clearCredsAndClients();
 		setIsEditingRoute(false);
 		setTrackerPoints(undefined);
 		setShowAuthTrackerBox(false);

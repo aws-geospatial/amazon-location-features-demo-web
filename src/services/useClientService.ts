@@ -3,28 +3,26 @@
 
 import { useMemo } from "react";
 
-import { ICredentials } from "@aws-amplify/core";
 import { IoT } from "@aws-sdk/client-iot";
 import { Location } from "@aws-sdk/client-location";
+import { CognitoIdentityCredentials } from "@demo/types";
 
-const useAwsService = () => {
+const useClientService = () => {
 	return useMemo(
 		() => ({
-			createLocationClient: (credentials: ICredentials, region: string) =>
+			createLocationClient: (credentials: CognitoIdentityCredentials, region: string) =>
 				new Location({
 					credentials,
 					region
-					// signatureCache: false
 				}),
-			createIotClient: (credentials: ICredentials, region: string) =>
+			createIotClient: (credentials: CognitoIdentityCredentials, region: string) =>
 				new IoT({
 					credentials,
 					region
-					// signatureCache: false
 				})
 		}),
 		[]
 	);
 };
 
-export default useAwsService;
+export default useClientService;

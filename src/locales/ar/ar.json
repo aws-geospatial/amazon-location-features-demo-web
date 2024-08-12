@@ -3691,5 +3691,11 @@
   },
   "web_service": {
     "text": "خدمة الويب"
+  },
+  "error_handler__failed_fetch_tokens": {
+    "text": "فشلت عملية جلب الرموز"
+  },
+  "error_handler__failed_refresh_tokens": {
+    "text": "فشل تحديث الرموز"
   }
 }

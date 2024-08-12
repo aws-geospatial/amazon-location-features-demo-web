@@ -6,7 +6,7 @@ import { IStateProps, NotificationHistoryItemtype } from "@demo/types";
 
 import createStore from "./createStore";
 
-export interface AwsGeofenceStoreProps {
+export interface GeofenceStoreProps {
 	isFetchingGeofences: boolean;
 	isCreatingGeofence: boolean;
 	isDeletingGeofence: boolean;
@@ -15,7 +15,7 @@ export interface AwsGeofenceStoreProps {
 	unauthNotifications: Array<NotificationHistoryItemtype>;
 }
 
-export const initialState: IStateProps<AwsGeofenceStoreProps> = {
+export const initialState: IStateProps<GeofenceStoreProps> = {
 	isFetchingGeofences: false,
 	isCreatingGeofence: false,
 	isDeletingGeofence: false,
@@ -23,4 +23,4 @@ export const initialState: IStateProps<AwsGeofenceStoreProps> = {
 	unauthNotifications: []
 };
 
-export default createStore<AwsGeofenceStoreProps>(initialState);
+export default createStore<GeofenceStoreProps>(initialState);

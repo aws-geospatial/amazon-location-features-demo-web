@@ -3691,5 +3691,11 @@
   },
   "web_service": {
     "text": "वेब सर्विस"
+  },
+  "error_handler__failed_fetch_tokens": {
+    "text": "टोकन लाने में असफल"
+  },
+  "error_handler__failed_refresh_tokens": {
+    "text": "टोकन रीफ़्रेश करने में विफल"
   }
 }
