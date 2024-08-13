@@ -3691,5 +3691,11 @@
   },
   "web_service": {
     "text": "Service Web"
+  },
+  "error_handler__failed_fetch_tokens": {
+    "text": "Impossible de récupérer les jetons"
+  },
+  "error_handler__failed_refresh_tokens": {
+    "text": "Impossible d'actualiser les jetons"
   }
 }

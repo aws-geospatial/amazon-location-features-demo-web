@@ -3691,5 +3691,11 @@
   },
   "web_service": {
     "text": "網路服務"
+  },
+  "error_handler__failed_fetch_tokens": {
+    "text": "擷取令牌失敗"
+  },
+  "error_handler__failed_refresh_tokens": {
+    "text": "重新整理令牌失敗"
   }
 }

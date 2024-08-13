@@ -10,10 +10,10 @@ import { ToastType } from "@demo/types";
 import { clearStorage } from "./localstorageUtils";
 
 const {
-	PERSIST_STORAGE_KEYS: { LOCAL_STORAGE_PREFIX, SHOULD_CLEAR_CREDENTIALS, AMPLIFY_AUTH_DATA },
+	PERSIST_STORAGE_KEYS: { LOCAL_STORAGE_PREFIX, SHOULD_CLEAR_CREDENTIALS, AUTH_DATA },
 	ROUTES: { ERROR_BOUNDARY, DEMO }
 } = appConfig;
-const authLocalStorageKey = `${LOCAL_STORAGE_PREFIX}${AMPLIFY_AUTH_DATA}`;
+const authLocalStorageKey = `${LOCAL_STORAGE_PREFIX}${AUTH_DATA}`;
 const errors = {
 	excluded: ["Too Many Requests"],
 	missingCreds: "Missing credentials in config",

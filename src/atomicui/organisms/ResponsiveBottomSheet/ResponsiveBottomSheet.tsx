@@ -19,7 +19,7 @@ import { Flex, Loader, Text } from "@aws-amplify/ui-react";
 import { IconClose, IconNotificationBell } from "@demo/assets/svgs";
 import appConfig from "@demo/core/constants/appConfig";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
-import { useAmplifyMap, useAwsGeofence, useAwsRoute, useAwsTracker, usePersistedData } from "@demo/hooks";
+import { useGeofence, useMap, usePersistedData, useRoute, useTracker } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { ShowStateType } from "@demo/types";
@@ -78,7 +78,7 @@ interface IProps {
 	confirmCloseSimulation: boolean;
 	setConfirmCloseSimulation: Dispatch<SetStateAction<boolean>>;
 	setShowAuthTrackerBox: (b: boolean) => void;
-	clearCredsAndLocationClient?: () => void;
+	clearCredsAndClients?: () => void;
 	setShowAuthGeofenceBox: (b: boolean) => void;
 	setTriggerOnClose: Dispatch<SetStateAction<boolean>>;
 	setTriggerOnReset: Dispatch<SetStateAction<boolean>>;
@@ -123,7 +123,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	confirmCloseSimulation,
 	setConfirmCloseSimulation,
 	setShowAuthTrackerBox,
-	clearCredsAndLocationClient,
+	clearCredsAndClients,
 	setTriggerOnClose,
 	setTriggerOnReset,
 	isEditingAuthRoute,
@@ -134,7 +134,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	geolocateControlRef
 }) => {
 	const { isDesktop, isMobile, isTablet, isMax556, isDesktopBrowser } = useDeviceMediaQuery();
-	const { unauthNotifications, isAddingGeofence } = useAwsGeofence();
+	const { unauthNotifications, isAddingGeofence } = useGeofence();
 	const { t } = useTranslation();
 	const location = useLocation();
 	const isDemoUrl = location.pathname === DEMO;
@@ -149,9 +149,9 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 		setBottomSheetMinHeight
 	} = useBottomSheet();
 	const { setSettingsOptions } = usePersistedData();
-	const { resetStore: resetAwsRouteStore } = useAwsRoute();
-	const { setIsEditingRoute, setTrackerPoints } = useAwsTracker();
-	const { mapStyle } = useAmplifyMap();
+	const { resetStore: resetRouteStore } = useRoute();
+	const { setIsEditingRoute, setTrackerPoints } = useTracker();
+	const { mapStyle } = useMap();
 	const [arrowDirection, setArrowDirection] = useState("no-dragging");
 	const prevBottomSheetHeightRef = useRef(bottomSheetCurrentHeight);
 	const bottomSheetRef = useRef<RefHandles | null>(null);
@@ -306,11 +306,11 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	);
 
 	const onCloseRouteBox = useCallback(() => {
-		resetAwsRouteStore();
+		resetRouteStore();
 		setShowRouteBox(false);
 		setUI(ResponsiveUIEnum.explore);
 		setSearchBoxValue("");
-	}, [setUI, resetAwsRouteStore, setShowRouteBox, setSearchBoxValue]);
+	}, [setUI, resetRouteStore, setShowRouteBox, setSearchBoxValue]);
 
 	const handleClose = useCallback(() => {
 		from === MenuItemEnum.GEOFENCE
@@ -320,12 +320,12 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	}, [from, resetToExplore, setShow]);
 
 	const onCloseAuthTracker = useCallback(() => {
-		clearCredsAndLocationClient && clearCredsAndLocationClient();
+		clearCredsAndClients && clearCredsAndClients();
 		setIsEditingRoute(false);
 		setTrackerPoints(undefined);
 		setShowAuthTrackerBox(false);
 		setUI(ResponsiveUIEnum.explore);
-	}, [clearCredsAndLocationClient, setIsEditingRoute, setShowAuthTrackerBox, setTrackerPoints, setUI]);
+	}, [clearCredsAndClients, setIsEditingRoute, setShowAuthTrackerBox, setTrackerPoints, setUI]);
 
 	const onBackUnauthHandler = useCallback(() => {
 		if (isNotifications) {
@@ -557,13 +557,13 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	const footerHeight = useCallback((maxHeight: number) => calculatePixelValue(maxHeight, 50), [calculatePixelValue]);
 
 	const onCloseHandler = useCallback(() => {
-		clearCredsAndLocationClient && clearCredsAndLocationClient();
+		clearCredsAndClients && clearCredsAndClients();
 		setShowStartUnauthSimulation(false);
 		from === MenuItemEnum.GEOFENCE ? setShowUnauthGeofenceBox(false) : setShowUnauthTrackerBox(false);
 		setConfirmCloseSimulation(false);
 		resetToExplore();
 	}, [
-		clearCredsAndLocationClient,
+		clearCredsAndClients,
 		from,
 		resetToExplore,
 		setConfirmCloseSimulation,

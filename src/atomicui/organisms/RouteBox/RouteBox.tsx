@@ -23,7 +23,7 @@ import {
 import { NotFoundCard, StepCard } from "@demo/atomicui/molecules";
 import { appConfig } from "@demo/core/constants";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
-import { useAmplifyMap, useAwsPlace, useAwsRoute, usePersistedData } from "@demo/hooks";
+import { useMap, usePersistedData, usePlace, useRoute } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import {
@@ -107,8 +107,8 @@ const RouteBox: FC<RouteBoxProps> = ({
 		mapUnit: currentMapUnit,
 		isCurrentLocationDisabled,
 		mapProvider: currentMapProvider
-	} = useAmplifyMap();
-	const { search, getPlaceData } = useAwsPlace();
+	} = useMap();
+	const { search, getPlaceData } = usePlace();
 	const {
 		setUI,
 		setBottomSheetMinHeight,
@@ -121,12 +121,12 @@ const RouteBox: FC<RouteBoxProps> = ({
 		setRoutePositions,
 		getRoute,
 		setRouteData,
-		resetStore: resetAwsRouteStore,
+		resetStore: resetRouteStore,
 		routePositions,
 		routeData,
 		directions,
 		setDirections
-	} = useAwsRoute();
+	} = useRoute();
 	const { defaultRouteOptions } = usePersistedData();
 	const [expandRouteOptions, setExpandRouteOptions] = useState(false);
 	const [routeOptions, setRouteOptions] = useState<RouteOptionsType>({ ...defaultRouteOptions });
@@ -379,7 +379,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 	]);
 
 	const onClose = () => {
-		resetAwsRouteStore();
+		resetRouteStore();
 		setShowRouteBox(false);
 		setUI(ResponsiveUIEnum.explore);
 	};

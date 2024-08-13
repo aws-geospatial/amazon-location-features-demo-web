@@ -6,7 +6,7 @@ import { I18nextProvider } from "react-i18next";
 
 import StepCard from "./StepCard";
 
-const useAwsPlace = () => ({
+const usePlace = () => ({
 	getPlaceDataByCoordinates: () => ({
 		Results: [
 			{
@@ -19,7 +19,7 @@ const useAwsPlace = () => ({
 	})
 });
 
-jest.mock("hooks", () => ({ useAwsPlace, useAmplifyMap: () => ({ mapUnit: "Metric" }) }));
+jest.mock("hooks", () => ({ usePlace, useMap: () => ({ mapUnit: "Metric" }) }));
 
 describe("<StepCard/>", () => {
 	let stepCardContainer: HTMLElement;

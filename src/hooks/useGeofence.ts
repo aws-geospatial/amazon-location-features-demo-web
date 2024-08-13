@@ -4,19 +4,19 @@
 import { useMemo } from "react";
 
 import { GeofenceGeometry, ListGeofenceResponseEntry } from "@aws-sdk/client-location";
-import { useAwsGeofenceService } from "@demo/services";
-import { useAmplifyAuthStore, useAwsGeofenceStore } from "@demo/stores";
+import { useGeofenceService } from "@demo/services";
+import { useAuthStore, useGeofenceStore } from "@demo/stores";
 import { EventTypeEnum, NotificationHistoryItemtype } from "@demo/types";
 import { record } from "@demo/utils/analyticsUtils";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { useTranslation } from "react-i18next";
 
-const useAwsGeofence = () => {
-	const store = useAwsGeofenceStore();
+const useGeofence = () => {
+	const store = useGeofenceStore();
 	const { setInitial } = store;
-	const { setState } = useAwsGeofenceStore;
-	const geofenceService = useAwsGeofenceService();
-	const authStore = useAmplifyAuthStore();
+	const { setState } = useGeofenceStore;
+	const geofenceService = useGeofenceService();
+	const authStore = useAuthStore();
 	const { t } = useTranslation();
 
 	const methods = useMemo(
@@ -111,4 +111,4 @@ const useAwsGeofence = () => {
 	return useMemo(() => ({ ...methods, ...store }), [methods, store]);
 };
 
-export default useAwsGeofence;
+export default useGeofence;

@@ -2,7 +2,7 @@ import { FC, memo, useCallback, useEffect, useMemo, useState, useTransition } fr
 
 import { View } from "@aws-amplify/ui-react";
 import { ListGeofenceResponseEntry } from "@aws-sdk/client-location";
-import { useAwsGeofence } from "@demo/hooks";
+import { useGeofence } from "@demo/hooks";
 import * as turf from "@turf/turf";
 import { Layer, Source } from "react-map-gl";
 
@@ -22,7 +22,7 @@ const UnauthGeofencesSimulation: FC<UnauthGeofencesSimulationProps> = ({
 	const [geofences, setGeofences] = useState<Array<ListGeofenceResponseEntry> | undefined>(undefined);
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [isPending, startTransition] = useTransition();
-	const { getGeofencesList } = useAwsGeofence();
+	const { getGeofencesList } = useGeofence();
 
 	const fetchGeofencesList = useCallback(
 		async () =>

@@ -6,7 +6,7 @@ import { FC, lazy, useCallback, useEffect, useMemo, useState } from "react";
 import { Button, Divider, Flex, Text } from "@aws-amplify/ui-react";
 import { IconArrow, IconBackArrow, IconPoweredByAws1 } from "@demo/assets/svgs";
 import { aboutModalData, appConfig } from "@demo/core/constants";
-import { useAmplifyMap } from "@demo/hooks";
+import { useMap } from "@demo/hooks";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { AboutOptionEnum, MapProviderEnum } from "@demo/types/Enums";
 import { useTranslation } from "react-i18next";
@@ -37,7 +37,7 @@ interface AboutModalProps {
 
 const AboutModal: FC<AboutModalProps> = ({ open, onClose }) => {
 	const [selectedOption, setSelectedOption] = useState<AboutOptionEnum | undefined>(AboutOptionEnum.ATTRIBUTION);
-	const { mapProvider } = useAmplifyMap();
+	const { mapProvider } = useMap();
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";

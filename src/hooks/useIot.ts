@@ -3,11 +3,11 @@
 
 import { useMemo } from "react";
 
-import { useAwsIotService } from "@demo/services";
+import { useIotService } from "@demo/services";
 import { errorHandler } from "@demo/utils/errorHandler";
 
-const useAwsIot = () => {
-	const iotService = useAwsIotService();
+const useIot = () => {
+	const iotService = useIotService();
 
 	const methods = useMemo(
 		() => ({
@@ -32,4 +32,4 @@ const useAwsIot = () => {
 	return useMemo(() => ({ ...methods }), [methods]);
 };
 
-export default useAwsIot;
+export default useIot;

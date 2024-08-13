@@ -4,20 +4,20 @@
 import { useMemo } from "react";
 
 import { CalculateRouteRequest } from "@aws-sdk/client-location";
-import { useAwsRouteService } from "@demo/services";
-import { useAmplifyMapStore, useAwsRouteStore } from "@demo/stores";
+import { useRouteService } from "@demo/services";
+import { useMapStore, useRouteStore } from "@demo/stores";
 import { InputType, RouteDataType, SuggestionType } from "@demo/types";
 import { EventTypeEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { useTranslation } from "react-i18next";
 
-const useAwsRoute = () => {
-	const store = useAwsRouteStore();
+const useRoute = () => {
+	const store = useRouteStore();
 	const { setInitial } = store;
-	const { setState } = useAwsRouteStore;
-	const routesService = useAwsRouteService();
-	const mapStore = useAmplifyMapStore();
+	const { setState } = useRouteStore;
+	const routeService = useRouteService();
+	const mapStore = useMapStore();
 	const { t } = useTranslation();
 
 	const methods = useMemo(
@@ -25,7 +25,7 @@ const useAwsRoute = () => {
 			getRoute: async (params: CalculateRouteRequest, triggeredBy: TriggeredByEnum) => {
 				try {
 					setState({ isFetchingRoute: true });
-					const routeData = await routesService.calculateRoute(params, mapStore.mapProvider);
+					const routeData = await routeService.calculateRoute(params, mapStore.mapProvider);
 					return routeData;
 				} catch (error) {
 					errorHandler(error, `${t("error_handler__failed_calculate_route.text") as string} (${params.TravelMode})`);
@@ -67,10 +67,10 @@ const useAwsRoute = () => {
 				setInitial();
 			}
 		}),
-		[setInitial, setState, routesService, mapStore.mapProvider, t]
+		[setInitial, setState, routeService, mapStore.mapProvider, t]
 	);
 
 	return useMemo(() => ({ ...methods, ...store }), [methods, store]);
 };
 
-export default useAwsRoute;
+export default useRoute;
