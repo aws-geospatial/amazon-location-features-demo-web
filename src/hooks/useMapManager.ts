@@ -110,7 +110,7 @@ const useMapManager = ({
 	const { isDesktop } = useDeviceMediaQuery();
 	const { setBottomSheetOpen, setBottomSheetHeight, setBottomSheetMinHeight } = useBottomSheet();
 	const fallbackRegion = Object.values(POOLS)[0];
-	const fastestRegion = localStorage.getItem(FASTEST_REGION) ?? fallbackRegion;
+	const fastestRegion = localStorage.getItem(FASTEST_REGION) ?? fallbackRegion.split(":")[0];
 	const defaultRegion = regionsData.find(option => option.value === fastestRegion) as { value: string; label: string };
 	const isGrabAvailableInRegion = useMemo(() => !!region && GRAB_SUPPORTED_AWS_REGIONS.includes(region), [region]);
 	const isGrabVisible = useMemo(
@@ -492,14 +492,13 @@ const useMapManager = ({
 	/* Handled stack region and cloudformation link */
 	useEffect(() => {
 		if (currentMapProvider === MapProviderEnum.GRAB) {
-			handleStackRegion({
-				value: "ap-southeast-1",
-				label: "regions__ap_southeast_1.text"
-			});
-		}
-
-		if (defaultRegion.value !== stackRegion?.value) {
-			handleStackRegion(defaultRegion);
+			stackRegion?.value !== "ap-southeast-1" &&
+				handleStackRegion({
+					value: "ap-southeast-1",
+					label: "regions__ap_southeast_1.text"
+				});
+		} else {
+			defaultRegion.value !== stackRegion?.value && handleStackRegion(defaultRegion);
 		}
 	}, [defaultRegion, currentMapProvider, handleStackRegion, stackRegion]);
 
