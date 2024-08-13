@@ -53,7 +53,6 @@ const {
 		PRICING_PAGE
 	},
 	ROUTES: {
-		OVERVIEW,
 		SAMPLES,
 		MIGRATE_FROM_GOOGLE_MAPS,
 		MIGRATE_A_WEB_APP,
@@ -271,12 +270,6 @@ const Explore: FC<IProps> = ({
 
 	const exploreMoreOptions = useMemo(
 		() => [
-			{
-				title: t("header__overview.text"),
-				description: t("settings_modal_option__overview.text"),
-				onClickHandler: () => navigate(OVERVIEW),
-				isEnabled: true
-			},
 			{
 				title: t("samples.text"),
 				description: t("settings_modal_option__samples.text"),

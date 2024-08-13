@@ -20,7 +20,7 @@ const List = lazy(() => import("@demo/atomicui/atoms/List").then(module => ({ de
 const Logo = lazy(() => import("@demo/atomicui/atoms/Logo").then(module => ({ default: module.Logo })));
 
 const {
-	ROUTES: { DEMO, OVERVIEW }
+	ROUTES: { DEFAULT, DEMO }
 } = appConfig;
 
 interface SidebarProps {
@@ -136,7 +136,7 @@ const Sidebar: FC<SidebarProps> = ({
 						padding: "16px 20px",
 						cursor: "pointer"
 					}}
-					onClick={() => navigate(OVERVIEW)}
+					onClick={() => navigate(DEFAULT)}
 				/>
 
 				<View className="icon-container">
