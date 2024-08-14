@@ -3,7 +3,7 @@
 
 import { FC, lazy, memo, useCallback, useEffect, useState } from "react";
 
-import { useAwsPlace } from "@demo/hooks";
+import { usePlace } from "@demo/hooks";
 import { SuggestionType } from "@demo/types";
 import { uuid } from "@demo/utils/uuid";
 
@@ -20,7 +20,7 @@ interface Props {
 
 const Marker: FC<Props> = ({ latitude, longitude, searchValue, setSearchValue }) => {
 	const [info, setInfo] = useState<SuggestionType>();
-	const { getPlaceDataByCoordinates, setMarker, marker, selectedMarker } = useAwsPlace();
+	const { getPlaceDataByCoordinates, setMarker, marker, selectedMarker } = usePlace();
 
 	if (marker && selectedMarker) setMarker(undefined);
 

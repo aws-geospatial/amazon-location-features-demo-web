@@ -1,23 +1,20 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { ICredentials } from "@aws-amplify/core";
-
 import { appConfig } from "@demo/core/constants";
-import { AuthTokensType, IStateProps } from "@demo/types";
+import { AuthTokensType, CognitoIdentityCredentials, IStateProps } from "@demo/types";
 
 import createStore from "./createStore";
 
 const {
 	ENV: { CF_TEMPLATE },
-	PERSIST_STORAGE_KEYS: { LOCAL_STORAGE_PREFIX, AMPLIFY_AUTH_DATA }
+	PERSIST_STORAGE_KEYS: { LOCAL_STORAGE_PREFIX, AUTH_DATA }
 } = appConfig;
-const localStorageKey = `${LOCAL_STORAGE_PREFIX}${AMPLIFY_AUTH_DATA}`;
+const localStorageKey = `${LOCAL_STORAGE_PREFIX}${AUTH_DATA}`;
 
-export interface AmplifyAuthStoreProps {
-	credentials?: ICredentials;
+export interface AuthStoreProps {
+	credentials?: CognitoIdentityCredentials;
 	authTokens?: AuthTokensType;
-	isLoading: boolean;
 	isUserAwsAccountConnected: boolean;
 	identityPoolId?: string;
 	region?: string;
@@ -30,11 +27,10 @@ export interface AmplifyAuthStoreProps {
 	cloudFormationLink: string;
 }
 
-export const initialState: IStateProps<AmplifyAuthStoreProps> = {
-	isLoading: false,
+export const initialState: IStateProps<AuthStoreProps> = {
 	isUserAwsAccountConnected: false,
 	autoRegion: true,
 	cloudFormationLink: CF_TEMPLATE
 };
 
-export default createStore<AmplifyAuthStoreProps>(initialState, true, localStorageKey);
+export default createStore<AuthStoreProps>(initialState, true, localStorageKey);

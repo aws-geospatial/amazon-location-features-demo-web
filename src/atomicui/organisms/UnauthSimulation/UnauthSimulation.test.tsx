@@ -16,7 +16,7 @@ const mockProps: UnauthSimulationProps = {
 	startSimulation: false,
 	setStartSimulation: jest.fn(),
 	setShowUnauthSimulationBounds: jest.fn(),
-	clearCredsAndLocationClient: jest.fn(),
+	clearCredsAndClients: jest.fn(),
 	isNotifications: false,
 	setIsNotifications: jest.fn(),
 	confirmCloseSimulation: false,
@@ -25,7 +25,7 @@ const mockProps: UnauthSimulationProps = {
 };
 
 jest.mock("@demo/hooks", () => ({
-	useAwsGeofence: () => ({
+	useGeofence: () => ({
 		unauthNotifications: [
 			{
 				busRouteId: "bus_route_1",

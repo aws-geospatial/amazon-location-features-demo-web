@@ -3691,5 +3691,11 @@
   },
   "web_service": {
     "text": "Webservice"
+  },
+  "error_handler__failed_fetch_tokens": {
+    "text": "Tokens konnten nicht abgerufen werden"
+  },
+  "error_handler__failed_refresh_tokens": {
+    "text": "Tokens konnten nicht aktualisiert werden"
   }
 }

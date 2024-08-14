@@ -5,15 +5,15 @@ import { IStateProps, TrackerType } from "@demo/types";
 
 import createStore from "./createStore";
 
-export interface AwsTrackerStoreProps {
+export interface TrackerStoreProps {
 	isEditingRoute: boolean;
 	trackerPoints?: Array<number[]>;
 	selectedTrackerType: TrackerType;
 }
 
-export const initialState: IStateProps<AwsTrackerStoreProps> = {
+export const initialState: IStateProps<TrackerStoreProps> = {
 	isEditingRoute: false,
 	selectedTrackerType: TrackerType.CAR
 };
 
-export default createStore<AwsTrackerStoreProps>(initialState);
+export default createStore<TrackerStoreProps>(initialState);

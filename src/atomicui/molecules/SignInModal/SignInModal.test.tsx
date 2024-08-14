@@ -4,15 +4,15 @@ import { I18nextProvider } from "react-i18next";
 
 import SignInModal from "./SignInModal";
 
-const useAmplifyAuthReturnValue = {
+const useAuthReturnValue = {
 	onLogin: jest.fn()
 };
-const useAmplifyAuth = () => useAmplifyAuthReturnValue;
+const useAuth = () => useAuthReturnValue;
 const delay = (cb: () => void, ms: number) => setTimeout(cb, ms);
 const onClose = jest.fn();
 
 jest.mock("hooks", () => ({
-	useAmplifyAuth
+	useAuth
 }));
 
 describe("<SignInModal/>", () => {
@@ -48,7 +48,7 @@ describe("<SignInModal/>", () => {
 	it("should call `onLogin` when `sign in` button is clicked", () => {
 		const { getByTestId } = renderComponent();
 		act(() => getByTestId("sign-in-button").click());
-		delay(() => expect(useAmplifyAuthReturnValue.onLogin).toBeCalled(), 500);
+		delay(() => expect(useAuthReturnValue.onLogin).toBeCalled(), 500);
 	});
 
 	it("should call `onClose` when `Maybe later` button is clicked", () => {

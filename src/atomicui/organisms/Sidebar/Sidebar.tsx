@@ -6,7 +6,7 @@ import { FC, lazy } from "react";
 import { Button, Card, Flex, Text, View } from "@aws-amplify/ui-react";
 import { IconClose, IconCompass, IconGear, IconGeofence, IconInfo, IconLockSolid, IconRadar } from "@demo/assets/svgs";
 import { appConfig, marketingMenuOptionsData } from "@demo/core/constants";
-import { useAmplifyAuth, useAmplifyMap, useAwsIot } from "@demo/hooks";
+import { useAuth, useIot, useMap } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import { AnalyticsEventActionsEnum, EventTypeEnum, MapProviderEnum, MenuItemEnum, TriggeredByEnum } from "@demo/types";
 import { ResponsiveUIEnum } from "@demo/types/Enums";
@@ -52,10 +52,9 @@ const Sidebar: FC<SidebarProps> = ({
 	onShowUnauthTrackerBox,
 	onOpenFeedbackModal
 }) => {
-	const { isUserAwsAccountConnected, credentials, onLogin, onLogout, onDisconnectAwsAccount, setAuthTokens } =
-		useAmplifyAuth();
-	const { mapProvider: currentMapProvider } = useAmplifyMap();
-	const { detachPolicy } = useAwsIot();
+	const { isUserAwsAccountConnected, credentials, onLogin, onLogout, onDisconnectAwsAccount } = useAuth();
+	const { mapProvider: currentMapProvider } = useMap();
+	const { detachPolicy } = useIot();
 	const navigate = useNavigate();
 	const isAuthenticated = !!credentials?.authenticated;
 	const { t } = useTranslation();
@@ -118,14 +117,6 @@ const Sidebar: FC<SidebarProps> = ({
 		onCloseSidebar();
 		onShowAboutModal();
 	};
-
-	const _onLogout = async () => {
-		setAuthTokens(undefined);
-		await detachPolicy(credentials!.identityId);
-		await onLogout();
-	};
-
-	const _onLogin = async () => await onLogin();
 
 	return (
 		<Card data-testid="side-bar" className="side-bar">
@@ -204,16 +195,25 @@ const Sidebar: FC<SidebarProps> = ({
 							textAlign="center"
 							onClick={async () => {
 								if (isAuthenticated) {
-									_onLogout();
+									record(
+										[
+											{
+												EventType: EventTypeEnum.SIGN_OUT_STARTED,
+												Attributes: { triggeredBy: TriggeredByEnum.SIDEBAR }
+											}
+										],
+										["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
+									);
+									await detachPolicy(credentials!.identityId);
+									onLogout();
 								} else {
-									await record(
+									record(
 										[
 											{ EventType: EventTypeEnum.SIGN_IN_STARTED, Attributes: { triggeredBy: TriggeredByEnum.SIDEBAR } }
 										],
 										["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
 									);
-
-									_onLogin();
+									onLogin();
 								}
 							}}
 						>

@@ -7,7 +7,7 @@ import { I18nextProvider } from "react-i18next";
 
 import RouteBox from "./RouteBox";
 
-const useAwsPlaceReturnValue = {
+const usePlaceReturnValue = {
 	getPlaceDataByCoordinates: () => ({
 		Results: [
 			{
@@ -57,8 +57,8 @@ const useAwsPlaceReturnValue = {
 		}
 	})
 };
-const useAwsPlace = () => useAwsPlaceReturnValue;
-const useAwsRouteServiceReturnValue = {
+const usePlace = () => usePlaceReturnValue;
+const useRouteServiceReturnValue = {
 	calculateRoute: () => ({
 		Legs: [
 			{
@@ -92,11 +92,11 @@ const useAwsRouteServiceReturnValue = {
 		}
 	})
 };
-const servicesObj = { useAwsRouteService: () => useAwsRouteServiceReturnValue };
+const servicesObj = { useRouteService: () => useRouteServiceReturnValue };
 const MarkerMock = ({ ...props }) => <View {...props} />;
 
-jest.mock("hooks/useAmplifyMap", () => () => ({}));
-jest.mock("hooks/useAwsPlace", () => useAwsPlace);
+jest.mock("hooks/useMap", () => () => ({}));
+jest.mock("hooks/usePlace", () => usePlace);
 jest.mock("services", () => servicesObj);
 jest.mock("react-map-gl", () => ({
 	...jest.requireActual("react-map-gl"),

@@ -3691,5 +3691,11 @@
   },
   "web_service": {
     "text": "웹 서비스"
+  },
+  "error_handler__failed_fetch_tokens": {
+    "text": "토큰을 가져오지 못했습니다."
+  },
+  "error_handler__failed_refresh_tokens": {
+    "text": "토큰 새로고침 실패"
   }
 }

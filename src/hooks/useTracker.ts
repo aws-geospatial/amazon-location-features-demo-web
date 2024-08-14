@@ -3,13 +3,13 @@
 
 import { useMemo } from "react";
 
-import { useAwsTrackerStore } from "@demo/stores";
+import { useTrackerStore } from "@demo/stores";
 import { TrackerType } from "@demo/types";
 
-const useAwsTracker = () => {
-	const store = useAwsTrackerStore();
+const useTracker = () => {
+	const store = useTrackerStore();
 	const { setInitial } = store;
-	const { setState } = useAwsTrackerStore;
+	const { setState } = useTrackerStore;
 
 	const methods = useMemo(
 		() => ({
@@ -39,4 +39,4 @@ const useAwsTracker = () => {
 	return useMemo(() => ({ ...methods, ...store }), [methods, store]);
 };
 
-export default useAwsTracker;
+export default useTracker;

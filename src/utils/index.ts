@@ -10,3 +10,4 @@ export * from "./analyticsUtils";
 export * from "./localstorageUtils";
 export * from "./debounce";
 export * from "./getDomainName";
+export * from "./regionUtils";

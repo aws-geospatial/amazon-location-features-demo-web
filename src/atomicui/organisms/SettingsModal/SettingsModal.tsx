@@ -17,7 +17,7 @@ import {
 	IconShuffle
 } from "@demo/assets/svgs";
 import { appConfig, languageSwitcherData, regionsData } from "@demo/core/constants";
-import { useAmplifyAuth, useAmplifyMap, useAws, useAwsIot, usePersistedData } from "@demo/hooks";
+import { useAuth, useClient, useIot, useMap, usePersistedData } from "@demo/hooks";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import {
 	ConnectFormValuesType,
@@ -91,7 +91,6 @@ const SettingsModal: FC<SettingsModalProps> = ({
 		setConnectFormValues,
 		credentials,
 		onLogin,
-		setAuthTokens,
 		onLogout,
 		autoRegion,
 		region: currentRegion,
@@ -99,7 +98,7 @@ const SettingsModal: FC<SettingsModalProps> = ({
 		stackRegion,
 		cloudFormationLink,
 		handleStackRegion
-	} = useAmplifyAuth();
+	} = useAuth();
 	const {
 		autoMapUnit,
 		setIsAutomaticMapUnit,
@@ -110,10 +109,10 @@ const SettingsModal: FC<SettingsModalProps> = ({
 		setMapProvider,
 		setMapStyle,
 		resetStore: resetMapStore
-	} = useAmplifyMap();
+	} = useMap();
 	const { defaultRouteOptions, setDefaultRouteOptions, setSettingsOptions, settingsOptions } = usePersistedData();
-	const { resetStore: resetAwsStore } = useAws();
-	const { detachPolicy } = useAwsIot();
+	const { resetStore: resetClientStore } = useClient();
+	const { detachPolicy } = useIot();
 	const keyArr = Object.keys(formValues);
 	const isAuthenticated = !!credentials?.authenticated;
 	const { t, i18n } = useTranslation();
@@ -140,14 +139,6 @@ const SettingsModal: FC<SettingsModalProps> = ({
 		[setIsAutomaticMapUnit, setMapUnit, resetAppState]
 	);
 
-	const _onLogin = useCallback(async () => await onLogin(), [onLogin]);
-
-	const _onLogout = useCallback(async () => {
-		setAuthTokens(undefined);
-		await detachPolicy(credentials!.identityId);
-		await onLogout();
-	}, [setAuthTokens, detachPolicy, credentials, onLogout]);
-
 	const isBtnEnabled = useMemo(
 		() => keyArr.filter(key => !!formValues[key as keyof typeof formValues]).length === keyArr.length,
 		[formValues, keyArr]
@@ -161,20 +152,10 @@ const SettingsModal: FC<SettingsModalProps> = ({
 	);
 
 	const onConnect = useCallback(() => {
-		const {
-			IdentityPoolId: identityPoolId,
-			UserPoolId: userPoolId,
-			UserPoolClientId: userPoolWebClientId,
-			UserDomain: domain,
-			WebSocketUrl: webSocketUrl
-		} = formValues;
+		const { IdentityPoolId: identityPoolId } = formValues;
 
 		validateFormValues(
 			identityPoolId,
-			userPoolId,
-			userPoolWebClientId,
-			domain,
-			webSocketUrl,
 			/* Success callback */
 			() => {
 				if (
@@ -188,7 +169,7 @@ const SettingsModal: FC<SettingsModalProps> = ({
 
 				setConnectFormValues(formValues);
 				clearCredentials();
-				resetAwsStore();
+				resetClientStore();
 				setIsUserAwsAccountConnected(true);
 			}
 		);
@@ -201,7 +182,7 @@ const SettingsModal: FC<SettingsModalProps> = ({
 		handleCurrentLocationAndViewpoint,
 		setConnectFormValues,
 		clearCredentials,
-		resetAwsStore,
+		resetClientStore,
 		setIsUserAwsAccountConnected
 	]);
 
@@ -254,11 +235,11 @@ const SettingsModal: FC<SettingsModalProps> = ({
 	const handleRegionChange = useCallback(
 		(region: "Automatic" | RegionEnum) => {
 			setAutoRegion(region === "Automatic", region);
-			resetAwsStore();
+			resetClientStore();
 			resetAppState();
 			resetMapStore();
 		},
-		[setAutoRegion, resetAwsStore, resetAppState, resetMapStore]
+		[setAutoRegion, resetClientStore, resetAppState, resetMapStore]
 	);
 
 	const optionItems: Array<SettingOptionItemType> = useMemo(
@@ -650,8 +631,8 @@ const SettingsModal: FC<SettingsModalProps> = ({
 											variation="primary"
 											fontFamily="AmazonEmber-Bold"
 											width="100%"
-											onClick={async () => {
-												await record(
+											onClick={() => {
+												record(
 													[
 														{
 															EventType: EventTypeEnum.SIGN_IN_STARTED,
@@ -660,8 +641,7 @@ const SettingsModal: FC<SettingsModalProps> = ({
 													],
 													["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
 												);
-
-												_onLogin();
+												onLogin();
 											}}
 										>
 											{t("sign_in.text")}
@@ -678,7 +658,24 @@ const SettingsModal: FC<SettingsModalProps> = ({
 										</Button>
 									</>
 								) : (
-									<Button variation="primary" fontFamily="AmazonEmber-Bold" width="100%" onClick={_onLogout}>
+									<Button
+										variation="primary"
+										fontFamily="AmazonEmber-Bold"
+										width="100%"
+										onClick={async () => {
+											record(
+												[
+													{
+														EventType: EventTypeEnum.SIGN_OUT_STARTED,
+														Attributes: { triggeredBy: TriggeredByEnum.SETTINGS_MODAL }
+													}
+												],
+												["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
+											);
+											await detachPolicy(credentials!.identityId);
+											onLogout();
+										}}
+									>
 										{t("sign_out.text")}
 									</Button>
 								)
@@ -720,39 +717,43 @@ const SettingsModal: FC<SettingsModalProps> = ({
 			}
 		],
 		[
-			currentMapUnit,
-			autoMapUnit,
-			i18n,
-			isGrabVisible,
-			handleAutoMapUnitChange,
-			onMapUnitChange,
-			currentMapProvider,
-			handleMapProviderChange,
-			selectedMapStyle,
-			defaultRouteOptions,
-			isUserAwsAccountConnected,
-			onDisconnectAwsAccount,
-			onConnect,
-			formValues,
-			isBtnEnabled,
-			keyArr,
-			onChangeFormValues,
-			isAuthenticated,
-			_onLogin,
-			_onLogout,
-			stackRegion,
-			cloudFormationLink,
 			t,
-			langDir,
-			isLtr,
+			autoMapUnit.selected,
+			autoMapUnit.system,
+			currentMapUnit,
+			handleAutoMapUnitChange,
+			currentMapProvider,
+			isGrabVisible,
+			selectedMapStyle,
 			mapButtons,
-			handleLanguageChange,
-			handleRouteOptionChange,
+			defaultRouteOptions.avoidTolls,
+			defaultRouteOptions.avoidFerries,
 			autoRegion,
 			currentRegion,
-			handleRegionChange,
+			langDir,
 			fastestRegion,
-			_onSelect
+			isLtr,
+			stackRegion,
+			_onSelect,
+			cloudFormationLink,
+			isUserAwsAccountConnected,
+			isAuthenticated,
+			onDisconnectAwsAccount,
+			keyArr,
+			isBtnEnabled,
+			onConnect,
+			onMapUnitChange,
+			handleMapProviderChange,
+			i18n.language,
+			handleLanguageChange,
+			handleRouteOptionChange,
+			handleRegionChange,
+			onLogin,
+			detachPolicy,
+			credentials,
+			onLogout,
+			formValues,
+			onChangeFormValues
 		]
 	);
 

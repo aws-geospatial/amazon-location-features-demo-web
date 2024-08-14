@@ -5,7 +5,7 @@ import { FC, memo, useCallback, useEffect, useMemo, useState } from "react";
 
 import { View } from "@aws-amplify/ui-react";
 import { IconSelected, IconSuggestion } from "@demo/assets/svgs";
-import { useAwsPlace } from "@demo/hooks";
+import { usePlace } from "@demo/hooks";
 import { SuggestionType } from "@demo/types";
 import { Marker } from "react-map-gl";
 
@@ -30,7 +30,7 @@ const SuggestionMarker: FC<Props> = ({
 	...rest
 }) => {
 	const [info, setInfo] = useState<SuggestionType | undefined>(undefined);
-	const { getPlaceData, setSelectedMarker, suggestions, hoveredMarker, setHoveredMarker, clearPoiList } = useAwsPlace();
+	const { getPlaceData, setSelectedMarker, suggestions, hoveredMarker, setHoveredMarker, clearPoiList } = usePlace();
 
 	const getPlaceInfo = useCallback(
 		async (placeId: string) => {

@@ -38,6 +38,7 @@ export enum EventTypeEnum {
 	SIGN_IN_STARTED = "SIGN_IN_STARTED",
 	SIGN_IN_SUCCESSFUL = "_userauth.sign_in",
 	SIGN_IN_FAILED = "_userauth.auth_fail",
+	SIGN_OUT_STARTED = "SIGN_OUT_STARTED",
 	SIGN_OUT_SUCCESSFUL = "SIGN_OUT_SUCCESSFUL",
 	SIGN_OUT_FAILED = "SIGN_OUT_FAILED",
 	AWS_ACCOUNT_CONNECTION_STARTED = "AWS_ACCOUNT_CONNECTION_STARTED",
@@ -307,4 +308,15 @@ export enum ResponsiveUIEnum {
 	auth_geofence = "auth_geofence",
 	unauth_geofence = "unauth_geofence",
 	direction_to_routes = "direction_to_routes"
+}
+
+export enum MqttConnectionState {
+	CLOSED = "closed",
+	CONNECT = "connect",
+	CONNECTION_FAILURE = "connection_failure",
+	CONNECTION_SUCCESS = "connection_success",
+	DISCONNECT = "disconnect",
+	ERROR = "error",
+	INTERRUPT = "interrupt",
+	RESUME = "resume"
 }

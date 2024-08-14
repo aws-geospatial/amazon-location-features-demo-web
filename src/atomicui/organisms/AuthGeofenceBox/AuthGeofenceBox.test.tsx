@@ -50,7 +50,7 @@ const mockGeofencesData = [
 	}
 ];
 
-const mockUseAwsGeofenceData: {
+const mockUseGeofenceData: {
 	getGeofencesList: () => {};
 	isFetchingGeofences: boolean;
 	geofences?: Array<ListGeofenceResponseEntry>;
@@ -68,18 +68,18 @@ const mockUseAwsGeofenceData: {
 	setIsAddingGeofence: jest.fn()
 };
 
-const mockUseAwsPlaceData = {
+const mockUsePlaceData = {
 	getPlaceData: jest.fn(),
 	search: jest.fn()
 };
 
 jest.mock("@demo/hooks", () => ({
-	useAmplifyMap: () => ({
+	useMap: () => ({
 		mapUnit: "METRIC",
 		mapProvider: "SomeProvider"
 	}),
-	useAwsGeofence: () => mockUseAwsGeofenceData,
-	useAwsPlace: () => mockUseAwsPlaceData,
+	useGeofence: () => mockUseGeofenceData,
+	usePlace: () => mockUsePlaceData,
 	useMediaQuery: () => true
 }));
 
@@ -92,9 +92,9 @@ describe("<AuthGeofenceBox />", () => {
 		);
 
 	beforeEach(() => {
-		mockUseAwsGeofenceData.isFetchingGeofences = false;
-		mockUseAwsGeofenceData.geofences = undefined;
-		mockUseAwsGeofenceData.isAddingGeofence = false;
+		mockUseGeofenceData.isFetchingGeofences = false;
+		mockUseGeofenceData.geofences = undefined;
+		mockUseGeofenceData.isAddingGeofence = false;
 	});
 
 	it("renders the component correctly", () => {
@@ -116,14 +116,14 @@ describe("<AuthGeofenceBox />", () => {
 	});
 
 	it("should show the loader when fetching geofences", () => {
-		mockUseAwsGeofenceData.isFetchingGeofences = true;
+		mockUseGeofenceData.isFetchingGeofences = true;
 		const { getByTestId } = renderComponent();
 
 		waitFor(
 			() => {
 				expect(getByTestId("geofences-list-container")).toBeInTheDocument();
 				expect(getByTestId("auth-geofence-box-loader")).toBeInTheDocument();
-				expect(mockUseAwsGeofenceData.getGeofencesList).toHaveBeenCalled();
+				expect(mockUseGeofenceData.getGeofencesList).toHaveBeenCalled();
 			},
 			{
 				timeout: 10000,
@@ -137,7 +137,7 @@ describe("<AuthGeofenceBox />", () => {
 	});
 
 	it("should render the geofences list", () => {
-		mockUseAwsGeofenceData.geofences = [...mockGeofencesData];
+		mockUseGeofenceData.geofences = [...mockGeofencesData];
 		const { getByTestId } = renderComponent();
 
 		waitFor(
@@ -183,7 +183,7 @@ describe("<AuthGeofenceBox />", () => {
 			() => {
 				expect(getByTestId("auth-geofence-box-add-button")).toBeInTheDocument();
 				fireEvent.click(getByTestId("auth-geofence-box-add-button"));
-				expect(mockUseAwsGeofenceData.setIsAddingGeofence).toHaveBeenCalled();
+				expect(mockUseGeofenceData.setIsAddingGeofence).toHaveBeenCalled();
 			},
 			{
 				timeout: 10000,
@@ -197,7 +197,7 @@ describe("<AuthGeofenceBox />", () => {
 	});
 
 	it("should render add geofence and allow to use search", () => {
-		mockUseAwsGeofenceData.isAddingGeofence = true;
+		mockUseGeofenceData.isAddingGeofence = true;
 		const { getByTestId } = renderComponent();
 
 		waitFor(
@@ -206,7 +206,7 @@ describe("<AuthGeofenceBox />", () => {
 				expect(getByTestId("auth-geofence-box-search-input")).toBeInTheDocument();
 				fireEvent.change(getByTestId("auth-geofence-box-search-input"), { target: { value: "test" } });
 				expect(getByTestId("auth-geofence-box-search-input")).toHaveValue("test");
-				expect(mockUseAwsPlaceData.search).toHaveBeenCalled();
+				expect(mockUsePlaceData.search).toHaveBeenCalled();
 			},
 			{
 				timeout: 10000,
@@ -220,7 +220,7 @@ describe("<AuthGeofenceBox />", () => {
 	});
 
 	it("should allow to select geofence and edit it", () => {
-		mockUseAwsGeofenceData.geofences = [...mockGeofencesData];
+		mockUseGeofenceData.geofences = [...mockGeofencesData];
 		const { getByTestId } = renderComponent();
 
 		waitFor(
@@ -228,7 +228,7 @@ describe("<AuthGeofenceBox />", () => {
 				expect(getByTestId("geofences-list-container")).toBeInTheDocument();
 				expect(getByTestId("test_geofence_1")).toBeInTheDocument();
 				fireEvent.click(getByTestId("test_geofence_1"));
-				mockUseAwsGeofenceData.isAddingGeofence = true;
+				mockUseGeofenceData.isAddingGeofence = true;
 				expect(getByTestId("auth-geofence-box-name-field")).toHaveValue("test_geofence_1");
 				expect(getByTestId("geofence-radius-slider")).toBeInTheDocument();
 			},
