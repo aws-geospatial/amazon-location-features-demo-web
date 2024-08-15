@@ -647,7 +647,7 @@ Resources:
     Properties:
       FunctionName: AmazonLocationDemoIotEndpointProvider
       Handler: index.handler
-      Runtime: nodejs16.x
+      Runtime: nodejs20.x
       Timeout: 30
       Role: !GetAtt AmazonLocationLambdaExecutionRole.Arn
       Code:
@@ -801,7 +801,7 @@ Resources:
       FunctionName: AmazonLocationDemoIoTPublisher
       Handler: index.handler
       Role: !GetAtt [AmazonLocationLambdaExecutionRole, Arn]
-      Runtime: nodejs16.x
+      Runtime: nodejs20.x
       Timeout: 30
 
   AmazonLocationLambdaExecutionRole:
