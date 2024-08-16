@@ -652,94 +652,108 @@ Resources:
       Role: !GetAtt AmazonLocationLambdaExecutionRole.Arn
       Code:
         ZipFile: |
-          var aws = require("aws-sdk");
-          exports.handler = function(event, context) {
-              console.log("REQUEST RECEIVED:\n" + JSON.stringify(event));
-              const iot = new aws.Iot();
-              // For Delete requests, immediately send a SUCCESS response.
+          const {IoT} = require("@aws-sdk/client-iot");
 
-              if (event.RequestType == "Delete") {
-              iot.listTargetsForPolicy({policyName: 'AmazonLocationIotPolicyUnauth'}, function(err, data) {
-                if (err) console.log(err, err.stack); // an error occurred
-                else     {
-                  const targets =  data.targets; 
-                  console.log(targets);
-                  targets.forEach(target => {
-                  const detachParams = {
-                    policyName: 'AmazonLocationIotPolicyUnauth',
-                    target: target
-                  };
-                  console.log('Detaching -----', target, detachParams);
-                  iot.detachPolicy(detachParams, function(err, data) {
-                    if (err) {
-                      console.log('Inside detachpol');
-                      console.log(err, err.stack);
-                    } else {
-                      console.log('Detached policy from target');
-                    }
-                  });
-                });
+          const policyName = "AmazonLocationIotPolicyUnauth";
+          const iotClient = new IoT();
+
+          exports.handler = function (event, context) {
+                console.log("REQUEST RECEIVED:\n" + JSON.stringify(event));
+
+                // For Delete requests, immediately send a SUCCESS response.
+                if (event.RequestType == "Delete") {
+                      iotClient.listTargetsForPolicy({policyName}, (err, data) => {
+                            if (err) console.log(err, err.stack); // an error occurred
+                            else {
+                                  const targets = data.targets;
+
+                                  targets.forEach((target) => {
+                                        iotClient.detachPolicy(
+                                              {
+                                                    policyName,
+                                                    target,
+                                              },
+                                              (err, _) => {
+                                                    if (err) {
+                                                          console.log("Inside detachpol");
+                                                          console.log(err, err.stack);
+                                                    } else {
+                                                          console.log(
+                                                                "Detached policy from target"
+                                                          );
+                                                    }
+                                              }
+                                        );
+                                  });
+                            }
+                      });
+                      sendResponse(event, context, "SUCCESS");
+                      return;
+                } else {
+                      iotClient.describeEndpoint({}, (err, data) => {
+                            let responseData, responseStatus;
+
+                            if (err) {
+                                  responseStatus = "FAILED";
+                                  responseData = {Error: "describeEndpoint call failed"};
+                                  console.log(responseData.Error + ":\n", err);
+                            } else {
+                                  responseStatus = "SUCCESS";
+                                  responseData = {
+                                        IotEndpointAddress: data.endpointAddress,
+                                  };
+                                  console.log(
+                                        "response data: " + JSON.stringify(responseData)
+                                  );
+                            }
+
+                            sendResponse(event, context, responseStatus, responseData);
+                      });
                 }
-              });
-              sendResponse(event, context, "SUCCESS");
-              return;
-              }
-              else {
-              iot.describeEndpoint({}, (err, data) => {
-              let responseData, responseStatus;
-                  if (err) {
-                      responseStatus = "FAILED";
-                      responseData = { Error: "describeEndpoint call failed" };
-                      console.log(responseData.Error + ":\n", err);
-                  } else  {
-                      responseStatus = "SUCCESS";
-                      responseData = { IotEndpointAddress: data.endpointAddress.replace('.iot', '-ats.iot')};
-                      console.log('response data: ' + JSON.stringify(responseData));
-                  }
-                  sendResponse(event, context, responseStatus, responseData);
-              });
-            }
           };
+
           // Send response to the pre-signed S3 URL
           function sendResponse(event, context, responseStatus, responseData) {
-              var responseBody = JSON.stringify({
-                  Status: responseStatus,
-                  Reason: "See the details in CloudWatch Log Stream: " + context.logStreamName,
-                  PhysicalResourceId: context.logStreamName,
-                  StackId: event.StackId,
-                  RequestId: event.RequestId,
-                  LogicalResourceId: event.LogicalResourceId,
-                  Data: responseData
-              });
-              console.log("RESPONSE BODY:\n", responseBody);
-              var https = require("https");
-              var url = require("url");
-              var parsedUrl = url.parse(event.ResponseURL);
-              var options = {
-                  hostname: parsedUrl.hostname,
-                  port: 443,
-                  path: parsedUrl.path,
-                  method: "PUT",
-                  headers: {
-                      "content-type": "",
-                      "content-length": responseBody.length
-                  }
-              };
-              console.log("SENDING RESPONSE...\n");
-              var request = https.request(options, function(response) {
-                  console.log("STATUS: " + response.statusCode);
-                  console.log("HEADERS: " + JSON.stringify(response.headers));
-                  // Tell AWS Lambda that the function execution is done
-                  context.done();
-              });
-              request.on("error", function(error) {
-                  console.log("sendResponse Error:" + error);
-                  // Tell AWS Lambda that the function execution is done
-                  context.done();
-              });
-              // write data to request body
-              request.write(responseBody);
-              request.end();
+                const responseBody = JSON.stringify({
+                      Status: responseStatus,
+                      Reason:
+                            "See the details in CloudWatch Log Stream: " +
+                            context.logStreamName,
+                      PhysicalResourceId: context.logStreamName,
+                      StackId: event.StackId,
+                      RequestId: event.RequestId,
+                      LogicalResourceId: event.LogicalResourceId,
+                      Data: responseData,
+                });
+                console.log("RESPONSE BODY:\n", responseBody);
+                const https = require("https");
+                const url = require("url");
+                const parsedUrl = url.parse(event.ResponseURL);
+                const options = {
+                      hostname: parsedUrl.hostname,
+                      port: 443,
+                      path: parsedUrl.path,
+                      method: "PUT",
+                      headers: {
+                            "content-type": "",
+                            "content-length": responseBody.length,
+                      },
+                };
+                console.log("SENDING RESPONSE...\n");
+                const request = https.request(options, function (response) {
+                      console.log("STATUS: " + response.statusCode);
+                      console.log("HEADERS: " + JSON.stringify(response.headers));
+                      // Tell AWS Lambda that the function execution is done
+                      context.done();
+                });
+                request.on("error", function (error) {
+                      console.log("sendResponse Error:" + error);
+                      // Tell AWS Lambda that the function execution is done
+                      context.done();
+                });
+                // write data to request body
+                request.write(responseBody);
+                request.end();
           }
     DependsOn:
       - AmazonLocationDemoIoTPolicy
@@ -750,54 +764,75 @@ Resources:
     Properties:
       Code:
         ZipFile: |
-          const AWS = require('aws-sdk')
-          const iot = new AWS.Iot();
-          exports.handler =  function(event) {
-            console.log("event===>>>", JSON.stringify(event));
-            var param = {
-              endpointType: "iot:Data-ATS"
-            };
-            iot.describeEndpoint(param, function(err, data) {
-              if (err) {
-                console.log("error===>>>", err, err.stack); // an error occurred
-              } else {
-                var endp = data['endpointAddress'];
-                const iotdata = new AWS.IotData({endpoint: endp});    
-                const trackerEvent = event["detail"]["EventType"];
-                const src = event["source"];
-                const time = event["time"];
-                const gfId = event["detail"]["GeofenceId"];
-                const stopName = event["detail"]["GeofenceProperties"]["stop_name"];	
-                const resources = event["resources"][0];	
-                const splitResources = resources.split(".");	
-                const geofenceCollection = splitResources[splitResources.length - 1];
-                const coordinates = event["detail"]["Position"];                               
-                const identityId = `${event["detail"]["PositionProperties"]["region"]}:${event["detail"]["PositionProperties"]["id"]}`
-                console.log("identityId===>>>", identityId)
-                const msg =  {
-                    "trackerEventType" : trackerEvent,
-                    "source" : src,
-                    "eventTime" : time,
-                    "geofenceId" : gfId,
-                    "stopName": stopName,
-                    "coordinates": coordinates,	
-                    "geofenceCollection": geofenceCollection
-                  };
-                const params = {
-                  topic: `${identityId}/tracker`,
-                  payload: JSON.stringify(msg),
-                  qos: 0
-                };
-                iotdata.publish(params, function(err, data) {
-                    if (err) {
-                      console.log("error===>>>", err, err.stack); // an error occurred
-                    } else {
-                      console.log("Ladmbda triggered===>>>", trackerEvent);  // successful response 
-                    }
-                }); 
-              }
-            });
-          }
+          const {IoT} = require("@aws-sdk/client-iot");
+          const {IoTDataPlane} = require("@aws-sdk/client-iot-data-plane");
+
+          const iotClient = new IoT();
+
+          exports.handler = function (event) {
+                console.log("event===>>>", JSON.stringify(event));
+
+                iotClient.describeEndpoint(
+                      {
+                            endpointType: "iot:Data-ATS",
+                      },
+                      (err, data) => {
+                            if (err) {
+                                  console.log("error===>>>", err, err.stack); // an error occurred
+                            } else {
+                                  const endpointAddress = data.endpointAddress;
+                                  const iotDataPlaneClient = new IoTDataPlane({
+                                        endpoint: `https://${endpointAddress}`,
+                                  });
+                                  const trackerEventType = event["detail"]["EventType"];
+                                  const source = event["source"];
+                                  const eventTime = event["time"];
+                                  const geofenceId = event["detail"]["GeofenceId"];
+                                  const stopName =
+                                        event["detail"]["GeofenceProperties"][
+                                              "stop_name"
+                                        ];
+                                  const coordinates = event["detail"]["Position"];
+                                  const identityId = `${event["detail"]["PositionProperties"]["region"]}:${event["detail"]["PositionProperties"]["id"]}`;
+                                  const resources = event["resources"][0];
+                                  const splitResources = resources.split(".");
+                                  const geofenceCollection =
+                                        splitResources[splitResources.length - 1];
+                                  const msg = {
+                                        trackerEventType,
+                                        source,
+                                        eventTime,
+                                        geofenceId,
+                                        stopName,
+                                        coordinates,
+                                        geofenceCollection,
+                                  };
+
+                                  iotDataPlaneClient.publish(
+                                        {
+                                              topic: `${identityId}/tracker`,
+                                              payload: JSON.stringify(msg),
+                                              qos: 0,
+                                        },
+                                        (err, _) => {
+                                              if (err) {
+                                                    console.log(
+                                                          "error===>>>",
+                                                          err,
+                                                          err.stack
+                                                    ); // an error occurred
+                                              } else {
+                                                    console.log(
+                                                          "Ladmbda triggered===>>>",
+                                                          trackerEventType
+                                                    ); // successful response
+                                              }
+                                        }
+                                  );
+                            }
+                      }
+                );
+          };
       FunctionName: AmazonLocationDemoIoTPublisher
       Handler: index.handler
       Role: !GetAtt [AmazonLocationLambdaExecutionRole, Arn]
