@@ -10,8 +10,8 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"@aws-sdk/client-iam": "3.529.1",
-		"aws-amplify": "6.0.20",
+		"@aws-sdk/client-iam": "3.624.0",
+		"aws-amplify": "6.5.0",
 		"crypto": "1.0.1",
 		"dotenv": "16.0.3",
 		"ramda": "0.29.0"
