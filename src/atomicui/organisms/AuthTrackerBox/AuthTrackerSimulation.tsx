@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { FC, MutableRefObject, memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { CalculateRouteRequest } from "@aws-sdk/client-location";
 import { useGeofence, useMap, usePersistedData, useRoute, useTracker } from "@demo/hooks";
@@ -9,7 +9,7 @@ import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { DistanceUnitEnum, MapUnitEnum, RouteDataType, TrackerType, TravelMode } from "@demo/types";
 import { TriggeredByEnum } from "@demo/types/Enums";
 import * as turf from "@turf/turf";
-import { Layer, LayerProps, MapRef, Marker, Source } from "react-map-gl";
+import { Layer, LayerProps, MapRef, Marker, Source } from "react-map-gl/maplibre";
 
 import { trackerTypes } from "./AuthTrackerBox";
 
@@ -17,7 +17,7 @@ const { IMPERIAL } = MapUnitEnum;
 const { MILES, KILOMETERS } = DistanceUnitEnum;
 
 interface AuthTrackerSimulationProps {
-	mapRef: MapRef | null;
+	mapRef: MutableRefObject<MapRef | null>;
 	isSaved: boolean;
 	routeData?: RouteDataType;
 	setRouteData: (rd?: RouteDataType) => void;
@@ -194,7 +194,7 @@ const AuthTrackerSimulation: FC<AuthTrackerSimulationProps> = ({
 			const boundingBox = routeData.Summary?.RouteBBox;
 
 			isDesktop
-				? mapRef?.fitBounds(
+				? mapRef.current?.fitBounds(
 						[
 							[boundingBox![0], boundingBox![1]],
 							[boundingBox![2], boundingBox![3]]
@@ -211,7 +211,7 @@ const AuthTrackerSimulation: FC<AuthTrackerSimulationProps> = ({
 						}
 				  )
 				: isTablet
-				? mapRef?.fitBounds(
+				? mapRef.current?.fitBounds(
 						[
 							[boundingBox![0], boundingBox![1]],
 							[boundingBox![2], boundingBox![3]]
@@ -227,7 +227,7 @@ const AuthTrackerSimulation: FC<AuthTrackerSimulationProps> = ({
 							linear: false
 						}
 				  )
-				: mapRef?.fitBounds(
+				: mapRef.current?.fitBounds(
 						[
 							[boundingBox![0], boundingBox![1]],
 							[boundingBox![2], boundingBox![3]]

@@ -274,7 +274,7 @@ jest.mock("mapbox-gl-draw-circle", () => ({
 	SimpleSelectMode: {}
 }));
 
-jest.mock("react-map-gl", () => ({
+jest.mock("react-map-gl/maplibre", () => ({
 	Marker: jest.fn().mockImplementation(() => null),
 	Source: jest.fn().mockImplementation(() => null),
 	Layer: jest.fn().mockImplementation(() => null),

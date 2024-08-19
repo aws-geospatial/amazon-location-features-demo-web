@@ -6,6 +6,7 @@ import {
 	Dispatch,
 	FC,
 	MouseEvent,
+	MutableRefObject,
 	SetStateAction,
 	lazy,
 	useCallback,
@@ -37,7 +38,7 @@ import { record } from "@demo/utils/analyticsUtils";
 import { uuid } from "@demo/utils/uuid";
 import * as turf from "@turf/turf";
 import { useTranslation } from "react-i18next";
-import { Layer, MapRef, Source } from "react-map-gl";
+import { Layer, LngLat, MapRef, Source } from "react-map-gl/maplibre";
 import { Tooltip } from "react-tooltip";
 import "./styles.scss";
 
@@ -62,7 +63,7 @@ const {
 } = appConfig;
 
 export interface AuthGeofenceBoxProps {
-	mapRef: MapRef | null;
+	mapRef: MutableRefObject<MapRef | null>;
 	setShowAuthGeofenceBox: (b: boolean) => void;
 	isEditingAuthRoute: boolean;
 	setIsEditingAuthRoute: Dispatch<SetStateAction<boolean>>;
@@ -158,7 +159,7 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 				let latitude = US.latitude;
 
 				if (!!mapRef) {
-					const { lng, lat } = mapRef.getCenter();
+					const { lng, lat } = mapRef.current?.getCenter() as LngLat;
 					longitude = lng;
 					latitude = lat;
 				}

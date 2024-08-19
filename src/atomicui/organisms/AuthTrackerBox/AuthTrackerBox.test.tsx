@@ -13,7 +13,7 @@ Object.defineProperty(window, "location", {
 
 const props: AuthTrackerBoxProps = {
 	mapRef: {
-		...jest.requireActual("react-map-gl").MapRef,
+		...jest.requireActual("react-map-gl/maplibre").MapRef,
 		getCenter: () => ({
 			lng: Number(faker.address.longitude()),
 			lat: Number(faker.address.latitude())

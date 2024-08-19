@@ -4,7 +4,7 @@ import { View } from "@aws-amplify/ui-react";
 import { ListGeofenceResponseEntry } from "@aws-sdk/client-location";
 import { useGeofence } from "@demo/hooks";
 import * as turf from "@turf/turf";
-import { Layer, Source } from "react-map-gl";
+import { Layer, Source } from "react-map-gl/maplibre";
 
 interface UnauthGeofencesSimulationProps {
 	id: string;

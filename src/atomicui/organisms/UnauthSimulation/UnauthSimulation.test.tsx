@@ -2,11 +2,16 @@ import i18n from "@demo/locales/i18n";
 import { MenuItemEnum } from "@demo/types";
 import { fireEvent, render, waitFor } from "@testing-library/react";
 import { I18nextProvider } from "react-i18next";
+import { MapRef } from "react-map-gl/maplibre";
 
 import UnauthSimulation, { UnauthSimulationProps } from "./UnauthSimulation";
 
 const mockProps: UnauthSimulationProps = {
-	mapRef: null,
+	mapRef: {
+		current: {
+			fitBounds: () => {}
+		} as unknown as MapRef
+	},
 	from: MenuItemEnum.TRACKER,
 	setShowUnauthGeofenceBox: jest.fn(),
 	setShowUnauthTrackerBox: jest.fn(),

@@ -30,7 +30,8 @@ const useCredsManager = () => {
 		userPoolId,
 		userPoolClientId,
 		authTokens,
-		setAuthTokens
+		setAuthTokens,
+		authOptions
 	} = useAuth();
 	const {
 		locationClient,
@@ -65,7 +66,7 @@ const useCredsManager = () => {
 
 	/* Fetch the current user credentials */
 	useEffect(() => {
-		if (credentials && credentials.expiration) {
+		if (credentials && credentials.expiration && authOptions?.transformRequest) {
 			const now = new Date();
 			const expiration = new Date(credentials.expiration);
 
@@ -93,7 +94,8 @@ const useCredsManager = () => {
 		refreshTokens,
 		authTokens,
 		setAuthTokens,
-		refreshCredentials
+		refreshCredentials,
+		authOptions
 	]);
 
 	/* Instantiate location and iot clients whenever the credentials change */

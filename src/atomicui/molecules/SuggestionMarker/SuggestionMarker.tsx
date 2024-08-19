@@ -7,7 +7,7 @@ import { View } from "@aws-amplify/ui-react";
 import { IconSelected, IconSuggestion } from "@demo/assets/svgs";
 import { usePlace } from "@demo/hooks";
 import { SuggestionType } from "@demo/types";
-import { Marker } from "react-map-gl";
+import { Marker } from "react-map-gl/maplibre";
 
 import { Popup } from "../Popup";
 
