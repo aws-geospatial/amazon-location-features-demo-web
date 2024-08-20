@@ -24,6 +24,7 @@ import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { ShowStateType } from "@demo/types";
 import { MenuItemEnum, ResponsiveUIEnum, SettingOptionEnum } from "@demo/types/Enums";
+import type { GeolocateControl as GeolocateControlRef } from "maplibre-gl";
 import { useTranslation } from "react-i18next";
 import { MapRef } from "react-map-gl/maplibre";
 import { useLocation } from "react-router-dom";
@@ -46,8 +47,7 @@ const {
 
 interface IProps {
 	mapRef: MutableRefObject<MapRef | null>;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	geolocateControlRef: MutableRefObject<any | null>;
+	geolocateControlRef: MutableRefObject<GeolocateControlRef | null>;
 	SearchBoxEl: (ref?: MutableRefObject<RefHandles | null>) => JSX.Element;
 	MapButtons: (ref?: MutableRefObject<RefHandles | null>) => JSX.Element;
 	RouteBox: (ref?: MutableRefObject<RefHandles | null>) => JSX.Element;

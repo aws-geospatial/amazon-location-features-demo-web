@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { MutableRefObject, useCallback, useEffect, useMemo, useState } from "react";
 
 import { showToast } from "@demo/core/Toast";
 import { appConfig, regionsData } from "@demo/core/constants";
@@ -16,6 +16,7 @@ import {
 } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
 import { getCurrentLocation } from "@demo/utils/getCurrentLocation";
+import type { GeolocateControl as GeolocateControlRef } from "maplibre-gl";
 import { omit } from "ramda";
 import { useTranslation } from "react-i18next";
 import { GeolocateErrorEvent, GeolocateResultEvent, MapLayerMouseEvent, MapRef } from "react-map-gl/maplibre";
@@ -41,9 +42,8 @@ const searchParams = new URLSearchParams(window.location.search);
 let switchToMapProvider = searchParams.get(DATA_PROVIDER);
 
 interface UseMapManagerProps {
-	mapRef: React.MutableRefObject<MapRef | null>;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	geolocateControlRef: React.MutableRefObject<any | null>;
+	mapRef: MutableRefObject<MapRef | null>;
+	geolocateControlRef: MutableRefObject<GeolocateControlRef | null>;
 	isUnauthGeofenceBoxOpen: boolean;
 	isUnauthTrackerBoxOpen: boolean;
 	isAuthGeofenceBoxOpen: boolean;

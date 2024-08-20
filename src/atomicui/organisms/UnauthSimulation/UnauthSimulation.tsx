@@ -46,6 +46,7 @@ import {
 } from "@demo/types";
 import { ResponsiveUIEnum } from "@demo/types/Enums";
 import { format, parseISO } from "date-fns";
+import type { GeolocateControl as GeolocateControlRef } from "maplibre-gl";
 import { useTranslation } from "react-i18next";
 import { LngLatBoundsLike, MapRef } from "react-map-gl/maplibre";
 
@@ -89,8 +90,7 @@ const {
 
 export interface UnauthSimulationProps {
 	mapRef: MutableRefObject<MapRef | null>;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	geolocateControlRef: MutableRefObject<any | null>;
+	geolocateControlRef: MutableRefObject<GeolocateControlRef | null>;
 	from: MenuItemEnum;
 	setShowUnauthGeofenceBox: (b: boolean) => void;
 	setShowUnauthTrackerBox: (b: boolean) => void;

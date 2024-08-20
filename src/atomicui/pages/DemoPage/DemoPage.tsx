@@ -25,6 +25,7 @@ import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { GrabMapEnum, MapProviderEnum, MapStyleFilterTypes, MenuItemEnum, ShowStateType } from "@demo/types";
 import { ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { errorHandler } from "@demo/utils/errorHandler";
+import type { GeolocateControl as GeolocateControlRef } from "maplibre-gl";
 import { useTranslation } from "react-i18next";
 import {
 	AttributionControl,
@@ -176,8 +177,7 @@ const DemoPage: FC = () => {
 	const [startSimulation, setStartSimulation] = useState(false);
 	const [searchBoxValue, setSearchBoxValue] = useState("");
 	const mapRef = useRef<MapRef | null>(null);
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const geolocateControlRef = useRef<any | null>(null);
+	const geolocateControlRef = useRef<GeolocateControlRef | null>(null);
 	const { authOptions, region, isUserAwsAccountConnected } = useAuth();
 	const {
 		mapProvider: currentMapProvider,

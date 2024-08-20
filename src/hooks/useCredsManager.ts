@@ -88,14 +88,14 @@ const useCredsManager = () => {
 		}
 	}, [
 		credentials,
+		authOptions,
 		fetchCredentials,
 		resetClientStore,
 		clearCredsAndClients,
 		refreshTokens,
 		authTokens,
 		setAuthTokens,
-		refreshCredentials,
-		authOptions
+		refreshCredentials
 	]);
 
 	/* Instantiate location and iot clients whenever the credentials change */
@@ -131,16 +131,7 @@ const useCredsManager = () => {
 			window.history.replaceState(undefined, "", DEMO);
 			clearCredsAndClients();
 		}
-	}, [
-		clearCredsAndClients,
-		credentials,
-		identityPoolId,
-		userPoolClientId,
-		region,
-		userPoolId,
-		fetchCredentials,
-		fetchTokens
-	]);
+	}, [clearCredsAndClients, credentials, identityPoolId, userPoolClientId, region, userPoolId, fetchTokens]);
 
 	const _attachPolicy = useCallback(async () => {
 		if (credentials && credentials?.expiration) {

@@ -9,7 +9,7 @@ import appConfig from "@demo/core/constants/appConfig";
 import { useClient, useMap } from "@demo/hooks";
 import { useAuthService } from "@demo/services";
 import { useAuthStore } from "@demo/stores";
-import { AuthTokensType, CognitoIdentityCredentials, ConnectFormValuesType, ToastType } from "@demo/types";
+import { AuthTokensType, ConnectFormValuesType, ToastType } from "@demo/types";
 import { EventTypeEnum, RegionEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
 import { errorHandler } from "@demo/utils/errorHandler";
@@ -59,13 +59,22 @@ const useAuth = () => {
 					const { identityPoolId, region, userPoolId, authTokens } = store;
 
 					if (identityPoolId && region) {
+						const cognitoIdentityCredentials = await authService.fetchCredentials({
+							identityPoolId,
+							clientConfig: { region },
+							logins: authTokens
+								? {
+										[`cognito-idp.${region}.amazonaws.com/${userPoolId}`]: authTokens.id_token
+								  }
+								: undefined
+						});
 						const authHelper = await authService.withIdentityPoolId(identityPoolId, region, authTokens, userPoolId);
-						const credentials = authHelper.getCredentials();
-						const authOptions = authHelper.getMapAuthenticationOptions();
-
+						const credentials = { ...cognitoIdentityCredentials, authenticated: !!authTokens };
+						const authOptions = { ...authHelper.getMapAuthenticationOptions() };
+						resetClientStore();
 						setState({
-							credentials: { ...credentials, authenticated: authTokens ? true : false } as CognitoIdentityCredentials,
-							authOptions: { ...authOptions }
+							credentials,
+							authOptions
 						});
 					}
 				} catch (error) {
