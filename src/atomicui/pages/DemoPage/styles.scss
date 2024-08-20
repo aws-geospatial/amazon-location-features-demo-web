@@ -2,17 +2,36 @@
 /* SPDX-License-Identifier: MIT-0 */
 
 .maplibregl-ctrl-bottom-right {
-	> details {
+	details {
 		right: 1.23rem !important;
 		bottom: 0.94rem !important;
 		font-size: 0.77rem !important;
+	}
 
-		.maplibregl-ctrl-attrib-inner {
-			margin-top: 0.12rem !important;
+	/* Geolocate control */
+	> div:nth-child(2) {
+		justify-content: center !important;
+		align-items: center !important;
+		width: 2.46rem !important;
+		height: 2.46rem !important;
+		border-radius: 0.62rem !important;
+		position: absolute !important;
+
+		.maplibregl-ctrl-geolocate {
+			.maplibregl-ctrl-icon {
+				background-image: url("@demo/assets/svgs/icon-locate-me.svg") !important; // TODO: move to custom assets dir
+
+				@media only screen and (min-width: 1024px) {
+					&:hover {
+						background-image: url("@demo/assets/svgs/icon-locate-me-filled.svg") !important; // TODO: move to custom assets dir
+					}
+				}
+			}
 		}
 	}
 
-	> div:nth-child(2) {
+	/* Navigation control */
+	> div:nth-child(3) {
 		display: flex !important;
 		flex-direction: column !important;
 		justify-content: space-around !important;
@@ -56,25 +75,6 @@
 			}
 		}
 	}
-
-	> div:nth-child(3) {
-		justify-content: center !important;
-		align-items: center !important;
-		width: 2.46rem !important;
-		height: 2.46rem !important;
-		border-radius: 0.62rem !important;
-		position: absolute !important;
-
-		.maplibregl-ctrl-icon {
-			background-image: url("@demo/assets/svgs/icon-locate-me.svg") !important; // TODO: move to custom assets dir
-
-			@media only screen and (min-width: 1024px) {
-				&:hover {
-					background-image: url("@demo/assets/svgs/icon-locate-me-filled.svg") !important; // TODO: move to custom assets dir
-				}
-			}
-		}
-	}
 }
 
 .maplibregl-ctrl button:not(:disabled):hover {
@@ -92,26 +92,24 @@
 	box-shadow: 0px 0px 10px rgb(0 0 0 / 20%) !important;
 }
 
-.maplibregl-user-location-dot:before {
-	background-color: #a9c6c2 !important;
-}
-
 .maplibregl-user-location-dot {
-	background-color: #008296 !important;
+	background-color: var(--primary-color) !important;
+
+	&:before {
+		background-color: #a9c6c2 !important;
+	}
 }
 
-.amplify-flex.location-disabled {
+.location-disabled {
 	gap: 0;
 	justify-content: center;
 	align-items: center;
 	width: 2.46rem;
 	height: 2.46rem;
 	position: absolute;
-	bottom: 9.85rem;
-	right: 2rem;
 	background-color: var(--white-color);
 	opacity: 0.8;
-	border-radius: 4px;
+	border-radius: 0.62rem !important;
 	box-shadow: 0px 0px 10px rgb(0 0 0 / 20%);
 	cursor: pointer;
 	z-index: 9;
@@ -126,14 +124,6 @@
 
 	@media only screen and (max-width: 300px) {
 		bottom: 15.5rem;
-	}
-}
-
-.dark-mode {
-	.maplibregl-ctrl-attrib-inner {
-		a {
-			color: white;
-		}
 	}
 }
 

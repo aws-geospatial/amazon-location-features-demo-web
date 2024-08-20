@@ -35,6 +35,7 @@ import {
 	NavigationControl
 } from "react-map-gl/maplibre";
 import { RefHandles } from "react-spring-bottom-sheet/dist/types";
+import "maplibre-gl/dist/maplibre-gl.css";
 import "./styles.scss";
 
 const DemoPlaceholderPage = lazy(() =>
@@ -156,8 +157,6 @@ const initShow = {
 	startUnauthSimulation: false,
 	openFeedbackModal: false
 };
-const peggedRemValue = 13;
-const extraGeoLocateTop = 2.6;
 
 const DemoPage: FC = () => {
 	const {} = useRecordViewPage("DemoPage");
@@ -236,15 +235,18 @@ const DemoPage: FC = () => {
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
-	const geoLocateTopValue = `-${bottomSheetCurrentHeight / peggedRemValue + extraGeoLocateTop}rem`;
+	const geoLocateTopValue = `${bottomSheetCurrentHeight / 13 + 0.59}rem`;
 
 	useEffect(() => {
 		let previousWidth = document.body.clientWidth;
+
 		const resizeObserver = new ResizeObserver(() => {
 			const currentWidth = document.body.clientWidth;
+
 			if ((previousWidth < 1024 && currentWidth >= 1024) || (previousWidth >= 1024 && currentWidth < 1024)) {
 				window.location.reload();
 			}
+
 			previousWidth = currentWidth;
 		});
 
@@ -373,13 +375,13 @@ const DemoPage: FC = () => {
 		]
 	);
 
-	const GeoLocateIcon = useMemo(
-		() =>
-			locationError || isCurrentLocationDisabled ? (
+	const _GeolocateControl = useMemo(
+		() => (
+			<>
 				<Flex
 					style={{
-						position: "absolute",
-						bottom: isMobile ? `${(bottomSheetCurrentHeight || 0) / 13 + 1.2}rem` : isDesktop ? "9.85rem" : "2rem",
+						display: locationError || isCurrentLocationDisabled ? "flex" : "none",
+						bottom: isMobile ? `${(bottomSheetCurrentHeight || 0) / 13 + 1.2}rem` : isDesktop ? "9.9rem" : "2rem",
 						right: isMobile ? "1rem" : isDesktop ? "2rem" : "2rem"
 					}}
 					className="location-disabled"
@@ -387,13 +389,12 @@ const DemoPage: FC = () => {
 				>
 					<IconLocateMe />
 				</Flex>
-			) : (
 				<GeolocateControl
 					ref={geolocateControlRef}
 					style={{
-						bottom: isMobile ? geoLocateTopValue : isDesktop ? "9.05rem" : "-2.5rem",
-						right: isMobile ? "-0.3rem" : isDesktop ? "1.19rem" : "0rem",
-						display: show.unauthSimulationBounds ? "none" : "flex"
+						bottom: isMobile ? geoLocateTopValue : isDesktop ? "9.05rem" : "0.55rem",
+						right: isMobile ? "0.18rem" : isDesktop ? "1.19rem" : "0.5rem",
+						display: show.unauthSimulationBounds || locationError || isCurrentLocationDisabled ? "none" : "flex"
 					}}
 					position="bottom-right"
 					positionOptions={{ enableHighAccuracy: true }}
@@ -402,7 +403,8 @@ const DemoPage: FC = () => {
 					onGeolocate={onGeoLocate}
 					onError={onGeoLocateError}
 				/>
-			),
+			</>
+		),
 		[
 			locationError,
 			isCurrentLocationDisabled,
@@ -682,22 +684,17 @@ const DemoPage: FC = () => {
 							onSetShowUnauthTrackerBox={(b: boolean) => setShow(s => ({ ...s, unauthTrackerBox: b }))}
 						/>
 					)}
-					{GeoLocateIcon}
 					{isDesktop && <NavigationControl position="bottom-right" showZoom showCompass={false} />}
+					{_GeolocateControl}
 				</View>
 				<AttributionControl
 					style={
 						isDesktop
 							? {
-									display: "flex",
-									fontSize: "0.77rem",
 									color: currentMapStyle.toLowerCase().includes("dark") ? "var(--white-color)" : "var(--black-color)",
 									backgroundColor: currentMapStyle.toLowerCase().includes("dark")
 										? "rgba(0, 0, 0, 0.2)"
-										: "var(--white-color)",
-									border: "0px solid none",
-									marginTop: "0rem",
-									marginBottom: "0rem"
+										: "var(--white-color)"
 							  }
 							: { display: "none" }
 					}
