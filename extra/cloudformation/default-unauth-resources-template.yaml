@@ -698,13 +698,17 @@ Resources:
                                   responseData = {Error: "describeEndpoint call failed"};
                                   console.log(responseData.Error + ":\n", err);
                             } else {
+                                  const splitEndpointAddress = data.endpointAddress.split(".");
+                                  const endpointAddress = !splitEndpointAddress[0].endsWith("-ats")
+                                        ? `${splitEndpointAddress[0]}-ats.${splitEndpointAddress
+                                                .splice(1)
+                                                .join(".")}`
+                                        : data.endpointAddress;
                                   responseStatus = "SUCCESS";
                                   responseData = {
-                                        IotEndpointAddress: data.endpointAddress,
+                                        IotEndpointAddress: endpointAddress,
                                   };
-                                  console.log(
-                                        "response data: " + JSON.stringify(responseData)
-                                  );
+                                  console.log("response data: " + JSON.stringify(responseData));
                             }
 
                             sendResponse(event, context, responseStatus, responseData);
