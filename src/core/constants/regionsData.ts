@@ -9,7 +9,7 @@ const regionsData = [
 	{ value: "ap-southeast-1", label: "regions__ap_southeast_1.text" },
 	{ value: "ap-southeast-2", label: "regions__ap_southeast_2.text" },
 	{ value: "ap-northeast-1", label: "regions__ap_northeast_1.text" },
-	{ value: "ca-central-1	", label: "regions__ca_central_1.text" },
+	{ value: "ca-central-1", label: "regions__ca_central_1.text" },
 	{ value: "eu-central-1", label: "regions__eu_central_1.text" },
 	{ value: "eu-west-1", label: "regions__eu_west_1.text" },
 	{ value: "eu-west-2", label: "regions__eu_west_2.text" },

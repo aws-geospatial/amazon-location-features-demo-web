@@ -20,7 +20,7 @@ import { ListGeofenceResponseEntry, Place } from "@aws-sdk/client-location";
 import { IconBackArrow, IconClose, IconPin, IconPlus, IconSearch, IconTrash } from "@demo/assets/svgs";
 import { showToast } from "@demo/core/Toast";
 import { appConfig } from "@demo/core/constants";
-import { useAmplifyMap, useAwsGeofence, useAwsPlace } from "@demo/hooks";
+import { useGeofence, useMap, usePlace } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import {
@@ -85,7 +85,7 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 	const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const [value, setValue] = useState("");
 	const [name, setName] = useState("");
-	const { mapUnit: currentMapUnit, mapProvider: currentMapProvider } = useAmplifyMap();
+	const { mapUnit: currentMapUnit, mapProvider: currentMapProvider } = useMap();
 	const [unit, setUnit] = useState(currentMapUnit === METRIC ? METERS_SHORT : FEET_SHORT);
 	/* Radius must be greater than 0 and not greater than 100,000 m (API requirement) */
 	const [radiusInM, setRadiusInM] = useState(RadiusInM.DEFAULT);
@@ -97,7 +97,7 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 		radiusInM: undefined
 	});
 	const { isDesktop } = useDeviceMediaQuery();
-	const { search, getPlaceData } = useAwsPlace();
+	const { search, getPlaceData } = usePlace();
 	const {
 		getGeofencesList,
 		isFetchingGeofences,
@@ -106,7 +106,7 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 		deleteGeofence,
 		isAddingGeofence,
 		setIsAddingGeofence
-	} = useAwsGeofence();
+	} = useGeofence();
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";

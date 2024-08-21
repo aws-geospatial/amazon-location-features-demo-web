@@ -5,7 +5,7 @@ import { ClustersType, IStateProps, SuggestionType, ViewPointType } from "@demo/
 
 import createStore from "./createStore";
 
-interface AwsPlaceStoreProps {
+interface PlaceStoreProps {
 	isSearching: boolean;
 	isFetchingPlaceData: boolean;
 	bound?: number[];
@@ -19,7 +19,7 @@ interface AwsPlaceStoreProps {
 	zoom: number;
 }
 
-const initialState: IStateProps<AwsPlaceStoreProps> = {
+const initialState: IStateProps<PlaceStoreProps> = {
 	isSearching: false,
 	isFetchingPlaceData: false,
 	zoom: 5,
@@ -27,4 +27,4 @@ const initialState: IStateProps<AwsPlaceStoreProps> = {
 	precision: 10
 };
 
-export default createStore<AwsPlaceStoreProps>(initialState);
+export default createStore<PlaceStoreProps>(initialState);

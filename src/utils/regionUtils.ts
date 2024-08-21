@@ -26,7 +26,7 @@ export const setClosestRegion = async (regions = Object.keys(POOLS)) => {
 					mapping[region] = timeSpent;
 				}
 			} catch (error) {
-				console.log("error: ", error);
+				console.error({ error });
 			}
 		})
 	);

@@ -3691,5 +3691,11 @@
   },
   "web_service": {
     "text": "שירות אינטרנט"
+  },
+  "error_handler__failed_fetch_tokens": {
+    "text": "לא הצליח לאחזר אסימונים"
+  },
+  "error_handler__failed_refresh_tokens": {
+    "text": "רענון האסימונים נכשל"
   }
 }

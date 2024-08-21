@@ -64,7 +64,7 @@ export default defineConfig(() => {
 					"@aws-sdk/credential-providers",
 					"@turf/turf",
 					"aws-amplify",
-					"cypress-mochawesome-reporter",
+					"aws-iot-device-sdk-v2",
 					"date-fns",
 					"i18next",
 					"i18next-browser-languagedetector",
@@ -83,7 +83,6 @@ export default defineConfig(() => {
 					/* Other deps */
 					"react-map-gl",
 					"react/jsx-runtime",
-					"@aws-amplify/pubsub",
 					"zustand/middleware",
 					"@turf/distance",
 					"@mapbox/mapbox-gl-draw",

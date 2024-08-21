@@ -3687,5 +3687,11 @@
   },
   "web_service": {
     "text": "网络服务"
+  },
+  "error_handler__failed_fetch_tokens": {
+    "text": "无法提取代币"
+  },
+  "error_handler__failed_refresh_tokens": {
+    "text": "刷新令牌失败"
   }
 }

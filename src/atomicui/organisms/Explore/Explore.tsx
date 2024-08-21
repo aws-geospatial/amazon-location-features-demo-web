@@ -18,7 +18,7 @@ import {
 } from "@demo/assets/svgs";
 import { appConfig } from "@demo/core/constants";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
-import { useAmplifyAuth, useAmplifyMap, useAwsIot } from "@demo/hooks";
+import { useAuth, useIot, useMap } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import {
@@ -103,10 +103,9 @@ const Explore: FC<IProps> = ({
 	const isLtr = langDir === "ltr";
 	const { setBottomSheetMinHeight, setBottomSheetHeight, bottomSheetCurrentHeight = 0 } = useBottomSheet();
 	const { isDesktop, isDesktopBrowser } = useDeviceMediaQuery();
-	const { isUserAwsAccountConnected, credentials, onLogin, onLogout, onDisconnectAwsAccount, setAuthTokens } =
-		useAmplifyAuth();
-	const { mapProvider: currentMapProvider } = useAmplifyMap();
-	const { detachPolicy } = useAwsIot();
+	const { isUserAwsAccountConnected, credentials, onLogin, onLogout, onDisconnectAwsAccount } = useAuth();
+	const { mapProvider: currentMapProvider } = useMap();
+	const { detachPolicy } = useIot();
 	const isAuthenticated = !!credentials?.authenticated;
 	const disconnectButtonText = t("disconnect_aws_account.text");
 	const navigate = useNavigate();
@@ -177,14 +176,6 @@ const Explore: FC<IProps> = ({
 		}
 	};
 
-	const _onLogout = async () => {
-		setAuthTokens(undefined);
-		await detachPolicy(credentials!.identityId);
-		await onLogout();
-	};
-
-	const _onLogin = async () => await onLogin();
-
 	const onClickSettings = useCallback(() => {
 		onCloseSidebar();
 		onShowSettings();
@@ -237,14 +228,18 @@ const Explore: FC<IProps> = ({
 			textAlign="center"
 			onClick={async () => {
 				if (isAuthenticated) {
-					_onLogout();
+					record(
+						[{ EventType: EventTypeEnum.SIGN_OUT_STARTED, Attributes: { triggeredBy: TriggeredByEnum.SIDEBAR } }],
+						["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
+					);
+					await detachPolicy(credentials!.identityId);
+					onLogout();
 				} else {
-					await record(
+					record(
 						[{ EventType: EventTypeEnum.SIGN_IN_STARTED, Attributes: { triggeredBy: TriggeredByEnum.SIDEBAR } }],
 						["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
 					);
-
-					_onLogin();
+					onLogin();
 				}
 			}}
 			className={isFooter ? "auth-footer-button" : ""}

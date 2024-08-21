@@ -6,9 +6,9 @@ import { useEffect, useMemo } from "react";
 import { CognitoIdentity } from "@aws-sdk/client-cognito-identity";
 import { showToast } from "@demo/core/Toast";
 import appConfig from "@demo/core/constants/appConfig";
-import { useAmplifyMap, useAws } from "@demo/hooks";
-import { useAmplifyAuthService } from "@demo/services";
-import { useAmplifyAuthStore } from "@demo/stores";
+import { useClient, useMap } from "@demo/hooks";
+import { useAuthService } from "@demo/services";
+import { useAuthStore } from "@demo/stores";
 import { AuthTokensType, ConnectFormValuesType, ToastType } from "@demo/types";
 import { EventTypeEnum, RegionEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
@@ -17,7 +17,6 @@ import { getDomainName } from "@demo/utils/getDomainName";
 import { clearStorage } from "@demo/utils/localstorageUtils";
 import { setClosestRegion } from "@demo/utils/regionUtils";
 import { transformCloudFormationLink } from "@demo/utils/transformCloudFormationLink";
-import { Amplify, Auth } from "aws-amplify";
 import { useTranslation } from "react-i18next";
 
 import useDeviceMediaQuery from "./useDeviceMediaQuery";
@@ -25,20 +24,19 @@ import useDeviceMediaQuery from "./useDeviceMediaQuery";
 const {
 	POOLS,
 	WEB_SOCKET_URLS,
-	ROUTES: { DEMO, ERROR_BOUNDARY },
+	ROUTES: { DEMO },
 	PERSIST_STORAGE_KEYS: { FASTEST_REGION },
 	MAP_RESOURCES: { GRAB_SUPPORTED_AWS_REGIONS }
 } = appConfig;
-
 const fallbackRegion = POOLS[Object.keys(POOLS)[0]];
 
-const useAmplifyAuth = () => {
-	const store = useAmplifyAuthStore();
+const useAuth = () => {
+	const store = useAuthStore();
 	const { setInitial } = store;
-	const { setState } = useAmplifyAuthStore;
-	const { getCurrentUserCredentials, login, logout, fetchHostedUi, getCurrentSession } = useAmplifyAuthService();
-	const { resetStore: resetAwsStore } = useAws();
-	const { resetStore: resetAmplifyMapStore } = useAmplifyMap();
+	const { setState } = useAuthStore;
+	const authService = useAuthService();
+	const { resetStore: resetClientStore } = useClient();
+	const { resetStore: resetMapStore } = useMap();
 	const { t } = useTranslation();
 	const { isDesktop } = useDeviceMediaQuery();
 
@@ -50,18 +48,72 @@ const useAmplifyAuth = () => {
 				const identityPoolId = POOLS[region];
 				const webSocketUrl = WEB_SOCKET_URLS[region];
 				setState({ identityPoolId, region, webSocketUrl });
-				window.location.reload();
 			})();
 		}
 	}, [store.identityPoolId, setState]);
 
 	const methods = useMemo(
 		() => ({
-			configureAmplify: (config: unknown) => {
+			fetchCredentials: async () => {
 				try {
-					Amplify.configure(config);
+					const { identityPoolId, region, userPoolId, authTokens } = store;
+
+					if (identityPoolId && region) {
+						const credentials = await authService.fetchCredentials({
+							identityPoolId,
+							clientConfig: { region },
+							logins: authTokens
+								? { [`cognito-idp.${region}.amazonaws.com/${userPoolId}`]: authTokens.id_token }
+								: undefined
+						});
+						setState({ credentials: { ...credentials, authenticated: authTokens ? true : false } });
+					}
 				} catch (error) {
-					errorHandler(error, t("error_handler__failed_configure_amplify.text") as string);
+					errorHandler(error, t("error_handler__failed_fetch_creds.text"));
+				}
+			},
+			fetchTokens: async (code: string) => {
+				try {
+					const { userDomain, userPoolClientId } = store;
+
+					if (userDomain && userPoolClientId) {
+						const response = await authService.fetchTokens(userDomain, userPoolClientId, code);
+
+						if (!response.ok) {
+							throw new Error(t("error_handler__failed_fetch_tokens.text"));
+						}
+
+						const authTokens = await response.json();
+						setState({ authTokens });
+						record(
+							[{ EventType: EventTypeEnum.SIGN_IN_SUCCESSFUL, Attributes: {} }],
+							["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
+						);
+					}
+				} catch (error) {
+					record(
+						[{ EventType: EventTypeEnum.SIGN_IN_FAILED, Attributes: {} }],
+						["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
+					);
+					errorHandler(error, t("error_handler__failed_fetch_tokens.text"));
+				}
+			},
+			refreshTokens: async () => {
+				try {
+					const { userDomain, userPoolClientId, authTokens } = store;
+
+					if (userDomain && userPoolClientId && authTokens) {
+						const response = await authService.refreshTokens(userDomain, userPoolClientId, authTokens.refresh_token);
+
+						if (!response.ok) {
+							throw new Error(t("error_handler__failed_refresh_tokens.text"));
+						}
+
+						const newTokens = await response.json();
+						setState({ authTokens: { ...newTokens, refresh_token: authTokens.refresh_token } });
+					}
+				} catch (error) {
+					errorHandler(error, t("error_handler__failed_refresh_tokens.text"));
 				}
 			},
 			validateIdentityPoolIdAndRegion: (IdentityPoolId: string, successCb?: () => void) => {
@@ -93,104 +145,15 @@ const useAmplifyAuth = () => {
 					}
 				);
 			},
-			validateDomainAndUserPoolClientId: async (
-				domain: string,
-				userPoolWebClientId: string,
-				successCb?: () => void
-			) => {
-				try {
-					const res = await fetchHostedUi(domain, userPoolWebClientId);
-
-					if (res.ok) {
-						successCb && successCb();
-					} else {
-						console.error({ error: res });
-						showToast({ content: t("failed_to_connect_ud_up.text"), type: ToastType.ERROR });
-					}
-				} catch (error) {
-					console.error({ error });
-					errorHandler(error, t("failed_to_connect_ud_up.text") as string);
-				}
-			},
-			validateUserPoolId: (config: unknown, successCb?: () => void) => {
-				try {
-					Auth.configure(config);
-					successCb && successCb();
-				} catch (error) {
-					errorHandler(error, t("error_handler__failed_connect_2.text") as string);
-				}
-			},
-			validateFormValues: (
-				identityPoolId: string,
-				userPoolId: string,
-				userPoolWebClientId: string,
-				domain: string,
-				webSocketUrl: string,
-				successCb?: () => void
-			) => {
+			validateFormValues: (identityPoolId: string, successCb?: () => void) => {
 				/* Validates identityPoolId and region */
 				methods.validateIdentityPoolIdAndRegion(
 					identityPoolId,
 					/* Success callback */
 					() => {
-						// /* Validates userPoolClientId and domain */
-						// methods.validateDomainAndUserPoolClientId(
-						// 	domain,
-						// 	userPoolWebClientId,
-						// 	/* Success callback */
-						// 	() => {
-						// 		/* Validates userPoolId  */
-						// 		methods.validateUserPoolId(
-						// 			{
-						// 				identityPoolId,
-						// 				region: identityPoolId.split(":")[0],
-						// 				userPoolId,
-						// 				userPoolWebClientId,
-						// 				oauth: {
-						// 					domain,
-						// 					scope: ["email", "openid", "profile"],
-						// 					redirectSignIn: `${window.location.origin}${DEMO}`,
-						// 					redirectSignOut: `${window.location.origin}${DEMO}`,
-						// 					responseType: "token"
-						// 				}
-						// 			},
-						// 			successCb
-						// 		);
-						// 	}
-						// );
-						/* Validates userPoolId  */
-						methods.validateUserPoolId(
-							{
-								identityPoolId,
-								region: identityPoolId.split(":")[0],
-								userPoolId,
-								userPoolWebClientId,
-								oauth: {
-									domain: getDomainName(domain),
-									scope: ["email", "openid", "profile"],
-									redirectSignIn: `${window.location.origin}${DEMO}`,
-									redirectSignOut: `${window.location.origin}${DEMO}`,
-									responseType: "token"
-								}
-							},
-							successCb
-						);
+						successCb && successCb();
 					}
 				);
-			},
-			getCurrentUserCredentials: async () => {
-				try {
-					const credentials = await getCurrentUserCredentials();
-
-					if (credentials.identityId) {
-						setState({ credentials });
-					} else {
-						setState({ credentials: undefined });
-						window.location.replace(ERROR_BOUNDARY);
-					}
-				} catch (error) {
-					errorHandler(error, t("error_handler__failed_fetch_creds.text") as string);
-				}
 			},
 			clearCredentials: () => {
 				setState({ credentials: undefined });
@@ -217,10 +180,17 @@ const useAmplifyAuth = () => {
 			setIsUserAwsAccountConnected: (isUserAwsAccountConnected: boolean) => {
 				setState({ isUserAwsAccountConnected });
 			},
-			onLogin: async () => {
+			onLogin: () => {
 				try {
-					setState({ authTokens: undefined });
-					await login();
+					const { userDomain, userPoolClientId } = store;
+
+					if (userDomain && userPoolClientId) {
+						setState({ authTokens: undefined });
+						window.open(
+							`https://${userDomain}/login?client_id=${userPoolClientId}&response_type=code&identity_provider=COGNITO&redirect_uri=${window.location.origin}${DEMO}`,
+							"_self"
+						);
+					}
 				} catch (error) {
 					record(
 						[{ EventType: EventTypeEnum.SIGN_IN_FAILED, Attributes: { error: JSON.stringify(error) } }],
@@ -229,14 +199,17 @@ const useAmplifyAuth = () => {
 					errorHandler(error, t("error_handler__failed_sign_in.text") as string);
 				}
 			},
-			onLogout: async () => {
+			onLogout: () => {
 				try {
-					await logout();
-					setState({ authTokens: undefined });
-					record(
-						[{ EventType: EventTypeEnum.SIGN_OUT_SUCCESSFUL, Attributes: {} }],
-						["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
-					);
+					const { userDomain, userPoolClientId } = store;
+
+					if (userDomain && userPoolClientId) {
+						setState({ authTokens: undefined });
+						window.open(
+							`https://${userDomain}/logout?client_id=${userPoolClientId}&logout_uri=${window.location.origin}${DEMO}?sign_out=true`,
+							"_self"
+						);
+					}
 				} catch (error) {
 					record(
 						[{ EventType: EventTypeEnum.SIGN_OUT_FAILED, Attributes: { error: JSON.stringify(error) } }],
@@ -248,18 +221,9 @@ const useAmplifyAuth = () => {
 			onDisconnectAwsAccount: () => {
 				clearStorage();
 				methods.resetStore();
-				resetAwsStore();
-				resetAmplifyMapStore();
+				resetClientStore();
+				resetMapStore();
 				setTimeout(() => window.location.reload(), 3000);
-			},
-			handleCurrentSession: async (resetAwsStore: () => void) => {
-				try {
-					await getCurrentSession();
-					await methods.getCurrentUserCredentials();
-					resetAwsStore();
-				} catch (error) {
-					console.error("HANDLE_CURRENT_SESSION_ERROR:", JSON.stringify(error));
-				}
 			},
 			switchToGrabMapRegionStack: () => {
 				for (const region of GRAB_SUPPORTED_AWS_REGIONS) {
@@ -336,22 +300,10 @@ const useAmplifyAuth = () => {
 				setInitial();
 			}
 		}),
-		[
-			setInitial,
-			setState,
-			fetchHostedUi,
-			getCurrentUserCredentials,
-			login,
-			logout,
-			getCurrentSession,
-			resetAmplifyMapStore,
-			resetAwsStore,
-			t,
-			isDesktop
-		]
+		[store, authService, setState, t, resetClientStore, resetMapStore, isDesktop, setInitial]
 	);
 
 	return { ...methods, ...store };
 };
 
-export default useAmplifyAuth;
+export default useAuth;

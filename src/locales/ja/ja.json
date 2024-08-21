@@ -3691,5 +3691,11 @@
   },
   "web_service": {
     "text": "ウェブサービス"
+  },
+  "error_handler__failed_fetch_tokens": {
+    "text": "トークンを取得できませんでした"
+  },
+  "error_handler__failed_refresh_tokens": {
+    "text": "トークンを更新できませんでした"
   }
 }
