@@ -77,7 +77,7 @@ const useCredsManager = () => {
 				timeout && clearTimeout(timeout);
 				timeout = setTimeout(() => {
 					refreshCredentials();
-				}, differenceInMilliseconds(new Date(credentials.expiration || 0), new Date()) - 300);
+				}, differenceInMilliseconds(new Date(credentials.expiration || 0), new Date()) - 5 * 60 * 1000); /* Refresh 5 minutes before expiration */
 			}
 		} else {
 			/* If the credentials are not present, fetch them */
