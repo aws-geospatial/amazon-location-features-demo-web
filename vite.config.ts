@@ -1,6 +1,5 @@
 import { resolve } from "path";
 
-import commonjs from "@rollup/plugin-commonjs";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import eslint from "vite-plugin-eslint";
@@ -19,9 +18,6 @@ export default defineConfig(() => {
 			Inspect({
 				build: false,
 				outputDir: ".vite-inspect"
-			}),
-			commonjs({
-				include: /node_modules/
 			})
 		],
 		resolve: {
@@ -42,8 +38,7 @@ export default defineConfig(() => {
 		build: {
 			outDir: "./build",
 			sourcemap: false,
-			minify: true,
-			commonjsOptions: { include: [""] }
+			minify: true
 		},
 		server: {
 			port: 3000

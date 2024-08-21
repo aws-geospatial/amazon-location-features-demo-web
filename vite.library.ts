@@ -1,6 +1,5 @@
 import { resolve } from "path";
 
-import commonjs from "@rollup/plugin-commonjs";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
@@ -21,9 +20,6 @@ export default defineConfig(() => {
 			Inspect({
 				build: false,
 				outputDir: ".vite-inspect"
-			}),
-			commonjs({
-				include: /node_modules/
 			})
 		],
 		define: {
@@ -73,7 +69,7 @@ export default defineConfig(() => {
 					"date-fns",
 					"i18next",
 					"i18next-browser-languagedetector",
-					"mapbox-gl-draw-circle",
+					"maplibre-gl-draw-circle",
 					"maplibre-gl",
 					"ngeohash",
 					"ramda",

@@ -31,7 +31,8 @@ const useCredsManager = () => {
 		userPoolClientId,
 		authTokens,
 		setAuthTokens,
-		authOptions
+		authOptions,
+		fetchAuthOptions
 	} = useAuth();
 	const {
 		locationClient,
@@ -66,7 +67,7 @@ const useCredsManager = () => {
 
 	/* Fetch the current user credentials */
 	useEffect(() => {
-		if (credentials && credentials.expiration && authOptions?.transformRequest) {
+		if (credentials && credentials.expiration) {
 			const now = new Date();
 			const expiration = new Date(credentials.expiration);
 
@@ -78,7 +79,7 @@ const useCredsManager = () => {
 				timeout && clearTimeout(timeout);
 				timeout = setTimeout(() => {
 					refreshCredentials();
-				}, differenceInMilliseconds(new Date(credentials.expiration || 0), new Date()) - 5 * 60 * 1000); /* Refresh 5 minutes before expiration */
+				}, differenceInMilliseconds(new Date(credentials.expiration || 0), now) - 5 * 60 * 1000); /* Refresh 5 minutes before expiration */
 			}
 		} else {
 			/* If the credentials are not present, fetch them */
@@ -88,7 +89,6 @@ const useCredsManager = () => {
 		}
 	}, [
 		credentials,
-		authOptions,
 		fetchCredentials,
 		resetClientStore,
 		clearCredsAndClients,
@@ -155,6 +155,15 @@ const useCredsManager = () => {
 	useEffect(() => {
 		_attachPolicy();
 	}, [_attachPolicy]);
+
+	/* Fetch authOptions for map */
+	useEffect(() => {
+		if (!!!authOptions?.transformRequest) {
+			(async () => {
+				await fetchAuthOptions();
+			})();
+		}
+	}, [authOptions, fetchAuthOptions]);
 
 	return { clearCredsAndClients };
 };

@@ -5,6 +5,7 @@ import {
 	ChangeEvent,
 	Dispatch,
 	FC,
+	Fragment,
 	MouseEvent,
 	MutableRefObject,
 	SetStateAction,
@@ -566,10 +567,9 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 				const line = turf.lineString(circle.geometry.coordinates[0]);
 
 				return (
-					<>
+					<Fragment key={idx}>
 						<Flex
 							data-testid={GeofenceId}
-							key={idx}
 							className={`geofence-item${idx !== geofences!.length - 1 ? " border-bottom" : ""}`}
 							style={isDisabled ? { opacity: 0.3 } : {}}
 							gap={0}
@@ -619,7 +619,7 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 							)}
 						</Flex>
 						<Tooltip id="geofence-item" />
-					</>
+					</Fragment>
 				);
 			}
 		},
