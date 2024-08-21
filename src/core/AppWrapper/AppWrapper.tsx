@@ -15,10 +15,6 @@ interface AppWrapperProps {
 	children?: ReactNode;
 }
 
-const AppWrapper: FC<AppWrapperProps> = ({ children }) => (
-	<ThemeProvider theme={appTheme} nonce="dAnIsRazNonCe">
-		{children}
-	</ThemeProvider>
-);
+const AppWrapper: FC<AppWrapperProps> = ({ children }) => <ThemeProvider theme={appTheme}>{children}</ThemeProvider>;
 
 export default AppWrapper;
