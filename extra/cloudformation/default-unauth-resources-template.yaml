@@ -690,25 +690,38 @@ Resources:
                       sendResponse(event, context, "SUCCESS");
                       return;
                 } else {
-                      iotClient.describeEndpoint({}, (err, data) => {
-                            let responseData, responseStatus;
+                      iotClient.describeEndpoint(
+                            {
+                                  endpointType: "iot:Data-ATS",
+                            },
+                            (err, data) => {
+                                  let responseData, responseStatus;
 
-                            if (err) {
-                                  responseStatus = "FAILED";
-                                  responseData = {Error: "describeEndpoint call failed"};
-                                  console.log(responseData.Error + ":\n", err);
-                            } else {
-                                  responseStatus = "SUCCESS";
-                                  responseData = {
-                                        IotEndpointAddress: data.endpointAddress,
-                                  };
-                                  console.log(
-                                        "response data: " + JSON.stringify(responseData)
+                                  if (err) {
+                                        responseStatus = "FAILED";
+                                        responseData = {
+                                              Error: "describeEndpoint call failed",
+                                        };
+                                        console.log(responseData.Error + ":\n", err);
+                                  } else {
+                                        responseStatus = "SUCCESS";
+                                        responseData = {
+                                              IotEndpointAddress: data.endpointAddress,
+                                        };
+                                        console.log(
+                                              "response data: " +
+                                                    JSON.stringify(responseData)
+                                        );
+                                  }
+
+                                  sendResponse(
+                                        event,
+                                        context,
+                                        responseStatus,
+                                        responseData
                                   );
                             }
-
-                            sendResponse(event, context, responseStatus, responseData);
-                      });
+                      );
                 }
           };
 
