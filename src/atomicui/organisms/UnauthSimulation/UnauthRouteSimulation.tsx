@@ -2,7 +2,7 @@ import { FC, useEffect, useMemo, useRef } from "react";
 
 import { View } from "@aws-amplify/ui-react";
 import { IconBusActive, IconBusInactive } from "@demo/assets/svgs";
-import { useAwsGeofence } from "@demo/hooks";
+import { useGeofence } from "@demo/hooks";
 import { TrackingHistoryItemtype, TrackingHistoryTypeEnum } from "@demo/types";
 import { Layer, LayerProps, Marker, Source } from "react-map-gl";
 
@@ -34,7 +34,7 @@ const UnauthRouteSimulation: FC<UnauthRouteSimulationProps> = ({
 	updateTrackingHistory
 }) => {
 	const timeoutId = useRef<NodeJS.Timeout | null>(null);
-	const { evaluateGeofence } = useAwsGeofence();
+	const { evaluateGeofence } = useGeofence();
 
 	useEffect(() => {
 		// Clear existing timeout when changing idx or pausing

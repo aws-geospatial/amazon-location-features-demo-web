@@ -8,7 +8,7 @@ import { IconAwsCloudFormation, IconCheckMarkCircle } from "@demo/assets/svgs";
 import { DropdownEl, Modal } from "@demo/atomicui/atoms";
 import { InputField } from "@demo/atomicui/molecules";
 import { appConfig, regionsData } from "@demo/core/constants";
-import { useAmplifyAuth, useAmplifyMap, useAws } from "@demo/hooks";
+import { useAuth, useClient, useMap } from "@demo/hooks";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { ConnectFormValuesType, EsriMapEnum, MapProviderEnum } from "@demo/types";
 import { AnalyticsEventActionsEnum, EventTypeEnum, TriggeredByEnum } from "@demo/types/Enums";
@@ -52,9 +52,9 @@ const ConnectAwsAccountModal: FC<ConnectAwsAccountModalProps> = ({
 		stackRegion,
 		cloudFormationLink,
 		handleStackRegion
-	} = useAmplifyAuth();
-	const { resetStore: resetAwsStore } = useAws();
-	const { mapProvider: currentMapProvider, setMapProvider, setMapStyle } = useAmplifyMap();
+	} = useAuth();
+	const { resetStore: resetClientStore } = useClient();
+	const { mapProvider: currentMapProvider, setMapProvider, setMapStyle } = useMap();
 	const keyArr = Object.keys(formValues);
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
@@ -125,20 +125,10 @@ const ConnectAwsAccountModal: FC<ConnectAwsAccountModalProps> = ({
 	};
 
 	const onConnect = () => {
-		const {
-			IdentityPoolId: identityPoolId,
-			UserPoolId: userPoolId,
-			UserPoolClientId: userPoolWebClientId,
-			UserDomain: domain,
-			WebSocketUrl: webSocketUrl
-		} = formValues;
+		const { IdentityPoolId: identityPoolId } = formValues;
 
 		validateFormValues(
 			identityPoolId,
-			userPoolId,
-			userPoolWebClientId,
-			domain,
-			webSocketUrl,
 			/* Success callback */
 			() => {
 				if (
@@ -152,15 +142,10 @@ const ConnectAwsAccountModal: FC<ConnectAwsAccountModalProps> = ({
 
 				setConnectFormValues(formValues);
 				clearCredentials();
-				resetAwsStore();
+				resetClientStore();
 				setIsUserAwsAccountConnected(true);
 			}
 		);
-	};
-
-	const _onLogin = async () => {
-		onClose();
-		await onLogin();
 	};
 
 	const handleModalClose = () => {
@@ -327,8 +312,8 @@ const ConnectAwsAccountModal: FC<ConnectAwsAccountModalProps> = ({
 										height="3.08rem"
 										variation="primary"
 										fontFamily="AmazonEmber-Bold"
-										onClick={async () => {
-											await record(
+										onClick={() => {
+											record(
 												[
 													{
 														EventType: EventTypeEnum.SIGN_IN_STARTED,
@@ -337,7 +322,8 @@ const ConnectAwsAccountModal: FC<ConnectAwsAccountModalProps> = ({
 												],
 												["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
 											);
-											await _onLogin();
+											onClose();
+											onLogin();
 										}}
 									>
 										{t("sign_in.text")}
@@ -348,8 +334,9 @@ const ConnectAwsAccountModal: FC<ConnectAwsAccountModalProps> = ({
 									className="continue-to-explore"
 									width="100%"
 									height="3.08rem"
-									onClick={async () => {
-										await record(
+									onClick={() => {
+										_onClose();
+										record(
 											[
 												{
 													EventType: EventTypeEnum.CONTINUE_TO_DEMO_CLICKED,
@@ -358,8 +345,6 @@ const ConnectAwsAccountModal: FC<ConnectAwsAccountModalProps> = ({
 											],
 											["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
 										);
-
-										_onClose();
 									}}
 								>
 									{t("caam__continue_to_demo.text")}

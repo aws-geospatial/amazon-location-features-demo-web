@@ -3,20 +3,22 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Flex, Text } from "@aws-amplify/ui-react";
 import { IconClose } from "@demo/assets/svgs";
 import { useWebSocketService } from "@demo/services";
-import { NotificationHistoryItemtype } from "@demo/types";
+import { MqttConnectionState, NotificationHistoryItemtype } from "@demo/types";
 import { t } from "i18next";
 import "./styles.scss";
+
+const { CONNECTION_SUCCESS, RESUME } = MqttConnectionState;
 
 const useWebSocketBanner = (
 	updateTrackingHistory?: (n: NotificationHistoryItemtype) => void,
 	startSocketConnection = true
 ) => {
 	const [hideConnectionAlert, setHideConnectionAlert] = useState(false);
-	const { subscription, connectionState } = useWebSocketService(
+	const { connectionState } = useWebSocketService(
 		(n: NotificationHistoryItemtype) => updateTrackingHistory && updateTrackingHistory(n),
 		startSocketConnection
 	);
-	const isConnected = useMemo(() => connectionState === "Connected", [connectionState]);
+	const isConnected = useMemo(() => [CONNECTION_SUCCESS, RESUME].includes(connectionState), [connectionState]);
 
 	useEffect(() => {
 		setHideConnectionAlert(false);
@@ -35,7 +37,6 @@ const useWebSocketBanner = (
 
 	return useMemo(
 		() => ({
-			subscription,
 			isHidden: hideConnectionAlert,
 			isConnected,
 			Connection: (
@@ -56,7 +57,7 @@ const useWebSocketBanner = (
 				</Flex>
 			)
 		}),
-		[hideConnectionAlert, isConnected, subscription]
+		[hideConnectionAlert, isConnected]
 	);
 };
 

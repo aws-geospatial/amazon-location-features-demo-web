@@ -3691,5 +3691,11 @@
   },
   "web_service": {
     "text": "Web Service"
+  },
+  "error_handler__failed_fetch_tokens": {
+    "text": "Failed to fetch tokens"
+  },
+  "error_handler__failed_refresh_tokens": {
+    "text": "Failed to refresh tokens"
   }
 }

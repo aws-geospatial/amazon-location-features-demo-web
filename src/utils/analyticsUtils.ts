@@ -7,7 +7,8 @@ import {
 	PinpointClient,
 	PutEventsCommand,
 	PutEventsRequest,
-	UpdateEndpointCommand
+	UpdateEndpointCommand,
+	UpdateEndpointCommandInput
 } from "@aws-sdk/client-pinpoint";
 import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
 
@@ -26,7 +27,7 @@ const {
 	ENV: { PINPOINT_IDENTITY_POOL_ID, PINPOINT_APPLICATION_ID },
 	PERSIST_STORAGE_KEYS: {
 		LOCAL_STORAGE_PREFIX,
-		AMPLIFY_AUTH_DATA,
+		AUTH_DATA,
 		ANALYTICS_ENDPOINT_ID,
 		ANALYTICS_CREDS,
 		PAGE_VIEW_IDENTIFIERS
@@ -35,7 +36,7 @@ const {
 
 const region = PINPOINT_IDENTITY_POOL_ID.split(":")[0];
 
-const amplifyAuthDataLocalStorageKey = `${LOCAL_STORAGE_PREFIX}${AMPLIFY_AUTH_DATA}`;
+const amplifyAuthDataLocalStorageKey = `${LOCAL_STORAGE_PREFIX}${AUTH_DATA}`;
 const endpointIdKey = `${LOCAL_STORAGE_PREFIX}${ANALYTICS_ENDPOINT_ID}`;
 const analyticsCredsKey = `${LOCAL_STORAGE_PREFIX}${ANALYTICS_CREDS}`;
 const pageViewIdentifiersKey = `${LOCAL_STORAGE_PREFIX}${PAGE_VIEW_IDENTIFIERS}`;
@@ -106,7 +107,7 @@ export const createOrUpdateEndpoint = async () => {
 		platformType = "IOS";
 	}
 
-	const input = {
+	const input: UpdateEndpointCommandInput = {
 		ApplicationId: PINPOINT_APPLICATION_ID,
 		EndpointId: endpointId!,
 		EndpointRequest: {
