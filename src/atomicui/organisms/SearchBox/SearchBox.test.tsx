@@ -19,7 +19,7 @@ const mockProps = {
 	isStylesCardOpen: false
 };
 
-const mockUseAmplifyMapData = {
+const mockUseMapData = {
 	currentLocationData: {
 		error: null
 	},
@@ -29,7 +29,7 @@ const mockUseAmplifyMapData = {
 	isCurrentLocationDisabled: false
 };
 
-const mockUseAwsPlaceData = {
+const mockUsePlaceData = {
 	clusters: [],
 	suggestions: [{}],
 	selectedMarker: null,
@@ -45,8 +45,8 @@ const mockUseAwsPlaceData = {
 };
 
 jest.mock("@demo/hooks", () => ({
-	useAmplifyMap: () => mockUseAmplifyMapData,
-	useAwsPlace: () => mockUseAwsPlaceData
+	useMap: () => mockUseMapData,
+	usePlace: () => mockUsePlaceData
 }));
 
 describe("<SearchBox />", () => {
@@ -73,7 +73,7 @@ describe("<SearchBox />", () => {
 		mockProps.isRouteBoxOpen = true;
 		const {} = renderComponent();
 		waitFor(() => {
-			expect(mockUseAwsPlaceData.clearPoiList).toHaveBeenCalled();
+			expect(mockUsePlaceData.clearPoiList).toHaveBeenCalled();
 		});
 	});
 
@@ -94,8 +94,8 @@ describe("<SearchBox />", () => {
 			fireEvent.change(getByTestId("search-box-input"), { target: { value: "search query" } });
 		});
 		waitFor(() => {
-			expect(mockUseAwsPlaceData.clearPoiList).toHaveBeenCalled();
-			expect(mockUseAwsPlaceData.search).toHaveBeenCalled();
+			expect(mockUsePlaceData.clearPoiList).toHaveBeenCalled();
+			expect(mockUsePlaceData.search).toHaveBeenCalled();
 		});
 	});
 });

@@ -39,17 +39,12 @@ jobs:
           echo "VITE_PRICING_PAGE=${{ secrets.VITE_PRICING_PAGE }}" >> .env
           echo "VITE_CUSTOM_ASSETS_URL=${{ secrets.VITE_CUSTOM_ASSETS_URL }}" >> .env
 
-      - name: Clone the amazon-location-web-marketing repository
-        run: |
-          mkdir -p ../amazon-location-web-marketing-temp
-          git clone --branch main https://${{ secrets.GH_USERNAME }}:${{ secrets.GH_PAT }}@github.com/aws-geospatial/amazon-location-web-marketing.git ../amazon-location-web-marketing-temp
+      - name: Install dependencies
+        run: npm install
 
-      - name: Create build
-        run: npm run create-build-with-demo-lib
-
-      - name: Run build
+      - name: Run local server
         run: |
-          npm run start-build &
+          npm run dev &
           echo "Server started"
           sleep 10
 

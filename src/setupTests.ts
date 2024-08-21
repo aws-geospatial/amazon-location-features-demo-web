@@ -52,8 +52,8 @@ jest.mock("@demo/core/constants/appConfig", () => ({
 	},
 	PERSIST_STORAGE_KEYS: {
 		LOCAL_STORAGE_PREFIX: "amazon-location_",
-		AMPLIFY_AUTH_DATA: "amplifyAuthData",
-		AMPLIFY_MAP_DATA: "amplifyMapData",
+		AUTH_DATA: "authData",
+		MAP_DATA: "mapData",
 		PERSISTED_DATA: "persistedData",
 		GEO_LOCATION_ALLOWED: "geoLocationAllowed",
 		SHOULD_CLEAR_CREDENTIALS: "shouldClearCredentials",

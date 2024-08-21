@@ -3691,5 +3691,11 @@
   },
   "web_service": {
     "text": "Serviço Web"
+  },
+  "error_handler__failed_fetch_tokens": {
+    "text": "Falha ao buscar tokens"
+  },
+  "error_handler__failed_refresh_tokens": {
+    "text": "Falha ao atualizar os tokens"
   }
 }
