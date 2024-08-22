@@ -10,7 +10,6 @@ import "@aws-amplify/ui-react/styles.css";
 import "react-toastify/dist/ReactToastify.min.css";
 import "@demo/theme/appStyles.scss";
 import "react-tooltip/dist/react-tooltip.css";
-import "mapbox-gl/dist/mapbox-gl.css";
 
 interface AppWrapperProps {
 	children?: ReactNode;

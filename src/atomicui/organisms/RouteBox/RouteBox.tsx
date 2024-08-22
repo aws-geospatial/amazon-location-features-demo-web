@@ -42,7 +42,7 @@ import { humanReadableTime } from "@demo/utils/dateTimeUtils";
 import { uuid } from "@demo/utils/uuid";
 import { isAndroid, isIOS } from "react-device-detect";
 import { useTranslation } from "react-i18next";
-import { Layer, LayerProps, LngLat, MapRef, Marker as ReactMapGlMarker, Source } from "react-map-gl";
+import { Layer, LayerProps, LngLat, MapRef, Marker as ReactMapGlMarker, Source } from "react-map-gl/maplibre";
 import { RefHandles } from "react-spring-bottom-sheet/dist/types";
 import { Tooltip } from "react-tooltip";
 import "./styles.scss";
@@ -61,7 +61,7 @@ const {
 } = appConfig;
 
 interface RouteBoxProps {
-	mapRef: MapRef | null;
+	mapRef: MutableRefObject<MapRef | null>;
 	setShowRouteBox: (b: boolean) => void;
 	isSideMenuExpanded: boolean;
 	isDirection?: boolean;
@@ -397,7 +397,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 			setIsSearching(true);
 
 			if (value.length >= 3) {
-				const { lng: longitude, lat: latitude } = mapRef?.getCenter() as LngLat;
+				const { lng: longitude, lat: latitude } = mapRef.current?.getCenter() as LngLat;
 
 				if (timeoutIdRef.current) {
 					clearTimeout(timeoutIdRef.current);
@@ -806,9 +806,9 @@ const RouteBox: FC<RouteBoxProps> = ({
 					coordinates: routeData.Legs![0].Geometry?.LineString as number[][]
 				}
 			};
-			const mapStyleLayers = mapRef?.getStyle().layers || [];
+			const mapStyleLayers = mapRef.current?.getStyle().layers || [];
 			const firstSymbolIdx = mapStyleLayers.findIndex(
-				el =>
+				(el: { type: string; id: string }) =>
 					el.type === "symbol" &&
 					(el.id.startsWith("Road") || el.id.startsWith("road-shield") || el.id.startsWith("lake"))
 			);

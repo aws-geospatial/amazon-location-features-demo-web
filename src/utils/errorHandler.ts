@@ -18,9 +18,10 @@ const errors = {
 	excluded: ["Too Many Requests"],
 	missingCreds: "Missing credentials in config",
 	codes: [403, 404],
-	exceptions: ["ExpiredTokenException"]
+	exceptions: ["NotAuthorizedException"]
 };
 let isStackCorrupted = false;
+let isSessionRefreshed = false;
 
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 export const errorHandler = (error: any, message?: string) => {
@@ -30,11 +31,8 @@ export const errorHandler = (error: any, message?: string) => {
 	const isUserAwsAccountConnected = authLocalStorageObj.state.isUserAwsAccountConnected;
 	const authTokens = authLocalStorageObj.state.authTokens;
 
-	if (
-		!!authTokens &&
-		errors.codes.includes(error.statusCode || error.status) &&
-		errors.exceptions.includes(error.code)
-	) {
+	if (!isSessionRefreshed && !!authTokens && errors.exceptions.includes(error.name)) {
+		isSessionRefreshed = true;
 		showToast({ content: i18n.t("show_toast__refreshing_session.text"), type: ToastType.INFO });
 		setTimeout(() => {
 			localStorage.setItem(SHOULD_CLEAR_CREDENTIALS, "true");

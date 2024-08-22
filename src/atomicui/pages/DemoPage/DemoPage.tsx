@@ -25,18 +25,18 @@ import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { GrabMapEnum, MapProviderEnum, MapStyleFilterTypes, MenuItemEnum, ShowStateType } from "@demo/types";
 import { ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { errorHandler } from "@demo/utils/errorHandler";
-import { Signer } from "aws-amplify";
-import { LngLatBoundsLike } from "mapbox-gl";
+import type { GeolocateControl as GeolocateControlRef } from "maplibre-gl";
 import { useTranslation } from "react-i18next";
 import {
 	AttributionControl,
 	GeolocateControl,
-	GeolocateControlRef,
+	LngLatBoundsLike,
 	Map,
 	MapRef,
 	NavigationControl
-} from "react-map-gl";
+} from "react-map-gl/maplibre";
 import { RefHandles } from "react-spring-bottom-sheet/dist/types";
+import "maplibre-gl/dist/maplibre-gl.css";
 import "./styles.scss";
 
 const DemoPlaceholderPage = lazy(() =>
@@ -158,8 +158,6 @@ const initShow = {
 	startUnauthSimulation: false,
 	openFeedbackModal: false
 };
-const peggedRemValue = 13;
-const extraGeoLocateTop = 2.6;
 
 const DemoPage: FC = () => {
 	const {} = useRecordViewPage("DemoPage");
@@ -178,9 +176,9 @@ const DemoPage: FC = () => {
 	});
 	const [startSimulation, setStartSimulation] = useState(false);
 	const [searchBoxValue, setSearchBoxValue] = useState("");
-	const mapViewRef = useRef<MapRef | null>(null);
+	const mapRef = useRef<MapRef | null>(null);
 	const geolocateControlRef = useRef<GeolocateControlRef | null>(null);
-	const { credentials, region, isUserAwsAccountConnected } = useAuth();
+	const { authOptions, region, isUserAwsAccountConnected } = useAuth();
 	const {
 		mapProvider: currentMapProvider,
 		mapStyle: currentMapStyle,
@@ -223,7 +221,7 @@ const DemoPage: FC = () => {
 		onMapProviderChange,
 		onMapStyleChange
 	} = useMapManager({
-		mapViewRef,
+		mapRef,
 		geolocateControlRef,
 		isUnauthGeofenceBoxOpen: show.unauthGeofenceBox,
 		isUnauthTrackerBoxOpen: show.unauthTrackerBox,
@@ -237,15 +235,18 @@ const DemoPage: FC = () => {
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
-	const geoLocateTopValue = `-${bottomSheetCurrentHeight / peggedRemValue + extraGeoLocateTop}rem`;
+	const geoLocateTopValue = `${bottomSheetCurrentHeight / 13 + 0.59}rem`;
 
 	useEffect(() => {
 		let previousWidth = document.body.clientWidth;
+
 		const resizeObserver = new ResizeObserver(() => {
 			const currentWidth = document.body.clientWidth;
+
 			if ((previousWidth < 1024 && currentWidth >= 1024) || (previousWidth >= 1024 && currentWidth < 1024)) {
 				window.location.reload();
 			}
+
 			previousWidth = currentWidth;
 		});
 
@@ -272,7 +273,7 @@ const DemoPage: FC = () => {
 	useEffect(() => {
 		if (selectedMarker) {
 			const { longitude: lng, latitude: lat } = viewpoint;
-			mapViewRef?.current?.setCenter({ lat, lng });
+			mapRef?.current?.setCenter({ lat, lng });
 		}
 	}, [selectedMarker, viewpoint]);
 
@@ -311,10 +312,10 @@ const DemoPage: FC = () => {
 			  };
 
 		if (suggestions && bound) {
-			mapViewRef.current?.fitBounds(bound as [number, number, number, number], options);
+			mapRef.current?.fitBounds(bound as [number, number, number, number], options);
 		} else if ((show.routeBox || ui === ResponsiveUIEnum.routes) && routeData?.Summary?.RouteBBox) {
 			const boundingBox = routeData.Summary.RouteBBox;
-			mapViewRef.current?.fitBounds(
+			mapRef.current?.fitBounds(
 				[
 					[boundingBox[0], boundingBox[1]],
 					[boundingBox[2], boundingBox[3]]
@@ -344,33 +345,10 @@ const DemoPage: FC = () => {
 
 	const locationError = useMemo(() => !!currentLocationData?.error, [currentLocationData]);
 
-	const transformRequest = useCallback(
-		(url: string, resourceType: string) => {
-			let newUrl = url;
-
-			if (resourceType === "Style" && !newUrl.includes("://") && region) {
-				newUrl = `https://maps.geo.${region}.amazonaws.com/maps/v0/maps/${newUrl}/style-descriptor`;
-			}
-
-			if (newUrl.includes("amazonaws.com")) {
-				return {
-					url: Signer.signUrl(newUrl, {
-						access_key: credentials?.accessKeyId,
-						secret_key: credentials?.secretAccessKey,
-						session_token: credentials?.sessionToken
-					})
-				};
-			}
-
-			return { url: newUrl };
-		},
-		[region, credentials]
-	);
-
 	const searchBoxEl = useCallback(
 		(isSimpleSearch = false, bottomSheetRef?: MutableRefObject<RefHandles | null>) => (
 			<SearchBox
-				mapRef={mapViewRef?.current}
+				mapRef={mapRef}
 				value={searchBoxValue}
 				setValue={setSearchBoxValue}
 				isSideMenuExpanded={show.sidebar}
@@ -397,13 +375,13 @@ const DemoPage: FC = () => {
 		]
 	);
 
-	const GeoLocateIcon = useMemo(
-		() =>
-			locationError || isCurrentLocationDisabled ? (
+	const _GeolocateControl = useMemo(
+		() => (
+			<>
 				<Flex
 					style={{
-						position: "absolute",
-						bottom: isMobile ? `${(bottomSheetCurrentHeight || 0) / 13 + 1.2}rem` : isDesktop ? "9.85rem" : "2rem",
+						display: locationError || isCurrentLocationDisabled ? "flex" : "none",
+						bottom: isMobile ? `${(bottomSheetCurrentHeight || 0) / 13 + 1.2}rem` : isDesktop ? "9.9rem" : "2rem",
 						right: isMobile ? "1rem" : isDesktop ? "2rem" : "2rem"
 					}}
 					className="location-disabled"
@@ -411,27 +389,22 @@ const DemoPage: FC = () => {
 				>
 					<IconLocateMe />
 				</Flex>
-			) : (
 				<GeolocateControl
+					ref={geolocateControlRef}
 					style={{
-						width: "2.46rem",
-						height: "2.46rem",
-						position: "absolute",
-						top: isMobile ? geoLocateTopValue : isDesktop ? "-9.5rem" : "-2.5rem",
-						right: isMobile ? "-0.3rem" : isDesktop ? "0.75rem" : "0rem",
-						margin: 0,
-						borderRadius: "0.62rem",
-						display: show.unauthSimulationBounds ? "none" : "block"
+						bottom: isMobile ? geoLocateTopValue : isDesktop ? "9.05rem" : "0.55rem",
+						right: isMobile ? "0.18rem" : isDesktop ? "1.19rem" : "0.5rem",
+						display: show.unauthSimulationBounds || locationError || isCurrentLocationDisabled ? "none" : "flex"
 					}}
 					position="bottom-right"
-					ref={geolocateControlRef}
 					positionOptions={{ enableHighAccuracy: true }}
 					showUserLocation
 					showAccuracyCircle={false}
 					onGeolocate={onGeoLocate}
 					onError={onGeoLocateError}
 				/>
-			),
+			</>
+		),
 		[
 			locationError,
 			isCurrentLocationDisabled,
@@ -449,7 +422,7 @@ const DemoPage: FC = () => {
 	const UnauthSimulationUI = useMemo(
 		() => (
 			<UnauthSimulation
-				mapRef={mapViewRef?.current}
+				mapRef={mapRef}
 				from={show.unauthGeofenceBox ? MenuItemEnum.GEOFENCE : MenuItemEnum.TRACKER}
 				setShowUnauthGeofenceBox={b => setShow(s => ({ ...s, unauthGeofenceBox: b }))}
 				setShowUnauthTrackerBox={b => setShow(s => ({ ...s, unauthTrackerBox: b }))}
@@ -483,14 +456,14 @@ const DemoPage: FC = () => {
 			"_blank"
 		);
 
-	return !!credentials ? (
+	return !!authOptions?.transformRequest ? (
 		<View
 			style={{ height: "100%" }}
 			className={`${currentMapStyle.toLowerCase().includes("dark") ? "dark-mode" : "light-mode"}`}
 		>
 			<Map
+				ref={mapRef}
 				style={{ width: "100%", height: "100%" }}
-				ref={mapViewRef}
 				cursor={isEditingRoute ? "crosshair" : ""}
 				maxTileCacheSize={100}
 				zoom={zoom}
@@ -499,7 +472,7 @@ const DemoPage: FC = () => {
 						? { ...currentLocationData.currentLocation, zoom }
 						: { ...viewpoint, zoom }
 				}
-				mapStyle={currentMapStyle}
+				mapStyle={`https://maps.geo.${region}.amazonaws.com/maps/v0/maps/${currentMapStyle}/style-descriptor`}
 				minZoom={2}
 				maxBounds={
 					currentMapProvider === MapProviderEnum.GRAB
@@ -510,15 +483,15 @@ const DemoPage: FC = () => {
 							: isTablet
 							? (MAX_BOUNDS.VANCOUVER.TABLET as LngLatBoundsLike)
 							: (MAX_BOUNDS.VANCOUVER.MOBILE as LngLatBoundsLike)
-						: (MAX_BOUNDS.DEFAULT as LngLatBoundsLike)
+						: undefined
 				}
 				onClick={handleMapClick}
 				onLoad={onLoad}
 				onZoom={({ viewState }) => setZoom(viewState.zoom)}
 				onError={error => errorHandler(error.error)}
 				onIdle={() => gridLoader && setGridLoader(false)}
-				transformRequest={transformRequest}
 				attributionControl={false}
+				{...authOptions}
 			>
 				<View className={gridLoader ? "loader-container" : ""}>
 					{isDesktop && (
@@ -543,20 +516,20 @@ const DemoPage: FC = () => {
 							)}
 							{show.routeBox ? (
 								<RouteBox
-									mapRef={mapViewRef?.current}
+									mapRef={mapRef}
 									setShowRouteBox={b => setShow(s => ({ ...s, routeBox: b }))}
 									isSideMenuExpanded={show.sidebar}
 								/>
 							) : show.authGeofenceBox ? (
 								<AuthGeofenceBox
-									mapRef={mapViewRef?.current}
+									mapRef={mapRef}
 									setShowAuthGeofenceBox={b => setShow(s => ({ ...s, authGeofenceBox: b }))}
 									isEditingAuthRoute={isEditingAuthRoute}
 									setIsEditingAuthRoute={setIsEditingAuthRoute}
 								/>
 							) : show.authTrackerBox ? (
 								<AuthTrackerBox
-									mapRef={mapViewRef?.current}
+									mapRef={mapRef}
 									setShowAuthTrackerBox={b => setShow(s => ({ ...s, authTrackerBox: b }))}
 									clearCredsAndClients={clearCredsAndClients}
 								/>
@@ -605,10 +578,10 @@ const DemoPage: FC = () => {
 									bottomSheetRef={ref}
 								/>
 							)}
-							mapRef={mapViewRef?.current}
+							mapRef={mapRef}
 							RouteBox={(ref?: MutableRefObject<RefHandles | null>) => (
 								<RouteBox
-									mapRef={mapViewRef?.current}
+									mapRef={mapRef}
 									setShowRouteBox={b => setShow(s => ({ ...s, routeBox: b }))}
 									isSideMenuExpanded={show.sidebar}
 									isDirection={ui === ResponsiveUIEnum.direction_to_routes}
@@ -643,7 +616,7 @@ const DemoPage: FC = () => {
 							setShow={setShow}
 							AuthGeofenceBox={
 								<AuthGeofenceBox
-									mapRef={mapViewRef?.current}
+									mapRef={mapRef}
 									setShowAuthGeofenceBox={b => setShow(s => ({ ...s, authGeofenceBox: b }))}
 									triggerOnClose={triggerOnClose}
 									setTriggerOnClose={setTriggerOnClose}
@@ -655,7 +628,7 @@ const DemoPage: FC = () => {
 							}
 							AuthTrackerBox={
 								<AuthTrackerBox
-									mapRef={mapViewRef?.current}
+									mapRef={mapRef}
 									setShowAuthTrackerBox={b => setShow(s => ({ ...s, authTrackerBox: b }))}
 								/>
 							}
@@ -711,37 +684,17 @@ const DemoPage: FC = () => {
 							onSetShowUnauthTrackerBox={(b: boolean) => setShow(s => ({ ...s, unauthTrackerBox: b }))}
 						/>
 					)}
-					{GeoLocateIcon}
-					{isDesktop && (
-						<NavigationControl
-							style={{
-								width: "2.46rem",
-								height: "4.92rem",
-								position: "absolute",
-								top: "-6rem",
-								right: "0.75rem",
-								margin: 0,
-								borderRadius: "0.62rem"
-							}}
-							position="bottom-right"
-							showZoom
-							showCompass={false}
-						/>
-					)}
+					{isDesktop && <NavigationControl position="bottom-right" showZoom showCompass={false} />}
+					{_GeolocateControl}
 				</View>
 				<AttributionControl
 					style={
 						isDesktop
 							? {
-									display: "flex",
-									fontSize: "0.77rem",
 									color: currentMapStyle.toLowerCase().includes("dark") ? "var(--white-color)" : "var(--black-color)",
 									backgroundColor: currentMapStyle.toLowerCase().includes("dark")
 										? "rgba(0, 0, 0, 0.2)"
-										: "var(--white-color)",
-									border: "0px solid none",
-									marginTop: "0rem",
-									marginBottom: "0rem"
+										: "var(--white-color)"
 							  }
 							: { display: "none" }
 					}

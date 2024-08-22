@@ -62,26 +62,28 @@ export default defineConfig(() => {
 					"@aws-sdk/client-location",
 					"@aws-sdk/client-pinpoint",
 					"@aws-sdk/credential-providers",
+					"@aws/amazon-location-utilities-auth-helper",
 					"@turf/turf",
 					"aws-amplify",
 					"aws-iot-device-sdk-v2",
 					"date-fns",
 					"i18next",
 					"i18next-browser-languagedetector",
-					"mapbox-gl-draw-circle",
+					"maplibre-gl-draw-circle",
+					"maplibre-gl",
 					"ngeohash",
 					"ramda",
 					"react",
 					"react-device-detect",
 					"react-dom",
 					"react-i18next",
+					"react-map-gl",
 					"react-router-dom",
 					"react-spring-bottom-sheet",
 					"react-toastify",
 					"react-tooltip",
 					"zustand",
 					/* Other deps */
-					"react-map-gl",
 					"react/jsx-runtime",
 					"zustand/middleware",
 					"@turf/distance",
@@ -97,9 +99,6 @@ export default defineConfig(() => {
 					}
 				}
 			}
-		},
-		optimizeDeps: {
-			disabled: false
 		},
 		server: {
 			port: 3000

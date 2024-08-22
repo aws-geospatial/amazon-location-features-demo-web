@@ -47,13 +47,13 @@ Cypress.Commands.add("addTrackerAndGeofenceEnterExit", (isResponsive, geofenceNa
 	cy.wait(5000);
 	cy.contains("Continue").click();
 	cy.wait(5000);
-	cy.get('[class="mapboxgl-canvas"]').click("left", { force: true });
+	cy.get('[class="maplibregl-canvas"]').click("left", { force: true });
 	cy.wait(5000);
 	isResponsive
-		? cy.get('[class="mapboxgl-canvas"]').click(200, 200, { force: true })
-		: cy.get('[class="mapboxgl-canvas"]').click("right", { force: true });
+		? cy.get('[class="maplibregl-canvas"]').click(200, 200, { force: true })
+		: cy.get('[class="maplibregl-canvas"]').click("right", { force: true });
 	cy.wait(5000);
-	cy.get('[class="mapboxgl-canvas"]').click("right", { force: true });
+	cy.get('[class="maplibregl-canvas"]').click("right", { force: true });
 	cy.wait(5000);
 	cy.contains("Save").click();
 	cy.wait(5000);

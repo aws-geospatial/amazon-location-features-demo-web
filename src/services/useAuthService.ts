@@ -4,7 +4,9 @@
 import { useMemo } from "react";
 
 import { FromCognitoIdentityPoolParameters, fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
+import { withIdentityPoolId } from "@aws/amazon-location-utilities-auth-helper";
 import { appConfig } from "@demo/core/constants";
+import { AuthTokensType } from "@demo/types";
 
 const {
 	ROUTES: { DEMO }
@@ -46,6 +48,20 @@ const useAuthService = () => {
 						"Content-Type": "application/x-www-form-urlencoded"
 					},
 					body: body.toString()
+				});
+			},
+			withIdentityPoolId: async (
+				identityPoolId: string,
+				region: string,
+				authTokens?: AuthTokensType,
+				userPoolId?: string
+			) => {
+				return await withIdentityPoolId(identityPoolId, {
+					identityPoolId,
+					clientConfig: { region },
+					logins: !!authTokens
+						? { [`cognito-idp.${region}.amazonaws.com/${userPoolId}`]: authTokens.id_token }
+						: undefined
 				});
 			}
 		}),

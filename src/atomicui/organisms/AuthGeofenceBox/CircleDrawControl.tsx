@@ -8,8 +8,8 @@ import { CircleDrawEventType, CircleFeatureType } from "@demo/types";
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import * as turf from "@turf/turf";
-import { CircleMode, DirectMode, DragCircleMode, SimpleSelectMode } from "mapbox-gl-draw-circle";
-import { IControl, LngLatBoundsLike, useControl, useMap } from "react-map-gl";
+import { CircleMode, DirectMode, DragCircleMode, SimpleSelectMode } from "maplibre-gl-draw-circle";
+import { IControl, LngLatBoundsLike, useControl, useMap } from "react-map-gl/maplibre";
 
 const draw = new MapboxDraw({
 	displayControlsDefault: false,

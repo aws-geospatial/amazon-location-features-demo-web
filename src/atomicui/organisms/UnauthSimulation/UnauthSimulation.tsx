@@ -46,9 +46,9 @@ import {
 } from "@demo/types";
 import { ResponsiveUIEnum } from "@demo/types/Enums";
 import { format, parseISO } from "date-fns";
-import { LngLatBoundsLike } from "mapbox-gl";
+import type { GeolocateControl as GeolocateControlRef } from "maplibre-gl";
 import { useTranslation } from "react-i18next";
-import { GeolocateControlRef, MapRef } from "react-map-gl";
+import { LngLatBoundsLike, MapRef } from "react-map-gl/maplibre";
 
 import UnauthGeofencesSimulation from "./UnauthGeofencesSimulation";
 import UnauthRouteSimulation from "./UnauthRouteSimulation";
@@ -89,7 +89,8 @@ const {
 } = appConfig;
 
 export interface UnauthSimulationProps {
-	mapRef: MapRef | null;
+	mapRef: MutableRefObject<MapRef | null>;
+	geolocateControlRef: MutableRefObject<GeolocateControlRef | null>;
 	from: MenuItemEnum;
 	setShowUnauthGeofenceBox: (b: boolean) => void;
 	setShowUnauthTrackerBox: (b: boolean) => void;
@@ -104,11 +105,11 @@ export interface UnauthSimulationProps {
 	setIsNotifications: Dispatch<SetStateAction<boolean>>;
 	confirmCloseSimulation: boolean;
 	setConfirmCloseSimulation: Dispatch<SetStateAction<boolean>>;
-	geolocateControlRef: MutableRefObject<GeolocateControlRef | null>;
 }
 
 const UnauthSimulation: FC<UnauthSimulationProps> = ({
 	mapRef,
+	geolocateControlRef,
 	from,
 	setShowUnauthGeofenceBox,
 	setShowUnauthTrackerBox,
@@ -122,8 +123,7 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 	isNotifications,
 	setIsNotifications,
 	confirmCloseSimulation,
-	setConfirmCloseSimulation,
-	geolocateControlRef
+	setConfirmCloseSimulation
 }) => {
 	const [idx, setIdx] = useState(initialIdx);
 	const [trackerPos, setTrackerPos] = useState(initialTrackerPos);
@@ -191,7 +191,7 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 
 	useEffect(() => {
 		startSimulation &&
-			mapRef?.fitBounds(
+			mapRef.current?.fitBounds(
 				isDesktop
 					? (VANCOUVER.DESKTOP as LngLatBoundsLike)
 					: isTablet

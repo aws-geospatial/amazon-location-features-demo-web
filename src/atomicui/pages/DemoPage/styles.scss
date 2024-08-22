@@ -1,23 +1,115 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-.maplibregl-canvas-container.mapboxgl-canvas-container {
-	position: relative;
-	z-index: 0;
+.maplibregl-ctrl-bottom-right {
+	details {
+		right: 1.23rem !important;
+		bottom: 0.25rem !important;
+		font-size: 0.77rem !important;
+	}
+
+	/* Geolocate control */
+	> div:nth-child(2) {
+		justify-content: center !important;
+		align-items: center !important;
+		width: 2.46rem !important;
+		height: 2.46rem !important;
+		border-radius: 0.62rem !important;
+		position: absolute !important;
+
+		.maplibregl-ctrl-geolocate {
+			.maplibregl-ctrl-icon {
+				background-image: url("@demo/assets/svgs/icon-locate-me.svg") !important; // TODO: move to custom assets dir
+
+				@media only screen and (min-width: 1024px) {
+					&:hover {
+						background-image: url("@demo/assets/svgs/icon-locate-me-filled.svg") !important; // TODO: move to custom assets dir
+					}
+				}
+			}
+		}
+	}
+
+	/* Navigation control */
+	> div:nth-child(3) {
+		display: flex !important;
+		flex-direction: column !important;
+		justify-content: space-around !important;
+		align-items: center !important;
+		width: 2.46rem !important;
+		height: 4.92rem !important;
+		border-radius: 0.62rem !important;
+		position: absolute !important;
+		right: 1.19rem !important;
+		bottom: 3.1rem !important;
+
+		.maplibregl-ctrl-zoom-in {
+			width: 100% !important;
+
+			.maplibregl-ctrl-icon {
+				background-image: url("@demo/assets/svgs/icon-zoom-plus.svg") !important; // TODO: move to custom assets dir
+
+				@media only screen and (min-width: 1024px) {
+					&:hover {
+						background-image: url("@demo/assets/svgs/icon-zoom-plus-filled.svg") !important; // TODO: move to custom assets dir
+					}
+				}
+			}
+		}
+
+		.maplibregl-ctrl-zoom-out {
+			width: 100% !important;
+
+			&:hover {
+				border-radius: 0rem 0rem 0.62rem 0.62rem !important;
+			}
+
+			.maplibregl-ctrl-icon {
+				background-image: url("@demo/assets/svgs/icon-minus.svg") !important; // TODO: move to custom assets dir
+
+				@media only screen and (min-width: 1024px) {
+					&:hover {
+						background-image: url("@demo/assets/svgs/icon-minus-filled.svg") !important; // TODO: move to custom assets dir
+					}
+				}
+			}
+		}
+	}
 }
 
-.amplify-flex.location-disabled {
+.maplibregl-ctrl button:not(:disabled):hover {
+	background-color: var(--ghost-white) !important;
+	box-shadow: none !important;
+	border-radius: 0.62rem !important;
+}
+
+.maplibregl-ctrl button:disabled {
+	cursor: pointer !important;
+	opacity: 1 !important;
+}
+
+.maplibregl-ctrl-group:not(:empty) {
+	box-shadow: 0px 0px 10px rgb(0 0 0 / 20%) !important;
+}
+
+.maplibregl-user-location-dot {
+	background-color: var(--primary-color) !important;
+
+	&:before {
+		background-color: #a9c6c2 !important;
+	}
+}
+
+.location-disabled {
 	gap: 0;
 	justify-content: center;
 	align-items: center;
 	width: 2.46rem;
 	height: 2.46rem;
 	position: absolute;
-	bottom: 9.85rem;
-	right: 2rem;
 	background-color: var(--white-color);
 	opacity: 0.8;
-	border-radius: 4px;
+	border-radius: 0.62rem !important;
 	box-shadow: 0px 0px 10px rgb(0 0 0 / 20%);
 	cursor: pointer;
 	z-index: 9;
@@ -32,91 +124,6 @@
 
 	@media only screen and (max-width: 300px) {
 		bottom: 15.5rem;
-	}
-}
-
-.maplibregl-ctrl.maplibregl-ctrl-group.mapboxgl-ctrl.mapboxgl-ctrl-group {
-	box-shadow: 0px 0px 10px rgb(0 0 0 / 20%);
-}
-
-.mapboxgl-ctrl-bottom-right,
-.maplibregl-ctrl-bottom-right {
-	display: flex;
-	flex-direction: column-reverse;
-	bottom: 1.23rem;
-	right: 1.23rem;
-	z-index: 3;
-}
-
-.dark-mode {
-	.mapboxgl-ctrl-attrib-inner {
-		a {
-			color: white;
-		}
-	}
-}
-
-.mapboxgl-ctrl-group button,
-.maplibregl-ctrl-group button {
-	width: 2.46rem;
-	height: 2.46rem;
-}
-
-.mapboxgl-ctrl button.mapboxgl-ctrl-geolocate .mapboxgl-ctrl-icon,
-.maplibregl-ctrl button.maplibregl-ctrl-geolocate .maplibregl-ctrl-icon {
-	background-image: url("@demo/assets/svgs/icon-locate-me.svg");
-
-	@media only screen and (min-width: 1024px) {
-		&:hover {
-			background-image: url("@demo/assets/svgs/icon-locate-me-filled.svg");
-		}
-	}
-}
-
-.mapboxgl-ctrl button:not(:disabled):hover,
-.maplibregl-ctrl button:not(:disabled):hover {
-	background-color: var(--ghost-white);
-	box-shadow: none;
-	border-radius: 0.62rem;
-}
-
-.mapboxgl-ctrl button:disabled,
-.maplibregl-ctrl button:disabled {
-	cursor: pointer !important;
-	opacity: 1;
-}
-
-.mapboxgl-ctrl-group:not(:empty),
-.maplibregl-ctrl-group:not(:empty) {
-	box-shadow: 0px 0px 10px rgb(0 0 0 / 20%);
-}
-
-.mapboxgl-ctrl button.mapboxgl-ctrl-zoom-in .mapboxgl-ctrl-icon,
-.maplibregl-ctrl button.maplibregl-ctrl-zoom-in .maplibregl-ctrl-icon {
-	background-image: url("@demo/assets/svgs/icon-zoom-plus.svg");
-
-	@media only screen and (min-width: 1024px) {
-		&:hover {
-			background-image: url("@demo/assets/svgs/icon-zoom-plus-filled.svg");
-		}
-	}
-}
-
-.mapboxgl-ctrl button.mapboxgl-ctrl-zoom-out,
-.maplibregl-ctrl button.maplibregl-ctrl-zoom-out {
-	&:hover {
-		border-radius: 0rem 0rem 0.62rem 0.62rem;
-	}
-}
-
-.mapboxgl-ctrl button.mapboxgl-ctrl-zoom-out .mapboxgl-ctrl-icon,
-.maplibregl-ctrl button.maplibregl-ctrl-zoom-out .maplibregl-ctrl-icon {
-	background-image: url("@demo/assets/svgs/icon-minus.svg");
-
-	@media only screen and (min-width: 1024px) {
-		&:hover {
-			background-image: url("@demo/assets/svgs/icon-minus-filled.svg");
-		}
 	}
 }
 
@@ -148,22 +155,8 @@
 	}
 }
 
-.mapboxgl-user-location-dot:before,
-.maplibregl-user-location-dot:before {
-	background-color: #a9c6c2 !important;
-}
-
-.mapboxgl-user-location-dot,
-.maplibregl-user-location-dot {
-	background-color: #008296 !important;
-}
-
 .loader-container {
 	width: 100%;
 	height: 100%;
 	background-image: url("@demo/assets/pngs/Loading.png");
-}
-
-.mapboxgl-ctrl-attrib-button {
-	box-shadow: none !important;
 }

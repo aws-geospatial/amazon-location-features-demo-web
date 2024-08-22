@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { FC, lazy, useCallback, useEffect, useMemo, useState } from "react";
+import { FC, MutableRefObject, lazy, useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button, Card, Flex, Loader, Text, View } from "@aws-amplify/ui-react";
 import {
@@ -21,7 +21,7 @@ import { EventTypeEnum, ResponsiveUIEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
 import * as turf from "@turf/turf";
 import { useTranslation } from "react-i18next";
-import { Layer, MapRef, Marker, Source } from "react-map-gl";
+import { Layer, MapRef, Marker, Source } from "react-map-gl/maplibre";
 import { Tooltip } from "react-tooltip";
 import "./styles.scss";
 
@@ -40,7 +40,7 @@ export const trackerTypes = [
 ];
 
 export interface AuthTrackerBoxProps {
-	mapRef: MapRef | null;
+	mapRef: MutableRefObject<MapRef | null>;
 	setShowAuthTrackerBox: (b: boolean) => void;
 	clearCredsAndClients?: () => void;
 }

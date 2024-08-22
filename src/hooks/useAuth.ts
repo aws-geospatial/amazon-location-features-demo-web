@@ -59,14 +59,17 @@ const useAuth = () => {
 					const { identityPoolId, region, userPoolId, authTokens } = store;
 
 					if (identityPoolId && region) {
-						const credentials = await authService.fetchCredentials({
+						const cognitoIdentityCredentials = await authService.fetchCredentials({
 							identityPoolId,
 							clientConfig: { region },
 							logins: authTokens
-								? { [`cognito-idp.${region}.amazonaws.com/${userPoolId}`]: authTokens.id_token }
+								? {
+										[`cognito-idp.${region}.amazonaws.com/${userPoolId}`]: authTokens.id_token
+								  }
 								: undefined
 						});
-						setState({ credentials: { ...credentials, authenticated: authTokens ? true : false } });
+						const credentials = { ...cognitoIdentityCredentials, authenticated: !!authTokens };
+						setState({ credentials });
 					}
 				} catch (error) {
 					errorHandler(error, t("error_handler__failed_fetch_creds.text"));
@@ -156,7 +159,7 @@ const useAuth = () => {
 				);
 			},
 			clearCredentials: () => {
-				setState({ credentials: undefined });
+				setState({ credentials: undefined, authOptions: undefined });
 			},
 			setAuthTokens: (authTokens?: AuthTokensType) => {
 				setState({ authTokens });
@@ -231,7 +234,7 @@ const useAuth = () => {
 					const webSocketUrl = WEB_SOCKET_URLS[region];
 
 					if (identityPoolId) {
-						setState({ identityPoolId, region, webSocketUrl, credentials: undefined });
+						setState({ identityPoolId, region, webSocketUrl, credentials: undefined, authOptions: undefined });
 						return;
 					}
 				}
@@ -241,7 +244,7 @@ const useAuth = () => {
 				const identityPoolId = POOLS[region];
 				const webSocketUrl = WEB_SOCKET_URLS[region];
 
-				setState({ identityPoolId, region, webSocketUrl, credentials: undefined });
+				setState({ identityPoolId, region, webSocketUrl, credentials: undefined, authOptions: undefined });
 			},
 			setAutoRegion: (autoRegion: boolean, region: "Automatic" | RegionEnum) => {
 				if (autoRegion) {
@@ -250,7 +253,14 @@ const useAuth = () => {
 						const region = localStorage.getItem(FASTEST_REGION) ?? fallbackRegion;
 						const identityPoolId = POOLS[region];
 						const webSocketUrl = WEB_SOCKET_URLS[region];
-						setState({ identityPoolId, region, webSocketUrl, autoRegion, credentials: undefined });
+						setState({
+							identityPoolId,
+							region,
+							webSocketUrl,
+							autoRegion,
+							credentials: undefined,
+							authOptions: undefined
+						});
 					})();
 				} else {
 					!!POOLS[region] &&
@@ -260,7 +270,8 @@ const useAuth = () => {
 							region,
 							webSocketUrl: WEB_SOCKET_URLS[region],
 							autoRegion,
-							credentials: undefined
+							credentials: undefined,
+							authOptions: undefined
 						});
 				}
 			},
@@ -285,9 +296,23 @@ const useAuth = () => {
 					setState({ stackRegion: { label: l, value }, cloudFormationLink: newUrl });
 				}
 			},
+			fetchAuthOptions: async () => {
+				try {
+					const { identityPoolId, region, userPoolId, authTokens } = store;
+
+					if (identityPoolId && region) {
+						const authHelper = await authService.withIdentityPoolId(identityPoolId, region, authTokens, userPoolId);
+						const authOptions = { ...authHelper.getMapAuthenticationOptions() };
+						setState({ authOptions });
+					}
+				} catch (error) {
+					errorHandler(error);
+				}
+			},
 			resetStore: () => {
 				setState({
 					credentials: undefined,
+					authOptions: undefined,
 					authTokens: undefined,
 					identityPoolId: undefined,
 					region: undefined,

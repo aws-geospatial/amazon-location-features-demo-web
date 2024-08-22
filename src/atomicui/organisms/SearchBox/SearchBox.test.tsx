@@ -1,12 +1,20 @@
 import i18n from "@demo/locales/i18n";
+import { faker } from "@faker-js/faker";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { I18nextProvider } from "react-i18next";
+import { MapRef } from "react-map-gl/maplibre";
 
 import SearchBox from "./SearchBox";
 
 const mockProps = {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	mapRef: { getCenter: () => ({ lat: 123, lng: 34 }) } as any,
+	mapRef: {
+		current: {
+			getCenter: () => ({
+				lng: Number(faker.address.longitude()),
+				lat: Number(faker.address.latitude())
+			})
+		} as MapRef
+	},
 	value: "",
 	setValue: jest.fn(),
 	isSideMenuExpanded: false,

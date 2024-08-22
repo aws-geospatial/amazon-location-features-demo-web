@@ -42,7 +42,7 @@ const AboutModal: FC<AboutModalProps> = ({ open, onClose }) => {
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
 	const { isMobile } = useDeviceMediaQuery();
-	const attributeEl = document.querySelector<HTMLElement>(".mapboxgl-ctrl-attrib-inner");
+	const attributeEl = document.querySelector<HTMLElement>(".maplibregl-ctrl-attrib-inner");
 
 	useEffect(() => {
 		isMobile ? setSelectedOption(undefined) : setSelectedOption(AboutOptionEnum.ATTRIBUTION);

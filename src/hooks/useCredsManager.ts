@@ -30,7 +30,9 @@ const useCredsManager = () => {
 		userPoolId,
 		userPoolClientId,
 		authTokens,
-		setAuthTokens
+		setAuthTokens,
+		authOptions,
+		fetchAuthOptions
 	} = useAuth();
 	const {
 		locationClient,
@@ -53,7 +55,7 @@ const useCredsManager = () => {
 		clearCredsAndClients();
 	}
 
-	const refreshCredentials = useCallback(async () => {
+	const refreshCredentials = useCallback(() => {
 		if (credentials && credentials.authenticated) {
 			(async () => {
 				await refreshTokens();
@@ -77,7 +79,7 @@ const useCredsManager = () => {
 				timeout && clearTimeout(timeout);
 				timeout = setTimeout(() => {
 					refreshCredentials();
-				}, differenceInMilliseconds(new Date(credentials.expiration || 0), new Date()) - 5 * 60 * 1000); /* Refresh 5 minutes before expiration */
+				}, differenceInMilliseconds(new Date(credentials.expiration || 0), now) - 5 * 60 * 1000); /* Refresh 5 minutes before expiration */
 			}
 		} else {
 			/* If the credentials are not present, fetch them */
@@ -129,16 +131,7 @@ const useCredsManager = () => {
 			window.history.replaceState(undefined, "", DEMO);
 			clearCredsAndClients();
 		}
-	}, [
-		clearCredsAndClients,
-		credentials,
-		identityPoolId,
-		userPoolClientId,
-		region,
-		userPoolId,
-		fetchCredentials,
-		fetchTokens
-	]);
+	}, [clearCredsAndClients, credentials, identityPoolId, userPoolClientId, region, userPoolId, fetchTokens]);
 
 	const _attachPolicy = useCallback(async () => {
 		if (credentials && credentials?.expiration) {
@@ -162,6 +155,15 @@ const useCredsManager = () => {
 	useEffect(() => {
 		_attachPolicy();
 	}, [_attachPolicy]);
+
+	/* Fetch authOptions for map */
+	useEffect(() => {
+		if (!!!authOptions?.transformRequest) {
+			(async () => {
+				await fetchAuthOptions();
+			})();
+		}
+	}, [authOptions, fetchAuthOptions]);
 
 	return { clearCredsAndClients };
 };

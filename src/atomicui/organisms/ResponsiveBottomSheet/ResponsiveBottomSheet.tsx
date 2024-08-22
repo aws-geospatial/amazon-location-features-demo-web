@@ -24,8 +24,9 @@ import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { ShowStateType } from "@demo/types";
 import { MenuItemEnum, ResponsiveUIEnum, SettingOptionEnum } from "@demo/types/Enums";
+import type { GeolocateControl as GeolocateControlRef } from "maplibre-gl";
 import { useTranslation } from "react-i18next";
-import { GeolocateControlRef, MapRef } from "react-map-gl";
+import { MapRef } from "react-map-gl/maplibre";
 import { useLocation } from "react-router-dom";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import { RefHandles } from "react-spring-bottom-sheet/dist/types";
@@ -45,7 +46,8 @@ const {
 } = appConfig;
 
 interface IProps {
-	mapRef: MapRef | null;
+	mapRef: MutableRefObject<MapRef | null>;
+	geolocateControlRef: MutableRefObject<GeolocateControlRef | null>;
 	SearchBoxEl: (ref?: MutableRefObject<RefHandles | null>) => JSX.Element;
 	MapButtons: (ref?: MutableRefObject<RefHandles | null>) => JSX.Element;
 	RouteBox: (ref?: MutableRefObject<RefHandles | null>) => JSX.Element;
@@ -87,10 +89,11 @@ interface IProps {
 	isExpandRouteOptionsMobile: boolean;
 	setExpandRouteOptionsMobile: (b: boolean) => void;
 	setSearchBoxValue: Dispatch<SetStateAction<string>>;
-	geolocateControlRef: MutableRefObject<GeolocateControlRef | null>;
 }
 
 const ResponsiveBottomSheet: FC<IProps> = ({
+	mapRef,
+	geolocateControlRef,
 	SearchBoxEl,
 	MapButtons,
 	RouteBox,
@@ -117,7 +120,6 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	setShow,
 	startSimulation,
 	setStartSimulation,
-	mapRef,
 	isNotifications,
 	setIsNotifications,
 	confirmCloseSimulation,
@@ -130,8 +132,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	setShowRouteBox,
 	isExpandRouteOptionsMobile,
 	setExpandRouteOptionsMobile,
-	setSearchBoxValue,
-	geolocateControlRef
+	setSearchBoxValue
 }) => {
 	const { isDesktop, isMobile, isTablet, isMax556, isDesktopBrowser } = useDeviceMediaQuery();
 	const { unauthNotifications, isAddingGeofence } = useGeofence();

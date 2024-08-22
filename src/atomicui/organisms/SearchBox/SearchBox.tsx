@@ -27,10 +27,9 @@ import { DistanceUnitEnum, MapProviderEnum, MapUnitEnum, SuggestionType } from "
 import { AnalyticsEventActionsEnum, ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { calculateGeodesicDistance } from "@demo/utils/geoCalculation";
 import { Units } from "@turf/turf";
-import { LngLat } from "mapbox-gl";
 import { isAndroid, isIOS } from "react-device-detect";
 import { useTranslation } from "react-i18next";
-import { MapRef } from "react-map-gl";
+import { LngLat, MapRef } from "react-map-gl/maplibre";
 import { RefHandles } from "react-spring-bottom-sheet/dist/types";
 import { Tooltip } from "react-tooltip";
 import "./styles.scss";
@@ -51,7 +50,7 @@ const {
 } = appConfig;
 
 interface SearchBoxProps {
-	mapRef: MapRef | null;
+	mapRef: MutableRefObject<MapRef | null>;
 	value: string;
 	setValue: (value: string) => void;
 	isSideMenuExpanded: boolean;
@@ -170,7 +169,7 @@ const SearchBox: FC<SearchBoxProps> = ({
 	const handleSearch = useCallback(
 		async (value: string, exact = false, action: string) => {
 			setSearchingState(!!value?.length);
-			const { lng: longitude, lat: latitude } = mapRef?.getCenter() as LngLat;
+			const { lng: longitude, lat: latitude } = mapRef.current?.getCenter() as LngLat;
 			const vp = { longitude, latitude };
 
 			if (timeoutIdRef.current) {

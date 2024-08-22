@@ -4,6 +4,7 @@ import { Divider, Flex, View } from "@aws-amplify/ui-react";
 import { IconLocateMe, IconMinus, IconZoomPlus, LogoLight } from "@demo/assets/svgs";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { MapStyleFilterTypes, MenuItemEnum, ShowStateType } from "@demo/types";
+import { MapRef } from "react-map-gl/maplibre";
 import "./styles.scss";
 
 const MapButtons = lazy(() =>
@@ -67,19 +68,35 @@ const DemoPlaceholderPage: FC<DemoPlaceholderPageProps> = ({
 							/>
 						)}
 						{show.routeBox ? (
-							<RouteBox mapRef={null} setShowRouteBox={() => {}} isSideMenuExpanded={show.sidebar} />
+							<RouteBox
+								mapRef={{
+									current: {} as MapRef
+								}}
+								setShowRouteBox={() => {}}
+								isSideMenuExpanded={show.sidebar}
+							/>
 						) : show.authGeofenceBox ? (
 							<AuthGeofenceBox
-								mapRef={null}
+								mapRef={{
+									current: {} as MapRef
+								}}
 								setShowAuthGeofenceBox={() => {}}
 								isEditingAuthRoute={false}
 								setIsEditingAuthRoute={() => {}}
 							/>
 						) : show.authTrackerBox ? (
-							<AuthTrackerBox mapRef={null} setShowAuthTrackerBox={() => {}} />
+							<AuthTrackerBox
+								mapRef={{
+									current: {} as MapRef
+								}}
+								setShowAuthTrackerBox={() => {}}
+							/>
 						) : show.unauthGeofenceBox || show.unauthTrackerBox ? (
 							<UnauthSimulation
-								mapRef={null}
+								mapRef={{
+									current: {} as MapRef
+								}}
+								geolocateControlRef={{ current: null }}
 								from={show.unauthGeofenceBox ? MenuItemEnum.GEOFENCE : MenuItemEnum.TRACKER}
 								setShowUnauthGeofenceBox={() => {}}
 								setShowUnauthTrackerBox={() => {}}
@@ -93,11 +110,12 @@ const DemoPlaceholderPage: FC<DemoPlaceholderPageProps> = ({
 								setIsNotifications={() => {}}
 								confirmCloseSimulation={false}
 								setConfirmCloseSimulation={() => {}}
-								geolocateControlRef={{ current: null }}
 							/>
 						) : (
 							<SearchBox
-								mapRef={null}
+								mapRef={{
+									current: {} as MapRef
+								}}
 								value={value}
 								setValue={setValue}
 								isSideMenuExpanded={show.sidebar}
