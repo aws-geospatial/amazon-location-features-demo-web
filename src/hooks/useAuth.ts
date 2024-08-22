@@ -72,7 +72,12 @@ const useAuth = () => {
 						setState({ credentials });
 					}
 				} catch (error) {
-					errorHandler(error, t("error_handler__failed_fetch_creds.text"));
+					if ((error as Error).name === "NotAuthorizedException") {
+						await methods.refreshTokens();
+						resetClientStore();
+					} else {
+						errorHandler(error, t("error_handler__failed_fetch_creds.text"));
+					}
 				}
 			},
 			fetchTokens: async (code: string) => {
@@ -113,7 +118,11 @@ const useAuth = () => {
 						}
 
 						const newTokens = await response.json();
-						setState({ authTokens: { ...newTokens, refresh_token: authTokens.refresh_token } });
+						setState({
+							authTokens: { ...newTokens, refresh_token: authTokens.refresh_token },
+							credentials: undefined,
+							authOptions: undefined
+						});
 					}
 				} catch (error) {
 					errorHandler(error, t("error_handler__failed_refresh_tokens.text"));
@@ -303,10 +312,15 @@ const useAuth = () => {
 					if (identityPoolId && region) {
 						const authHelper = await authService.withIdentityPoolId(identityPoolId, region, authTokens, userPoolId);
 						const authOptions = { ...authHelper.getMapAuthenticationOptions() };
-						setState({ authOptions });
+						setState({ authOptions: { transformRequest: authOptions.transformRequest } });
 					}
 				} catch (error) {
-					errorHandler(error);
+					if ((error as Error).name === "NotAuthorizedException") {
+						await methods.refreshTokens();
+						resetClientStore();
+					} else {
+						errorHandler(error);
+					}
 				}
 			},
 			resetStore: () => {
