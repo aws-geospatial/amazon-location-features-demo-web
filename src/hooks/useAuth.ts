@@ -69,7 +69,6 @@ const useAuth = () => {
 								: undefined
 						});
 						const credentials = { ...cognitoIdentityCredentials, authenticated: !!authTokens };
-						// resetClientStore();
 						setState({ credentials });
 					}
 				} catch (error) {
@@ -307,9 +306,7 @@ const useAuth = () => {
 						setState({ authOptions });
 					}
 				} catch (error) {
-					await methods.refreshTokens();
-					resetClientStore();
-					setState({ credentials: undefined, authOptions: undefined });
+					errorHandler(error);
 				}
 			},
 			resetStore: () => {

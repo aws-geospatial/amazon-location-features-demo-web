@@ -55,7 +55,7 @@ const useCredsManager = () => {
 		clearCredsAndClients();
 	}
 
-	const refreshCredentials = useCallback(async () => {
+	const refreshCredentials = useCallback(() => {
 		if (credentials && credentials.authenticated) {
 			(async () => {
 				await refreshTokens();
