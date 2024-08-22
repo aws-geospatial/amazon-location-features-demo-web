@@ -4,7 +4,7 @@ import { View } from "@aws-amplify/ui-react";
 import { IconBusActive, IconBusInactive } from "@demo/assets/svgs";
 import { useGeofence } from "@demo/hooks";
 import { TrackingHistoryItemtype, TrackingHistoryTypeEnum } from "@demo/types";
-import { Layer, LayerProps, Marker, Source } from "react-map-gl";
+import { Layer, LayerProps, Marker, Source } from "react-map-gl/maplibre";
 
 interface UnauthRouteSimulationProps {
 	id: string;

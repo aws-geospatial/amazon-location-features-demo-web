@@ -7,8 +7,8 @@ Cypress.Commands.add("searchRouteAndSelectCurrentLocation", () => {
 	cy.wait(2000);
 	cy.get('[placeholder="To"]').click().type("Gramercy Park", { delay: 200 });
 	cy.contains("Gramercy Park").click({ force: true });
-	cy.get('[class="mapboxgl-marker mapboxgl-marker-anchor-center"]').eq(0).should("be.visible");
-	cy.get('[class="mapboxgl-marker mapboxgl-marker-anchor-center"]').eq(1).should("be.visible");
+	cy.get('[class="maplibregl-marker maplibregl-marker-anchor-center"]').eq(0).should("be.visible");
+	cy.get('[class="maplibregl-marker maplibregl-marker-anchor-center"]').eq(1).should("be.visible");
 });
 
 Cypress.Commands.add("swapDepartureAndDestinationAddresses", () => {
@@ -18,11 +18,11 @@ Cypress.Commands.add("swapDepartureAndDestinationAddresses", () => {
 	cy.get('[placeholder="To"]').click().type("Gramercy Park", { delay: 200 });
 	cy.contains("Gramercy Park").click({ force: true });
 	cy.wait(10000);
-	cy.get('[class="mapboxgl-marker mapboxgl-marker-anchor-center"]').eq(0).should("be.visible");
-	cy.get('[class="mapboxgl-marker mapboxgl-marker-anchor-center"]').eq(1).should("be.visible");
+	cy.get('[class="maplibregl-marker maplibregl-marker-anchor-center"]').eq(0).should("be.visible");
+	cy.get('[class="maplibregl-marker maplibregl-marker-anchor-center"]').eq(1).should("be.visible");
 	cy.get('[class="amplify-flex swap-icon-container"]').click();
-	cy.get('[class="mapboxgl-marker mapboxgl-marker-anchor-center"]').eq(0).should("be.visible");
-	cy.get('[class="mapboxgl-marker mapboxgl-marker-anchor-center"]').eq(1).should("be.visible");
+	cy.get('[class="maplibregl-marker maplibregl-marker-anchor-center"]').eq(0).should("be.visible");
+	cy.get('[class="maplibregl-marker maplibregl-marker-anchor-center"]').eq(1).should("be.visible");
 	cy.get('[class="amplify-flex swap-icon-container"]').click();
 });
 

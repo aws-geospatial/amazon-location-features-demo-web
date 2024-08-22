@@ -26,13 +26,13 @@ describe("Search", () => {
 					.wait(10000)
 					.type("{downArrow}")
 					.type("{enter}");
-				cy.get('[class="mapboxgl-popup popup-container mapboxgl-popup-anchor-left"]').should("be.visible");
+				cy.get('[class="maplibregl-popup popup-container maplibregl-popup-anchor-left"]').should("be.visible");
 			}
 		);
 
 		it("DS-003 - should allow user to search by geocode", { scrollBehavior: false }, () => {
 			cy.get('[inputmode="search"]').type("-31.9627092,115.9248736").wait(10000).type("{downArrow}").type("{enter}");
-			cy.get('[class="mapboxgl-popup popup-container mapboxgl-popup-anchor-left"]').should("be.visible");
+			cy.get('[class="maplibregl-popup popup-container maplibregl-popup-anchor-left"]').should("be.visible");
 		});
 
 		it("DS-004 - should allow user to view the POIs after a search", { scrollBehavior: false }, () => {

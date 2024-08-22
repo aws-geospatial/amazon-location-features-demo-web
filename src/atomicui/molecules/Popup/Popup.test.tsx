@@ -10,8 +10,8 @@ import Popup from "./Popup";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const PopupMock = ({ closeButton: _, ...props }) => <View {...props} />;
 
-jest.mock("react-map-gl", () => ({
-	...jest.requireActual("react-map-gl"),
+jest.mock("react-map-gl/maplibre", () => ({
+	...jest.requireActual("react-map-gl/maplibre"),
 	Popup: PopupMock
 }));
 

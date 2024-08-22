@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { MutableRefObject, useCallback, useEffect, useMemo, useState } from "react";
 
 import { showToast } from "@demo/core/Toast";
 import { appConfig, regionsData } from "@demo/core/constants";
@@ -16,15 +16,10 @@ import {
 } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
 import { getCurrentLocation } from "@demo/utils/getCurrentLocation";
+import type { GeolocateControl as GeolocateControlRef } from "maplibre-gl";
 import { omit } from "ramda";
 import { useTranslation } from "react-i18next";
-import {
-	GeolocateControlRef,
-	GeolocateErrorEvent,
-	GeolocateResultEvent,
-	MapLayerMouseEvent,
-	MapRef
-} from "react-map-gl";
+import { GeolocateErrorEvent, GeolocateResultEvent, MapLayerMouseEvent, MapRef } from "react-map-gl/maplibre";
 
 import useAuth from "./useAuth";
 import useBottomSheet from "./useBottomSheet";
@@ -47,8 +42,8 @@ const searchParams = new URLSearchParams(window.location.search);
 let switchToMapProvider = searchParams.get(DATA_PROVIDER);
 
 interface UseMapManagerProps {
-	mapViewRef: React.MutableRefObject<MapRef | null>;
-	geolocateControlRef: React.MutableRefObject<GeolocateControlRef | null>;
+	mapRef: MutableRefObject<MapRef | null>;
+	geolocateControlRef: MutableRefObject<GeolocateControlRef | null>;
 	isUnauthGeofenceBoxOpen: boolean;
 	isUnauthTrackerBoxOpen: boolean;
 	isAuthGeofenceBoxOpen: boolean;
@@ -60,7 +55,7 @@ interface UseMapManagerProps {
 }
 
 const useMapManager = ({
-	mapViewRef,
+	mapRef,
 	geolocateControlRef,
 	isUnauthGeofenceBoxOpen,
 	isUnauthTrackerBoxOpen,
@@ -138,7 +133,7 @@ const useMapManager = ({
 					content: t("show_toast__grab_not_supported.text"),
 					type: ToastType.INFO
 				});
-				mapViewRef.current?.flyTo({ center: [AMAZON_HQ.SG.longitude, AMAZON_HQ.SG.latitude], zoom: 15 });
+				mapRef.current?.flyTo({ center: [AMAZON_HQ.SG.longitude, AMAZON_HQ.SG.latitude], zoom: 15 });
 			} else {
 				getCurrentLocation(setCurrentLocation, setViewpoint, currentMapProvider, setIsCurrentLocationDisabled);
 			}
@@ -150,7 +145,7 @@ const useMapManager = ({
 		isGrabAvailableInRegion,
 		isCurrentLocationDisabled,
 		t,
-		mapViewRef,
+		mapRef,
 		setCurrentLocation,
 		setViewpoint,
 		currentMapProvider,
@@ -229,7 +224,7 @@ const useMapManager = ({
 					}
 				}
 
-				mapViewRef?.current?.flyTo({ center: lngLat });
+				mapRef?.current?.flyTo({ center: lngLat });
 			}
 		},
 		[
@@ -239,7 +234,7 @@ const useMapManager = ({
 			isSettingsOpen,
 			isUnauthGeofenceBoxOpen,
 			isUnauthTrackerBoxOpen,
-			mapViewRef,
+			mapRef,
 			marker,
 			selectedMarker,
 			setMarker,
@@ -265,14 +260,14 @@ const useMapManager = ({
 						setIsCurrentLocationDisabled(true);
 						setViewpoint({ latitude: AMAZON_HQ.SG.latitude, longitude: AMAZON_HQ.SG.longitude });
 						setZoom(15);
-						mapViewRef.current?.flyTo({
+						mapRef.current?.flyTo({
 							center: [AMAZON_HQ.SG.longitude, AMAZON_HQ.SG.latitude]
 						});
 					}
 				} else {
 					setViewpoint({ latitude: AMAZON_HQ.SG.latitude, longitude: AMAZON_HQ.SG.longitude });
 					setZoom(15);
-					mapViewRef.current?.flyTo({
+					mapRef.current?.flyTo({
 						center: [AMAZON_HQ.SG.longitude, AMAZON_HQ.SG.latitude]
 					});
 				}
@@ -283,14 +278,14 @@ const useMapManager = ({
 					isCurrentLocationDisabled && setIsCurrentLocationDisabled(false);
 					setViewpoint({ latitude, longitude });
 					setZoom(15);
-					mapViewRef.current?.flyTo({ center: [longitude, latitude] });
+					mapRef.current?.flyTo({ center: [longitude, latitude] });
 					setTimeout(() => {
 						geolocateControlRef.current?.trigger();
 					}, 3000);
 				} else {
 					setViewpoint({ latitude: AMAZON_HQ.US.latitude, longitude: AMAZON_HQ.US.longitude });
 					setZoom(15);
-					mapViewRef.current?.flyTo({
+					mapRef.current?.flyTo({
 						center: [AMAZON_HQ.US.longitude, AMAZON_HQ.US.latitude]
 					});
 				}
@@ -302,7 +297,7 @@ const useMapManager = ({
 			setZoom,
 			setIsCurrentLocationDisabled,
 			isCurrentLocationDisabled,
-			mapViewRef,
+			mapRef,
 			geolocateControlRef
 		]
 	);

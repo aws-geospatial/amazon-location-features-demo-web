@@ -267,14 +267,14 @@ jest.mock("@demo/utils/countryUtil", () => ({
 	getCountryCode: () => "PK"
 }));
 
-jest.mock("mapbox-gl-draw-circle", () => ({
+jest.mock("maplibre-gl-draw-circle", () => ({
 	CircleMode: {},
 	DirectMode: {},
 	DragCircleMode: {},
 	SimpleSelectMode: {}
 }));
 
-jest.mock("react-map-gl", () => ({
+jest.mock("react-map-gl/maplibre", () => ({
 	Marker: jest.fn().mockImplementation(() => null),
 	Source: jest.fn().mockImplementation(() => null),
 	Layer: jest.fn().mockImplementation(() => null),

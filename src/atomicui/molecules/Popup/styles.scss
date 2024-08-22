@@ -9,7 +9,11 @@
 	border-radius: 0.62rem;
 	margin-left: 6px;
 
-	.mapboxgl-popup-content {
+	.maplibregl-popup-tip {
+		display: none;
+	}
+
+	.maplibregl-popup-content {
 		border-radius: 0.62rem;
 		width: 100%;
 		padding: 0;
@@ -45,8 +49,6 @@
 				transform: rotate(45deg);
 			}
 		}
-
-
 	}
 }
 
@@ -136,8 +138,8 @@
 		display: flex;
 		justify-content: flex-end;
 		position: absolute;
-    top: 15px;
-    right: 6px;
+		top: 15px;
+		right: 6px;
 
 		svg {
 			width: 20px;

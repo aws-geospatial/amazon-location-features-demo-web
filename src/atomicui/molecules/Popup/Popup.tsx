@@ -16,7 +16,7 @@ import { humanReadableTime } from "@demo/utils/dateTimeUtils";
 import { calculateGeodesicDistance } from "@demo/utils/geoCalculation";
 import { Units } from "@turf/turf";
 import { useTranslation } from "react-i18next";
-import { Popup as PopupGl } from "react-map-gl";
+import { Popup as PopupGl } from "react-map-gl/maplibre";
 import { Tooltip } from "react-tooltip";
 import "./styles.scss";
 

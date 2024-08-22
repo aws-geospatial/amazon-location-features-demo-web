@@ -38,11 +38,7 @@ export default defineConfig(() => {
 		build: {
 			outDir: "./build",
 			sourcemap: false,
-			minify: true,
-			commonjsOptions: { include: [""] }
-		},
-		optimizeDeps: {
-			disabled: false
+			minify: true
 		},
 		server: {
 			port: 3000
