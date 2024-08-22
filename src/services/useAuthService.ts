@@ -3,7 +3,7 @@
 
 import { useMemo } from "react";
 
-import { FromCognitoIdentityPoolParameters, fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
+import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
 import { withIdentityPoolId } from "@aws/amazon-location-utilities-auth-helper";
 import { appConfig } from "@demo/core/constants";
 import { AuthTokensType } from "@demo/types";
@@ -15,8 +15,19 @@ const {
 const useAuthService = () => {
 	return useMemo(
 		() => ({
-			fetchCredentials: async (options: FromCognitoIdentityPoolParameters) => {
-				const credentialsProvider = fromCognitoIdentityPool(options);
+			fetchCredentials: async (
+				identityPoolId: string,
+				region: string,
+				authTokens?: AuthTokensType,
+				userPoolId?: string
+			) => {
+				const credentialsProvider = fromCognitoIdentityPool({
+					identityPoolId,
+					clientConfig: { region },
+					logins: !!authTokens
+						? { [`cognito-idp.${region}.amazonaws.com/${userPoolId}`]: authTokens.id_token }
+						: undefined
+				});
 				return await credentialsProvider();
 			},
 			fetchTokens: async (userDomain: string, userPoolClientId: string, code: string) => {
