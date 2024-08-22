@@ -59,15 +59,12 @@ const useAuth = () => {
 					const { identityPoolId, region, userPoolId, authTokens } = store;
 
 					if (identityPoolId && region) {
-						const cognitoIdentityCredentials = await authService.fetchCredentials({
+						const cognitoIdentityCredentials = await authService.fetchCredentials(
 							identityPoolId,
-							clientConfig: { region },
-							logins: authTokens
-								? {
-										[`cognito-idp.${region}.amazonaws.com/${userPoolId}`]: authTokens.id_token
-								  }
-								: undefined
-						});
+							region,
+							authTokens,
+							userPoolId
+						);
 						const credentials = { ...cognitoIdentityCredentials, authenticated: !!authTokens };
 						setState({ credentials });
 					}
@@ -311,8 +308,8 @@ const useAuth = () => {
 
 					if (identityPoolId && region) {
 						const authHelper = await authService.withIdentityPoolId(identityPoolId, region, authTokens, userPoolId);
-						const authOptions = { ...authHelper.getMapAuthenticationOptions() };
-						setState({ authOptions: { transformRequest: authOptions.transformRequest } });
+						const authOptions = authHelper.getMapAuthenticationOptions();
+						setState({ authOptions });
 					}
 				} catch (error) {
 					if ((error as Error).name === "NotAuthorizedException") {
