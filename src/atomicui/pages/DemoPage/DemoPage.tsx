@@ -137,7 +137,8 @@ const UnauthSimulationExitModal = lazy(() =>
 
 const {
 	MAP_RESOURCES: { MAX_BOUNDS },
-	LINKS: { AMAZON_LOCATION_TERMS_AND_CONDITIONS, AWS_LOCATION }
+	LINKS: { AMAZON_LOCATION_TERMS_AND_CONDITIONS, AWS_LOCATION },
+	ROUTES: { DEMO }
 } = appConfig;
 const initShow = {
 	sidebar: false,
@@ -192,7 +193,7 @@ const DemoPage: FC = () => {
 	const { resetStore: resetGeofenceStore } = useGeofence();
 	const { isEditingRoute, resetStore: resetTrackerStore } = useTracker();
 	const { showWelcomeModal, setShowWelcomeModal, setSettingsOptions } = usePersistedData();
-	const { isDesktop, isMobile, isTablet } = useDeviceMediaQuery();
+	const { isDesktop, isMobile, isTablet, isMax766 } = useDeviceMediaQuery();
 	const { setUI, ui, bottomSheetCurrentHeight = 0, setBottomSheetHeight, setBottomSheetMinHeight } = useBottomSheet();
 	const { clearCredsAndClients } = useCredsManager();
 	const {
@@ -236,6 +237,21 @@ const DemoPage: FC = () => {
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
 	const geoLocateTopValue = `${bottomSheetCurrentHeight / 13 + 0.59}rem`;
+
+	const handlePopState = () => {
+		if (isMax766 && window.location.pathname === DEMO) {
+			history.go();
+		}
+	};
+
+	useEffect(() => {
+		window.addEventListener("popstate", handlePopState);
+
+		return () => {
+			window.removeEventListener("popstate", handlePopState);
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		let previousWidth = document.body.clientWidth;
