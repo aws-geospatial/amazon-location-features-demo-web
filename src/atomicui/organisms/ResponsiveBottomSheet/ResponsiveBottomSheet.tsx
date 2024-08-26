@@ -17,6 +17,7 @@ import {
 
 import { Flex, Loader, Text } from "@aws-amplify/ui-react";
 import { IconClose, IconNotificationBell } from "@demo/assets/svgs";
+import { ConfirmationModal } from "@demo/atomicui/molecules";
 import appConfig from "@demo/core/constants/appConfig";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useGeofence, useMap, usePersistedData, useRoute, useTracker } from "@demo/hooks";
@@ -36,9 +37,6 @@ import "./styles.scss";
 const Explore = lazy(() => import("../Explore").then(module => ({ default: module.Explore })));
 const UnauthSimulation = lazy(() =>
 	import("../UnauthSimulation").then(module => ({ default: module.UnauthSimulation }))
-);
-const ConfirmationModal = lazy(() =>
-	import("@demo/atomicui/molecules/ConfirmationModal").then(module => ({ default: module.ConfirmationModal }))
 );
 
 const {
