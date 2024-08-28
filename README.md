@@ -80,7 +80,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 9. Under the repo settings → Go to Secrets & Variables → Click on Actions.
 10. Now, Add/Update the values in secrets as per the output values gathered from the cloudformation.
 11. Add all keys from `.env` file to the secrets section of the repo as well from the above Requirements section.
-12. Also create a Personal Access Token (PAT) from [here](https://github.com/settings/tokens), which will be added against `GH_PAT` and the username against `GH_USERNAME` in the secrets section of the repo.
 ```
 > WEB_DOMAIN: "http://localhost:3000"
 > WEB_DOMAIN_USERNAME: "XXXXX" // This is the username for the web domain (only required for dev and qa environments, not needed for prod environment)
@@ -109,8 +108,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 > VITE_MIGRATE_A_WEB_SERVICE_PAGE
 > VITE_PRICING_PAGE
 > VITE_CUSTOM_ASSETS_URL
-> GH_USERNAME: XXXXXXXX
-> GH_PAT: ghp_XXXXXXXXXXXXXXXXXXXXXX
 ```
 
 #### `npm run cypress`
