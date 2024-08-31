@@ -398,26 +398,30 @@ const Explore: FC<IProps> = ({
 								direction="row-reverse"
 								cardAlignItems="center"
 								onClickHandler={option.onClickHandler}
+								style={{ padding: "0 1rem" }}
 							/>
 							{isMigrationMenuExapnded &&
 								option.subMenu.map((subOption, subIdx) => {
 									if (subOption.isEnabled) {
 										return (
-											<IconicInfoCard
-												key={subIdx}
-												gap="0"
-												IconComponent={subOption.iconComponent}
-												title={subOption.title}
-												description={subOption.description}
-												cardMargin={
-													idx === 0 && (!isUserAwsAccountConnected || !isAuthenticated)
-														? "2rem 0 0.923rem 0"
-														: "0.923rem 0"
-												}
-												cardAlignItems="center"
-												onClickHandler={subOption.onClickHandler}
-												isTitleBold
-											/>
+											<Flex gap={0} direction="column" backgroundColor="var(--ghost-white)">
+												<IconicInfoCard
+													key={subIdx}
+													gap="0"
+													IconComponent={subOption.iconComponent}
+													title={subOption.title}
+													description={subOption.description}
+													cardMargin={
+														idx === 0 && (!isUserAwsAccountConnected || !isAuthenticated)
+															? "2rem 0 0.923rem 0"
+															: "0.923rem 0"
+													}
+													cardAlignItems="center"
+													onClickHandler={subOption.onClickHandler}
+													isTitleBold
+													style={{ padding: "0 1rem" }}
+												/>
+											</Flex>
 										);
 									}
 								})}
@@ -437,6 +441,7 @@ const Explore: FC<IProps> = ({
 							direction="row-reverse"
 							cardAlignItems="center"
 							onClickHandler={option.onClickHandler}
+							style={{ padding: "0 1rem" }}
 						/>
 					);
 				}
@@ -512,7 +517,7 @@ const Explore: FC<IProps> = ({
 					<ConnectAccount isAuthenticated={isUserAwsAccountConnected} />
 				</Flex>
 			)}
-			<Flex direction="column" gap="0" margin="0 1rem" className="explore-more-options">
+			<Flex direction="column" gap="0" className="explore-more-options">
 				{renderExploreMoreOptions}
 			</Flex>
 			{isUserAwsAccountConnected && isAuthenticated && (

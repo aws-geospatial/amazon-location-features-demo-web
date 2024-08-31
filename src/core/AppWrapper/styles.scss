@@ -1,8 +1,6 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-@import "@demo/theme/mediaQueries";
-
 .app-download-notification__wrapper {
 	position: fixed;
 	bottom: 0;
@@ -11,7 +9,7 @@
 	min-width: 390px;
 	z-index: 6;
 
-	@include xs {
+	@media screen and (max-width: 599px) {
 		min-width: 100%;
 	}
 

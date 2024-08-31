@@ -1,9 +1,9 @@
 import { FC, ReactElement } from "react";
 
-import { Flex, Text } from "@aws-amplify/ui-react";
+import { Flex, FlexProps, Text } from "@aws-amplify/ui-react";
 import "./styles.scss";
 
-export interface IconicInfoCardProps {
+export interface IconicInfoCardProps extends FlexProps {
 	IconComponent?: ReactElement;
 	title: string;
 	description?: string;
@@ -30,7 +30,8 @@ const IconicInfoCard: FC<IconicInfoCardProps> = ({
 	direction = "row",
 	onClickHandler,
 	titleColor = "",
-	isTitleBold = false
+	isTitleBold = false,
+	style
 }) => {
 	return (
 		<Flex
@@ -40,6 +41,7 @@ const IconicInfoCard: FC<IconicInfoCardProps> = ({
 			margin={cardMargin}
 			alignItems={cardAlignItems}
 			onClick={onClickHandler}
+			style={style}
 		>
 			{IconComponent}
 			<Flex direction="column" gap={subDescription ? 0 : "3px"} marginLeft={textContainerMarginLeft}>

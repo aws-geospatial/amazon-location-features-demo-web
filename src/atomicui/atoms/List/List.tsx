@@ -4,7 +4,7 @@
 import { FC, ReactNode } from "react";
 
 import { Flex, Link, Text, View, ViewProps } from "@aws-amplify/ui-react";
-import { IconArrowRight } from "@demo/assets/svgs";
+import { IconArrow } from "@demo/assets/svgs";
 import { uuid } from "@demo/utils/uuid";
 import { omit } from "ramda";
 import { useTranslation } from "react-i18next";
@@ -62,7 +62,9 @@ const LinkWrapper: React.FC<LinkWrapperProps> = ({
 			target="_self"
 		>
 			{children}
-			{hasSubMenuItems && <IconArrowRight width="0.8rem" height="0.8rem" fill="var(--primary-color)" />}
+			{hasSubMenuItems && (
+				<IconArrow style={{ width: "1.3rem", height: "1.3rem", fill: "var(--primary-color)", rotate: "-90deg" }} />
+			)}
 		</NavLink>
 	);
 };
