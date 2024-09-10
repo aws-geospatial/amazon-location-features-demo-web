@@ -114,7 +114,7 @@
     "text": "نظرة عامة"
   },
   "header__product": {
-    "text": "المنتج"
+    "text": "منتجات"
   },
   "header__try_it": {
     "text": "جربها"
@@ -129,7 +129,7 @@
     "text": "الشروع في العمل"
   },
   "footer__faq": {
-    "text": "التعليمات"
+    "text": "الأسئلة الشائعة"
   },
   "footer__pricing": {
     "text": "التسعير"
@@ -3697,5 +3697,44 @@
   },
   "error_handler__failed_refresh_tokens": {
     "text": "فشل تحديث الرموز"
+  },
+  "geofences_and_trackers": {
+    "text": "المواقع الجغرافية وأجهزة التتبع"
+  },
+  "industry": {
+    "text": "الصناعة"
+  },
+  "transportation_and_logistics": {
+    "text": "النقل والخدمات اللوجستية"
+  },
+  "financial_service": {
+    "text": "خدمة مالية"
+  },
+  "healthcare": {
+    "text": "الرعاية الصحية"
+  },
+  "retails": {
+    "text": "تجارة التجزئة"
+  },
+  "travel_and_hospitality": {
+    "text": "السفر والضيافة"
+  },
+  "real_estate": {
+    "text": "العقارات"
+  },
+  "resources": {
+    "text": "الموارد"
+  },
+  "customers": {
+    "text": "العملاء"
+  },
+  "product_resources": {
+    "text": "موارد المنتج"
+  },
+  "developer_resources": {
+    "text": "موارد المطور"
+  },
+  "header__product_desc": {
+    "text": "إضافة بيانات الموقع إلى التطبيقات بأمان وسهولة"
   }
 }

@@ -114,7 +114,7 @@
     "text": "概述"
   },
   "header__product": {
-    "text": "产品"
+    "text": "產品"
   },
   "header__try_it": {
     "text": "嘗試一下"
@@ -129,7 +129,7 @@
     "text": "開始使用"
   },
   "footer__faq": {
-    "text": "常問問題"
+    "text": "常見問題"
   },
   "footer__pricing": {
     "text": "定價"
@@ -3697,5 +3697,44 @@
   },
   "error_handler__failed_refresh_tokens": {
     "text": "重新整理令牌失敗"
+  },
+  "geofences_and_trackers": {
+    "text": "地理信息和追踪器"
+  },
+  "industry": {
+    "text": "行業"
+  },
+  "transportation_and_logistics": {
+    "text": "運輸及物流"
+  },
+  "financial_service": {
+    "text": "金融服務"
+  },
+  "healthcare": {
+    "text": "醫療保健"
+  },
+  "retails": {
+    "text": "零售"
+  },
+  "travel_and_hospitality": {
+    "text": "旅遊與酒店"
+  },
+  "real_estate": {
+    "text": "房地產"
+  },
+  "resources": {
+    "text": "資源"
+  },
+  "customers": {
+    "text": "客戶"
+  },
+  "product_resources": {
+    "text": "產品資源"
+  },
+  "developer_resources": {
+    "text": "開發人員資源"
+  },
+  "header__product_desc": {
+    "text": "安全輕鬆地將位置資料新增至應用程式"
   }
 }

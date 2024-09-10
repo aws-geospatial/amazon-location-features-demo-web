@@ -114,7 +114,7 @@
     "text": "संक्षिप्त विवरण"
   },
   "header__product": {
-    "text": "प्रोडक्ट"
+    "text": "प्रोडक्ट्स"
   },
   "header__try_it": {
     "text": "इसे आजमाएं"
@@ -3697,5 +3697,44 @@
   },
   "error_handler__failed_refresh_tokens": {
     "text": "टोकन रीफ़्रेश करने में विफल"
+  },
+  "geofences_and_trackers": {
+    "text": "जियोफेंस और ट्रैकर्स"
+  },
+  "industry": {
+    "text": "इंडस्ट्री"
+  },
+  "transportation_and_logistics": {
+    "text": "परिवहन और लॉजिस्टिक्स"
+  },
+  "financial_service": {
+    "text": "फाइनेंशियल सर्विस"
+  },
+  "healthcare": {
+    "text": "हेल्थकेयर"
+  },
+  "retails": {
+    "text": "रिटेल्स"
+  },
+  "travel_and_hospitality": {
+    "text": "यात्रा और आतिथ्य"
+  },
+  "real_estate": {
+    "text": "रियल एस्टेट"
+  },
+  "resources": {
+    "text": "संसाधन"
+  },
+  "customers": {
+    "text": "ग्राहक"
+  },
+  "product_resources": {
+    "text": "उत्पाद संसाधन"
+  },
+  "developer_resources": {
+    "text": "डेवलपर संसाधन"
+  },
+  "header__product_desc": {
+    "text": "सुरक्षित रूप से और आसानी से एप्लिकेशन में स्थान डेटा जोड़ें"
   }
 }

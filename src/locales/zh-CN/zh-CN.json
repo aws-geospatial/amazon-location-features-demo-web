@@ -129,7 +129,7 @@
     "text": "入门指南"
   },
   "footer__faq": {
-    "text": "常见问题"
+    "text": "常见问题解答"
   },
   "footer__pricing": {
     "text": "定价"
@@ -3693,5 +3693,44 @@
   },
   "error_handler__failed_refresh_tokens": {
     "text": "刷新令牌失败"
+  },
+  "geofences_and_trackers": {
+    "text": "地理围栏和追踪器"
+  },
+  "industry": {
+    "text": "工业"
+  },
+  "transportation_and_logistics": {
+    "text": "运输和物流"
+  },
+  "financial_service": {
+    "text": "金融服务"
+  },
+  "healthcare": {
+    "text": "医疗保健"
+  },
+  "retails": {
+    "text": "零售业"
+  },
+  "travel_and_hospitality": {
+    "text": "旅行和款待"
+  },
+  "real_estate": {
+    "text": "房地产"
+  },
+  "resources": {
+    "text": "资源"
+  },
+  "customers": {
+    "text": "顾客"
+  },
+  "product_resources": {
+    "text": "产品资源"
+  },
+  "developer_resources": {
+    "text": "开发者资源"
+  },
+  "header__product_desc": {
+    "text": "安全轻松地向应用程序添加位置数据"
   }
 }
