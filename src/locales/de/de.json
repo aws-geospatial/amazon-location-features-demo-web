@@ -114,7 +114,7 @@
     "text": "Überblick"
   },
   "header__product": {
-    "text": "Produkt"
+    "text": "Produkte"
   },
   "header__try_it": {
     "text": "Probiere es aus"
@@ -129,7 +129,7 @@
     "text": "Erste Schritte"
   },
   "footer__faq": {
-    "text": "FAQ"
+    "text": "Häufig gestellte Fragen"
   },
   "footer__pricing": {
     "text": "Preisgestaltung"
@@ -3697,5 +3697,44 @@
   },
   "error_handler__failed_refresh_tokens": {
     "text": "Tokens konnten nicht aktualisiert werden"
+  },
+  "geofences_and_trackers": {
+    "text": "Geofences und Tracker"
+  },
+  "industry": {
+    "text": "Industrie"
+  },
+  "transportation_and_logistics": {
+    "text": "Transport und Logistik"
+  },
+  "financial_service": {
+    "text": "Finanzdienstleistung"
+  },
+  "healthcare": {
+    "text": "Gesundheitswesen"
+  },
+  "retails": {
+    "text": "Einzelhandel"
+  },
+  "travel_and_hospitality": {
+    "text": "Reisen und Gastgewerbe"
+  },
+  "real_estate": {
+    "text": "Immobilien"
+  },
+  "resources": {
+    "text": "Ressourcen"
+  },
+  "customers": {
+    "text": "Kunden"
+  },
+  "product_resources": {
+    "text": "Produktressourcen"
+  },
+  "developer_resources": {
+    "text": "Ressourcen für Entwickler"
+  },
+  "header__product_desc": {
+    "text": "Sicheres und einfaches Hinzufügen von Standortdaten zu Anwendungen"
   }
 }

@@ -114,7 +114,7 @@
     "text": "概要"
   },
   "header__product": {
-    "text": "プロダクト"
+    "text": "製品"
   },
   "header__try_it": {
     "text": "やってみて"
@@ -3697,5 +3697,44 @@
   },
   "error_handler__failed_refresh_tokens": {
     "text": "トークンを更新できませんでした"
+  },
+  "geofences_and_trackers": {
+    "text": "ジオフェンスとトラッカー"
+  },
+  "industry": {
+    "text": "業界"
+  },
+  "transportation_and_logistics": {
+    "text": "輸送と物流"
+  },
+  "financial_service": {
+    "text": "金融サービス"
+  },
+  "healthcare": {
+    "text": "ヘルスケア"
+  },
+  "retails": {
+    "text": "小売業"
+  },
+  "travel_and_hospitality": {
+    "text": "旅行とホスピタリティ"
+  },
+  "real_estate": {
+    "text": "不動産"
+  },
+  "resources": {
+    "text": "リソース"
+  },
+  "customers": {
+    "text": "顧客"
+  },
+  "product_resources": {
+    "text": "製品リソース"
+  },
+  "developer_resources": {
+    "text": "デベロッパーリソース"
+  },
+  "header__product_desc": {
+    "text": "アプリケーションに位置データを安全かつ簡単に追加"
   }
 }

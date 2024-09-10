@@ -114,7 +114,7 @@
     "text": "סקירה כללית"
   },
   "header__product": {
-    "text": "מוצר"
+    "text": "מוצרים"
   },
   "header__try_it": {
     "text": "נסה את זה"
@@ -3697,5 +3697,44 @@
   },
   "error_handler__failed_refresh_tokens": {
     "text": "רענון האסימונים נכשל"
+  },
+  "geofences_and_trackers": {
+    "text": "גיאופנסים ועוקבים"
+  },
+  "industry": {
+    "text": "תעשייה"
+  },
+  "transportation_and_logistics": {
+    "text": "תחבורה ולוגיסטיקה"
+  },
+  "financial_service": {
+    "text": "שירות פיננסי"
+  },
+  "healthcare": {
+    "text": "שירותי בריאות"
+  },
+  "retails": {
+    "text": "קמעונאות"
+  },
+  "travel_and_hospitality": {
+    "text": "נסיעות ואירוח"
+  },
+  "real_estate": {
+    "text": "נדל\"ן"
+  },
+  "resources": {
+    "text": "משאבים"
+  },
+  "customers": {
+    "text": "לקוחות"
+  },
+  "product_resources": {
+    "text": "משאבי מוצר"
+  },
+  "developer_resources": {
+    "text": "משאבי מפתחים"
+  },
+  "header__product_desc": {
+    "text": "הוספת נתוני מיקום ליישומים בצורה מאובטחת ובקלות"
   }
 }

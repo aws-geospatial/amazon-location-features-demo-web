@@ -38,6 +38,7 @@ jobs:
           echo "VITE_MIGRATE_A_WEB_SERVICE_PAGE=${{ secrets.VITE_MIGRATE_A_WEB_SERVICE_PAGE }}" >> .env
           echo "VITE_PRICING_PAGE=${{ secrets.VITE_PRICING_PAGE }}" >> .env
           echo "VITE_CUSTOM_ASSETS_URL=${{ secrets.VITE_CUSTOM_ASSETS_URL }}" >> .env
+          echo "VITE_SHOW_NEW_NAVIGATION=${{ secrets.VITE_SHOW_NEW_NAVIGATION }}" >> .env
 
       - name: Install dependencies
         run: npm install
@@ -51,8 +52,6 @@ jobs:
       - name: Run cypress tests
         env:
           CYPRESS_WEB_DOMAIN: ${{ secrets.WEB_DOMAIN }}
-          CYPRESS_WEB_DOMAIN_USERNAME: ${{ secrets.WEB_DOMAIN_USERNAME }}
-          CYPRESS_WEB_DOMAIN_PASSWORD: ${{ secrets.WEB_DOMAIN_PASSWORD }}
           CYPRESS_IDENTITY_POOL_ID: ${{ secrets.IDENTITY_POOL_ID }}
           CYPRESS_USER_DOMAIN: ${{ secrets.USER_DOMAIN }}
           CYPRESS_USER_POOL_CLIENT_ID: ${{ secrets.USER_POOL_CLIENT_ID }}

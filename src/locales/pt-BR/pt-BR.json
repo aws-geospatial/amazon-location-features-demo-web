@@ -114,7 +114,7 @@
     "text": "Visão geral"
   },
   "header__product": {
-    "text": "Produto"
+    "text": "Produtos"
   },
   "header__try_it": {
     "text": "Experimente"
@@ -129,7 +129,7 @@
     "text": "Começando"
   },
   "footer__faq": {
-    "text": "PERGUNTAS FREQUENTES"
+    "text": "Perguntas frequentes"
   },
   "footer__pricing": {
     "text": "Preços"
@@ -3697,5 +3697,44 @@
   },
   "error_handler__failed_refresh_tokens": {
     "text": "Falha ao atualizar os tokens"
+  },
+  "geofences_and_trackers": {
+    "text": "Geofences e rastreadores"
+  },
+  "industry": {
+    "text": "Indústria"
+  },
+  "transportation_and_logistics": {
+    "text": "Transporte e logística"
+  },
+  "financial_service": {
+    "text": "Serviço financeiro"
+  },
+  "healthcare": {
+    "text": "Assistência médica"
+  },
+  "retails": {
+    "text": "Varejos"
+  },
+  "travel_and_hospitality": {
+    "text": "Viagens e hospitalidade"
+  },
+  "real_estate": {
+    "text": "Imóveis"
+  },
+  "resources": {
+    "text": "Recursos"
+  },
+  "customers": {
+    "text": "Clientes"
+  },
+  "product_resources": {
+    "text": "Recursos do produto"
+  },
+  "developer_resources": {
+    "text": "Recursos para desenvolvedores"
+  },
+  "header__product_desc": {
+    "text": "Adicione dados de localização aos aplicativos com segurança e facilidade"
   }
 }

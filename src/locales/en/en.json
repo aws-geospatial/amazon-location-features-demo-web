@@ -114,7 +114,7 @@
     "text": "Overview"
   },
   "header__product": {
-    "text": "Product"
+    "text": "Products"
   },
   "header__try_it": {
     "text": "Try it"
@@ -129,7 +129,7 @@
     "text": "Getting Started"
   },
   "footer__faq": {
-    "text": "FAQ"
+    "text": "FAQs"
   },
   "footer__pricing": {
     "text": "Pricing"
@@ -3697,5 +3697,44 @@
   },
   "error_handler__failed_refresh_tokens": {
     "text": "Failed to refresh tokens"
+  },
+  "geofences_and_trackers": {
+    "text": "Geofences and Trackers"
+  },
+  "industry": {
+    "text": "Industry"
+  },
+  "transportation_and_logistics": {
+    "text": "Transportation and Logistics"
+  },
+  "financial_service": {
+    "text": "Financial Service"
+  },
+  "healthcare": {
+    "text": "Healthcare"
+  },
+  "retails": {
+    "text": "Retails"
+  },
+  "travel_and_hospitality": {
+    "text": "Travel and Hospitality"
+  },
+  "real_estate": {
+    "text": "Real Estate"
+  },
+  "resources": {
+    "text": "Resources"
+  },
+  "customers": {
+    "text": "Customers"
+  },
+  "product_resources": {
+    "text": "Product Resources"
+  },
+  "developer_resources": {
+    "text": "Developer Resources"
+  },
+  "header__product_desc": {
+    "text": "Securely and easily add location data to applications"
   }
 }

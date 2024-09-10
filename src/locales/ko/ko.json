@@ -3697,5 +3697,44 @@
   },
   "error_handler__failed_refresh_tokens": {
     "text": "토큰 새로고침 실패"
+  },
+  "geofences_and_trackers": {
+    "text": "지오펜스 및 트래커"
+  },
+  "industry": {
+    "text": "산업"
+  },
+  "transportation_and_logistics": {
+    "text": "운송 및 물류"
+  },
+  "financial_service": {
+    "text": "파이낸셜 서비스"
+  },
+  "healthcare": {
+    "text": "헬스케어"
+  },
+  "retails": {
+    "text": "소매업"
+  },
+  "travel_and_hospitality": {
+    "text": "여행 및 호스피탈리티"
+  },
+  "real_estate": {
+    "text": "부동산"
+  },
+  "resources": {
+    "text": "리소스"
+  },
+  "customers": {
+    "text": "고객들"
+  },
+  "product_resources": {
+    "text": "제품 리소스"
+  },
+  "developer_resources": {
+    "text": "개발자 리소스"
+  },
+  "header__product_desc": {
+    "text": "위치 데이터를 애플리케이션에 안전하고 쉽게 추가"
   }
 }

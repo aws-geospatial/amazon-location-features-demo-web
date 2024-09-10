@@ -114,7 +114,7 @@
     "text": "Panoramica"
   },
   "header__product": {
-    "text": "Prodotto"
+    "text": "Prodotti"
   },
   "header__try_it": {
     "text": "Provalo"
@@ -129,7 +129,7 @@
     "text": "Guida introduttiva"
   },
   "footer__faq": {
-    "text": "FAQ"
+    "text": "FAQs"
   },
   "footer__pricing": {
     "text": "Prezzi"
@@ -3697,5 +3697,44 @@
   },
   "error_handler__failed_refresh_tokens": {
     "text": "Aggiornamento dei token non riuscito"
+  },
+  "geofences_and_trackers": {
+    "text": "Geofences e tracker"
+  },
+  "industry": {
+    "text": "Industria"
+  },
+  "transportation_and_logistics": {
+    "text": "Trasporti e logistica"
+  },
+  "financial_service": {
+    "text": "Servizio finanziario"
+  },
+  "healthcare": {
+    "text": "Assistenza sanitaria"
+  },
+  "retails": {
+    "text": "Vendita al dettaglio"
+  },
+  "travel_and_hospitality": {
+    "text": "Viaggi e ospitalità"
+  },
+  "real_estate": {
+    "text": "Immobili"
+  },
+  "resources": {
+    "text": "Risorse"
+  },
+  "customers": {
+    "text": "Clienti"
+  },
+  "product_resources": {
+    "text": "Risorse sui prodotti"
+  },
+  "developer_resources": {
+    "text": "Risorse per gli sviluppatori"
+  },
+  "header__product_desc": {
+    "text": "Aggiungi dati sulla posizione alle applicazioni in modo sicuro e semplice"
   }
 }
