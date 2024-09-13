@@ -3736,5 +3736,65 @@
   },
   "header__product_desc": {
     "text": "Aggiungi dati sulla posizione alle applicazioni in modo sicuro e semplice"
+  },
+  "new_overview_desc": {
+    "text": "Aggiungi dati sulla posizione alle applicazioni in modo sicuro e semplice"
+  },
+  "new_products_desc": {
+    "text": "Visualizza le funzionalità dettagliate di Amazon Location Service"
+  },
+  "new_maps_desc": {
+    "text": "Visualizza le informazioni sulla posizione"
+  },
+  "new_places_desc": {
+    "text": "Esegui ricerche per punti di interesse, converti tra indirizzi e coordinate geografiche"
+  },
+  "new_routes_desc": {
+    "text": "Richiedi tempi di percorrenza, distanze e indicazioni stradali tra i punti"
+  },
+  "new_geofences_trackers_desc": {
+    "text": "Tieni traccia delle posizioni dei dispositivi, rileva quando i dispositivi entrano o escono dai confini geografici"
+  },
+  "new_getting_started_desc": {
+    "text": "Scopri come iniziare a utilizzare Amazon Location Service"
+  },
+  "new_pricing_desc": {
+    "text": "Stima dei costi di utilizzo del servizio (contatta AWS per sconti sui volumi)"
+  },
+  "new_faqs_desc": {
+    "text": "Trova le risposte alle domande più frequenti"
+  },
+  "new_industry_desc": {
+    "text": "Scopri come i dati e i servizi di localizzazione si applicano a diversi segmenti del settore"
+  },
+  "new_transportation_logistics_desc": {
+    "text": "Servizi di consegna, distribuzione e trasporto"
+  },
+  "new_financial_service_desc": {
+    "text": "Servizi bancari, di gestione del denaro e assicurativi"
+  },
+  "new_healthcare_desc": {
+    "text": "Fornitori di servizi medici, strutture sanitarie e assicurazioni"
+  },
+  "new_retail_desc": {
+    "text": "Acquisto e vendita di beni al dettaglio come generi alimentari e abbigliamento"
+  },
+  "new_travel_hospitality_desc": {
+    "text": "Compagnie aeree, hotel e ristoranti"
+  },
+  "new_real_estate_desc": {
+    "text": "Gestione immobiliare, compravendita di abitazioni"
+  },
+  "new_resources_desc": {
+    "text": "Trova materiali per continuare a conoscere Amazon Location Service"
+  },
+  "new_customers_desc": {
+    "text": "Soluzioni per i clienti create utilizzando servizi di localizzazione"
+  },
+  "new_product_resources_desc": {
+    "text": "Blog e aggiornamenti"
+  },
+  "new_developer_resources_desc": {
+    "text": "Guide e forum"
   }
 }
