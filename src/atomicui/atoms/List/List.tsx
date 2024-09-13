@@ -58,7 +58,10 @@ const LinkWrapper: React.FC<LinkWrapperProps> = ({
 			>
 				{children}
 				{hasSubMenuItems && (
-					<IconArrow style={{ width: "1.3rem", height: "1.3rem", fill: "var(--primary-color)", rotate: "-90deg" }} />
+					<IconArrow
+						className="icon-arrow"
+						style={{ width: "1.3rem", height: "1.3rem", fill: "var(--tertiary-color)", rotate: "-90deg" }}
+					/>
 				)}
 			</Link>
 		);
@@ -76,7 +79,10 @@ const LinkWrapper: React.FC<LinkWrapperProps> = ({
 			>
 				{children}
 				{hasSubMenuItems && (
-					<IconArrow style={{ width: "1.3rem", height: "1.3rem", fill: "var(--primary-color)", rotate: "-90deg" }} />
+					<IconArrow
+						className="icon-arrow"
+						style={{ width: "1.3rem", height: "1.3rem", fill: "var(--tertiary-color)", rotate: "-90deg" }}
+					/>
 				)}
 			</NavLink>
 		);

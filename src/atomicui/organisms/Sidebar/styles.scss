@@ -217,6 +217,10 @@
 	}
 
 	&:hover {
+		.icon-arrow {
+			fill: var(--primary-color);
+		}
+
 		.sub-menu-container {
 			display: block;
 		}

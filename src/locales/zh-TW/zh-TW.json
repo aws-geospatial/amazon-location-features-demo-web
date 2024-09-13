@@ -3736,5 +3736,65 @@
   },
   "header__product_desc": {
     "text": "安全輕鬆地將位置資料新增至應用程式"
+  },
+  "new_overview_desc": {
+    "text": "安全輕鬆地將位置資料新增至應用程式"
+  },
+  "new_products_desc": {
+    "text": "檢視 Amazon 定位服務的詳細功能"
+  },
+  "new_maps_desc": {
+    "text": "可視化位置資訊"
+  },
+  "new_places_desc": {
+    "text": "執行興趣點搜索，在地址和地理坐標之間進行轉換"
+  },
+  "new_routes_desc": {
+    "text": "請求點之間的旅行時間、距離和方向"
+  },
+  "new_geofences_trackers_desc": {
+    "text": "追蹤裝置位置，偵測裝置何時進入或退出地理邊界"
+  },
+  "new_getting_started_desc": {
+    "text": "了解如何開始使用亞馬遜定位服務"
+  },
+  "new_pricing_desc": {
+    "text": "估計服務使用成本（請聯絡 AWS 以獲取大量折扣）"
+  },
+  "new_faqs_desc": {
+    "text": "尋找常見問題的答案"
+  },
+  "new_industry_desc": {
+    "text": "了解位置資料和服務如何適用於不同的產業細分"
+  },
+  "new_transportation_logistics_desc": {
+    "text": "送貨、配送和乘車服務"
+  },
+  "new_financial_service_desc": {
+    "text": "銀行、資金管理及保險服務"
+  },
+  "new_healthcare_desc": {
+    "text": "醫療提供者、健康設施和保險"
+  },
+  "new_retail_desc": {
+    "text": "購買和銷售零售商品，例如雜貨和服裝"
+  },
+  "new_travel_hospitality_desc": {
+    "text": "航空公司、酒店和餐廳"
+  },
+  "new_real_estate_desc": {
+    "text": "物業管理、買賣住宅"
+  },
+  "new_resources_desc": {
+    "text": "尋找資料以繼續學習亞馬遜定位服務"
+  },
+  "new_customers_desc": {
+    "text": "使用定位服務建置的客戶解決方案"
+  },
+  "new_product_resources_desc": {
+    "text": "部落格和更新"
+  },
+  "new_developer_resources_desc": {
+    "text": "指南和論壇"
   }
 }

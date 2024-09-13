@@ -10,11 +10,23 @@ import {
 	IconBrandAndroid,
 	IconBrandApple,
 	IconBrowser,
+	IconCustomers,
+	IconDeveloperResources,
 	IconDirections,
+	IconFinancialService,
 	IconGeofencePlusSolid,
+	IconGeofencesTrackers,
 	IconGlobe,
+	IconHealthcare,
 	IconMapSolid,
-	IconRadar
+	IconPlacesNew,
+	IconProductResources,
+	IconRadar,
+	IconRealEstate,
+	IconRetail,
+	IconRoute,
+	IconTravelHospitality,
+	IconTruckSolid
 } from "@demo/assets/svgs";
 import { appConfig } from "@demo/core/constants";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
@@ -510,25 +522,29 @@ const Explore: FC<ExploreProps> = ({
 						},
 						{
 							title: "header__overview.text",
-							description: "Lorem epsom dolor sit amet",
+							description: "new_overview_desc.text",
 							onClickHandler: () => window.open(LEARN_MORE_URL, "_blank"),
 							isEnabled: true
 						},
 						{
 							title: "header__product.text",
-							description: "header__product_desc.text",
+							description: "new_products_desc.text",
 							onClickHandler: () =>
 								setIsMenuExapnded(s => ({ ...s, "header__product.text": !s["header__product.text"] })),
 							isEnabled: true,
 							subMenu: [
 								{
 									title: "maps.text",
-									description: "Lorem epsom dolor sit amet",
+									description: "new_maps_desc.text",
 									onClickHandler: () => window.open(AWS_LOCATION_MAPS_URL, "_blank"),
 									isEnabled: true,
 									iconComponent: (
-										<IconBrowser
-											style={{ alignSelf: "flex-start", margin: "0.15rem 0rem 0rem 0.8rem" }}
+										<IconMapSolid
+											style={{
+												alignSelf: "flex-start",
+												margin: "0.15rem 0rem 0rem 0.8rem",
+												fill: "var(--primary-color)"
+											}}
 											width={18}
 											height={18}
 										/>
@@ -536,12 +552,15 @@ const Explore: FC<ExploreProps> = ({
 								},
 								{
 									title: "places.text",
-									description: "Lorem epsom dolor sit amet",
+									description: "new_places_desc.text",
 									onClickHandler: () => window.open(AWS_LOCATION_PLACES_URL, "_blank"),
 									isEnabled: true,
 									iconComponent: (
-										<IconBrowser
-											style={{ alignSelf: "flex-start", margin: "0.15rem 0rem 0rem 0.8rem" }}
+										<IconPlacesNew
+											style={{
+												alignSelf: "flex-start",
+												margin: "0.15rem 0rem 0rem 0.8rem"
+											}}
 											width={18}
 											height={18}
 										/>
@@ -549,12 +568,16 @@ const Explore: FC<ExploreProps> = ({
 								},
 								{
 									title: "routes.text",
-									description: "Lorem epsom dolor sit amet",
+									description: "new_routes_desc.text",
 									onClickHandler: () => window.open(AWS_LOCATION_ROUTES_URL, "_blank"),
 									isEnabled: true,
 									iconComponent: (
-										<IconBrowser
-											style={{ alignSelf: "flex-start", margin: "0.15rem 0rem 0rem 0.8rem" }}
+										<IconRoute
+											style={{
+												alignSelf: "flex-start",
+												margin: "0.15rem 0rem 0rem 0.8rem",
+												fill: "var(--primary-color)"
+											}}
 											width={18}
 											height={18}
 										/>
@@ -562,11 +585,11 @@ const Explore: FC<ExploreProps> = ({
 								},
 								{
 									title: "geofences_and_trackers.text",
-									description: "Lorem epsom dolor sit amet",
+									description: "new_geofences_trackers_desc.text",
 									onClickHandler: () => window.open(AWS_LOCATION_GENFENCE_AND_TRACKERS_URL, "_blank"),
 									isEnabled: true,
 									iconComponent: (
-										<IconBrowser
+										<IconGeofencesTrackers
 											style={{ alignSelf: "flex-start", margin: "0.15rem 0rem 0rem 0.8rem" }}
 											width={18}
 											height={18}
@@ -577,36 +600,40 @@ const Explore: FC<ExploreProps> = ({
 						},
 						{
 							title: "footer__getting_started.text",
-							description: "Lorem epsom dolor sit amet",
+							description: "new_getting_started_desc.text",
 							onClickHandler: () => window.open(AWS_GETTING_STARTED_URL, "_blank"),
 							isEnabled: true
 						},
 						{
 							title: "pricing.text",
-							description: "pricing_desc.text",
+							description: "new_pricing_desc.text",
 							onClickHandler: () => window.open(AWS_PRICING_URL, "_blank"),
 							isEnabled: true
 						},
 						{
 							title: "footer__faq.text",
-							description: "Lorem epsom dolor sit amet",
+							description: "new_faqs_desc.text",
 							onClickHandler: () => window.open(AWS_FAQ_URL, "_blank"),
 							isEnabled: true
 						},
 						{
 							title: "industry.text",
-							description: "Lorem epsom dolor sit amet",
+							description: "new_industry_desc.text",
 							onClickHandler: () => setIsMenuExapnded(s => ({ ...s, "industry.text": !s["industry.text"] })),
 							isEnabled: true,
 							subMenu: [
 								{
 									title: "transportation_and_logistics.text",
-									description: "Lorem epsom dolor sit amet",
+									description: "new_transportation_logistics_desc.text",
 									onClickHandler: () => window.open(AWS_LOCATION_TRANSPORTATION_AND_LOGISTICS_URL, "_blank"),
 									isEnabled: true,
 									iconComponent: (
-										<IconBrowser
-											style={{ alignSelf: "flex-start", margin: "0.15rem 0rem 0rem 0.8rem" }}
+										<IconTruckSolid
+											style={{
+												alignSelf: "flex-start",
+												margin: "0.15rem 0rem 0rem 0.8rem",
+												fill: "var(--primary-color)"
+											}}
 											width={18}
 											height={18}
 										/>
@@ -614,11 +641,11 @@ const Explore: FC<ExploreProps> = ({
 								},
 								{
 									title: "financial_service.text",
-									description: "Lorem epsom dolor sit amet",
+									description: "new_financial_service_desc.text",
 									onClickHandler: () => window.open(AWS_LOCATION_FINANCIAL_SERVICE_URL, "_blank"),
 									isEnabled: true,
 									iconComponent: (
-										<IconBrowser
+										<IconFinancialService
 											style={{ alignSelf: "flex-start", margin: "0.15rem 0rem 0rem 0.8rem" }}
 											width={18}
 											height={18}
@@ -627,11 +654,11 @@ const Explore: FC<ExploreProps> = ({
 								},
 								{
 									title: "healthcare.text",
-									description: "Lorem epsom dolor sit amet",
+									description: "new_healthcare_desc.text",
 									onClickHandler: () => window.open(AWS_LOCATION_HEALTHCARE_URL, "_blank"),
 									isEnabled: true,
 									iconComponent: (
-										<IconBrowser
+										<IconHealthcare
 											style={{ alignSelf: "flex-start", margin: "0.15rem 0rem 0rem 0.8rem" }}
 											width={18}
 											height={18}
@@ -640,11 +667,11 @@ const Explore: FC<ExploreProps> = ({
 								},
 								{
 									title: "retails.text",
-									description: "Lorem epsom dolor sit amet",
+									description: "new_retail_desc.text",
 									onClickHandler: () => window.open(AWS_LOCATION_RETAILS_URL, "_blank"),
 									isEnabled: true,
 									iconComponent: (
-										<IconBrowser
+										<IconRetail
 											style={{ alignSelf: "flex-start", margin: "0.15rem 0rem 0rem 0.8rem" }}
 											width={18}
 											height={18}
@@ -653,11 +680,11 @@ const Explore: FC<ExploreProps> = ({
 								},
 								{
 									title: "travel_and_hospitality.text",
-									description: "Lorem epsom dolor sit amet",
+									description: "new_travel_hospitality_desc.text",
 									onClickHandler: () => window.open(AWS_LOCATION_TRAVEL_AND_HOSPITALITY_URL, "_blank"),
 									isEnabled: true,
 									iconComponent: (
-										<IconBrowser
+										<IconTravelHospitality
 											style={{ alignSelf: "flex-start", margin: "0.15rem 0rem 0rem 0.8rem" }}
 											width={18}
 											height={18}
@@ -666,11 +693,11 @@ const Explore: FC<ExploreProps> = ({
 								},
 								{
 									title: "real_estate.text",
-									description: "Lorem epsom dolor sit amet",
+									description: "new_real_estate_desc.text",
 									onClickHandler: () => window.open(AWS_LOCATION_REAL_ESTATE_URL, "_blank"),
 									isEnabled: true,
 									iconComponent: (
-										<IconBrowser
+										<IconRealEstate
 											style={{ alignSelf: "flex-start", margin: "0.15rem 0rem 0rem 0.8rem" }}
 											width={18}
 											height={18}
@@ -681,18 +708,22 @@ const Explore: FC<ExploreProps> = ({
 						},
 						{
 							title: "resources.text",
-							description: "Lorem epsom dolor sit amet",
+							description: "new_resources_desc.text",
 							onClickHandler: () => setIsMenuExapnded(s => ({ ...s, "resources.text": !s["resources.text"] })),
 							isEnabled: true,
 							subMenu: [
 								{
 									title: "customers.text",
-									description: "Lorem epsom dolor sit amet",
+									description: "new_customers_desc.text",
 									onClickHandler: () => window.open(AWS_LOCATION_CUSTOMERS_URL, "_blank"),
 									isEnabled: true,
 									iconComponent: (
-										<IconBrowser
-											style={{ alignSelf: "flex-start", margin: "0.15rem 0rem 0rem 0.8rem" }}
+										<IconCustomers
+											style={{
+												alignSelf: "flex-start",
+												margin: "0.15rem 0rem 0rem 0.8rem",
+												fill: "var(--primary-color)"
+											}}
 											width={18}
 											height={18}
 										/>
@@ -700,11 +731,11 @@ const Explore: FC<ExploreProps> = ({
 								},
 								{
 									title: "product_resources.text",
-									description: "Lorem epsom dolor sit amet",
+									description: "new_product_resources_desc.text",
 									onClickHandler: () => window.open(AWS_LOCATION_PRODUCT_RESOURCES_URL, "_blank"),
 									isEnabled: true,
 									iconComponent: (
-										<IconBrowser
+										<IconProductResources
 											style={{ alignSelf: "flex-start", margin: "0.15rem 0rem 0rem 0.8rem" }}
 											width={18}
 											height={18}
@@ -713,11 +744,11 @@ const Explore: FC<ExploreProps> = ({
 								},
 								{
 									title: "developer_resources.text",
-									description: "Lorem epsom dolor sit amet",
+									description: "new_developer_resources_desc.text",
 									onClickHandler: () => window.open(AWS_LOCATION_DEVELOPER_RESOURCES_URL, "_blank"),
 									isEnabled: true,
 									iconComponent: (
-										<IconBrowser
+										<IconDeveloperResources
 											style={{ alignSelf: "flex-start", margin: "0.15rem 0rem 0rem 0.8rem" }}
 											width={18}
 											height={18}

@@ -3736,5 +3736,65 @@
   },
   "header__product_desc": {
     "text": "Sicheres und einfaches Hinzufügen von Standortdaten zu Anwendungen"
+  },
+  "new_overview_desc": {
+    "text": "Sicheres und einfaches Hinzufügen von Standortdaten zu Anwendungen"
+  },
+  "new_products_desc": {
+    "text": "Sehen Sie sich die detaillierten Funktionen des Amazon Location Service an"
+  },
+  "new_maps_desc": {
+    "text": "Visualisieren Sie Standortinformationen"
+  },
+  "new_places_desc": {
+    "text": "Suchen Sie nach Sonderzielen und konvertieren Sie zwischen Adressen und geographischen Koordinaten"
+  },
+  "new_routes_desc": {
+    "text": "Reisezeiten, Entfernungen und Wegbeschreibungen zwischen Punkten anfragen"
+  },
+  "new_geofences_trackers_desc": {
+    "text": "Verfolgen Sie Gerätestandorte und erkennen Sie, wann Geräte geografische Grenzen betreten oder verlassen"
+  },
+  "new_getting_started_desc": {
+    "text": "Erfahren Sie, wie Sie mit der Nutzung von Amazon Location Service beginnen"
+  },
+  "new_pricing_desc": {
+    "text": "Schätzung der Servicenutzungskosten (wenden Sie sich an AWS, um Mengenrabatte zu erhalten)"
+  },
+  "new_faqs_desc": {
+    "text": "Finden Sie Antworten auf häufig gestellte Fragen"
+  },
+  "new_industry_desc": {
+    "text": "Erfahren Sie, wie Standortdaten und Dienste für verschiedene Branchensegmente gelten"
+  },
+  "new_transportation_logistics_desc": {
+    "text": "Liefer-, Vertriebs- und Fahrdienste"
+  },
+  "new_financial_service_desc": {
+    "text": "Bank-, Geldmanagement- und Versicherungsdienstleistungen"
+  },
+  "new_healthcare_desc": {
+    "text": "Medizinische Dienstleister, Gesundheitseinrichtungen und Versicherungen"
+  },
+  "new_retail_desc": {
+    "text": "Kauf und Verkauf von Einzelhandelswaren wie Lebensmitteln und Kleidung"
+  },
+  "new_travel_hospitality_desc": {
+    "text": "Fluggesellschaften, Hotels und Restaurants"
+  },
+  "new_real_estate_desc": {
+    "text": "Immobilienverwaltung, Kauf und Verkauf von Wohnungen"
+  },
+  "new_resources_desc": {
+    "text": "Hier finden Sie Materialien, um weiter über Amazon Location Service zu erfahren"
+  },
+  "new_customers_desc": {
+    "text": "Kundenlösungen, die mithilfe von Ortungsdiensten erstellt wurden"
+  },
+  "new_product_resources_desc": {
+    "text": "Blogs und Updates"
+  },
+  "new_developer_resources_desc": {
+    "text": "Leitfäden und Foren"
   }
 }

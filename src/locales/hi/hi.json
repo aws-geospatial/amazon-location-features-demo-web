@@ -3714,7 +3714,7 @@
     "text": "हेल्थकेयर"
   },
   "retails": {
-    "text": "रिटेल्स"
+    "text": "रिटेल"
   },
   "travel_and_hospitality": {
     "text": "यात्रा और आतिथ्य"
@@ -3736,5 +3736,65 @@
   },
   "header__product_desc": {
     "text": "सुरक्षित रूप से और आसानी से एप्लिकेशन में स्थान डेटा जोड़ें"
+  },
+  "new_overview_desc": {
+    "text": "सुरक्षित रूप से और आसानी से एप्लिकेशन में स्थान डेटा जोड़ें"
+  },
+  "new_products_desc": {
+    "text": "Amazon Location Service की विस्तृत क्षमताएं देखें"
+  },
+  "new_maps_desc": {
+    "text": "स्थान की जानकारी विज़ुअलाइज़ करें"
+  },
+  "new_places_desc": {
+    "text": "पॉइंट-ऑफ-इंटरेस्ट सर्च करें, पतों और भौगोलिक निर्देशांक के बीच कनवर्ट करें"
+  },
+  "new_routes_desc": {
+    "text": "यात्रा के समय, दूरी, और बिंदुओं के बीच के दिशा-निर्देशों का अनुरोध करें"
+  },
+  "new_geofences_trackers_desc": {
+    "text": "डिवाइस स्थानों को ट्रैक करें, पता लगाएं कि डिवाइस भौगोलिक सीमाओं में कब प्रवेश करते हैं या बाहर निकलते हैं"
+  },
+  "new_getting_started_desc": {
+    "text": "Amazon Location Service का उपयोग शुरू करने का तरीका जानें"
+  },
+  "new_pricing_desc": {
+    "text": "अनुमानित सेवा उपयोग लागत (वॉल्यूम छूट के लिए AWS से संपर्क करें)"
+  },
+  "new_faqs_desc": {
+    "text": "सामान्य रूप से पूछे जाने वाले प्रश्नों के उत्तर ढूंढें"
+  },
+  "new_industry_desc": {
+    "text": "जानें कि अलग-अलग इंडस्ट्री सेगमेंट पर लोकेशन डेटा और सेवाएं कैसे लागू होती हैं"
+  },
+  "new_transportation_logistics_desc": {
+    "text": "डिलीवरी, वितरण और सवारी सेवाएं"
+  },
+  "new_financial_service_desc": {
+    "text": "बैंकिंग, धन प्रबंधन और बीमा सेवाएं"
+  },
+  "new_healthcare_desc": {
+    "text": "चिकित्सा प्रदाता, स्वास्थ्य सुविधाएं, और बीमा"
+  },
+  "new_retail_desc": {
+    "text": "किराने का सामान और कपड़े जैसे खुदरा सामान खरीदना और बेचना"
+  },
+  "new_travel_hospitality_desc": {
+    "text": "एयरलाइंस, होटल, और रेस्तरां"
+  },
+  "new_real_estate_desc": {
+    "text": "संपत्ति प्रबंधन, आवास खरीदना और बेचना"
+  },
+  "new_resources_desc": {
+    "text": "Amazon Location Service के बारे में सीखना जारी रखने के लिए सामग्री ढूंढें"
+  },
+  "new_customers_desc": {
+    "text": "स्थान सेवाओं का उपयोग करके बनाए गए ग्राहक समाधान"
+  },
+  "new_product_resources_desc": {
+    "text": "ब्लॉग और अपडेट"
+  },
+  "new_developer_resources_desc": {
+    "text": "मार्गदर्शिकाएँ और फ़ोरम"
   }
 }
