@@ -11,7 +11,7 @@
    - `WebSocketUrl` value will be added to `.env` file against `VITE_AWS_WEB_SOCKET_URLS` **(comma separated for multiple values)**.
 3. Value for `VITE_AWS_CF_TEMPLATE`, `VITE_APPLE_APP_STORE_LINK`, `VITE_GOOGLE_PLAY_STORE_LINK` can be added as it is to `.env` file from `.env.examples`.
 4. Value for `VITE_APP_VERSION` needs to be populated with the correct version at the time of deployment in the following format `2.1.0`.
-5. Values for `VITE_MIGRATE_FROM_GOOGLE_MAPS_PAGE`, `VITE_MIGRATE_A_WEB_APP_PAGE`, `VITE_MIGRATE_AN_ANDROID_APP_PAGE`, `VITE_MIGRATE_AN_IOS_APP_PAGE`, `VITE_MIGRATE_A_WEB_SERVICE_PAGE` and `VITE_PRICING_PAG` can either be `1` or `0` to either enable or disable the respective pages.
+5. Values for `VITE_MIGRATE_FROM_GOOGLE_MAPS_PAGE`, `VITE_MIGRATE_A_WEB_APP_PAGE`, `VITE_MIGRATE_AN_ANDROID_APP_PAGE`, `VITE_MIGRATE_AN_IOS_APP_PAGE`, `VITE_MIGRATE_A_WEB_SERVICE_PAGE` and `VITE_PRICING_PAGE` can either be `1` or `0` to either enable or disable the respective pages.
 6. Values for `VITE_SHOW_NEW_NAVIGATION` can either be `1` or `0` to either enable or disable the new navigation, turning it off would should the current navigation instead.
 
 #### Env keys required in `.env` file, see `.env.example` for reference
