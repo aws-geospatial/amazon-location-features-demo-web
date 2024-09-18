@@ -35,6 +35,11 @@ describe("<Sidebar />", () => {
 			</I18nextProvider>
 		);
 	};
+
+	beforeEach(() => {
+		(window.location as Location) = { href: "http://example.com/some/path" } as Location;
+	});
+
 	it("renders the logo", () => {
 		const { getByTestId } = renderComponent();
 

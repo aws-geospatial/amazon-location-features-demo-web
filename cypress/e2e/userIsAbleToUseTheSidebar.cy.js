@@ -7,11 +7,15 @@ describe("Sidebar", () => {
 			cy.visitDomain(`${Cypress.env("WEB_DOMAIN")}/demo`);
 			cy.get('[data-testid="hamburger-menu"]').click();
 			cy.get("div")
-				.should("contain", "Demo")
-				.and("contain", "Geofence")
-				.and("contain", "Tracker")
-				.and("contain", "Settings")
-				.and("contain", "Samples");
+				.should("contain", "Samples")
+				.and("contain", "Migration")
+				.and("contain", "Overview")
+				.and("contain", "Products")
+				.and("contain", "Getting Started")
+				.and("contain", "Pricing")
+				.and("contain", "FAQs")
+				.and("contain", "Industry")
+				.and("contain", "Resources");
 		});
 	});
 
@@ -29,10 +33,16 @@ describe("Sidebar", () => {
 				cy.get('[data-testid="iconic-info-card-title"]')
 					.should("contain", "Samples")
 					.and("contain", "Migration")
-					.and("contain", "Pricing")
 					.and("contain", "Settings")
 					.and("contain", "About")
-					.and("contain", "Provide Feedback");
+					.and("contain", "Provide Feedback")
+					.and("contain", "Overview")
+					.and("contain", "Products")
+					.and("contain", "Getting Started")
+					.and("contain", "Pricing")
+					.and("contain", "FAQs")
+					.and("contain", "Industry")
+					.and("contain", "Resources");
 			}
 		);
 	});
