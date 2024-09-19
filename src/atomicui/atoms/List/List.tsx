@@ -6,6 +6,7 @@ import { FC, ReactNode, useState } from "react";
 import { Flex, Link, Text, View, ViewProps } from "@aws-amplify/ui-react";
 import { IconArrow } from "@demo/assets/svgs";
 import { appConfig } from "@demo/core/constants";
+import { MenuItem } from "@demo/types";
 import { uuid } from "@demo/utils/uuid";
 import { omit } from "ramda";
 import { useTranslation } from "react-i18next";
@@ -15,28 +16,9 @@ const {
 	ENV: { SHOW_NEW_NAVIGATION }
 } = appConfig;
 
-interface ListArr {
-	label: string;
-	link?: string;
-	iconBeforeLink?: string;
-	iconContainerClass?: string;
-	subMenu?: {
-		label: string;
-		link?: string;
-		isExternalLink?: boolean;
-	}[];
-}
-
-interface ListProps extends ViewProps {
-	listArray: ListArr[];
-	useDefaultStyles?: boolean;
-	labelIsIcon?: boolean;
-	hideIcons?: boolean;
-}
-
 interface LinkWrapperProps {
 	isExternalLink: boolean | undefined;
-	linkTo: string;
+	link: string;
 	children: ReactNode;
 	className?: string;
 	hasSubMenuItems?: boolean;
@@ -44,16 +26,19 @@ interface LinkWrapperProps {
 
 const LinkWrapper: React.FC<LinkWrapperProps> = ({
 	isExternalLink = false,
-	linkTo = "#",
+	link = "#",
 	children,
 	className,
 	hasSubMenuItems = false
 }) => {
-	if (isExternalLink) {
+	const checkIfExternalLink = (link: string): boolean =>
+		!!(link?.startsWith("https://") || link?.startsWith("http://") || link?.startsWith("#"));
+
+	if (checkIfExternalLink(link)) {
 		return (
 			<Link
-				isExternal={linkTo === "#" ? false : true}
-				href={hasSubMenuItems ? undefined : linkTo}
+				isExternal={isExternalLink}
+				href={hasSubMenuItems ? undefined : link}
 				className={`${className} amplify-text`}
 			>
 				{children}
@@ -70,9 +55,9 @@ const LinkWrapper: React.FC<LinkWrapperProps> = ({
 
 		return (
 			<NavLink
-				to={hasSubMenuItems ? `/${currentSplitHref[currentSplitHref.length - 1]}` : linkTo}
+				to={hasSubMenuItems ? `/${currentSplitHref[currentSplitHref.length - 1]}` : link}
 				className={({ isActive }) =>
-					`${className} navigation-link ${isActive && linkTo !== "#" ? "amplify-text isActive" : "amplify-text"}`
+					`${className} navigation-link ${isActive && link !== "#" ? "amplify-text isActive" : "amplify-text"}`
 				}
 				style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
 				target="_self"
@@ -88,6 +73,13 @@ const LinkWrapper: React.FC<LinkWrapperProps> = ({
 		);
 	}
 };
+
+interface ListProps extends ViewProps {
+	listArray: MenuItem[];
+	useDefaultStyles?: boolean;
+	labelIsIcon?: boolean;
+	hideIcons?: boolean;
+}
 
 const List: FC<ListProps> = ({
 	listArray,
@@ -107,13 +99,9 @@ const List: FC<ListProps> = ({
 		import("./styles.scss");
 	}
 
-	const checkIfExternalLink = (link: string): boolean =>
-		!!(link?.startsWith("https://") || link?.startsWith("http://") || link?.startsWith("#"));
-
 	return (
 		<View data-testid="list-container" as="ul" className={ulClass} {...omit(["className"], props)}>
-			{listArray.map(({ link, subMenu, label, iconContainerClass, iconBeforeLink }) => {
-				const isExternalLink = checkIfExternalLink(link || "#");
+			{listArray.map(({ link, subMenu, label, iconContainerClass, iconBeforeLink, isExternalLink }) => {
 				const hasSubMenuItems = !!subMenu?.length;
 
 				return (
@@ -132,7 +120,7 @@ const List: FC<ListProps> = ({
 						<LinkWrapper
 							className={hasSubMenuItems ? "link-with-sub-links" : ""}
 							isExternalLink={isExternalLink}
-							linkTo={link || "#"}
+							link={link || "#"}
 							hasSubMenuItems={!!hasSubMenuItems}
 						>
 							{labelIsIcon ? <img loading="lazy" src={label} /> : t(label)}
@@ -140,12 +128,7 @@ const List: FC<ListProps> = ({
 						{hasSubMenuItems && !SHOW_NEW_NAVIGATION && (
 							<View className="sub-menu-container">
 								{subMenu.map(({ link, isExternalLink, label }, idx) => (
-									<Link
-										key={String(idx)}
-										className="sub-menu-item"
-										href={link}
-										isExternal={checkIfExternalLink(link || "#") || !!isExternalLink}
-									>
+									<Link key={String(idx)} className="sub-menu-item" href={link} isExternal={isExternalLink}>
 										<Text className="sub-menu-item-label">{t(label)}</Text>
 									</Link>
 								))}
