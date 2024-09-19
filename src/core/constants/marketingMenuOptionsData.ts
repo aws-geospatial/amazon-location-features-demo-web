@@ -162,34 +162,34 @@ if (!SHOW_NEW_NAVIGATION) {
 			link: LEARN_MORE_URL,
 			iconBeforeLink: IconCodeMenu,
 			iconContainerClass: "menu-item-icon",
-			isExternalLink: true
+			isExternalLink: false
 		},
 		{
 			label: "header__product.text",
 			link: AWS_LOCATION_MAPS_URL,
 			iconBeforeLink: IconCodeMenu,
 			iconContainerClass: "menu-item-icon",
-			isExternalLink: true,
+			isExternalLink: false,
 			subMenu: [
 				{
 					label: "maps.text",
 					link: AWS_LOCATION_MAPS_URL,
-					isExternalLink: true
+					isExternalLink: false
 				},
 				{
 					label: "places.text",
 					link: AWS_LOCATION_PLACES_URL,
-					isExternalLink: true
+					isExternalLink: false
 				},
 				{
 					label: "routes.text",
 					link: AWS_LOCATION_ROUTES_URL,
-					isExternalLink: true
+					isExternalLink: false
 				},
 				{
 					label: "geofences_and_trackers.text",
 					link: AWS_LOCATION_GENFENCE_AND_TRACKERS_URL,
-					isExternalLink: true
+					isExternalLink: false
 				}
 			]
 		},
@@ -198,58 +198,58 @@ if (!SHOW_NEW_NAVIGATION) {
 			link: AWS_GETTING_STARTED_URL,
 			iconBeforeLink: IconCodeMenu,
 			iconContainerClass: "menu-item-icon",
-			isExternalLink: true
+			isExternalLink: false
 		},
 		{
 			label: "pricing.text",
 			link: AWS_PRICING_URL,
 			iconBeforeLink: IconDollarSolid,
 			iconContainerClass: "menu-item-icon",
-			isExternalLink: true
+			isExternalLink: false
 		},
 		{
 			label: "footer__faq.text",
 			link: AWS_FAQ_URL,
 			iconBeforeLink: IconDollarSolid,
 			iconContainerClass: "menu-item-icon",
-			isExternalLink: true
+			isExternalLink: false
 		},
 		{
 			label: "industry.text",
 			link: AWS_LOCATION_INDUSTRY_URL,
 			iconBeforeLink: IconCodeMenu,
 			iconContainerClass: "menu-item-icon",
-			isExternalLink: true,
+			isExternalLink: false,
 			subMenu: [
 				{
 					label: "transportation_and_logistics.text",
 					link: AWS_LOCATION_TRANSPORTATION_AND_LOGISTICS_URL,
-					isExternalLink: true
+					isExternalLink: false
 				},
 				{
 					label: "financial_service.text",
 					link: AWS_LOCATION_FINANCIAL_SERVICE_URL,
-					isExternalLink: true
+					isExternalLink: false
 				},
 				{
 					label: "healthcare.text",
 					link: AWS_LOCATION_HEALTHCARE_URL,
-					isExternalLink: true
+					isExternalLink: false
 				},
 				{
 					label: "retails.text",
 					link: AWS_LOCATION_RETAILS_URL,
-					isExternalLink: true
+					isExternalLink: false
 				},
 				{
 					label: "travel_and_hospitality.text",
 					link: AWS_LOCATION_TRAVEL_AND_HOSPITALITY_URL,
-					isExternalLink: true
+					isExternalLink: false
 				},
 				{
 					label: "real_estate.text",
 					link: AWS_LOCATION_REAL_ESTATE_URL,
-					isExternalLink: true
+					isExternalLink: false
 				}
 			]
 		},
@@ -258,22 +258,22 @@ if (!SHOW_NEW_NAVIGATION) {
 			link: AWS_LOCATION_RESOURCES_URL,
 			iconBeforeLink: IconCodeMenu,
 			iconContainerClass: "menu-item-icon",
-			isExternalLink: true,
+			isExternalLink: false,
 			subMenu: [
 				{
 					label: "customers.text",
 					link: AWS_LOCATION_CUSTOMERS_URL,
-					isExternalLink: true
+					isExternalLink: false
 				},
 				{
 					label: "product_resources.text",
 					link: AWS_LOCATION_PRODUCT_RESOURCES_URL,
-					isExternalLink: true
+					isExternalLink: false
 				},
 				{
 					label: "developer_resources.text",
 					link: AWS_LOCATION_DEVELOPER_RESOURCES_URL,
-					isExternalLink: true
+					isExternalLink: false
 				}
 			]
 		}

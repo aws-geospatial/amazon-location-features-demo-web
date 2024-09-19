@@ -523,7 +523,7 @@ const Explore: FC<ExploreProps> = ({
 						{
 							title: "header__overview.text",
 							description: "new_overview_desc.text",
-							onClickHandler: () => window.open(LEARN_MORE_URL, "_blank"),
+							onClickHandler: () => window.open(LEARN_MORE_URL, "_self"),
 							isEnabled: true
 						},
 						{
@@ -536,7 +536,7 @@ const Explore: FC<ExploreProps> = ({
 								{
 									title: "maps.text",
 									description: "new_maps_desc.text",
-									onClickHandler: () => window.open(AWS_LOCATION_MAPS_URL, "_blank"),
+									onClickHandler: () => window.open(AWS_LOCATION_MAPS_URL, "_self"),
 									isEnabled: true,
 									iconComponent: (
 										<IconMapSolid
@@ -553,7 +553,7 @@ const Explore: FC<ExploreProps> = ({
 								{
 									title: "places.text",
 									description: "new_places_desc.text",
-									onClickHandler: () => window.open(AWS_LOCATION_PLACES_URL, "_blank"),
+									onClickHandler: () => window.open(AWS_LOCATION_PLACES_URL, "_self"),
 									isEnabled: true,
 									iconComponent: (
 										<IconPlacesNew
@@ -569,7 +569,7 @@ const Explore: FC<ExploreProps> = ({
 								{
 									title: "routes.text",
 									description: "new_routes_desc.text",
-									onClickHandler: () => window.open(AWS_LOCATION_ROUTES_URL, "_blank"),
+									onClickHandler: () => window.open(AWS_LOCATION_ROUTES_URL, "_self"),
 									isEnabled: true,
 									iconComponent: (
 										<IconRoute
@@ -586,7 +586,7 @@ const Explore: FC<ExploreProps> = ({
 								{
 									title: "geofences_and_trackers.text",
 									description: "new_geofences_trackers_desc.text",
-									onClickHandler: () => window.open(AWS_LOCATION_GENFENCE_AND_TRACKERS_URL, "_blank"),
+									onClickHandler: () => window.open(AWS_LOCATION_GENFENCE_AND_TRACKERS_URL, "_self"),
 									isEnabled: true,
 									iconComponent: (
 										<IconGeofencesTrackers
@@ -601,19 +601,19 @@ const Explore: FC<ExploreProps> = ({
 						{
 							title: "footer__getting_started.text",
 							description: "new_getting_started_desc.text",
-							onClickHandler: () => window.open(AWS_GETTING_STARTED_URL, "_blank"),
+							onClickHandler: () => window.open(AWS_GETTING_STARTED_URL, "_self"),
 							isEnabled: true
 						},
 						{
 							title: "pricing.text",
 							description: "new_pricing_desc.text",
-							onClickHandler: () => window.open(AWS_PRICING_URL, "_blank"),
+							onClickHandler: () => window.open(AWS_PRICING_URL, "_self"),
 							isEnabled: true
 						},
 						{
 							title: "footer__faq.text",
 							description: "new_faqs_desc.text",
-							onClickHandler: () => window.open(AWS_FAQ_URL, "_blank"),
+							onClickHandler: () => window.open(AWS_FAQ_URL, "_self"),
 							isEnabled: true
 						},
 						{
@@ -625,7 +625,7 @@ const Explore: FC<ExploreProps> = ({
 								{
 									title: "transportation_and_logistics.text",
 									description: "new_transportation_logistics_desc.text",
-									onClickHandler: () => window.open(AWS_LOCATION_TRANSPORTATION_AND_LOGISTICS_URL, "_blank"),
+									onClickHandler: () => window.open(AWS_LOCATION_TRANSPORTATION_AND_LOGISTICS_URL, "_self"),
 									isEnabled: true,
 									iconComponent: (
 										<IconTruckSolid
@@ -642,7 +642,7 @@ const Explore: FC<ExploreProps> = ({
 								{
 									title: "financial_service.text",
 									description: "new_financial_service_desc.text",
-									onClickHandler: () => window.open(AWS_LOCATION_FINANCIAL_SERVICE_URL, "_blank"),
+									onClickHandler: () => window.open(AWS_LOCATION_FINANCIAL_SERVICE_URL, "_self"),
 									isEnabled: true,
 									iconComponent: (
 										<IconFinancialService
@@ -655,7 +655,7 @@ const Explore: FC<ExploreProps> = ({
 								{
 									title: "healthcare.text",
 									description: "new_healthcare_desc.text",
-									onClickHandler: () => window.open(AWS_LOCATION_HEALTHCARE_URL, "_blank"),
+									onClickHandler: () => window.open(AWS_LOCATION_HEALTHCARE_URL, "_self"),
 									isEnabled: true,
 									iconComponent: (
 										<IconHealthcare
@@ -668,7 +668,7 @@ const Explore: FC<ExploreProps> = ({
 								{
 									title: "retails.text",
 									description: "new_retail_desc.text",
-									onClickHandler: () => window.open(AWS_LOCATION_RETAILS_URL, "_blank"),
+									onClickHandler: () => window.open(AWS_LOCATION_RETAILS_URL, "_self"),
 									isEnabled: true,
 									iconComponent: (
 										<IconRetail
@@ -681,7 +681,7 @@ const Explore: FC<ExploreProps> = ({
 								{
 									title: "travel_and_hospitality.text",
 									description: "new_travel_hospitality_desc.text",
-									onClickHandler: () => window.open(AWS_LOCATION_TRAVEL_AND_HOSPITALITY_URL, "_blank"),
+									onClickHandler: () => window.open(AWS_LOCATION_TRAVEL_AND_HOSPITALITY_URL, "_self"),
 									isEnabled: true,
 									iconComponent: (
 										<IconTravelHospitality
@@ -694,7 +694,7 @@ const Explore: FC<ExploreProps> = ({
 								{
 									title: "real_estate.text",
 									description: "new_real_estate_desc.text",
-									onClickHandler: () => window.open(AWS_LOCATION_REAL_ESTATE_URL, "_blank"),
+									onClickHandler: () => window.open(AWS_LOCATION_REAL_ESTATE_URL, "_self"),
 									isEnabled: true,
 									iconComponent: (
 										<IconRealEstate
@@ -715,7 +715,7 @@ const Explore: FC<ExploreProps> = ({
 								{
 									title: "customers.text",
 									description: "new_customers_desc.text",
-									onClickHandler: () => window.open(AWS_LOCATION_CUSTOMERS_URL, "_blank"),
+									onClickHandler: () => window.open(AWS_LOCATION_CUSTOMERS_URL, "_self"),
 									isEnabled: true,
 									iconComponent: (
 										<IconCustomers
@@ -732,7 +732,7 @@ const Explore: FC<ExploreProps> = ({
 								{
 									title: "product_resources.text",
 									description: "new_product_resources_desc.text",
-									onClickHandler: () => window.open(AWS_LOCATION_PRODUCT_RESOURCES_URL, "_blank"),
+									onClickHandler: () => window.open(AWS_LOCATION_PRODUCT_RESOURCES_URL, "_self"),
 									isEnabled: true,
 									iconComponent: (
 										<IconProductResources
@@ -745,7 +745,7 @@ const Explore: FC<ExploreProps> = ({
 								{
 									title: "developer_resources.text",
 									description: "new_developer_resources_desc.text",
-									onClickHandler: () => window.open(AWS_LOCATION_DEVELOPER_RESOURCES_URL, "_blank"),
+									onClickHandler: () => window.open(AWS_LOCATION_DEVELOPER_RESOURCES_URL, "_self"),
 									isEnabled: true,
 									iconComponent: (
 										<IconDeveloperResources
