@@ -130,7 +130,7 @@ const Explore: FC<ExploreProps> = ({
 	onshowUnauthSimulationDisclaimerModal,
 	bottomSheetRef
 }) => {
-	const [isMenuExapnded, setIsMenuExapnded] = useState<{ [key: string]: boolean }>({
+	const [isMenuExpanded, setIsMenuExpanded] = useState<{ [key: string]: boolean }>({
 		"migration.text": false,
 		"header__product.text": false,
 		"industry.text": false,
@@ -315,7 +315,7 @@ const Explore: FC<ExploreProps> = ({
 						{
 							title: "migration.text",
 							description: "migration_desc.text",
-							onClickHandler: () => setIsMenuExapnded(s => ({ ...s, "migration.text": !s["migration.text"] })),
+							onClickHandler: () => setIsMenuExpanded(s => ({ ...s, "migration.text": !s["migration.text"] })),
 							isEnabled:
 								MIGRATE_FROM_GOOGLE_MAPS_PAGE ||
 								MIGRATE_A_WEB_APP_PAGE ||
@@ -426,7 +426,7 @@ const Explore: FC<ExploreProps> = ({
 						{
 							title: "migration.text",
 							description: "migration_desc.text",
-							onClickHandler: () => setIsMenuExapnded(s => ({ ...s, "migration.text": !s["migration.text"] })),
+							onClickHandler: () => setIsMenuExpanded(s => ({ ...s, "migration.text": !s["migration.text"] })),
 							isEnabled:
 								MIGRATE_FROM_GOOGLE_MAPS_PAGE ||
 								MIGRATE_A_WEB_APP_PAGE ||
@@ -530,7 +530,7 @@ const Explore: FC<ExploreProps> = ({
 							title: "header__product.text",
 							description: "new_products_desc.text",
 							onClickHandler: () =>
-								setIsMenuExapnded(s => ({ ...s, "header__product.text": !s["header__product.text"] })),
+								setIsMenuExpanded(s => ({ ...s, "header__product.text": !s["header__product.text"] })),
 							isEnabled: true,
 							subMenu: [
 								{
@@ -619,7 +619,7 @@ const Explore: FC<ExploreProps> = ({
 						{
 							title: "industry.text",
 							description: "new_industry_desc.text",
-							onClickHandler: () => setIsMenuExapnded(s => ({ ...s, "industry.text": !s["industry.text"] })),
+							onClickHandler: () => setIsMenuExpanded(s => ({ ...s, "industry.text": !s["industry.text"] })),
 							isEnabled: true,
 							subMenu: [
 								{
@@ -709,7 +709,7 @@ const Explore: FC<ExploreProps> = ({
 						{
 							title: "resources.text",
 							description: "new_resources_desc.text",
-							onClickHandler: () => setIsMenuExapnded(s => ({ ...s, "resources.text": !s["resources.text"] })),
+							onClickHandler: () => setIsMenuExpanded(s => ({ ...s, "resources.text": !s["resources.text"] })),
 							isEnabled: true,
 							subMenu: [
 								{
@@ -770,10 +770,10 @@ const Explore: FC<ExploreProps> = ({
 							<IconicInfoCard
 								gap="0"
 								IconComponent={
-									<IconArrow className={isMenuExapnded[title] ? "up-icon" : "reverse-icon"} width={20} height={20} />
+									<IconArrow className={isMenuExpanded[title] ? "up-icon" : "reverse-icon"} width={20} height={20} />
 								}
 								title={t(title)}
-								titleColor={isMenuExapnded[title] ? "var(--primary-color)" : ""}
+								titleColor={isMenuExpanded[title] ? "var(--primary-color)" : ""}
 								description={t(description)}
 								cardMargin={
 									idx === 0 && (!isUserAwsAccountConnected || !isAuthenticated) ? "2rem 0 0.923rem 0" : "0.923rem 0"
@@ -783,7 +783,7 @@ const Explore: FC<ExploreProps> = ({
 								onClickHandler={onClickHandler}
 								style={{ padding: "0 1rem" }}
 							/>
-							{isMenuExapnded[title] &&
+							{isMenuExpanded[title] &&
 								subMenu.map(({ isEnabled, iconComponent, title, description, onClickHandler }, subIdx) => {
 									if (isEnabled) {
 										return (
@@ -830,7 +830,7 @@ const Explore: FC<ExploreProps> = ({
 				}
 			}
 		});
-	}, [exploreMoreOptions, isAuthenticated, isMenuExapnded, isUserAwsAccountConnected, t]);
+	}, [exploreMoreOptions, isAuthenticated, isMenuExpanded, isUserAwsAccountConnected, t]);
 
 	const exploreButtons = [
 		{
