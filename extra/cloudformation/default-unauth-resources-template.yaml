@@ -904,6 +904,36 @@ Resources:
     Properties:
       ServiceToken: !GetAtt AmazonLocationGeoFenceLambda.Arn
 
+  GeofenceLambdaTrigger:
+    Type: AWS::Events::Rule
+    DependsOn: AmazonLocationGeoFenceLambda
+    Properties:
+      Name: GeofenceLambdaTrigger
+      EventPattern:
+        Fn::Sub: >-
+          {"source":["aws.cloudformation"],"region":["${AWS::Region}"],"detail-type":["CloudFormation
+          Stack Status
+          Change"],"detail":{"stack-id":["${AWS::StackId}"],"status-details":{"status":["UPDATE_IN_PROGRESS"]}}}
+      State: ENABLED
+      Targets:
+        - Id: Id1acddeab-175e-495f-8b56-8d8de684f610
+          Arn:
+            Fn::Sub: >-
+              arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:AmazonLocationDemoGeofenceCreator
+          Input: |-
+            {
+              "RequestType": "Update"
+            }
+
+  GeofenceTriggerInvokePermission:
+    Type: AWS::Lambda::Permission
+    DependsOn: [AmazonLocationGeoFenceLambda, GeofenceLambdaTrigger]
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: AmazonLocationDemoGeofenceCreator
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt [GeofenceLambdaTrigger, Arn]
+
   AmazonLocationGeoFenceLambda:
     DependsOn: AmazonLocationGeoFenceLambdaExecutionPolicy
     Type: AWS::Lambda::Function
