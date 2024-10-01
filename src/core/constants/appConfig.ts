@@ -66,12 +66,13 @@ const appConfig = {
 		APP_VERSION: getEnv("VITE_APP_VERSION"),
 		NL_BASE_URL: getEnv("VITE_NL_BASE_URL"),
 		NL_API_KEY: getEnv("VITE_NL_API_KEY"),
-		MIGRATE_FROM_GOOGLE_MAPS_PAGE: getEnv("VITE_MIGRATE_FROM_GOOGLE_MAPS_PAGE"),
-		MIGRATE_A_WEB_APP_PAGE: getEnv("VITE_MIGRATE_A_WEB_APP_PAGE"),
-		MIGRATE_AN_ANDROID_APP_PAGE: getEnv("VITE_MIGRATE_AN_ANDROID_APP_PAGE"),
-		MIGRATE_AN_IOS_APP_PAGE: getEnv("VITE_MIGRATE_AN_IOS_APP_PAGE"),
-		MIGRATE_A_WEB_SERVICE_PAGE: getEnv("VITE_MIGRATE_A_WEB_SERVICE_PAGE"),
-		PRICING_PAGE: getEnv("VITE_PRICING_PAGE")
+		MIGRATE_FROM_GOOGLE_MAPS_PAGE: !!parseInt(String(getEnv("VITE_MIGRATE_FROM_GOOGLE_MAPS_PAGE"))),
+		MIGRATE_A_WEB_APP_PAGE: !!parseInt(String(getEnv("VITE_MIGRATE_A_WEB_APP_PAGE"))),
+		MIGRATE_AN_ANDROID_APP_PAGE: !!parseInt(String(getEnv("VITE_MIGRATE_AN_ANDROID_APP_PAGE"))),
+		MIGRATE_AN_IOS_APP_PAGE: !!parseInt(String(getEnv("VITE_MIGRATE_AN_IOS_APP_PAGE"))),
+		MIGRATE_A_WEB_SERVICE_PAGE: !!parseInt(String(getEnv("VITE_MIGRATE_A_WEB_SERVICE_PAGE"))),
+		PRICING_PAGE: !!parseInt(String(getEnv("VITE_PRICING_PAGE"))),
+		SHOW_NEW_NAVIGATION: !!parseInt(String(getEnv("VITE_SHOW_NEW_NAVIGATION")))
 	},
 	PERSIST_STORAGE_KEYS: {
 		LOCAL_STORAGE_PREFIX: "amazon-location_",
@@ -436,7 +437,22 @@ const appConfig = {
 			"https://docs.aws.amazon.com/location/latest/APIReference/API_GetDevicePositionHistory.html",
 		BATCH_DELETE_DEVICE_POSITION_HISTORY_URL:
 			"https://docs.aws.amazon.com/location/latest/APIReference/API_BatchDeleteDevicePositionHistory.html",
-		AWS_LOCATION: "https://aws.amazon.com/location/"
+		AWS_LOCATION: "https://aws.amazon.com/location/",
+		AWS_LOCATION_MAPS_URL: "https://aws.amazon.com/location/maps/",
+		AWS_LOCATION_PLACES_URL: "https://aws.amazon.com/location/places/",
+		AWS_LOCATION_ROUTES_URL: "https://aws.amazon.com/location/routes/",
+		AWS_LOCATION_GENFENCE_AND_TRACKERS_URL: "https://aws.amazon.com/location/geofences-and-trackers/",
+		AWS_LOCATION_INDUSTRY_URL: "https://aws.amazon.com/location/industry/",
+		AWS_LOCATION_TRANSPORTATION_AND_LOGISTICS_URL: "https://aws.amazon.com/location/transportation-and-logistics/",
+		AWS_LOCATION_FINANCIAL_SERVICE_URL: "https://aws.amazon.com/location/financial-service/",
+		AWS_LOCATION_HEALTHCARE_URL: "https://aws.amazon.com/location/healthcare/",
+		AWS_LOCATION_RETAILS_URL: "https://aws.amazon.com/location/retails/",
+		AWS_LOCATION_TRAVEL_AND_HOSPITALITY_URL: "https://aws.amazon.com/location/travel-and-hospitality/",
+		AWS_LOCATION_REAL_ESTATE_URL: "https://aws.amazon.com/location/real-estate/",
+		AWS_LOCATION_RESOURCES_URL: "https://aws.amazon.com/location/resources/",
+		AWS_LOCATION_CUSTOMERS_URL: "https://aws.amazon.com/location/resources/customers/",
+		AWS_LOCATION_PRODUCT_RESOURCES_URL: "https://aws.amazon.com/location/resources/product-resources/",
+		AWS_LOCATION_DEVELOPER_RESOURCES_URL: "https://aws.amazon.com/location/resources/developer-resources/"
 	}
 };
 

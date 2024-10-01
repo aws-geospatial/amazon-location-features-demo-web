@@ -12,15 +12,18 @@ describe("<List/>", () => {
 	const listArray = [
 		...[...Array(2)].map(() => ({
 			label: faker.random.word(),
-			link: faker.internet.url()
+			link: faker.internet.url(),
+			isExternalLink: true
 		})),
 		{
 			label: faker.random.word(),
 			link: "/somewhere",
+			isExternalLink: false,
 			subMenu: [
 				{
 					label: faker.random.word(),
-					link: "/somewhere"
+					link: "/somewhere",
+					isExternalLink: false
 				}
 			]
 		}

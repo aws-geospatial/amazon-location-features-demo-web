@@ -114,7 +114,7 @@
     "text": "Overview"
   },
   "header__product": {
-    "text": "Product"
+    "text": "Products"
   },
   "header__try_it": {
     "text": "Try it"
@@ -129,7 +129,7 @@
     "text": "Getting Started"
   },
   "footer__faq": {
-    "text": "FAQ"
+    "text": "FAQs"
   },
   "footer__pricing": {
     "text": "Pricing"
@@ -3697,5 +3697,104 @@
   },
   "error_handler__failed_refresh_tokens": {
     "text": "Failed to refresh tokens"
+  },
+  "geofences_and_trackers": {
+    "text": "Geofences and Trackers"
+  },
+  "industry": {
+    "text": "Industry"
+  },
+  "transportation_and_logistics": {
+    "text": "Transportation and Logistics"
+  },
+  "financial_service": {
+    "text": "Financial Service"
+  },
+  "healthcare": {
+    "text": "Healthcare"
+  },
+  "retails": {
+    "text": "Retail"
+  },
+  "travel_and_hospitality": {
+    "text": "Travel and Hospitality"
+  },
+  "real_estate": {
+    "text": "Real Estate"
+  },
+  "resources": {
+    "text": "Resources"
+  },
+  "customers": {
+    "text": "Customers"
+  },
+  "product_resources": {
+    "text": "Product Resources"
+  },
+  "developer_resources": {
+    "text": "Developer Resources"
+  },
+  "header__product_desc": {
+    "text": "Securely and easily add location data to applications"
+  },
+  "new_overview_desc": {
+    "text": "Securely and easily add location data to applications"
+  },
+  "new_products_desc": {
+    "text": "View detailed capabilities of the Amazon Location Service"
+  },
+  "new_maps_desc": {
+    "text": "Visualize location information"
+  },
+  "new_places_desc": {
+    "text": "Perform point-of-interest searches, convert between addresses and geographic coordinates"
+  },
+  "new_routes_desc": {
+    "text": "Request travel times, distances, and directions between points"
+  },
+  "new_geofences_trackers_desc": {
+    "text": "Track device locations, detect when devices enter or exit geographical boundaries"
+  },
+  "new_getting_started_desc": {
+    "text": "Learn how to start using Amazon Location Service"
+  },
+  "new_pricing_desc": {
+    "text": "Estimate service usage costs (contact AWS for volume discounts)"
+  },
+  "new_faqs_desc": {
+    "text": "Find answers to commonly asked questions"
+  },
+  "new_industry_desc": {
+    "text": "Learn how location data and services apply to different industry segments"
+  },
+  "new_transportation_logistics_desc": {
+    "text": "Delivery, distribution, and ride services"
+  },
+  "new_financial_service_desc": {
+    "text": "Banking, money management, and insurance services"
+  },
+  "new_healthcare_desc": {
+    "text": "Medical providers, health facilities, and insurance"
+  },
+  "new_retail_desc": {
+    "text": "Buying and selling retail goods such as groceries and clothing"
+  },
+  "new_travel_hospitality_desc": {
+    "text": "Airlines, hotels, and restaurants"
+  },
+  "new_real_estate_desc": {
+    "text": "Property management, buying and selling dwellings"
+  },
+  "new_resources_desc": {
+    "text": "Find materials to continue learning about Amazon Location Service"
+  },
+  "new_customers_desc": {
+    "text": "Customer solutions built using location services"
+  },
+  "new_product_resources_desc": {
+    "text": "Blogs and updates"
+  },
+  "new_developer_resources_desc": {
+    "text": "Guides and forums"
   }
 }
