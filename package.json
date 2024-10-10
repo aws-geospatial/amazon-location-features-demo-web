@@ -37,7 +37,7 @@
 		"translate-content-update": "cd extra/translation-script-content && npm install && node update-translation.js && cd ../../"
 	},
 	"dependencies": {
-		"@aws-amplify/ui-react": "3.6.1",
+		"@aws-amplify/ui-react": "6.5.3",
 		"@aws-sdk/client-cognito-identity": "3.496.0",
 		"@aws-sdk/client-iot": "3.496.0",
 		"@aws-sdk/client-location": "3.496.0",
@@ -45,7 +45,7 @@
 		"@aws-sdk/credential-providers": "3.370.0",
 		"@aws/amazon-location-utilities-auth-helper": "^1.0.7",
 		"@turf/turf": "6.5.0",
-		"aws-amplify": "5.3.19",
+		"aws-amplify": "6.6.4",
 		"aws-iot-device-sdk-v2": "^1.20.0",
 		"date-fns": "2.29.3",
 		"i18next": "23.2.8",
