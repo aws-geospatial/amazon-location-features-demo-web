@@ -8,9 +8,9 @@ import { IconAwsCloudFormation, IconCheckMarkCircle } from "@demo/assets/svgs";
 import { DropdownEl, Modal } from "@demo/atomicui/atoms";
 import { InputField } from "@demo/atomicui/molecules";
 import { appConfig, regionsData } from "@demo/core/constants";
-import { useAuth, useClient, useMap } from "@demo/hooks";
+import { useAuth, useClient } from "@demo/hooks";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
-import { ConnectFormValuesType, EsriMapEnum, MapProviderEnum } from "@demo/types";
+import { ConnectFormValuesType } from "@demo/types";
 import { AnalyticsEventActionsEnum, EventTypeEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
 import { isAndroid, isIOS } from "react-device-detect";
@@ -19,7 +19,6 @@ import "./styles.scss";
 
 const {
 	ROUTES: { HELP },
-	MAP_RESOURCES: { GRAB_SUPPORTED_AWS_REGIONS },
 	LINKS: { AWS_TERMS_AND_CONDITIONS }
 } = appConfig;
 let scrollTimeout: NodeJS.Timer | undefined;
@@ -27,14 +26,9 @@ let scrollTimeout: NodeJS.Timer | undefined;
 export interface ConnectAwsAccountModalProps {
 	open: boolean;
 	onClose: () => void;
-	handleCurrentLocationAndViewpoint: (b: boolean) => void;
 }
 
-const ConnectAwsAccountModal: FC<ConnectAwsAccountModalProps> = ({
-	open,
-	onClose,
-	handleCurrentLocationAndViewpoint
-}) => {
+const ConnectAwsAccountModal: FC<ConnectAwsAccountModalProps> = ({ open, onClose }) => {
 	const [formValues, setFormValues] = useState<ConnectFormValuesType>({
 		IdentityPoolId: "",
 		UserDomain: "",
@@ -43,9 +37,8 @@ const ConnectAwsAccountModal: FC<ConnectAwsAccountModalProps> = ({
 		WebSocketUrl: ""
 	});
 	const {
-		isUserAwsAccountConnected,
+		userProvidedValues,
 		setConnectFormValues,
-		setIsUserAwsAccountConnected,
 		clearCredentials,
 		onLogin,
 		validateFormValues,
@@ -53,8 +46,7 @@ const ConnectAwsAccountModal: FC<ConnectAwsAccountModalProps> = ({
 		cloudFormationLink,
 		handleStackRegion
 	} = useAuth();
-	const { resetStore: resetClientStore } = useClient();
-	const { mapProvider: currentMapProvider, setMapProvider, setMapStyle } = useMap();
+	const { resetLocationAndIotClients } = useClient();
 	const keyArr = Object.keys(formValues);
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
@@ -103,11 +95,6 @@ const ConnectAwsAccountModal: FC<ConnectAwsAccountModalProps> = ({
 		}
 	}, [open, isOverflowing]);
 
-	const _onClose = () => {
-		onClose();
-		isUserAwsAccountConnected && window.location.reload();
-	};
-
 	const _onSelect = useCallback(
 		(option: { value: string; label: string }) => {
 			handleStackRegion(option);
@@ -131,27 +118,17 @@ const ConnectAwsAccountModal: FC<ConnectAwsAccountModalProps> = ({
 			identityPoolId,
 			/* Success callback */
 			() => {
-				if (
-					currentMapProvider === MapProviderEnum.GRAB &&
-					!GRAB_SUPPORTED_AWS_REGIONS.includes(identityPoolId.split(":")[0])
-				) {
-					setMapProvider(MapProviderEnum.ESRI);
-					setMapStyle(EsriMapEnum.ESRI_LIGHT);
-					handleCurrentLocationAndViewpoint(false);
-				}
-
 				setConnectFormValues(formValues);
 				clearCredentials();
-				resetClientStore();
-				setIsUserAwsAccountConnected(true);
+				resetLocationAndIotClients();
 			}
 		);
 	};
 
 	const handleModalClose = () => {
-		_onClose();
+		onClose();
 
-		if (!isUserAwsAccountConnected) {
+		if (!userProvidedValues) {
 			const columnsHavingText = Object.keys(formValues)
 				.filter(key => !!formValues[key as keyof ConnectFormValuesType].trim())
 				.map(valueKey => valueKey)
@@ -192,7 +169,7 @@ const ConnectAwsAccountModal: FC<ConnectAwsAccountModalProps> = ({
 											overflowX: "hidden"
 									  }
 									: { justifyContent: "center" }
-								: isUserAwsAccountConnected
+								: userProvidedValues
 								? { display: "none" }
 								: {}
 						}
@@ -292,10 +269,10 @@ const ConnectAwsAccountModal: FC<ConnectAwsAccountModalProps> = ({
 					</Flex>
 					<Flex
 						className="right-col"
-						justifyContent={isUserAwsAccountConnected ? "center" : "flex-end"}
-						textAlign={isUserAwsAccountConnected ? "center" : "left"}
+						justifyContent={userProvidedValues ? "center" : "flex-end"}
+						textAlign={userProvidedValues ? "center" : "left"}
 					>
-						{isUserAwsAccountConnected ? (
+						{userProvidedValues ? (
 							<>
 								<IconCheckMarkCircle className="icon-check-mark-circle" />
 								<Text className="bold" fontSize="1.54rem" marginTop="3.08rem">
@@ -304,7 +281,7 @@ const ConnectAwsAccountModal: FC<ConnectAwsAccountModalProps> = ({
 								<Text marginTop="1.23rem" variation="tertiary" whiteSpace="pre-line">
 									{t("caam__post_connect__desc.text")}
 								</Text>
-								{isUserAwsAccountConnected && (
+								{userProvidedValues && (
 									<Button
 										data-testid="sign-in-button"
 										marginTop="3.08rem"
@@ -335,7 +312,7 @@ const ConnectAwsAccountModal: FC<ConnectAwsAccountModalProps> = ({
 									width="100%"
 									height="3.08rem"
 									onClick={() => {
-										_onClose();
+										onClose();
 										record(
 											[
 												{

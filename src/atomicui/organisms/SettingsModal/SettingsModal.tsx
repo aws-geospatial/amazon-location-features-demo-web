@@ -11,7 +11,6 @@ import {
 	IconCloud,
 	IconGlobe,
 	IconLanguage,
-	IconMapOutlined,
 	IconPaintroller,
 	IconPeopleArrows,
 	IconShuffle
@@ -19,15 +18,7 @@ import {
 import { appConfig, languageSwitcherData, regionsData } from "@demo/core/constants";
 import { useAuth, useClient, useIot, useMap, usePersistedData } from "@demo/hooks";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
-import {
-	ConnectFormValuesType,
-	EsriMapEnum,
-	MapProviderEnum,
-	MapUnitEnum,
-	RegionEnum,
-	SettingOptionEnum,
-	SettingOptionItemType
-} from "@demo/types";
+import { ConnectFormValuesType, MapUnitEnum, RegionEnum, SettingOptionEnum, SettingOptionItemType } from "@demo/types";
 import { AnalyticsEventActionsEnum, EventTypeEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
 import { useTranslation } from "react-i18next";
@@ -42,39 +33,22 @@ const InputField = lazy(() =>
 );
 
 const {
-	POOLS,
+	IDENTITY_POOL_IDS,
 	ROUTES: { HELP },
-	MAP_RESOURCES: {
-		MAP_STYLES: { ESRI_STYLES, HERE_STYLES },
-		GRAB_SUPPORTED_AWS_REGIONS
-	},
 	LINKS: { AWS_TERMS_AND_CONDITIONS },
 	PERSIST_STORAGE_KEYS: { FASTEST_REGION }
 } = appConfig;
 const { IMPERIAL, METRIC } = MapUnitEnum;
-const { ESRI, HERE, GRAB, OPEN_DATA } = MapProviderEnum;
+const fallbackRegion = Object.keys(IDENTITY_POOL_IDS)[0];
 
 interface SettingsModalProps {
 	open: boolean;
 	onClose: () => void;
 	resetAppState: () => void;
-	isGrabVisible: boolean;
-	handleMapProviderChange: (mapProvider: MapProviderEnum, triggeredBy: TriggeredByEnum) => void;
-	handleCurrentLocationAndViewpoint: (b: boolean) => void;
 	mapButtons: JSX.Element;
-	resetSearchAndFilters: () => void;
 }
 
-const SettingsModal: FC<SettingsModalProps> = ({
-	open,
-	onClose,
-	resetAppState,
-	isGrabVisible,
-	handleMapProviderChange,
-	handleCurrentLocationAndViewpoint,
-	mapButtons,
-	resetSearchAndFilters
-}) => {
+const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, mapButtons }) => {
 	const [formValues, setFormValues] = useState<ConnectFormValuesType>({
 		IdentityPoolId: "",
 		UserDomain: "",
@@ -83,42 +57,37 @@ const SettingsModal: FC<SettingsModalProps> = ({
 		WebSocketUrl: ""
 	});
 	const {
-		isUserAwsAccountConnected,
 		validateFormValues,
 		clearCredentials,
-		setIsUserAwsAccountConnected,
 		onDisconnectAwsAccount,
 		setConnectFormValues,
 		credentials,
 		onLogin,
 		onLogout,
 		autoRegion,
-		region: currentRegion,
-		setAutoRegion,
+		setRegion,
 		stackRegion,
 		cloudFormationLink,
-		handleStackRegion
+		handleStackRegion,
+		baseValues,
+		userProvidedValues
 	} = useAuth();
 	const {
 		autoMapUnit,
 		setIsAutomaticMapUnit,
 		mapUnit: currentMapUnit,
 		setMapUnit,
-		mapProvider: currentMapProvider,
-		mapStyle: currentMapStyle,
-		setMapProvider,
-		setMapStyle,
-		resetStore: resetMapStore
+		resetStore: resetMapStore,
+		mapStyle
 	} = useMap();
 	const { defaultRouteOptions, setDefaultRouteOptions, setSettingsOptions, settingsOptions } = usePersistedData();
-	const { resetStore: resetClientStore } = useClient();
+	const { resetPlacesAndRoutesClients, resetLocationAndIotClients, resetStore: resetClientStore } = useClient();
 	const { detachPolicy } = useIot();
 	const keyArr = Object.keys(formValues);
 	const isAuthenticated = !!credentials?.authenticated;
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
-	const fallbackRegion = Object.values(POOLS)[0];
 	const fastestRegion = localStorage.getItem(FASTEST_REGION) ?? fallbackRegion;
 	const { isDesktop, isMobile } = useDeviceMediaQuery();
 
@@ -158,41 +127,12 @@ const SettingsModal: FC<SettingsModalProps> = ({
 			identityPoolId,
 			/* Success callback */
 			() => {
-				if (
-					currentMapProvider === MapProviderEnum.GRAB &&
-					!GRAB_SUPPORTED_AWS_REGIONS.includes(identityPoolId.split(":")[0])
-				) {
-					setMapProvider(MapProviderEnum.ESRI);
-					setMapStyle(EsriMapEnum.ESRI_LIGHT);
-					handleCurrentLocationAndViewpoint(false);
-				}
-
 				setConnectFormValues(formValues);
 				clearCredentials();
-				resetClientStore();
-				setIsUserAwsAccountConnected(true);
+				resetLocationAndIotClients();
 			}
 		);
-	}, [
-		formValues,
-		validateFormValues,
-		currentMapProvider,
-		setMapProvider,
-		setMapStyle,
-		handleCurrentLocationAndViewpoint,
-		setConnectFormValues,
-		clearCredentials,
-		resetClientStore,
-		setIsUserAwsAccountConnected
-	]);
-
-	const selectedMapStyle = useMemo(
-		() =>
-			currentMapProvider === ESRI
-				? ESRI_STYLES.find(({ id }) => id === currentMapStyle)?.name
-				: HERE_STYLES.find(({ id }) => id === currentMapStyle)?.name,
-		[currentMapProvider, currentMapStyle]
-	);
+	}, [formValues, validateFormValues, setConnectFormValues, clearCredentials, resetLocationAndIotClients]);
 
 	const _onSelect = useCallback(
 		(option: { value: string; label: string }) => {
@@ -234,12 +174,12 @@ const SettingsModal: FC<SettingsModalProps> = ({
 
 	const handleRegionChange = useCallback(
 		(region: "Automatic" | RegionEnum) => {
-			setAutoRegion(region === "Automatic", region);
-			resetClientStore();
+			setRegion(region === "Automatic", region);
+			userProvidedValues ? resetPlacesAndRoutesClients() : resetClientStore();
 			resetAppState();
 			resetMapStore();
 		},
-		[setAutoRegion, resetClientStore, resetAppState, resetMapStore]
+		[setRegion, userProvidedValues, resetPlacesAndRoutesClients, resetClientStore, resetAppState, resetMapStore]
 	);
 
 	const optionItems: Array<SettingOptionItemType> = useMemo(
@@ -308,81 +248,18 @@ const SettingsModal: FC<SettingsModalProps> = ({
 				)
 			},
 			{
-				id: SettingOptionEnum.DATA_PROVIDER,
-				title: t("settings_modal__data_provider.text"),
-				defaultValue: currentMapProvider,
-				icon: <IconMapOutlined />,
-				detailsComponent: (
-					<Flex
-						data-testid={`${SettingOptionEnum.DATA_PROVIDER}-details-component`}
-						gap={0}
-						direction="column"
-						padding="0rem 1.15rem"
-					>
-						{/* Esri */}
-						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
-							<Radio
-								data-testid="data-provider-esri-radio"
-								value={ESRI}
-								checked={currentMapProvider === ESRI}
-								onChange={() => handleMapProviderChange(ESRI, TriggeredByEnum.SETTINGS_MODAL)}
-								crossOrigin={undefined}
-							>
-								<Text marginLeft="1.23rem">{ESRI}</Text>
-							</Radio>
-						</Flex>
-						{/* HERE */}
-						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
-							<Radio
-								data-testid="data-provider-here-radio"
-								value={HERE}
-								checked={currentMapProvider === HERE}
-								onChange={() => handleMapProviderChange(HERE, TriggeredByEnum.SETTINGS_MODAL)}
-								crossOrigin={undefined}
-							>
-								<Text marginLeft="1.23rem">{HERE}</Text>
-							</Radio>
-						</Flex>
-						{/* Grab */}
-						{isGrabVisible && (
-							<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
-								<Radio
-									data-testid="data-provider-grab-radio"
-									value={GRAB}
-									checked={currentMapProvider === GRAB}
-									onChange={() => handleMapProviderChange(GRAB, TriggeredByEnum.SETTINGS_MODAL)}
-									crossOrigin={undefined}
-								>
-									<Text marginLeft="1.23rem">{`${GRAB}Maps`}</Text>
-								</Radio>
-							</Flex>
-						)}
-						{/* OpenData */}
-						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
-							<Radio
-								data-testid="data-provider-openData-radio"
-								value={OPEN_DATA}
-								checked={currentMapProvider === OPEN_DATA}
-								onChange={() => handleMapProviderChange(OPEN_DATA, TriggeredByEnum.SETTINGS_MODAL)}
-								crossOrigin={undefined}
-							>
-								<Text marginLeft="1.23rem">{OPEN_DATA}</Text>
-							</Radio>
-						</Flex>
-					</Flex>
-				)
-			},
-			{
 				id: SettingOptionEnum.MAP_STYLE,
 				title: t("map_style.text"),
-				defaultValue: t(selectedMapStyle as string) as string,
+				defaultValue: mapStyle,
 				icon: <IconPaintroller />,
 				detailsComponent: (
 					<Flex
 						data-testid={`${SettingOptionEnum.MAP_STYLE}-details-component`}
 						gap={0}
 						direction="column"
+						padding="1.08rem 0 0 0"
 						overflow="hidden scroll"
+						height="100%"
 					>
 						{mapButtons}
 					</Flex>
@@ -457,9 +334,9 @@ const SettingsModal: FC<SettingsModalProps> = ({
 				title: t("settings_modal__region.text"),
 				defaultValue: autoRegion
 					? (t("settings_modal__automatic.text") as string)
-					: currentRegion === RegionEnum.EU_WEST_1
+					: baseValues?.region === RegionEnum.EU_WEST_1
 					? t("regions__eu_west__region.text")
-					: currentRegion === RegionEnum.AP_SOUTHEAST_1
+					: baseValues?.region === RegionEnum.AP_SOUTHEAST_1
 					? t("regions__ap_southeast__region.text")
 					: t("regions__us_east__region.text"),
 				icon: <IconGlobe />,
@@ -486,7 +363,7 @@ const SettingsModal: FC<SettingsModalProps> = ({
 							<Radio
 								data-testid={`region-${RegionEnum.EU_WEST_1}-radio`}
 								value={RegionEnum.EU_WEST_1}
-								checked={!autoRegion && currentRegion === RegionEnum.EU_WEST_1}
+								checked={!autoRegion && baseValues?.region === RegionEnum.EU_WEST_1}
 								onChange={() => handleRegionChange(RegionEnum.EU_WEST_1)}
 								crossOrigin={undefined}
 							>
@@ -497,7 +374,7 @@ const SettingsModal: FC<SettingsModalProps> = ({
 							<Radio
 								data-testid={`region-${RegionEnum.AP_SOUTHEAST_1}-radio`}
 								value={RegionEnum.AP_SOUTHEAST_1}
-								checked={!autoRegion && currentRegion === RegionEnum.AP_SOUTHEAST_1}
+								checked={!autoRegion && baseValues?.region === RegionEnum.AP_SOUTHEAST_1}
 								onChange={() => handleRegionChange(RegionEnum.AP_SOUTHEAST_1)}
 								crossOrigin={undefined}
 							>
@@ -508,13 +385,16 @@ const SettingsModal: FC<SettingsModalProps> = ({
 							<Radio
 								data-testid={`region-${RegionEnum.US_EAST_1}-radio`}
 								value={RegionEnum.US_EAST_1}
-								checked={!autoRegion && currentRegion === RegionEnum.US_EAST_1}
+								checked={!autoRegion && baseValues?.region === RegionEnum.US_EAST_1}
 								onChange={() => handleRegionChange(RegionEnum.US_EAST_1)}
 								crossOrigin={undefined}
 							>
 								<Text marginLeft="1.23rem">{t("regions__us_east_1.text")}</Text>
 							</Radio>
 						</Flex>
+						<p style={{ color: "var(--grey-color)" }} className="bold small-text">
+							{t("multiple_region_disclaimer.text")}
+						</p>
 					</Flex>
 				)
 			},
@@ -624,7 +504,7 @@ const SettingsModal: FC<SettingsModalProps> = ({
 									</Text>
 								</View>
 							</Flex>
-							{isUserAwsAccountConnected ? (
+							{userProvidedValues ? (
 								!isAuthenticated ? (
 									<>
 										<Button
@@ -722,28 +602,25 @@ const SettingsModal: FC<SettingsModalProps> = ({
 			autoMapUnit.system,
 			currentMapUnit,
 			handleAutoMapUnitChange,
-			currentMapProvider,
-			isGrabVisible,
-			selectedMapStyle,
+			mapStyle,
 			mapButtons,
 			defaultRouteOptions.avoidTolls,
 			defaultRouteOptions.avoidFerries,
 			autoRegion,
-			currentRegion,
+			baseValues?.region,
 			langDir,
 			fastestRegion,
 			isLtr,
 			stackRegion,
 			_onSelect,
 			cloudFormationLink,
-			isUserAwsAccountConnected,
+			userProvidedValues,
 			isAuthenticated,
 			onDisconnectAwsAccount,
 			keyArr,
 			isBtnEnabled,
 			onConnect,
 			onMapUnitChange,
-			handleMapProviderChange,
 			i18n.language,
 			handleLanguageChange,
 			handleRouteOptionChange,
@@ -758,15 +635,7 @@ const SettingsModal: FC<SettingsModalProps> = ({
 	);
 
 	const renderOptionItems = useMemo(() => {
-		const filtered = optionItems.filter(({ id }) => {
-			if (isUserAwsAccountConnected) {
-				return id !== SettingOptionEnum.REGION;
-			} else {
-				return id;
-			}
-		});
-
-		return filtered.map(({ id, title, defaultValue, icon }) => (
+		return optionItems.map(({ id, title, defaultValue, icon }) => (
 			<Flex
 				data-testid={`option-item-${id}`}
 				key={id}
@@ -805,7 +674,6 @@ const SettingsModal: FC<SettingsModalProps> = ({
 						);
 					}
 
-					resetSearchAndFilters();
 					setSettingsOptions(id);
 				}}
 			>
@@ -829,15 +697,7 @@ const SettingsModal: FC<SettingsModalProps> = ({
 				)}
 			</Flex>
 		));
-	}, [
-		optionItems,
-		isUserAwsAccountConnected,
-		settingsOptions,
-		isMobile,
-		resetSearchAndFilters,
-		setSettingsOptions,
-		formValues
-	]);
+	}, [optionItems, settingsOptions, isMobile, setSettingsOptions, formValues]);
 
 	const renderOptionDetails = useMemo(() => {
 		const [optionItem] = optionItems.filter(({ id }) => settingsOptions === id);

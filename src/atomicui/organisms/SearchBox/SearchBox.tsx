@@ -10,11 +10,10 @@ import {
 	ComboBoxOption,
 	Flex,
 	Placeholder,
-	SwitchField,
+	// SwitchField,
 	Text,
 	View
 } from "@aws-amplify/ui-react";
-import { PlaceGeometry } from "@aws-sdk/client-location";
 import { IconActionMenu, IconClose, IconDirections } from "@demo/assets/svgs";
 import { NLSearchLoader } from "@demo/atomicui/atoms";
 import { InputField, Marker, NotFoundCard, SuggestionMarker } from "@demo/atomicui/molecules";
@@ -23,7 +22,7 @@ import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useMap, usePlace } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
-import { DistanceUnitEnum, MapProviderEnum, MapUnitEnum, SuggestionType } from "@demo/types";
+import { DistanceUnitEnum, MapUnitEnum, SuggestionType } from "@demo/types";
 import { AnalyticsEventActionsEnum, ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { calculateGeodesicDistance } from "@demo/utils/geoCalculation";
 import { Units } from "@turf/turf";
@@ -84,13 +83,7 @@ const SearchBox: FC<SearchBoxProps> = ({
 	const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const [isNLChecked, setIsNLChecked] = useState(false);
 	const autocompleteRef = useRef<HTMLInputElement | null>(null);
-	const {
-		mapProvider: currentMapProvider,
-		mapUnit: currentMapUnit,
-		isCurrentLocationDisabled,
-		currentLocationData,
-		viewpoint
-	} = useMap();
+	const { mapUnit, currentLocationData, viewpoint } = useMap();
 	const {
 		clusters,
 		suggestions,
@@ -160,11 +153,12 @@ const SearchBox: FC<SearchBoxProps> = ({
 		}
 	}, [ui, isDesktop, bottomSheetRef, setBottomSheetMinHeight]);
 
-	useEffect(() => {
-		if (currentMapProvider === MapProviderEnum.GRAB || currentMapProvider === MapProviderEnum.HERE) {
-			setIsNLChecked(false);
-		}
-	}, [isNLChecked, currentMapProvider]);
+	// TODO: Commented out for the time being
+	// useEffect(() => {
+	// 	if (currentMapProvider === MapProviderEnum.GRAB || currentMapProvider === MapProviderEnum.HERE) {
+	// 		setIsNLChecked(false);
+	// 	}
+	// }, [isNLChecked, currentMapProvider]);
 
 	const handleSearch = useCallback(
 		async (value: string, exact = false, action: string) => {
@@ -206,9 +200,9 @@ const SearchBox: FC<SearchBoxProps> = ({
 	}, []);
 
 	const selectSuggestion = useCallback(
-		async ({ id, text, label, placeid }: ComboBoxOption) => {
+		async ({ text, placeid }: ComboBoxOption) => {
 			if (!placeid) {
-				await handleSearch(text || label, true, AnalyticsEventActionsEnum.SUGGESTION_SELECTED);
+				await handleSearch(text, true, AnalyticsEventActionsEnum.SUGGESTION_SELECTED);
 				setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
 				setBottomSheetHeight(window.innerHeight * 0.4);
 
@@ -217,10 +211,7 @@ const SearchBox: FC<SearchBoxProps> = ({
 					setBottomSheetHeight(window.innerHeight);
 				}, 500);
 			} else {
-				const selectedMarker = suggestions?.find(
-					(i: SuggestionType) => i.PlaceId === placeid || (i.Place?.Label === placeid && i.Id === id)
-				);
-
+				const selectedMarker = suggestions?.find(s => s.placeId === placeid);
 				await setSelectedMarker(selectedMarker);
 			}
 		},
@@ -228,12 +219,10 @@ const SearchBox: FC<SearchBoxProps> = ({
 	);
 
 	const setHover = useCallback(
-		({ id, placeid }: ComboBoxOption) => {
+		({ placeid }: ComboBoxOption) => {
 			if (!placeid) return;
 
-			const selectedMarker = suggestions?.find(
-				(i: SuggestionType) => i.PlaceId === placeid || (i.Place?.Label === placeid && i.Id === id)
-			);
+			const selectedMarker = suggestions?.find(s => s.placeId === placeid);
 			setHoveredMarker(selectedMarker);
 		},
 		[setHoveredMarker, suggestions]
@@ -265,26 +254,23 @@ const SearchBox: FC<SearchBoxProps> = ({
 		label: string;
 		country?: string;
 		region?: string;
-		geometry?: string;
+		position?: string;
 	}) => {
-		const { id, placeid, label, country, region, geometry } = option;
+		const { id, placeid, label, country, region, position } = option;
 		const separateIndex = id !== "" ? label.indexOf(",") : -1;
 		const title = separateIndex > -1 ? label.substring(0, separateIndex) : label;
 		const address = separateIndex > 1 ? label.substring(separateIndex + 1).trim() : null;
-		const _geometry = geometry ? (JSON.parse(geometry) as PlaceGeometry) : undefined;
-		const destCoords = _geometry?.Point ? _geometry?.Point : undefined;
+		const destCoords = position ? (JSON.parse(position) as number[]) : undefined;
 		const geodesicDistance = destCoords
 			? calculateGeodesicDistance(
-					isCurrentLocationDisabled
-						? [viewpoint.longitude, viewpoint.latitude]
-						: currentLocationData?.currentLocation
+					currentLocationData?.currentLocation
 						? [
 								currentLocationData.currentLocation.longitude as number,
 								currentLocationData.currentLocation.latitude as number
 						  ]
 						: [viewpoint.longitude, viewpoint.latitude],
 					[destCoords[0], destCoords[1]],
-					currentMapUnit === METRIC ? (KILOMETERS.toLowerCase() as Units) : (MILES.toLowerCase() as Units)
+					mapUnit === METRIC ? (KILOMETERS.toLowerCase() as Units) : (MILES.toLowerCase() as Units)
 			  )
 			: undefined;
 		const localizeGeodesicDistance = () => {
@@ -293,7 +279,7 @@ const SearchBox: FC<SearchBoxProps> = ({
 		};
 
 		const geodesicDistanceUnit = geodesicDistance
-			? currentMapUnit === METRIC
+			? mapUnit === METRIC
 				? t("geofence_box__km__short.text")
 				: t("geofence_box__mi__short.text")
 			: undefined;
@@ -322,14 +308,14 @@ const SearchBox: FC<SearchBoxProps> = ({
 
 	const options = useMemo(
 		() =>
-			suggestions?.map(({ Id, PlaceId, Text, Place }: SuggestionType) => {
+			suggestions?.map(({ id, placeId, label, position, country, region }: SuggestionType) => {
 				return {
-					id: Id,
-					placeid: PlaceId || Place?.Label || "",
-					label: Text || Place?.Label || "",
-					country: Place?.Country || "",
-					region: Place?.Region || "",
-					geometry: Place?.Geometry ? JSON.stringify(Place.Geometry) : ""
+					id,
+					placeid: placeId as string,
+					label: label as string,
+					position: position ? JSON.stringify(position) : "",
+					country: country as string,
+					region: region as string
 				};
 			}),
 		[suggestions]
@@ -347,11 +333,11 @@ const SearchBox: FC<SearchBoxProps> = ({
 				<SuggestionMarker key={i} active={true} searchValue={value} setSearchValue={setValue} {...s} />
 			));
 		} else if (!clusters) {
-			return suggestions?.map((s, i) => {
-				return s.PlaceId ? (
+			return suggestions?.map(s => {
+				return s.placeId ? (
 					<SuggestionMarker
-						key={`${s.PlaceId}_${i}`}
-						active={s.PlaceId === selectedMarker?.PlaceId}
+						key={s.id}
+						active={s.placeId === selectedMarker?.placeId}
 						searchValue={value}
 						setSearchValue={setValue}
 						{...s}
@@ -361,16 +347,13 @@ const SearchBox: FC<SearchBoxProps> = ({
 		} else {
 			return Object.keys(clusters).reduce((acc, key) => {
 				const cluster = clusters[key];
-				// const containsSelectedPoi = selectedMarker?.Hash?.includes(key);
-				// const s = containsSelectedPoi ? cluster.find(i => i.Hash === selectedMarker?.Hash) || cluster[0] : cluster[0];
-				const containsSelectedPoi = cluster.find(o => o.Id === selectedMarker?.Id) ? true : false;
-				const s = containsSelectedPoi ? cluster.find(o => o.Id === selectedMarker?.Id) || cluster[0] : cluster[0];
+				const containsSelectedPoi = cluster.find(o => o.id === selectedMarker?.id) ? true : false;
+				const s = containsSelectedPoi ? cluster.find(o => o.id === selectedMarker?.id) || cluster[0] : cluster[0];
 
 				acc.push(
 					<SuggestionMarker
-						// key={`${s.Hash}_${key}`}
-						key={s.Id}
-						active={s.Place?.Label === selectedMarker?.Place?.Label && s.Id === selectedMarker?.Id}
+						key={s.id}
+						active={s.id === selectedMarker?.id}
 						searchValue={value}
 						setSearchValue={setValue}
 						{...s}
@@ -500,7 +483,8 @@ const SearchBox: FC<SearchBoxProps> = ({
 										</Button>
 									)}
 								</Flex>
-								{!isSearching &&
+								{/* TODO: Commented out for the time being */}
+								{/* {!isSearching &&
 								NL_BASE_URL &&
 								NL_API_KEY &&
 								currentMapProvider !== MapProviderEnum.GRAB &&
@@ -522,7 +506,7 @@ const SearchBox: FC<SearchBoxProps> = ({
 									</Flex>
 								) : (
 									<></>
-								)}
+								)} */}
 								{isNLChecked && !value ? (
 									<Flex
 										gap={0}
@@ -622,12 +606,7 @@ const SearchBox: FC<SearchBoxProps> = ({
 													data-testid="search-suggestions"
 													key={i}
 													onClick={() => {
-														selectSuggestion({
-															id: option.id,
-															text: !!option?.placeid ? value : option.label,
-															label: option.label,
-															placeid: option?.placeid
-														});
+														selectSuggestion({ ...option });
 													}}
 													className="option-wrapper"
 												>
@@ -766,7 +745,8 @@ const SearchBox: FC<SearchBoxProps> = ({
 									}
 									crossOrigin={undefined}
 								/>
-								{NL_BASE_URL &&
+								{/* TODO: Commented out for the time being */}
+								{/* {NL_BASE_URL &&
 								NL_API_KEY &&
 								currentMapProvider !== MapProviderEnum.GRAB &&
 								currentMapProvider !== MapProviderEnum.HERE ? (
@@ -805,7 +785,6 @@ const SearchBox: FC<SearchBoxProps> = ({
 												alignItems="center"
 												style={{
 													borderBottom: isNLChecked && !value ? "1px solid var(--grey-color-3)" : ""
-													// marginLeft: "10px"
 												}}
 											>
 												<SwitchField
@@ -858,7 +837,7 @@ const SearchBox: FC<SearchBoxProps> = ({
 									</Flex>
 								) : (
 									<></>
-								)}
+								)} */}
 							</Flex>
 						</Flex>
 					)}

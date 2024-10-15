@@ -56,11 +56,9 @@ interface IProps {
 	onShowAuthGeofenceBox: () => void;
 	onShowAuthTrackerBox: () => void;
 	onShowSettings: () => void;
-	onShowTrackingDisclaimerModal: () => void;
 	onShowAboutModal: () => void;
 	onShowUnauthGeofenceBox: () => void;
 	onShowUnauthTrackerBox: () => void;
-	onshowUnauthSimulationDisclaimerModal: () => void;
 	setShowUnauthGeofenceBox: (b: boolean) => void;
 	setShowUnauthTrackerBox: (b: boolean) => void;
 	setShowStartUnauthSimulation: (b: boolean) => void;
@@ -102,11 +100,9 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	onShowAuthGeofenceBox,
 	onShowAuthTrackerBox,
 	onShowSettings,
-	onShowTrackingDisclaimerModal,
 	onShowAboutModal,
 	onShowUnauthGeofenceBox,
 	onShowUnauthTrackerBox,
-	onshowUnauthSimulationDisclaimerModal,
 	setShowUnauthGeofenceBox,
 	setShowUnauthTrackerBox,
 	from,
@@ -400,9 +396,6 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 								<Text fontFamily="AmazonEmber-Bold" fontSize="1.23rem" textAlign="left">
 									{t("map_style.text")}
 								</Text>
-								<Text fontFamily="AmazonEmber-Regular" fontSize="1rem" color="var(--grey-color)" textAlign="left">
-									{t("map_buttons__info.text")}
-								</Text>
 							</Flex>
 						</Flex>
 					);
@@ -503,11 +496,9 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 										onShowAuthGeofenceBox={onShowAuthGeofenceBox}
 										onShowAuthTrackerBox={onShowAuthTrackerBox}
 										onShowSettings={onShowSettings}
-										onShowTrackingDisclaimerModal={onShowTrackingDisclaimerModal}
 										onShowAboutModal={onShowAboutModal}
 										onShowUnauthGeofenceBox={onShowUnauthGeofenceBox}
 										onShowUnauthTrackerBox={onShowUnauthTrackerBox}
-										onshowUnauthSimulationDisclaimerModal={onshowUnauthSimulationDisclaimerModal}
 										bottomSheetRef={bottomSheetRef}
 									/>
 								)}
@@ -530,10 +521,8 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 			onShowAuthGeofenceBox,
 			onShowAuthTrackerBox,
 			onShowSettings,
-			onShowTrackingDisclaimerModal,
 			onShowUnauthGeofenceBox,
 			onShowUnauthTrackerBox,
-			onshowUnauthSimulationDisclaimerModal,
 			setUI
 		]
 	);

@@ -1,44 +1,24 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import {
-	EsriDarkGray,
-	EsriImagery,
-	EsriLight,
-	EsriLightGray,
-	EsriNavigation,
-	EsriStreets,
-	GrabStandardDark,
-	GrabStandardLight,
-	HereConrast,
-	HereExplore,
-	HereExploreTruck,
-	HereHybrid,
-	HereImagery,
-	OpenDataStandardDark,
-	OpenDataStandardLight,
-	OpenDataVisualizationDark,
-	OpenDataVisualizationLight
-} from "@demo/assets/pngs";
-import {
-	AttributeEnum,
-	EsriMapEnum,
-	EsriMapStyleEnum,
-	GrabMapEnum,
-	GrabMapStyleEnum,
-	HereMapEnum,
-	HereMapStyleEnum,
-	MapProviderEnum,
-	TypeEnum
-} from "@demo/types";
-import { OpenDataMapEnum, OpenDataMapStyleEnum } from "@demo/types/Enums";
+import { EsriLightGray, HereExplore, HereHybrid, HereImagery } from "@demo/assets/pngs";
+import { MapColorSchemeEnum, MapStyleEnum } from "@demo/types/Enums";
 
 const getEnv = (key: string) => {
 	return import.meta.env[key];
 };
 
 const appConfig = {
-	POOLS: (getEnv("VITE_AWS_COGNITO_IDENTITY_POOL_IDS") || "")
+	API_KEYS: (getEnv("VITE_AWS_API_KEYS") || "")
+		.split(",")
+		.reduce((result: { [key: string]: string }, apiKey: string, idx: number) => {
+			const regions = (getEnv("VITE_AWS_API_KEY_REGIONS") || "").split(",");
+			const region = regions[idx].trim();
+			result[region] = apiKey.trim();
+
+			return result;
+		}, {}) as { [key: string]: string },
+	IDENTITY_POOL_IDS: (getEnv("VITE_AWS_COGNITO_IDENTITY_POOL_IDS") || "")
 		.split(",")
 		.reduce((result: { [key: string]: string }, value: string) => {
 			const poolId = value.trim();
@@ -66,12 +46,13 @@ const appConfig = {
 		APP_VERSION: getEnv("VITE_APP_VERSION"),
 		NL_BASE_URL: getEnv("VITE_NL_BASE_URL"),
 		NL_API_KEY: getEnv("VITE_NL_API_KEY"),
-		MIGRATE_FROM_GOOGLE_MAPS_PAGE: getEnv("VITE_MIGRATE_FROM_GOOGLE_MAPS_PAGE"),
-		MIGRATE_A_WEB_APP_PAGE: getEnv("VITE_MIGRATE_A_WEB_APP_PAGE"),
-		MIGRATE_AN_ANDROID_APP_PAGE: getEnv("VITE_MIGRATE_AN_ANDROID_APP_PAGE"),
-		MIGRATE_AN_IOS_APP_PAGE: getEnv("VITE_MIGRATE_AN_IOS_APP_PAGE"),
-		MIGRATE_A_WEB_SERVICE_PAGE: getEnv("VITE_MIGRATE_A_WEB_SERVICE_PAGE"),
-		PRICING_PAGE: getEnv("VITE_PRICING_PAGE")
+		MIGRATE_FROM_GOOGLE_MAPS_PAGE: !!parseInt(String(getEnv("VITE_MIGRATE_FROM_GOOGLE_MAPS_PAGE"))),
+		MIGRATE_A_WEB_APP_PAGE: !!parseInt(String(getEnv("VITE_MIGRATE_A_WEB_APP_PAGE"))),
+		MIGRATE_AN_ANDROID_APP_PAGE: !!parseInt(String(getEnv("VITE_MIGRATE_AN_ANDROID_APP_PAGE"))),
+		MIGRATE_AN_IOS_APP_PAGE: !!parseInt(String(getEnv("VITE_MIGRATE_AN_IOS_APP_PAGE"))),
+		MIGRATE_A_WEB_SERVICE_PAGE: !!parseInt(String(getEnv("VITE_MIGRATE_A_WEB_SERVICE_PAGE"))),
+		PRICING_PAGE: !!parseInt(String(getEnv("VITE_PRICING_PAGE"))),
+		SHOW_NEW_NAVIGATION: !!parseInt(String(getEnv("VITE_SHOW_NEW_NAVIGATION")))
 	},
 	PERSIST_STORAGE_KEYS: {
 		LOCAL_STORAGE_PREFIX: "amazon-location_",
@@ -105,19 +86,15 @@ const appConfig = {
 		PRICING: "/pricing"
 	},
 	GET_PARAMS: {
-		DATA_PROVIDER: "dp",
 		NL_TOGGLE: "nl"
 	},
 	MAP_RESOURCES: {
 		IMPERIAL_COUNTRIES: ["US", "GB", "LR", "MM"],
-		GRAB_SUPPORTED_AWS_REGIONS: ["ap-southeast-1"],
 		AMAZON_HQ: {
-			US: { longitude: -122.3408586, latitude: 47.6149975 },
-			SG: { longitude: 103.8485701, latitude: 1.2840829 }
+			US: { longitude: -122.3408586, latitude: 47.6149975 }
 		},
 		MAX_BOUNDS: {
 			DEFAULT: [-210, -80, 290, 85],
-			GRAB: [90.0, -21.943045533438166, 146.25, 31.952162238024968],
 			VANCOUVER: {
 				DESKTOP: [
 					[-123.185777, 49.258543], // southwest corner
@@ -133,192 +110,32 @@ const appConfig = {
 				]
 			}
 		},
-		MAP_ITEMS: {
-			[EsriMapEnum.ESRI_DARK_GRAY_CANVAS]: {
-				style: EsriMapStyleEnum[EsriMapEnum.ESRI_DARK_GRAY_CANVAS]
-			},
-			[EsriMapEnum.ESRI_IMAGERY]: {
-				style: EsriMapStyleEnum[EsriMapEnum.ESRI_IMAGERY]
-			},
-			[EsriMapEnum.ESRI_LIGHT]: {
-				style: EsriMapStyleEnum[EsriMapEnum.ESRI_LIGHT]
-			},
-			[EsriMapEnum.ESRI_LIGHT_GRAY_CANVAS]: {
-				style: EsriMapStyleEnum[EsriMapEnum.ESRI_LIGHT_GRAY_CANVAS]
-			},
-			[EsriMapEnum.ESRI_NAVIGATION]: {
-				style: EsriMapStyleEnum[EsriMapEnum.ESRI_NAVIGATION]
-			},
-			[EsriMapEnum.ESRI_STREET_MAP]: {
-				style: EsriMapStyleEnum[EsriMapEnum.ESRI_STREET_MAP]
-			},
-			[HereMapEnum.HERE_EXPLORE]: {
-				style: HereMapStyleEnum[HereMapEnum.HERE_EXPLORE]
-			},
-			[HereMapEnum.HERE_CONTRAST]: {
-				style: HereMapStyleEnum[HereMapEnum.HERE_CONTRAST]
-			},
-			[HereMapEnum.HERE_EXPLORE_TRUCK]: {
-				style: HereMapStyleEnum[HereMapEnum.HERE_EXPLORE_TRUCK]
-			},
-			[HereMapEnum.HERE_HYBRID]: {
-				style: HereMapStyleEnum[HereMapEnum.HERE_HYBRID]
-			},
-			[HereMapEnum.HERE_IMAGERY]: {
-				style: HereMapStyleEnum[HereMapEnum.HERE_IMAGERY]
-			},
-			[GrabMapEnum.GRAB_STANDARD_LIGHT]: {
-				style: GrabMapStyleEnum[GrabMapEnum.GRAB_STANDARD_LIGHT]
-			},
-			[GrabMapEnum.GRAB_STANDARD_DARK]: {
-				style: GrabMapStyleEnum[GrabMapEnum.GRAB_STANDARD_DARK]
-			},
-			[OpenDataMapEnum.OPEN_DATA_STANDARD_LIGHT]: {
-				style: OpenDataMapStyleEnum[OpenDataMapEnum.OPEN_DATA_STANDARD_LIGHT]
-			},
-			[OpenDataMapEnum.OPEN_DATA_STANDARD_DARK]: {
-				style: OpenDataMapStyleEnum[OpenDataMapEnum.OPEN_DATA_STANDARD_DARK]
-			},
-			[OpenDataMapEnum.OPEN_DATA_VISUALIZATION_LIGHT]: {
-				style: OpenDataMapStyleEnum[OpenDataMapEnum.OPEN_DATA_VISUALIZATION_LIGHT]
-			},
-			[OpenDataMapEnum.OPEN_DATA_VISUALIZATION_DARK]: {
-				style: OpenDataMapStyleEnum[OpenDataMapEnum.OPEN_DATA_VISUALIZATION_DARK]
-			}
-		},
-		MAP_STYLES: {
-			ESRI_STYLES: [
-				{
-					id: EsriMapEnum.ESRI_LIGHT,
-					image: EsriLight,
-					name: "map_buttons__light.text",
-					filters: { provider: MapProviderEnum.ESRI, attribute: [AttributeEnum.Light], type: [TypeEnum.Vector] }
-				},
-				{
-					id: EsriMapEnum.ESRI_STREET_MAP,
-					image: EsriStreets,
-					name: "map_buttons__streets.text",
-					filters: { provider: MapProviderEnum.ESRI, attribute: [AttributeEnum.Light], type: [TypeEnum.Vector] }
-				},
-				{
-					id: EsriMapEnum.ESRI_NAVIGATION,
-					image: EsriNavigation,
-					name: "map_buttons__navigation.text",
-					filters: { provider: MapProviderEnum.ESRI, attribute: [AttributeEnum.Light], type: [TypeEnum.Vector] }
-				},
-				{
-					id: EsriMapEnum.ESRI_DARK_GRAY_CANVAS,
-					image: EsriDarkGray,
-					name: "map_buttons__dark_gray.text",
-					filters: { provider: MapProviderEnum.ESRI, attribute: [AttributeEnum.Dark], type: [TypeEnum.Vector] }
-				},
-				{
-					id: EsriMapEnum.ESRI_LIGHT_GRAY_CANVAS,
-					image: EsriLightGray,
-					name: "map_buttons__light_gray.text",
-					filters: { provider: MapProviderEnum.ESRI, attribute: [AttributeEnum.Light], type: [TypeEnum.Vector] }
-				},
-				{
-					id: EsriMapEnum.ESRI_IMAGERY,
-					image: EsriImagery,
-					name: "map_buttons__imagery.text",
-					filters: { provider: MapProviderEnum.ESRI, attribute: [AttributeEnum.Satellite], type: [TypeEnum.Raster] }
-				}
-			],
-			HERE_STYLES: [
-				{
-					id: HereMapEnum.HERE_EXPLORE,
-					image: HereExplore,
-					name: "map_buttons__explore.text",
-					filters: { provider: MapProviderEnum.HERE, attribute: [AttributeEnum.Light], type: [TypeEnum.Vector] }
-				},
-				{
-					id: HereMapEnum.HERE_CONTRAST,
-					image: HereConrast,
-					name: "map_buttons__contrast.text",
-					filters: {
-						provider: MapProviderEnum.HERE,
-						attribute: [AttributeEnum.Dark, AttributeEnum.ThreeD],
-						type: [TypeEnum.Vector]
-					}
-				},
-				{
-					id: HereMapEnum.HERE_EXPLORE_TRUCK,
-					image: HereExploreTruck,
-					name: "map_buttons__explore_truck.text",
-					filters: {
-						provider: MapProviderEnum.HERE,
-						attribute: [AttributeEnum.Truck, AttributeEnum.Light],
-						type: [TypeEnum.Vector]
-					}
-				},
-				{
-					id: HereMapEnum.HERE_HYBRID,
-					image: HereHybrid,
-					name: "map_buttons__hybrid.text",
-					filters: {
-						provider: MapProviderEnum.HERE,
-						attribute: [AttributeEnum.Satellite],
-						type: [TypeEnum.Raster, TypeEnum.Vector]
-					}
-				},
-				{
-					id: HereMapEnum.HERE_IMAGERY,
-					image: HereImagery,
-					name: "map_buttons__imagery.text",
-					filters: { provider: MapProviderEnum.HERE, attribute: [AttributeEnum.Satellite], type: [TypeEnum.Raster] }
-				}
-			],
-			GRAB_STYLES: [
-				{
-					id: GrabMapEnum.GRAB_STANDARD_LIGHT,
-					image: GrabStandardLight,
-					name: "map_buttons__light.text",
-					filters: { provider: MapProviderEnum.GRAB, attribute: [AttributeEnum.Light], type: [TypeEnum.Vector] }
-				},
-				{
-					id: GrabMapEnum.GRAB_STANDARD_DARK,
-					image: GrabStandardDark,
-					name: "map_buttons__dark.text",
-					filters: { provider: MapProviderEnum.GRAB, attribute: [AttributeEnum.Dark], type: [TypeEnum.Vector] }
-				}
-			],
-			OPEN_DATA_STYLES: [
-				{
-					id: OpenDataMapEnum.OPEN_DATA_STANDARD_LIGHT,
-					image: OpenDataStandardLight,
-					name: "map_buttons__standard_light.text",
-					filters: { provider: MapProviderEnum.OPEN_DATA, attribute: [AttributeEnum.Light], type: [TypeEnum.Vector] }
-				},
-				{
-					id: OpenDataMapEnum.OPEN_DATA_STANDARD_DARK,
-					image: OpenDataStandardDark,
-					name: "map_buttons__standard_dark.text",
-					filters: { provider: MapProviderEnum.OPEN_DATA, attribute: [AttributeEnum.Dark], type: [TypeEnum.Vector] }
-				},
-				{
-					id: OpenDataMapEnum.OPEN_DATA_VISUALIZATION_LIGHT,
-					image: OpenDataVisualizationLight,
-					name: "map_buttons__visualization_light.text",
-					filters: { provider: MapProviderEnum.OPEN_DATA, attribute: [AttributeEnum.Light], type: [TypeEnum.Vector] }
-				},
-				{
-					id: OpenDataMapEnum.OPEN_DATA_VISUALIZATION_DARK,
-					image: OpenDataVisualizationDark,
-					name: "map_buttons__visualization_dark.text",
-					filters: { provider: MapProviderEnum.OPEN_DATA, attribute: [AttributeEnum.Dark], type: [TypeEnum.Vector] }
-				}
-			]
-		},
-		PLACE_INDEXES: {
-			ESRI: "location.aws.com.demo.places.Esri.PlaceIndex",
-			HERE: "location.aws.com.demo.places.HERE.PlaceIndex",
-			GRAB: "location.aws.com.demo.places.Grab.PlaceIndex"
-		},
-		ROUTE_CALCULATORS: {
-			ESRI: "location.aws.com.demo.routes.Esri.RouteCalculator",
-			HERE: "location.aws.com.demo.routes.HERE.RouteCalculator",
-			GRAB: "location.aws.com.demo.routes.Grab.RouteCalculator"
+		MAP_STYLES: [
+			{ id: MapStyleEnum.STANDARD.toLowerCase(), name: MapStyleEnum.STANDARD, image: HereExplore },
+			{ id: MapStyleEnum.MONOCHROME.toLowerCase(), name: MapStyleEnum.MONOCHROME, image: EsriLightGray },
+			{ id: MapStyleEnum.HYBRID.toLowerCase(), name: MapStyleEnum.HYBRID, image: HereHybrid },
+			{ id: MapStyleEnum.SATELLITE.toLowerCase(), name: MapStyleEnum.SATELLITE, image: HereImagery }
+		],
+		MAP_COLOR_SCHEMES: [
+			{ id: MapColorSchemeEnum.LIGHT.toLowerCase(), name: MapColorSchemeEnum.LIGHT },
+			{ id: MapColorSchemeEnum.DARK.toLowerCase(), name: MapColorSchemeEnum.DARK }
+		],
+		MAP_POLITICAL_VIEWS: {
+			ARG: "Argentina's view on the Southern Patagonian Ice Field and Tierra Del Fuego, including the Falkland Islands, South Georgia, and South Sandwich Islands",
+			EGY: "Egypt's view on Bir Tawil",
+			IND: "India's view on Gilgit-Baltistan",
+			KEN: "Kenya's view on the Ilemi Triangle",
+			MAR: "Morocco's view on Western Sahara",
+			PAK: "Pakistan's view on Jammu and Kashmir and the Junagadh Area",
+			RUS: "Russia's view on Crimea",
+			SDN: "Sudan's view on the Halaib Triangle",
+			SRB: "Serbia's view on Kosovo, Vukovar, and Sarengrad Islands",
+			SUR: "Suriname's view on the Courantyne Headwaters and Lawa Headwaters",
+			SYR: "Syria's view on the Golan Heights",
+			TUR: "Turkey's view on Cyprus and Northern Cyprus",
+			TZA: "Tanzania's view on Lake Malawi",
+			URY: "Uruguay's view on Rincon de Artigas",
+			VNM: "Vietnam's view on the Paracel Islands and Spratly Islands"
 		},
 		GEOFENCE_COLLECTION: "location.aws.com.demo.geofences.GeofenceCollection",
 		DEVICE_ID_WEB: "web_browser_device",
@@ -436,7 +253,22 @@ const appConfig = {
 			"https://docs.aws.amazon.com/location/latest/APIReference/API_GetDevicePositionHistory.html",
 		BATCH_DELETE_DEVICE_POSITION_HISTORY_URL:
 			"https://docs.aws.amazon.com/location/latest/APIReference/API_BatchDeleteDevicePositionHistory.html",
-		AWS_LOCATION: "https://aws.amazon.com/location/"
+		AWS_LOCATION: "https://aws.amazon.com/location/",
+		AWS_LOCATION_MAPS_URL: "https://aws.amazon.com/location/maps/",
+		AWS_LOCATION_PLACES_URL: "https://aws.amazon.com/location/places/",
+		AWS_LOCATION_ROUTES_URL: "https://aws.amazon.com/location/routes/",
+		AWS_LOCATION_GENFENCE_AND_TRACKERS_URL: "https://aws.amazon.com/location/geofences-and-trackers/",
+		AWS_LOCATION_INDUSTRY_URL: "https://aws.amazon.com/location/industry/",
+		AWS_LOCATION_TRANSPORTATION_AND_LOGISTICS_URL: "https://aws.amazon.com/location/transportation-and-logistics/",
+		AWS_LOCATION_FINANCIAL_SERVICE_URL: "https://aws.amazon.com/location/financial-service/",
+		AWS_LOCATION_HEALTHCARE_URL: "https://aws.amazon.com/location/healthcare/",
+		AWS_LOCATION_RETAILS_URL: "https://aws.amazon.com/location/retails/",
+		AWS_LOCATION_TRAVEL_AND_HOSPITALITY_URL: "https://aws.amazon.com/location/travel-and-hospitality/",
+		AWS_LOCATION_REAL_ESTATE_URL: "https://aws.amazon.com/location/real-estate/",
+		AWS_LOCATION_RESOURCES_URL: "https://aws.amazon.com/location/resources/",
+		AWS_LOCATION_CUSTOMERS_URL: "https://aws.amazon.com/location/resources/customers/",
+		AWS_LOCATION_PRODUCT_RESOURCES_URL: "https://aws.amazon.com/location/resources/product-resources/",
+		AWS_LOCATION_DEVELOPER_RESOURCES_URL: "https://aws.amazon.com/location/resources/developer-resources/"
 	}
 };
 

@@ -114,7 +114,7 @@
     "text": "نظرة عامة"
   },
   "header__product": {
-    "text": "المنتج"
+    "text": "منتجات"
   },
   "header__try_it": {
     "text": "جربها"
@@ -129,7 +129,7 @@
     "text": "الشروع في العمل"
   },
   "footer__faq": {
-    "text": "التعليمات"
+    "text": "الأسئلة الشائعة"
   },
   "footer__pricing": {
     "text": "التسعير"
@@ -3315,13 +3315,13 @@
     "text": "احسب المسار باستخدام «السيارة» كوضع سفر"
   },
   "tooltip__calculate_route_walk": {
-    "text": "احسب المسار باستخدام «المشي» كوضع سفر"
+    "text": "احسب المسار باستخدام «المشاة» كوضع سفر"
   },
   "tooltip__calculate_route_bicycle": {
     "text": "احسب المسار باستخدام «الدراجة» كوضع سفر"
   },
   "tooltip__calculate_route_motorcycle": {
-    "text": "احسب المسار باستخدام «دراجة نارية» كوضع سفر"
+    "text": "احسب المسار باستخدام «Scooter» كوضع سفر"
   },
   "tooltip__calculate_route_truck": {
     "text": "احسب المسار باستخدام «الشاحنة» كوضع سفر"
@@ -3697,5 +3697,113 @@
   },
   "error_handler__failed_refresh_tokens": {
     "text": "فشل تحديث الرموز"
+  },
+  "geofences_and_trackers": {
+    "text": "المواقع الجغرافية وأجهزة التتبع"
+  },
+  "industry": {
+    "text": "الصناعة"
+  },
+  "transportation_and_logistics": {
+    "text": "النقل والخدمات اللوجستية"
+  },
+  "financial_service": {
+    "text": "خدمة مالية"
+  },
+  "healthcare": {
+    "text": "الرعاية الصحية"
+  },
+  "retails": {
+    "text": "البيع بالتجزئة"
+  },
+  "travel_and_hospitality": {
+    "text": "السفر والضيافة"
+  },
+  "real_estate": {
+    "text": "العقارات"
+  },
+  "resources": {
+    "text": "الموارد"
+  },
+  "customers": {
+    "text": "العملاء"
+  },
+  "product_resources": {
+    "text": "موارد المنتج"
+  },
+  "developer_resources": {
+    "text": "موارد المطور"
+  },
+  "header__product_desc": {
+    "text": "إضافة بيانات الموقع إلى التطبيقات بأمان وسهولة"
+  },
+  "new_overview_desc": {
+    "text": "إضافة بيانات الموقع إلى التطبيقات بأمان وسهولة"
+  },
+  "new_products_desc": {
+    "text": "عرض الإمكانات التفصيلية لخدمة موقع Amazon"
+  },
+  "new_maps_desc": {
+    "text": "تصور معلومات الموقع"
+  },
+  "new_places_desc": {
+    "text": "إجراء عمليات بحث في نقاط الاهتمام والتحويل بين العناوين والإحداثيات الجغرافية"
+  },
+  "new_routes_desc": {
+    "text": "اطلب أوقات السفر والمسافات والاتجاهات بين النقاط"
+  },
+  "new_geofences_trackers_desc": {
+    "text": "تتبع مواقع الأجهزة واكتشف متى تدخل الأجهزة الحدود الجغرافية أو تخرج منها"
+  },
+  "new_getting_started_desc": {
+    "text": "تعرف على كيفية بدء استخدام خدمة Amazon Location"
+  },
+  "new_pricing_desc": {
+    "text": "تقدير تكاليف استخدام الخدمة (اتصل بـ AWS للحصول على خصومات كبيرة)"
+  },
+  "new_faqs_desc": {
+    "text": "اعثر على إجابات للأسئلة الشائعة"
+  },
+  "new_industry_desc": {
+    "text": "تعرف على كيفية تطبيق بيانات وخدمات الموقع على قطاعات الصناعة المختلفة"
+  },
+  "new_transportation_logistics_desc": {
+    "text": "خدمات التوصيل والتوزيع والركوب"
+  },
+  "new_financial_service_desc": {
+    "text": "الخدمات المصرفية وإدارة الأموال والتأمين"
+  },
+  "new_healthcare_desc": {
+    "text": "مقدمو الخدمات الطبية والمرافق الصحية والتأمين"
+  },
+  "new_retail_desc": {
+    "text": "شراء وبيع سلع التجزئة مثل البقالة والملابس"
+  },
+  "new_travel_hospitality_desc": {
+    "text": "شركات الطيران والفنادق والمطاعم"
+  },
+  "new_real_estate_desc": {
+    "text": "إدارة الممتلكات وشراء وبيع المساكن"
+  },
+  "new_resources_desc": {
+    "text": "ابحث عن مواد لمواصلة التعرف على خدمة Amazon Location"
+  },
+  "new_customers_desc": {
+    "text": "حلول العملاء التي تم إنشاؤها باستخدام خدمات الموقع"
+  },
+  "new_product_resources_desc": {
+    "text": "المدونات والتحديثات"
+  },
+  "new_developer_resources_desc": {
+    "text": "أدلة ومنتديات"
+  },
+  "error_handler__failed_create_places_client": {
+    "text": "فشل إنشاء عميل الأماكن"
+  },
+  "error_handler__failed_create_routes_client": {
+    "text": "فشل إنشاء عميل المسارات"
+  },
+  "multiple_region_disclaimer": {
+    "text": "إخلاء المسؤولية: عندما يكون حساب AWS الخاص بالمستخدم متصلاً، فإن تغيير المنطقة سيؤثر فقط على الخرائط والأماكن والمسارات."
   }
 }

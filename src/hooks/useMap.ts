@@ -5,23 +5,11 @@ import { useEffect, useMemo } from "react";
 
 import { appConfig } from "@demo/core/constants";
 import { useMapStore } from "@demo/stores";
-import {
-	CurrentLocationDataType,
-	EsriMapEnum,
-	GrabMapEnum,
-	HereMapEnum,
-	MapProviderEnum,
-	MapUnitEnum,
-	ViewPointType
-} from "@demo/types";
-
-import { OpenDataMapEnum } from "@demo/types/Enums";
+import { CurrentLocationDataType, MapColorSchemeEnum, MapStyleEnum, MapUnitEnum, ViewPointType } from "@demo/types";
 import { getCountryCode } from "@demo/utils/countryUtil";
 
 const {
-	MAP_RESOURCES: { IMPERIAL_COUNTRIES },
-	ROUTES: { DEMO },
-	GET_PARAMS: { DATA_PROVIDER }
+	MAP_RESOURCES: { IMPERIAL_COUNTRIES }
 } = appConfig;
 const { IMPERIAL, METRIC } = MapUnitEnum;
 
@@ -55,19 +43,14 @@ const useMap = () => {
 			setMapUnit: (mapUnit: MapUnitEnum) => {
 				setState({ mapUnit });
 			},
-			setMapProvider: (mapProvider: MapProviderEnum) => {
-				if (DEMO === location.pathname) {
-					const newurl = `${location.protocol}//${location.host}${location.pathname}?${DATA_PROVIDER}=${mapProvider}`;
-					history.pushState({ path: newurl }, "", newurl);
-				}
-
-				setState({ mapProvider });
-			},
-			setMapStyle: (mapStyle: EsriMapEnum | HereMapEnum | GrabMapEnum | OpenDataMapEnum) => {
+			setMapStyle: (mapStyle: MapStyleEnum) => {
 				setState({ mapStyle });
 			},
-			setIsCurrentLocationDisabled: (isCurrentLocationDisabled: boolean) => {
-				setState({ isCurrentLocationDisabled });
+			setMapColorScheme: (mapColorScheme: MapColorSchemeEnum) => {
+				setState({ mapColorScheme });
+			},
+			setMapPoliticalView: (mapPoliticalView: string) => {
+				setState({ mapPoliticalView });
 			},
 			resetStore() {
 				setState({

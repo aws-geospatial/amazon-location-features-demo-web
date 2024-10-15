@@ -114,7 +114,7 @@
     "text": "סקירה כללית"
   },
   "header__product": {
-    "text": "מוצר"
+    "text": "מוצרים"
   },
   "header__try_it": {
     "text": "נסה את זה"
@@ -3315,13 +3315,13 @@
     "text": "חישוב מסלול עם 'רכב' כמצב נסיעה"
   },
   "tooltip__calculate_route_walk": {
-    "text": "חישוב מסלול עם 'הליכה' כמצב נסיעה"
+    "text": "חישוב מסלול עם 'הולך רגל' כמצב נסיעה"
   },
   "tooltip__calculate_route_bicycle": {
     "text": "חישוב מסלול עם 'אופניים' כמצב נסיעה"
   },
   "tooltip__calculate_route_motorcycle": {
-    "text": "חישוב מסלול עם 'אופנוע' כמצב נסיעה"
+    "text": "חשב מסלול עם 'קטנוע' כמצב נסיעה"
   },
   "tooltip__calculate_route_truck": {
     "text": "חישוב מסלול עם 'משאית' כמצב נסיעה"
@@ -3697,5 +3697,113 @@
   },
   "error_handler__failed_refresh_tokens": {
     "text": "רענון האסימונים נכשל"
+  },
+  "geofences_and_trackers": {
+    "text": "גיאופנסים ועוקבים"
+  },
+  "industry": {
+    "text": "תעשייה"
+  },
+  "transportation_and_logistics": {
+    "text": "תחבורה ולוגיסטיקה"
+  },
+  "financial_service": {
+    "text": "שירות פיננסי"
+  },
+  "healthcare": {
+    "text": "שירותי בריאות"
+  },
+  "retails": {
+    "text": "קמעונאות"
+  },
+  "travel_and_hospitality": {
+    "text": "נסיעות ואירוח"
+  },
+  "real_estate": {
+    "text": "נדל\"ן"
+  },
+  "resources": {
+    "text": "משאבים"
+  },
+  "customers": {
+    "text": "לקוחות"
+  },
+  "product_resources": {
+    "text": "משאבי מוצר"
+  },
+  "developer_resources": {
+    "text": "משאבי מפתחים"
+  },
+  "header__product_desc": {
+    "text": "הוספת נתוני מיקום ליישומים בצורה מאובטחת ובקלות"
+  },
+  "new_overview_desc": {
+    "text": "הוספת נתוני מיקום ליישומים בצורה מאובטחת ובקלות"
+  },
+  "new_products_desc": {
+    "text": "צפה ביכולות מפורטות של שירות המיקום של אמזון"
+  },
+  "new_maps_desc": {
+    "text": "דמיינו מידע על מיקום"
+  },
+  "new_places_desc": {
+    "text": "בצע חיפושים בנקודות עניין, המר בין כתובות וקואורדינטות גיאוגרפיות"
+  },
+  "new_routes_desc": {
+    "text": "בקש זמני נסיעה, מרחקים וכיוונים בין נקודות"
+  },
+  "new_geofences_trackers_desc": {
+    "text": "עקוב אחר מיקומי מכשירים, גלה מתי התקנים נכנסים לגבולות גיאוגרפיים או יוצאים מהם"
+  },
+  "new_getting_started_desc": {
+    "text": "למד כיצד להתחיל להשתמש בשירות המיקום של אמזון"
+  },
+  "new_pricing_desc": {
+    "text": "הערכת עלויות השימוש בשירות (פנה ל- AWS להנחות נפח)"
+  },
+  "new_faqs_desc": {
+    "text": "מצא תשובות לשאלות נפוצות"
+  },
+  "new_industry_desc": {
+    "text": "למד כיצד נתוני מיקום ושירותים חלים על פלחי תעשייה שונים"
+  },
+  "new_transportation_logistics_desc": {
+    "text": "שירותי משלוח, הפצה ונסיעה"
+  },
+  "new_financial_service_desc": {
+    "text": "שירותי בנקאות, ניהול כספים וביטוח"
+  },
+  "new_healthcare_desc": {
+    "text": "ספקים רפואיים, מתקני בריאות וביטוח"
+  },
+  "new_retail_desc": {
+    "text": "קנייה ומכירה של מוצרים קמעונאיים כגון מצרכים ובגדים"
+  },
+  "new_travel_hospitality_desc": {
+    "text": "חברות תעופה, מלונות ומסעדות"
+  },
+  "new_real_estate_desc": {
+    "text": "ניהול נכסים, קנייה ומכירה של דירות"
+  },
+  "new_resources_desc": {
+    "text": "מצא חומרים כדי להמשיך ללמוד על שירות המיקום של אמזון"
+  },
+  "new_customers_desc": {
+    "text": "פתרונות לקוחות שנבנו באמצעות שירותי מיקום"
+  },
+  "new_product_resources_desc": {
+    "text": "בלוגים ועדכונים"
+  },
+  "new_developer_resources_desc": {
+    "text": "מדריכים ופורומים"
+  },
+  "error_handler__failed_create_places_client": {
+    "text": "יצירת לקוח מקומות נכשלה"
+  },
+  "error_handler__failed_create_routes_client": {
+    "text": "יצירת לקוח נתיבים נכשלה"
+  },
+  "multiple_region_disclaimer": {
+    "text": "כתב ויתור: כאשר חשבון AWS של המשתמש מחובר, שינוי האזור ישפיע רק על מפות, מקומות ונתיבים."
   }
 }

@@ -19,69 +19,58 @@ interface Props extends SuggestionType {
 }
 
 const SuggestionMarker: FC<Props> = ({
-	Id,
-	PlaceId,
-	Text,
-	Place,
+	id,
+	placeId,
+	label,
+	position,
 	active,
 	onClosePopUp,
 	searchValue,
-	setSearchValue,
-	...rest
+	setSearchValue
 }) => {
 	const [info, setInfo] = useState<SuggestionType | undefined>(undefined);
 	const { getPlaceData, setSelectedMarker, suggestions, hoveredMarker, setHoveredMarker, clearPoiList } = usePlace();
 
 	const getPlaceInfo = useCallback(
 		async (placeId: string) => {
-			const pd = await getPlaceData(placeId);
-			setInfo({ Id, Place: pd?.Place });
+			const place = await getPlaceData(placeId);
+			setInfo({ id, placeId, label, position, place });
 		},
-		[Id, getPlaceData]
+		[getPlaceData, id, label, position]
 	);
 
-	const setPlaceInfo = useCallback(() => setInfo({ Id, Place }), [Id, Place]);
-
 	useEffect(() => {
-		if (PlaceId) {
-			getPlaceInfo(PlaceId);
-		} else {
-			setPlaceInfo();
+		if (placeId && !info) {
+			getPlaceInfo(placeId);
 		}
-	}, [PlaceId, getPlaceInfo, setPlaceInfo]);
+	}, [placeId, info, getPlaceInfo]);
 
 	useEffect(() => {
 		if (info && active && !!searchValue) {
-			setSearchValue(info.Place?.Label || "");
+			setSearchValue(info.place?.Address?.Label as string);
 		}
 	}, [info, active, searchValue, setSearchValue]);
 
 	const select = useCallback(
-		async (str?: string) => {
-			if (str) {
-				const selectedMarker = suggestions?.find(
-					(i: SuggestionType) => i.PlaceId === str || (i.Place?.Label === str && i.Id === Id)
-				);
+		async (id?: string) => {
+			if (id) {
+				const selectedMarker = suggestions?.find(s => s.id === id);
 				await setSelectedMarker(selectedMarker);
 			} else {
 				await setSelectedMarker(undefined);
 			}
 		},
-		[suggestions, setSelectedMarker, Id]
+		[suggestions, setSelectedMarker]
 	);
 
 	const markerDescription = useMemo(() => {
-		const string = Text || Place?.Label || "";
+		const string = info?.place?.Address?.Label || label || "";
 		return string.split(",")[0];
-	}, [Place?.Label, Text]);
+	}, [info?.place?.Address?.Label, label]);
 
 	const isHovered = useMemo(
-		() =>
-			hoveredMarker &&
-			(hoveredMarker.PlaceId
-				? hoveredMarker.PlaceId === PlaceId
-				: hoveredMarker.Place?.Label === Place?.Label && hoveredMarker.Id === Id),
-		[hoveredMarker, PlaceId, Place?.Label, Id]
+		() => hoveredMarker && (hoveredMarker.placeId ? hoveredMarker.placeId === placeId : hoveredMarker.id === id),
+		[hoveredMarker, id, placeId]
 	);
 
 	const setHover = useCallback(
@@ -91,7 +80,11 @@ const SuggestionMarker: FC<Props> = ({
 		[setHoveredMarker]
 	);
 
-	if (info && info.Place?.Geometry?.Point) {
+	if (info && info.place?.Position) {
+		const {
+			place: { Position }
+		} = info;
+
 		return (
 			<Marker
 				style={{
@@ -103,19 +96,15 @@ const SuggestionMarker: FC<Props> = ({
 					textShadow: "-1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff"
 				}}
 				clickTolerance={22}
-				longitude={info.Place?.Geometry.Point[0]}
-				latitude={info.Place?.Geometry.Point[1]}
+				longitude={Position[0]}
+				latitude={Position[1]}
 				onClick={async e => {
 					e.originalEvent.preventDefault();
 					e.originalEvent.stopPropagation();
-					await select((PlaceId || Place?.Label) as string);
+					await select(id);
 				}}
 			>
-				{active || isHovered ? (
-					<IconSelected />
-				) : (
-					<IconSuggestion onMouseOver={() => setHover({ Id, PlaceId, Text, ...rest })} />
-				)}
+				{active || isHovered ? <IconSelected /> : <IconSuggestion onMouseOver={() => setHover(info)} />}
 				{active ? (
 					<Popup
 						active={active}

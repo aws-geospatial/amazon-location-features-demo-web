@@ -34,7 +34,7 @@ const AuthTrackerSimulation = lazy(() =>
 
 export const trackerTypes = [
 	{ type: TrackerType.CAR, icon: <IconCar width="1.54rem" height="1.54rem" /> },
-	{ type: TrackerType.WALK, icon: <IconWalking width="1.54rem" height="1.54rem" /> },
+	{ type: TrackerType.PEDESTRIAN, icon: <IconWalking width="1.54rem" height="1.54rem" /> },
 	{ type: TrackerType.MOBILE, icon: <IconMobileSolid width="1.54rem" height="1.54rem" /> },
 	{ type: TrackerType.DRONE, icon: <IconDroneSolid width="1.54rem" height="1.54rem" /> }
 ];
@@ -71,7 +71,10 @@ const AuthTrackerBox: FC<AuthTrackerBoxProps> = ({ mapRef, setShowAuthTrackerBox
 	const fetchGeofencesList = useCallback(async () => getGeofencesList(), [getGeofencesList]);
 
 	const _trackerTypes = useMemo(
-		() => trackerTypes.filter(item => (isDesktop ? item.type !== TrackerType.MOBILE : item.type !== TrackerType.WALK)),
+		() =>
+			trackerTypes.filter(item =>
+				isDesktop ? item.type !== TrackerType.MOBILE : item.type !== TrackerType.PEDESTRIAN
+			),
 		[isDesktop]
 	);
 
@@ -317,7 +320,7 @@ const AuthTrackerBox: FC<AuthTrackerBoxProps> = ({ mapRef, setShowAuthTrackerBox
 									data-tooltip-content={
 										type === TrackerType.CAR
 											? t("tooltip__simulate_tracking_car.text")
-											: type === TrackerType.WALK
+											: type === TrackerType.PEDESTRIAN
 											? t("tooltip__simulate_tracking_walk.text")
 											: t("tooltip__simulate_tracking_drone.text")
 									}

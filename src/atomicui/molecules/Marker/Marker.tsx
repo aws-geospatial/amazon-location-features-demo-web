@@ -25,8 +25,8 @@ const Marker: FC<Props> = ({ latitude, longitude, searchValue, setSearchValue })
 	if (marker && selectedMarker) setMarker(undefined);
 
 	const loadPlaceInfo = useCallback(async () => {
-		const pd = await getPlaceDataByCoordinates([longitude, latitude]);
-		setInfo({ ...pd?.Results![0], Id: uuid.randomUUID() });
+		const place = await getPlaceDataByCoordinates([longitude, latitude]);
+		setInfo({ ...place?.ResultItems![0], id: uuid.randomUUID() });
 	}, [getPlaceDataByCoordinates, latitude, longitude]);
 
 	useEffect(() => {

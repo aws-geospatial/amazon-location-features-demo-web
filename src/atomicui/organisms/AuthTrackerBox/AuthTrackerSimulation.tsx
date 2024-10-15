@@ -3,18 +3,16 @@
 
 import { FC, MutableRefObject, memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { CalculateRouteRequest } from "@aws-sdk/client-location";
+import { CalculateRoutesCommandInput } from "@aws-sdk/client-georoutes";
 import { useGeofence, useMap, usePersistedData, useRoute, useTracker } from "@demo/hooks";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
-import { DistanceUnitEnum, MapUnitEnum, RouteDataType, TrackerType, TravelMode } from "@demo/types";
+import { RouteDataType, TrackerType, TravelMode } from "@demo/types";
 import { TriggeredByEnum } from "@demo/types/Enums";
 import * as turf from "@turf/turf";
+import { bbox, lineString } from "@turf/turf";
 import { Layer, LayerProps, MapRef, Marker, Source } from "react-map-gl/maplibre";
 
 import { trackerTypes } from "./AuthTrackerBox";
-
-const { IMPERIAL } = MapUnitEnum;
-const { MILES, KILOMETERS } = DistanceUnitEnum;
 
 interface AuthTrackerSimulationProps {
 	mapRef: MutableRefObject<MapRef | null>;
@@ -45,39 +43,35 @@ const AuthTrackerSimulation: FC<AuthTrackerSimulationProps> = ({
 }) => {
 	const [idx, setIdx] = useState(0);
 	const timeoutId = useRef<NodeJS.Timeout | null>(null);
-	const { mapUnit: currentMapUnit } = useMap();
+	const { mapUnit } = useMap();
 	const { getRoute } = useRoute();
 	const { evaluateGeofence } = useGeofence();
 	const { trackerPoints } = useTracker();
 	const { defaultRouteOptions } = usePersistedData();
 	const { isDesktop, isTablet } = useDeviceMediaQuery();
 
-	/* Route calculation for travel mode car or walk */
+	/* Route calculation for travel mode car or pedestrian */
 	const calculateRoute = useCallback(async () => {
 		if (isSaved && trackerPoints && trackerPoints.length >= 2) {
-			const params: Omit<CalculateRouteRequest, "CalculatorName" | "DepartNow"> = {
-				IncludeLegGeometry: true,
-				DistanceUnit: currentMapUnit === IMPERIAL ? MILES : KILOMETERS,
-				DeparturePosition: trackerPoints[0],
-				DestinationPosition: trackerPoints[trackerPoints.length - 1],
-				TravelMode: selectedTrackerType === TrackerType.WALK ? TravelMode.WALKING : TravelMode.CAR,
-				CarModeOptions:
-					selectedTrackerType === TrackerType.CAR
-						? {
-								AvoidFerries: defaultRouteOptions.avoidFerries,
-								AvoidTolls: defaultRouteOptions.avoidTolls
-						  }
-						: undefined,
-				WaypointPositions: trackerPoints.length > 2 ? trackerPoints.slice(1, trackerPoints.length - 1) : undefined
+			const params: CalculateRoutesCommandInput = {
+				InstructionsMeasurementSystem: mapUnit,
+				Origin: trackerPoints[0],
+				Destination: trackerPoints[trackerPoints.length - 1],
+				TravelMode: selectedTrackerType === TrackerType.PEDESTRIAN ? TravelMode.PEDESTRIAN : TravelMode.CAR,
+				Avoid: {
+					TollRoads: defaultRouteOptions.avoidTolls,
+					Ferries: defaultRouteOptions.avoidFerries
+				},
+				Waypoints: trackerPoints.length > 2 ? trackerPoints.map(tp => ({ Position: tp })) : undefined
 			};
-			const rd = await getRoute(params as CalculateRouteRequest, TriggeredByEnum.TRACKER_SIMULATION_MODULE);
+			const rd = await getRoute(params, TriggeredByEnum.TRACKER_SIMULATION_MODULE);
 			rd &&
 				setRouteData({
 					...rd,
-					travelMode: selectedTrackerType === TrackerType.WALK ? TrackerType.WALK : TrackerType.CAR
+					travelMode: selectedTrackerType === TrackerType.PEDESTRIAN ? TrackerType.PEDESTRIAN : TrackerType.CAR
 				});
 		}
-	}, [isSaved, trackerPoints, currentMapUnit, selectedTrackerType, defaultRouteOptions, getRoute, setRouteData]);
+	}, [isSaved, trackerPoints, mapUnit, selectedTrackerType, defaultRouteOptions, getRoute, setRouteData]);
 
 	/* Route calculation for travel mode drone */
 	const calculatePath = useCallback(() => {
@@ -118,18 +112,23 @@ const AuthTrackerSimulation: FC<AuthTrackerSimulationProps> = ({
 			}
 
 			const lineString = turf.lineString(arc);
-			const bbox = turf.bbox(lineString);
 			setRouteData({
 				travelMode: TrackerType.DRONE,
-				Summary: {
-					RouteBBox: bbox,
-					DataSource: "",
-					Distance: lineDistance,
-					DistanceUnit: "Kilometers",
-					DurationSeconds: 0
-				},
-				Legs: []
-			} as RouteDataType);
+				Routes: [
+					{
+						Legs: [
+							{
+								Geometry: {
+									LineString: lineString.geometry.coordinates
+								}
+							}
+						],
+						Summary: {
+							Distance: lineDistance
+						}
+					}
+				]
+			} as unknown as RouteDataType);
 			setPoints(arc);
 		}
 	}, [isSaved, trackerPoints, setRouteData, setPoints]);
@@ -148,7 +147,9 @@ const AuthTrackerSimulation: FC<AuthTrackerSimulationProps> = ({
 	useEffect(() => {
 		if (routeData && !points) {
 			const pointsArr: number[][] = [];
-			routeData.Legs?.forEach(({ Geometry }) => Geometry?.LineString?.forEach(coords => pointsArr.push(coords)));
+			routeData.Routes![0].Legs?.forEach(({ Geometry }) =>
+				Geometry?.LineString?.forEach(coords => pointsArr.push(coords))
+			);
 			pointsArr.length && setPoints(pointsArr);
 		}
 	}, [routeData, points, setPoints]);
@@ -191,58 +192,41 @@ const AuthTrackerSimulation: FC<AuthTrackerSimulationProps> = ({
 
 	useEffect(() => {
 		if (routeData) {
-			const boundingBox = routeData.Summary?.RouteBBox;
+			const line = lineString(routeData.Routes![0].Legs![0].Geometry!.LineString!);
+			const bounds = bbox(line);
 
 			isDesktop
-				? mapRef.current?.fitBounds(
-						[
-							[boundingBox![0], boundingBox![1]],
-							[boundingBox![2], boundingBox![3]]
-						],
-						{
-							padding: {
-								top: 200,
-								bottom: 200,
-								left: 450,
-								right: 200
-							},
-							speed: 5,
-							linear: false
-						}
-				  )
+				? mapRef.current?.fitBounds(bounds as [number, number, number, number], {
+						padding: {
+							top: 200,
+							bottom: 200,
+							left: 450,
+							right: 200
+						},
+						speed: 5,
+						linear: false
+				  })
 				: isTablet
-				? mapRef.current?.fitBounds(
-						[
-							[boundingBox![0], boundingBox![1]],
-							[boundingBox![2], boundingBox![3]]
-						],
-						{
-							padding: {
-								top: 100,
-								bottom: 100,
-								left: 390,
-								right: 50
-							},
-							speed: 5,
-							linear: false
-						}
-				  )
-				: mapRef.current?.fitBounds(
-						[
-							[boundingBox![0], boundingBox![1]],
-							[boundingBox![2], boundingBox![3]]
-						],
-						{
-							padding: {
-								top: 100,
-								bottom: 420,
-								left: 60,
-								right: 70
-							},
-							speed: 5,
-							linear: false
-						}
-				  );
+				? mapRef.current?.fitBounds(bounds as [number, number, number, number], {
+						padding: {
+							top: 100,
+							bottom: 100,
+							left: 390,
+							right: 50
+						},
+						speed: 5,
+						linear: false
+				  })
+				: mapRef.current?.fitBounds(bounds as [number, number, number, number], {
+						padding: {
+							top: 100,
+							bottom: 420,
+							left: 60,
+							right: 70
+						},
+						speed: 5,
+						linear: false
+				  });
 		}
 	}, [mapRef, routeData, isDesktop, isTablet]);
 

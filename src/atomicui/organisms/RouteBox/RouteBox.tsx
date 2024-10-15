@@ -4,10 +4,15 @@
 import { ChangeEvent, FC, MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button, Card, CheckboxField, Flex, Text, View } from "@aws-amplify/ui-react";
-import { CalculateRouteRequest, Place } from "@aws-sdk/client-location";
+import { GetPlaceCommandOutput } from "@aws-sdk/client-geoplaces";
+import {
+	CalculateRoutesCommandInput,
+	RoutePedestrianTravelStep,
+	RouteTravelMode,
+	RouteVehicleTravelStep
+} from "@aws-sdk/client-georoutes";
 import {
 	IconArrowDownUp,
-	IconBicycleSolid,
 	IconCar,
 	IconClose,
 	IconDestination,
@@ -26,20 +31,10 @@ import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useMap, usePersistedData, usePlace, useRoute } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
-import {
-	DistanceUnitEnum,
-	InputType,
-	MapProviderEnum,
-	MapUnitEnum,
-	RouteDataType,
-	RouteOptionsType,
-	SuggestionType,
-	TravelMode
-} from "@demo/types";
+import { InputType, MapUnitEnum, RouteDataType, RouteOptionsType, SuggestionType, TravelMode } from "@demo/types";
 import { AnalyticsEventActionsEnum, ResponsiveUIEnum, TriggeredByEnum, UserAgentEnum } from "@demo/types/Enums";
 import { isUserDeviceIsAndroid } from "@demo/utils";
 import { humanReadableTime } from "@demo/utils/dateTimeUtils";
-import { uuid } from "@demo/utils/uuid";
 import { isAndroid, isIOS } from "react-device-detect";
 import { useTranslation } from "react-i18next";
 import { Layer, LayerProps, LngLat, MapRef, Marker as ReactMapGlMarker, Source } from "react-map-gl/maplibre";
@@ -47,18 +42,18 @@ import { RefHandles } from "react-spring-bottom-sheet/dist/types";
 import { Tooltip } from "react-tooltip";
 import "./styles.scss";
 
-// const NotFoundCard = lazy(() =>
-// 	import("@demo/atomicui/molecules/NotFoundCard").then(module => ({ default: module.NotFoundCard }))
-// );
-// const StepCard = lazy(() => import("@demo/atomicui/molecules/StepCard").then(module => ({ default: module.StepCard })));
-
 const { METRIC } = MapUnitEnum;
-const { KILOMETERS, MILES } = DistanceUnitEnum;
 const { ANDROID } = UserAgentEnum;
 
 const {
 	ENV: { GOOGLE_PLAY_STORE_LINK }
 } = appConfig;
+const iconsByTravelMode = [
+	{ mode: TravelMode.CAR, IconComponent: IconCar },
+	{ mode: TravelMode.PEDESTRIAN, IconComponent: IconWalking },
+	{ mode: TravelMode.SCOOTER, IconComponent: IconMotorcycleSolid },
+	{ mode: TravelMode.TRUCK, IconComponent: IconTruckSolid }
+];
 
 interface RouteBoxProps {
 	mapRef: MutableRefObject<MapRef | null>;
@@ -89,25 +84,20 @@ const RouteBox: FC<RouteBoxProps> = ({
 		from: SuggestionType[] | undefined;
 		to: SuggestionType[] | undefined;
 	}>({ from: undefined, to: undefined });
-	const [placeData, setPlaceData] = useState<{ from: Place | undefined; to: Place | undefined }>({
+	const [placeData, setPlaceData] = useState<{
+		from: GetPlaceCommandOutput | undefined;
+		to: GetPlaceCommandOutput | undefined;
+	}>({
 		from: undefined,
 		to: undefined
 	});
 	const [isCurrentLocationSelected, setIsCurrentLocationSelected] = useState(false);
 	const [isSearching, setIsSearching] = useState(false);
-	const [stepsData, setStepsData] = useState<Place[]>([]);
 	const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const arrowRef = useRef<HTMLDivElement | null>(null);
 	const routesCardRef = useRef<HTMLDivElement | null>(null);
 	const expandRouteRef = useRef<HTMLDivElement | null>(null);
-	const {
-		currentLocationData,
-		viewpoint,
-		mapStyle,
-		mapUnit: currentMapUnit,
-		isCurrentLocationDisabled,
-		mapProvider: currentMapProvider
-	} = useMap();
+	const { currentLocationData, viewpoint, mapUnit } = useMap();
 	const { search, getPlaceData } = usePlace();
 	const {
 		setUI,
@@ -140,20 +130,6 @@ const RouteBox: FC<RouteBoxProps> = ({
 	const toInputRef = useRef<HTMLInputElement>(null);
 	const isInputFocused = inputFocused.from || inputFocused.to;
 	const isBothInputFilled = value.from && value.to;
-
-	const iconsByTravelMode = useMemo(
-		() => [
-			{ mode: TravelMode.CAR, IconComponent: IconCar },
-			{ mode: TravelMode.WALKING, IconComponent: IconWalking },
-			...(currentMapProvider === MapProviderEnum.GRAB
-				? [
-						{ mode: TravelMode.BICYCLE, IconComponent: IconBicycleSolid },
-						{ mode: TravelMode.MOTORCYCLE, IconComponent: IconMotorcycleSolid }
-				  ]
-				: [{ mode: TravelMode.TRUCK, IconComponent: IconTruckSolid }])
-		],
-		[currentMapProvider]
-	);
 
 	const clearRoutePosition = useCallback((type: InputType) => setRoutePositions(undefined, type), [setRoutePositions]);
 
@@ -203,7 +179,6 @@ const RouteBox: FC<RouteBoxProps> = ({
 			placeData.from && setPlaceData({ ...placeData, from: undefined });
 			routePositions?.from && clearRoutePosition(InputType.FROM);
 			routeData && clearRouteData();
-			stepsData.length && setStepsData([]);
 		}
 
 		if (!value.to) {
@@ -211,7 +186,6 @@ const RouteBox: FC<RouteBoxProps> = ({
 			placeData.to && setPlaceData({ ...placeData, to: undefined });
 			routePositions?.to && clearRoutePosition(InputType.TO);
 			routeData && clearRouteData();
-			stepsData.length && setStepsData([]);
 			directions && setDirections(undefined);
 		}
 
@@ -231,7 +205,6 @@ const RouteBox: FC<RouteBoxProps> = ({
 		clearRoutePosition,
 		routeData,
 		clearRouteData,
-		stepsData,
 		directions,
 		setDirections,
 		t
@@ -249,10 +222,10 @@ const RouteBox: FC<RouteBoxProps> = ({
 					currentLocationData?.currentLocation?.longitude,
 					currentLocationData?.currentLocation?.latitude
 				] as number[];
-				obj.DestinationPosition = [placeData.to.Geometry?.Point?.[0], placeData.to.Geometry?.Point?.[1]] as number[];
+				obj.DestinationPosition = [placeData.to.Position![0], placeData.to.Position![1]];
 				return obj;
 			} else if (placeData.from && !placeData.to) {
-				obj.DeparturePosition = [placeData.from.Geometry?.Point?.[0], placeData.from.Geometry?.Point?.[1]] as number[];
+				obj.DeparturePosition = [placeData.from.Position![0], placeData.from.Position![1]] as number[];
 				obj.DestinationPosition = [
 					currentLocationData?.currentLocation?.longitude,
 					currentLocationData?.currentLocation?.latitude
@@ -261,45 +234,32 @@ const RouteBox: FC<RouteBoxProps> = ({
 			}
 		} else {
 			if (placeData.from && placeData.to) {
-				obj.DeparturePosition = [placeData.from.Geometry?.Point?.[0], placeData.from.Geometry?.Point?.[1]] as number[];
-				obj.DestinationPosition = [placeData.to.Geometry?.Point?.[0], placeData.to.Geometry?.Point?.[1]] as number[];
+				obj.DeparturePosition = [placeData.from.Position![0], placeData.from.Position![1]] as number[];
+				obj.DestinationPosition = [placeData.to.Position![0], placeData.to.Position![1]] as number[];
 				return obj;
 			}
 		}
 	}, [isCurrentLocationSelected, placeData, currentLocationData]);
 
 	const handleParams = useCallback(
-		(mode: string) => {
+		(mode: RouteTravelMode) => {
 			const obj = getDestDept();
-			let params;
 
 			if (obj?.DeparturePosition && obj?.DestinationPosition) {
-				params = {
-					IncludeLegGeometry: true,
-					DistanceUnit: currentMapUnit === METRIC ? KILOMETERS : MILES,
-					DeparturePosition: obj.DeparturePosition,
-					DestinationPosition: obj.DestinationPosition,
+				const params: CalculateRoutesCommandInput = {
+					Origin: obj.DeparturePosition,
+					Destination: obj.DestinationPosition,
 					TravelMode: mode,
-					CarModeOptions:
-						mode === TravelMode.CAR
-							? {
-									AvoidFerries: routeOptions.avoidFerries,
-									AvoidTolls: routeOptions.avoidTolls
-							  }
-							: undefined,
-					TruckModeOptions:
-						mode === TravelMode.TRUCK
-							? {
-									AvoidFerries: routeOptions.avoidFerries,
-									AvoidTolls: routeOptions.avoidTolls
-							  }
-							: undefined
+					Avoid: {
+						TollRoads: routeOptions.avoidTolls,
+						Ferries: routeOptions.avoidFerries
+					},
+					InstructionsMeasurementSystem: mapUnit
 				};
+				return params;
 			}
-
-			return params;
 		},
-		[currentMapUnit, getDestDept, routeOptions.avoidFerries, routeOptions.avoidTolls]
+		[getDestDept, mapUnit, routeOptions.avoidFerries, routeOptions.avoidTolls]
 	);
 
 	const calculateRouteDataForAllTravelModes = useCallback(async () => {
@@ -307,8 +267,10 @@ const RouteBox: FC<RouteBoxProps> = ({
 
 		if (obj?.DeparturePosition && obj?.DestinationPosition) {
 			travelModes.map(async mode => {
-				if (!!handleParams(mode)) {
-					const rd = await getRoute(handleParams(mode) as CalculateRouteRequest, TriggeredByEnum.ROUTE_MODULE);
+				const params = handleParams(mode);
+
+				if (!!params) {
+					const rd = await getRoute(params, TriggeredByEnum.ROUTE_MODULE);
 					rd && setRouteDataForMobile(preVal => (preVal ? [...preVal, { [mode]: rd }] : [{ [mode]: rd }]));
 				}
 			});
@@ -316,9 +278,11 @@ const RouteBox: FC<RouteBoxProps> = ({
 	}, [getDestDept, travelModes, getRoute, handleParams]);
 
 	const calculateRouteData = useCallback(async () => {
-		if (!!handleParams(travelMode)) {
-			const rd = await getRoute(handleParams(travelMode) as CalculateRouteRequest, TriggeredByEnum.ROUTE_MODULE);
-			rd && setRouteData({ ...rd, travelMode: travelMode as TravelMode });
+		const params = handleParams(travelMode);
+
+		if (!!params) {
+			const rd = await getRoute(params, TriggeredByEnum.ROUTE_MODULE);
+			rd && setRouteData({ ...rd, travelMode: travelMode });
 			!isDesktop && !routeDataForMobile && calculateRouteDataForAllTravelModes();
 		}
 	}, [
@@ -339,44 +303,31 @@ const RouteBox: FC<RouteBoxProps> = ({
 
 	useEffect(() => {
 		if (!isDesktop) {
-			if (currentMapProvider === MapProviderEnum.GRAB)
-				setTravelModes([TravelMode.CAR, TravelMode.WALKING, TravelMode.BICYCLE, TravelMode.MOTORCYCLE]);
-			else setTravelModes([TravelMode.CAR, TravelMode.WALKING, TravelMode.TRUCK]);
+			setTravelModes([TravelMode.CAR, TravelMode.PEDESTRIAN, TravelMode.SCOOTER, TravelMode.TRUCK]);
 		}
-	}, [currentMapProvider, isDesktop]);
+	}, [isDesktop]);
 
 	useEffect(() => {
 		!routeData && calculateRouteData();
-	}, [routeData, calculateRouteData, mapStyle, isDesktop]);
+	}, [routeData, calculateRouteData, isDesktop]);
 
 	useEffect(() => {
 		if (directions) {
-			directions.info.Place?.Geometry?.Point &&
+			directions.info.place?.Position &&
 				setValue({
-					from:
-						!currentLocationData?.error && !directions.isEsriLimitation && !isCurrentLocationDisabled
-							? t("route_box__my_location.text")
-							: "",
-					to: directions.info.Place.Label
-						? directions.info.Place.Label
-						: `${directions.info.Place.Geometry.Point[1]}, ${directions.info.Place.Geometry.Point[0]}`
+					from: !currentLocationData?.error ? t("route_box__my_location.text") : "",
+					to: directions.info.place.Address?.Label
+						? directions.info.place.Address.Label
+						: `${directions.info.place.Position[1]}, ${directions.info.place.Position[0]}`
 				});
 			!currentLocationData?.error && setIsCurrentLocationSelected(true);
 			setTimeout(() => {
-				setPlaceData({ from: undefined, to: directions.info.Place });
-				setRoutePositions(directions.info.Place?.Geometry?.Point, InputType.TO);
+				setPlaceData({ from: undefined, to: directions.info.place });
+				setRoutePositions(directions.info.place?.Position, InputType.TO);
 				!currentLocationData?.error && calculateRouteData();
 			}, 1000);
 		}
-	}, [
-		directions,
-		isCurrentLocationDisabled,
-		viewpoint,
-		currentLocationData?.error,
-		setRoutePositions,
-		calculateRouteData,
-		t
-	]);
+	}, [directions, viewpoint, currentLocationData?.error, setRoutePositions, calculateRouteData, t]);
 
 	const onClose = () => {
 		resetRouteStore();
@@ -509,8 +460,8 @@ const RouteBox: FC<RouteBoxProps> = ({
 	const onSwap = () => {
 		setValue({ from: value.to, to: value.from });
 		setPlaceData({ from: placeData.to, to: placeData.from });
-		setRoutePositions(placeData.to?.Geometry?.Point, InputType.FROM);
-		setRoutePositions(placeData.from?.Geometry?.Point, InputType.TO);
+		setRoutePositions(placeData.to?.Position, InputType.FROM);
+		setRoutePositions(placeData.from?.Position, InputType.TO);
 		setRouteData(undefined);
 		setRouteDataForMobile(undefined);
 	};
@@ -616,82 +567,55 @@ const RouteBox: FC<RouteBoxProps> = ({
 		setIsCurrentLocationSelected(!isCurrentLocationSelected);
 	};
 
-	const onSelectSuggestion = async ({ PlaceId, Text = "", Place }: SuggestionType, type: InputType) => {
-		if (!PlaceId && Text) {
-			type === InputType.FROM
-				? await handleSearch(Text, true, InputType.FROM, AnalyticsEventActionsEnum.FROM_SUGGESTION_SELECT)
-				: await handleSearch(Text, true, InputType.TO, AnalyticsEventActionsEnum.TO_SUGGESTION_SELECT);
-		} else if (!PlaceId && !Text) {
-			if (type === InputType.FROM) {
-				if (suggestions.from) {
-					setPlaceData({ ...placeData, from: suggestions.from[0].Place });
-					suggestions.from[0].Place?.Geometry?.Point &&
-						setRoutePositions(
-							[suggestions.from[0].Place?.Geometry.Point[0], suggestions.from[0].Place?.Geometry.Point[1]],
-							type
-						);
-				}
-				setValue({ ...value, from: Place?.Label || "" });
-				setSuggestions({ ...suggestions, from: undefined });
-			} else {
-				if (suggestions.to) {
-					setPlaceData({ ...placeData, to: suggestions.to[0].Place });
-					suggestions.to[0].Place?.Geometry?.Point &&
-						setRoutePositions(
-							[suggestions.to[0].Place.Geometry.Point[0], suggestions.to[0].Place.Geometry.Point[1]],
-							type
-						);
-				}
-				setValue({ ...value, to: Place?.Label || "" });
-				setSuggestions({ ...suggestions, to: undefined });
-			}
-			setInputFocused({ from: false, to: false });
-		} else if (PlaceId) {
-			const pd = await getPlaceData(PlaceId);
+	const onSelectSuggestion = async ({ placeId, label = "" }: SuggestionType, type: InputType) => {
+		if (placeId) {
+			const pd = await getPlaceData(placeId);
 			if (!pd) return;
 
 			if (type === InputType.FROM) {
-				setPlaceData({ ...placeData, from: pd.Place });
-				setValue({ ...value, from: pd.Place?.Label || "" });
+				setPlaceData({ ...placeData, from: pd });
+				setValue({ ...value, from: pd.Address?.Label || "" });
 				setSuggestions({ ...suggestions, from: undefined });
 			} else {
-				setPlaceData({ ...placeData, to: pd.Place });
-				setValue({ ...value, to: pd.Place?.Label || "" });
+				setPlaceData({ ...placeData, to: pd });
+				setValue({ ...value, to: pd.Address?.Label || "" });
 				setSuggestions({ ...suggestions, to: undefined });
 			}
 
 			setInputFocused({ from: false, to: false });
-			pd.Place?.Geometry?.Point &&
-				setRoutePositions([pd?.Place?.Geometry?.Point[0] as number, pd.Place?.Geometry.Point[1] as number], type);
+			pd.Position && setRoutePositions([pd.Position[0], pd.Position[1]], type);
+		} else if (label) {
+			type === InputType.FROM
+				? await handleSearch(label, true, InputType.FROM, AnalyticsEventActionsEnum.FROM_SUGGESTION_SELECT)
+				: await handleSearch(label, true, InputType.TO, AnalyticsEventActionsEnum.TO_SUGGESTION_SELECT);
 		}
 
 		setTimeout(() => {
 			directions && setDirections(undefined);
-			stepsData.length && setStepsData([]);
 			routeData && clearRouteData();
 		}, 0);
 	};
 
 	const renderSuggestions = (arr: SuggestionType[], type: InputType) =>
-		arr.map(({ PlaceId, Text = "", Place }, idx) => {
-			const string = Text || Place?.Label || "";
-			const separateIndex = !!PlaceId ? string?.indexOf(",") : -1;
+		arr.map(({ id, placeId, label = "" }) => {
+			const string = label || "";
+			const separateIndex = !!placeId ? string?.indexOf(",") : -1;
 			const title = separateIndex > -1 ? string?.substring(0, separateIndex) : string;
 			const address = separateIndex > 1 ? string?.substring(separateIndex + 1) : null;
 
 			return (
 				<View
 					data-testid={`${type}-suggestions`}
-					key={`${PlaceId}-${idx}`}
+					key={id}
 					className="suggestion"
 					onClick={() => {
-						onSelectSuggestion({ Id: uuid.randomUUID(), PlaceId, Text, Place }, type);
+						onSelectSuggestion({ id, placeId, label }, type);
 					}}
 				>
-					{PlaceId ? <IconPin /> : <IconSearch />}
+					{placeId ? <IconPin /> : <IconSearch />}
 					<View className="description">
 						<span className="title">{title}</span>
-						<span className="address">{PlaceId && address ? address : t("search_nearby.text")}</span>
+						<span className="address">{placeId && address ? address : t("search_nearby.text")}</span>
 					</View>
 				</View>
 			);
@@ -699,14 +623,19 @@ const RouteBox: FC<RouteBoxProps> = ({
 
 	const renderSteps = useMemo(() => {
 		if (routeData) {
+			const travelSteps: RouteVehicleTravelStep[] | RoutePedestrianTravelStep[] =
+				travelMode === TravelMode.PEDESTRIAN
+					? routeData.Routes![0].Legs![0].PedestrianLegDetails!.TravelSteps!
+					: routeData.Routes![0].Legs![0].VehicleLegDetails!.TravelSteps!;
+
 			return (
 				<View data-testid="steps-container" className={`steps-container ${!isDesktop ? "steps-container-mobile" : ""}`}>
-					{routeData.Legs![0].Steps?.map((s, idx) => (
+					{travelSteps.map((step, idx) => (
 						<StepCard
 							key={idx}
-							step={s}
+							step={step}
 							isFirst={idx === 0}
-							isLast={idx + 1 === routeData.Legs![0].Steps?.length}
+							isLast={idx + 1 === travelSteps.length}
 							travelMode={travelMode as TravelMode}
 						/>
 					))}
@@ -759,10 +688,12 @@ const RouteBox: FC<RouteBoxProps> = ({
 					coordinates: [
 						routePositions.from
 							? routePositions.from
-							: !isCurrentLocationDisabled
-							? [currentLocationData?.currentLocation?.longitude, currentLocationData?.currentLocation?.latitude]
+							: currentLocationData?.currentLocation
+							? [currentLocationData.currentLocation?.longitude, currentLocationData.currentLocation?.latitude]
 							: undefined,
-						routeData.Legs![0].StartPosition
+						travelMode === TravelMode.PEDESTRIAN
+							? routeData.Routes![0].Legs![0].PedestrianLegDetails!.Departure!.Place!.Position
+							: routeData.Routes![0].Legs![0].VehicleLegDetails!.Departure!.Place!.Position
 					] as number[][]
 				}
 			};
@@ -777,7 +708,9 @@ const RouteBox: FC<RouteBoxProps> = ({
 				geometry: {
 					type: "LineString",
 					coordinates: [
-						routeData.Legs![0].EndPosition,
+						travelMode === TravelMode.PEDESTRIAN
+							? routeData.Routes![0].Legs![0].PedestrianLegDetails!.Arrival!.Place!.Position
+							: routeData.Routes![0].Legs![0].VehicleLegDetails!.Arrival!.Place!.Position,
 						routePositions.to
 							? routePositions.to
 							: [currentLocationData?.currentLocation?.longitude, currentLocationData?.currentLocation?.latitude]
@@ -803,7 +736,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 				properties: {},
 				geometry: {
 					type: "LineString",
-					coordinates: routeData.Legs![0].Geometry?.LineString as number[][]
+					coordinates: routeData.Routes![0].Legs![0].Geometry!.LineString as number[][]
 				}
 			};
 			const mapStyleLayers = mapRef.current?.getStyle().layers || [];
@@ -822,7 +755,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 					"line-cap": "round"
 				},
 				paint:
-					routeData?.travelMode === TravelMode.WALKING
+					routeData?.travelMode === TravelMode.PEDESTRIAN
 						? { ...mainPaint, "line-width": 4, "line-dasharray": [0.0001, 2] }
 						: mainPaint,
 				beforeId: beforeId
@@ -842,13 +775,12 @@ const RouteBox: FC<RouteBoxProps> = ({
 				</>
 			);
 		}
-	}, [routeData, routePositions, isCurrentLocationDisabled, currentLocationData, mapRef]);
+	}, [routeData, routePositions, currentLocationData, travelMode, mapRef]);
 
 	const getDuration = useCallback(
 		(mode: TravelMode) => {
 			const route = routeDataForMobile?.find(r => r.hasOwnProperty(mode));
-			const legs = route?.[mode]?.Legs;
-			const durationSeconds = legs?.[0]?.DurationSeconds;
+			const durationSeconds = route?.[mode]?.Routes![0].Summary?.Duration;
 
 			return durationSeconds ? humanReadableTime(durationSeconds * 1000, currentLang, t, !isDesktop) : "";
 		},
@@ -870,7 +802,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 								if (duration) {
 									const rd = routeDataForMobile?.find(r => r.hasOwnProperty(mode))![mode];
 									setTravelMode(mode);
-									setRouteData({ Legs: rd!.Legs, Summary: rd!.Summary, travelMode: mode });
+									rd && setRouteData({ ...rd, travelMode: mode });
 								}
 							}}
 						>
@@ -881,7 +813,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 				})}
 			</Flex>
 		);
-	}, [getDuration, iconsByTravelMode, routeDataForMobile, setRouteData, travelMode]);
+	}, [getDuration, routeDataForMobile, setRouteData, travelMode]);
 
 	if (expandRouteOptionsMobile) {
 		return (
@@ -934,8 +866,8 @@ const RouteBox: FC<RouteBoxProps> = ({
 							</View>
 							<View
 								data-testid="travel-mode-walking-icon-container"
-								className={travelMode === TravelMode.WALKING ? "travel-mode selected" : "travel-mode"}
-								onClick={() => handleTravelModeChange(TravelMode.WALKING)}
+								className={travelMode === TravelMode.PEDESTRIAN ? "travel-mode selected" : "travel-mode"}
+								onClick={() => handleTravelModeChange(TravelMode.PEDESTRIAN)}
 							>
 								<IconWalking
 									data-tooltip-id="icon-walking-tooltip"
@@ -944,48 +876,30 @@ const RouteBox: FC<RouteBoxProps> = ({
 								/>
 								<Tooltip id="icon-walking-tooltip" />
 							</View>
-
-							{currentMapProvider === MapProviderEnum.GRAB ? (
-								<>
-									<View
-										data-testid="travel-mode-bicycle-icon-container"
-										className={travelMode === TravelMode.BICYCLE ? "travel-mode selected" : "travel-mode"}
-										onClick={() => handleTravelModeChange(TravelMode.BICYCLE)}
-									>
-										<IconBicycleSolid
-											data-tooltip-id="icon-bicycle-tooltip"
-											data-tooltip-place="top"
-											data-tooltip-content={t("tooltip__calculate_route_bicycle.text")}
-										/>
-										<Tooltip id="icon-bicycle-tooltip" />
-									</View>
-									<View
-										data-testid="travel-mode-motorcycle-icon-container"
-										className={travelMode === TravelMode.MOTORCYCLE ? "travel-mode selected" : "travel-mode"}
-										onClick={() => handleTravelModeChange(TravelMode.MOTORCYCLE)}
-									>
-										<IconMotorcycleSolid
-											data-tooltip-id="icon-motorcycle-tooltip"
-											data-tooltip-place="top"
-											data-tooltip-content={t("tooltip__calculate_route_motorcycle.text")}
-										/>
-										<Tooltip id="icon-motorcycle-tooltip" />
-									</View>
-								</>
-							) : (
-								<View
-									data-testid="travel-mode-truck-icon-container"
-									className={travelMode === TravelMode.TRUCK ? "travel-mode selected" : "travel-mode"}
-									onClick={() => handleTravelModeChange(TravelMode.TRUCK)}
-								>
-									<IconTruckSolid
-										data-tooltip-id="icon-truck-tooltip"
-										data-tooltip-place="top"
-										data-tooltip-content={t("tooltip__calculate_route_truck.text")}
-									/>
-									<Tooltip id="icon-truck-tooltip" />
-								</View>
-							)}
+							<View
+								data-testid="travel-mode-motorcycle-icon-container"
+								className={travelMode === TravelMode.SCOOTER ? "travel-mode selected" : "travel-mode"}
+								onClick={() => handleTravelModeChange(TravelMode.SCOOTER)}
+							>
+								<IconMotorcycleSolid
+									data-tooltip-id="icon-motorcycle-tooltip"
+									data-tooltip-place="top"
+									data-tooltip-content={t("tooltip__calculate_route_motorcycle.text")}
+								/>
+								<Tooltip id="icon-motorcycle-tooltip" />
+							</View>
+							<View
+								data-testid="travel-mode-truck-icon-container"
+								className={travelMode === TravelMode.TRUCK ? "travel-mode selected" : "travel-mode"}
+								onClick={() => handleTravelModeChange(TravelMode.TRUCK)}
+							>
+								<IconTruckSolid
+									data-tooltip-id="icon-truck-tooltip"
+									data-tooltip-place="top"
+									data-tooltip-content={t("tooltip__calculate_route_truck.text")}
+								/>
+								<Tooltip id="icon-truck-tooltip" />
+							</View>
 						</Flex>
 					)}
 					<Flex
@@ -1070,8 +984,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 						{(inputFocused.from || inputFocused.to) &&
 							(!placeData.from || !placeData.to) &&
 							currentLocationData?.currentLocation &&
-							!isCurrentLocationSelected &&
-							!isCurrentLocationDisabled && (
+							!isCurrentLocationSelected && (
 								<View
 									className={`current-location-toggle-container ${
 										!isDesktop ? "current-location-toggle-container-mobile" : ""
@@ -1110,10 +1023,8 @@ const RouteBox: FC<RouteBoxProps> = ({
 										<IconCar />
 									) : travelMode === TravelMode.TRUCK ? (
 										<IconTruckSolid />
-									) : travelMode === TravelMode.WALKING ? (
+									) : travelMode === TravelMode.PEDESTRIAN ? (
 										<IconWalking />
-									) : travelMode === TravelMode.BICYCLE ? (
-										<IconBicycleSolid />
 									) : (
 										<IconMotorcycleSolid />
 									)}
@@ -1122,8 +1033,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 											<Text className="dark-text">
 												{travelMode === TravelMode.CAR ||
 												travelMode === TravelMode.TRUCK ||
-												travelMode === TravelMode.BICYCLE ||
-												travelMode === TravelMode.MOTORCYCLE
+												travelMode === TravelMode.SCOOTER
 													? t("route_box__drive.text")
 													: t("route_box__walk.text")}
 											</Text>
@@ -1135,17 +1045,19 @@ const RouteBox: FC<RouteBoxProps> = ({
 											direction={isLanguageRTL ? "row-reverse" : "row"}
 											justifyContent={isLanguageRTL ? "flex-end" : "flex-start"}
 										>
-											<Text className="distance">{routeData.Summary?.Distance?.toFixed(2)}</Text>
 											<Text className="distance">
-												{currentMapUnit === METRIC
-													? t("geofence_box__km__short.text")
-													: t("geofence_box__mi__short.text")}
+												{mapUnit === METRIC
+													? (routeData.Routes![0].Summary?.Distance?.toFixed(2) as unknown as number) / 1000
+													: routeData.Routes![0].Summary?.Distance?.toFixed(2)}
+											</Text>
+											<Text className="distance">
+												{mapUnit === METRIC ? t("geofence_box__km__short.text") : t("geofence_box__mi__short.text")}
 											</Text>
 										</Flex>
 									</View>
 									<View className="duration">
 										<Text className="regular-text">
-											{humanReadableTime(routeData.Summary!.DurationSeconds! * 1000, currentLang, t, !isDesktop)}
+											{humanReadableTime(routeData.Routes![0].Summary!.Duration! * 1000, currentLang, t, !isDesktop)}
 										</Text>
 									</View>
 								</View>
@@ -1153,15 +1065,13 @@ const RouteBox: FC<RouteBoxProps> = ({
 								<Flex className={"route-info-mobile  border-bottom"}>
 									<Flex className="time-and-distance">
 										<Text className="bold small-text">
-											{humanReadableTime(routeData.Summary!.DurationSeconds! * 1000, currentLang, t, !isDesktop)}
+											{humanReadableTime(routeData.Routes![0].Summary!.Duration! * 1000, currentLang, t, !isDesktop)}
 										</Text>
 										<Flex gap={0}>
-											<Text className="regular small-text">{routeData.Summary!.Distance!.toFixed(2)}</Text>
+											<Text className="regular small-text">{routeData.Routes![0].Summary!.Distance!.toFixed(2)}</Text>
 											<Text className="regular small-text">
 												&nbsp;
-												{currentMapUnit === METRIC
-													? t("geofence_box__km__short.text")
-													: t("geofence_box__mi__short.text")}
+												{mapUnit === METRIC ? t("geofence_box__km__short.text") : t("geofence_box__mi__short.text")}
 											</Text>
 										</Flex>
 									</Flex>

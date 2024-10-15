@@ -114,7 +114,7 @@
     "text": "Visão geral"
   },
   "header__product": {
-    "text": "Produto"
+    "text": "Produtos"
   },
   "header__try_it": {
     "text": "Experimente"
@@ -129,7 +129,7 @@
     "text": "Começando"
   },
   "footer__faq": {
-    "text": "PERGUNTAS FREQUENTES"
+    "text": "Perguntas frequentes"
   },
   "footer__pricing": {
     "text": "Preços"
@@ -3315,13 +3315,13 @@
     "text": "Calcule a rota com 'Carro' como modo de viagem"
   },
   "tooltip__calculate_route_walk": {
-    "text": "Calcule a rota com 'Caminhada' como modo de viagem"
+    "text": "Calcule a rota com 'Pedestre' como modo de viagem"
   },
   "tooltip__calculate_route_bicycle": {
     "text": "Calcule a rota com 'Bicicleta' como modo de viagem"
   },
   "tooltip__calculate_route_motorcycle": {
-    "text": "Calcule a rota com 'Motocicleta' como modo de viagem"
+    "text": "Calcule a rota com 'Scooter' como modo de viagem"
   },
   "tooltip__calculate_route_truck": {
     "text": "Calcule a rota com 'Caminhão' como modo de viagem"
@@ -3697,5 +3697,113 @@
   },
   "error_handler__failed_refresh_tokens": {
     "text": "Falha ao atualizar os tokens"
+  },
+  "geofences_and_trackers": {
+    "text": "Geofences e rastreadores"
+  },
+  "industry": {
+    "text": "Indústria"
+  },
+  "transportation_and_logistics": {
+    "text": "Transporte e logística"
+  },
+  "financial_service": {
+    "text": "Serviço financeiro"
+  },
+  "healthcare": {
+    "text": "Assistência médica"
+  },
+  "retails": {
+    "text": "Varejo"
+  },
+  "travel_and_hospitality": {
+    "text": "Viagens e hospitalidade"
+  },
+  "real_estate": {
+    "text": "Imóveis"
+  },
+  "resources": {
+    "text": "Recursos"
+  },
+  "customers": {
+    "text": "Clientes"
+  },
+  "product_resources": {
+    "text": "Recursos do produto"
+  },
+  "developer_resources": {
+    "text": "Recursos para desenvolvedores"
+  },
+  "header__product_desc": {
+    "text": "Adicione dados de localização aos aplicativos com segurança e facilidade"
+  },
+  "new_overview_desc": {
+    "text": "Adicione dados de localização aos aplicativos com segurança e facilidade"
+  },
+  "new_products_desc": {
+    "text": "Veja os recursos detalhados do Amazon Location Service"
+  },
+  "new_maps_desc": {
+    "text": "Visualize as informações de localização"
+  },
+  "new_places_desc": {
+    "text": "Faça buscas por pontos de interesse, converta entre endereços e coordenadas geográficas"
+  },
+  "new_routes_desc": {
+    "text": "Solicite tempos de viagem, distâncias e direções entre pontos"
+  },
+  "new_geofences_trackers_desc": {
+    "text": "Rastreie a localização dos dispositivos, detecte quando os dispositivos entram ou saem dos limites geográficos"
+  },
+  "new_getting_started_desc": {
+    "text": "Saiba como começar a usar o Amazon Location Service"
+  },
+  "new_pricing_desc": {
+    "text": "Estime os custos de uso do serviço (entre em contato com a AWS para obter descontos por volume)"
+  },
+  "new_faqs_desc": {
+    "text": "Encontre respostas para as perguntas mais frequentes"
+  },
+  "new_industry_desc": {
+    "text": "Saiba como os dados e serviços de localização se aplicam a diferentes segmentos do setor"
+  },
+  "new_transportation_logistics_desc": {
+    "text": "Serviços de entrega, distribuição e carona"
+  },
+  "new_financial_service_desc": {
+    "text": "Serviços bancários, de gestão de dinheiro e de seguros"
+  },
+  "new_healthcare_desc": {
+    "text": "Prestadores de serviços médicos, estabelecimentos de saúde e seguros"
+  },
+  "new_retail_desc": {
+    "text": "Compra e venda de produtos de varejo, como mantimentos e roupas"
+  },
+  "new_travel_hospitality_desc": {
+    "text": "Companhias aéreas, hotéis e restaurantes"
+  },
+  "new_real_estate_desc": {
+    "text": "Gestão de propriedades, compra e venda de moradias"
+  },
+  "new_resources_desc": {
+    "text": "Encontre materiais para continuar aprendendo sobre o Amazon Location Service"
+  },
+  "new_customers_desc": {
+    "text": "Soluções para clientes criadas usando serviços de localização"
+  },
+  "new_product_resources_desc": {
+    "text": "Blogs e atualizações"
+  },
+  "new_developer_resources_desc": {
+    "text": "Guias e fóruns"
+  },
+  "error_handler__failed_create_places_client": {
+    "text": "Falha ao criar o cliente de lugares"
+  },
+  "error_handler__failed_create_routes_client": {
+    "text": "Falha ao criar o cliente de rotas"
+  },
+  "multiple_region_disclaimer": {
+    "text": "Aviso: quando a conta da AWS do usuário estiver conectada, a alteração da região afetará apenas mapas, lugares e rotas."
   }
 }

@@ -6,7 +6,7 @@ import { useEffect, useMemo } from "react";
 import { CognitoIdentity } from "@aws-sdk/client-cognito-identity";
 import { showToast } from "@demo/core/Toast";
 import appConfig from "@demo/core/constants/appConfig";
-import { useClient, useMap } from "@demo/hooks";
+import { useClient, useMap, usePlace } from "@demo/hooks";
 import { useAuthService } from "@demo/services";
 import { useAuthStore } from "@demo/stores";
 import { AuthTokensType, ConnectFormValuesType, ToastType } from "@demo/types";
@@ -14,7 +14,6 @@ import { EventTypeEnum, RegionEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { getDomainName } from "@demo/utils/getDomainName";
-import { clearStorage } from "@demo/utils/localstorageUtils";
 import { setClosestRegion } from "@demo/utils/regionUtils";
 import { transformCloudFormationLink } from "@demo/utils/transformCloudFormationLink";
 import { useTranslation } from "react-i18next";
@@ -22,56 +21,81 @@ import { useTranslation } from "react-i18next";
 import useDeviceMediaQuery from "./useDeviceMediaQuery";
 
 const {
-	POOLS,
+	IDENTITY_POOL_IDS,
 	WEB_SOCKET_URLS,
+	API_KEYS,
 	ROUTES: { DEMO },
-	PERSIST_STORAGE_KEYS: { FASTEST_REGION },
-	MAP_RESOURCES: { GRAB_SUPPORTED_AWS_REGIONS }
+	PERSIST_STORAGE_KEYS: { FASTEST_REGION }
 } = appConfig;
-const fallbackRegion = POOLS[Object.keys(POOLS)[0]];
+const fallbackApiKey = Object.values(API_KEYS)[0];
+const fallbackRegion = Object.keys(IDENTITY_POOL_IDS)[0];
 
 const useAuth = () => {
 	const store = useAuthStore();
 	const { setInitial } = store;
 	const { setState } = useAuthStore;
 	const authService = useAuthService();
-	const { resetStore: resetClientStore } = useClient();
+	const { resetLocationAndIotClients } = useClient();
 	const { resetStore: resetMapStore } = useMap();
+	const { resetStore: resetPlaceStore } = usePlace();
 	const { t } = useTranslation();
 	const { isDesktop } = useDeviceMediaQuery();
 
+	// Set initial apiKey, identityPoolId, region, and webSocketUrl when user lands on Demo app for the first time
 	useEffect(() => {
-		if (window.location.pathname === DEMO && !store.identityPoolId) {
+		if (window.location.pathname === DEMO && (!store.apiKey || !store.baseValues)) {
 			(async () => {
 				await setClosestRegion();
 				const region = localStorage.getItem(FASTEST_REGION) ?? fallbackRegion;
-				const identityPoolId = POOLS[region];
-				const webSocketUrl = WEB_SOCKET_URLS[region];
-				setState({ identityPoolId, region, webSocketUrl });
+				setState({
+					apiKey: API_KEYS[region] ?? fallbackApiKey,
+					baseValues: {
+						identityPoolId: IDENTITY_POOL_IDS[region],
+						region,
+						webSocketUrl: WEB_SOCKET_URLS[region]
+					}
+				});
 			})();
 		}
-	}, [store.identityPoolId, setState]);
+	}, [store.apiKey, store.baseValues, setState]);
 
 	const methods = useMemo(
 		() => ({
+			fetchLocationClientConfigWithApiKey: async (apiKey: string, region: string) => {
+				try {
+					const authHelper = await authService.withAPIKey(apiKey);
+					const locationClientConfig = authHelper.getLocationClientConfig();
+					return { ...locationClientConfig, region };
+				} catch (error) {
+					errorHandler(error);
+				}
+			},
 			fetchCredentials: async () => {
 				try {
-					const { identityPoolId, region, userPoolId, authTokens } = store;
+					const { baseValues, userProvidedValues, authTokens } = store;
 
-					if (identityPoolId && region) {
-						const cognitoIdentityCredentials = await authService.fetchCredentials(
-							identityPoolId,
-							region,
-							authTokens,
-							userPoolId
-						);
-						const credentials = { ...cognitoIdentityCredentials, authenticated: !!authTokens };
-						setState({ credentials });
+					if (userProvidedValues) {
+						const { identityPoolId, region, userPoolId } = userProvidedValues;
+						const logins = !!authTokens
+							? { [`cognito-idp.${region}.amazonaws.com/${userPoolId}`]: authTokens.id_token }
+							: undefined;
+						const cognitoIdentityCredentials = await authService.fetchCredentials(identityPoolId, region, logins);
+						setState({ credentials: { ...cognitoIdentityCredentials, authenticated: !!authTokens } });
+					} else if (baseValues) {
+						const { identityPoolId, region } = baseValues;
+						const cognitoIdentityCredentials = await authService.fetchCredentials(identityPoolId, region, undefined);
+						setState({
+							credentials: {
+								...cognitoIdentityCredentials,
+								expiration: new Date(cognitoIdentityCredentials.expiration!),
+								authenticated: false
+							}
+						});
 					}
 				} catch (error) {
 					if ((error as Error).name === "NotAuthorizedException") {
 						await methods.refreshTokens();
-						resetClientStore();
+						resetLocationAndIotClients();
 					} else {
 						errorHandler(error, t("error_handler__failed_fetch_creds.text"));
 					}
@@ -79,9 +103,10 @@ const useAuth = () => {
 			},
 			fetchTokens: async (code: string) => {
 				try {
-					const { userDomain, userPoolClientId } = store;
+					const { userProvidedValues } = store;
 
-					if (userDomain && userPoolClientId) {
+					if (userProvidedValues) {
+						const { userDomain, userPoolClientId } = userProvidedValues;
 						const response = await authService.fetchTokens(userDomain, userPoolClientId, code);
 
 						if (!response.ok) {
@@ -105,9 +130,10 @@ const useAuth = () => {
 			},
 			refreshTokens: async () => {
 				try {
-					const { userDomain, userPoolClientId, authTokens } = store;
+					const { userProvidedValues, authTokens } = store;
 
-					if (userDomain && userPoolClientId && authTokens) {
+					if (userProvidedValues && authTokens) {
+						const { userDomain, userPoolClientId } = userProvidedValues;
 						const response = await authService.refreshTokens(userDomain, userPoolClientId, authTokens.refresh_token);
 
 						if (!response.ok) {
@@ -117,8 +143,7 @@ const useAuth = () => {
 						const newTokens = await response.json();
 						setState({
 							authTokens: { ...newTokens, refresh_token: authTokens.refresh_token },
-							credentials: undefined,
-							authOptions: undefined
+							credentials: undefined
 						});
 					}
 				} catch (error) {
@@ -165,7 +190,7 @@ const useAuth = () => {
 				);
 			},
 			clearCredentials: () => {
-				setState({ credentials: undefined, authOptions: undefined });
+				setState({ credentials: undefined });
 			},
 			setAuthTokens: (authTokens?: AuthTokensType) => {
 				setState({ authTokens });
@@ -178,22 +203,22 @@ const useAuth = () => {
 				WebSocketUrl
 			}: ConnectFormValuesType) => {
 				setState({
-					identityPoolId: IdentityPoolId,
-					region: IdentityPoolId.split(":")[0],
-					userDomain: getDomainName(UserDomain),
-					userPoolClientId: UserPoolClientId,
-					userPoolId: UserPoolId,
-					webSocketUrl: WebSocketUrl
+					userProvidedValues: {
+						identityPoolId: IdentityPoolId,
+						region: IdentityPoolId.split(":")[0],
+						userDomain: getDomainName(UserDomain),
+						userPoolClientId: UserPoolClientId,
+						userPoolId: UserPoolId,
+						webSocketUrl: WebSocketUrl
+					}
 				});
-			},
-			setIsUserAwsAccountConnected: (isUserAwsAccountConnected: boolean) => {
-				setState({ isUserAwsAccountConnected });
 			},
 			onLogin: () => {
 				try {
-					const { userDomain, userPoolClientId } = store;
+					const { userProvidedValues } = store;
 
-					if (userDomain && userPoolClientId) {
+					if (userProvidedValues) {
+						const { userDomain, userPoolClientId } = userProvidedValues;
 						setState({ authTokens: undefined });
 						window.open(
 							`https://${userDomain}/login?client_id=${userPoolClientId}&response_type=code&identity_provider=COGNITO&redirect_uri=${window.location.origin}${DEMO}`,
@@ -210,9 +235,10 @@ const useAuth = () => {
 			},
 			onLogout: () => {
 				try {
-					const { userDomain, userPoolClientId } = store;
+					const { userProvidedValues } = store;
 
-					if (userDomain && userPoolClientId) {
+					if (userProvidedValues) {
+						const { userDomain, userPoolClientId } = userProvidedValues;
 						setState({ authTokens: undefined });
 						window.open(
 							`https://${userDomain}/logout?client_id=${userPoolClientId}&logout_uri=${window.location.origin}${DEMO}?sign_out=true`,
@@ -228,67 +254,41 @@ const useAuth = () => {
 				}
 			},
 			onDisconnectAwsAccount: () => {
-				clearStorage();
 				methods.resetStore();
-				resetClientStore();
+				resetLocationAndIotClients();
 				resetMapStore();
-				setTimeout(() => window.location.reload(), 3000);
+				resetPlaceStore();
 			},
-			switchToGrabMapRegionStack: () => {
-				for (const region of GRAB_SUPPORTED_AWS_REGIONS) {
-					const identityPoolId = POOLS[region];
-					const webSocketUrl = WEB_SOCKET_URLS[region];
-
-					if (identityPoolId) {
-						setState({ identityPoolId, region, webSocketUrl, credentials: undefined, authOptions: undefined });
-						return;
-					}
-				}
-			},
-			switchToDefaultRegionStack: () => {
-				const region = localStorage.getItem(FASTEST_REGION) ?? fallbackRegion;
-				const identityPoolId = POOLS[region];
-				const webSocketUrl = WEB_SOCKET_URLS[region];
-
-				setState({ identityPoolId, region, webSocketUrl, credentials: undefined, authOptions: undefined });
-			},
-			setAutoRegion: (autoRegion: boolean, region: "Automatic" | RegionEnum) => {
+			setRegion: (autoRegion: boolean, region: "Automatic" | RegionEnum) => {
 				if (autoRegion) {
 					(async () => {
 						await setClosestRegion();
 						const region = localStorage.getItem(FASTEST_REGION) ?? fallbackRegion;
-						const identityPoolId = POOLS[region];
-						const webSocketUrl = WEB_SOCKET_URLS[region];
 						setState({
-							identityPoolId,
-							region,
-							webSocketUrl,
+							apiKey: API_KEYS[region] ?? fallbackApiKey,
+							baseValues: {
+								identityPoolId: IDENTITY_POOL_IDS[region],
+								region,
+								webSocketUrl: WEB_SOCKET_URLS[region]
+							},
 							autoRegion,
-							credentials: undefined,
-							authOptions: undefined
+							credentials: undefined
 						});
 					})();
 				} else {
-					!!POOLS[region] &&
+					!!IDENTITY_POOL_IDS[region] &&
 						!!WEB_SOCKET_URLS[region] &&
 						setState({
-							identityPoolId: POOLS[region],
-							region,
-							webSocketUrl: WEB_SOCKET_URLS[region],
+							apiKey: API_KEYS[region] ?? fallbackApiKey,
+							baseValues: {
+								identityPoolId: IDENTITY_POOL_IDS[region],
+								region,
+								webSocketUrl: WEB_SOCKET_URLS[region]
+							},
 							autoRegion,
-							credentials: undefined,
-							authOptions: undefined
+							credentials: undefined
 						});
 				}
-			},
-			setIdentityPoolIdRegionAndWebSocketUrl: (identityPoolId?: string, region?: string, webSocketUrl?: string) => {
-				setState({ identityPoolId, region, webSocketUrl });
-			},
-			setStackRegion: (stackRegion?: { value: string; label: string }) => {
-				setState({ stackRegion });
-			},
-			setCloudFormationLink: (cloudFormationLink: string) => {
-				setState({ cloudFormationLink });
 			},
 			handleStackRegion: (option: { value: string; label: string }) => {
 				const { label, value } = option;
@@ -302,41 +302,19 @@ const useAuth = () => {
 					setState({ stackRegion: { label: l, value }, cloudFormationLink: newUrl });
 				}
 			},
-			fetchAuthOptions: async () => {
-				try {
-					const { identityPoolId, region, userPoolId, authTokens } = store;
-
-					if (identityPoolId && region) {
-						const authHelper = await authService.withIdentityPoolId(identityPoolId, region, authTokens, userPoolId);
-						const authOptions = authHelper.getMapAuthenticationOptions();
-						setState({ authOptions });
-					}
-				} catch (error) {
-					if ((error as Error).name === "NotAuthorizedException") {
-						await methods.refreshTokens();
-						resetClientStore();
-					} else {
-						errorHandler(error);
-					}
-				}
-			},
 			resetStore: () => {
 				setState({
 					credentials: undefined,
-					authOptions: undefined,
 					authTokens: undefined,
-					identityPoolId: undefined,
-					region: undefined,
-					userDomain: undefined,
-					userPoolClientId: undefined,
-					userPoolId: undefined,
-					webSocketUrl: undefined,
-					stackRegion: undefined
+					baseValues: undefined,
+					userProvidedValues: undefined,
+					stackRegion: undefined,
+					apiKey: undefined
 				});
 				setInitial();
 			}
 		}),
-		[store, authService, setState, t, resetClientStore, resetMapStore, isDesktop, setInitial]
+		[authService, store, setState, resetLocationAndIotClients, t, resetMapStore, resetPlaceStore, isDesktop, setInitial]
 	);
 
 	return { ...methods, ...store };

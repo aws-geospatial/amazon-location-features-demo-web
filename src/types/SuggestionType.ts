@@ -1,14 +1,16 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { Place } from "@aws-sdk/client-location";
+import { GetPlaceCommandOutput } from "@aws-sdk/client-geoplaces";
 
 export interface SuggestionType {
-	Id: string;
-	PlaceId?: string;
-	Text?: string;
-	Place?: Place;
-	Distance?: number;
-	Relevance?: number;
-	Hash?: string;
+	id: string;
+	queryId?: string;
+	placeId?: string;
+	label?: string;
+	position?: number[];
+	country?: string;
+	region?: string;
+	hash?: string;
+	place?: GetPlaceCommandOutput;
 }

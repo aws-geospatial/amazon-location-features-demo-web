@@ -31,11 +31,10 @@ describe("<StepCard/>", () => {
 			<I18nextProvider i18n={i18n}>
 				<StepCard
 					step={{
-						GeometryOffset: faker.datatype.number(),
-						Distance: faker.datatype.number(),
-						DurationSeconds: faker.datatype.number(),
-						EndPosition: [Number(faker.address.longitude()), Number(faker.address.latitude())],
-						StartPosition: [Number(faker.address.longitude()), Number(faker.address.latitude())]
+						Instruction: faker.random.words(3),
+						Distance: faker.datatype.number({ min: 100, max: 1000 }),
+						Duration: faker.datatype.number({ min: 100, max: 1000 }),
+						Type: "Arrive"
 					}}
 					travelMode={TravelMode.CAR}
 					{...props}
@@ -107,7 +106,7 @@ describe("<StepCard/>", () => {
 		expect(stepCardContainer).toBeInTheDocument();
 		renderedComponent.unmount();
 
-		await renderComponent({ travelMode: TravelMode.WALKING, isFirst: false, isLast: false });
+		await renderComponent({ travelMode: TravelMode.PEDESTRIAN, isFirst: false, isLast: false });
 		expect(stepCardContainer).toBeInTheDocument();
 	});
 });
