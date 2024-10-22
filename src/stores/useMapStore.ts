@@ -31,7 +31,7 @@ interface MapStoreProps {
 	mapUnit: MapUnitEnum;
 	mapStyle: MapStyleEnum;
 	mapColorScheme: MapColorSchemeEnum;
-	mapPoliticalView: string;
+	mapPoliticalView?: string;
 }
 
 const initialState: IStateProps<MapStoreProps> = {
@@ -42,8 +42,7 @@ const initialState: IStateProps<MapStoreProps> = {
 	},
 	mapUnit: MapUnitEnum.IMPERIAL,
 	mapStyle: MapStyleEnum.STANDARD,
-	mapColorScheme: MapColorSchemeEnum.LIGHT,
-	mapPoliticalView: ""
+	mapColorScheme: MapColorSchemeEnum.LIGHT
 };
 
 export default createStore<MapStoreProps>(initialState, true, localStorageKey);

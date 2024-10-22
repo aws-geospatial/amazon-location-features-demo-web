@@ -86,6 +86,11 @@ const MapButtons: FC<MapButtonsProps> = ({
 	const settingsTablet = isTablet && isSettingsModal;
 	const { hideGeofenceTrackerShortcut } = useUnauthSimulation();
 
+	const isColorSchemeDisabled = useMemo(
+		() => [MapStyleEnum.HYBRID, MapStyleEnum.SATELLITE].includes(mapStyle),
+		[mapStyle]
+	);
+
 	const handleClickOutside = useCallback(
 		(ev: MouseEvent) => {
 			if (
@@ -154,7 +159,7 @@ const MapButtons: FC<MapButtonsProps> = ({
 		(id: string, style: MapStyleEnum) => {
 			if (mapStyle !== style) {
 				onShowGridLoader();
-				style === MapStyleEnum.SATELLITE && !!mapPoliticalView && setMapPoliticalView("");
+				style === MapStyleEnum.SATELLITE && !!mapPoliticalView && setMapPoliticalView();
 				setMapStyle(style);
 				record([
 					{
@@ -240,26 +245,45 @@ const MapButtons: FC<MapButtonsProps> = ({
 								{MAP_COLOR_SCHEMES.map(({ id, name }) => (
 									<Flex
 										key={id}
-										gap={0}
-										flex="1"
-										justifyContent="center"
-										alignItems="center"
-										borderRadius="0.46rem"
-										height="2.62rem"
-										backgroundColor={mapColorScheme === name ? "var(--white-color)" : "var(--light-color-2)"}
+										style={{
+											gap: 0,
+											flex: 1,
+											justifyContent: "center",
+											alignItems: "center",
+											borderRadius: "0.46rem",
+											height: "2.62rem",
+											backgroundColor: isColorSchemeDisabled
+												? "var(--light-color-2)"
+												: mapColorScheme === name
+												? "var(--white-color)"
+												: "var(--light-color-2)",
+											cursor: isColorSchemeDisabled ? "not-allowed" : "pointer"
+										}}
 										onClick={e => {
-											e.preventDefault();
-											e.stopPropagation();
-											handleMapColorSchemeChange(id, name);
+											if (!isColorSchemeDisabled) {
+												e.preventDefault();
+												e.stopPropagation();
+												handleMapColorSchemeChange(id, name);
+											}
 										}}
 									>
-										{name === MapColorSchemeEnum.LIGHT ? <IconLight /> : <IconDark />}
+										{name === MapColorSchemeEnum.LIGHT ? (
+											<IconLight fill={isColorSchemeDisabled ? "var(--grey-color-9)" : "var(--tertiary-color)"} />
+										) : (
+											<IconDark fill={isColorSchemeDisabled ? "var(--grey-color-9)" : "var(--tertiary-color)"} />
+										)}
 										<Text
 											className="medium"
-											fontSize="1.08rem"
-											lineHeight="1.29rem"
-											marginLeft="1rem"
-											color={name === MapColorSchemeEnum.LIGHT ? "var(--primary-color)" : "var(--tertiary-color)"}
+											style={{
+												fontSize: "1.08rem",
+												lineHeight: "1.29rem",
+												marginLeft: "1rem",
+												color: isColorSchemeDisabled
+													? "var(--grey-color-9)"
+													: name === MapColorSchemeEnum.LIGHT
+													? "var(--primary-color)"
+													: "var(--tertiary-color)"
+											}}
 										>
 											{t(name)}
 										</Text>
@@ -270,13 +294,13 @@ const MapButtons: FC<MapButtonsProps> = ({
 						<Flex gap={0} padding="2rem 1rem 0rem 1rem" direction="column">
 							<ToggleSwitch
 								isToggled={!!mapPoliticalView}
-								setIsToggled={isToggle => (isToggle ? setMapPoliticalView("ARG") : setMapPoliticalView(""))}
-								label={t("Political view")}
+								setIsToggled={isToggle => (isToggle ? setMapPoliticalView("ARG") : setMapPoliticalView())}
+								label="Political view"
 								disabled={mapStyle === MapStyleEnum.SATELLITE}
 							/>
 							<Flex gap={0} padding="1rem 0rem">
 								<PoliticalViewDropdown
-									label={mapPoliticalView ? t(mapPoliticalView) : t("Enable political view")}
+									label={!!mapPoliticalView ? mapPoliticalView : "Enable political view"}
 									options={mapPoliticalViewOptions}
 									onSelect={option => setMapPoliticalView(option.value)}
 									bordered
@@ -292,6 +316,7 @@ const MapButtons: FC<MapButtonsProps> = ({
 		[
 			handleMapColorSchemeChange,
 			handleMapStyleChange,
+			isColorSchemeDisabled,
 			isHandDevice,
 			isLoading,
 			isLoadingImg,

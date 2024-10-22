@@ -21,7 +21,7 @@ import {
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { MenuItemEnum, ShowStateType } from "@demo/types";
-import { MapColorSchemeEnum, ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
+import { MapColorSchemeEnum, MapStyleEnum, ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { Position, bbox, lineString } from "@turf/turf";
 import type { GeolocateControl as GeolocateControlRef } from "maplibre-gl";
@@ -411,9 +411,9 @@ const DemoPage: FC = () => {
 						? { ...currentLocationData.currentLocation, zoom }
 						: { ...viewpoint, zoom }
 				}
-				mapStyle={`https://maps.geo.${apiKeyRegion}.amazonaws.com/v2/styles/${mapStyle}/descriptor?key=${apiKey}&color-scheme=${mapColorScheme}${
-					!!mapPoliticalView ? `&political-view=${mapPoliticalView}` : ""
-				}`}
+				mapStyle={`https://maps.geo.${apiKeyRegion}.amazonaws.com/v2/styles/${mapStyle}/descriptor?key=${apiKey}${
+					[MapStyleEnum.HYBRID, MapStyleEnum.SATELLITE].includes(mapStyle) ? "" : `&color-scheme=${mapColorScheme}`
+				}${!!mapPoliticalView ? `&political-view=${mapPoliticalView}` : ""}`}
 				minZoom={2}
 				maxBounds={
 					(show.unauthGeofenceBox || show.unauthTrackerBox) && show.unauthSimulationBounds
