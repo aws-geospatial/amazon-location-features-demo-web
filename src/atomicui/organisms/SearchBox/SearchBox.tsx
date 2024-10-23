@@ -327,6 +327,7 @@ const SearchBox: FC<SearchBoxProps> = ({
 		isSimpleSearch && setUI && setUI(ResponsiveUIEnum.explore);
 	};
 
+	// TODO: suggestions shouldn't render markers and fit bounds, render markers and fit bounds only when suggestion is clicked or text search is performed on keyboard enter
 	const markers = useMemo(() => {
 		if (suggestions?.length === 1 && selectedMarker) {
 			return suggestions.map((s, i) => (

@@ -36,13 +36,13 @@ const usePlace = () => {
 					if (data?.ResultItems) {
 						const { ResultItems } = data;
 						// TODO: Implement logic to use QueryId, ignoring QuqeryId for now
-						const suggestionsWithPlaceId = ResultItems.filter(({ Place }) => Place?.PlaceId);
-						const suggestions = suggestionsWithPlaceId.map(({ Query, Title, Place }) => ({
+						const suggestions = ResultItems.filter(({ Place }) => Place?.PlaceId).map(({ Query, Place, Title }) => ({
 							id: uuid.randomUUID(),
 							queryId: Query?.QueryId,
 							placeId: Place?.PlaceId,
-							label: Query?.QueryId ? Title : Place?.Address?.Label,
 							position: Place?.Position,
+							address: Place?.Address,
+							label: Query?.QueryId ? Title : Place?.Address?.Label,
 							country: Place?.Address?.Country?.Name,
 							region: Place?.Address?.Region ? Place?.Address?.Region?.Name : Place?.Address?.SubRegion?.Name
 						}));
@@ -74,15 +74,16 @@ const usePlace = () => {
 					if (data?.ResultItems) {
 						const { ResultItems } = data;
 						const clusters: ClustersType = {};
-						const suggestions = ResultItems.map(place => {
-							const hash = getHash(place.Position!, store.precision);
+						const suggestions = ResultItems.map(({ Position, PlaceId, Address }) => {
+							const hash = getHash(Position!, store.precision);
 							const sg: SuggestionType = {
 								id: uuid.randomUUID(),
-								placeId: place.PlaceId,
-								label: place.Address?.Label,
-								position: place.Position,
-								country: place.Address?.Country?.Name,
-								region: place.Address?.Region ? place.Address?.Region?.Name : place.Address?.SubRegion?.Name,
+								placeId: PlaceId,
+								position: Position,
+								address: Address,
+								label: Address?.Label,
+								country: Address?.Country?.Name,
+								region: Address?.Region ? Address?.Region?.Name : Address?.SubRegion?.Name,
 								hash
 							};
 							clusters[hash] = clusters[hash] ? [...clusters[hash], sg] : [sg];
@@ -218,7 +219,7 @@ const usePlace = () => {
 					return { zoom };
 				});
 			},
-			setMarker: (marker?: Omit<ViewPointType, "zoom" | "info">) => {
+			setMarker: (marker?: ViewPointType) => {
 				setState({ marker });
 			},
 			setSelectedMarker: async (selectedMarker?: SuggestionType) => {

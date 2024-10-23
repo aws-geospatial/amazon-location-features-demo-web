@@ -66,8 +66,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 #### Env keys required in `cypress.env.json` file, see `cypress.env.json.example` for reference.
 
 > WEB_DOMAIN<br />
-> WEB_DOMAIN_USERNAME<br />
-> WEB_DOMAIN_PASSWORD<br />
 > IDENTITY_POOL_ID<br />
 > USER_DOMAIN<br />
 > USER_POOL_CLIENT_ID<br />
@@ -93,8 +91,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 11. Add all keys from `.env` file to the secrets section of the repo as well from the above Requirements section.
 ```
 > WEB_DOMAIN: "http://localhost:3000"
-> WEB_DOMAIN_USERNAME: "XXXXX" // This is the username for the web domain (only required for dev and qa environments, not needed for prod environment)
-> WEB_DOMAIN_PASSWORD: "XXXXX" // This is the password for the web domain (only required for dev and qa environments, not needed for prod environment)
 > IDENTITY_POOL_ID: "XX-XXXX-X:XXXXXXXX-XXXX-1234-abcd-1234567890ab" // Stack output as IdentityPoolId
 > USER_DOMAIN: "https://XXXXXXXXXXXX.XXXX.XX-XXXX-X.amazoncognito.com/" // Stack output as UserDomain
 > USER_POOL_CLIENT_ID: "XXXXXXXXXXXX" // Stack output as UserPoolClientId
@@ -133,8 +129,8 @@ Runs Cypress tests to completion in a headed chrome browser.
 #### Env keys required in `security-tests/.env` file, see `security-tests/.env.example` for reference.
 
 > IDENTITY_POOL_ID</br>
-> USER_POOL_ID</br>
 > USER_POOL_CLIENT_ID</br>
+> USER_POOL_ID</br>
 > COGNITO_EMAIL</br>
 > COGNITO_PASSWORD</br>
 > IAM_AUTH_ROLE_NAME</br>

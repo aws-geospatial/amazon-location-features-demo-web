@@ -175,7 +175,11 @@ const Sidebar: FC<SidebarProps> = ({
 					<Text>{t("about.text")}</Text>
 				</Flex>
 			</View>
-			<List listArray={marketingMenuOptionsData} className="verticle-list side-bar__external-menu" hideIcons />
+			<List
+				listArray={marketingMenuOptionsData}
+				className="hideScroll verticle-list side-bar__external-menu"
+				hideIcons
+			/>
 			<View className="button-wrapper">
 				{userProvidedValues ? (
 					<>

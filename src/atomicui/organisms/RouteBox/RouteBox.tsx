@@ -4,7 +4,6 @@
 import { ChangeEvent, FC, MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button, Card, CheckboxField, Flex, Text, View } from "@aws-amplify/ui-react";
-import { GetPlaceCommandOutput } from "@aws-sdk/client-geoplaces";
 import {
 	CalculateRoutesCommandInput,
 	RoutePedestrianTravelStep,
@@ -33,7 +32,7 @@ import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { InputType, MapUnitEnum, RouteDataType, RouteOptionsType, SuggestionType, TravelMode } from "@demo/types";
 import { AnalyticsEventActionsEnum, ResponsiveUIEnum, TriggeredByEnum, UserAgentEnum } from "@demo/types/Enums";
-import { isUserDeviceIsAndroid } from "@demo/utils";
+import { isUserDeviceIsAndroid, uuid } from "@demo/utils";
 import { humanReadableTime } from "@demo/utils/dateTimeUtils";
 import { isAndroid, isIOS } from "react-device-detect";
 import { useTranslation } from "react-i18next";
@@ -85,8 +84,8 @@ const RouteBox: FC<RouteBoxProps> = ({
 		to: SuggestionType[] | undefined;
 	}>({ from: undefined, to: undefined });
 	const [placeData, setPlaceData] = useState<{
-		from: GetPlaceCommandOutput | undefined;
-		to: GetPlaceCommandOutput | undefined;
+		from: SuggestionType | undefined;
+		to: SuggestionType | undefined;
 	}>({
 		from: undefined,
 		to: undefined
@@ -222,10 +221,10 @@ const RouteBox: FC<RouteBoxProps> = ({
 					currentLocationData?.currentLocation?.longitude,
 					currentLocationData?.currentLocation?.latitude
 				] as number[];
-				obj.DestinationPosition = [placeData.to.Position![0], placeData.to.Position![1]];
+				obj.DestinationPosition = [placeData.to.position![0], placeData.to.position![1]];
 				return obj;
 			} else if (placeData.from && !placeData.to) {
-				obj.DeparturePosition = [placeData.from.Position![0], placeData.from.Position![1]] as number[];
+				obj.DeparturePosition = [placeData.from.position![0], placeData.from.position![1]] as number[];
 				obj.DestinationPosition = [
 					currentLocationData?.currentLocation?.longitude,
 					currentLocationData?.currentLocation?.latitude
@@ -234,8 +233,8 @@ const RouteBox: FC<RouteBoxProps> = ({
 			}
 		} else {
 			if (placeData.from && placeData.to) {
-				obj.DeparturePosition = [placeData.from.Position![0], placeData.from.Position![1]] as number[];
-				obj.DestinationPosition = [placeData.to.Position![0], placeData.to.Position![1]] as number[];
+				obj.DeparturePosition = [placeData.from.position![0], placeData.from.position![1]] as number[];
+				obj.DestinationPosition = [placeData.to.position![0], placeData.to.position![1]] as number[];
 				return obj;
 			}
 		}
@@ -313,17 +312,17 @@ const RouteBox: FC<RouteBoxProps> = ({
 
 	useEffect(() => {
 		if (directions) {
-			directions.info.place?.Position &&
+			directions.position &&
 				setValue({
 					from: !currentLocationData?.error ? t("route_box__my_location.text") : "",
-					to: directions.info.place.Address?.Label
-						? directions.info.place.Address.Label
-						: `${directions.info.place.Position[1]}, ${directions.info.place.Position[0]}`
+					to: directions.address?.Label
+						? directions.address.Label
+						: `${directions.position[1]}, ${directions.position[0]}`
 				});
 			!currentLocationData?.error && setIsCurrentLocationSelected(true);
 			setTimeout(() => {
-				setPlaceData({ from: undefined, to: directions.info.place });
-				setRoutePositions(directions.info.place?.Position, InputType.TO);
+				setPlaceData({ from: undefined, to: directions });
+				setRoutePositions(directions.position, InputType.TO);
 				!currentLocationData?.error && calculateRouteData();
 			}, 1000);
 		}
@@ -460,8 +459,8 @@ const RouteBox: FC<RouteBoxProps> = ({
 	const onSwap = () => {
 		setValue({ from: value.to, to: value.from });
 		setPlaceData({ from: placeData.to, to: placeData.from });
-		setRoutePositions(placeData.to?.Position, InputType.FROM);
-		setRoutePositions(placeData.from?.Position, InputType.TO);
+		setRoutePositions(placeData.to?.position, InputType.FROM);
+		setRoutePositions(placeData.from?.position, InputType.TO);
 		setRouteData(undefined);
 		setRouteDataForMobile(undefined);
 	};
@@ -567,17 +566,28 @@ const RouteBox: FC<RouteBoxProps> = ({
 		setIsCurrentLocationSelected(!isCurrentLocationSelected);
 	};
 
-	const onSelectSuggestion = async ({ placeId, label = "" }: SuggestionType, type: InputType) => {
-		if (placeId) {
-			const pd = await getPlaceData(placeId);
+	const onSelectSuggestion = async ({ placeId: pid, label = "" }: SuggestionType, type: InputType) => {
+		if (pid) {
+			const pd = await getPlaceData(pid);
 			if (!pd) return;
 
+			const { PlaceId: placeId, Position: position, Address: address } = pd;
+			const suggestion: SuggestionType = {
+				id: uuid.randomUUID(),
+				placeId,
+				position,
+				address,
+				label: address?.Label,
+				country: address?.Country?.Name,
+				region: address?.Region ? address?.Region?.Name : address?.SubRegion?.Name
+			};
+
 			if (type === InputType.FROM) {
-				setPlaceData({ ...placeData, from: pd });
+				setPlaceData({ ...placeData, from: suggestion });
 				setValue({ ...value, from: pd.Address?.Label || "" });
 				setSuggestions({ ...suggestions, from: undefined });
 			} else {
-				setPlaceData({ ...placeData, to: pd });
+				setPlaceData({ ...placeData, to: suggestion });
 				setValue({ ...value, to: pd.Address?.Label || "" });
 				setSuggestions({ ...suggestions, to: undefined });
 			}
@@ -1047,8 +1057,8 @@ const RouteBox: FC<RouteBoxProps> = ({
 										>
 											<Text className="distance">
 												{mapUnit === METRIC
-													? (routeData.Routes![0].Summary?.Distance?.toFixed(2) as unknown as number) / 1000
-													: routeData.Routes![0].Summary?.Distance?.toFixed(2)}
+													? parseFloat((routeData.Routes![0].Summary!.Distance! / 1000).toFixed(2))
+													: parseFloat((routeData.Routes![0].Summary!.Distance! / 1609).toFixed(2))}
 											</Text>
 											<Text className="distance">
 												{mapUnit === METRIC ? t("geofence_box__km__short.text") : t("geofence_box__mi__short.text")}
@@ -1068,7 +1078,11 @@ const RouteBox: FC<RouteBoxProps> = ({
 											{humanReadableTime(routeData.Routes![0].Summary!.Duration! * 1000, currentLang, t, !isDesktop)}
 										</Text>
 										<Flex gap={0}>
-											<Text className="regular small-text">{routeData.Routes![0].Summary!.Distance!.toFixed(2)}</Text>
+											<Text className="regular small-text">
+												{mapUnit === METRIC
+													? parseFloat((routeData.Routes![0].Summary!.Distance! / 1000).toFixed(2))
+													: parseFloat((routeData.Routes![0].Summary!.Distance! / 1609).toFixed(2))}
+											</Text>
 											<Text className="regular small-text">
 												&nbsp;
 												{mapUnit === METRIC ? t("geofence_box__km__short.text") : t("geofence_box__mi__short.text")}

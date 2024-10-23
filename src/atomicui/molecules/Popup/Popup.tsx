@@ -23,21 +23,20 @@ import "./styles.scss";
 const { METRIC } = MapUnitEnum;
 const { KILOMETERS, MILES } = DistanceUnitEnum;
 
-interface Props {
+interface PopupProps {
 	active: boolean;
 	info: SuggestionType;
 	select: (id?: string) => Promise<void>;
 	onClosePopUp?: () => void;
-	setInfo: (info?: SuggestionType) => void;
 }
-const Popup: FC<Props> = ({ active, info, select, onClosePopUp, setInfo }) => {
+const Popup: FC<PopupProps> = ({ active, info, select, onClosePopUp }) => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [routeData, setRouteData] = useState<CalculateRoutesCommandOutput>();
 	const { setPOICard, setBottomSheetMinHeight, setBottomSheetHeight, setUI, bottomSheetHeight, ui } = useBottomSheet();
 	const { currentLocationData, viewpoint, mapUnit } = useMap();
 	const { clearPoiList } = usePlace();
 	const { getRoute, setDirections, isFetchingRoute } = useRoute();
-	const [longitude, latitude] = useMemo(() => (info.position || info.place?.Position) as number[], [info]);
+	const [longitude, latitude] = useMemo(() => info.position as number[], [info]);
 	const { isDesktop } = useDeviceMediaQuery();
 	const { t, i18n } = useTranslation();
 	const currentLang = i18n.language;
@@ -76,35 +75,38 @@ const Popup: FC<Props> = ({ active, info, select, onClosePopUp, setInfo }) => {
 		[localizeGeodesicDistance, mapUnit, t]
 	);
 
-	const loadRouteData = useCallback(async () => {
-		const params: CalculateRoutesCommandInput = {
-			Origin: [
-				currentLocationData?.currentLocation?.longitude,
-				currentLocationData?.currentLocation?.latitude
-			] as number[],
-			Destination: [longitude, latitude],
-			TravelMode: TravelMode.CAR
-		};
-		try {
-			setIsLoading(true);
-			const r = await getRoute(params, TriggeredByEnum.PLACES_POPUP);
-			setRouteData(r);
-		} finally {
-			setIsLoading(false);
-		}
-	}, [currentLocationData, longitude, latitude, getRoute]);
-
 	useEffect(() => {
-		if (!routeData && active && !!currentLocationData?.currentLocation) {
-			loadRouteData();
+		if (
+			!routeData &&
+			active &&
+			!!currentLocationData?.currentLocation &&
+			geodesicDistance &&
+			geodesicDistance <= 2000
+		) {
+			(async () => {
+				const params: CalculateRoutesCommandInput = {
+					Origin: [
+						currentLocationData?.currentLocation?.longitude,
+						currentLocationData?.currentLocation?.latitude
+					] as number[],
+					Destination: [longitude, latitude],
+					TravelMode: TravelMode.CAR
+				};
+				try {
+					setIsLoading(true);
+					const r = await getRoute(params, TriggeredByEnum.PLACES_POPUP);
+					setRouteData(r);
+				} finally {
+					setIsLoading(false);
+				}
+			})();
 		}
-	}, [routeData, active, currentLocationData, loadRouteData]);
+	}, [active, currentLocationData?.currentLocation, geodesicDistance, getRoute, latitude, longitude, routeData]);
 
 	const onClose = useCallback(
 		async (ui: ResponsiveUIEnum) => {
 			if (!isDesktop) {
 				setPOICard(undefined);
-				setInfo(undefined);
 				setUI(ui);
 				setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
 				setBottomSheetHeight(window.innerHeight * 0.4);
@@ -117,11 +119,11 @@ const Popup: FC<Props> = ({ active, info, select, onClosePopUp, setInfo }) => {
 			await select(undefined);
 			onClosePopUp && onClosePopUp();
 		},
-		[isDesktop, select, onClosePopUp, setPOICard, setInfo, setUI, setBottomSheetMinHeight, setBottomSheetHeight]
+		[isDesktop, select, onClosePopUp, setPOICard, setUI, setBottomSheetMinHeight, setBottomSheetHeight]
 	);
 
 	const onGetDirections = useCallback(() => {
-		setDirections({ info });
+		setDirections(info);
 		clearPoiList();
 
 		if (!isDesktop) {
@@ -149,16 +151,13 @@ const Popup: FC<Props> = ({ active, info, select, onClosePopUp, setInfo }) => {
 			return (
 				<Flex data-testid="here-message-container" gap={0} direction={"column"}>
 					<Flex className="localize-geofence-distance" gap="0.3rem" direction={isLanguageRTL ? "row-reverse" : "row"}>
-						{!isLoading && (
-							<>
-								<Text className="bold" variation="secondary" marginRight="0.3rem">
-									{localizeGeodesicDistance}
-								</Text>
-								<Text className="bold" variation="secondary">
-									{geodesicDistanceUnit}
-								</Text>
-							</>
-						)}
+						<Text className="bold" variation="secondary" marginRight="0.3rem">
+							{localizeGeodesicDistance}
+						</Text>
+						<Text className="bold" variation="secondary">
+							{geodesicDistanceUnit}
+						</Text>
+						{!isLoading && <></>}
 					</Flex>
 					<Text style={{ marginTop: "0px" }} variation="info">
 						{!isLoading && t("popup__route_not_found.text")}
@@ -208,8 +207,8 @@ const Popup: FC<Props> = ({ active, info, select, onClosePopUp, setInfo }) => {
 	]);
 
 	const address = useMemo(() => {
-		if (info.place?.Address?.Label) {
-			const split = info.place.Address.Label.split(",");
+		if (info?.address?.Label) {
+			const split = info.address.Label.split(",");
 			split.shift();
 			return split.join(",").trim();
 		} else {
@@ -235,7 +234,7 @@ const Popup: FC<Props> = ({ active, info, select, onClosePopUp, setInfo }) => {
 				)}
 				<View className="info-container">
 					<Text className="bold" variation="secondary" fontSize="20px" lineHeight="28px">{`${
-						info.place?.Address?.Label?.split(",")[0]
+						info.address?.Label?.split(",")[0]
 					}`}</Text>
 					<View className="address-container">
 						<View>
@@ -245,9 +244,7 @@ const Popup: FC<Props> = ({ active, info, select, onClosePopUp, setInfo }) => {
 							<IconCopyPages
 								data-testid="copy-icon"
 								className="copy-icon"
-								onClick={() =>
-									navigator.clipboard.writeText(`${info.place?.Address?.Label?.split(",")[0]}` + ", " + address)
-								}
+								onClick={() => navigator.clipboard.writeText(`${info.address?.Label?.split(",")[0]}` + ", " + address)}
 							/>
 						)}
 					</View>

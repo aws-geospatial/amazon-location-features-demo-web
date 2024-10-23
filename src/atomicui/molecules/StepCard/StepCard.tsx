@@ -48,8 +48,8 @@ const StepCard: FC<StepCardProps> = ({ step, isFirst, isLast }) => {
 				>
 					<Text className="distance">
 						{currentMapUnit === METRIC
-							? (step.Distance?.toFixed(2) as unknown as number) / 1000
-							: step.Distance?.toFixed(2)}
+							? parseFloat((step.Distance! / 1000).toFixed(2))
+							: parseFloat((step.Distance! / 1609).toFixed(2))}
 					</Text>
 					<Text className="distance">
 						{currentMapUnit === METRIC ? t("geofence_box__km__short.text") : t("geofence_box__mi__short.text")}

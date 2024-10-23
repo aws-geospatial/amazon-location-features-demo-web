@@ -48,7 +48,7 @@ const useRoute = () => {
 			setRouteData: (routeData?: RouteDataType) => {
 				setState({ routeData });
 			},
-			setDirections: (directions?: { info: SuggestionType }) => {
+			setDirections: (directions?: SuggestionType) => {
 				setState({ directions });
 			},
 			resetStore: () => {

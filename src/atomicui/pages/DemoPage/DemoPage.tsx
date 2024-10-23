@@ -180,6 +180,11 @@ const DemoPage: FC = () => {
 	});
 	const geoLocateTopValue = `${bottomSheetCurrentHeight / 13 + 0.59}rem`;
 
+	const isColorSchemeDisabled = useMemo(
+		() => [MapStyleEnum.HYBRID, MapStyleEnum.SATELLITE].includes(mapStyle),
+		[mapStyle]
+	);
+
 	const handlePopState = () => {
 		if (isMax766 && window.location.pathname === DEMO) {
 			history.go();
@@ -262,9 +267,10 @@ const DemoPage: FC = () => {
 			  };
 
 		if (suggestions) {
+			// TODO: suggestions shouldn't render markers and fit bounds, render markers and fit bounds only when suggestion is clicked or text search is performed on keyboard enter
 			const positions = suggestions.map(s => s.position) as Position[];
 
-			if (positions.length) {
+			if (positions.length >= 2) {
 				const line = lineString(positions);
 				const bounds = bbox(line);
 				mapRef.current?.fitBounds(bounds as [number, number, number, number], options);
@@ -412,7 +418,7 @@ const DemoPage: FC = () => {
 						: { ...viewpoint, zoom }
 				}
 				mapStyle={`https://maps.geo.${apiKeyRegion}.amazonaws.com/v2/styles/${mapStyle}/descriptor?key=${apiKey}${
-					[MapStyleEnum.HYBRID, MapStyleEnum.SATELLITE].includes(mapStyle) ? "" : `&color-scheme=${mapColorScheme}`
+					!isColorSchemeDisabled ? `&color-scheme=${mapColorScheme}` : ""
 				}${!!mapPoliticalView ? `&political-view=${mapPoliticalView}` : ""}`}
 				minZoom={2}
 				maxBounds={
