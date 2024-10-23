@@ -57,11 +57,9 @@ describe("<Popup/>", () => {
 						placeId: faker.random.word(),
 						label: faker.random.words(3),
 						position: [0, 0],
-						hash: faker.random.word(),
-						place: undefined
+						hash: faker.random.word()
 					}}
 					select={jest.fn()}
-					setInfo={jest.fn()}
 				/>
 			</I18nextProvider>
 		);
