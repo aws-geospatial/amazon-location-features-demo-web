@@ -257,7 +257,7 @@ const SearchBox: FC<SearchBoxProps> = ({
 		position?: string;
 	}) => {
 		const { id, placeid, label, country, region, position } = option;
-		const separateIndex = id !== "" ? label.indexOf(",") : -1;
+		const separateIndex = label ? label.indexOf(",") : -1;
 		const title = separateIndex > -1 ? label.substring(0, separateIndex) : label;
 		const address = separateIndex > 1 ? label.substring(separateIndex + 1).trim() : null;
 		const destCoords = position ? (JSON.parse(position) as number[]) : undefined;

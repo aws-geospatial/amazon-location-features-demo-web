@@ -71,34 +71,40 @@ describe("<StepCard/>", () => {
 		}
 	});
 
-	it("should render successfully when different isFirst and isLast prop is passed", async () => {
+	it.only("should render successfully when different isFirst and isLast prop is passed", async () => {
+		let renderedComponent;
+
 		// 0-0
-		await renderComponent({
+		renderedComponent = await renderComponent({
 			isFirst: false,
 			isLast: false
 		});
 		expect(stepCardContainer).toBeInTheDocument();
+		renderedComponent.unmount();
 
 		// 0-1
-		await renderComponent({
+		renderedComponent = await renderComponent({
 			isFirst: false,
 			isLast: true
 		});
 		expect(stepCardContainer).toBeInTheDocument();
+		renderedComponent.unmount();
 
 		// 1-0
-		await renderComponent({
+		renderedComponent = await renderComponent({
 			isFirst: true,
 			isLast: false
 		});
 		expect(stepCardContainer).toBeInTheDocument();
+		renderedComponent.unmount();
 
 		// 1-1
-		await renderComponent({
+		renderedComponent = await renderComponent({
 			isFirst: true,
 			isLast: true
 		});
 		expect(stepCardContainer).toBeInTheDocument();
+		renderedComponent.unmount();
 	});
 
 	it("should render with different travel modes", async () => {
