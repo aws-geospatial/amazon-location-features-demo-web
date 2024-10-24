@@ -602,10 +602,10 @@ const SearchBox: FC<SearchBoxProps> = ({
 										paddingBottom={!!options?.length ? "5.1rem" : ""}
 									>
 										{!!options?.length &&
-											options.map((option, i) => (
+											options.map(option => (
 												<div
 													data-testid="search-suggestions"
-													key={i}
+													key={option.id}
 													onClick={() => {
 														selectSuggestion({ ...option });
 													}}

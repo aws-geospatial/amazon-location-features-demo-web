@@ -126,7 +126,6 @@ Cypress.Commands.add("signOutAndDisconnectFromAwsAccount", isResponsive => {
 		? cy.openResponsiveMenu('[data-testid="bottomsheet"]')
 		: cy.get('[data-testid="hamburger-menu"]').click();
 	cy.get('[data-testid="disconnect-aws-account-button"]').click();
-	cy.get('[data-testid="welcome-modal-continue-button"]').click();
 	isResponsive
 		? cy.openResponsiveMenu('[data-testid="bottomsheet"]')
 		: cy.get('[data-testid="hamburger-menu"]').click();

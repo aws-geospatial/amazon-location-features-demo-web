@@ -158,49 +158,65 @@ const Explore: FC<ExploreProps> = ({
 		);
 	};
 
-	const onClickMenuItem = (menuItem: MenuItemEnum) => {
-		onCloseSidebar();
-		const isAuthenticated = !!credentials?.authenticated;
+	const onClickMenuItem = useCallback(
+		(menuItem: MenuItemEnum) => {
+			onCloseSidebar();
+			const isAuthenticated = !!credentials?.authenticated;
 
-		if (!!userProvidedValues) {
-			if (isAuthenticated) {
-				if (menuItem === MenuItemEnum.GEOFENCE) {
-					onShowAuthGeofenceBox();
-					updateUIInfo(ResponsiveUIEnum.auth_geofence);
-					if (!isDesktop) {
-						setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
-						setBottomSheetHeight(window.innerHeight * 0.4);
-						setTimeout(() => {
-							setBottomSheetMinHeight(BottomSheetHeights.explore.min);
-							setBottomSheetHeight(window.innerHeight);
-						}, 300);
+			if (!!userProvidedValues) {
+				if (isAuthenticated) {
+					if (menuItem === MenuItemEnum.GEOFENCE) {
+						onShowAuthGeofenceBox();
+						updateUIInfo(ResponsiveUIEnum.auth_geofence);
+						if (!isDesktop) {
+							setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+							setBottomSheetHeight(window.innerHeight * 0.4);
+							setTimeout(() => {
+								setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+								setBottomSheetHeight(window.innerHeight);
+							}, 300);
+						}
+					} else {
+						onShowAuthTrackerBox();
+						updateUIInfo(ResponsiveUIEnum.auth_tracker);
+
+						if (!isDesktop) {
+							setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+							setBottomSheetHeight(window.innerHeight * 0.4);
+							setTimeout(() => {
+								setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+								setBottomSheetHeight(window.innerHeight);
+							}, 300);
+						}
 					}
 				} else {
-					onShowAuthTrackerBox();
-					updateUIInfo(ResponsiveUIEnum.auth_tracker);
-
-					if (!isDesktop) {
-						setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
-						setBottomSheetHeight(window.innerHeight * 0.4);
-						setTimeout(() => {
-							setBottomSheetMinHeight(BottomSheetHeights.explore.min);
-							setBottomSheetHeight(window.innerHeight);
-						}, 300);
-					}
+					onOpenSignInModal();
 				}
 			} else {
-				onOpenSignInModal();
+				if (menuItem === MenuItemEnum.GEOFENCE) {
+					onShowUnauthGeofenceBox();
+					updateUIInfo(ResponsiveUIEnum.non_start_unauthorized_geofence);
+				} else {
+					updateUIInfo(ResponsiveUIEnum.non_start_unauthorized_tracker);
+					onShowUnauthTrackerBox();
+				}
 			}
-		} else {
-			if (menuItem === MenuItemEnum.GEOFENCE) {
-				onShowUnauthGeofenceBox();
-				updateUIInfo(ResponsiveUIEnum.non_start_unauthorized_geofence);
-			} else {
-				updateUIInfo(ResponsiveUIEnum.non_start_unauthorized_tracker);
-				onShowUnauthTrackerBox();
-			}
-		}
-	};
+		},
+		[
+			credentials?.authenticated,
+			isDesktop,
+			onCloseSidebar,
+			onOpenSignInModal,
+			onShowAuthGeofenceBox,
+			onShowAuthTrackerBox,
+			onShowUnauthGeofenceBox,
+			onShowUnauthTrackerBox,
+			setBottomSheetHeight,
+			setBottomSheetMinHeight,
+			updateUIInfo,
+			userProvidedValues
+		]
+	);
 
 	const onClickSettings = useCallback(() => {
 		onCloseSidebar();
@@ -813,59 +829,71 @@ const Explore: FC<ExploreProps> = ({
 		});
 	}, [exploreMoreOptions, isAuthenticated, isMenuExpanded, userProvidedValues, t]);
 
-	const exploreButtons = [
-		{
-			text: t("routes.text"),
-			icon: <IconDirections width="1.53rem" height="1.53rem" fill="white" />,
-			onClick: () => {
-				updateUIInfo(ResponsiveUIEnum.routes);
-				if ((isAndroid || isIOS) && !isDesktopBrowser) {
-					setBottomSheetMinHeight(window.innerHeight - 10);
-					setBottomSheetHeight(window.innerHeight);
-					bottomSheetRef?.current?.snapTo(1000);
-					setTimeout(() => {
-						setBottomSheetMinHeight(BottomSheetHeights.explore.min);
-					}, 400);
-				} else {
+	const exploreButtons = useMemo(
+		() => [
+			{
+				text: t("routes.text"),
+				icon: <IconDirections width="1.53rem" height="1.53rem" fill="white" />,
+				onClick: () => {
+					updateUIInfo(ResponsiveUIEnum.routes);
+					if ((isAndroid || isIOS) && !isDesktopBrowser) {
+						setBottomSheetMinHeight(window.innerHeight - 10);
+						setBottomSheetHeight(window.innerHeight);
+						bottomSheetRef?.current?.snapTo(1000);
+						setTimeout(() => {
+							setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+						}, 400);
+					} else {
+						if (bottomSheetCurrentHeight < window.innerHeight * 0.4) {
+							setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+							setBottomSheetHeight(window.innerHeight * 0.4);
+
+							setTimeout(() => {
+								setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+								setBottomSheetHeight(window.innerHeight);
+							}, 200);
+						}
+					}
+				}
+			},
+			{
+				text: t("map_style.text"),
+				icon: <IconMapSolid width="1.53rem" height="1.53rem" fill="white" />,
+				onClick: () => {
+					updateUIInfo(ResponsiveUIEnum.map_styles);
 					if (bottomSheetCurrentHeight < window.innerHeight * 0.4) {
 						setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
 						setBottomSheetHeight(window.innerHeight * 0.4);
-
-						setTimeout(() => {
-							setBottomSheetMinHeight(BottomSheetHeights.explore.min);
-							setBottomSheetHeight(window.innerHeight);
-						}, 200);
 					}
-				}
-			}
-		},
-		{
-			text: t("map_style.text"),
-			icon: <IconMapSolid width="1.53rem" height="1.53rem" fill="white" />,
-			onClick: () => {
-				updateUIInfo(ResponsiveUIEnum.map_styles);
-				if (bottomSheetCurrentHeight < window.innerHeight * 0.4) {
-					setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
-					setBottomSheetHeight(window.innerHeight * 0.4);
-				}
 
-				setTimeout(() => {
-					setBottomSheetMinHeight(BottomSheetHeights.explore.min);
-					setBottomSheetHeight(window.innerHeight);
-				}, 500);
+					setTimeout(() => {
+						setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+						setBottomSheetHeight(window.innerHeight);
+					}, 500);
+				}
+			},
+			{
+				text: t("trackers.text"),
+				icon: <IconRadar width="1.53rem" height="1.53rem" />,
+				onClick: () => onClickMenuItem(MenuItemEnum.TRACKER)
+			},
+			{
+				text: t("geofences.text"),
+				icon: <IconGeofencePlusSolid width="1.53rem" height="1.53rem" fill="white" />,
+				onClick: () => onClickMenuItem(MenuItemEnum.GEOFENCE)
 			}
-		},
-		{
-			text: t("trackers.text"),
-			icon: <IconRadar width="1.53rem" height="1.53rem" />,
-			onClick: () => onClickMenuItem(MenuItemEnum.TRACKER)
-		},
-		{
-			text: t("geofences.text"),
-			icon: <IconGeofencePlusSolid width="1.53rem" height="1.53rem" fill="white" />,
-			onClick: () => onClickMenuItem(MenuItemEnum.GEOFENCE)
-		}
-	];
+		],
+		[
+			bottomSheetCurrentHeight,
+			bottomSheetRef,
+			isDesktopBrowser,
+			onClickMenuItem,
+			setBottomSheetHeight,
+			setBottomSheetMinHeight,
+			t,
+			updateUIInfo
+		]
+	);
 
 	return (
 		<Flex direction="column" className="explore-container" gap="0">

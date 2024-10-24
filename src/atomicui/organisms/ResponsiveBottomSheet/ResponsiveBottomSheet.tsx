@@ -315,12 +315,11 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	}, [from, resetToExplore, setShow]);
 
 	const onCloseAuthTracker = useCallback(() => {
-		clearCredsAndClients && clearCredsAndClients();
 		setIsEditingRoute(false);
 		setTrackerPoints(undefined);
 		setShowAuthTrackerBox(false);
 		setUI(ResponsiveUIEnum.explore);
-	}, [clearCredsAndClients, setIsEditingRoute, setShowAuthTrackerBox, setTrackerPoints, setUI]);
+	}, [setIsEditingRoute, setShowAuthTrackerBox, setTrackerPoints, setUI]);
 
 	const onBackUnauthHandler = useCallback(() => {
 		if (isNotifications) {

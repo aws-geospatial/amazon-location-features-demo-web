@@ -191,12 +191,17 @@ const AuthTrackerSimulation: FC<AuthTrackerSimulationProps> = ({
 	}, [isPlaying, idx]);
 
 	useEffect(() => {
-		if (routeData) {
-			const line = lineString(routeData.Routes![0].Legs![0].Geometry!.LineString!);
-			const bounds = bbox(line);
+		if (routeData && routeData.Routes![0]?.Legs) {
+			let lineStringArr: number[][] = [];
 
-			isDesktop
-				? mapRef.current?.fitBounds(bounds as [number, number, number, number], {
+			routeData.Routes![0].Legs.map(({ Geometry }) => {
+				if (!!Geometry?.LineString && Geometry?.LineString?.length > 0) {
+					lineStringArr = [...lineStringArr, ...Geometry.LineString];
+				}
+			});
+
+			const options = isDesktop
+				? {
 						padding: {
 							top: 200,
 							bottom: 200,
@@ -204,10 +209,10 @@ const AuthTrackerSimulation: FC<AuthTrackerSimulationProps> = ({
 							right: 200
 						},
 						speed: 5,
-						linear: false
-				  })
+						linear: true
+				  }
 				: isTablet
-				? mapRef.current?.fitBounds(bounds as [number, number, number, number], {
+				? {
 						padding: {
 							top: 100,
 							bottom: 100,
@@ -215,9 +220,9 @@ const AuthTrackerSimulation: FC<AuthTrackerSimulationProps> = ({
 							right: 50
 						},
 						speed: 5,
-						linear: false
-				  })
-				: mapRef.current?.fitBounds(bounds as [number, number, number, number], {
+						linear: true
+				  }
+				: {
 						padding: {
 							top: 100,
 							bottom: 420,
@@ -225,8 +230,11 @@ const AuthTrackerSimulation: FC<AuthTrackerSimulationProps> = ({
 							right: 70
 						},
 						speed: 5,
-						linear: false
-				  });
+						linear: true
+				  };
+			const line = lineString(lineStringArr);
+			const bounds = bbox(line);
+			mapRef.current?.fitBounds(bounds as [number, number, number, number], options);
 		}
 	}, [mapRef, routeData, isDesktop, isTablet]);
 

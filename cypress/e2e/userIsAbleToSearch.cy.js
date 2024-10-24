@@ -50,7 +50,7 @@ describe("Search", () => {
 
 		it("DS-005 - should show user an error message when no search text is present", { scrollBehavior: false }, () => {
 			cy.get('[inputmode="search"]').type("{enter}");
-			cy.get("div").should("contain", "Failed to search place by text, 'Text' must have length at least 1");
+			cy.get("div").should("contain", "Failed to search place by text, 'QueryText' must have length at least 1");
 		});
 
 		it.skip("should enable nl search and allow user to view POI after nl search", { scrollBehavior: false }, () => {
@@ -81,14 +81,14 @@ describe("Search", () => {
 			{ scrollBehavior: false },
 			() => {
 				cy.get('[data-testid="search-box-input"]').type("gramercy park music school USA");
-				cy.get('[data-testid="search-suggestions"]').click();
+				cy.get('[data-testid="search-suggestions"]').first().click();
 				cy.get('[data-testid="poi-body"]').should("be.visible");
 			}
 		);
 
 		it("DS-008 - should allow user to search by geocode", { scrollBehavior: false }, () => {
 			cy.get('[data-testid="search-box-input"]').type("-31.9627092,115.9248736");
-			cy.get('[data-testid="search-suggestions"]').click();
+			cy.get('[data-testid="search-suggestions"]').first().click();
 			cy.get('[data-testid="poi-body"]').should("be.visible");
 		});
 
@@ -108,7 +108,7 @@ describe("Search", () => {
 
 		it("DS-010 - should show user an error message when no search text is present", { scrollBehavior: false }, () => {
 			cy.get('[data-testid="search-box-input"]').type("{enter}");
-			cy.get("div").should("contain", "Failed to search place by text, 'Text' must have length at least 1");
+			cy.get("div").should("contain", "Failed to search place by text, 'QueryText' must have length at least 1");
 		});
 	});
 });
