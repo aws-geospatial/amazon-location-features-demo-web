@@ -17,11 +17,11 @@ import useRoute from "./useRoute";
 import useTracker from "./useTracker";
 
 const {
-	IDENTITY_POOL_IDS,
+	API_KEYS,
 	PERSIST_STORAGE_KEYS: { FASTEST_REGION, GEO_LOCATION_ALLOWED },
 	MAP_RESOURCES: { AMAZON_HQ }
 } = appConfig;
-const fallbackRegion = Object.values(IDENTITY_POOL_IDS)[0];
+const fallbackRegion = Object.keys(API_KEYS)[0];
 
 interface UseMapManagerProps {
 	mapRef: MutableRefObject<MapRef | null>;
@@ -54,7 +54,7 @@ const useMapManager = ({
 	const { resetStore: resetGeofenceStore } = useGeofence();
 	const { isEditingRoute, trackerPoints, setTrackerPoints, resetStore: resetTrackerStore } = useTracker();
 	const { t } = useTranslation();
-	const fastestRegion = localStorage.getItem(FASTEST_REGION) ?? fallbackRegion.split(":")[0];
+	const fastestRegion = localStorage.getItem(FASTEST_REGION) ?? fallbackRegion;
 	const defaultRegion = regionsData.find(option => option.value === fastestRegion) as { value: string; label: string };
 
 	const onLoad = useCallback(() => {

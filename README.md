@@ -11,7 +11,7 @@
    -  ---
       ***Note***
       * Pinpoint and Translate resosurces are only created in `us-east-1` which are required for the analytics feature and running translation scripts.
-      * Make sure to run the above stack in `eu-west-1` and `ap-southeast-1` as well to support multiple regions.
+      * Make sure to run the above stack in `eu-west-1` as well to support multiple regions.
       * The `Region`, `ApiKey`, `IdentityPoolId`, `WebSocketUrl` values from stack output's tab can be added to `.env` file against the respective keys.
       * The `VITE_AWS_API_KEY_REGIONS`, `VITE_AWS_API_KEYS`, `VITE_AWS_COGNITO_IDENTITY_POOL_IDS`, `VITE_AWS_WEB_SOCKET_URLS` keys in `.env` file should be comma separated for multiple values and must be in same order for all variables.
       ---
@@ -107,8 +107,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 > VITE_AWS_CF_TEMPLATE
 > VITE_APPLE_APP_STORE_LINK
 > VITE_GOOGLE_PLAY_STORE_LINK
-> VITE_DATA_FILES_URL
-> VITE_SAMPLES_LIST_FILENAME
 > VITE_APP_VERSION
 > VITE_MIGRATE_FROM_GOOGLE_MAPS_PAGE
 > VITE_MIGRATE_A_WEB_APP_PAGE
@@ -116,7 +114,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 > VITE_MIGRATE_AN_IOS_APP_PAGE
 > VITE_MIGRATE_A_WEB_SERVICE_PAGE
 > VITE_PRICING_PAGE
-> VITE_CUSTOM_ASSETS_URL
 > VITE_SHOW_NEW_NAVIGATION
 ```
 
