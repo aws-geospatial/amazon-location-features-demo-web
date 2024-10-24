@@ -6,9 +6,8 @@ import { FC, lazy, useCallback, useEffect, useMemo, useState } from "react";
 import { Button, Divider, Flex, Text } from "@aws-amplify/ui-react";
 import { IconArrow, IconBackArrow, IconPoweredByAws1 } from "@demo/assets/svgs";
 import { aboutModalData, appConfig } from "@demo/core/constants";
-import { useMap } from "@demo/hooks";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
-import { AboutOptionEnum, MapProviderEnum } from "@demo/types/Enums";
+import { AboutOptionEnum } from "@demo/types/Enums";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
 
@@ -16,13 +15,7 @@ const Modal = lazy(() => import("@demo/atomicui/atoms/Modal").then(module => ({ 
 
 const {
 	ROUTES: { SOFTWARE_ATTRIBUTIONS },
-	LINKS: {
-		ESRI_ATTRIBUTION_LINK,
-		HERE_ATTRIBUTION_LINK,
-		AWS_CUSTOMER_AGREEMENT,
-		AWS_ACCEPTABLE_USE_POLICY,
-		AWS_PRIVACY_NOTICE
-	},
+	LINKS: { HERE_ATTRIBUTION_LINK, AWS_CUSTOMER_AGREEMENT, AWS_ACCEPTABLE_USE_POLICY, AWS_PRIVACY_NOTICE },
 	ENV: { APP_VERSION }
 } = appConfig;
 const {
@@ -37,7 +30,6 @@ interface AboutModalProps {
 
 const AboutModal: FC<AboutModalProps> = ({ open, onClose }) => {
 	const [selectedOption, setSelectedOption] = useState<AboutOptionEnum | undefined>(AboutOptionEnum.ATTRIBUTION);
-	const { mapProvider } = useMap();
 	const { t, i18n } = useTranslation();
 	const langDir = i18n.dir();
 	const isLtr = langDir === "ltr";
@@ -48,11 +40,7 @@ const AboutModal: FC<AboutModalProps> = ({ open, onClose }) => {
 		isMobile ? setSelectedOption(undefined) : setSelectedOption(AboutOptionEnum.ATTRIBUTION);
 	}, [isMobile, setSelectedOption]);
 
-	const handlePartnerLearnMore = useCallback(() => {
-		mapProvider === MapProviderEnum.ESRI
-			? window.open(ESRI_ATTRIBUTION_LINK, "_blank")
-			: window.open(HERE_ATTRIBUTION_LINK, "_blank");
-	}, [mapProvider]);
+	const handlePartnerLearnMore = useCallback(() => window.open(HERE_ATTRIBUTION_LINK, "_blank"), []);
 
 	const renderTermsAndConditions = useCallback(
 		(showIconAndCopyright = true) => (

@@ -3,7 +3,7 @@ import { FC, lazy } from "react";
 import { Divider, Flex, View } from "@aws-amplify/ui-react";
 import { IconLocateMe, IconMinus, IconZoomPlus, LogoLight } from "@demo/assets/svgs";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
-import { MapStyleFilterTypes, MenuItemEnum, ShowStateType } from "@demo/types";
+import { MenuItemEnum, ShowStateType } from "@demo/types";
 import { MapRef } from "react-map-gl/maplibre";
 import "./styles.scss";
 
@@ -30,21 +30,11 @@ const AuthTrackerBox = lazy(() =>
 
 interface DemoPlaceholderPageProps {
 	show: ShowStateType;
-	isGrabVisible: boolean;
-	searchValue: string;
-	selectedFilters: MapStyleFilterTypes;
 	value: string;
 	setValue: (value: string) => void;
 }
 
-const DemoPlaceholderPage: FC<DemoPlaceholderPageProps> = ({
-	show,
-	isGrabVisible,
-	searchValue,
-	selectedFilters,
-	value,
-	setValue
-}) => {
+const DemoPlaceholderPage: FC<DemoPlaceholderPageProps> = ({ show, value, setValue }) => {
 	const { isDesktop } = useDeviceMediaQuery();
 	return (
 		<View style={{ height: "100%" }}>
@@ -59,9 +49,7 @@ const DemoPlaceholderPage: FC<DemoPlaceholderPageProps> = ({
 								onShowSettings={() => {}}
 								onShowAboutModal={() => {}}
 								onShowAuthGeofenceBox={() => {}}
-								onShowAuthTrackerDisclaimerModal={() => {}}
 								onShowAuthTrackerBox={() => {}}
-								onShowUnauthSimulationDisclaimerModal={() => {}}
 								onShowUnauthGeofenceBox={() => {}}
 								onShowUnauthTrackerBox={() => {}}
 								onOpenFeedbackModal={() => {}}
@@ -137,23 +125,12 @@ const DemoPlaceholderPage: FC<DemoPlaceholderPageProps> = ({
 					setOpenStylesCard={() => {}}
 					onCloseSidebar={() => {}}
 					onOpenSignInModal={() => {}}
-					isGrabVisible={isGrabVisible}
-					showGrabDisclaimerModal={false}
 					onShowGridLoader={() => {}}
-					handleMapStyleChange={() => {}}
-					searchValue={searchValue}
-					setSearchValue={() => {}}
-					selectedFilters={selectedFilters}
-					setSelectedFilters={() => {}}
 					isLoading={true}
-					showOpenDataDisclaimerModal={false}
 					isAuthGeofenceBoxOpen={show.authGeofenceBox}
 					onSetShowAuthGeofenceBox={() => {}}
-					isAuthTrackerDisclaimerModalOpen={show.authTrackerDisclaimerModal}
 					isAuthTrackerBoxOpen={show.authTrackerBox}
-					onShowAuthTrackerDisclaimerModal={() => {}}
 					onSetShowAuthTrackerBox={() => {}}
-					onShowUnauthSimulationDisclaimerModal={() => {}}
 					isUnauthGeofenceBoxOpen={show.unauthGeofenceBox}
 					isUnauthTrackerBoxOpen={show.unauthTrackerBox}
 					onSetShowUnauthGeofenceBox={() => {}}
@@ -175,9 +152,6 @@ const DemoPlaceholderPage: FC<DemoPlaceholderPageProps> = ({
 				open={show.settings}
 				onClose={() => {}}
 				resetAppState={() => {}}
-				isGrabVisible={isGrabVisible}
-				handleMapProviderChange={() => {}}
-				handleCurrentLocationAndViewpoint={() => {}}
 				mapButtons={
 					<MapButtons
 						renderedUpon={"Settings Modal"}
@@ -185,22 +159,11 @@ const DemoPlaceholderPage: FC<DemoPlaceholderPageProps> = ({
 						setOpenStylesCard={() => {}}
 						onCloseSidebar={() => {}}
 						onOpenSignInModal={() => {}}
-						isGrabVisible={isGrabVisible}
-						showGrabDisclaimerModal={false}
 						onShowGridLoader={() => {}}
-						handleMapStyleChange={() => {}}
-						searchValue={searchValue}
-						setSearchValue={() => {}}
-						selectedFilters={selectedFilters}
-						setSelectedFilters={() => {}}
 						isLoading={true}
-						showOpenDataDisclaimerModal={false}
 						isAuthGeofenceBoxOpen={show.authGeofenceBox}
 						onSetShowAuthGeofenceBox={() => {}}
-						isAuthTrackerDisclaimerModalOpen={show.authTrackerDisclaimerModal}
 						isAuthTrackerBoxOpen={show.authTrackerBox}
-						onShowAuthTrackerDisclaimerModal={() => {}}
-						onShowUnauthSimulationDisclaimerModal={() => {}}
 						onSetShowAuthTrackerBox={() => {}}
 						isUnauthGeofenceBoxOpen={show.unauthGeofenceBox}
 						isUnauthTrackerBoxOpen={show.unauthTrackerBox}
@@ -208,7 +171,6 @@ const DemoPlaceholderPage: FC<DemoPlaceholderPageProps> = ({
 						onSetShowUnauthTrackerBox={() => {}}
 					/>
 				}
-				resetSearchAndFilters={() => {}}
 			/>
 			<Flex className="logo-stroke-container">
 				<LogoLight />

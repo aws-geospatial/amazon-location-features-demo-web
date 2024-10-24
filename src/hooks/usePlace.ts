@@ -32,15 +32,23 @@ const usePlace = () => {
 				try {
 					setState({ isSearching: true });
 					const data = await placeService.getPlaceSuggestions(value);
-					cb
-						? cb(data?.Results?.map(({ PlaceId, Text }) => ({ PlaceId, Text })) as SuggestionType[])
-						: setState({
-								suggestions: data?.Results?.map(({ PlaceId, Text }) => ({ PlaceId, Text, Id: uuid.randomUUID() }))
-						  });
-					setState({
-						bound: undefined
-					});
-					setViewpoint(viewpoint);
+
+					if (data?.ResultItems) {
+						const { ResultItems } = data;
+						// TODO: Implement logic to use QueryId, ignoring QuqeryId for now
+						const suggestions = ResultItems.filter(({ Place }) => Place?.PlaceId).map(({ Query, Place, Title }) => ({
+							id: uuid.randomUUID(),
+							queryId: Query?.QueryId,
+							placeId: Place?.PlaceId,
+							position: Place?.Position,
+							address: Place?.Address,
+							label: Query?.QueryId ? Title : Place?.Address?.Label,
+							country: Place?.Address?.Country?.Name,
+							region: Place?.Address?.Region ? Place?.Address?.Region?.Name : Place?.Address?.SubRegion?.Name
+						}));
+						cb ? cb(suggestions) : setState({ suggestions });
+						setViewpoint(viewpoint);
+					}
 				} catch (error) {
 					errorHandler(error, t("error_handler__failed_search_place_suggestions.text") as string);
 				} finally {
@@ -62,23 +70,29 @@ const usePlace = () => {
 				try {
 					setState({ isSearching: true });
 					const data = await placeService.getPlacesByText(value);
-					const clusters: ClustersType = {};
-					const suggestions = data?.Results?.map(p => {
-						const Hash = getHash(p.Place?.Geometry?.Point as number[], store.precision);
-						const sg = {
-							...p,
-							Hash,
-							Id: uuid.randomUUID()
-						} as SuggestionType;
-						clusters[Hash] = clusters[Hash] ? [...clusters[Hash], sg] : [sg];
-						return sg;
-					});
-					cb ? cb(suggestions as SuggestionType[]) : setState({ suggestions });
-					setState({
-						bound: data?.Summary?.ResultBBox,
-						clusters
-					});
-					setViewpoint(viewpoint);
+
+					if (data?.ResultItems) {
+						const { ResultItems } = data;
+						const clusters: ClustersType = {};
+						const suggestions = ResultItems.map(({ Position, PlaceId, Address }) => {
+							const hash = getHash(Position!, store.precision);
+							const sg: SuggestionType = {
+								id: uuid.randomUUID(),
+								placeId: PlaceId,
+								position: Position,
+								address: Address,
+								label: Address?.Label,
+								country: Address?.Country?.Name,
+								region: Address?.Region ? Address?.Region?.Name : Address?.SubRegion?.Name,
+								hash
+							};
+							clusters[hash] = clusters[hash] ? [...clusters[hash], sg] : [sg];
+							return sg;
+						});
+						cb ? cb(suggestions) : setState({ suggestions });
+						setState({ clusters });
+						setViewpoint(viewpoint);
+					}
 				} catch (error) {
 					errorHandler(error, t("error_handler__failed_search_place_text.text") as string);
 				} finally {
@@ -89,23 +103,30 @@ const usePlace = () => {
 				try {
 					setState({ isSearching: true });
 					const data = await placeService.getNLPlacesByText(value);
-					const clusters: ClustersType = {};
-					const suggestions = data?.Results?.map((p: SearchForTextResult) => {
-						const Hash = getHash(p.Place?.Geometry?.Point as number[], store.precision);
-						const sg = {
-							...p,
-							Hash,
-							Id: uuid.randomUUID()
-						} as SuggestionType;
-						clusters[Hash] = clusters[Hash] ? [...clusters[Hash], sg] : [sg];
-						return sg;
-					});
-					cb ? cb(suggestions as SuggestionType[]) : setState({ suggestions });
-					setState({
-						bound: data?.Summary.ResultBBox,
-						clusters
-					});
-					setViewpoint(viewpoint);
+
+					if (data.Results) {
+						const { Results } = data;
+						const clusters: ClustersType = {};
+						const suggestions: SuggestionType[] = Results.map(({ Place, PlaceId }: SearchForTextResult) => {
+							const hash = getHash(Place!.Geometry!.Point!, store.precision);
+							const sg: SuggestionType = {
+								id: uuid.randomUUID(),
+								placeId: PlaceId,
+								label: Place?.Label,
+								position: Place?.Geometry?.Point,
+								country: Place?.Country,
+								region: Place?.Region ? Place?.Region : Place?.SubRegion,
+								hash
+							};
+							clusters[hash] = clusters[hash] ? [...clusters[hash], sg] : [sg];
+							return sg;
+						});
+						cb ? cb(suggestions) : setState({ suggestions });
+						setState({
+							clusters
+						});
+						setViewpoint(viewpoint);
+					}
 				} catch (error) {
 					errorHandler(error, t("error_handler__failed_search_place_text.text") as string);
 				} finally {
@@ -129,14 +150,21 @@ const usePlace = () => {
 					const [lat, lng] = value.split(",");
 					const data = await placeService.getPlaceByCoordinates([parseFloat(lng), parseFloat(lat)]);
 
-					if (!!data?.Results?.length) {
-						const vPoint = data
-							? { longitude: data.Summary?.Position![0] || 0, latitude: data.Summary?.Position![1] || 0 }
-							: viewpoint;
-						const Hash = getHash([vPoint.longitude, vPoint.latitude], 10);
-						const suggestion = { ...data?.Results[0], Hash, Id: uuid.randomUUID() };
+					if (data?.ResultItems) {
+						const { ResultItems } = data;
+						const { Position, Title, PlaceId, Address } = ResultItems[0];
+						const vPoint = Position ? { longitude: Position[0], latitude: Position[1] } : viewpoint;
+						const hash = getHash([vPoint.longitude, vPoint.latitude], 10);
+						const suggestion: SuggestionType = {
+							id: uuid.randomUUID(),
+							placeId: PlaceId,
+							label: Title,
+							position: Position,
+							country: Address?.Country?.Name,
+							region: Address?.Region ? Address?.Region?.Name : Address?.SubRegion?.Name,
+							hash
+						};
 						cb ? cb([suggestion]) : setState({ suggestions: [suggestion] });
-						setState({ bound: undefined });
 						setViewpoint(vPoint);
 					}
 				} catch (error) {
@@ -155,6 +183,7 @@ const usePlace = () => {
 				isNLSearchEnabled = false
 			) => {
 				let placeSearchType = AnalyticsPlaceSearchTypeEnum.TEXT;
+
 				if (isGeoString(value)) {
 					await methods.searchPlacesByCoordinates(value, viewpoint, cb);
 					placeSearchType = AnalyticsPlaceSearchTypeEnum.COORDINATES;
@@ -190,32 +219,28 @@ const usePlace = () => {
 					return { zoom };
 				});
 			},
-			setMarker: (marker?: Omit<ViewPointType, "zoom" | "info">) => {
+			setMarker: (marker?: ViewPointType) => {
 				setState({ marker });
 			},
 			setSelectedMarker: async (selectedMarker?: SuggestionType) => {
 				if (selectedMarker === undefined) {
 					setState({ selectedMarker });
-					return;
-				}
-
-				let coords;
-
-				if (!selectedMarker.PlaceId) {
-					const { Place } = selectedMarker;
-					coords = Place?.Geometry?.Point;
-				} else {
+				} else if (selectedMarker.position) {
+					const { position } = selectedMarker;
+					setState({ selectedMarker, hoveredMarker: undefined, zoom: 15 });
+					setViewpoint({ longitude: position[0], latitude: position[1] });
+				} else if (selectedMarker.placeId) {
 					try {
-						const pd = await placeService.getPlaceById(selectedMarker.PlaceId);
-						coords = pd?.Place?.Geometry?.Point;
+						const { placeId } = selectedMarker;
+						const place = await placeService.getPlaceById(placeId);
+						setState({ selectedMarker, hoveredMarker: undefined, zoom: 15 });
+						setViewpoint({ longitude: place!.Position![0], latitude: place!.Position![1] });
 					} catch (error) {
 						errorHandler(error, t("error_handler__failed_fetch_place_id_marker.text") as string);
 					}
+				} else {
+					console.error("setSelectedMarker - edge case", { selectedMarker });
 				}
-
-				const [longitude, latitude] = coords as number[];
-				setState({ selectedMarker, hoveredMarker: undefined, zoom: 15 });
-				setViewpoint({ longitude, latitude });
 			},
 			setHoveredMarker: (hoveredMarker?: SuggestionType) => {
 				setState({ hoveredMarker });
@@ -225,7 +250,6 @@ const usePlace = () => {
 					suggestions: undefined,
 					selectedMarker: undefined,
 					marker: undefined,
-					bound: undefined,
 					clusters: undefined
 				});
 			},
@@ -237,7 +261,6 @@ const usePlace = () => {
 			},
 			resetStore() {
 				setState({
-					bound: undefined,
 					clusters: undefined,
 					suggestions: undefined,
 					selectedMarker: undefined,

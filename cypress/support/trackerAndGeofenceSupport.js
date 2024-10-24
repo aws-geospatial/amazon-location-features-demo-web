@@ -45,8 +45,6 @@ Cypress.Commands.add("addTrackerAndGeofenceEnterExit", (isResponsive, geofenceNa
 	cy.wait(5000);
 	cy.contains("Tracker").click();
 	cy.wait(5000);
-	cy.contains("Continue").click();
-	cy.wait(5000);
 	cy.get('[class="maplibregl-canvas"]').click("left", { force: true });
 	cy.wait(5000);
 	isResponsive

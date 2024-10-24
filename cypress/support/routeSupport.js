@@ -28,7 +28,7 @@ Cypress.Commands.add("swapDepartureAndDestinationAddresses", () => {
 
 Cypress.Commands.add("canSelectAnyRouteMode", () => {
 	cy.get(".travel-mode").should("have.class", "selected");
-	cy.get(".travel-mode").should("exist").and("have.length", 3);
+	cy.get(".travel-mode").should("exist").and("have.length", 4);
 });
 
 Cypress.Commands.add("searchRouteWithAvoidTollOption", isResponsive => {

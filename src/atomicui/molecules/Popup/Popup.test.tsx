@@ -53,19 +53,13 @@ describe("<Popup/>", () => {
 				<Popup
 					active
 					info={{
-						Id: faker.random.alphaNumeric(10),
-						PlaceId: faker.random.word(),
-						Text: faker.random.words(3),
-						Distance: 11,
-						Relevance: 11,
-						Hash: faker.random.word(),
-						Place: {
-							Label: faker.random.words(3),
-							Geometry: { Point: [0, 0] }
-						}
+						id: faker.random.alphaNumeric(10),
+						placeId: faker.random.word(),
+						label: faker.random.words(3),
+						position: [0, 0],
+						hash: faker.random.word()
 					}}
 					select={jest.fn()}
-					setInfo={jest.fn()}
 				/>
 			</I18nextProvider>
 		);

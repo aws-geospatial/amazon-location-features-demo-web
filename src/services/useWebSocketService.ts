@@ -25,7 +25,7 @@ const useWebSocketService = (
 	const [connectionState, setConnectionState] = useState<MqttConnectionState>(CLOSED);
 	const timeoutId = useRef<NodeJS.Timeout | null>(null);
 	const areEventListenersSet = useRef(false);
-	const { region, webSocketUrl, credentials } = useAuth();
+	const { baseValues, userProvidedValues, credentials } = useAuth();
 	const { setUnauthNotifications } = useGeofence();
 
 	/* Terminate connection and subscription on unmount */
@@ -101,13 +101,18 @@ const useWebSocketService = (
 			iot.AwsIotMqttConnectionConfigBuilder.new_with_websockets()
 				.with_clean_session(false)
 				.with_client_id(credentials!.identityId)
-				.with_endpoint(getDomainName(webSocketUrl!))
-				.with_credentials(region!, credentials!.accessKeyId, credentials!.secretAccessKey, credentials!.sessionToken),
-		[credentials, webSocketUrl, region]
+				.with_endpoint(getDomainName(userProvidedValues ? userProvidedValues.webSocketUrl : baseValues!.webSocketUrl))
+				.with_credentials(
+					userProvidedValues ? userProvidedValues.region : baseValues!.region,
+					credentials!.accessKeyId,
+					credentials!.secretAccessKey,
+					credentials!.sessionToken
+				),
+		[baseValues, credentials, userProvidedValues]
 	);
 
 	const connectAndSubscribe = useCallback(async () => {
-		if (!mqttClient) {
+		if (!mqttClient && ((baseValues && !userProvidedValues) || (userProvidedValues && credentials?.authenticated))) {
 			const client = new mqtt.MqttClient().new_connection(config.build());
 			setMqttClient(client);
 			try {
@@ -214,7 +219,7 @@ const useWebSocketService = (
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [mqttClient, config, credentials]);
+	}, [mqttClient, config, credentials, baseValues, userProvidedValues]);
 
 	/* Initiate connection and subscription accordingly */
 	useEffect(() => {

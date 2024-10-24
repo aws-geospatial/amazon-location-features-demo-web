@@ -8,7 +8,6 @@ import createStore from "./createStore";
 interface PlaceStoreProps {
 	isSearching: boolean;
 	isFetchingPlaceData: boolean;
-	bound?: number[];
 	clusters?: ClustersType;
 	clusterZoom: number;
 	precision: number;

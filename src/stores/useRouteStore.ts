@@ -9,7 +9,7 @@ interface RouteStoreProps {
 	isFetchingRoute: boolean;
 	routePositions?: { from: number[] | undefined; to: number[] | undefined };
 	routeData?: RouteDataType;
-	directions?: { info: SuggestionType; isEsriLimitation: boolean };
+	directions?: SuggestionType;
 }
 
 const initialState: IStateProps<RouteStoreProps> = {

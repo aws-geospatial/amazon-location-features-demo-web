@@ -30,13 +30,12 @@ import {
 } from "@demo/assets/svgs";
 import { appConfig } from "@demo/core/constants";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
-import { useAuth, useIot, useMap } from "@demo/hooks";
+import { useAuth, useIot } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import {
 	AnalyticsEventActionsEnum,
 	EventTypeEnum,
-	MapProviderEnum,
 	MenuItemEnum,
 	ResponsiveUIEnum,
 	TriggeredByEnum
@@ -106,11 +105,9 @@ interface ExploreProps {
 	onShowAuthGeofenceBox: () => void;
 	onShowAuthTrackerBox: () => void;
 	onShowSettings: () => void;
-	onShowTrackingDisclaimerModal: () => void;
 	onShowAboutModal: () => void;
 	onShowUnauthGeofenceBox: () => void;
 	onShowUnauthTrackerBox: () => void;
-	onshowUnauthSimulationDisclaimerModal: () => void;
 	bottomSheetRef?: MutableRefObject<RefHandles | null>;
 }
 
@@ -123,11 +120,9 @@ const Explore: FC<ExploreProps> = ({
 	onShowAuthGeofenceBox,
 	onShowAuthTrackerBox,
 	onShowSettings,
-	onShowTrackingDisclaimerModal,
 	onShowAboutModal,
 	onShowUnauthGeofenceBox,
 	onShowUnauthTrackerBox,
-	onshowUnauthSimulationDisclaimerModal,
 	bottomSheetRef
 }) => {
 	const [isMenuExpanded, setIsMenuExpanded] = useState<{ [key: string]: boolean }>({
@@ -142,8 +137,7 @@ const Explore: FC<ExploreProps> = ({
 	const isLtr = langDir === "ltr";
 	const { setBottomSheetMinHeight, setBottomSheetHeight, bottomSheetCurrentHeight = 0 } = useBottomSheet();
 	const { isDesktop, isDesktopBrowser } = useDeviceMediaQuery();
-	const { isUserAwsAccountConnected, credentials, onLogin, onLogout, onDisconnectAwsAccount } = useAuth();
-	const { mapProvider: currentMapProvider } = useMap();
+	const { userProvidedValues, credentials, onLogin, onLogout, onDisconnectAwsAccount } = useAuth();
 	const { detachPolicy } = useIot();
 	const isAuthenticated = !!credentials?.authenticated;
 	const disconnectButtonText = t("disconnect_aws_account.text");
@@ -164,29 +158,28 @@ const Explore: FC<ExploreProps> = ({
 		);
 	};
 
-	const onClickMenuItem = (menuItem: MenuItemEnum) => {
-		onCloseSidebar();
-		const isAuthenticated = !!credentials?.authenticated;
+	const onClickMenuItem = useCallback(
+		(menuItem: MenuItemEnum) => {
+			onCloseSidebar();
+			const isAuthenticated = !!credentials?.authenticated;
 
-		if (isUserAwsAccountConnected) {
-			if (isAuthenticated) {
-				if (menuItem === MenuItemEnum.GEOFENCE) {
-					onShowAuthGeofenceBox();
-					updateUIInfo(ResponsiveUIEnum.auth_geofence);
-					if (!isDesktop) {
-						setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
-						setBottomSheetHeight(window.innerHeight * 0.4);
-						setTimeout(() => {
-							setBottomSheetMinHeight(BottomSheetHeights.explore.min);
-							setBottomSheetHeight(window.innerHeight);
-						}, 300);
-					}
-				} else {
-					if (currentMapProvider === MapProviderEnum.ESRI) {
-						onShowTrackingDisclaimerModal();
+			if (!!userProvidedValues) {
+				if (isAuthenticated) {
+					if (menuItem === MenuItemEnum.GEOFENCE) {
+						onShowAuthGeofenceBox();
+						updateUIInfo(ResponsiveUIEnum.auth_geofence);
+						if (!isDesktop) {
+							setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+							setBottomSheetHeight(window.innerHeight * 0.4);
+							setTimeout(() => {
+								setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+								setBottomSheetHeight(window.innerHeight);
+							}, 300);
+						}
 					} else {
 						onShowAuthTrackerBox();
 						updateUIInfo(ResponsiveUIEnum.auth_tracker);
+
 						if (!isDesktop) {
 							setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
 							setBottomSheetHeight(window.innerHeight * 0.4);
@@ -196,13 +189,9 @@ const Explore: FC<ExploreProps> = ({
 							}, 300);
 						}
 					}
+				} else {
+					onOpenSignInModal();
 				}
-			} else {
-				onOpenSignInModal();
-			}
-		} else {
-			if (currentMapProvider === MapProviderEnum.GRAB) {
-				onshowUnauthSimulationDisclaimerModal();
 			} else {
 				if (menuItem === MenuItemEnum.GEOFENCE) {
 					onShowUnauthGeofenceBox();
@@ -212,8 +201,22 @@ const Explore: FC<ExploreProps> = ({
 					onShowUnauthTrackerBox();
 				}
 			}
-		}
-	};
+		},
+		[
+			credentials?.authenticated,
+			isDesktop,
+			onCloseSidebar,
+			onOpenSignInModal,
+			onShowAuthGeofenceBox,
+			onShowAuthTrackerBox,
+			onShowUnauthGeofenceBox,
+			onShowUnauthTrackerBox,
+			setBottomSheetHeight,
+			setBottomSheetMinHeight,
+			updateUIInfo,
+			userProvidedValues
+		]
+	);
 
 	const onClickSettings = useCallback(() => {
 		onCloseSidebar();
@@ -775,9 +778,7 @@ const Explore: FC<ExploreProps> = ({
 								title={t(title)}
 								titleColor={isMenuExpanded[title] ? "var(--primary-color)" : ""}
 								description={t(description)}
-								cardMargin={
-									idx === 0 && (!isUserAwsAccountConnected || !isAuthenticated) ? "2rem 0 0.923rem 0" : "0.923rem 0"
-								}
+								cardMargin={idx === 0 && (!userProvidedValues || !isAuthenticated) ? "2rem 0 0.923rem 0" : "0.923rem 0"}
 								direction="row-reverse"
 								cardAlignItems="center"
 								onClickHandler={onClickHandler}
@@ -795,9 +796,7 @@ const Explore: FC<ExploreProps> = ({
 													title={t(title)}
 													description={t(description)}
 													cardMargin={
-														idx === 0 && (!isUserAwsAccountConnected || !isAuthenticated)
-															? "2rem 0 0.923rem 0"
-															: "0.923rem 0"
+														idx === 0 && (!userProvidedValues || !isAuthenticated) ? "2rem 0 0.923rem 0" : "0.923rem 0"
 													}
 													cardAlignItems="center"
 													onClickHandler={onClickHandler}
@@ -818,9 +817,7 @@ const Explore: FC<ExploreProps> = ({
 							IconComponent={<IconArrow className="reverse-icon" width={20} height={20} />}
 							title={t(title)}
 							description={t(description)}
-							cardMargin={
-								idx === 0 && (!isUserAwsAccountConnected || !isAuthenticated) ? "2rem 0 0.923rem 0" : "0.923rem 0"
-							}
+							cardMargin={idx === 0 && (!userProvidedValues || !isAuthenticated) ? "2rem 0 0.923rem 0" : "0.923rem 0"}
 							direction="row-reverse"
 							cardAlignItems="center"
 							onClickHandler={onClickHandler}
@@ -830,61 +827,73 @@ const Explore: FC<ExploreProps> = ({
 				}
 			}
 		});
-	}, [exploreMoreOptions, isAuthenticated, isMenuExpanded, isUserAwsAccountConnected, t]);
+	}, [exploreMoreOptions, isAuthenticated, isMenuExpanded, userProvidedValues, t]);
 
-	const exploreButtons = [
-		{
-			text: t("routes.text"),
-			icon: <IconDirections width="1.53rem" height="1.53rem" fill="white" />,
-			onClick: () => {
-				updateUIInfo(ResponsiveUIEnum.routes);
-				if ((isAndroid || isIOS) && !isDesktopBrowser) {
-					setBottomSheetMinHeight(window.innerHeight - 10);
-					setBottomSheetHeight(window.innerHeight);
-					bottomSheetRef?.current?.snapTo(1000);
-					setTimeout(() => {
-						setBottomSheetMinHeight(BottomSheetHeights.explore.min);
-					}, 400);
-				} else {
+	const exploreButtons = useMemo(
+		() => [
+			{
+				text: t("routes.text"),
+				icon: <IconDirections width="1.53rem" height="1.53rem" fill="white" />,
+				onClick: () => {
+					updateUIInfo(ResponsiveUIEnum.routes);
+					if ((isAndroid || isIOS) && !isDesktopBrowser) {
+						setBottomSheetMinHeight(window.innerHeight - 10);
+						setBottomSheetHeight(window.innerHeight);
+						bottomSheetRef?.current?.snapTo(1000);
+						setTimeout(() => {
+							setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+						}, 400);
+					} else {
+						if (bottomSheetCurrentHeight < window.innerHeight * 0.4) {
+							setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+							setBottomSheetHeight(window.innerHeight * 0.4);
+
+							setTimeout(() => {
+								setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+								setBottomSheetHeight(window.innerHeight);
+							}, 200);
+						}
+					}
+				}
+			},
+			{
+				text: t("map_style.text"),
+				icon: <IconMapSolid width="1.53rem" height="1.53rem" fill="white" />,
+				onClick: () => {
+					updateUIInfo(ResponsiveUIEnum.map_styles);
 					if (bottomSheetCurrentHeight < window.innerHeight * 0.4) {
 						setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
 						setBottomSheetHeight(window.innerHeight * 0.4);
-
-						setTimeout(() => {
-							setBottomSheetMinHeight(BottomSheetHeights.explore.min);
-							setBottomSheetHeight(window.innerHeight);
-						}, 200);
 					}
-				}
-			}
-		},
-		{
-			text: t("map_style.text"),
-			icon: <IconMapSolid width="1.53rem" height="1.53rem" fill="white" />,
-			onClick: () => {
-				updateUIInfo(ResponsiveUIEnum.map_styles);
-				if (bottomSheetCurrentHeight < window.innerHeight * 0.4) {
-					setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
-					setBottomSheetHeight(window.innerHeight * 0.4);
-				}
 
-				setTimeout(() => {
-					setBottomSheetMinHeight(BottomSheetHeights.explore.min);
-					setBottomSheetHeight(window.innerHeight);
-				}, 500);
+					setTimeout(() => {
+						setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+						setBottomSheetHeight(window.innerHeight);
+					}, 500);
+				}
+			},
+			{
+				text: t("trackers.text"),
+				icon: <IconRadar width="1.53rem" height="1.53rem" />,
+				onClick: () => onClickMenuItem(MenuItemEnum.TRACKER)
+			},
+			{
+				text: t("geofences.text"),
+				icon: <IconGeofencePlusSolid width="1.53rem" height="1.53rem" fill="white" />,
+				onClick: () => onClickMenuItem(MenuItemEnum.GEOFENCE)
 			}
-		},
-		{
-			text: t("trackers.text"),
-			icon: <IconRadar width="1.53rem" height="1.53rem" />,
-			onClick: () => onClickMenuItem(MenuItemEnum.TRACKER)
-		},
-		{
-			text: t("geofences.text"),
-			icon: <IconGeofencePlusSolid width="1.53rem" height="1.53rem" fill="white" />,
-			onClick: () => onClickMenuItem(MenuItemEnum.GEOFENCE)
-		}
-	];
+		],
+		[
+			bottomSheetCurrentHeight,
+			bottomSheetRef,
+			isDesktopBrowser,
+			onClickMenuItem,
+			setBottomSheetHeight,
+			setBottomSheetMinHeight,
+			t,
+			updateUIInfo
+		]
+	);
 
 	return (
 		<Flex direction="column" className="explore-container" gap="0">
@@ -895,21 +904,21 @@ const Explore: FC<ExploreProps> = ({
 					<ExploreButton key={index} text={button.text} icon={button.icon} onClick={button.onClick} />
 				))}
 			</Flex>
-			{(!isUserAwsAccountConnected || !isAuthenticated) && (
+			{(!userProvidedValues || !isAuthenticated) && (
 				<Flex direction="column" className="aws-connect-container button-wrapper">
-					<ConnectAccount isAuthenticated={isUserAwsAccountConnected} />
+					<ConnectAccount isAuthenticated={!!userProvidedValues} />
 				</Flex>
 			)}
 			<Flex direction="column" gap="0" className="explore-more-options">
 				{renderExploreMoreOptions}
 			</Flex>
-			{isUserAwsAccountConnected && isAuthenticated && (
+			{!!userProvidedValues && isAuthenticated && (
 				<>
 					<Divider className="title-divider" />
 					<AwsAccountButton isFooter />
 				</>
 			)}
-			{isUserAwsAccountConnected && !isAuthenticated && (
+			{!!userProvidedValues && !isAuthenticated && (
 				<>
 					<Divider className="title-divider" />
 					<DisconnectButton isFooter />

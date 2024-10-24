@@ -4,12 +4,12 @@
 import { FC, memo, useCallback, useEffect, useMemo, useState } from "react";
 
 import { View } from "@aws-amplify/ui-react";
+import { GetPlaceCommandOutput } from "@aws-sdk/client-geoplaces";
 import { IconSelected, IconSuggestion } from "@demo/assets/svgs";
+import { Popup } from "@demo/atomicui/molecules";
 import { usePlace } from "@demo/hooks";
 import { SuggestionType } from "@demo/types";
 import { Marker } from "react-map-gl/maplibre";
-
-import { Popup } from "../Popup";
 
 interface Props extends SuggestionType {
 	active?: boolean;
@@ -18,70 +18,46 @@ interface Props extends SuggestionType {
 	setSearchValue: (v: string) => void;
 }
 
-const SuggestionMarker: FC<Props> = ({
-	Id,
-	PlaceId,
-	Text,
-	Place,
-	active,
-	onClosePopUp,
-	searchValue,
-	setSearchValue,
-	...rest
-}) => {
-	const [info, setInfo] = useState<SuggestionType | undefined>(undefined);
+const SuggestionMarker: FC<Props> = ({ active, onClosePopUp, searchValue, setSearchValue, ...rest }) => {
+	const [info, setInfo] = useState<SuggestionType>(rest);
 	const { getPlaceData, setSelectedMarker, suggestions, hoveredMarker, setHoveredMarker, clearPoiList } = usePlace();
 
-	const getPlaceInfo = useCallback(
-		async (placeId: string) => {
-			const pd = await getPlaceData(placeId);
-			setInfo({ Id, Place: pd?.Place });
-		},
-		[Id, getPlaceData]
-	);
-
-	const setPlaceInfo = useCallback(() => setInfo({ Id, Place }), [Id, Place]);
+	useEffect(() => {
+		(async () => {
+			if (!!info.placeId && (!info.address || !info.position)) {
+				const place: GetPlaceCommandOutput | undefined = await getPlaceData(info.placeId);
+				setInfo(s => ({ ...s, address: place?.Address, position: place?.Position }));
+			}
+		})();
+	}, [getPlaceData, info.address, info.placeId, info.position]);
 
 	useEffect(() => {
-		if (PlaceId) {
-			getPlaceInfo(PlaceId);
-		} else {
-			setPlaceInfo();
-		}
-	}, [PlaceId, getPlaceInfo, setPlaceInfo]);
-
-	useEffect(() => {
-		if (info && active && !!searchValue) {
-			setSearchValue(info.Place?.Label || "");
+		if (info.address?.Label && active && !!searchValue) {
+			setSearchValue(info.address?.Label);
 		}
 	}, [info, active, searchValue, setSearchValue]);
 
 	const select = useCallback(
-		async (str?: string) => {
-			if (str) {
-				const selectedMarker = suggestions?.find(
-					(i: SuggestionType) => i.PlaceId === str || (i.Place?.Label === str && i.Id === Id)
-				);
+		async (id?: string) => {
+			if (id) {
+				const selectedMarker = suggestions?.find(s => s.id === id);
 				await setSelectedMarker(selectedMarker);
 			} else {
 				await setSelectedMarker(undefined);
 			}
 		},
-		[suggestions, setSelectedMarker, Id]
+		[suggestions, setSelectedMarker]
 	);
 
 	const markerDescription = useMemo(() => {
-		const string = Text || Place?.Label || "";
+		const string = info?.address?.Label || info.label || "";
 		return string.split(",")[0];
-	}, [Place?.Label, Text]);
+	}, [info?.address?.Label, info.label]);
 
 	const isHovered = useMemo(
 		() =>
-			hoveredMarker &&
-			(hoveredMarker.PlaceId
-				? hoveredMarker.PlaceId === PlaceId
-				: hoveredMarker.Place?.Label === Place?.Label && hoveredMarker.Id === Id),
-		[hoveredMarker, PlaceId, Place?.Label, Id]
+			hoveredMarker && (hoveredMarker.placeId ? hoveredMarker.placeId === info.placeId : hoveredMarker.id === info.id),
+		[hoveredMarker, info.id, info.placeId]
 	);
 
 	const setHover = useCallback(
@@ -91,7 +67,8 @@ const SuggestionMarker: FC<Props> = ({
 		[setHoveredMarker]
 	);
 
-	if (info && info.Place?.Geometry?.Point) {
+	// position
+	if (info && info?.position) {
 		return (
 			<Marker
 				style={{
@@ -103,19 +80,15 @@ const SuggestionMarker: FC<Props> = ({
 					textShadow: "-1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff"
 				}}
 				clickTolerance={22}
-				longitude={info.Place?.Geometry.Point[0]}
-				latitude={info.Place?.Geometry.Point[1]}
+				longitude={info.position[0]}
+				latitude={info.position[1]}
 				onClick={async e => {
 					e.originalEvent.preventDefault();
 					e.originalEvent.stopPropagation();
-					await select((PlaceId || Place?.Label) as string);
+					await select(info.id);
 				}}
 			>
-				{active || isHovered ? (
-					<IconSelected />
-				) : (
-					<IconSuggestion onMouseOver={() => setHover({ Id, PlaceId, Text, ...rest })} />
-				)}
+				{active || isHovered ? <IconSelected /> : <IconSuggestion onMouseOver={() => setHover(info)} />}
 				{active ? (
 					<Popup
 						active={active}
@@ -129,7 +102,6 @@ const SuggestionMarker: FC<Props> = ({
 								  }
 								: onClosePopUp
 						}
-						setInfo={setInfo}
 					/>
 				) : (
 					<View

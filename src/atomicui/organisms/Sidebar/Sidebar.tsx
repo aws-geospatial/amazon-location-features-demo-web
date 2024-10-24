@@ -6,9 +6,9 @@ import { FC, lazy } from "react";
 import { Button, Card, Flex, Text, View } from "@aws-amplify/ui-react";
 import { IconClose, IconCompass, IconGear, IconGeofence, IconInfo, IconLockSolid, IconRadar } from "@demo/assets/svgs";
 import { appConfig, marketingMenuOptionsData } from "@demo/core/constants";
-import { useAuth, useIot, useMap } from "@demo/hooks";
+import { useAuth, useIot } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
-import { AnalyticsEventActionsEnum, EventTypeEnum, MapProviderEnum, MenuItemEnum, TriggeredByEnum } from "@demo/types";
+import { AnalyticsEventActionsEnum, EventTypeEnum, MenuItemEnum, TriggeredByEnum } from "@demo/types";
 import { ResponsiveUIEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
 import { useTranslation } from "react-i18next";
@@ -30,11 +30,9 @@ interface SidebarProps {
 	onShowSettings: () => void;
 	onShowAboutModal: () => void;
 	onShowAuthGeofenceBox: () => void;
-	onShowAuthTrackerDisclaimerModal: () => void;
 	onShowAuthTrackerBox: () => void;
 	onShowUnauthGeofenceBox: () => void;
 	onShowUnauthTrackerBox: () => void;
-	onShowUnauthSimulationDisclaimerModal: () => void;
 	onOpenFeedbackModal: () => void;
 }
 
@@ -45,15 +43,12 @@ const Sidebar: FC<SidebarProps> = ({
 	onShowSettings,
 	onShowAboutModal,
 	onShowAuthGeofenceBox,
-	onShowAuthTrackerDisclaimerModal,
 	onShowAuthTrackerBox,
-	onShowUnauthSimulationDisclaimerModal,
 	onShowUnauthGeofenceBox,
 	onShowUnauthTrackerBox,
 	onOpenFeedbackModal
 }) => {
-	const { isUserAwsAccountConnected, credentials, onLogin, onLogout, onDisconnectAwsAccount } = useAuth();
-	const { mapProvider: currentMapProvider } = useMap();
+	const { credentials, onLogin, onLogout, onDisconnectAwsAccount, userProvidedValues } = useAuth();
 	const { detachPolicy } = useIot();
 	const navigate = useNavigate();
 	const isAuthenticated = !!credentials?.authenticated;
@@ -84,26 +79,22 @@ const Sidebar: FC<SidebarProps> = ({
 	const onClickMenuItem = (menuItem: MenuItemEnum) => {
 		onCloseSidebar();
 
-		if (isUserAwsAccountConnected) {
+		if (userProvidedValues) {
 			if (isAuthenticated) {
 				if (menuItem === MenuItemEnum.GEOFENCE) {
 					onShowAuthGeofenceBox();
 				} else {
-					currentMapProvider === MapProviderEnum.ESRI ? onShowAuthTrackerDisclaimerModal() : onShowAuthTrackerBox();
+					onShowAuthTrackerBox();
 				}
 			} else {
 				onOpenSignInModal();
 			}
 		} else {
-			if (currentMapProvider === MapProviderEnum.GRAB) {
-				onShowUnauthSimulationDisclaimerModal();
+			if (menuItem === MenuItemEnum.GEOFENCE) {
+				onShowUnauthGeofenceBox();
 			} else {
-				if (menuItem === MenuItemEnum.GEOFENCE) {
-					onShowUnauthGeofenceBox();
-				} else {
-					onShowUnauthTrackerBox();
-					setUI(ResponsiveUIEnum.non_start_unauthorized_tracker);
-				}
+				onShowUnauthTrackerBox();
+				setUI(ResponsiveUIEnum.non_start_unauthorized_tracker);
 			}
 		}
 	};
@@ -148,7 +139,7 @@ const Sidebar: FC<SidebarProps> = ({
 				<Flex className="link-item" onClick={() => onClickMenuItem(MenuItemEnum.GEOFENCE)}>
 					<IconGeofence className="menu-icon" />
 					<Text>{t("geofence.text")}</Text>
-					{isUserAwsAccountConnected && !isAuthenticated && (
+					{userProvidedValues && !isAuthenticated && (
 						<Flex className="locked-item">
 							<IconLockSolid
 								className="lock-icon"
@@ -163,7 +154,7 @@ const Sidebar: FC<SidebarProps> = ({
 				<Flex className="link-item" onClick={() => onClickMenuItem(MenuItemEnum.TRACKER)}>
 					<IconRadar className="menu-icon" />
 					<Text>{t("tracker.text")}</Text>
-					{isUserAwsAccountConnected && !isAuthenticated && (
+					{userProvidedValues && !isAuthenticated && (
 						<Flex className="locked-item">
 							<IconLockSolid
 								className="lock-icon"
@@ -184,9 +175,13 @@ const Sidebar: FC<SidebarProps> = ({
 					<Text>{t("about.text")}</Text>
 				</Flex>
 			</View>
-			<List listArray={marketingMenuOptionsData} className="verticle-list side-bar__external-menu" hideIcons />
+			<List
+				listArray={marketingMenuOptionsData}
+				className="hideScroll verticle-list side-bar__external-menu"
+				hideIcons
+			/>
 			<View className="button-wrapper">
-				{isUserAwsAccountConnected ? (
+				{userProvidedValues ? (
 					<>
 						<Button
 							data-testid={isAuthenticated ? "sign-out-button" : "sign-in-button"}
