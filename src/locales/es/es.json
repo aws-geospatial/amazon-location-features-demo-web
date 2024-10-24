@@ -114,7 +114,7 @@
     "text": "Visión general"
   },
   "header__product": {
-    "text": "Producto"
+    "text": "Productos"
   },
   "header__try_it": {
     "text": "Pruébalo"
@@ -129,7 +129,7 @@
     "text": "Cómo empezar"
   },
   "footer__faq": {
-    "text": "PREGUNTAS MÁS FRECUENTES"
+    "text": "Preguntas frecuentes"
   },
   "footer__pricing": {
     "text": "Precios"
@@ -3697,5 +3697,104 @@
   },
   "error_handler__failed_refresh_tokens": {
     "text": "No se pudieron actualizar los tokens"
+  },
+  "geofences_and_trackers": {
+    "text": "Geofences y rastreadores"
+  },
+  "industry": {
+    "text": "Industria"
+  },
+  "transportation_and_logistics": {
+    "text": "Transporte y logística"
+  },
+  "financial_service": {
+    "text": "Servicio financiero"
+  },
+  "healthcare": {
+    "text": "Asistencia sanitaria"
+  },
+  "retails": {
+    "text": "Venta minorista"
+  },
+  "travel_and_hospitality": {
+    "text": "Viajes y hospitalidad"
+  },
+  "real_estate": {
+    "text": "Bienes raíces"
+  },
+  "resources": {
+    "text": "Recursos"
+  },
+  "customers": {
+    "text": "Clientes"
+  },
+  "product_resources": {
+    "text": "Recursos del producto"
+  },
+  "developer_resources": {
+    "text": "Recursos para desarrolladores"
+  },
+  "header__product_desc": {
+    "text": "Agregue datos de ubicación a las aplicaciones de forma fácil y segura"
+  },
+  "new_overview_desc": {
+    "text": "Agregue datos de ubicación a las aplicaciones de forma fácil y segura"
+  },
+  "new_products_desc": {
+    "text": "Consulta las funciones detalladas del servicio de localización de Amazon"
+  },
+  "new_maps_desc": {
+    "text": "Visualice la información de ubicación"
+  },
+  "new_places_desc": {
+    "text": "Realice búsquedas en puntos de interés, convierta entre direcciones y coordenadas geográficas"
+  },
+  "new_routes_desc": {
+    "text": "Solicita tiempos de viaje, distancias e indicaciones entre puntos"
+  },
+  "new_geofences_trackers_desc": {
+    "text": "Rastrea las ubicaciones de los dispositivos, detecta cuándo los dispositivos entran o salen de los límites geográficos"
+  },
+  "new_getting_started_desc": {
+    "text": "Más información sobre cómo empezar a utilizar Amazon Location Service"
+  },
+  "new_pricing_desc": {
+    "text": "Calcule los costos de uso del servicio (póngase en contacto con AWS para obtener descuentos por volumen)"
+  },
+  "new_faqs_desc": {
+    "text": "Encuentre respuestas a las preguntas más frecuentes"
+  },
+  "new_industry_desc": {
+    "text": "Descubra cómo los datos y servicios de ubicación se aplican a diferentes segmentos de la industria"
+  },
+  "new_transportation_logistics_desc": {
+    "text": "Servicios de entrega, distribución y transporte"
+  },
+  "new_financial_service_desc": {
+    "text": "Servicios bancarios, de administración de dinero y de seguros"
+  },
+  "new_healthcare_desc": {
+    "text": "Proveedores médicos, centros de salud y seguros"
+  },
+  "new_retail_desc": {
+    "text": "Compra y venta de productos minoristas, como alimentos y ropa"
+  },
+  "new_travel_hospitality_desc": {
+    "text": "Aerolíneas, hoteles y restaurantes"
+  },
+  "new_real_estate_desc": {
+    "text": "Administración de fincas, compra y venta de viviendas"
+  },
+  "new_resources_desc": {
+    "text": "Encuentra materiales para seguir aprendiendo sobre Amazon Location Service"
+  },
+  "new_customers_desc": {
+    "text": "Soluciones para clientes creadas con servicios de ubicación"
+  },
+  "new_product_resources_desc": {
+    "text": "Blogs y actualizaciones"
+  },
+  "new_developer_resources_desc": {
+    "text": "Guías y foros"
   }
 }

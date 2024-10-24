@@ -7,15 +7,7 @@ Cypress.Commands.add("visitDomain", domain => {
 	});
 
 	if (typeof domain === "string") {
-		domain.includes("dev")
-			? cy.visit(domain, {
-					auth: {
-						username: Cypress.env("WEB_DOMAIN_USERNAME"),
-						password: Cypress.env("WEB_DOMAIN_PASSWORD")
-					}
-			  })
-			: cy.visit(domain);
-
+		cy.visit(domain);
 		cy.wait(10000);
 		cy.get('[data-testid="welcome-modal-continue-button"]').click();
 	}

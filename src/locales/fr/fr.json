@@ -114,7 +114,7 @@
     "text": "Vue d'ensemble"
   },
   "header__product": {
-    "text": "Produit"
+    "text": "Produits"
   },
   "header__try_it": {
     "text": "Essayez-le"
@@ -129,7 +129,7 @@
     "text": "Pour commencer"
   },
   "footer__faq": {
-    "text": "FAQ"
+    "text": "FAQs"
   },
   "footer__pricing": {
     "text": "Tarification"
@@ -3697,5 +3697,104 @@
   },
   "error_handler__failed_refresh_tokens": {
     "text": "Impossible d'actualiser les jetons"
+  },
+  "geofences_and_trackers": {
+    "text": "Géofences et traceurs"
+  },
+  "industry": {
+    "text": "L'industrie"
+  },
+  "transportation_and_logistics": {
+    "text": "Transport et logistique"
+  },
+  "financial_service": {
+    "text": "Service financier"
+  },
+  "healthcare": {
+    "text": "Soins de santé"
+  },
+  "retails": {
+    "text": "Commerce de détail"
+  },
+  "travel_and_hospitality": {
+    "text": "Voyages et accueil"
+  },
+  "real_estate": {
+    "text": "Immobilier"
+  },
+  "resources": {
+    "text": "Ressources"
+  },
+  "customers": {
+    "text": "Clientèle"
+  },
+  "product_resources": {
+    "text": "Ressources sur les produits"
+  },
+  "developer_resources": {
+    "text": "Ressources pour les développeurs"
+  },
+  "header__product_desc": {
+    "text": "Ajoutez facilement et en toute sécurité des données de localisation aux applications"
+  },
+  "new_overview_desc": {
+    "text": "Ajoutez facilement et en toute sécurité des données de localisation aux applications"
+  },
+  "new_products_desc": {
+    "text": "Afficher les fonctionnalités détaillées d'Amazon Location Service"
+  },
+  "new_maps_desc": {
+    "text": "Visualisez les informations de localisation"
+  },
+  "new_places_desc": {
+    "text": "Effectuez des recherches de points d'intérêt, convertissez les adresses et les coordonnées géographiques"
+  },
+  "new_routes_desc": {
+    "text": "Demander les temps de trajet, les distances et les directions entre les points"
+  },
+  "new_geofences_trackers_desc": {
+    "text": "Suivez l'emplacement des appareils, détectez quand les appareils entrent ou sortent des limites géographiques"
+  },
+  "new_getting_started_desc": {
+    "text": "Découvrez comment commencer à utiliser Amazon Location Service"
+  },
+  "new_pricing_desc": {
+    "text": "Estimez les coûts d'utilisation des services (contactez AWS pour obtenir des remises sur volume)"
+  },
+  "new_faqs_desc": {
+    "text": "Trouvez les réponses aux questions les plus fréquemment posées"
+  },
+  "new_industry_desc": {
+    "text": "Découvrez comment les données et les services de localisation s'appliquent à différents segments de l'industrie"
+  },
+  "new_transportation_logistics_desc": {
+    "text": "Services de livraison, de distribution et de transport"
+  },
+  "new_financial_service_desc": {
+    "text": "Services bancaires, de gestion financière et d'assurance"
+  },
+  "new_healthcare_desc": {
+    "text": "Prestataires de soins, établissements de santé et assurances"
+  },
+  "new_retail_desc": {
+    "text": "Acheter et vendre des produits de détail tels que des produits d'épicerie et des vêtements"
+  },
+  "new_travel_hospitality_desc": {
+    "text": "Compagnies aériennes, hôtels et restaurants"
+  },
+  "new_real_estate_desc": {
+    "text": "Gestion immobilière, achat et vente de logements"
+  },
+  "new_resources_desc": {
+    "text": "Trouvez des documents pour continuer à en savoir plus sur Amazon Location Service"
+  },
+  "new_customers_desc": {
+    "text": "Solutions clients conçues à l'aide de services de localisation"
+  },
+  "new_product_resources_desc": {
+    "text": "Blogs et mises à jour"
+  },
+  "new_developer_resources_desc": {
+    "text": "Guides et forums"
   }
 }

@@ -469,7 +469,7 @@ const DemoPage: FC = () => {
 			isUserAwsAccountConnected && region
 				? `https://${region}.console.aws.amazon.com/location/home?region=${region}#/`
 				: AWS_LOCATION,
-			"_blank"
+			isUserAwsAccountConnected && region ? "_blank" : "_self"
 		);
 
 	return !!authOptions?.transformRequest ? (

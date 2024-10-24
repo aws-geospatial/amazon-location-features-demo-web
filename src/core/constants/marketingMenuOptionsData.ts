@@ -6,6 +6,7 @@ import IconDollarSolid from "@demo/assets/svgs/icon-dollar-solid.svg";
 import IconSwap from "@demo/assets/svgs/icon-swap.svg";
 
 import appConfig from "@demo/core/constants/appConfig";
+import { MenuItem } from "@demo/types";
 
 const {
 	ENV: {
@@ -14,7 +15,8 @@ const {
 		MIGRATE_AN_ANDROID_APP_PAGE,
 		MIGRATE_AN_IOS_APP_PAGE,
 		MIGRATE_A_WEB_SERVICE_PAGE,
-		PRICING_PAGE
+		PRICING_PAGE,
+		SHOW_NEW_NAVIGATION
 	},
 	ROUTES: {
 		SAMPLES,
@@ -24,20 +26,33 @@ const {
 		MIGRATE_AN_IOS_APP,
 		MIGRATE_A_WEB_SERVICE,
 		PRICING
+	},
+	LINKS: {
+		LEARN_MORE_URL,
+		AWS_LOCATION_MAPS_URL,
+		AWS_LOCATION_PLACES_URL,
+		AWS_LOCATION_ROUTES_URL,
+		AWS_LOCATION_GENFENCE_AND_TRACKERS_URL,
+		AWS_GETTING_STARTED_URL,
+		AWS_PRICING_URL,
+		AWS_FAQ_URL,
+		AWS_LOCATION_INDUSTRY_URL,
+		AWS_LOCATION_TRANSPORTATION_AND_LOGISTICS_URL,
+		AWS_LOCATION_FINANCIAL_SERVICE_URL,
+		AWS_LOCATION_HEALTHCARE_URL,
+		AWS_LOCATION_RETAILS_URL,
+		AWS_LOCATION_TRAVEL_AND_HOSPITALITY_URL,
+		AWS_LOCATION_REAL_ESTATE_URL,
+		AWS_LOCATION_RESOURCES_URL,
+		AWS_LOCATION_CUSTOMERS_URL,
+		AWS_LOCATION_PRODUCT_RESOURCES_URL,
+		AWS_LOCATION_DEVELOPER_RESOURCES_URL
 	}
 } = appConfig;
 
-type MenuItem = {
-	label: string;
-	link: string;
-	iconBeforeLink?: string;
-	iconContainerClass?: string;
-	isExternalLink?: boolean;
-	subMenu?: MenuItem[];
-};
+let marketingMenuOptionsData: MenuItem[];
 
 const routeToEnvMapping = {
-	[SAMPLES]: "1",
 	[MIGRATE_FROM_GOOGLE_MAPS]: MIGRATE_FROM_GOOGLE_MAPS_PAGE,
 	[MIGRATE_A_WEB_APP]: MIGRATE_A_WEB_APP_PAGE,
 	[MIGRATE_AN_ANDROID_APP]: MIGRATE_AN_ANDROID_APP_PAGE,
@@ -46,58 +61,224 @@ const routeToEnvMapping = {
 	[PRICING]: PRICING_PAGE
 };
 
-const shouldIncludeMenuItem = (menuItem: MenuItem) => !!parseInt(routeToEnvMapping[menuItem?.link]);
+const shouldIncludeMenuItem = ({ link }: MenuItem) => (link in routeToEnvMapping ? routeToEnvMapping[link] : true);
 
-let marketingMenuOptionsData: MenuItem[] = [
-	{
-		label: "samples.text",
-		link: SAMPLES,
-		iconBeforeLink: IconCodeMenu,
-		iconContainerClass: "menu-item-icon",
-		isExternalLink: false
-	},
-	{
-		label: "migration.text",
-		link: MIGRATE_FROM_GOOGLE_MAPS,
-		iconBeforeLink: IconSwap,
-		iconContainerClass: "menu-item-icon",
-		isExternalLink: false,
-		subMenu: [
-			{
-				label: "migrate_from_google_maps.text",
-				link: MIGRATE_FROM_GOOGLE_MAPS,
-				isExternalLink: false
-			},
-			{
-				label: "migrate_a_web_app.text",
-				link: MIGRATE_A_WEB_APP,
-				isExternalLink: false
-			},
-			{
-				label: "migrate_an_android_app.text",
-				link: MIGRATE_AN_ANDROID_APP,
-				isExternalLink: false
-			},
-			{
-				label: "migrate_an_ios_app.text",
-				link: MIGRATE_AN_IOS_APP,
-				isExternalLink: false
-			},
-			{
-				label: "migrate_a_web_service.text",
-				link: MIGRATE_A_WEB_SERVICE,
-				isExternalLink: false
-			}
-		]
-	},
-	{
-		label: "pricing.text",
-		link: PRICING,
-		iconBeforeLink: IconDollarSolid,
-		iconContainerClass: "menu-item-icon",
-		isExternalLink: false
-	}
-];
+if (!SHOW_NEW_NAVIGATION) {
+	marketingMenuOptionsData = [
+		{
+			label: "samples.text",
+			link: SAMPLES,
+			iconBeforeLink: IconCodeMenu,
+			iconContainerClass: "menu-item-icon",
+			isExternalLink: false
+		},
+		{
+			label: "migration.text",
+			link: MIGRATE_FROM_GOOGLE_MAPS,
+			iconBeforeLink: IconSwap,
+			iconContainerClass: "menu-item-icon",
+			isExternalLink: false,
+			subMenu: [
+				{
+					label: "migrate_from_google_maps.text",
+					link: MIGRATE_FROM_GOOGLE_MAPS,
+					isExternalLink: false
+				},
+				{
+					label: "migrate_a_web_app.text",
+					link: MIGRATE_A_WEB_APP,
+					isExternalLink: false
+				},
+				{
+					label: "migrate_an_android_app.text",
+					link: MIGRATE_AN_ANDROID_APP,
+					isExternalLink: false
+				},
+				{
+					label: "migrate_an_ios_app.text",
+					link: MIGRATE_AN_IOS_APP,
+					isExternalLink: false
+				},
+				{
+					label: "migrate_a_web_service.text",
+					link: MIGRATE_A_WEB_SERVICE,
+					isExternalLink: false
+				}
+			]
+		},
+		{
+			label: "pricing.text",
+			link: PRICING,
+			iconBeforeLink: IconDollarSolid,
+			iconContainerClass: "menu-item-icon",
+			isExternalLink: false
+		}
+	];
+} else {
+	marketingMenuOptionsData = [
+		{
+			label: "samples.text",
+			link: SAMPLES,
+			iconBeforeLink: IconCodeMenu,
+			iconContainerClass: "menu-item-icon",
+			isExternalLink: false
+		},
+		{
+			label: "migration.text",
+			link: MIGRATE_FROM_GOOGLE_MAPS,
+			iconBeforeLink: IconSwap,
+			iconContainerClass: "menu-item-icon",
+			isExternalLink: false,
+			subMenu: [
+				{
+					label: "migrate_from_google_maps.text",
+					link: MIGRATE_FROM_GOOGLE_MAPS,
+					isExternalLink: false
+				},
+				{
+					label: "migrate_a_web_app.text",
+					link: MIGRATE_A_WEB_APP,
+					isExternalLink: false
+				},
+				{
+					label: "migrate_an_android_app.text",
+					link: MIGRATE_AN_ANDROID_APP,
+					isExternalLink: false
+				},
+				{
+					label: "migrate_an_ios_app.text",
+					link: MIGRATE_AN_IOS_APP,
+					isExternalLink: false
+				},
+				{
+					label: "migrate_a_web_service.text",
+					link: MIGRATE_A_WEB_SERVICE,
+					isExternalLink: false
+				}
+			]
+		},
+		{
+			label: "header__overview.text",
+			link: LEARN_MORE_URL,
+			iconBeforeLink: IconCodeMenu,
+			iconContainerClass: "menu-item-icon",
+			isExternalLink: false
+		},
+		{
+			label: "header__product.text",
+			link: AWS_LOCATION_MAPS_URL,
+			iconBeforeLink: IconCodeMenu,
+			iconContainerClass: "menu-item-icon",
+			isExternalLink: false,
+			subMenu: [
+				{
+					label: "maps.text",
+					link: AWS_LOCATION_MAPS_URL,
+					isExternalLink: false
+				},
+				{
+					label: "places.text",
+					link: AWS_LOCATION_PLACES_URL,
+					isExternalLink: false
+				},
+				{
+					label: "routes.text",
+					link: AWS_LOCATION_ROUTES_URL,
+					isExternalLink: false
+				},
+				{
+					label: "geofences_and_trackers.text",
+					link: AWS_LOCATION_GENFENCE_AND_TRACKERS_URL,
+					isExternalLink: false
+				}
+			]
+		},
+		{
+			label: "footer__getting_started.text",
+			link: AWS_GETTING_STARTED_URL,
+			iconBeforeLink: IconCodeMenu,
+			iconContainerClass: "menu-item-icon",
+			isExternalLink: false
+		},
+		{
+			label: "pricing.text",
+			link: AWS_PRICING_URL,
+			iconBeforeLink: IconDollarSolid,
+			iconContainerClass: "menu-item-icon",
+			isExternalLink: false
+		},
+		{
+			label: "footer__faq.text",
+			link: AWS_FAQ_URL,
+			iconBeforeLink: IconDollarSolid,
+			iconContainerClass: "menu-item-icon",
+			isExternalLink: false
+		},
+		{
+			label: "industry.text",
+			link: AWS_LOCATION_INDUSTRY_URL,
+			iconBeforeLink: IconCodeMenu,
+			iconContainerClass: "menu-item-icon",
+			isExternalLink: false,
+			subMenu: [
+				{
+					label: "transportation_and_logistics.text",
+					link: AWS_LOCATION_TRANSPORTATION_AND_LOGISTICS_URL,
+					isExternalLink: false
+				},
+				{
+					label: "financial_service.text",
+					link: AWS_LOCATION_FINANCIAL_SERVICE_URL,
+					isExternalLink: false
+				},
+				{
+					label: "healthcare.text",
+					link: AWS_LOCATION_HEALTHCARE_URL,
+					isExternalLink: false
+				},
+				{
+					label: "retails.text",
+					link: AWS_LOCATION_RETAILS_URL,
+					isExternalLink: false
+				},
+				{
+					label: "travel_and_hospitality.text",
+					link: AWS_LOCATION_TRAVEL_AND_HOSPITALITY_URL,
+					isExternalLink: false
+				},
+				{
+					label: "real_estate.text",
+					link: AWS_LOCATION_REAL_ESTATE_URL,
+					isExternalLink: false
+				}
+			]
+		},
+		{
+			label: "resources.text",
+			link: AWS_LOCATION_RESOURCES_URL,
+			iconBeforeLink: IconCodeMenu,
+			iconContainerClass: "menu-item-icon",
+			isExternalLink: false,
+			subMenu: [
+				{
+					label: "customers.text",
+					link: AWS_LOCATION_CUSTOMERS_URL,
+					isExternalLink: false
+				},
+				{
+					label: "product_resources.text",
+					link: AWS_LOCATION_PRODUCT_RESOURCES_URL,
+					isExternalLink: false
+				},
+				{
+					label: "developer_resources.text",
+					link: AWS_LOCATION_DEVELOPER_RESOURCES_URL,
+					isExternalLink: false
+				}
+			]
+		}
+	];
+}
 
 marketingMenuOptionsData = marketingMenuOptionsData
 	.map(object => {

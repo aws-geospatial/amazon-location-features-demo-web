@@ -114,7 +114,7 @@
     "text": "概要"
   },
   "header__product": {
-    "text": "プロダクト"
+    "text": "製品"
   },
   "header__try_it": {
     "text": "やってみて"
@@ -3697,5 +3697,104 @@
   },
   "error_handler__failed_refresh_tokens": {
     "text": "トークンを更新できませんでした"
+  },
+  "geofences_and_trackers": {
+    "text": "ジオフェンスとトラッカー"
+  },
+  "industry": {
+    "text": "業界"
+  },
+  "transportation_and_logistics": {
+    "text": "輸送と物流"
+  },
+  "financial_service": {
+    "text": "金融サービス"
+  },
+  "healthcare": {
+    "text": "ヘルスケア"
+  },
+  "retails": {
+    "text": "リテール"
+  },
+  "travel_and_hospitality": {
+    "text": "旅行とホスピタリティ"
+  },
+  "real_estate": {
+    "text": "不動産"
+  },
+  "resources": {
+    "text": "リソース"
+  },
+  "customers": {
+    "text": "顧客"
+  },
+  "product_resources": {
+    "text": "製品リソース"
+  },
+  "developer_resources": {
+    "text": "デベロッパーリソース"
+  },
+  "header__product_desc": {
+    "text": "アプリケーションに位置データを安全かつ簡単に追加"
+  },
+  "new_overview_desc": {
+    "text": "アプリケーションに位置データを安全かつ簡単に追加"
+  },
+  "new_products_desc": {
+    "text": "Amazon ロケーションサービスの詳細な機能を見る"
+  },
+  "new_maps_desc": {
+    "text": "位置情報を視覚化する"
+  },
+  "new_places_desc": {
+    "text": "ポイントオブインタレスト検索の実行、住所と地理座標の変換"
+  },
+  "new_routes_desc": {
+    "text": "ポイント間の移動時間、距離、ルートをリクエストする"
+  },
+  "new_geofences_trackers_desc": {
+    "text": "デバイスの位置を追跡し、デバイスが地理的境界に出入りするタイミングを検知します"
+  },
+  "new_getting_started_desc": {
+    "text": "Amazon 位置情報サービスの使用を開始する方法をご覧ください"
+  },
+  "new_pricing_desc": {
+    "text": "サービス使用費用の見積もり (ボリュームディスカウントについては AWS にお問い合わせください)"
+  },
+  "new_faqs_desc": {
+    "text": "よくある質問への回答を検索する"
+  },
+  "new_industry_desc": {
+    "text": "位置データとサービスがさまざまな業界セグメントにどのように適用されるかをご覧ください"
+  },
+  "new_transportation_logistics_desc": {
+    "text": "配送、配送、配車サービス"
+  },
+  "new_financial_service_desc": {
+    "text": "銀行、資金管理、保険サービス"
+  },
+  "new_healthcare_desc": {
+    "text": "医療提供者、医療施設、保険"
+  },
+  "new_retail_desc": {
+    "text": "食料品や衣料品などの小売商品の売買"
+  },
+  "new_travel_hospitality_desc": {
+    "text": "航空会社、ホテル、レストラン"
+  },
+  "new_real_estate_desc": {
+    "text": "不動産管理、住宅の売買"
+  },
+  "new_resources_desc": {
+    "text": "Amazon 位置情報サービスについて引き続き学習するための資料を検索する"
+  },
+  "new_customers_desc": {
+    "text": "位置情報サービスを使用して構築された顧客ソリューション"
+  },
+  "new_product_resources_desc": {
+    "text": "ブログと更新"
+  },
+  "new_developer_resources_desc": {
+    "text": "ガイドとフォーラム"
   }
 }
