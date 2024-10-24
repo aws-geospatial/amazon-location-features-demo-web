@@ -25,6 +25,7 @@ import { MapColorSchemeEnum, MapStyleEnum, ResponsiveUIEnum, TriggeredByEnum } f
 import { errorHandler } from "@demo/utils/errorHandler";
 import { Position, bbox, lineString } from "@turf/turf";
 import type { GeolocateControl as GeolocateControlRef } from "maplibre-gl";
+import { useTranslation } from "react-i18next";
 import {
 	AttributionControl,
 	GeolocateControl,
@@ -107,6 +108,11 @@ const ConnectAwsAccountModal = lazy(() =>
 		default: module.ConnectAwsAccountModal
 	}))
 );
+const UnauthSimulationExitModal = lazy(() =>
+	import("@demo/atomicui/molecules/ConfirmationModal").then(module => ({
+		default: module.ConfirmationModal
+	}))
+);
 
 const {
 	API_KEYS,
@@ -178,6 +184,7 @@ const DemoPage: FC = () => {
 		closeRouteBox: () => setShow(s => ({ ...s, routeBox: false })),
 		resetAppStateCb: () => setShow(s => ({ ...initShow, stylesCard: s.stylesCard, settings: s.settings }))
 	});
+	const { t } = useTranslation();
 	const geoLocateTopValue = `${bottomSheetCurrentHeight / 13 + 0.59}rem`;
 
 	const isColorSchemeDisabled = useMemo(
@@ -563,7 +570,6 @@ const DemoPage: FC = () => {
 							confirmCloseSimulation={confirmCloseUnauthSimulation}
 							setConfirmCloseSimulation={setConfirmCloseUnauthSimulation}
 							setShowAuthTrackerBox={b => setShow(s => ({ ...s, authTrackerBox: b }))}
-							clearCredsAndClients={clearCredsAndClients}
 							setShowAuthGeofenceBox={b => setShow(s => ({ ...s, authGeofenceBox: b }))}
 							setShowRouteBox={b => setShow(s => ({ ...s, routeBox: b }))}
 							isExpandRouteOptionsMobile={expandRouteOptionsMobile}
@@ -642,6 +648,26 @@ const DemoPage: FC = () => {
 				}
 			/>
 			<AboutModal open={show.about} onClose={() => setShow(s => ({ ...s, about: false }))} />
+			<UnauthSimulationExitModal
+				open={show.unauthSimulationExitModal}
+				onClose={() => setShow(s => ({ ...s, unauthSimulationExitModal: false }))}
+				heading={t("start_unauth_simulation__exit_simulation.text")}
+				description={t("start_unauth_simulation__exit_modal_desc.text")}
+				confirmationText={t("start_unauth_simulation__exit_simulation.text")}
+				onConfirm={() => {
+					setShow(s => ({
+						...s,
+						unauthSimulationExitModal: false,
+						unauthGeofenceBox: false,
+						unauthTrackerBox: false
+					}));
+					// setTimeout(() => {
+					// 	handleGrabMapChange(tempMapStyle as GrabMapEnum);
+					// 	window.location.reload();
+					// }, 0);
+				}}
+				cancelationText={t("start_unauth_simulation__stay_in_simulation.text")}
+			/>
 			{(isDesktop || isTablet) && (
 				<Flex
 					className={`logo-stroke-container ${isTablet ? "logo-stroke-container-tablet" : ""}`}
