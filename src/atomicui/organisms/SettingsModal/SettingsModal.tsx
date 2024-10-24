@@ -33,13 +33,13 @@ const InputField = lazy(() =>
 );
 
 const {
-	IDENTITY_POOL_IDS,
+	API_KEYS,
 	ROUTES: { HELP },
 	LINKS: { AWS_TERMS_AND_CONDITIONS },
 	PERSIST_STORAGE_KEYS: { FASTEST_REGION }
 } = appConfig;
 const { IMPERIAL, METRIC } = MapUnitEnum;
-const fallbackRegion = Object.keys(IDENTITY_POOL_IDS)[0];
+const fallbackRegion = Object.keys(API_KEYS)[0];
 
 interface SettingsModalProps {
 	open: boolean;
@@ -361,28 +361,6 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 						</Flex>
 						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
 							<Radio
-								data-testid={`region-${RegionEnum.EU_WEST_1}-radio`}
-								value={RegionEnum.EU_WEST_1}
-								checked={!autoRegion && baseValues?.region === RegionEnum.EU_WEST_1}
-								onChange={() => handleRegionChange(RegionEnum.EU_WEST_1)}
-								crossOrigin={undefined}
-							>
-								<Text marginLeft="1.23rem">{t("regions__eu_west_1.text")}</Text>
-							</Radio>
-						</Flex>
-						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
-							<Radio
-								data-testid={`region-${RegionEnum.AP_SOUTHEAST_1}-radio`}
-								value={RegionEnum.AP_SOUTHEAST_1}
-								checked={!autoRegion && baseValues?.region === RegionEnum.AP_SOUTHEAST_1}
-								onChange={() => handleRegionChange(RegionEnum.AP_SOUTHEAST_1)}
-								crossOrigin={undefined}
-							>
-								<Text marginLeft="1.23rem">{t("regions__ap_southeast_1.text")}</Text>
-							</Radio>
-						</Flex>
-						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
-							<Radio
 								data-testid={`region-${RegionEnum.US_EAST_1}-radio`}
 								value={RegionEnum.US_EAST_1}
 								checked={!autoRegion && baseValues?.region === RegionEnum.US_EAST_1}
@@ -390,6 +368,17 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 								crossOrigin={undefined}
 							>
 								<Text marginLeft="1.23rem">{t("regions__us_east_1.text")}</Text>
+							</Radio>
+						</Flex>
+						<Flex style={{ gap: 0, padding: "1.08rem 0rem", cursor: "pointer" }}>
+							<Radio
+								data-testid={`region-${RegionEnum.EU_WEST_1}-radio`}
+								value={RegionEnum.EU_WEST_1}
+								checked={!autoRegion && baseValues?.region === RegionEnum.EU_WEST_1}
+								onChange={() => handleRegionChange(RegionEnum.EU_WEST_1)}
+								crossOrigin={undefined}
+							>
+								<Text marginLeft="1.23rem">{t("regions__eu_west_1.text")}</Text>
 							</Radio>
 						</Flex>
 						<p style={{ color: "var(--grey-color)" }} className="bold small-text">

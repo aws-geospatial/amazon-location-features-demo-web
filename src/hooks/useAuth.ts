@@ -21,14 +21,13 @@ import { useTranslation } from "react-i18next";
 import useDeviceMediaQuery from "./useDeviceMediaQuery";
 
 const {
+	API_KEYS,
 	IDENTITY_POOL_IDS,
 	WEB_SOCKET_URLS,
-	API_KEYS,
 	ROUTES: { DEMO },
 	PERSIST_STORAGE_KEYS: { FASTEST_REGION }
 } = appConfig;
-const fallbackApiKey = Object.values(API_KEYS)[0];
-const fallbackRegion = Object.keys(IDENTITY_POOL_IDS)[0];
+const fallbackRegion = Object.keys(API_KEYS)[0];
 
 const useAuth = () => {
 	const store = useAuthStore();
@@ -47,14 +46,17 @@ const useAuth = () => {
 			(async () => {
 				await setClosestRegion();
 				const region = localStorage.getItem(FASTEST_REGION) ?? fallbackRegion;
-				setState({
-					apiKey: API_KEYS[region] ?? fallbackApiKey,
-					baseValues: {
-						identityPoolId: IDENTITY_POOL_IDS[region],
-						region,
-						webSocketUrl: WEB_SOCKET_URLS[region]
-					}
-				});
+				!!API_KEYS[region] &&
+					!!IDENTITY_POOL_IDS[region] &&
+					!!WEB_SOCKET_URLS[region] &&
+					setState({
+						apiKey: API_KEYS[region],
+						baseValues: {
+							identityPoolId: IDENTITY_POOL_IDS[region],
+							region,
+							webSocketUrl: WEB_SOCKET_URLS[region]
+						}
+					});
 			})();
 		}
 	}, [store.apiKey, store.baseValues, setState]);
@@ -264,22 +266,26 @@ const useAuth = () => {
 					(async () => {
 						await setClosestRegion();
 						const region = localStorage.getItem(FASTEST_REGION) ?? fallbackRegion;
-						setState({
-							apiKey: API_KEYS[region] ?? fallbackApiKey,
-							baseValues: {
-								identityPoolId: IDENTITY_POOL_IDS[region],
-								region,
-								webSocketUrl: WEB_SOCKET_URLS[region]
-							},
-							autoRegion,
-							credentials: undefined
-						});
+						!!API_KEYS[region] &&
+							!!IDENTITY_POOL_IDS[region] &&
+							!!WEB_SOCKET_URLS[region] &&
+							setState({
+								apiKey: API_KEYS[region],
+								baseValues: {
+									identityPoolId: IDENTITY_POOL_IDS[region],
+									region,
+									webSocketUrl: WEB_SOCKET_URLS[region]
+								},
+								autoRegion,
+								credentials: undefined
+							});
 					})();
 				} else {
-					!!IDENTITY_POOL_IDS[region] &&
+					!!API_KEYS[region] &&
+						!!IDENTITY_POOL_IDS[region] &&
 						!!WEB_SOCKET_URLS[region] &&
 						setState({
-							apiKey: API_KEYS[region] ?? fallbackApiKey,
+							apiKey: API_KEYS[region],
 							baseValues: {
 								identityPoolId: IDENTITY_POOL_IDS[region],
 								region,

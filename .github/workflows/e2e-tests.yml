@@ -1,9 +1,6 @@
 name: E2E tests
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches: [main]
 
@@ -18,9 +15,13 @@ jobs:
 
       - name: Setup node
         uses: actions/setup-node@v3
+        with:
+          node-version: 20.17.0
 
       - name: Create .env file
         run: |
+          echo: "VITE_AWS_API_KEY_REGIONS=${{ secrets.VITE_AWS_API_KEY_REGIONS }}" > .env
+          echo "VITE_AWS_API_KEYS=${{ secrets.VITE_AWS_API_KEYS }}" >> .env
           echo "VITE_AWS_COGNITO_IDENTITY_POOL_IDS=${{ secrets.VITE_AWS_COGNITO_IDENTITY_POOL_IDS }}" > .env
           echo "VITE_AWS_WEB_SOCKET_URLS=${{ secrets.VITE_AWS_WEB_SOCKET_URLS }}" >> .env
           echo "VITE_PINPOINT_IDENTITY_POOL_ID=${{ secrets.VITE_PINPOINT_IDENTITY_POOL_ID }}" >> .env
@@ -28,8 +29,6 @@ jobs:
           echo "VITE_AWS_CF_TEMPLATE=${{ secrets.VITE_AWS_CF_TEMPLATE }}" >> .env
           echo "VITE_APPLE_APP_STORE_LINK=${{ secrets.VITE_APPLE_APP_STORE_LINK }}" >> .env
           echo "VITE_GOOGLE_PLAY_STORE_LINK=${{ secrets.VITE_GOOGLE_PLAY_STORE_LINK }}" >> .env
-          echo "VITE_DATA_FILES_URL=${{ secrets.VITE_DATA_FILES_URL }}" >> .env
-          echo "VITE_SAMPLES_LIST_FILENAME=${{ secrets.VITE_SAMPLES_LIST_FILENAME }}" >> .env
           echo "VITE_APP_VERSION=${{ secrets.VITE_APP_VERSION }}" >> .env
           echo "VITE_MIGRATE_FROM_GOOGLE_MAPS_PAGE=${{ secrets.VITE_MIGRATE_FROM_GOOGLE_MAPS_PAGE }}" >> .env
           echo "VITE_MIGRATE_A_WEB_APP_PAGE=${{ secrets.VITE_MIGRATE_A_WEB_APP_PAGE }}" >> .env
@@ -37,7 +36,6 @@ jobs:
           echo "VITE_MIGRATE_AN_IOS_APP_PAGE=${{ secrets.VITE_MIGRATE_AN_IOS_APP_PAGE }}" >> .env
           echo "VITE_MIGRATE_A_WEB_SERVICE_PAGE=${{ secrets.VITE_MIGRATE_A_WEB_SERVICE_PAGE }}" >> .env
           echo "VITE_PRICING_PAGE=${{ secrets.VITE_PRICING_PAGE }}" >> .env
-          echo "VITE_CUSTOM_ASSETS_URL=${{ secrets.VITE_CUSTOM_ASSETS_URL }}" >> .env
           echo "VITE_SHOW_NEW_NAVIGATION=${{ secrets.VITE_SHOW_NEW_NAVIGATION }}" >> .env
 
       - name: Install dependencies
