@@ -21,7 +21,10 @@ jobs:
           fail_on_empty: false
 
       - name: Upload artifact
+        run: ls -all ; pwd ; cat .env
+
+      - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: cats
-          path: .
+          path: .env
