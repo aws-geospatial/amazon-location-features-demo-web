@@ -7,6 +7,9 @@ Parameters:
     AllowedPattern: '[^@]+@[^@]+\.[^@]+'
     Description: Cognito Username. It should be a valid Email
 
+Conditions:
+  EnableGrab: !Equals [!Ref "AWS::Region", "ap-southeast-1"]
+
 Resources:
   ################ Congito #######################
 
@@ -82,6 +85,62 @@ Resources:
       UserPoolId: !Ref AmazonLocationDemoUserPool
       Domain: !Ref AWS::AccountId
 
+  AmazonLocationDemoCognitoIdentityPoolUnauthRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: "sts:AssumeRoleWithWebIdentity"
+            Condition:
+              "StringEquals":
+                "cognito-identity.amazonaws.com:aud": !Ref AmazonLocationDemoCognitoIdentityPool
+              "ForAnyValue:StringLike":
+                "cognito-identity.amazonaws.com:amr": unauthenticated
+            Effect: Allow
+            Principal:
+              Federated: cognito-identity.amazonaws.com
+        Version: 2012-10-17
+
+  AmazonLocationDemoCognitoIdentityPoolUnauthRolePolicy:
+    Type: "AWS::IAM::Policy"
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - "geo:GetPlace"
+              - "geo:SearchPlaceIndex*"
+              - "geo:GetMap*"
+              - "geo:CalculateRoute"
+            Effect: Allow
+            Resource:
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.Light"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.DarkGrayCanvas"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.Imagery"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.LightGrayCanvas"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.Navigation"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.Streets"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.Explore"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.Contrast"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.ExploreTruck"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.Hybrid"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.Imagery"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Grab.StandardLight"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Grab.StandardDark"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.OpenData.StandardLight"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.OpenData.StandardDark"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.OpenData.VisualizationLight"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.OpenData.VisualizationDark"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:place-index/location.aws.com.demo.places.Esri.PlaceIndex"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:place-index/location.aws.com.demo.places.HERE.PlaceIndex"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:place-index/location.aws.com.demo.places.Grab.PlaceIndex"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:route-calculator/location.aws.com.demo.routes.Esri.RouteCalculator"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:route-calculator/location.aws.com.demo.routes.HERE.RouteCalculator"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:route-calculator/location.aws.com.demo.routes.Grab.RouteCalculator"
+        Version: 2012-10-17
+      PolicyName: !Sub "AmazonLocationDemoCognitoUnauthRolePolicy-${AWS::StackName}"
+      Roles:
+        - !Ref AmazonLocationDemoCognitoIdentityPoolUnauthRole
+
   AmazonLocationDemoCognitoIdentityPool:
     Type: "AWS::Cognito::IdentityPool"
     Properties:
@@ -119,6 +178,10 @@ Resources:
       PolicyDocument:
         Statement:
           - Action:
+              - "geo:GetPlace"
+              - "geo:SearchPlaceIndex*"
+              - "geo:GetMap*"
+              - "geo:CalculateRoute"
               - "geo:ListGeofences"
               - "geo:GetGeofence"
               - "geo:BatchPutGeofence"
@@ -138,12 +201,36 @@ Resources:
               - "iam:GetRolePolicy"
             Effect: Allow
             Resource:
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.Light"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.DarkGrayCanvas"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.Imagery"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.LightGrayCanvas"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.Navigation"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Esri.Streets"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.Explore"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.Contrast"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.ExploreTruck"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.Hybrid"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.HERE.Imagery"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Grab.StandardLight"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.Grab.StandardDark"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.OpenData.StandardLight"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.OpenData.StandardDark"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.OpenData.VisualizationLight"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:map/location.aws.com.demo.maps.OpenData.VisualizationDark"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:place-index/location.aws.com.demo.places.Esri.PlaceIndex"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:place-index/location.aws.com.demo.places.HERE.PlaceIndex"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:place-index/location.aws.com.demo.places.Grab.PlaceIndex"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:route-calculator/location.aws.com.demo.routes.Esri.RouteCalculator"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:route-calculator/location.aws.com.demo.routes.HERE.RouteCalculator"
+              - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:route-calculator/location.aws.com.demo.routes.Grab.RouteCalculator"
               - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:geofence-collection/location.aws.com.demo.geofences.GeofenceCollection"
               - !Sub "arn:aws:geo:${AWS::Region}:${AWS::AccountId}:tracker/location.aws.com.demo.trackers.Tracker"
               - !Sub "arn:aws:iot:${AWS::Region}:${AWS::AccountId}:client/${!cognito-identity.amazonaws.com:sub}"
               - !Sub "arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topic/${!cognito-identity.amazonaws.com:sub}"
               - !Sub "arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topicfilter/${!cognito-identity.amazonaws.com:sub}/*"
               - !Sub "arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topic/${!cognito-identity.amazonaws.com:sub}/tracker"
+              - !GetAtt AmazonLocationDemoCognitoIdentityPoolUnauthRole.Arn
               - !GetAtt AmazonLocationDemoCognitoIdentityPoolAuthenticatedRole.Arn
           - Action:
               - "iot:AttachPolicy"
@@ -169,6 +256,191 @@ Resources:
         authenticated: !GetAtt
           - AmazonLocationDemoCognitoIdentityPoolAuthenticatedRole
           - Arn
+        unauthenticated: !GetAtt
+          - AmazonLocationDemoCognitoIdentityPoolUnauthRole
+          - Arn
+
+  AmazonLocationDemoMapsOpenDataLight:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorOpenDataStandardLight
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.OpenData.StandardLight
+
+  AmazonLocationDemoMapsOpenDataDark:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorOpenDataStandardDark
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.OpenData.StandardDark
+
+  AmazonLocationDemoMapsOpenDataVisualizationLight:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorOpenDataVisualizationLight
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.OpenData.VisualizationLight
+
+  AmazonLocationDemoMapsOpenDataVisualizationDark:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorOpenDataVisualizationDark
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.OpenData.VisualizationDark
+
+  AmazonLocationDemoMapsEsriLight:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorEsriTopographic
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.Esri.Light
+
+  AmazonLocationDemoMapsGrabStandardLight:
+    Condition: EnableGrab
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorGrabStandardLight
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.Grab.StandardLight
+
+  AmazonLocationDemoMapsGrabStandardDark:
+    Condition: EnableGrab
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorGrabStandardDark
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.Grab.StandardDark
+
+  AmazonLocationDemoMapsEsriStreets:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorEsriStreets
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.Esri.Streets
+
+  AmazonLocationDemoMapsEsriDarkGrayCanvas:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorEsriDarkGrayCanvas
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.Esri.DarkGrayCanvas
+
+  AmazonLocationDemoMapsEsriImagery:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: RasterEsriImagery
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.Esri.Imagery
+
+  AmazonLocationDemoMapsEsriLightGrayCanvas:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorEsriLightGrayCanvas
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.Esri.LightGrayCanvas
+
+  AmazonLocationDemoMapsEsriNavigation:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorEsriNavigation
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.Esri.Navigation
+
+  AmazonLocationDemoMapsHere:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorHereExplore
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.HERE.Explore
+
+  AmazonLocationDemoMapsHereContrast:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorHereContrast
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.HERE.Contrast
+
+  AmazonLocationDemoMapsHereExploreTruck:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: VectorHereExploreTruck
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.HERE.ExploreTruck
+
+  AmazonLocationDemoMapsHereHybrid:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: HybridHereExploreSatellite
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.HERE.Hybrid
+
+  AmazonLocationDemoMapsHereImagery:
+    Type: AWS::Location::Map
+    Properties:
+      Configuration:
+        Style: RasterHereExploreSatellite
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      MapName: location.aws.com.demo.maps.HERE.Imagery
+
+  AmazonLocationDemoPlaceIndexEsr:
+    Type: AWS::Location::PlaceIndex
+    Properties:
+      DataSource: Esri
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      IndexName: location.aws.com.demo.places.Esri.PlaceIndex
+
+  AmazonLocationDemoPlaceIndexHere:
+    Type: AWS::Location::PlaceIndex
+    Properties:
+      DataSource: Here
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      IndexName: location.aws.com.demo.places.HERE.PlaceIndex
+
+  AmazonLocationDemoPlaceIndexGrab:
+    Condition: EnableGrab
+    Type: AWS::Location::PlaceIndex
+    Properties:
+      DataSource: Grab
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+      IndexName: location.aws.com.demo.places.Grab.PlaceIndex
+
+  AmazonLocationDemoRouteEsri:
+    Type: AWS::Location::RouteCalculator
+    Properties:
+      CalculatorName: location.aws.com.demo.routes.Esri.RouteCalculator
+      DataSource: Esri
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+
+  AmazonLocationDemoRouteHere:
+    Type: AWS::Location::RouteCalculator
+    Properties:
+      CalculatorName: location.aws.com.demo.routes.HERE.RouteCalculator
+      DataSource: Here
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
+
+  AmazonLocationDemoRouteGrab:
+    Condition: EnableGrab
+    Type: AWS::Location::RouteCalculator
+    Properties:
+      CalculatorName: location.aws.com.demo.routes.Grab.RouteCalculator
+      DataSource: Grab
+      Description: You created this resource by running Amazon Location Demo's CloudFormation template.
 
   AmazonLocationDemoGeofenceCollection:
     Type: AWS::Location::GeofenceCollection
@@ -487,3 +759,6 @@ Outputs:
 
   IAMAuthRoleName:
     Value: !Ref AmazonLocationDemoCognitoIdentityPoolAuthenticatedRole
+
+  IAMUnAuthRoleName:
+    Value: !Ref AmazonLocationDemoCognitoIdentityPoolUnauthRole
