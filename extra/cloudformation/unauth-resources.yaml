@@ -1081,7 +1081,7 @@ Outputs:
     Value: !Sub "${AWS::Region}"
 
   ApiKey:
-    Value: !GetAtt AmazonLocationApiKey.ApiKey
+    Value: !Ref AmazonLocationApiKey
 
   IdentityPoolId:
     Value: !Ref CognitoIdentityPool
