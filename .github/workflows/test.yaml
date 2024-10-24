@@ -10,7 +10,7 @@ on:
 jobs:
   unit-tests:
     name: Unit test
-    runs-on: ubuntu
+    runs-on: ubuntu-20.04
 
     steps:
       - name: Make envfile
