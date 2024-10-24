@@ -24,9 +24,14 @@ jobs:
         run: ls -all ; pwd ; cat .env
 
       - name: Upload artifact
+        id: artifact
         uses: actions/upload-artifact@v3
         with:
           name: cats
           path: .env
           if-no-files-found: warn
           include-hidden-files: true
+
+
+      - name: Output artifact ID
+        run:  echo 'Artifact ID is ${{ steps.artifact.outputs.artifact-id }}' ; echo '${{ steps.artifact.outputs.artifact-url }}'
