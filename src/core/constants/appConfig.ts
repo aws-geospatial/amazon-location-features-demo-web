@@ -126,7 +126,6 @@ const appConfig = {
 			IND: "India's view on Gilgit-Baltistan",
 			KEN: "Kenya's view on the Ilemi Triangle",
 			MAR: "Morocco's view on Western Sahara",
-			PAK: "Pakistan's view on Jammu and Kashmir and the Junagadh Area",
 			RUS: "Russia's view on Crimea",
 			SDN: "Sudan's view on the Halaib Triangle",
 			SRB: "Serbia's view on Kosovo, Vukovar, and Sarengrad Islands",
