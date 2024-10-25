@@ -256,7 +256,11 @@ const useAuth = () => {
 				}
 			},
 			onDisconnectAwsAccount: () => {
-				methods.resetStore();
+				setState({
+					credentials: undefined,
+					authTokens: undefined,
+					userProvidedValues: undefined
+				});
 				resetLocationAndIotClients();
 				resetMapStore();
 				resetPlaceStore();
