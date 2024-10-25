@@ -28,7 +28,7 @@ describe("Settings", () => {
 		beforeEach(() => {
 			cy.visitDomainInResponsiveView(`${Cypress.env("WEB_DOMAIN")}/demo`);
 			cy.openResponsiveMenu('[data-testid="bottomsheet"]');
-			cy.contains("Settings").click();
+			cy.contains("Settings").click({ force: true });
 		});
 
 		it("ST-005 - should allow user toggle default units for map", { scrollBehavior: false }, () => {

@@ -5,6 +5,11 @@
 1. Run the template from `/extra/cloudformation/unauth-resources.yaml` to create AWS CloudFormation stack in `us-east-1` region and get `Region`, `ApiKey`, `IdentityPoolId`, `PinPointAppId`, `WebSocketUrl` from stack output's tab.
    - `Region` value will be added to `.env` file against `VITE_AWS_API_KEY_REGIONS`.
    - `ApiKey` value will be added to `.env` file against `VITE_AWS_API_KEYS`.
+      - In stack output's tab only the ApiKey name is visible, in order to get the ApiKey value
+      - Navigate to Amazon Location Service
+      - Click on "API keys" from the left navigation pane
+      - Click on the ApiKey name
+      - Copy the ApiKey value
    - `IdentityPoolId` value will be added to `.env` file against `VITE_AWS_COGNITO_IDENTITY_POOL_IDS` and `VITE_PINPOINT_IDENTITY_POOL_ID`.
    - `PinPointAppId` value will be added to `.env` file against `VITE_PINPOINT_APPLICATION_ID`.
    - `WebSocketUrl` value will be added to `.env` file against `VITE_AWS_WEB_SOCKET_URLS`.
