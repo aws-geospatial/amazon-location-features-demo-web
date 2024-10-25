@@ -6,6 +6,7 @@ import { ChangeEvent, FC, MutableRefObject, useCallback, useEffect, useMemo, use
 import { Button, Card, CheckboxField, Flex, Text, View } from "@aws-amplify/ui-react";
 import {
 	CalculateRoutesCommandInput,
+	RouteFerryTravelStep,
 	RoutePedestrianTravelStep,
 	RouteTravelMode,
 	RouteVehicleTravelStep
@@ -32,7 +33,7 @@ import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { InputType, MapUnitEnum, RouteDataType, RouteOptionsType, SuggestionType, TravelMode } from "@demo/types";
 import { AnalyticsEventActionsEnum, ResponsiveUIEnum, TriggeredByEnum, UserAgentEnum } from "@demo/types/Enums";
-import { isUserDeviceIsAndroid, uuid } from "@demo/utils";
+import { getConvertedDistance, isUserDeviceIsAndroid, uuid } from "@demo/utils";
 import { humanReadableTime } from "@demo/utils/dateTimeUtils";
 import { isAndroid, isIOS } from "react-device-detect";
 import { useTranslation } from "react-i18next";
@@ -53,6 +54,13 @@ const iconsByTravelMode = [
 	{ mode: TravelMode.SCOOTER, IconComponent: IconMotorcycleSolid },
 	{ mode: TravelMode.TRUCK, IconComponent: IconTruckSolid }
 ];
+
+type LineJsonType =
+	| GeoJSON.Feature<GeoJSON.Geometry>
+	| GeoJSON.FeatureCollection<GeoJSON.Geometry>
+	| GeoJSON.Geometry
+	| string
+	| undefined;
 
 interface RouteBoxProps {
 	mapRef: MutableRefObject<MapRef | null>;
@@ -129,6 +137,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 	const toInputRef = useRef<HTMLInputElement>(null);
 	const isInputFocused = inputFocused.from || inputFocused.to;
 	const isBothInputFilled = value.from && value.to;
+	console.log({ routePositions, routeData });
 
 	const clearRoutePosition = useCallback((type: InputType) => setRoutePositions(undefined, type), [setRoutePositions]);
 
@@ -631,13 +640,24 @@ const RouteBox: FC<RouteBoxProps> = ({
 			);
 		});
 
-	const renderSteps = useMemo(() => {
-		if (routeData) {
-			const travelSteps: RouteVehicleTravelStep[] | RoutePedestrianTravelStep[] =
-				travelMode === TravelMode.PEDESTRIAN
-					? routeData.Routes![0].Legs![0].PedestrianLegDetails!.TravelSteps!
-					: routeData.Routes![0].Legs![0].VehicleLegDetails!.TravelSteps!;
+	const getTravelSteps = (routeData: RouteDataType | undefined) => {
+		const travelSteps: Array<RouteVehicleTravelStep | RoutePedestrianTravelStep | RouteFerryTravelStep> = [];
 
+		if (routeData) {
+			routeData.Routes![0].Legs?.forEach(({ Type, VehicleLegDetails, PedestrianLegDetails, FerryLegDetails }) => {
+				Type === "Vehicle" && VehicleLegDetails && travelSteps.push(...VehicleLegDetails.TravelSteps!);
+				Type === "Pedestrian" && PedestrianLegDetails && travelSteps.push(...PedestrianLegDetails.TravelSteps!);
+				Type === "Ferry" && FerryLegDetails && travelSteps.push(...FerryLegDetails.TravelSteps!);
+			});
+		}
+
+		return travelSteps;
+	};
+
+	const renderSteps = useMemo(() => {
+		const travelSteps = getTravelSteps(routeData);
+
+		if (travelSteps.length > 0) {
 			return (
 				<View data-testid="steps-container" className={`steps-container ${!isDesktop ? "steps-container-mobile" : ""}`}>
 					{travelSteps.map((step, idx) => (
@@ -683,14 +703,80 @@ const RouteBox: FC<RouteBoxProps> = ({
 		}
 	}, [routePositions, currentLocationData, value, t]);
 
+	const getRouteLayerData = (routeData: RouteDataType | undefined) => {
+		const data: { startLineCoords: number[]; mainLineCoords: number[][]; endLineCoords: number[] } = {
+			startLineCoords: [],
+			mainLineCoords: [],
+			endLineCoords: []
+		};
+
+		if (routeData && routeData.Routes) {
+			const { Routes } = routeData;
+			const { Legs } = Routes[0];
+
+			if (Legs && Legs.length === 1) {
+				const { Geometry, Type, VehicleLegDetails, PedestrianLegDetails, FerryLegDetails } = Legs[0];
+				data.mainLineCoords = Geometry?.LineString || [];
+
+				if (Type === "Vehicle" && VehicleLegDetails) {
+					data.startLineCoords = VehicleLegDetails.Departure?.Place?.Position || [];
+					data.endLineCoords = VehicleLegDetails.Arrival?.Place?.Position || [];
+				}
+
+				if (Type === "Pedestrian" && PedestrianLegDetails) {
+					data.startLineCoords = PedestrianLegDetails.Departure?.Place?.Position || [];
+					data.endLineCoords = PedestrianLegDetails.Arrival?.Place?.Position || [];
+				}
+
+				if (Type === "Ferry" && FerryLegDetails) {
+					data.startLineCoords = FerryLegDetails.Departure?.Place?.Position || [];
+					data.endLineCoords = FerryLegDetails.Arrival?.Place?.Position || [];
+				}
+			} else if (Legs && Legs.length > 1) {
+				Legs.forEach(({ Geometry, Type, VehicleLegDetails, PedestrianLegDetails, FerryLegDetails }, idx) => {
+					Geometry?.LineString && data.mainLineCoords.push(...Geometry.LineString);
+
+					if (idx === 0) {
+						// assign startLineCoords
+						if (Type === "Vehicle" && VehicleLegDetails) {
+							data.startLineCoords = VehicleLegDetails.Departure?.Place?.Position || [];
+						}
+
+						if (Type === "Pedestrian" && PedestrianLegDetails) {
+							data.startLineCoords = PedestrianLegDetails.Departure?.Place?.Position || [];
+						}
+
+						if (Type === "Ferry" && FerryLegDetails) {
+							data.startLineCoords = FerryLegDetails.Departure?.Place?.Position || [];
+						}
+					}
+
+					if (idx === Legs.length - 1) {
+						// assign endLineCoords
+						if (Type === "Vehicle" && VehicleLegDetails) {
+							data.endLineCoords = VehicleLegDetails.Arrival?.Place?.Position || [];
+						}
+
+						if (Type === "Pedestrian" && PedestrianLegDetails) {
+							data.endLineCoords = PedestrianLegDetails.Arrival?.Place?.Position || [];
+						}
+
+						if (Type === "Ferry" && FerryLegDetails) {
+							data.endLineCoords = FerryLegDetails.Arrival?.Place?.Position || [];
+						}
+					}
+				});
+			}
+		}
+
+		return data;
+	};
+
 	const routeLayer = useMemo(() => {
 		if (routeData && routePositions) {
-			const startLineJson:
-				| GeoJSON.Feature<GeoJSON.Geometry>
-				| GeoJSON.FeatureCollection<GeoJSON.Geometry>
-				| GeoJSON.Geometry
-				| string
-				| undefined = {
+			const data = getRouteLayerData(routeData);
+
+			const startLineJson: LineJsonType = {
 				type: "Feature",
 				properties: {},
 				geometry: {
@@ -701,26 +787,17 @@ const RouteBox: FC<RouteBoxProps> = ({
 							: currentLocationData?.currentLocation
 							? [currentLocationData.currentLocation?.longitude, currentLocationData.currentLocation?.latitude]
 							: undefined,
-						travelMode === TravelMode.PEDESTRIAN
-							? routeData.Routes![0].Legs![0].PedestrianLegDetails!.Departure!.Place!.Position
-							: routeData.Routes![0].Legs![0].VehicleLegDetails!.Departure!.Place!.Position
+						data.startLineCoords
 					] as number[][]
 				}
 			};
-			const endLineJson:
-				| GeoJSON.Feature<GeoJSON.Geometry>
-				| GeoJSON.FeatureCollection<GeoJSON.Geometry>
-				| GeoJSON.Geometry
-				| string
-				| undefined = {
+			const endLineJson: LineJsonType = {
 				type: "Feature",
 				properties: {},
 				geometry: {
 					type: "LineString",
 					coordinates: [
-						travelMode === TravelMode.PEDESTRIAN
-							? routeData.Routes![0].Legs![0].PedestrianLegDetails!.Arrival!.Place!.Position
-							: routeData.Routes![0].Legs![0].VehicleLegDetails!.Arrival!.Place!.Position,
+						data.endLineCoords,
 						routePositions.to
 							? routePositions.to
 							: [currentLocationData?.currentLocation?.longitude, currentLocationData?.currentLocation?.latitude]
@@ -736,17 +813,12 @@ const RouteBox: FC<RouteBoxProps> = ({
 				},
 				paint: { "line-color": "#8E8E93", "line-width": 4, "line-dasharray": [0.0001, 2] }
 			};
-			const mainLineJson:
-				| GeoJSON.Feature<GeoJSON.Geometry>
-				| GeoJSON.FeatureCollection<GeoJSON.Geometry>
-				| GeoJSON.Geometry
-				| string
-				| undefined = {
+			const mainLineJson: LineJsonType = {
 				type: "Feature",
 				properties: {},
 				geometry: {
 					type: "LineString",
-					coordinates: routeData.Routes![0].Legs![0].Geometry!.LineString as number[][]
+					coordinates: data.mainLineCoords
 				}
 			};
 			const mapStyleLayers = mapRef.current?.getStyle().layers || [];
@@ -785,7 +857,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 				</>
 			);
 		}
-	}, [routeData, routePositions, currentLocationData, travelMode, mapRef]);
+	}, [routeData, routePositions, currentLocationData, mapRef]);
 
 	const getDuration = useCallback(
 		(mode: TravelMode) => {
@@ -1056,9 +1128,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 											justifyContent={isLanguageRTL ? "flex-end" : "flex-start"}
 										>
 											<Text className="distance">
-												{mapUnit === METRIC
-													? parseFloat((routeData.Routes![0].Summary!.Distance! / 1000).toFixed(2))
-													: parseFloat((routeData.Routes![0].Summary!.Distance! / 1609).toFixed(2))}
+												{getConvertedDistance(mapUnit, routeData.Routes![0].Summary!.Distance!)}
 											</Text>
 											<Text className="distance">
 												{mapUnit === METRIC ? t("geofence_box__km__short.text") : t("geofence_box__mi__short.text")}
@@ -1079,9 +1149,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 										</Text>
 										<Flex gap={0}>
 											<Text className="regular small-text">
-												{mapUnit === METRIC
-													? parseFloat((routeData.Routes![0].Summary!.Distance! / 1000).toFixed(2))
-													: parseFloat((routeData.Routes![0].Summary!.Distance! / 1609).toFixed(2))}
+												{getConvertedDistance(mapUnit, routeData.Routes![0].Summary!.Distance!)}
 											</Text>
 											<Text className="regular small-text">
 												&nbsp;

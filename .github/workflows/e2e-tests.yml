@@ -20,7 +20,7 @@ jobs:
 
       - name: Create .env file
         run: |
-          echo: "VITE_AWS_API_KEY_REGIONS=${{ secrets.VITE_AWS_API_KEY_REGIONS }}" >> .env
+          echo "VITE_AWS_API_KEY_REGIONS=${{ secrets.VITE_AWS_API_KEY_REGIONS }}" >> .env
           echo "VITE_AWS_API_KEYS=${{ secrets.VITE_AWS_API_KEYS }}" >> .env
           echo "VITE_AWS_COGNITO_IDENTITY_POOL_IDS=${{ secrets.VITE_AWS_COGNITO_IDENTITY_POOL_IDS }}" >> .env
           echo "VITE_AWS_WEB_SOCKET_URLS=${{ secrets.VITE_AWS_WEB_SOCKET_URLS }}" >> .env
