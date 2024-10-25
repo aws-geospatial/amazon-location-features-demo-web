@@ -282,16 +282,23 @@ const DemoPage: FC = () => {
 				const bounds = bbox(line);
 				mapRef.current?.fitBounds(bounds as [number, number, number, number], options);
 			}
-		} else if (
-			(show.routeBox || ui === ResponsiveUIEnum.routes) &&
-			routeData?.Routes![0]?.Legs![0]?.Geometry?.LineString
-		) {
-			const line = lineString(routeData.Routes[0].Legs[0].Geometry.LineString);
-			const bounds = bbox(line);
-			mapRef.current?.fitBounds(bounds as [number, number, number, number], options);
+		} else if ((show.routeBox || ui === ResponsiveUIEnum.routes) && routeData?.Routes![0]?.Legs) {
+			// TODO: move to useRouteManager
+			const ls: number[][] = [];
+
+			routeData.Routes[0].Legs.forEach(({ Geometry }) => {
+				Geometry?.LineString && Geometry.LineString.length > 0 && ls.push(...Geometry.LineString);
+			});
+
+			if (lineString.length >= 2) {
+				const line = lineString(ls);
+				const bounds = bbox(line);
+				mapRef.current?.fitBounds(bounds as [number, number, number, number], options);
+			}
 		}
 	}, [suggestions, show.routeBox, ui, routeData, isDesktop, isTablet]);
 
+	// TODO: move to useRouteManager
 	useEffect(() => {
 		if (directions) setShow(s => ({ ...s, routeBox: true }));
 	}, [directions, show]);

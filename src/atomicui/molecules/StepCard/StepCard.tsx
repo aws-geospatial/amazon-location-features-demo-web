@@ -4,24 +4,25 @@
 import { FC, memo, useRef } from "react";
 
 import { Flex, Text, View } from "@aws-amplify/ui-react";
-import { RoutePedestrianTravelStep, RouteVehicleTravelStep } from "@aws-sdk/client-georoutes";
+import { RouteFerryTravelStep, RoutePedestrianTravelStep, RouteVehicleTravelStep } from "@aws-sdk/client-georoutes";
 import { useMap } from "@demo/hooks";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { MapUnitEnum, TravelMode } from "@demo/types";
+import { getConvertedDistance } from "@demo/utils";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
 
 const { METRIC } = MapUnitEnum;
 
 interface StepCardProps {
-	step: RouteVehicleTravelStep | RoutePedestrianTravelStep;
+	step: RouteVehicleTravelStep | RoutePedestrianTravelStep | RouteFerryTravelStep;
 	isFirst: boolean;
 	isLast: boolean;
 	travelMode: TravelMode;
 }
 
 const StepCard: FC<StepCardProps> = ({ step, isFirst, isLast }) => {
-	const { mapUnit: currentMapUnit } = useMap();
+	const { mapUnit } = useMap();
 	const onlyOneEl = isFirst && isLast;
 	const { t, i18n } = useTranslation();
 	const { isDesktop } = useDeviceMediaQuery();
@@ -46,13 +47,9 @@ const StepCard: FC<StepCardProps> = ({ step, isFirst, isLast }) => {
 					justifyContent={isLanguageRTL ? "flex-end" : "flex-start"}
 					className="distance-container"
 				>
+					<Text className="distance">{getConvertedDistance(mapUnit, step.Distance!)}</Text>
 					<Text className="distance">
-						{currentMapUnit === METRIC
-							? parseFloat((step.Distance! / 1000).toFixed(2))
-							: parseFloat((step.Distance! / 1609).toFixed(2))}
-					</Text>
-					<Text className="distance">
-						{currentMapUnit === METRIC ? t("geofence_box__km__short.text") : t("geofence_box__mi__short.text")}
+						{mapUnit === METRIC ? t("geofence_box__km__short.text") : t("geofence_box__mi__short.text")}
 					</Text>
 				</Flex>
 			</View>
