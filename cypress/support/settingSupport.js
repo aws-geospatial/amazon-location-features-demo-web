@@ -29,6 +29,7 @@ Cypress.Commands.add("sendCorrectEventToPinpoint", isResponsive => {
 			? cy.openResponsiveMenu('[data-testid="bottomsheet"]')
 			: cy.get('[data-testid="hamburger-menu"]').click();
 		cy.contains("Settings").click();
+		cy.wait(10000);
 		cy.intercept("POST", "**/events").as("postPinpointEvents");
 		cy.get('[data-testid="option-item-Map style"]').click();
 		cy.get('[data-testid="map-style-item-Monochrome"]').click();
