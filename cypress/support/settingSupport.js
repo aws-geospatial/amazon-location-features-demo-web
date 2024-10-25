@@ -9,10 +9,12 @@ Cypress.Commands.add("toggleDefaultUnitsForMap", isResponsive => {
 
 Cypress.Commands.add("selectMapStyle", isResponsive => {
 	cy.get('[data-testid="option-item-Map style"]').click();
-	cy.contains("Monochrome").click();
+	cy.get('[data-testid="map-style-item-Monochrome"]').click();
+
 	if (isResponsive) {
 		cy.get('[class="grey-icon back-arrow"]').click();
 	}
+
 	cy.get('[data-testid="option-item-Map style"]').contains("Monochrome");
 });
 
