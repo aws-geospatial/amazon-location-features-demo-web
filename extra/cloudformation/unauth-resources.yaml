@@ -1063,7 +1063,7 @@ Resources:
   AmazonLocationApiKey:
     Type: AWS::Location::APIKey
     Properties:
-      KeyName: MyAmazonLocationApiKeyx
+      KeyName: MyAmazonLocationApiKey
       Description: API Key for Amazon Location Service Maps, Places and Routes
       NoExpiry: true
       Restrictions:
