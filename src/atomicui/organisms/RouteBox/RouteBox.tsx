@@ -137,7 +137,6 @@ const RouteBox: FC<RouteBoxProps> = ({
 	const toInputRef = useRef<HTMLInputElement>(null);
 	const isInputFocused = inputFocused.from || inputFocused.to;
 	const isBothInputFilled = value.from && value.to;
-	console.log({ routePositions, routeData });
 
 	const clearRoutePosition = useCallback((type: InputType) => setRoutePositions(undefined, type), [setRoutePositions]);
 
