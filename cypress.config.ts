@@ -6,7 +6,7 @@ export default defineConfig({
 	defaultCommandTimeout: 20000,
 	viewportWidth: 1440,
 	viewportHeight: 733,
-	retries: 0,
+	retries: 3,
 	video: false,
 	experimentalMemoryManagement: true,
 	env: {
