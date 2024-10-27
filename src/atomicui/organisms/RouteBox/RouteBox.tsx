@@ -6,9 +6,13 @@ import { ChangeEvent, FC, MutableRefObject, useCallback, useEffect, useMemo, use
 import { Button, Card, CheckboxField, Flex, Text, View } from "@aws-amplify/ui-react";
 import {
 	CalculateRoutesCommandInput,
+	RouteFerryLegDetails,
 	RouteFerryTravelStep,
+	RouteLegType,
+	RoutePedestrianLegDetails,
 	RoutePedestrianTravelStep,
 	RouteTravelMode,
+	RouteVehicleLegDetails,
 	RouteVehicleTravelStep
 } from "@aws-sdk/client-georoutes";
 import {
@@ -702,74 +706,59 @@ const RouteBox: FC<RouteBoxProps> = ({
 		}
 	}, [routePositions, currentLocationData, value, t]);
 
-	const getRouteLayerData = (routeData: RouteDataType | undefined) => {
+	const getPosition = (
+		key: "Departure" | "Arrival",
+		Type?: RouteLegType,
+		VehicleLegDetails?: RouteVehicleLegDetails,
+		PedestrianLegDetails?: RoutePedestrianLegDetails,
+		FerryLegDetails?: RouteFerryLegDetails
+	): number[] => {
+		if (Type === "Vehicle" && VehicleLegDetails) {
+			return VehicleLegDetails[key]?.Place?.Position || [];
+		} else if (Type === "Pedestrian" && PedestrianLegDetails) {
+			return PedestrianLegDetails[key]?.Place?.Position || [];
+		} else if (Type === "Ferry" && FerryLegDetails) {
+			return FerryLegDetails[key]?.Place?.Position || [];
+		}
+		return [];
+	};
+
+	const getRouteLayerData = useCallback((routeData: RouteDataType | undefined) => {
 		const data: { startLineCoords: number[]; mainLineCoords: number[][]; endLineCoords: number[] } = {
 			startLineCoords: [],
 			mainLineCoords: [],
 			endLineCoords: []
 		};
 
-		if (routeData && routeData.Routes) {
-			const { Routes } = routeData;
-			const { Legs } = Routes[0];
+		if (routeData?.Routes?.[0]?.Legs) {
+			const { Legs } = routeData.Routes[0];
 
-			if (Legs && Legs.length === 1) {
-				const { Geometry, Type, VehicleLegDetails, PedestrianLegDetails, FerryLegDetails } = Legs[0];
-				data.mainLineCoords = Geometry?.LineString || [];
-
-				if (Type === "Vehicle" && VehicleLegDetails) {
-					data.startLineCoords = VehicleLegDetails.Departure?.Place?.Position || [];
-					data.endLineCoords = VehicleLegDetails.Arrival?.Place?.Position || [];
+			Legs.forEach(({ Geometry, Type, VehicleLegDetails, PedestrianLegDetails, FerryLegDetails }, idx) => {
+				// Accumulate main line coordinates
+				if (Geometry?.LineString) {
+					data.mainLineCoords.push(...Geometry.LineString);
 				}
 
-				if (Type === "Pedestrian" && PedestrianLegDetails) {
-					data.startLineCoords = PedestrianLegDetails.Departure?.Place?.Position || [];
-					data.endLineCoords = PedestrianLegDetails.Arrival?.Place?.Position || [];
+				// Assign startLineCoords for the first leg
+				if (idx === 0) {
+					data.startLineCoords = getPosition(
+						"Departure",
+						Type,
+						VehicleLegDetails,
+						PedestrianLegDetails,
+						FerryLegDetails
+					);
 				}
 
-				if (Type === "Ferry" && FerryLegDetails) {
-					data.startLineCoords = FerryLegDetails.Departure?.Place?.Position || [];
-					data.endLineCoords = FerryLegDetails.Arrival?.Place?.Position || [];
+				// Assign endLineCoords for the last leg
+				if (idx === Legs.length - 1) {
+					data.endLineCoords = getPosition("Arrival", Type, VehicleLegDetails, PedestrianLegDetails, FerryLegDetails);
 				}
-			} else if (Legs && Legs.length > 1) {
-				Legs.forEach(({ Geometry, Type, VehicleLegDetails, PedestrianLegDetails, FerryLegDetails }, idx) => {
-					Geometry?.LineString && data.mainLineCoords.push(...Geometry.LineString);
-
-					if (idx === 0) {
-						// assign startLineCoords
-						if (Type === "Vehicle" && VehicleLegDetails) {
-							data.startLineCoords = VehicleLegDetails.Departure?.Place?.Position || [];
-						}
-
-						if (Type === "Pedestrian" && PedestrianLegDetails) {
-							data.startLineCoords = PedestrianLegDetails.Departure?.Place?.Position || [];
-						}
-
-						if (Type === "Ferry" && FerryLegDetails) {
-							data.startLineCoords = FerryLegDetails.Departure?.Place?.Position || [];
-						}
-					}
-
-					if (idx === Legs.length - 1) {
-						// assign endLineCoords
-						if (Type === "Vehicle" && VehicleLegDetails) {
-							data.endLineCoords = VehicleLegDetails.Arrival?.Place?.Position || [];
-						}
-
-						if (Type === "Pedestrian" && PedestrianLegDetails) {
-							data.endLineCoords = PedestrianLegDetails.Arrival?.Place?.Position || [];
-						}
-
-						if (Type === "Ferry" && FerryLegDetails) {
-							data.endLineCoords = FerryLegDetails.Arrival?.Place?.Position || [];
-						}
-					}
-				});
-			}
+			});
 		}
 
 		return data;
-	};
+	}, []);
 
 	const routeLayer = useMemo(() => {
 		if (routeData && routePositions) {
@@ -856,7 +845,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 				</>
 			);
 		}
-	}, [routeData, routePositions, currentLocationData, mapRef]);
+	}, [routeData, routePositions, getRouteLayerData, currentLocationData, mapRef]);
 
 	const getDuration = useCallback(
 		(mode: TravelMode) => {
