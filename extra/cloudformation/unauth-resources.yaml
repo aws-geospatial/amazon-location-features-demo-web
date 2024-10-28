@@ -1060,9 +1060,28 @@ Resources:
       Roles:
         - !Ref AmazonLocationGeoFenceLambdaExecutionRole
 
+  AmazonLocationApiKey:
+    Type: AWS::Location::APIKey
+    Properties:
+      KeyName: MyAmazonLocationApiKey
+      Description: API Key for Amazon Location Service Maps, Places and Routes
+      NoExpiry: true
+      Restrictions:
+        AllowActions:
+          - "geo-maps:*"
+          - "geo-places:*"
+          - "geo-routes:*"
+        AllowResources:
+          - !Sub "arn:aws:geo-maps:${AWS::Region}::provider/default"
+          - !Sub "arn:aws:geo-places:${AWS::Region}::provider/default"
+          - !Sub "arn:aws:geo-routes:${AWS::Region}::provider/default"
+
 Outputs:
   Region:
     Value: !Sub "${AWS::Region}"
+
+  ApiKey:
+    Value: !Ref AmazonLocationApiKey
 
   IdentityPoolId:
     Value: !Ref CognitoIdentityPool

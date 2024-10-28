@@ -19,9 +19,9 @@ export const getHash = (point: number[], precision = 6): string => Geohash.encod
 // group poi in clusters by geohash based on precision level
 export const calculateClusters = (suggestions: SuggestionType[], precision: number): ClustersType => {
 	return suggestions.reduce((acc, currentValue) => {
-		const hash = currentValue.Hash
-			? currentValue.Hash.substring(0, precision)
-			: getHash(currentValue.Place?.Geometry?.Point as number[], precision);
+		const hash = currentValue.hash
+			? currentValue.hash.substring(0, precision)
+			: getHash(currentValue.position as number[], precision);
 		acc[hash] = acc[hash] ? [...acc[hash], currentValue] : [currentValue];
 		return acc;
 	}, {} as ClustersType);

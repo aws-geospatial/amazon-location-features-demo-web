@@ -1,6 +1,18 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
+export interface BaseValues {
+	identityPoolId: string;
+	region: string;
+	webSocketUrl: string;
+}
+
+export interface UserProvidedValues extends BaseValues {
+	userDomain: string;
+	userPoolClientId: string;
+	userPoolId: string;
+}
+
 export type CognitoIdentityCredentials = {
 	accessKeyId: string;
 	expiration?: Date;

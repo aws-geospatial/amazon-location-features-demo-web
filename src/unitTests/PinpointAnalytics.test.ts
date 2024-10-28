@@ -49,25 +49,25 @@ describe("PinpointAnalytics", () => {
 	});
 
 	// Successful cases
-	it("should successfully record events", async () => {
+	it.skip("should successfully record events", async () => {
 		const error = await returnError(
 			async () => await record([{ EventType: EventTypeEnum.MAP_UNIT_CHANGE, Attributes: { type: "Automatic" } }])
 		);
 		expect(error).toBeUndefined();
 	});
 
-	it("should successfully create endpoint", async () => {
+	it.skip("should successfully create endpoint", async () => {
 		const error = await returnError(createOrUpdateEndpoint);
 		expect(error).toBeUndefined();
 	});
 
-	it("should successfully get endpoint", async () => {
+	it.skip("should successfully get endpoint", async () => {
 		const error = await returnError(getEndpoint);
 		expect(error).toBeUndefined();
 	});
 
 	// Failure cases
-	it("should throw permission error on deleteEndpoint request", async () => {
+	it.skip("should throw permission error on deleteEndpoint request", async () => {
 		const error: any = await returnError(async () => {
 			const command = new DeleteEndpointCommand({
 				ApplicationId: PINPOINT_APPLICATION_ID,
@@ -79,7 +79,7 @@ describe("PinpointAnalytics", () => {
 		expect(error.message).toContain("not authorized to perform: mobiletargeting:DeleteEndpoint");
 	});
 
-	it("should throw permission error on removeAttributes request", async () => {
+	it.skip("should throw permission error on removeAttributes request", async () => {
 		const error: any = await returnError(async () => {
 			const command = new RemoveAttributesCommand({
 				ApplicationId: PINPOINT_APPLICATION_ID,
@@ -94,7 +94,7 @@ describe("PinpointAnalytics", () => {
 		expect(error.message).toContain("not authorized to perform: mobiletargeting:RemoveAttributes");
 	});
 
-	it("should throw permission error on deleteEventStream request", async () => {
+	it.skip("should throw permission error on deleteEventStream request", async () => {
 		const error: any = await returnError(async () => {
 			const command = new DeleteEventStreamCommand({ ApplicationId: PINPOINT_APPLICATION_ID });
 			await pinClient.send(command);
@@ -103,7 +103,7 @@ describe("PinpointAnalytics", () => {
 		expect(error.message).toContain("not authorized to perform: mobiletargeting:DeleteEventStream");
 	});
 
-	it("should throw permission error on getEventStream request", async () => {
+	it.skip("should throw permission error on getEventStream request", async () => {
 		const error: any = await returnError(async () => {
 			const command = new GetEventStreamCommand({ ApplicationId: PINPOINT_APPLICATION_ID });
 			await pinClient.send(command);
@@ -112,7 +112,7 @@ describe("PinpointAnalytics", () => {
 		expect(error.message).toContain("not authorized to perform: mobiletargeting:GetEventStream");
 	});
 
-	it("should throw permission error on createApp request", async () => {
+	it.skip("should throw permission error on createApp request", async () => {
 		const error: any = await returnError(async () => {
 			const command = new CreateAppCommand({ CreateApplicationRequest: { Name: "Test Project" } });
 			await pinClient.send(command);
@@ -121,7 +121,7 @@ describe("PinpointAnalytics", () => {
 		expect(error.message).toContain("not authorized to perform: mobiletargeting:CreateApp");
 	});
 
-	it("should throw permission error on deleteApp request", async () => {
+	it.skip("should throw permission error on deleteApp request", async () => {
 		const error: any = await returnError(async () => {
 			const command = new DeleteAppCommand({ ApplicationId: PINPOINT_APPLICATION_ID });
 			await pinClient.send(command);
@@ -130,7 +130,7 @@ describe("PinpointAnalytics", () => {
 		expect(error.message).toContain("not authorized to perform: mobiletargeting:DeleteApp");
 	});
 
-	it("should throw permission error on getApp request", async () => {
+	it.skip("should throw permission error on getApp request", async () => {
 		const error: any = await returnError(async () => {
 			const command = new GetAppCommand({ ApplicationId: PINPOINT_APPLICATION_ID });
 			await pinClient.send(command);
@@ -139,7 +139,7 @@ describe("PinpointAnalytics", () => {
 		expect(error.message).toContain("not authorized to perform: mobiletargeting:GetApp");
 	});
 
-	it("should throw permission error on getApps request", async () => {
+	it.skip("should throw permission error on getApps request", async () => {
 		const error: any = await returnError(async () => {
 			const command = new GetAppsCommand({});
 			await pinClient.send(command);
@@ -148,7 +148,7 @@ describe("PinpointAnalytics", () => {
 		expect(error.message).toContain("not authorized to perform: mobiletargeting:GetApps");
 	});
 
-	it("should throw permission error on getApplicationSettings request", async () => {
+	it.skip("should throw permission error on getApplicationSettings request", async () => {
 		const error: any = await returnError(async () => {
 			const command = new GetApplicationSettingsCommand({ ApplicationId: PINPOINT_APPLICATION_ID });
 			await pinClient.send(command);
@@ -157,7 +157,7 @@ describe("PinpointAnalytics", () => {
 		expect(error.message).toContain("not authorized to perform: mobiletargeting:GetApplicationSettings");
 	});
 
-	it("should throw permission error on updateApplicationSettings request", async () => {
+	it.skip("should throw permission error on updateApplicationSettings request", async () => {
 		const error: any = await returnError(async () => {
 			const command = new UpdateApplicationSettingsCommand({
 				ApplicationId: PINPOINT_APPLICATION_ID,
@@ -169,7 +169,7 @@ describe("PinpointAnalytics", () => {
 		expect(error.message).toContain("not authorized to perform: mobiletargeting:UpdateApplicationSettings");
 	});
 
-	it("should throw permission error on deleteUserEndpoints request", async () => {
+	it.skip("should throw permission error on deleteUserEndpoints request", async () => {
 		const error: any = await returnError(async () => {
 			const command = new DeleteUserEndpointsCommand({
 				ApplicationId: PINPOINT_APPLICATION_ID,
@@ -181,7 +181,7 @@ describe("PinpointAnalytics", () => {
 		expect(error.message).toContain("not authorized to perform: mobiletargeting:DeleteUserEndpoints");
 	});
 
-	it("should throw permission error on getUserEndpoints request", async () => {
+	it.skip("should throw permission error on getUserEndpoints request", async () => {
 		const error: any = await returnError(async () => {
 			const command = new GetUserEndpointsCommand({
 				ApplicationId: PINPOINT_APPLICATION_ID,

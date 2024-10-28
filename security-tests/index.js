@@ -1,5 +1,3 @@
-import crypto from "crypto";
-
 import { GetRolePolicyCommand, IAMClient, ListRolePoliciesCommand } from "@aws-sdk/client-iam";
 import { Amplify } from "aws-amplify";
 import { confirmSignIn, fetchAuthSession, signIn } from "aws-amplify/auth";
@@ -8,7 +6,6 @@ import * as R from "ramda";
 
 import { policies } from "./constants/index.js";
 
-global.crypto = crypto;
 dotenv.config();
 
 const identityPoolId = process.env.IDENTITY_POOL_ID;

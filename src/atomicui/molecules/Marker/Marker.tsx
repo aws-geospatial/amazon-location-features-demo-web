@@ -1,15 +1,12 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { FC, lazy, memo, useCallback, useEffect, useState } from "react";
+import { FC, memo, useEffect, useState } from "react";
 
+import { ReverseGeocodeCommandOutput, ReverseGeocodeResultItem } from "@aws-sdk/client-geoplaces";
+import { SuggestionMarker } from "@demo/atomicui/molecules";
 import { usePlace } from "@demo/hooks";
-import { SuggestionType } from "@demo/types";
 import { uuid } from "@demo/utils/uuid";
-
-const SuggestionMarker = lazy(() =>
-	import("@demo/atomicui/molecules/SuggestionMarker").then(module => ({ default: module.SuggestionMarker }))
-);
 
 interface Props {
 	latitude: number;
@@ -19,27 +16,29 @@ interface Props {
 }
 
 const Marker: FC<Props> = ({ latitude, longitude, searchValue, setSearchValue }) => {
-	const [info, setInfo] = useState<SuggestionType>();
+	const [info, setInfo] = useState<{ id: string; place: ReverseGeocodeResultItem }>();
 	const { getPlaceDataByCoordinates, setMarker, marker, selectedMarker } = usePlace();
 
 	if (marker && selectedMarker) setMarker(undefined);
 
-	const loadPlaceInfo = useCallback(async () => {
-		const pd = await getPlaceDataByCoordinates([longitude, latitude]);
-		setInfo({ ...pd?.Results![0], Id: uuid.randomUUID() });
-	}, [getPlaceDataByCoordinates, latitude, longitude]);
-
 	useEffect(() => {
 		if (!info) {
-			loadPlaceInfo();
+			(async () => {
+				const place: ReverseGeocodeCommandOutput | undefined = await getPlaceDataByCoordinates([longitude, latitude]);
+				setInfo({ id: uuid.randomUUID(), place: place!.ResultItems![0] });
+			})();
 		}
-	}, [info, loadPlaceInfo]);
+	}, [info, getPlaceDataByCoordinates, longitude, latitude]);
 
-	if (info) {
+	if (!!info && !!info.place.PlaceId) {
 		return (
 			<SuggestionMarker
+				id={info.id}
+				placeId={info.place.PlaceId}
+				position={info.place.Position}
+				address={info.place.Address}
+				label={info.place.Address!.Label}
 				active={true}
-				{...info}
 				onClosePopUp={() => setMarker(undefined)}
 				searchValue={searchValue}
 				setSearchValue={setSearchValue}

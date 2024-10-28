@@ -3,9 +3,9 @@
 
 import { useMemo } from "react";
 
-import { CalculateRouteRequest } from "@aws-sdk/client-location";
+import { CalculateRoutesCommandInput } from "@aws-sdk/client-georoutes";
 import { useRouteService } from "@demo/services";
-import { useMapStore, useRouteStore } from "@demo/stores";
+import { useRouteStore } from "@demo/stores";
 import { InputType, RouteDataType, SuggestionType } from "@demo/types";
 import { EventTypeEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
@@ -17,15 +17,14 @@ const useRoute = () => {
 	const { setInitial } = store;
 	const { setState } = useRouteStore;
 	const routeService = useRouteService();
-	const mapStore = useMapStore();
 	const { t } = useTranslation();
 
 	const methods = useMemo(
 		() => ({
-			getRoute: async (params: CalculateRouteRequest, triggeredBy: TriggeredByEnum) => {
+			getRoute: async (params: CalculateRoutesCommandInput, triggeredBy: TriggeredByEnum) => {
 				try {
 					setState({ isFetchingRoute: true });
-					const routeData = await routeService.calculateRoute(params, mapStore.mapProvider);
+					const routeData = await routeService.calculateRoutes(params);
 					return routeData;
 				} catch (error) {
 					errorHandler(error, `${t("error_handler__failed_calculate_route.text") as string} (${params.TravelMode})`);
@@ -34,18 +33,8 @@ const useRoute = () => {
 
 					const recordAttributes: { [key: string]: string } = {
 						travelMode: params.TravelMode || "N/A",
-						distanceUnit: params.DistanceUnit || "N/A",
 						triggeredBy: String(triggeredBy)
 					};
-
-					const modeOptions = {
-						...(params.CarModeOptions ? params.CarModeOptions : {}),
-						...(params.TruckModeOptions ? params.TruckModeOptions : {})
-					};
-
-					for (const [key, value] of Object.entries(modeOptions)) {
-						recordAttributes[key] = String(value);
-					}
 
 					record([{ EventType: EventTypeEnum.ROUTE_SEARCH, Attributes: recordAttributes }]);
 				}
@@ -59,7 +48,7 @@ const useRoute = () => {
 			setRouteData: (routeData?: RouteDataType) => {
 				setState({ routeData });
 			},
-			setDirections: (directions?: { info: SuggestionType; isEsriLimitation: boolean }) => {
+			setDirections: (directions?: SuggestionType) => {
 				setState({ directions });
 			},
 			resetStore: () => {
@@ -67,7 +56,7 @@ const useRoute = () => {
 				setInitial();
 			}
 		}),
-		[setInitial, setState, routeService, mapStore.mapProvider, t]
+		[setInitial, setState, routeService, t]
 	);
 
 	return useMemo(() => ({ ...methods, ...store }), [methods, store]);

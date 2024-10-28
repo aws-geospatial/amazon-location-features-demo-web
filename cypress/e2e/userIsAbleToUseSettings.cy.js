@@ -15,15 +15,11 @@ describe("Settings", () => {
 			cy.toggleDefaultUnitsForMap(Viewport.DESKTOP);
 		});
 
-		it("ST-002 - should allow user to select map data provider", { scrollBehavior: false }, () => {
-			cy.selectMapDataProvider();
-		});
-
-		it("ST-003 - should allow user to select map style", { scrollBehavior: false }, () => {
+		it("ST-002 - should allow user to select map style", { scrollBehavior: false }, () => {
 			cy.selectMapStyle(Viewport.DESKTOP);
 		});
 
-		it("ST-004 - should allow user to set default route options from settings", { scrollBehavior: false }, () => {
+		it("ST-003 - should allow user to set default route options from settings", { scrollBehavior: false }, () => {
 			cy.checkDefaultRouteOptions();
 		});
 	});
@@ -32,22 +28,18 @@ describe("Settings", () => {
 		beforeEach(() => {
 			cy.visitDomainInResponsiveView(`${Cypress.env("WEB_DOMAIN")}/demo`);
 			cy.openResponsiveMenu('[data-testid="bottomsheet"]');
-			cy.contains("Settings").click();
+			cy.contains("Settings").click({ force: true });
 		});
 
 		it("ST-005 - should allow user toggle default units for map", { scrollBehavior: false }, () => {
 			cy.toggleDefaultUnitsForMap(Viewport.RESPONSIVE);
 		});
 
-		it("ST-006 - should allow user to select map data provider", { scrollBehavior: false }, () => {
-			cy.selectMapDataProvider();
-		});
-
-		it("ST-007 - should allow user to select map style", { scrollBehavior: false }, () => {
+		it("ST-006 - should allow user to select map style", { scrollBehavior: false }, () => {
 			cy.selectMapStyle(Viewport.RESPONSIVE);
 		});
 
-		it("ST-008 - should allow user to set default route options from settings", { scrollBehavior: false }, () => {
+		it("ST-007 - should allow user to set default route options from settings", { scrollBehavior: false }, () => {
 			cy.checkDefaultRouteOptions();
 		});
 	});

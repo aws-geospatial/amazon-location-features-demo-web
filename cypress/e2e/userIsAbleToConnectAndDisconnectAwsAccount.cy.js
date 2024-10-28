@@ -7,10 +7,10 @@ describe("Connecting and Disconnecting AWS account", () => {
 	context("Desktop view", () => {
 		beforeEach(() => {
 			cy.visitDomain(`${Cypress.env("WEB_DOMAIN")}/demo`);
-			cy.connectAwsAccount(Viewport.DESKTOP);
 		});
 
 		it("CDAA-001 - should allow user to connect, sign-in, sign-out and disconnect AWS account from sidebar", () => {
+			cy.connectAwsAccount(Viewport.DESKTOP);
 			cy.signOutAndDisconnectFromAwsAccount(Viewport.DESKTOP);
 		});
 	});
@@ -18,10 +18,10 @@ describe("Connecting and Disconnecting AWS account", () => {
 	context("Responsive view", () => {
 		beforeEach(() => {
 			cy.visitDomainInResponsiveView(`${Cypress.env("WEB_DOMAIN")}/demo`);
-			cy.connectAwsAccount(Viewport.RESPONSIVE);
 		});
 
 		it("CDAA-002 - should allow user to connect, sign-in, sign-out and disconnect AWS account from sidebar", () => {
+			cy.connectAwsAccount(Viewport.RESPONSIVE);
 			cy.signOutAndDisconnectFromAwsAccount(Viewport.RESPONSIVE);
 		});
 	});

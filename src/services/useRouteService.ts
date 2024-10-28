@@ -3,37 +3,28 @@
 
 import { useMemo } from "react";
 
-import { CalculateRouteRequest } from "@aws-sdk/client-location";
-import { appConfig } from "@demo/core/constants";
+import { CalculateRoutesCommand, CalculateRoutesCommandInput } from "@aws-sdk/client-georoutes";
 import { useClient } from "@demo/hooks";
-import { MapProviderEnum } from "@demo/types";
-
-const {
-	MAP_RESOURCES: {
-		ROUTE_CALCULATORS: { ESRI, HERE, GRAB }
-	}
-} = appConfig;
 
 const useRouteService = () => {
-	const { locationClient } = useClient();
+	const { routesClient } = useClient();
 
 	return useMemo(
 		() => ({
-			calculateRoute: async (params: CalculateRouteRequest, mapProvider: MapProviderEnum) =>
-				await locationClient?.calculateRoute({
+			calculateRoutes: async (params: CalculateRoutesCommandInput) => {
+				const input: CalculateRoutesCommandInput = {
 					...params,
-					CalculatorName:
-						mapProvider === MapProviderEnum.ESRI || mapProvider === MapProviderEnum.OPEN_DATA
-							? ESRI
-							: mapProvider === MapProviderEnum.HERE
-							? HERE
-							: mapProvider === MapProviderEnum.GRAB
-							? GRAB
-							: "",
-					DepartNow: true
-				})
+					DepartNow: true,
+					LegGeometryFormat: "Simple",
+					TravelStepType: "Default",
+					LegAdditionalFeatures: ["TravelStepInstructions", "Summary"],
+					MaxAlternatives: 0
+				};
+				const command = new CalculateRoutesCommand(input);
+				return await routesClient?.send(command);
+			}
 		}),
-		[locationClient]
+		[routesClient]
 	);
 };
 

@@ -7,21 +7,15 @@ Cypress.Commands.add("toggleDefaultUnitsForMap", isResponsive => {
 	cy.get('[data-testid="option-item-Units"]').contains("Imperial");
 });
 
-Cypress.Commands.add("selectMapDataProvider", () => {
-	cy.get('[data-testid="option-item-Data provider"]').click();
-	cy.get('[data-testid="option-details-container"]').contains("Esri");
-	cy.get('[data-testid="option-details-container"]').contains("HERE");
-	cy.get('[data-testid="option-details-container"]').contains("GrabMaps");
-	cy.get('[data-testid="option-details-container"]').contains("OpenData");
-});
-
 Cypress.Commands.add("selectMapStyle", isResponsive => {
 	cy.get('[data-testid="option-item-Map style"]').click();
-	cy.contains("Streets").click();
+	cy.get('[data-testid="map-style-item-Monochrome"]').click();
+
 	if (isResponsive) {
 		cy.get('[class="grey-icon back-arrow"]').click();
 	}
-	cy.get('[data-testid="option-item-Map style"]').contains("Streets");
+
+	cy.get('[data-testid="option-item-Map style"]').contains("Monochrome");
 });
 
 Cypress.Commands.add("checkDefaultRouteOptions", () => {
@@ -37,9 +31,10 @@ Cypress.Commands.add("sendCorrectEventToPinpoint", isResponsive => {
 			? cy.openResponsiveMenu('[data-testid="bottomsheet"]')
 			: cy.get('[data-testid="hamburger-menu"]').click();
 		cy.contains("Settings").click();
+		cy.wait(10000);
 		cy.intercept("POST", "**/events").as("postPinpointEvents");
 		cy.get('[data-testid="option-item-Map style"]').click();
-		cy.get('[data-testid="map-style-item-location.aws.com.demo.maps.HERE.Explore"]').click();
+		cy.get('[data-testid="map-style-item-Monochrome"]').click();
 		cy.wait("@postPinpointEvents").then(intercepted => {
 			const requestBody = intercepted.request.body;
 			const responseBody = intercepted.response.body;

@@ -528,6 +528,7 @@
 		.steps-container {
 			overflow-y: scroll;
 			padding: 0 1rem;
+			max-height: 40vh;
 
 			&.steps-container-mobile {
 				padding: 0;

@@ -465,6 +465,7 @@ Resources:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: /aws/events/AmazonLocationMonitor-GeofenceCollection
+
   AmazonLocationDemoEventRule:
     Type: AWS::Events::Rule
     Properties:
@@ -482,6 +483,7 @@ Resources:
           Arn: !GetAtt AmazonLocationDemoGeoFenceLogGroup.Arn
         - Id: LambdaTarget
           Arn: !GetAtt AmazonLocationDemoIoTPublisherLambda.Arn
+
   AmazonLocationDemoIoTPolicy:
     Type: AWS::IoT::Policy
     Properties:
@@ -628,6 +630,7 @@ Resources:
                 request.end();
           }
     DependsOn: AmazonLocationDemoIoTPolicy
+
   AmazonLocationDemoIoTPublisherLambda:
     Type: AWS::Lambda::Function
     Properties:
@@ -693,6 +696,7 @@ Resources:
       Role: !GetAtt [AmazonLocationLambdaExecutionRole, Arn]
       Runtime: nodejs20.x
       Timeout: 30
+
   AmazonLocationLambdaExecutionRole:
     Type: AWS::IAM::Role
     Properties:

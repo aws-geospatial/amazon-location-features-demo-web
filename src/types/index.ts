@@ -1,7 +1,13 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-export type { CognitoIdentityCredentials, AuthTokensType, ConnectFormValuesType } from "./AwsAuthModel";
+export type {
+	BaseValues,
+	UserProvidedValues,
+	CognitoIdentityCredentials,
+	AuthTokensType,
+	ConnectFormValuesType
+} from "./AuthModel";
 export type { BaseStateProps } from "./BaseStateProps";
 export type { IContextProps } from "./IContextProps";
 export type { default as IActions } from "./IActions";
@@ -10,20 +16,12 @@ export type { ViewPointType } from "./ViewPointType";
 export type { SuggestionType } from "./SuggestionType";
 export type { CurrentLocationDataType } from "./CurrentLocationDataType";
 export type { ClustersType } from "./ClustersType";
-export type { MapStyleFilterTypes, MapStyle } from "./MapStyleFilterTypes";
 export {
 	CirclreDrawTypeEnum,
 	DistanceUnitEnum,
-	EsriMapEnum,
-	EsriMapStyleEnum,
 	HelpAccordionEnum,
-	HereMapEnum,
-	HereMapStyleEnum,
-	GrabMapEnum,
-	GrabMapStyleEnum,
 	InputType,
 	LocationErrorMessage,
-	MapProviderEnum,
 	MapUnitEnum,
 	RadiusInM,
 	SettingOptionEnum,
@@ -31,17 +29,16 @@ export {
 	TrackerType,
 	TravelMode,
 	UserAgentEnum,
-	AttributeEnum,
-	TypeEnum,
 	MenuItemEnum,
 	TrackingHistoryTypeEnum,
 	EventTypeEnum,
 	AnalyticsSessionStatus,
 	TriggeredByEnum,
 	AnalyticsEventActionsEnum,
-	OpenDataMapEnum,
 	RegionEnum,
-	MqttConnectionState
+	MqttConnectionState,
+	MapStyleEnum,
+	MapColorSchemeEnum
 } from "./Enums";
 export type { RouteDataType } from "./RouteDataType";
 export type { CirclePropertiesType, CircleDrawEventType, CircleFeatureType } from "./CircleDrawControlTypes";

@@ -9,3 +9,5 @@ export * from "./Modal";
 export * from "./DropdownEl";
 export * from "./ExploreButton";
 export * from "./NLSearchLoader";
+export * from "./ToggleSwitch";
+export * from "./PoliticalViewDropdown";
