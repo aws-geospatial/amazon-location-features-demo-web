@@ -42,7 +42,7 @@ const usePlace = () => {
 							placeId: Place?.PlaceId,
 							position: Place?.Position,
 							address: Place?.Address,
-							label: Query?.QueryId ? Title : Place?.Address?.Label,
+							label: Place?.Address ? Place.Address.Label : Title,
 							country: Place?.Address?.Country?.Name,
 							region: Place?.Address?.Region ? Place?.Address?.Region?.Name : Place?.Address?.SubRegion?.Name
 						}));

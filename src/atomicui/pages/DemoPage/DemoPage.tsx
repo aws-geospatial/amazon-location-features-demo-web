@@ -277,7 +277,7 @@ const DemoPage: FC = () => {
 			// TODO: suggestions shouldn't render markers and fit bounds, render markers and fit bounds only when suggestion is clicked or text search is performed on keyboard enter
 			const positions = suggestions.map(s => s.position) as Position[];
 
-			if (positions.length >= 2) {
+			if (positions.length >= 2 && positions.every(pos => pos !== undefined)) {
 				const line = lineString(positions);
 				const bounds = bbox(line);
 				mapRef.current?.fitBounds(bounds as [number, number, number, number], options);
