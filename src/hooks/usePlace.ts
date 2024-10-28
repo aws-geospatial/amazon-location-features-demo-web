@@ -41,8 +41,8 @@ const usePlace = () => {
 							queryId: Query?.QueryId,
 							placeId: Place?.PlaceId,
 							position: Place?.Position,
+							label: Query?.QueryId ? Title : Place?.Address?.Label,
 							address: Place?.Address,
-							label: Place?.Address ? Place.Address.Label : Title,
 							country: Place?.Address?.Country?.Name,
 							region: Place?.Address?.Region ? Place?.Address?.Region?.Name : Place?.Address?.SubRegion?.Name
 						}));
@@ -80,8 +80,8 @@ const usePlace = () => {
 								id: uuid.randomUUID(),
 								placeId: PlaceId,
 								position: Position,
-								address: Address,
 								label: Address?.Label,
+								address: Address,
 								country: Address?.Country?.Name,
 								region: Address?.Region ? Address?.Region?.Name : Address?.SubRegion?.Name,
 								hash
@@ -112,8 +112,8 @@ const usePlace = () => {
 							const sg: SuggestionType = {
 								id: uuid.randomUUID(),
 								placeId: PlaceId,
-								label: Place?.Label,
 								position: Place?.Geometry?.Point,
+								label: Place?.Label,
 								country: Place?.Country,
 								region: Place?.Region ? Place?.Region : Place?.SubRegion,
 								hash
@@ -158,8 +158,9 @@ const usePlace = () => {
 						const suggestion: SuggestionType = {
 							id: uuid.randomUUID(),
 							placeId: PlaceId,
-							label: Title,
 							position: Position,
+							label: Title,
+							address: Address,
 							country: Address?.Country?.Name,
 							region: Address?.Region ? Address?.Region?.Name : Address?.SubRegion?.Name,
 							hash

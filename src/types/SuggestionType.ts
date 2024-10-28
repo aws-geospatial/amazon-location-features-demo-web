@@ -8,8 +8,8 @@ export interface SuggestionType {
 	queryId?: string;
 	placeId?: string;
 	position?: number[];
-	address?: Address;
 	label?: string;
+	address?: Address;
 	country?: string;
 	region?: string;
 	hash?: string;

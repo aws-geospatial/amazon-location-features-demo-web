@@ -33,7 +33,11 @@ const usePlaceService = () => {
 				const input: SuggestCommandInput = {
 					QueryText,
 					BiasPosition: [viewpoint?.longitude as number, viewpoint?.latitude as number],
-					Language
+					Language,
+					// TODO: remove when updated GeoPlacesClient is used
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore
+					AdditionalFeatures: ["Core"]
 				};
 				const command = new SuggestCommand(input);
 				return await placesClient?.send(command);
