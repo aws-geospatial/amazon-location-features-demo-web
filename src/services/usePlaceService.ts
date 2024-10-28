@@ -56,11 +56,6 @@ const usePlaceService = () => {
 				return await placesClient?.send(command);
 			},
 			getPlaceByCoordinates: async (QueryPosition: number[]) => {
-				// const params: SearchPlaceIndexForPositionRequest = {
-				// 	...config,
-				// 	Position
-				// };
-				// return await locationClient?.searchPlaceIndexForPosition(params);
 				const input: ReverseGeocodeCommandInput = {
 					QueryPosition,
 					Language
