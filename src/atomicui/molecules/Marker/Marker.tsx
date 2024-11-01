@@ -3,7 +3,7 @@
 
 import { FC, memo, useEffect, useState } from "react";
 
-import { ReverseGeocodeCommandOutput, ReverseGeocodeResultItem } from "@aws-sdk/client-geoplaces";
+import { ReverseGeocodeCommandOutput, ReverseGeocodeResultItem } from "@aws-sdk/client-geo-places";
 import { SuggestionMarker } from "@demo/atomicui/molecules";
 import { usePlace } from "@demo/hooks";
 import { uuid } from "@demo/utils/uuid";
@@ -19,16 +19,15 @@ const Marker: FC<Props> = ({ latitude, longitude, searchValue, setSearchValue })
 	const [info, setInfo] = useState<{ id: string; place: ReverseGeocodeResultItem }>();
 	const { getPlaceDataByCoordinates, setMarker, marker, selectedMarker } = usePlace();
 
-	if (marker && selectedMarker) setMarker(undefined);
-
 	useEffect(() => {
+		if (marker && selectedMarker) setMarker(undefined);
 		if (!info) {
 			(async () => {
 				const place: ReverseGeocodeCommandOutput | undefined = await getPlaceDataByCoordinates([longitude, latitude]);
 				setInfo({ id: uuid.randomUUID(), place: place!.ResultItems![0] });
 			})();
 		}
-	}, [info, getPlaceDataByCoordinates, longitude, latitude]);
+	}, [info, getPlaceDataByCoordinates, longitude, latitude, marker, selectedMarker, setMarker]);
 
 	if (!!info && !!info.place.PlaceId) {
 		return (

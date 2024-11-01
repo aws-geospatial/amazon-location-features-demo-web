@@ -27,9 +27,9 @@ const useClient = () => {
 					errorHandler(error, t("error_handler__failed_create_places_client.text") as string);
 				}
 			},
-			createRoutesClient: (locationClientConfig: LocationClientConfig, region: string) => {
+			createRoutesClient: (locationClientConfig: LocationClientConfig) => {
 				try {
-					const routesClient = clientService.createRoutesClient(locationClientConfig, region);
+					const routesClient = clientService.createRoutesClient(locationClientConfig);
 					setState({ routesClient });
 				} catch (error) {
 					errorHandler(error, t("error_handler__failed_create_routes_client.text") as string);

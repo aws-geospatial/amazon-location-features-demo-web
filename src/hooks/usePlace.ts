@@ -25,7 +25,7 @@ const usePlace = () => {
 
 	const methods = useMemo(
 		() => ({
-			setSearchingState: (isSearching = true) => {
+			setSearchingState: (isSearching: boolean) => {
 				setState({ isSearching });
 			},
 			searchPlaceSuggestions: async (value: string, viewpoint: ViewPointType, cb?: (sg: SuggestionType[]) => void) => {
@@ -35,8 +35,7 @@ const usePlace = () => {
 
 					if (data?.ResultItems) {
 						const { ResultItems } = data;
-						// TODO: Implement logic to use QueryId, ignoring QuqeryId for now
-						const suggestions = ResultItems.filter(({ Place }) => Place?.PlaceId).map(({ Query, Place, Title }) => ({
+						const suggestions = ResultItems.map(({ Query, Place, Title }) => ({
 							id: uuid.randomUUID(),
 							queryId: Query?.QueryId,
 							placeId: Place?.PlaceId,
@@ -46,7 +45,7 @@ const usePlace = () => {
 							country: Place?.Address?.Country?.Name,
 							region: Place?.Address?.Region ? Place?.Address?.Region?.Name : Place?.Address?.SubRegion?.Name
 						}));
-						cb ? cb(suggestions) : setState({ suggestions });
+						cb ? cb(suggestions) : setState({ suggestions: { list: suggestions, renderMarkers: false } });
 						setViewpoint(viewpoint);
 					}
 				} catch (error) {
@@ -66,10 +65,15 @@ const usePlace = () => {
 					setState({ isFetchingPlaceData: false });
 				}
 			},
-			searchPlacesByText: async (value: string, viewpoint: ViewPointType, cb?: (sg: SuggestionType[]) => void) => {
+			searchPlacesByText: async (
+				value: string,
+				viewpoint: ViewPointType,
+				cb?: (sg: SuggestionType[]) => void,
+				isQueryId = false
+			) => {
 				try {
 					setState({ isSearching: true });
-					const data = await placeService.getPlacesByText(value);
+					const data = await placeService.getPlacesByText(value, isQueryId);
 
 					if (data?.ResultItems) {
 						const { ResultItems } = data;
@@ -89,8 +93,14 @@ const usePlace = () => {
 							clusters[hash] = clusters[hash] ? [...clusters[hash], sg] : [sg];
 							return sg;
 						});
-						cb ? cb(suggestions) : setState({ suggestions });
-						setState({ clusters });
+
+						if (cb) {
+							cb(suggestions);
+						} else {
+							setState({ suggestions: { list: suggestions, renderMarkers: true } });
+							setState({ clusters });
+						}
+
 						setViewpoint(viewpoint);
 					}
 				} catch (error) {
@@ -121,10 +131,14 @@ const usePlace = () => {
 							clusters[hash] = clusters[hash] ? [...clusters[hash], sg] : [sg];
 							return sg;
 						});
-						cb ? cb(suggestions) : setState({ suggestions });
-						setState({
-							clusters
-						});
+
+						if (cb) {
+							cb(suggestions);
+						} else {
+							setState({ suggestions: { list: suggestions, renderMarkers: true } });
+							setState({ clusters });
+						}
+
 						setViewpoint(viewpoint);
 					}
 				} catch (error) {
@@ -165,7 +179,7 @@ const usePlace = () => {
 							region: Address?.Region ? Address?.Region?.Name : Address?.SubRegion?.Name,
 							hash
 						};
-						cb ? cb([suggestion]) : setState({ suggestions: [suggestion] });
+						cb ? cb([suggestion]) : setState({ suggestions: { list: [suggestion], renderMarkers: false } });
 						setViewpoint(vPoint);
 					}
 				} catch (error) {
@@ -181,7 +195,8 @@ const usePlace = () => {
 				cb: ((sg: SuggestionType[]) => void) | undefined,
 				triggeredBy: TriggeredByEnum,
 				action: string,
-				isNLSearchEnabled = false
+				isNLSearchEnabled = false,
+				isQueryId = false
 			) => {
 				let placeSearchType = AnalyticsPlaceSearchTypeEnum.TEXT;
 
@@ -192,7 +207,7 @@ const usePlace = () => {
 					await methods.searchNLPlacesByText(value, viewpoint, cb);
 					placeSearchType = AnalyticsPlaceSearchTypeEnum.NATURAL_LANGUAGE_TEXT;
 				} else if (exact && !isNLSearchEnabled) {
-					await methods.searchPlacesByText(value, viewpoint, cb);
+					await methods.searchPlacesByText(value, viewpoint, cb, isQueryId);
 				} else if (value?.length) {
 					await methods.searchPlaceSuggestions(value, viewpoint, cb);
 				}
@@ -212,9 +227,9 @@ const usePlace = () => {
 			setZoom: (zoom: number) => {
 				setState(s => {
 					const v = Math.round(s.clusterZoom - zoom);
-					if (s.clusters && s.suggestions && s.suggestions.length > 1 && Math.abs(v) >= 1) {
+					if (s.clusters && s.suggestions && s.suggestions.list.length > 1 && Math.abs(v) >= 1) {
 						const precision = getPrecision(zoom, s.precision);
-						const clusters = calculateClusters(s.suggestions, precision);
+						const clusters = calculateClusters(s.suggestions.list, precision);
 						return { zoom, clusterZoom: Math.round(zoom), precision, clusters };
 					}
 					return { zoom };
@@ -257,7 +272,7 @@ const usePlace = () => {
 			setIsSearching: (isSearching: boolean) => {
 				setState({ isSearching });
 			},
-			setSuggestions: (suggestions?: SuggestionType[]) => {
+			setSuggestions: (suggestions?: { list: SuggestionType[]; renderMarkers: boolean }) => {
 				setState({ suggestions });
 			},
 			resetStore() {

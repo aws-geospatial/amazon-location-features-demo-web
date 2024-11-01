@@ -138,7 +138,39 @@ const appConfig = {
 		},
 		GEOFENCE_COLLECTION: "location.aws.com.demo.geofences.GeofenceCollection",
 		DEVICE_ID_WEB: "web_browser_device",
-		TRACKER: "location.aws.com.demo.trackers.Tracker"
+		TRACKER: "location.aws.com.demo.trackers.Tracker",
+		SEARCH_ROUTE_BOUND_OPTIONS: {
+			DESKTOP: {
+				padding: {
+					top: 200,
+					bottom: 200,
+					left: 450,
+					right: 200
+				},
+				speed: 5,
+				linear: true
+			},
+			TABLET: {
+				padding: {
+					top: 100,
+					bottom: 100,
+					left: 400,
+					right: 100
+				},
+				speed: 5,
+				linear: true
+			},
+			MOBILE: {
+				padding: {
+					top: 100,
+					bottom: 400,
+					left: 100,
+					right: 100
+				},
+				speed: 5,
+				linear: true
+			}
+		}
 	},
 	LINKS: {
 		AMAZON_LOCATION_GIT: "https://github.com/aws-geospatial",

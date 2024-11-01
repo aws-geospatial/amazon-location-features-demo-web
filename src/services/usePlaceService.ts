@@ -12,7 +12,7 @@ import {
 	SearchTextCommandInput,
 	SuggestCommand,
 	SuggestCommandInput
-} from "@aws-sdk/client-geoplaces";
+} from "@aws-sdk/client-geo-places";
 import { appConfig } from "@demo/core/constants";
 import { useClient, useMap } from "@demo/hooks";
 import { useTranslation } from "react-i18next";
@@ -34,9 +34,6 @@ const usePlaceService = () => {
 					QueryText,
 					BiasPosition: [viewpoint?.longitude as number, viewpoint?.latitude as number],
 					Language,
-					// TODO: remove when updated GeoPlacesClient is used
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
 					AdditionalFeatures: ["Core"]
 				};
 				const command = new SuggestCommand(input);
@@ -50,11 +47,12 @@ const usePlaceService = () => {
 				const command = new GetPlaceCommand(input);
 				return await placesClient?.send(command);
 			},
-			getPlacesByText: async (QueryText: string) => {
+			getPlacesByText: async (QueryTextOrId: string, isQueryId = false) => {
 				const input: SearchTextCommandInput = {
-					QueryText,
-					BiasPosition: [viewpoint?.longitude as number, viewpoint?.latitude as number],
-					Language
+					QueryText: isQueryId ? undefined : QueryTextOrId,
+					QueryId: isQueryId ? QueryTextOrId : undefined,
+					BiasPosition: isQueryId ? undefined : [viewpoint?.longitude as number, viewpoint?.latitude as number],
+					Language: isQueryId ? undefined : Language
 				};
 				const command = new SearchTextCommand(input);
 				return await placesClient?.send(command);
