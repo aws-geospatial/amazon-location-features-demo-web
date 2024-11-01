@@ -22,8 +22,8 @@ import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { MenuItemEnum, ShowStateType } from "@demo/types";
 import { MapColorSchemeEnum, MapStyleEnum, ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
+import { getBoundsFromLineString } from "@demo/utils";
 import { errorHandler } from "@demo/utils/errorHandler";
-import { Position, bbox, lineString } from "@turf/turf";
 import type { GeolocateControl as GeolocateControlRef } from "maplibre-gl";
 import { useTranslation } from "react-i18next";
 import {
@@ -116,7 +116,7 @@ const UnauthSimulationExitModal = lazy(() =>
 
 const {
 	API_KEYS,
-	MAP_RESOURCES: { MAX_BOUNDS },
+	MAP_RESOURCES: { MAX_BOUNDS, SEARCH_ROUTE_BOUND_OPTIONS },
 	LINKS: { AWS_LOCATION },
 	ROUTES: { DEMO }
 } = appConfig;
@@ -157,7 +157,7 @@ const DemoPage: FC = () => {
 		[baseValues]
 	);
 	const { currentLocationData, viewpoint, mapStyle, mapColorScheme, mapPoliticalView } = useMap();
-	const { selectedMarker, suggestions, zoom, setZoom } = usePlace();
+	const { zoom, setZoom } = usePlace();
 	const { routeData, directions } = useRoute();
 	const { isEditingRoute } = useTracker();
 	const { showWelcomeModal, setShowWelcomeModal, setSettingsOptions } = usePersistedData();
@@ -232,71 +232,24 @@ const DemoPage: FC = () => {
 		};
 	}, []);
 
+	// TODO: move to useRouteManager
 	useEffect(() => {
-		if (selectedMarker) {
-			const { longitude: lng, latitude: lat } = viewpoint;
-			mapRef?.current?.setCenter({ lat, lng });
-		}
-	}, [selectedMarker, viewpoint]);
-
-	useEffect(() => {
-		const options = isDesktop
-			? {
-					padding: {
-						top: 200,
-						bottom: 200,
-						left: 450,
-						right: 200
-					},
-					speed: 5,
-					linear: true
-			  }
-			: isTablet
-			? {
-					padding: {
-						top: 100,
-						bottom: 100,
-						left: 400,
-						right: 100
-					},
-					speed: 5,
-					linear: true
-			  }
-			: {
-					padding: {
-						top: 100,
-						bottom: 400,
-						left: 100,
-						right: 100
-					},
-					speed: 5,
-					linear: true
-			  };
-
-		if (suggestions) {
-			// TODO: suggestions shouldn't render markers and fit bounds, render markers and fit bounds only when suggestion is clicked or text search is performed on keyboard enter
-			const positions = suggestions.map(s => s.position) as Position[];
-
-			if (positions.length >= 2 && positions.every(pos => pos !== undefined)) {
-				const line = lineString(positions);
-				const bounds = bbox(line);
-				mapRef.current?.fitBounds(bounds as [number, number, number, number], options);
-			}
-		} else if ((show.routeBox || ui === ResponsiveUIEnum.routes) && routeData?.Routes![0]?.Legs) {
-			// TODO: move to useRouteManager
+		if ((show.routeBox || ui === ResponsiveUIEnum.routes) && routeData?.Routes![0]?.Legs) {
+			const options = isDesktop
+				? SEARCH_ROUTE_BOUND_OPTIONS.DESKTOP
+				: isTablet
+				? SEARCH_ROUTE_BOUND_OPTIONS.TABLET
+				: SEARCH_ROUTE_BOUND_OPTIONS.MOBILE;
 			const ls: number[][] = [];
 
 			routeData.Routes[0].Legs.forEach(({ Geometry }) => {
 				Geometry?.LineString && Geometry.LineString.length > 0 && ls.push(...Geometry.LineString);
 			});
 
-			if (lineString.length >= 2) {
-				const line = lineString(ls);
-				const bounds = bbox(line);
-				mapRef.current?.fitBounds(bounds as [number, number, number, number], options);
-			}
+			const bounds = getBoundsFromLineString(ls);
+			bounds && mapRef.current?.fitBounds(bounds as [number, number, number, number], options);
 		}
-	}, [suggestions, show.routeBox, ui, routeData, isDesktop, isTablet]);
+	}, [isDesktop, isTablet, routeData, show.routeBox, ui]);
 
 	// TODO: move to useRouteManager
 	useEffect(() => {

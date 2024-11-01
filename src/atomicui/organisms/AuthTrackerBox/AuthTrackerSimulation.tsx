@@ -3,7 +3,7 @@
 
 import { FC, MutableRefObject, memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { CalculateRoutesCommandInput } from "@aws-sdk/client-georoutes";
+import { CalculateRoutesCommandInput } from "@aws-sdk/client-geo-routes";
 import { useGeofence, useMap, usePersistedData, useRoute, useTracker } from "@demo/hooks";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { RouteDataType, TrackerType, TravelMode } from "@demo/types";

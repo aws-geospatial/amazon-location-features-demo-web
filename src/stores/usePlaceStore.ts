@@ -11,7 +11,7 @@ interface PlaceStoreProps {
 	clusters?: ClustersType;
 	clusterZoom: number;
 	precision: number;
-	suggestions?: SuggestionType[];
+	suggestions?: { list: SuggestionType[]; renderMarkers: boolean };
 	selectedMarker?: SuggestionType;
 	hoveredMarker?: SuggestionType;
 	marker?: ViewPointType;

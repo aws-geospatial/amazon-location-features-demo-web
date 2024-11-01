@@ -14,7 +14,7 @@ import {
 	RouteTravelMode,
 	RouteVehicleLegDetails,
 	RouteVehicleTravelStep
-} from "@aws-sdk/client-georoutes";
+} from "@aws-sdk/client-geo-routes";
 import {
 	IconArrowDownUp,
 	IconCar,
@@ -37,7 +37,7 @@ import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { InputType, MapUnitEnum, RouteDataType, RouteOptionsType, SuggestionType, TravelMode } from "@demo/types";
 import { AnalyticsEventActionsEnum, ResponsiveUIEnum, TriggeredByEnum, UserAgentEnum } from "@demo/types/Enums";
-import { getConvertedDistance, isUserDeviceIsAndroid, uuid } from "@demo/utils";
+import { getConvertedDistance, isUserDeviceIsAndroid } from "@demo/utils";
 import { humanReadableTime } from "@demo/utils/dateTimeUtils";
 import { isAndroid, isIOS } from "react-device-detect";
 import { useTranslation } from "react-i18next";
@@ -109,7 +109,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 	const routesCardRef = useRef<HTMLDivElement | null>(null);
 	const expandRouteRef = useRef<HTMLDivElement | null>(null);
 	const { currentLocationData, viewpoint, mapUnit } = useMap();
-	const { search, getPlaceData } = usePlace();
+	const { search } = usePlace();
 	const {
 		setUI,
 		setBottomSheetMinHeight,
@@ -355,7 +355,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 	);
 
 	const handleSearch = useCallback(
-		async (value: string, exact = false, type: InputType, action: string) => {
+		async (value: string, exact = false, type: InputType, action: string, isQueryId = false) => {
 			setIsSearching(true);
 
 			if (value.length >= 3) {
@@ -376,7 +376,9 @@ const RouteBox: FC<RouteBoxProps> = ({
 								: setSuggestions({ ...suggestions, to: sg });
 						},
 						TriggeredByEnum.ROUTE_MODULE,
-						action
+						action,
+						false,
+						isQueryId
 					);
 				}, 200);
 			}
@@ -578,38 +580,28 @@ const RouteBox: FC<RouteBoxProps> = ({
 		setIsCurrentLocationSelected(!isCurrentLocationSelected);
 	};
 
-	const onSelectSuggestion = async ({ placeId: pid, label = "" }: SuggestionType, type: InputType) => {
-		if (pid) {
-			const pd = await getPlaceData(pid);
-			if (!pd) return;
-
-			const { PlaceId: placeId, Position: position, Address: address } = pd;
-			const suggestion: SuggestionType = {
-				id: uuid.randomUUID(),
-				placeId,
-				position,
-				address,
-				label: address?.Label,
-				country: address?.Country?.Name,
-				region: address?.Region ? address?.Region?.Name : address?.SubRegion?.Name
-			};
-
+	const onSelectSuggestion = async (s: SuggestionType, type: InputType) => {
+		if (s.queryId) {
 			if (type === InputType.FROM) {
-				setPlaceData({ ...placeData, from: suggestion });
-				setValue({ ...value, from: pd.Address?.Label || "" });
+				setValue({ ...value, from: s.label || "" });
+				await handleSearch(s.queryId, true, InputType.FROM, AnalyticsEventActionsEnum.FROM_SUGGESTION_SELECT, true);
+			} else {
+				setValue({ ...value, to: s.label || "" });
+				await handleSearch(s.queryId, true, InputType.TO, AnalyticsEventActionsEnum.TO_SUGGESTION_SELECT, true);
+			}
+		} else if (s.placeId) {
+			if (type === InputType.FROM) {
+				setPlaceData({ ...placeData, from: { ...s } });
+				setValue({ ...value, from: s.label || "" });
 				setSuggestions({ ...suggestions, from: undefined });
 			} else {
-				setPlaceData({ ...placeData, to: suggestion });
-				setValue({ ...value, to: pd.Address?.Label || "" });
+				setPlaceData({ ...placeData, to: { ...s } });
+				setValue({ ...value, to: s.label || "" });
 				setSuggestions({ ...suggestions, to: undefined });
 			}
 
 			setInputFocused({ from: false, to: false });
-			pd.Position && setRoutePositions([pd.Position[0], pd.Position[1]], type);
-		} else if (label) {
-			type === InputType.FROM
-				? await handleSearch(label, true, InputType.FROM, AnalyticsEventActionsEnum.FROM_SUGGESTION_SELECT)
-				: await handleSearch(label, true, InputType.TO, AnalyticsEventActionsEnum.TO_SUGGESTION_SELECT);
+			s.position && setRoutePositions([s.position[0], s.position[1]], type);
 		}
 
 		setTimeout(() => {
@@ -618,26 +610,26 @@ const RouteBox: FC<RouteBoxProps> = ({
 		}, 0);
 	};
 
-	const renderSuggestions = (arr: SuggestionType[], type: InputType) =>
-		arr.map(({ id, placeId, label = "" }) => {
-			const string = label || "";
-			const separateIndex = !!placeId ? string?.indexOf(",") : -1;
+	const renderSuggestions = (suggestions: SuggestionType[], type: InputType) =>
+		suggestions.map(s => {
+			const string = s.label || "";
+			const separateIndex = !!s.placeId ? string?.indexOf(",") : -1;
 			const title = separateIndex > -1 ? string?.substring(0, separateIndex) : string;
 			const address = separateIndex > 1 ? string?.substring(separateIndex + 1) : null;
 
 			return (
 				<View
+					key={s.id}
 					data-testid={`${type}-suggestions`}
-					key={id}
 					className="suggestion"
 					onClick={() => {
-						onSelectSuggestion({ id, placeId, label }, type);
+						onSelectSuggestion({ ...s }, type);
 					}}
 				>
-					{placeId ? <IconPin /> : <IconSearch />}
+					{s.placeId ? <IconPin /> : <IconSearch />}
 					<View className="description">
 						<span className="title">{title}</span>
-						<span className="address">{placeId && address ? address : t("search_nearby.text")}</span>
+						{address && <span className="address">{address}</span>}
 					</View>
 				</View>
 			);

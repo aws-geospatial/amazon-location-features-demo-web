@@ -4,7 +4,7 @@
 import { FC, memo, useRef } from "react";
 
 import { Flex, Text, View } from "@aws-amplify/ui-react";
-import { RouteFerryTravelStep, RoutePedestrianTravelStep, RouteVehicleTravelStep } from "@aws-sdk/client-georoutes";
+import { RouteFerryTravelStep, RoutePedestrianTravelStep, RouteVehicleTravelStep } from "@aws-sdk/client-geo-routes";
 import { useMap } from "@demo/hooks";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { MapUnitEnum, TravelMode } from "@demo/types";
