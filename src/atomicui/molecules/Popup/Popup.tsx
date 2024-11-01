@@ -4,7 +4,7 @@
 import { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button, Flex, Placeholder, Text, View } from "@aws-amplify/ui-react";
-import { CalculateRoutesCommandInput, CalculateRoutesCommandOutput } from "@aws-sdk/client-georoutes";
+import { CalculateRoutesCommandInput, CalculateRoutesCommandOutput } from "@aws-sdk/client-geo-routes";
 import { IconCar, IconClose, IconCopyPages, IconDirections, IconInfo } from "@demo/assets/svgs";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useMap, usePlace, useRoute } from "@demo/hooks";

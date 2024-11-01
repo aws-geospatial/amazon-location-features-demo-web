@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { CalculateRoutesCommandOutput } from "@aws-sdk/client-georoutes";
+import { CalculateRoutesCommandOutput } from "@aws-sdk/client-geo-routes";
 
 import { TrackerType, TravelMode } from "./Enums";
 

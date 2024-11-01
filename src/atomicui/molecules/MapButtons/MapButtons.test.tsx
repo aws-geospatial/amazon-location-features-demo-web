@@ -45,7 +45,8 @@ const mockUseAuthData = {
 };
 
 const mockUseMapData = {
-	mapStyle: MapStyleEnum.STANDARD
+	mapStyle: MapStyleEnum.STANDARD,
+	setMapStyle: jest.fn()
 };
 
 const mockUseGeofenceData = {
@@ -105,20 +106,19 @@ describe("<MapButtons/>", () => {
 		});
 	});
 
-	// TODO: Fix this test
-	// it("should allow to select map style", () => {
-	// 	mockProps.openStylesCard = true;
-	// 	const { getByTestId } = renderComponent();
-	// 	waitFor(() => {
-	// 		expect(getByTestId("map-styles-container")).toBeInTheDocument();
-	// 	});
-	// 	act(() => {
-	// 		fireEvent.click(getByTestId(`map-style-item-${EsriMapEnum.ESRI_STREET_MAP}`));
-	// 	});
-	// 	waitFor(() => {
-	// 		expect(mockProps.handleMapStyleChange).toHaveBeenCalledWith(EsriMapEnum.ESRI_STREET_MAP);
-	// 	});
-	// });
+	it("should allow to select map style", () => {
+		mockProps.openStylesCard = true;
+		const { getByTestId } = renderComponent();
+		waitFor(() => {
+			expect(getByTestId("map-styles-container")).toBeInTheDocument();
+		});
+		act(() => {
+			fireEvent.click(getByTestId(`map-style-item-${MapStyleEnum.MONOCHROME}`));
+		});
+		waitFor(() => {
+			expect(mockUseMapData.setMapStyle).toHaveBeenCalledWith(MapStyleEnum.MONOCHROME);
+		});
+	});
 
 	it("renders geofence button and executes correctly when user AWS account connected and authenticated", () => {
 		mockUseAuthData.isUserAwsAccountConnected = true;
@@ -161,21 +161,20 @@ describe("<MapButtons/>", () => {
 		});
 	});
 
-	// TODO: Fix this test
-	// it("renders tracker button and executes correctly when user AWS account connected and authenticated and map is Esri", () => {
-	// 	mockUseAuthData.isUserAwsAccountConnected = true;
-	// 	mockUseAuthData.credentials.authenticated = true;
-	// 	const { getByTestId } = renderComponent();
-	// 	expect(getByTestId("tracker-control-button")).toBeInTheDocument();
-	// 	act(() => {
-	// 		fireEvent.click(getByTestId("tracker-control-button"));
-	// 	});
-	// 	waitFor(() => {
-	// 		expect(mockProps.onCloseSidebar).toHaveBeenCalled();
-	// 		expect(mockUseGeofenceData.setIsAddingGeofence).toHaveBeenCalled();
-	// 		expect(mockProps.onSetShowAuthGeofenceBox).toHaveBeenCalled();
-	// 	});
-	// });
+	it("renders tracker button and executes correctly when user AWS account connected and authenticated", () => {
+		mockUseAuthData.isUserAwsAccountConnected = true;
+		mockUseAuthData.credentials.authenticated = true;
+		const { getByTestId } = renderComponent();
+		expect(getByTestId("tracker-control-button")).toBeInTheDocument();
+		act(() => {
+			fireEvent.click(getByTestId("tracker-control-button"));
+		});
+		waitFor(() => {
+			expect(mockProps.onCloseSidebar).toHaveBeenCalled();
+			expect(mockUseGeofenceData.setIsAddingGeofence).toHaveBeenCalled();
+			expect(mockProps.onSetShowAuthGeofenceBox).toHaveBeenCalled();
+		});
+	});
 
 	it("renders tracker button and executes correctly when user AWS account not connected", () => {
 		mockUseAuthData.isUserAwsAccountConnected = true;

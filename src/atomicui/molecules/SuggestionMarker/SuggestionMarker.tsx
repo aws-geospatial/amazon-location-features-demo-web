@@ -4,7 +4,7 @@
 import { FC, memo, useCallback, useEffect, useMemo, useState } from "react";
 
 import { View } from "@aws-amplify/ui-react";
-import { GetPlaceCommandOutput } from "@aws-sdk/client-geoplaces";
+import { GetPlaceCommandOutput } from "@aws-sdk/client-geo-places";
 import { IconSelected, IconSuggestion } from "@demo/assets/svgs";
 import { Popup } from "@demo/atomicui/molecules";
 import { usePlace } from "@demo/hooks";
@@ -40,7 +40,7 @@ const SuggestionMarker: FC<Props> = ({ active, onClosePopUp, searchValue, setSea
 	const select = useCallback(
 		async (id?: string) => {
 			if (id) {
-				const selectedMarker = suggestions?.find(s => s.id === id);
+				const selectedMarker = suggestions?.list.find(s => s.id === id);
 				await setSelectedMarker(selectedMarker);
 			} else {
 				await setSelectedMarker(undefined);
@@ -95,7 +95,7 @@ const SuggestionMarker: FC<Props> = ({ active, onClosePopUp, searchValue, setSea
 						info={info}
 						select={select}
 						onClosePopUp={
-							suggestions?.length === 1
+							suggestions?.list.length === 1
 								? () => {
 										clearPoiList();
 										setSearchValue("");

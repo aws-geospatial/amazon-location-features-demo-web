@@ -3,7 +3,7 @@
 
 import { useMemo } from "react";
 
-import { CalculateRoutesCommand, CalculateRoutesCommandInput } from "@aws-sdk/client-georoutes";
+import { CalculateRoutesCommand, CalculateRoutesCommandInput } from "@aws-sdk/client-geo-routes";
 import { useClient } from "@demo/hooks";
 
 const useRouteService = () => {

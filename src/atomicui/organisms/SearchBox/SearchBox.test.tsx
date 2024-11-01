@@ -39,7 +39,10 @@ const mockUseMapData = {
 
 const mockUsePlaceData = {
 	clusters: [],
-	suggestions: [{}],
+	suggestions: {
+		list: [],
+		renderMarkers: false
+	},
 	selectedMarker: null,
 	marker: null,
 	search: jest.fn(),

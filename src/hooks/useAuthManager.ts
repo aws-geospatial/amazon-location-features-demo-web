@@ -54,7 +54,7 @@ const useAuthManager = () => {
 
 				if (locationClientConfig) {
 					!placesClient && createPlacesClient(locationClientConfig);
-					!routesClient && createRoutesClient(locationClientConfig, apiKeyRegion);
+					!routesClient && createRoutesClient(locationClientConfig);
 				}
 			})();
 		}

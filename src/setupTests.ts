@@ -100,12 +100,65 @@ jest.mock("@demo/core/constants/appConfig", () => ({
 				[-123.061047, 49.303531] // northeast corner
 			]
 		},
-		MAP_STYLES: [],
-		MAP_COLOR_SCHEMES: [],
-		MAP_POLITICAL_VIEWS: {},
+		MAP_STYLES: [
+			{ id: "Standard", name: "Standard" },
+			{ id: "monochrome", name: "Monochrome" }
+		],
+		MAP_COLOR_SCHEMES: [
+			{ id: "light", name: "Light" },
+			{ id: "dark", name: "Dark" }
+		],
+		MAP_POLITICAL_VIEWS: {
+			ARG: "Argentina's view on the Southern Patagonian Ice Field and Tierra Del Fuego, including the Falkland Islands, South Georgia, and South Sandwich Islands",
+			EGY: "Egypt's view on Bir Tawil",
+			IND: "India's view on Gilgit-Baltistan",
+			KEN: "Kenya's view on the Ilemi Triangle",
+			MAR: "Morocco's view on Western Sahara",
+			RUS: "Russia's view on Crimea",
+			SDN: "Sudan's view on the Halaib Triangle",
+			SRB: "Serbia's view on Kosovo, Vukovar, and Sarengrad Islands",
+			SUR: "Suriname's view on the Courantyne Headwaters and Lawa Headwaters",
+			SYR: "Syria's view on the Golan Heights",
+			TUR: "Turkey's view on Cyprus and Northern Cyprus",
+			TZA: "Tanzania's view on Lake Malawi",
+			URY: "Uruguay's view on Rincon de Artigas",
+			VNM: "Vietnam's view on the Paracel Islands and Spratly Islands"
+		},
 		GEOFENCE_COLLECTION: "location.aws.com.demo.geofences.GeofenceCollection",
 		DEVICE_ID_WEB: "web_browser_device",
-		TRACKER: "location.aws.com.demo.trackers.Tracker"
+		TRACKER: "location.aws.com.demo.trackers.Tracker",
+		SEARCH_ROUTE_BOUND_OPTIONS: {
+			DESKTOP: {
+				padding: {
+					top: 200,
+					bottom: 200,
+					left: 450,
+					right: 200
+				},
+				speed: 5,
+				linear: true
+			},
+			TABLET: {
+				padding: {
+					top: 100,
+					bottom: 100,
+					left: 400,
+					right: 100
+				},
+				speed: 5,
+				linear: true
+			},
+			MOBILE: {
+				padding: {
+					top: 100,
+					bottom: 400,
+					left: 100,
+					right: 100
+				},
+				speed: 5,
+				linear: true
+			}
+		}
 	},
 	LINKS: {
 		AMAZON_LOCATION_GIT: "https://github.com/aws-geospatial",

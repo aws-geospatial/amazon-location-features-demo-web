@@ -18,7 +18,6 @@ import {
 } from "react";
 
 import { Button, Card, Flex, Loader, SelectField, SliderField, Text, View } from "@aws-amplify/ui-react";
-import { GetPlaceCommandOutput } from "@aws-sdk/client-geoplaces";
 import { ListGeofenceResponseEntry } from "@aws-sdk/client-location";
 import { IconBackArrow, IconClose, IconPin, IconPlus, IconSearch, IconTrash } from "@demo/assets/svgs";
 import { showToast } from "@demo/core/Toast";
@@ -82,14 +81,14 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 	/* Radius must be greater than 0 and not greater than 100,000 m (API requirement) */
 	const [radiusInM, setRadiusInM] = useState(RadiusInM.DEFAULT);
 	const [suggestions, setSuggestions] = useState<SuggestionType[] | undefined>(undefined);
-	const [place, setPlace] = useState<GetPlaceCommandOutput | undefined>(undefined);
+	const [place, setPlace] = useState<SuggestionType | undefined>(undefined);
 	const [geofenceCenter, setGeofenceCenter] = useState<number[] | undefined>(undefined);
 	const [current, setCurrent] = useState<{ value: string | undefined; radiusInM: number | undefined }>({
 		value: undefined,
 		radiusInM: undefined
 	});
 	const { isDesktop } = useDeviceMediaQuery();
-	const { search, getPlaceData } = usePlace();
+	const { search } = usePlace();
 	const {
 		getGeofencesList,
 		isFetchingGeofences,
@@ -144,7 +143,7 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 	}, [triggerOnClose, triggerOnReset]);
 
 	const handleSearch = useCallback(
-		async (value: string, exact = false) => {
+		async (value: string, exact = false, isQueryId = false) => {
 			if (value.length >= 3) {
 				let longitude = US.longitude;
 				let latitude = US.latitude;
@@ -166,7 +165,9 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 						exact,
 						sg => setSuggestions(sg),
 						TriggeredByEnum.GEOFENCE_MODULE,
-						AnalyticsEventActionsEnum.AUTOCOMPLETE
+						AnalyticsEventActionsEnum.AUTOCOMPLETE,
+						false,
+						isQueryId
 					);
 				}, 200);
 			}
@@ -192,51 +193,49 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 
 	const onSearch = useCallback(async () => !!value && (await handleSearch(value)), [value, handleSearch]);
 
-	const setCirclePropertiesFromSuggestion = (place: GetPlaceCommandOutput) => {
-		setGeofenceCenter(place.Position!);
-		setValue(place?.Address?.Label || "");
+	const setCirclePropertiesFromSuggestion = ({ label, position }: SuggestionType) => {
+		setValue(label || "");
+		setGeofenceCenter(position);
 		setSuggestions(undefined);
 	};
 
 	const onSelectSuggestion = useCallback(
-		async ({ placeId, label = "" }: SuggestionType) => {
-			if (!placeId && label) {
-				await handleSearch(label, true);
-			} else if (placeId && label) {
-				const placeData = await getPlaceData(placeId);
-
-				if (placeData) {
-					setPlace(placeData);
-					setCirclePropertiesFromSuggestion(placeData);
-				}
+		async (s: SuggestionType) => {
+			if (s.queryId) {
+				await handleSearch(s.queryId, true, true);
+			} else if (s.placeId) {
+				setPlace({ ...s });
+				setCirclePropertiesFromSuggestion({ ...s });
 			}
 		},
-		[handleSearch, getPlaceData]
+		[handleSearch]
 	);
 
 	const renderSuggestions = useMemo(() => {
 		if (!!value && !!suggestions) {
 			return suggestions?.length ? (
-				suggestions.map(({ id, placeId, label }, idx) => {
-					const string = label || "";
-					const separateIndex = !!placeId ? string?.indexOf(",") : -1;
+				suggestions.map((s, idx) => {
+					const string = s.label || "";
+					const separateIndex = !!s.placeId ? string?.indexOf(",") : -1;
 					const title = separateIndex > -1 ? string?.substring(0, separateIndex) : string;
 					const address = separateIndex > 1 ? string?.substring(separateIndex + 1) : null;
 
 					return (
 						<Flex
-							key={id}
+							key={s.id}
 							className={idx === 0 ? "suggestion border-top" : "suggestion"}
 							onClick={() => {
-								onSelectSuggestion({ id, placeId, label });
+								onSelectSuggestion({ ...s });
 							}}
 						>
-							{placeId ? <IconPin /> : <IconSearch />}
+							{s.placeId ? <IconPin /> : <IconSearch />}
 							<Flex gap={0} direction="column" justifyContent="center" marginLeft="19px">
 								<Text>{title}</Text>
-								<Text variation="tertiary" textAlign={isLtr ? "start" : "end"}>
-									{placeId && address ? address : t("search_nearby.text")}
-								</Text>
+								{address && (
+									<Text variation="tertiary" textAlign={isLtr ? "start" : "end"}>
+										{address}
+									</Text>
+								)}
 							</Flex>
 						</Flex>
 					);
@@ -247,7 +246,7 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 				</Flex>
 			);
 		}
-	}, [value, suggestions, onSelectSuggestion, t, isLtr]);
+	}, [value, suggestions, onSelectSuggestion, isLtr]);
 
 	const onSave = useCallback(async () => {
 		if (geofenceCenter) {
