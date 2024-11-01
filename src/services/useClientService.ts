@@ -13,10 +13,8 @@ import { CognitoIdentityCredentials } from "@demo/types";
 const useClientService = () => {
 	return useMemo(
 		() => ({
-			createPlacesClient: (locationClientConfig: LocationClientConfig) =>
-				new GeoPlacesClient({ ...locationClientConfig }),
-			createRoutesClient: (locationClientConfig: LocationClientConfig) =>
-				new GeoRoutesClient({ ...locationClientConfig }),
+			createPlacesClient: (locationClientConfig: LocationClientConfig) => new GeoPlacesClient(locationClientConfig),
+			createRoutesClient: (locationClientConfig: LocationClientConfig) => new GeoRoutesClient(locationClientConfig),
 			createLocationClient: (credentials: CognitoIdentityCredentials, region: string) =>
 				new Location({
 					credentials,

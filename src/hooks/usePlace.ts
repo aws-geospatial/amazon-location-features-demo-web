@@ -93,8 +93,14 @@ const usePlace = () => {
 							clusters[hash] = clusters[hash] ? [...clusters[hash], sg] : [sg];
 							return sg;
 						});
-						cb ? cb(suggestions) : setState({ suggestions: { list: suggestions, renderMarkers: true } });
-						setState({ clusters });
+
+						if (cb) {
+							cb(suggestions);
+						} else {
+							setState({ suggestions: { list: suggestions, renderMarkers: true } });
+							setState({ clusters });
+						}
+
 						setViewpoint(viewpoint);
 					}
 				} catch (error) {
@@ -125,10 +131,14 @@ const usePlace = () => {
 							clusters[hash] = clusters[hash] ? [...clusters[hash], sg] : [sg];
 							return sg;
 						});
-						cb ? cb(suggestions) : setState({ suggestions: { list: suggestions, renderMarkers: true } });
-						setState({
-							clusters
-						});
+
+						if (cb) {
+							cb(suggestions);
+						} else {
+							setState({ suggestions: { list: suggestions, renderMarkers: true } });
+							setState({ clusters });
+						}
+
 						setViewpoint(viewpoint);
 					}
 				} catch (error) {
