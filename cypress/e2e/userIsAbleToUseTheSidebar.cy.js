@@ -11,7 +11,7 @@ describe("Sidebar", () => {
 				.and("contain", "Migration")
 				.and("contain", "Overview")
 				.and("contain", "Products")
-				.and("contain", "Industry")
+				.and("contain", "Industries")
 				.and("contain", "Getting Started")
 				.and("contain", "Pricing")
 				.and("contain", "Resources");
@@ -37,7 +37,7 @@ describe("Sidebar", () => {
 					.and("contain", "Provide Feedback")
 					.and("contain", "Overview")
 					.and("contain", "Products")
-					.and("contain", "Industry")
+					.and("contain", "Industries")
 					.and("contain", "Getting Started")
 					.and("contain", "Pricing")
 					.and("contain", "Resources");
