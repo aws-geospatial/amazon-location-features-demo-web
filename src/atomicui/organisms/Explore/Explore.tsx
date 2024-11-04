@@ -13,6 +13,7 @@ import {
 	IconCustomers,
 	IconDeveloperResources,
 	IconDirections,
+	IconFaqsPrimary,
 	IconFinancialService,
 	IconGeofencePlusSolid,
 	IconGeofencesTrackers,
@@ -22,7 +23,6 @@ import {
 	IconPlacesNew,
 	IconProductResources,
 	IconRadar,
-	IconRealEstate,
 	IconRetail,
 	IconRoute,
 	IconTravelHospitality,
@@ -65,6 +65,7 @@ const {
 		SHOW_NEW_NAVIGATION
 	},
 	ROUTES: {
+		DEMO,
 		SAMPLES,
 		MIGRATE_FROM_GOOGLE_MAPS,
 		MIGRATE_A_WEB_APP,
@@ -82,17 +83,13 @@ const {
 		AWS_GETTING_STARTED_URL,
 		AWS_PRICING_URL,
 		AWS_FAQ_URL,
-		// AWS_LOCATION_INDUSTRY_URL,
 		AWS_LOCATION_TRANSPORTATION_AND_LOGISTICS_URL,
 		AWS_LOCATION_FINANCIAL_SERVICE_URL,
 		AWS_LOCATION_HEALTHCARE_URL,
 		AWS_LOCATION_RETAILS_URL,
 		AWS_LOCATION_TRAVEL_AND_HOSPITALITY_URL,
-		AWS_LOCATION_REAL_ESTATE_URL,
-		// AWS_LOCATION_RESOURCES_URL,
 		AWS_LOCATION_CUSTOMERS_URL,
-		AWS_LOCATION_PRODUCT_RESOURCES_URL,
-		AWS_LOCATION_DEVELOPER_RESOURCES_URL
+		AMAZON_LOCATION_DOCUMENTATION_URL
 	}
 } = appConfig;
 
@@ -602,24 +599,6 @@ const Explore: FC<ExploreProps> = ({
 							]
 						},
 						{
-							title: "footer__getting_started.text",
-							description: "new_getting_started_desc.text",
-							onClickHandler: () => window.open(AWS_GETTING_STARTED_URL, "_self"),
-							isEnabled: true
-						},
-						{
-							title: "pricing.text",
-							description: "new_pricing_desc.text",
-							onClickHandler: () => window.open(AWS_PRICING_URL, "_self"),
-							isEnabled: true
-						},
-						{
-							title: "footer__faq.text",
-							description: "new_faqs_desc.text",
-							onClickHandler: () => window.open(AWS_FAQ_URL, "_self"),
-							isEnabled: true
-						},
-						{
 							title: "industry.text",
 							description: "new_industry_desc.text",
 							onClickHandler: () => setIsMenuExpanded(s => ({ ...s, "industry.text": !s["industry.text"] })),
@@ -693,21 +672,20 @@ const Explore: FC<ExploreProps> = ({
 											height={18}
 										/>
 									)
-								},
-								{
-									title: "real_estate.text",
-									description: "new_real_estate_desc.text",
-									onClickHandler: () => window.open(AWS_LOCATION_REAL_ESTATE_URL, "_self"),
-									isEnabled: true,
-									iconComponent: (
-										<IconRealEstate
-											style={{ alignSelf: "flex-start", margin: "0.15rem 0rem 0rem 0.8rem" }}
-											width={18}
-											height={18}
-										/>
-									)
 								}
 							]
+						},
+						{
+							title: "footer__getting_started.text",
+							description: "new_getting_started_desc.text",
+							onClickHandler: () => window.open(AWS_GETTING_STARTED_URL, "_self"),
+							isEnabled: true
+						},
+						{
+							title: "pricing.text",
+							description: "new_pricing_desc.text",
+							onClickHandler: () => window.open(AWS_PRICING_URL, "_self"),
+							isEnabled: true
 						},
 						{
 							title: "resources.text",
@@ -715,6 +693,23 @@ const Explore: FC<ExploreProps> = ({
 							onClickHandler: () => setIsMenuExpanded(s => ({ ...s, "resources.text": !s["resources.text"] })),
 							isEnabled: true,
 							subMenu: [
+								{
+									title: "footer__faq.text",
+									description: "new_faqs_desc.text",
+									onClickHandler: () => window.open(AWS_FAQ_URL, "_self"),
+									isEnabled: true,
+									iconComponent: (
+										<IconFaqsPrimary
+											style={{
+												alignSelf: "flex-start",
+												margin: "0.15rem 0rem 0rem 0.8rem",
+												fill: "var(--primary-color)"
+											}}
+											width={18}
+											height={18}
+										/>
+									)
+								},
 								{
 									title: "customers.text",
 									description: "new_customers_desc.text",
@@ -733,9 +728,22 @@ const Explore: FC<ExploreProps> = ({
 									)
 								},
 								{
-									title: "product_resources.text",
-									description: "new_product_resources_desc.text",
-									onClickHandler: () => window.open(AWS_LOCATION_PRODUCT_RESOURCES_URL, "_self"),
+									title: "documentation.text",
+									description: "new_developer_resources_desc.text",
+									onClickHandler: () => window.open(AMAZON_LOCATION_DOCUMENTATION_URL, "_self"),
+									isEnabled: true,
+									iconComponent: (
+										<IconDeveloperResources
+											style={{ alignSelf: "flex-start", margin: "0.15rem 0rem 0rem 0.8rem" }}
+											width={18}
+											height={18}
+										/>
+									)
+								},
+								{
+									title: "demo.text",
+									description: "description_demo.text",
+									onClickHandler: () => navigate(DEMO),
 									isEnabled: true,
 									iconComponent: (
 										<IconProductResources
@@ -746,12 +754,12 @@ const Explore: FC<ExploreProps> = ({
 									)
 								},
 								{
-									title: "developer_resources.text",
-									description: "new_developer_resources_desc.text",
-									onClickHandler: () => window.open(AWS_LOCATION_DEVELOPER_RESOURCES_URL, "_self"),
+									title: "sample_applications.text",
+									description: "settings_modal_option__samples.text",
+									onClickHandler: () => navigate(SAMPLES),
 									isEnabled: true,
 									iconComponent: (
-										<IconDeveloperResources
+										<IconProductResources
 											style={{ alignSelf: "flex-start", margin: "0.15rem 0rem 0rem 0.8rem" }}
 											width={18}
 											height={18}

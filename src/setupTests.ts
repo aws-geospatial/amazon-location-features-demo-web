@@ -278,16 +278,19 @@ jest.mock("@demo/core/constants/appConfig", () => ({
 		AWS_LOCATION_ROUTES_URL: "https://aws.amazon.com/location/routes/",
 		AWS_LOCATION_GENFENCE_AND_TRACKERS_URL: "https://aws.amazon.com/location/geofences-and-trackers/",
 		AWS_LOCATION_INDUSTRY_URL: "https://aws.amazon.com/location/industry/",
-		AWS_LOCATION_TRANSPORTATION_AND_LOGISTICS_URL: "https://aws.amazon.com/location/transportation-and-logistics/",
-		AWS_LOCATION_FINANCIAL_SERVICE_URL: "https://aws.amazon.com/location/financial-service/",
-		AWS_LOCATION_HEALTHCARE_URL: "https://aws.amazon.com/location/healthcare/",
-		AWS_LOCATION_RETAILS_URL: "https://aws.amazon.com/location/retails/",
-		AWS_LOCATION_TRAVEL_AND_HOSPITALITY_URL: "https://aws.amazon.com/location/travel-and-hospitality/",
+		AWS_LOCATION_TRANSPORTATION_AND_LOGISTICS_URL:
+			"https://aws.amazon.com/location/industry/transportation-and-logistics/",
+		AWS_LOCATION_FINANCIAL_SERVICE_URL: "https://aws.amazon.com/location/industry/financial-service/",
+		AWS_LOCATION_HEALTHCARE_URL: "https://aws.amazon.com/location/industry/healthcare/",
+		AWS_LOCATION_RETAILS_URL: "https://aws.amazon.com/location/industry/retail/",
+		AWS_LOCATION_TRAVEL_AND_HOSPITALITY_URL: "https://aws.amazon.com/location/industry/travel-and-hospitality/",
 		AWS_LOCATION_REAL_ESTATE_URL: "https://aws.amazon.com/location/real-estate/",
 		AWS_LOCATION_RESOURCES_URL: "https://aws.amazon.com/location/resources/",
 		AWS_LOCATION_CUSTOMERS_URL: "https://aws.amazon.com/location/resources/customers/",
 		AWS_LOCATION_PRODUCT_RESOURCES_URL: "https://aws.amazon.com/location/resources/product-resources/",
-		AWS_LOCATION_DEVELOPER_RESOURCES_URL: "https://aws.amazon.com/location/resources/developer-resources/"
+		AWS_LOCATION_DEVELOPER_RESOURCES_URL: "https://aws.amazon.com/location/resources/developer-resources/",
+		AMAZON_LOCATION_AUTH_SDK_IOS_URL: "https://github.com/aws-geospatial/amazon-location-mobile-auth-sdk-ios",
+		AMAZON_LOCATION_DOCUMENTATION_URL: "https://docs.aws.amazon.com/location/"
 	}
 }));
 
