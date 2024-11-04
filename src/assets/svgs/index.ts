@@ -123,3 +123,4 @@ export { ReactComponent as IconDeveloperResources } from "./icon-developer-resou
 export { ReactComponent as IconCustomers } from "./icon-customers.svg";
 export { ReactComponent as IconLight } from "./icon-light.svg";
 export { ReactComponent as IconDark } from "./icon-dark.svg";
+export { ReactComponent as IconFaqsPrimary } from "./icon-faqs-primary.svg";

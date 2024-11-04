@@ -19,6 +19,7 @@ const {
 		SHOW_NEW_NAVIGATION
 	},
 	ROUTES: {
+		DEMO,
 		SAMPLES,
 		MIGRATE_FROM_GOOGLE_MAPS,
 		MIGRATE_A_WEB_APP,
@@ -42,11 +43,9 @@ const {
 		AWS_LOCATION_HEALTHCARE_URL,
 		AWS_LOCATION_RETAILS_URL,
 		AWS_LOCATION_TRAVEL_AND_HOSPITALITY_URL,
-		AWS_LOCATION_REAL_ESTATE_URL,
 		AWS_LOCATION_RESOURCES_URL,
 		AWS_LOCATION_CUSTOMERS_URL,
-		AWS_LOCATION_PRODUCT_RESOURCES_URL,
-		AWS_LOCATION_DEVELOPER_RESOURCES_URL
+		AMAZON_LOCATION_DOCUMENTATION_URL
 	}
 } = appConfig;
 
@@ -194,27 +193,6 @@ if (!SHOW_NEW_NAVIGATION) {
 			]
 		},
 		{
-			label: "footer__getting_started.text",
-			link: AWS_GETTING_STARTED_URL,
-			iconBeforeLink: IconCodeMenu,
-			iconContainerClass: "menu-item-icon",
-			isExternalLink: false
-		},
-		{
-			label: "pricing.text",
-			link: AWS_PRICING_URL,
-			iconBeforeLink: IconDollarSolid,
-			iconContainerClass: "menu-item-icon",
-			isExternalLink: false
-		},
-		{
-			label: "footer__faq.text",
-			link: AWS_FAQ_URL,
-			iconBeforeLink: IconDollarSolid,
-			iconContainerClass: "menu-item-icon",
-			isExternalLink: false
-		},
-		{
 			label: "industry.text",
 			link: AWS_LOCATION_INDUSTRY_URL,
 			iconBeforeLink: IconCodeMenu,
@@ -245,13 +223,22 @@ if (!SHOW_NEW_NAVIGATION) {
 					label: "travel_and_hospitality.text",
 					link: AWS_LOCATION_TRAVEL_AND_HOSPITALITY_URL,
 					isExternalLink: false
-				},
-				{
-					label: "real_estate.text",
-					link: AWS_LOCATION_REAL_ESTATE_URL,
-					isExternalLink: false
 				}
 			]
+		},
+		{
+			label: "footer__getting_started.text",
+			link: AWS_GETTING_STARTED_URL,
+			iconBeforeLink: IconCodeMenu,
+			iconContainerClass: "menu-item-icon",
+			isExternalLink: false
+		},
+		{
+			label: "pricing.text",
+			link: AWS_PRICING_URL,
+			iconBeforeLink: IconDollarSolid,
+			iconContainerClass: "menu-item-icon",
+			isExternalLink: false
 		},
 		{
 			label: "resources.text",
@@ -261,18 +248,28 @@ if (!SHOW_NEW_NAVIGATION) {
 			isExternalLink: false,
 			subMenu: [
 				{
+					label: "footer__faq.text",
+					link: AWS_FAQ_URL,
+					isExternalLink: false
+				},
+				{
 					label: "customers.text",
 					link: AWS_LOCATION_CUSTOMERS_URL,
 					isExternalLink: false
 				},
 				{
-					label: "product_resources.text",
-					link: AWS_LOCATION_PRODUCT_RESOURCES_URL,
+					label: "documentation.text",
+					link: AMAZON_LOCATION_DOCUMENTATION_URL,
 					isExternalLink: false
 				},
 				{
-					label: "developer_resources.text",
-					link: AWS_LOCATION_DEVELOPER_RESOURCES_URL,
+					label: "demo.text",
+					link: DEMO,
+					isExternalLink: false
+				},
+				{
+					label: "sample_applications.text",
+					link: SAMPLES,
 					isExternalLink: false
 				}
 			]
