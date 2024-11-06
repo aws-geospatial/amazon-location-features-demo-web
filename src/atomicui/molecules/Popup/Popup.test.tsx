@@ -28,14 +28,18 @@ const useMapReturnValue: {
 		error: null
 	},
 	viewpoint: { longitude: -122.3408586, latitude: 47.6149975 },
-	mapProvider: "Esri",
+	mapProvider: "Here",
 	mapUnit: "Imperial",
 	isCurrentLocationDisabled: false
 };
 
 jest.mock("hooks", () => ({
 	useMap: () => useMapReturnValue,
-	usePlace: () => ({}),
+	usePlace: () => ({
+		getPlaceData: jest.fn(),
+		isFetchingPlaceData: false,
+		clearPoiList: jest.fn()
+	}),
 	useRoute: () => ({
 		getRoute: () => {}
 	}),
@@ -51,14 +55,10 @@ describe("<Popup/>", () => {
 		const renderedComponent = render(
 			<I18nextProvider i18n={i18n}>
 				<Popup
+					placeId={faker.random.word()}
+					position={[parseFloat(faker.address.longitude()), parseFloat(faker.address.latitude())]}
+					label={`${faker.address.street()}, ${faker.address.city()}, ${faker.address.state()}, ${faker.address.zipCode()}`}
 					active
-					info={{
-						id: faker.random.alphaNumeric(10),
-						placeId: faker.random.word(),
-						label: faker.random.words(3),
-						position: [0, 0],
-						hash: faker.random.word()
-					}}
 					select={jest.fn()}
 				/>
 			</I18nextProvider>

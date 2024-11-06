@@ -102,6 +102,86 @@
 		}
 	}
 
+	.place-info-container {
+		gap: 0;
+		margin-top: 0.62rem;
+		border-top: 1px solid var(--grey-color-3);
+		flex-direction: column;
+
+		.icon {
+			width: 100%;
+			max-width: 1.23rem;
+			height: 100%;
+			max-height: 1.23rem;
+			margin-right: 0.62rem;
+			fill: var(--grey-color);
+		}
+
+		.opening-hours {
+			gap: 0;
+			margin-top: 0.62rem;
+			flex-direction: column;
+
+			.accordion-header {
+				gap: 0;
+				align-items: center;
+
+				.spacer {
+					gap: 0;
+					flex-grow: 1;
+				}
+
+				.icon-arrow {
+					fill: var(--grey-color);
+					width: 100%;
+					max-width: 1.23rem;
+					height: 100%;
+					max-height: 1.23rem;
+
+					&.transform {
+						transform: rotate(180deg);
+					}
+				}
+			}
+
+			.accordion-content {
+				gap: 0;
+				flex-direction: column;
+				margin-top: 0.62rem;
+				padding-left: 1.85rem;
+			}
+		}
+
+		.website {
+			gap: 0;
+			margin-top: 0.62rem;
+
+			.urls {
+				gap: 0;
+				width: 100%;
+				flex-direction: column;
+
+				.link-text {
+					max-width: 20rem;
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
+			}
+		}
+
+		.phone {
+			gap: 0;
+			margin: 0.62rem 0 0 0.2rem;
+
+			.numbers {
+				gap: 0;
+				width: 100%;
+				flex-direction: column;
+			}
+		}
+	}
+
 	.directions-button {
 		width: 100%;
 		height: 2.46rem;
