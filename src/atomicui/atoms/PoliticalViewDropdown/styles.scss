@@ -86,7 +86,7 @@
 			height: auto;
 			width: 100%;
 			border-radius: 4px;
-			max-height: 40rem;
+			max-height: calc(100vh - 40rem);
 			box-shadow: none;
 			border: 1px solid var(--grey-color-5);
 
