@@ -91,8 +91,10 @@ const SuggestionMarker: FC<Props> = ({ active, onClosePopUp, searchValue, setSea
 				{active || isHovered ? <IconSelected /> : <IconSuggestion onMouseOver={() => setHover(info)} />}
 				{active ? (
 					<Popup
+						placeId={info.placeId!}
+						position={info.position!}
+						label={info.label}
 						active={active}
-						info={info}
 						select={select}
 						onClosePopUp={
 							suggestions?.list.length === 1
