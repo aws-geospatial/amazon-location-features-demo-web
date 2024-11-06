@@ -247,8 +247,9 @@ const Popup: FC<PopupProps> = ({ placeId, position, label, active, select, onClo
 	]);
 
 	const renderPlaceInfo = useMemo(() => {
-		const openingHours = placeData?.OpeningHours?.map(oh => oh.Display);
-		const areOpeningHoursPresent = openingHours && openingHours.every(oh => oh !== undefined);
+		const openingHours: string[] = [];
+		placeData?.OpeningHours?.forEach(oh => oh.Display?.forEach(d => openingHours.push(d)));
+		const areOpeningHoursPresent = openingHours.length > 0 && openingHours.every(oh => oh !== undefined);
 		const websites = placeData?.Contacts?.Websites?.map(w => w.Value);
 		const areWebsitesPresent = websites && websites.every(w => w !== undefined);
 		const phones = placeData?.Contacts?.Phones?.map(p => p.Value);
