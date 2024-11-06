@@ -18,29 +18,19 @@ import {
 } from "react";
 
 import { Button, Card, Flex, Loader, SelectField, SliderField, Text, View } from "@aws-amplify/ui-react";
-import { ListGeofenceResponseEntry, Place } from "@aws-sdk/client-location";
+import { ListGeofenceResponseEntry } from "@aws-sdk/client-location";
 import { IconBackArrow, IconClose, IconPin, IconPlus, IconSearch, IconTrash } from "@demo/assets/svgs";
 import { showToast } from "@demo/core/Toast";
 import { appConfig } from "@demo/core/constants";
 import { useGeofence, useMap, usePlace } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
-import {
-	CircleDrawEventType,
-	DistanceUnitEnum,
-	MapProviderEnum,
-	MapUnitEnum,
-	RadiusInM,
-	SuggestionType,
-	ToastType
-} from "@demo/types";
+import { CircleDrawEventType, DistanceUnitEnum, MapUnitEnum, RadiusInM, SuggestionType, ToastType } from "@demo/types";
 import { AnalyticsEventActionsEnum, EventTypeEnum, ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
-import { uuid } from "@demo/utils/uuid";
 import * as turf from "@turf/turf";
 import { useTranslation } from "react-i18next";
 import { Layer, LngLat, MapRef, Source } from "react-map-gl/maplibre";
-import { Tooltip } from "react-tooltip";
 import "./styles.scss";
 
 const GeofenceMarker = lazy(() =>
@@ -58,7 +48,6 @@ const { IMPERIAL, METRIC } = MapUnitEnum;
 const { MILES, MILES_SHORT, FEET, FEET_SHORT, KILOMETERS, KILOMETERS_SHORT, METERS, METERS_SHORT } = DistanceUnitEnum;
 const {
 	MAP_RESOURCES: {
-		MAX_BOUNDS,
 		AMAZON_HQ: { US }
 	}
 } = appConfig;
@@ -87,19 +76,19 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 	const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const [value, setValue] = useState("");
 	const [name, setName] = useState("");
-	const { mapUnit: currentMapUnit, mapProvider: currentMapProvider } = useMap();
-	const [unit, setUnit] = useState(currentMapUnit === METRIC ? METERS_SHORT : FEET_SHORT);
+	const { mapUnit } = useMap();
+	const [unit, setUnit] = useState(mapUnit === METRIC ? METERS_SHORT : FEET_SHORT);
 	/* Radius must be greater than 0 and not greater than 100,000 m (API requirement) */
 	const [radiusInM, setRadiusInM] = useState(RadiusInM.DEFAULT);
 	const [suggestions, setSuggestions] = useState<SuggestionType[] | undefined>(undefined);
-	const [place, setPlace] = useState<Place | undefined>(undefined);
+	const [place, setPlace] = useState<SuggestionType | undefined>(undefined);
 	const [geofenceCenter, setGeofenceCenter] = useState<number[] | undefined>(undefined);
 	const [current, setCurrent] = useState<{ value: string | undefined; radiusInM: number | undefined }>({
 		value: undefined,
 		radiusInM: undefined
 	});
 	const { isDesktop } = useDeviceMediaQuery();
-	const { search, getPlaceData } = usePlace();
+	const { search } = usePlace();
 	const {
 		getGeofencesList,
 		isFetchingGeofences,
@@ -154,7 +143,7 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 	}, [triggerOnClose, triggerOnReset]);
 
 	const handleSearch = useCallback(
-		async (value: string, exact = false) => {
+		async (value: string, exact = false, isQueryId = false) => {
 			if (value.length >= 3) {
 				let longitude = US.longitude;
 				let latitude = US.latitude;
@@ -176,7 +165,9 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 						exact,
 						sg => setSuggestions(sg),
 						TriggeredByEnum.GEOFENCE_MODULE,
-						AnalyticsEventActionsEnum.AUTOCOMPLETE
+						AnalyticsEventActionsEnum.AUTOCOMPLETE,
+						false,
+						isQueryId
 					);
 				}, 200);
 			}
@@ -202,54 +193,49 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 
 	const onSearch = useCallback(async () => !!value && (await handleSearch(value)), [value, handleSearch]);
 
-	const setCirclePropertiesFromSuggestion = (place: Place) => {
-		setGeofenceCenter(place.Geometry?.Point);
-		setValue(place?.Label || "");
+	const setCirclePropertiesFromSuggestion = ({ label, position }: SuggestionType) => {
+		setValue(label || "");
+		setGeofenceCenter(position);
 		setSuggestions(undefined);
 	};
 
 	const onSelectSuggestion = useCallback(
-		async ({ PlaceId, Text = "", Place }: SuggestionType) => {
-			if (!PlaceId && Text && !Place) {
-				await handleSearch(Text, true);
-			} else if (PlaceId && Text && !Place) {
-				const pd = await getPlaceData(PlaceId);
-
-				if (pd) {
-					setPlace(pd.Place);
-					setCirclePropertiesFromSuggestion(pd.Place as Place);
-				}
-			} else if (!Text && Place) {
-				setPlace(Place);
-				setCirclePropertiesFromSuggestion(Place);
+		async (s: SuggestionType) => {
+			if (s.queryId) {
+				await handleSearch(s.queryId, true, true);
+			} else if (s.placeId) {
+				setPlace({ ...s });
+				setCirclePropertiesFromSuggestion({ ...s });
 			}
 		},
-		[handleSearch, getPlaceData]
+		[handleSearch]
 	);
 
 	const renderSuggestions = useMemo(() => {
 		if (!!value && !!suggestions) {
 			return suggestions?.length ? (
-				suggestions.map(({ PlaceId, Text: text, Place }, idx) => {
-					const string = text || Place?.Label || "";
-					const separateIndex = !!PlaceId ? string?.indexOf(",") : -1;
+				suggestions.map((s, idx) => {
+					const string = s.label || "";
+					const separateIndex = !!s.placeId ? string?.indexOf(",") : -1;
 					const title = separateIndex > -1 ? string?.substring(0, separateIndex) : string;
 					const address = separateIndex > 1 ? string?.substring(separateIndex + 1) : null;
 
 					return (
 						<Flex
-							key={`${PlaceId}-${idx}`}
+							key={s.id}
 							className={idx === 0 ? "suggestion border-top" : "suggestion"}
 							onClick={() => {
-								onSelectSuggestion({ Id: uuid.randomUUID(), PlaceId, Text: text, Place });
+								onSelectSuggestion({ ...s });
 							}}
 						>
-							{PlaceId ? <IconPin /> : <IconSearch />}
+							{s.placeId ? <IconPin /> : <IconSearch />}
 							<Flex gap={0} direction="column" justifyContent="center" marginLeft="19px">
 								<Text>{title}</Text>
-								<Text variation="tertiary" textAlign={isLtr ? "start" : "end"}>
-									{PlaceId && address ? address : t("search_nearby.text")}
-								</Text>
+								{address && (
+									<Text variation="tertiary" textAlign={isLtr ? "start" : "end"}>
+										{address}
+									</Text>
+								)}
 							</Flex>
 						</Flex>
 					);
@@ -260,7 +246,7 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 				</Flex>
 			);
 		}
-	}, [value, suggestions, onSelectSuggestion, t, isLtr]);
+	}, [value, suggestions, onSelectSuggestion, isLtr]);
 
 	const onSave = useCallback(async () => {
 		if (geofenceCenter) {
@@ -279,7 +265,7 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 		(e: ChangeEvent<HTMLInputElement>) => {
 			const radius = Number(e.target.value);
 			const lowerLimit =
-				currentMapUnit === IMPERIAL
+				mapUnit === IMPERIAL
 					? unit === MILES_SHORT
 						? RadiusInM.MIN / 1609
 						: RadiusInM.MIN / 3.281
@@ -287,7 +273,7 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 					? RadiusInM.MIN / 1000
 					: RadiusInM.MIN;
 			const upperLimit =
-				currentMapUnit === IMPERIAL
+				mapUnit === IMPERIAL
 					? unit === MILES_SHORT
 						? RadiusInM.MAX / 1609
 						: RadiusInM.MAX / 3.281
@@ -297,7 +283,7 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 
 			if (!isNaN(radius) && radius >= lowerLimit && radius <= upperLimit) {
 				setRadiusInM(
-					currentMapUnit === IMPERIAL
+					mapUnit === IMPERIAL
 						? unit === MILES_SHORT
 							? parseFloat((radius * 1609).toFixed(2))
 							: parseFloat((radius / 3.281).toFixed(2))
@@ -307,7 +293,7 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 				);
 			}
 		},
-		[currentMapUnit, unit]
+		[mapUnit, unit]
 	);
 
 	const renderAddGeofence = useMemo(() => {
@@ -414,7 +400,7 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 										label=""
 										type="number"
 										value={
-											currentMapUnit === IMPERIAL
+											mapUnit === IMPERIAL
 												? unit === MILES_SHORT
 													? (radiusInM / 1609).toFixed(2)
 													: (radiusInM * 3.281).toFixed(2)
@@ -435,7 +421,7 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 									label=""
 									labelHidden
 									value={
-										currentMapUnit === IMPERIAL
+										mapUnit === IMPERIAL
 											? unit === MILES_SHORT
 												? MILES
 												: FEET
@@ -444,12 +430,12 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 											: METERS
 									}
 									onChange={e => {
-										currentMapUnit === IMPERIAL
+										mapUnit === IMPERIAL
 											? setUnit(e.target.value === MILES ? MILES_SHORT : FEET_SHORT)
 											: setUnit(e.target.value === KILOMETERS ? KILOMETERS_SHORT : METERS_SHORT);
 									}}
 								>
-									{currentMapUnit === IMPERIAL ? (
+									{mapUnit === IMPERIAL ? (
 										<>
 											<option value={MILES}>{t("geofence_box__mi.text")}</option>
 											<option value={FEET}>{t("geofence_box__ft.text")}</option>
@@ -494,8 +480,7 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 		geofences,
 		isEditingAuthRoute,
 		t,
-		current.value,
-		current.radiusInM,
+		current,
 		value,
 		radiusInM,
 		isDesktop,
@@ -506,8 +491,8 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 		onSearch,
 		langDir,
 		renderSuggestions,
-		suggestions?.length,
-		currentMapUnit,
+		suggestions,
+		mapUnit,
 		unit,
 		onSave,
 		isAddingGeofence,
@@ -559,10 +544,6 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 			if (Geometry?.Circle) {
 				const { Circle } = Geometry;
 				const { Center, Radius } = Circle;
-				const [westBound, southBound, eastBound, northBound] = MAX_BOUNDS.GRAB;
-				const isWithinGrabBounds =
-					Center![1] >= southBound && Center![1] <= northBound && Center![0] >= westBound && Center![0] <= eastBound;
-				const isDisabled = currentMapProvider === MapProviderEnum.GRAB && !isWithinGrabBounds;
 				const circle = turf.circle(Center!, Radius!, { steps: 50, units: "meters" });
 				const line = turf.lineString(circle.geometry.coordinates[0]);
 
@@ -571,59 +552,51 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 						<Flex
 							data-testid={GeofenceId}
 							className={`geofence-item${idx !== geofences!.length - 1 ? " border-bottom" : ""}`}
-							style={isDisabled ? { opacity: 0.3 } : {}}
 							gap={0}
 							padding="10px 0px 10px 10px"
 							alignItems="center"
-							onClick={isDisabled ? () => {} : () => onClickGeofenceItem(GeofenceId!, Center!, Radius!)}
-							data-tooltip-id="geofence-item"
-							data-tooltip-place="right"
-							data-tooltip-position-strategy="fixed"
-							data-tooltip-content={isDisabled ? t("tooltip__disabled_geofence.text") : ""}
+							onClick={() => onClickGeofenceItem(GeofenceId!, Center!, Radius!)}
 						>
-							<Flex className={isDisabled ? "icon-geofence-marker-disabled" : "icon-geofence-marker"} />
+							<Flex className={"icon-geofence-marker"} />
 							<Flex gap={0} direction="column">
 								<Text>{GeofenceId}</Text>
 							</Flex>
 							<div
 								data-testid={`icon-trash-${GeofenceId}`}
-								className={isDisabled ? "icon-trash-container-diabled" : "icon-trash-container"}
-								onClick={isDisabled ? () => {} : e => onDelete(e, GeofenceId!)}
+								className={"icon-trash-container"}
+								onClick={e => onDelete(e, GeofenceId!)}
 							>
 								<IconTrash />
 							</div>
-							{!isDisabled && (
-								<div key={GeofenceId}>
-									<Source id={`${GeofenceId}-circle-source-fill`} type="geojson" data={circle}>
-										<Layer
-											id={`${GeofenceId}-circle-layer-fill`}
-											type="fill"
-											paint={{
-												"fill-opacity": 0.4,
-												"fill-color": "#30b8c0"
-											}}
-										/>
-									</Source>
-									<Source id={`${GeofenceId}-circle-source-line`} type="geojson" data={line}>
-										<Layer
-											id={`${GeofenceId}-circle-layer-line`}
-											type="line"
-											layout={{ "line-cap": "round", "line-join": "round" }}
-											paint={{
-												"line-color": "#008296",
-												"line-width": 2
-											}}
-										/>
-									</Source>
-								</div>
-							)}
+							<div key={GeofenceId}>
+								<Source id={`${GeofenceId}-circle-source-fill`} type="geojson" data={circle}>
+									<Layer
+										id={`${GeofenceId}-circle-layer-fill`}
+										type="fill"
+										paint={{
+											"fill-opacity": 0.4,
+											"fill-color": "#30b8c0"
+										}}
+									/>
+								</Source>
+								<Source id={`${GeofenceId}-circle-source-line`} type="geojson" data={line}>
+									<Layer
+										id={`${GeofenceId}-circle-layer-line`}
+										type="line"
+										layout={{ "line-cap": "round", "line-join": "round" }}
+										paint={{
+											"line-color": "#008296",
+											"line-width": 2
+										}}
+									/>
+								</Source>
+							</div>
 						</Flex>
-						<Tooltip id="geofence-item" />
 					</Fragment>
 				);
 			}
 		},
-		[geofences, onClickGeofenceItem, currentMapProvider, onDelete, t]
+		[geofences, onClickGeofenceItem, onDelete]
 	);
 
 	const renderGeofencesList = useMemo(() => {

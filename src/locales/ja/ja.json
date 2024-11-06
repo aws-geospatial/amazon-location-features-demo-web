@@ -3315,13 +3315,13 @@
     "text": "移動モードとして「車」を使用してルートを計算"
   },
   "tooltip__calculate_route_walk": {
-    "text": "移動モードとして「ウォーキング」を使用してルートを計算"
+    "text": "移動モードとして「歩行者」を使用してルートを計算"
   },
   "tooltip__calculate_route_bicycle": {
     "text": "移動モードとして「自転車」を使用してルートを計算"
   },
   "tooltip__calculate_route_motorcycle": {
-    "text": "移動モードとして「バイク」を使用してルートを計算"
+    "text": "移動モードとして「スクーター」を使用してルートを計算"
   },
   "tooltip__calculate_route_truck": {
     "text": "移動モードとして「トラック」を使用してルートを計算"
@@ -3796,5 +3796,23 @@
   },
   "new_developer_resources_desc": {
     "text": "ガイドとフォーラム"
+  },
+  "error_handler__failed_create_places_client": {
+    "text": "プレースクライアントを作成できませんでした"
+  },
+  "error_handler__failed_create_routes_client": {
+    "text": "ルートクライアントを作成できませんでした"
+  },
+  "multiple_region_disclaimer": {
+    "text": "免責事項:ユーザーの AWS アカウントが接続されている場合、リージョンの変更はマップ、場所、ルートにのみ影響します。"
+  },
+  "documentation": {
+    "text": "ドキュメンテーション"
+  },
+  "sample_applications": {
+    "text": "サンプルアプリケーション"
+  },
+  "description_demo": {
+    "text": "Amazon ロケーションサービスの機能を紹介するデモアプリ"
   }
 }

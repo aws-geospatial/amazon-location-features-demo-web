@@ -1,4 +1,5 @@
 import i18n from "@demo/locales/i18n";
+import { UserProvidedValues } from "@demo/types";
 import { faker } from "@faker-js/faker";
 import { fireEvent, render, waitFor } from "@testing-library/react";
 import { I18nextProvider } from "react-i18next";
@@ -14,15 +15,12 @@ Object.defineProperty(window, "location", {
 
 const mockProps: ConnectAwsAccountModalProps = {
 	open: true,
-	onClose: jest.fn(),
-	handleCurrentLocationAndViewpoint: jest.fn()
+	onClose: jest.fn()
 };
 
 const mockUseAuthData = {
-	region: "ap-southeast-1",
-	isUserAwsAccountConnected: false,
+	userProvidedValues: undefined as UserProvidedValues | undefined,
 	setConnectFormValues: jest.fn(),
-	setIsUserAwsAccountConnected: jest.fn(),
 	clearCredentials: jest.fn(),
 	onLogin: jest.fn(),
 	validateFormValues: jest.fn(),
@@ -65,7 +63,7 @@ describe("<ConnectAwsAccountModal />", () => {
 		);
 
 	beforeEach(() => {
-		mockUseAuthData.isUserAwsAccountConnected = false;
+		mockUseAuthData.userProvidedValues = undefined;
 		i18n.changeLanguage("en");
 	});
 
@@ -132,7 +130,6 @@ describe("<ConnectAwsAccountModal />", () => {
 				expect(mockUseAuthData.setConnectFormValues).toHaveBeenCalled();
 				expect(mockUseAuthData.clearCredentials).toHaveBeenCalled();
 				expect(mockUseClientData.resetStore).toHaveBeenCalled();
-				expect(mockUseAuthData.setIsUserAwsAccountConnected).toHaveBeenCalled();
 			},
 			{
 				timeout: 10000,
@@ -146,7 +143,14 @@ describe("<ConnectAwsAccountModal />", () => {
 	});
 
 	it("should allow to continue to explore page after connecting successfully", () => {
-		mockUseAuthData.isUserAwsAccountConnected = true;
+		mockUseAuthData.userProvidedValues = {
+			identityPoolId: "",
+			region: "",
+			userDomain: "",
+			userPoolClientId: "",
+			userPoolId: "",
+			webSocketUrl: ""
+		};
 		const { getByTestId } = renderComponent();
 
 		waitFor(
@@ -169,7 +173,14 @@ describe("<ConnectAwsAccountModal />", () => {
 	});
 
 	it("should allow to signin after connecting successfully", () => {
-		mockUseAuthData.isUserAwsAccountConnected = true;
+		mockUseAuthData.userProvidedValues = {
+			identityPoolId: "",
+			region: "",
+			userDomain: "",
+			userPoolClientId: "",
+			userPoolId: "",
+			webSocketUrl: ""
+		};
 		const { getByTestId } = renderComponent();
 
 		waitFor(

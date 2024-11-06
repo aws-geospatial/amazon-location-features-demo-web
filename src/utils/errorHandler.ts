@@ -52,19 +52,9 @@ export const errorHandler = (error: any, message?: string) => {
 				}, 2000);
 				return;
 			} else {
-				if (error.url.includes("https://maps.geo")) {
-					isStackCorrupted = true;
-					showToast({ content: i18n.t("show_toast__refreshing_session.text"), type: ToastType.INFO });
-					setTimeout(() => {
-						localStorage.setItem(SHOULD_CLEAR_CREDENTIALS, "true");
-						window.location.reload();
-					}, 2000);
-					return;
-				} else {
-					window.location.replace(`${ERROR_BOUNDARY}?from=${DEMO}`);
-					showToast({ content: i18n.t("show_toast__something_went_wrong.text"), type: ToastType.ERROR });
-					return;
-				}
+				window.location.replace(`${ERROR_BOUNDARY}?from=${DEMO}`);
+				showToast({ content: i18n.t("show_toast__something_went_wrong.text"), type: ToastType.ERROR });
+				return;
 			}
 		}
 	}

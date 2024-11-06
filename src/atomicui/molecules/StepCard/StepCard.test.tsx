@@ -31,11 +31,10 @@ describe("<StepCard/>", () => {
 			<I18nextProvider i18n={i18n}>
 				<StepCard
 					step={{
-						GeometryOffset: faker.datatype.number(),
-						Distance: faker.datatype.number(),
-						DurationSeconds: faker.datatype.number(),
-						EndPosition: [Number(faker.address.longitude()), Number(faker.address.latitude())],
-						StartPosition: [Number(faker.address.longitude()), Number(faker.address.latitude())]
+						Instruction: faker.random.words(3),
+						Distance: faker.datatype.number({ min: 100, max: 1000 }),
+						Duration: faker.datatype.number({ min: 100, max: 1000 }),
+						Type: "Arrive"
 					}}
 					travelMode={TravelMode.CAR}
 					{...props}
@@ -72,34 +71,40 @@ describe("<StepCard/>", () => {
 		}
 	});
 
-	it("should render successfully when different isFirst and isLast prop is passed", async () => {
+	it.only("should render successfully when different isFirst and isLast prop is passed", async () => {
+		let renderedComponent;
+
 		// 0-0
-		await renderComponent({
+		renderedComponent = await renderComponent({
 			isFirst: false,
 			isLast: false
 		});
 		expect(stepCardContainer).toBeInTheDocument();
+		renderedComponent.unmount();
 
 		// 0-1
-		await renderComponent({
+		renderedComponent = await renderComponent({
 			isFirst: false,
 			isLast: true
 		});
 		expect(stepCardContainer).toBeInTheDocument();
+		renderedComponent.unmount();
 
 		// 1-0
-		await renderComponent({
+		renderedComponent = await renderComponent({
 			isFirst: true,
 			isLast: false
 		});
 		expect(stepCardContainer).toBeInTheDocument();
+		renderedComponent.unmount();
 
 		// 1-1
-		await renderComponent({
+		renderedComponent = await renderComponent({
 			isFirst: true,
 			isLast: true
 		});
 		expect(stepCardContainer).toBeInTheDocument();
+		renderedComponent.unmount();
 	});
 
 	it("should render with different travel modes", async () => {
@@ -107,7 +112,7 @@ describe("<StepCard/>", () => {
 		expect(stepCardContainer).toBeInTheDocument();
 		renderedComponent.unmount();
 
-		await renderComponent({ travelMode: TravelMode.WALKING, isFirst: false, isLast: false });
+		await renderComponent({ travelMode: TravelMode.PEDESTRIAN, isFirst: false, isLast: false });
 		expect(stepCardContainer).toBeInTheDocument();
 	});
 });

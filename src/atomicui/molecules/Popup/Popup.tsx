@@ -3,15 +3,27 @@
 
 import { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { Button, Flex, Placeholder, Text, View } from "@aws-amplify/ui-react";
-import { CalculateRouteRequest, CalculateRouteResponse } from "@aws-sdk/client-location";
-import { IconCar, IconClose, IconCopyPages, IconDirections, IconInfo } from "@demo/assets/svgs";
+import { Button, Flex, Link, Placeholder, Text, View } from "@aws-amplify/ui-react";
+import { GetPlaceCommandOutput } from "@aws-sdk/client-geo-places";
+import { CalculateRoutesCommandInput, CalculateRoutesCommandOutput } from "@aws-sdk/client-geo-routes";
+import {
+	IconArrow,
+	IconCar,
+	IconClock,
+	IconClose,
+	IconCopyPages,
+	IconDirections,
+	IconGlobe,
+	IconInfo,
+	IconPhone
+} from "@demo/assets/svgs";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useMap, usePlace, useRoute } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
-import { DistanceUnitEnum, MapProviderEnum, MapUnitEnum, SuggestionType, TravelMode } from "@demo/types";
+import { DistanceUnitEnum, MapUnitEnum, TravelMode } from "@demo/types";
 import { ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
+import { uuid } from "@demo/utils";
 import { humanReadableTime } from "@demo/utils/dateTimeUtils";
 import { calculateGeodesicDistance } from "@demo/utils/geoCalculation";
 import { Units } from "@turf/turf";
@@ -23,27 +35,23 @@ import "./styles.scss";
 const { METRIC } = MapUnitEnum;
 const { KILOMETERS, MILES } = DistanceUnitEnum;
 
-interface Props {
+interface PopupProps {
+	placeId: string;
+	position: number[];
+	label?: string;
 	active: boolean;
-	info: SuggestionType;
 	select: (id?: string) => Promise<void>;
 	onClosePopUp?: () => void;
-	setInfo: (info?: SuggestionType) => void;
 }
-const Popup: FC<Props> = ({ active, info, select, onClosePopUp, setInfo }) => {
+const Popup: FC<PopupProps> = ({ placeId, position, label, active, select, onClosePopUp }) => {
 	const [isLoading, setIsLoading] = useState(true);
-	const [routeData, setRouteData] = useState<CalculateRouteResponse>();
+	const [routeData, setRouteData] = useState<CalculateRoutesCommandOutput>();
+	const [placeData, setPlaceData] = useState<GetPlaceCommandOutput | undefined>(undefined);
+	const [isExpanded, setIsExpanded] = useState(false);
 	const { setPOICard, setBottomSheetMinHeight, setBottomSheetHeight, setUI, bottomSheetHeight, ui } = useBottomSheet();
-	const {
-		currentLocationData,
-		viewpoint,
-		mapProvider: currentMapProvider,
-		mapUnit: currentMapUnit,
-		isCurrentLocationDisabled
-	} = useMap();
-	const { clearPoiList } = usePlace();
+	const { currentLocationData, viewpoint, mapUnit } = useMap();
+	const { getPlaceData, isFetchingPlaceData, clearPoiList } = usePlace();
 	const { getRoute, setDirections, isFetchingRoute } = useRoute();
-	const [longitude, latitude] = useMemo(() => info.Place?.Geometry?.Point as number[], [info]);
 	const { isDesktop } = useDeviceMediaQuery();
 	const { t, i18n } = useTranslation();
 	const currentLang = i18n.language;
@@ -52,19 +60,28 @@ const Popup: FC<Props> = ({ active, info, select, onClosePopUp, setInfo }) => {
 	const isLanguageRTL = ["ar", "he"].includes(currentLang);
 	const POICardRef = useRef<HTMLDivElement>(null);
 
+	useEffect(() => {
+		(async () => {
+			if (!placeData) {
+				const pd = await getPlaceData(placeId);
+				setPlaceData(pd);
+			}
+		})();
+	}, [placeData, getPlaceData, placeId]);
+
 	const geodesicDistance = useMemo(
 		() =>
 			calculateGeodesicDistance(
-				currentLocationData?.currentLocation && !isCurrentLocationDisabled
+				currentLocationData?.currentLocation
 					? [
 							currentLocationData.currentLocation.longitude as number,
 							currentLocationData.currentLocation.latitude as number
 					  ]
 					: [viewpoint.longitude, viewpoint.latitude],
-				[longitude, latitude],
-				currentMapUnit === METRIC ? (KILOMETERS.toLowerCase() as Units) : (MILES.toLowerCase() as Units)
+				position,
+				mapUnit === METRIC ? (KILOMETERS.toLowerCase() as Units) : (MILES.toLowerCase() as Units)
 			),
-		[isCurrentLocationDisabled, viewpoint, currentLocationData, longitude, latitude, currentMapUnit]
+		[viewpoint, currentLocationData, position, mapUnit]
 	);
 
 	const localizeGeodesicDistance = useMemo(() => {
@@ -75,59 +92,45 @@ const Popup: FC<Props> = ({ active, info, select, onClosePopUp, setInfo }) => {
 	const geodesicDistanceUnit = useMemo(
 		() =>
 			localizeGeodesicDistance
-				? currentMapUnit === METRIC
+				? mapUnit === METRIC
 					? t("geofence_box__km__short.text")
 					: t("geofence_box__mi__short.text")
 				: "",
-		[localizeGeodesicDistance, currentMapUnit, t]
+		[localizeGeodesicDistance, mapUnit, t]
 	);
-
-	/* Esri route can't be calculated when distance is greater than 400 km or 248.55 mi */
-	const isEsriLimitation = useMemo(() => {
-		if (geodesicDistance) {
-			const maxDistance = currentMapUnit === METRIC ? 400 : 248.55;
-			return currentMapProvider === MapProviderEnum.ESRI && geodesicDistance >= maxDistance;
-		} else {
-			return false;
-		}
-	}, [geodesicDistance, currentMapUnit, currentMapProvider]);
-
-	const loadRouteData = useCallback(async () => {
-		const params: Omit<CalculateRouteRequest, "CalculatorName" | "DepartNow"> = {
-			DeparturePosition: [
-				currentLocationData?.currentLocation?.longitude,
-				currentLocationData?.currentLocation?.latitude
-			] as number[],
-			DestinationPosition: [longitude, latitude],
-			DistanceUnit: currentMapUnit === METRIC ? KILOMETERS : MILES,
-			TravelMode: TravelMode.CAR
-		};
-		try {
-			setIsLoading(true);
-			const r = await getRoute(params as CalculateRouteRequest, TriggeredByEnum.PLACES_POPUP);
-			setRouteData(r);
-		} finally {
-			setIsLoading(false);
-		}
-	}, [currentLocationData, longitude, latitude, currentMapUnit, getRoute]);
 
 	useEffect(() => {
 		if (
 			!routeData &&
 			active &&
-			!isEsriLimitation &&
 			!!currentLocationData?.currentLocation &&
-			!isCurrentLocationDisabled
+			geodesicDistance &&
+			geodesicDistance <= 2000
 		) {
-			loadRouteData();
+			(async () => {
+				const params: CalculateRoutesCommandInput = {
+					Origin: [
+						currentLocationData?.currentLocation?.longitude,
+						currentLocationData?.currentLocation?.latitude
+					] as number[],
+					Destination: position,
+					TravelMode: TravelMode.CAR
+				};
+				try {
+					setIsLoading(true);
+					const r = await getRoute(params, TriggeredByEnum.PLACES_POPUP);
+					setRouteData(r);
+				} finally {
+					setIsLoading(false);
+				}
+			})();
 		}
-	}, [routeData, active, isEsriLimitation, currentLocationData, isCurrentLocationDisabled, loadRouteData]);
+	}, [active, currentLocationData, geodesicDistance, getRoute, position, routeData]);
 
 	const onClose = useCallback(
 		async (ui: ResponsiveUIEnum) => {
 			if (!isDesktop) {
 				setPOICard(undefined);
-				setInfo(undefined);
 				setUI(ui);
 				setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
 				setBottomSheetHeight(window.innerHeight * 0.4);
@@ -140,36 +143,53 @@ const Popup: FC<Props> = ({ active, info, select, onClosePopUp, setInfo }) => {
 			await select(undefined);
 			onClosePopUp && onClosePopUp();
 		},
-		[isDesktop, select, onClosePopUp, setPOICard, setInfo, setUI, setBottomSheetMinHeight, setBottomSheetHeight]
+		[isDesktop, select, onClosePopUp, setPOICard, setUI, setBottomSheetMinHeight, setBottomSheetHeight]
 	);
 
 	const onGetDirections = useCallback(() => {
-		setDirections({ info, isEsriLimitation });
+		setDirections({
+			id: uuid.randomUUID(),
+			placeId,
+			position,
+			label,
+			address: placeData?.Address
+		});
 		clearPoiList();
+
 		if (!isDesktop) {
 			onClose(ResponsiveUIEnum.direction_to_routes);
 		}
-	}, [clearPoiList, info, isDesktop, isEsriLimitation, onClose, setDirections]);
+	}, [clearPoiList, isDesktop, label, onClose, placeData, placeId, position, setDirections]);
+
+	const address = useMemo(() => {
+		if (label) {
+			const split = label.split(",");
+			split.shift();
+			return split.join(",").trim();
+		} else {
+			return `${position[1]}, ${position[0]}`;
+		}
+	}, [label, position]);
 
 	const renderRouteInfo = useMemo(() => {
-		if (currentLocationData?.error || isCurrentLocationDisabled) {
+		if (currentLocationData?.error) {
 			return (
 				<Flex data-testid="permission-denied-error-container" gap={3} alignItems="center">
 					<Text variation="info" textAlign={isLtr ? "start" : "end"}>
-						{isCurrentLocationDisabled ? t("popup__cl_disabled.text") : t("popup__cl_denied.text")}
+						{t("popup__cl_denied.text")}
 					</Text>
 					<IconInfo
 						className="location-permission-denied-info-icon"
 						data-tooltip-id="location-permission-denied-info"
 						data-tooltip-place="top"
-						data-tooltip-content={isCurrentLocationDisabled ? t("tooltip__cl_grab.text") : t("tooltip__cl_denied.text")}
+						data-tooltip-content={t("tooltip__cl_denied.text")}
 					/>
 					<Tooltip id="location-permission-denied-info" />
 				</Flex>
 			);
-		} else if (isEsriLimitation) {
+		} else if (!isFetchingRoute && !routeData) {
 			return (
-				<Flex data-testid="esri-limitation-message-container" gap={0} direction={"column"}>
+				<Flex data-testid="here-message-container" gap={0} direction={"column"}>
 					<Flex className="localize-geofence-distance" gap="0.3rem" direction={isLanguageRTL ? "row-reverse" : "row"}>
 						<Text className="bold" variation="secondary" marginRight="0.3rem">
 							{localizeGeodesicDistance}
@@ -177,26 +197,7 @@ const Popup: FC<Props> = ({ active, info, select, onClosePopUp, setInfo }) => {
 						<Text className="bold" variation="secondary">
 							{geodesicDistanceUnit}
 						</Text>
-					</Flex>
-					<Text style={{ marginTop: "0px" }} variation="info" textAlign={isLtr ? "start" : "end"}>
-						{currentMapUnit === METRIC ? t("popup__esri_limitation_1.text") : t("popup__esri_limitation_2.text")}
-					</Text>
-				</Flex>
-			);
-		} else if (!isFetchingRoute && !routeData) {
-			return (
-				<Flex data-testid="here-message-container" gap={0} direction={"column"}>
-					<Flex className="localize-geofence-distance" gap="0.3rem" direction={isLanguageRTL ? "row-reverse" : "row"}>
-						{!isLoading && (
-							<>
-								<Text className="bold" variation="secondary" marginRight="0.3rem">
-									{localizeGeodesicDistance}
-								</Text>
-								<Text className="bold" variation="secondary">
-									{geodesicDistanceUnit}
-								</Text>
-							</>
-						)}
+						{!isLoading && <></>}
 					</Flex>
 					<Text style={{ marginTop: "0px" }} variation="info">
 						{!isLoading && t("popup__route_not_found.text")}
@@ -204,7 +205,7 @@ const Popup: FC<Props> = ({ active, info, select, onClosePopUp, setInfo }) => {
 				</Flex>
 			);
 		} else {
-			const timeInSeconds = routeData?.Summary?.DurationSeconds || 0;
+			const timeInSeconds = routeData?.Routes?.reduce((acc, route) => acc + route.Summary!.Duration!, 0);
 
 			return (
 				<View data-testid="route-info-container" className="route-info">
@@ -233,30 +234,97 @@ const Popup: FC<Props> = ({ active, info, select, onClosePopUp, setInfo }) => {
 			);
 		}
 	}, [
+		currentLang,
 		currentLocationData?.error,
-		isCurrentLocationDisabled,
-		isEsriLimitation,
-		isFetchingRoute,
-		routeData,
-		isLtr,
-		t,
-		isLanguageRTL,
-		localizeGeodesicDistance,
 		geodesicDistanceUnit,
-		currentMapUnit,
+		isFetchingRoute,
+		isLanguageRTL,
 		isLoading,
-		currentLang
+		isLtr,
+		localizeGeodesicDistance,
+		routeData,
+		t
 	]);
 
-	const address = useMemo(() => {
-		if (info.Place?.Label) {
-			const split = info.Place.Label.split(",");
-			split.shift();
-			return split.join(",").trim();
-		} else {
-			return `${latitude}, ${longitude}`;
-		}
-	}, [info, latitude, longitude]);
+	const renderPlaceInfo = useMemo(() => {
+		const openingHours: string[] = [];
+		placeData?.OpeningHours?.forEach(oh => oh.Display?.forEach(d => openingHours.push(d)));
+		const areOpeningHoursPresent = openingHours.length > 0 && openingHours.every(oh => oh !== undefined);
+		const websites = placeData?.Contacts?.Websites?.map(w => w.Value);
+		const areWebsitesPresent = websites && websites.every(w => w !== undefined);
+		const phones = placeData?.Contacts?.Phones?.map(p => p.Value);
+		const arePhonesPresent = phones && phones.every(p => p !== undefined);
+		const renderNull = !areOpeningHoursPresent && !areWebsitesPresent && !arePhonesPresent;
+
+		return isFetchingPlaceData ? (
+			<Flex className="place-info-container">
+				<Flex className="opening-hours">
+					<Flex className="accordion-header">
+						<Placeholder width="1.23rem" height="1.23rem" marginRight="0.62rem" />
+						<Placeholder />
+					</Flex>
+				</Flex>
+				<Flex className="website">
+					<Placeholder width="1.23rem" height="1.23rem" marginRight="0.62rem" />
+					<Placeholder />
+				</Flex>
+				<Flex className="phone" marginLeft={0}>
+					<Placeholder width="1.23rem" height="1.23rem" marginRight="0.62rem" />
+					<Placeholder />
+				</Flex>
+			</Flex>
+		) : renderNull ? null : (
+			<Flex className="place-info-container">
+				{areOpeningHoursPresent && (
+					<Flex className="opening-hours">
+						<Flex className="accordion-header" onClick={() => setIsExpanded(!isExpanded)}>
+							<IconClock className="icon" />
+							<Text className="regular small-text" lineHeight="1.38rem" color="var(--tertiary-color)">
+								Schedule
+							</Text>
+							<Flex className="spacer" />
+							<IconArrow className={`icon-arrow${isExpanded ? " transform" : ""}`} />
+						</Flex>
+						{isExpanded && (
+							<Flex className="accordion-content">
+								{openingHours.map((oh, idx) => (
+									<Text key={idx} className="regular small-text" lineHeight="1.38rem">
+										{oh}
+									</Text>
+								))}
+							</Flex>
+						)}
+					</Flex>
+				)}
+				{areWebsitesPresent && (
+					<Flex className="website">
+						<IconGlobe className="icon" style={{ marginTop: "0.2rem" }} />
+						<Flex className="urls">
+							{websites.map((w, idx) => (
+								<Link key={idx} href={w} target="_blank">
+									<Text className="regular small-text link-text" lineHeight="1.38rem" color="var(--primary-color)">
+										{w}
+									</Text>
+								</Link>
+							))}
+						</Flex>
+					</Flex>
+				)}
+				{arePhonesPresent && (
+					<Flex className="phone">
+						<IconPhone className="icon" style={{ marginTop: "0.12rem" }} />
+						<Flex className="numbers">
+							{phones.map((p, idx) => (
+								<Text key={idx} className="regular small-text" lineHeight="1.38rem">
+									{p}
+								</Text>
+							))}
+						</Flex>
+					</Flex>
+				)}
+			</Flex>
+		);
+	}, [isExpanded, isFetchingPlaceData, placeData]);
 
 	const POIBody = useCallback(
 		() => (
@@ -276,7 +344,7 @@ const Popup: FC<Props> = ({ active, info, select, onClosePopUp, setInfo }) => {
 				)}
 				<View className="info-container">
 					<Text className="bold" variation="secondary" fontSize="20px" lineHeight="28px">{`${
-						info.Place?.Label?.split(",")[0]
+						label?.split(",")[0]
 					}`}</Text>
 					<View className="address-container">
 						<View>
@@ -286,11 +354,12 @@ const Popup: FC<Props> = ({ active, info, select, onClosePopUp, setInfo }) => {
 							<IconCopyPages
 								data-testid="copy-icon"
 								className="copy-icon"
-								onClick={() => navigator.clipboard.writeText(`${info.Place?.Label?.split(",")[0]}` + ", " + address)}
+								onClick={() => navigator.clipboard.writeText(`${label?.split(",")[0]}` + ", " + address)}
 							/>
 						)}
 					</View>
 					{renderRouteInfo}
+					{renderPlaceInfo}
 					<Button
 						data-testid="directions-button"
 						ref={r => r?.blur()}
@@ -306,7 +375,7 @@ const Popup: FC<Props> = ({ active, info, select, onClosePopUp, setInfo }) => {
 				</View>
 			</Flex>
 		),
-		[address, info.Place?.Label, isDesktop, onClose, onGetDirections, renderRouteInfo, t]
+		[isDesktop, label, address, renderRouteInfo, renderPlaceInfo, onGetDirections, t, onClose]
 	);
 
 	useEffect(() => {
@@ -319,8 +388,7 @@ const Popup: FC<Props> = ({ active, info, select, onClosePopUp, setInfo }) => {
 		}
 	}, [
 		POIBody,
-		latitude,
-		longitude,
+		position,
 		isDesktop,
 		setBottomSheetHeight,
 		setBottomSheetMinHeight,
@@ -339,8 +407,8 @@ const Popup: FC<Props> = ({ active, info, select, onClosePopUp, setInfo }) => {
 				anchor={isDesktop ? "left" : "bottom"}
 				offset={active ? 27 : 22}
 				style={{ maxWidth: isDesktop ? "28.62rem" : "20rem", width: "100%" }}
-				longitude={longitude as number}
-				latitude={latitude as number}
+				longitude={position[0]}
+				latitude={position[1]}
 			>
 				<POIBody />
 			</PopupGl>

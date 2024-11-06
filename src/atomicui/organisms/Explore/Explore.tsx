@@ -13,6 +13,7 @@ import {
 	IconCustomers,
 	IconDeveloperResources,
 	IconDirections,
+	IconFaqsPrimary,
 	IconFinancialService,
 	IconGeofencePlusSolid,
 	IconGeofencesTrackers,
@@ -22,7 +23,6 @@ import {
 	IconPlacesNew,
 	IconProductResources,
 	IconRadar,
-	IconRealEstate,
 	IconRetail,
 	IconRoute,
 	IconTravelHospitality,
@@ -30,13 +30,12 @@ import {
 } from "@demo/assets/svgs";
 import { appConfig } from "@demo/core/constants";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
-import { useAuth, useIot, useMap } from "@demo/hooks";
+import { useAuth, useIot } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import {
 	AnalyticsEventActionsEnum,
 	EventTypeEnum,
-	MapProviderEnum,
 	MenuItemEnum,
 	ResponsiveUIEnum,
 	TriggeredByEnum
@@ -66,6 +65,7 @@ const {
 		SHOW_NEW_NAVIGATION
 	},
 	ROUTES: {
+		DEMO,
 		SAMPLES,
 		MIGRATE_FROM_GOOGLE_MAPS,
 		MIGRATE_A_WEB_APP,
@@ -83,17 +83,13 @@ const {
 		AWS_GETTING_STARTED_URL,
 		AWS_PRICING_URL,
 		AWS_FAQ_URL,
-		// AWS_LOCATION_INDUSTRY_URL,
 		AWS_LOCATION_TRANSPORTATION_AND_LOGISTICS_URL,
 		AWS_LOCATION_FINANCIAL_SERVICE_URL,
 		AWS_LOCATION_HEALTHCARE_URL,
 		AWS_LOCATION_RETAILS_URL,
 		AWS_LOCATION_TRAVEL_AND_HOSPITALITY_URL,
-		AWS_LOCATION_REAL_ESTATE_URL,
-		// AWS_LOCATION_RESOURCES_URL,
 		AWS_LOCATION_CUSTOMERS_URL,
-		AWS_LOCATION_PRODUCT_RESOURCES_URL,
-		AWS_LOCATION_DEVELOPER_RESOURCES_URL
+		AMAZON_LOCATION_DOCUMENTATION_URL
 	}
 } = appConfig;
 
@@ -106,11 +102,9 @@ interface ExploreProps {
 	onShowAuthGeofenceBox: () => void;
 	onShowAuthTrackerBox: () => void;
 	onShowSettings: () => void;
-	onShowTrackingDisclaimerModal: () => void;
 	onShowAboutModal: () => void;
 	onShowUnauthGeofenceBox: () => void;
 	onShowUnauthTrackerBox: () => void;
-	onshowUnauthSimulationDisclaimerModal: () => void;
 	bottomSheetRef?: MutableRefObject<RefHandles | null>;
 }
 
@@ -123,11 +117,9 @@ const Explore: FC<ExploreProps> = ({
 	onShowAuthGeofenceBox,
 	onShowAuthTrackerBox,
 	onShowSettings,
-	onShowTrackingDisclaimerModal,
 	onShowAboutModal,
 	onShowUnauthGeofenceBox,
 	onShowUnauthTrackerBox,
-	onshowUnauthSimulationDisclaimerModal,
 	bottomSheetRef
 }) => {
 	const [isMenuExpanded, setIsMenuExpanded] = useState<{ [key: string]: boolean }>({
@@ -142,8 +134,7 @@ const Explore: FC<ExploreProps> = ({
 	const isLtr = langDir === "ltr";
 	const { setBottomSheetMinHeight, setBottomSheetHeight, bottomSheetCurrentHeight = 0 } = useBottomSheet();
 	const { isDesktop, isDesktopBrowser } = useDeviceMediaQuery();
-	const { isUserAwsAccountConnected, credentials, onLogin, onLogout, onDisconnectAwsAccount } = useAuth();
-	const { mapProvider: currentMapProvider } = useMap();
+	const { userProvidedValues, credentials, onLogin, onLogout, onDisconnectAwsAccount } = useAuth();
 	const { detachPolicy } = useIot();
 	const isAuthenticated = !!credentials?.authenticated;
 	const disconnectButtonText = t("disconnect_aws_account.text");
@@ -164,29 +155,28 @@ const Explore: FC<ExploreProps> = ({
 		);
 	};
 
-	const onClickMenuItem = (menuItem: MenuItemEnum) => {
-		onCloseSidebar();
-		const isAuthenticated = !!credentials?.authenticated;
+	const onClickMenuItem = useCallback(
+		(menuItem: MenuItemEnum) => {
+			onCloseSidebar();
+			const isAuthenticated = !!credentials?.authenticated;
 
-		if (isUserAwsAccountConnected) {
-			if (isAuthenticated) {
-				if (menuItem === MenuItemEnum.GEOFENCE) {
-					onShowAuthGeofenceBox();
-					updateUIInfo(ResponsiveUIEnum.auth_geofence);
-					if (!isDesktop) {
-						setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
-						setBottomSheetHeight(window.innerHeight * 0.4);
-						setTimeout(() => {
-							setBottomSheetMinHeight(BottomSheetHeights.explore.min);
-							setBottomSheetHeight(window.innerHeight);
-						}, 300);
-					}
-				} else {
-					if (currentMapProvider === MapProviderEnum.ESRI) {
-						onShowTrackingDisclaimerModal();
+			if (!!userProvidedValues) {
+				if (isAuthenticated) {
+					if (menuItem === MenuItemEnum.GEOFENCE) {
+						onShowAuthGeofenceBox();
+						updateUIInfo(ResponsiveUIEnum.auth_geofence);
+						if (!isDesktop) {
+							setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+							setBottomSheetHeight(window.innerHeight * 0.4);
+							setTimeout(() => {
+								setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+								setBottomSheetHeight(window.innerHeight);
+							}, 300);
+						}
 					} else {
 						onShowAuthTrackerBox();
 						updateUIInfo(ResponsiveUIEnum.auth_tracker);
+
 						if (!isDesktop) {
 							setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
 							setBottomSheetHeight(window.innerHeight * 0.4);
@@ -196,13 +186,9 @@ const Explore: FC<ExploreProps> = ({
 							}, 300);
 						}
 					}
+				} else {
+					onOpenSignInModal();
 				}
-			} else {
-				onOpenSignInModal();
-			}
-		} else {
-			if (currentMapProvider === MapProviderEnum.GRAB) {
-				onshowUnauthSimulationDisclaimerModal();
 			} else {
 				if (menuItem === MenuItemEnum.GEOFENCE) {
 					onShowUnauthGeofenceBox();
@@ -212,8 +198,22 @@ const Explore: FC<ExploreProps> = ({
 					onShowUnauthTrackerBox();
 				}
 			}
-		}
-	};
+		},
+		[
+			credentials?.authenticated,
+			isDesktop,
+			onCloseSidebar,
+			onOpenSignInModal,
+			onShowAuthGeofenceBox,
+			onShowAuthTrackerBox,
+			onShowUnauthGeofenceBox,
+			onShowUnauthTrackerBox,
+			setBottomSheetHeight,
+			setBottomSheetMinHeight,
+			updateUIInfo,
+			userProvidedValues
+		]
+	);
 
 	const onClickSettings = useCallback(() => {
 		onCloseSidebar();
@@ -599,24 +599,6 @@ const Explore: FC<ExploreProps> = ({
 							]
 						},
 						{
-							title: "footer__getting_started.text",
-							description: "new_getting_started_desc.text",
-							onClickHandler: () => window.open(AWS_GETTING_STARTED_URL, "_self"),
-							isEnabled: true
-						},
-						{
-							title: "pricing.text",
-							description: "new_pricing_desc.text",
-							onClickHandler: () => window.open(AWS_PRICING_URL, "_self"),
-							isEnabled: true
-						},
-						{
-							title: "footer__faq.text",
-							description: "new_faqs_desc.text",
-							onClickHandler: () => window.open(AWS_FAQ_URL, "_self"),
-							isEnabled: true
-						},
-						{
 							title: "industry.text",
 							description: "new_industry_desc.text",
 							onClickHandler: () => setIsMenuExpanded(s => ({ ...s, "industry.text": !s["industry.text"] })),
@@ -690,21 +672,20 @@ const Explore: FC<ExploreProps> = ({
 											height={18}
 										/>
 									)
-								},
-								{
-									title: "real_estate.text",
-									description: "new_real_estate_desc.text",
-									onClickHandler: () => window.open(AWS_LOCATION_REAL_ESTATE_URL, "_self"),
-									isEnabled: true,
-									iconComponent: (
-										<IconRealEstate
-											style={{ alignSelf: "flex-start", margin: "0.15rem 0rem 0rem 0.8rem" }}
-											width={18}
-											height={18}
-										/>
-									)
 								}
 							]
+						},
+						{
+							title: "footer__getting_started.text",
+							description: "new_getting_started_desc.text",
+							onClickHandler: () => window.open(AWS_GETTING_STARTED_URL, "_self"),
+							isEnabled: true
+						},
+						{
+							title: "pricing.text",
+							description: "new_pricing_desc.text",
+							onClickHandler: () => window.open(AWS_PRICING_URL, "_self"),
+							isEnabled: true
 						},
 						{
 							title: "resources.text",
@@ -712,6 +693,23 @@ const Explore: FC<ExploreProps> = ({
 							onClickHandler: () => setIsMenuExpanded(s => ({ ...s, "resources.text": !s["resources.text"] })),
 							isEnabled: true,
 							subMenu: [
+								{
+									title: "footer__faq.text",
+									description: "new_faqs_desc.text",
+									onClickHandler: () => window.open(AWS_FAQ_URL, "_self"),
+									isEnabled: true,
+									iconComponent: (
+										<IconFaqsPrimary
+											style={{
+												alignSelf: "flex-start",
+												margin: "0.15rem 0rem 0rem 0.8rem",
+												fill: "var(--primary-color)"
+											}}
+											width={18}
+											height={18}
+										/>
+									)
+								},
 								{
 									title: "customers.text",
 									description: "new_customers_desc.text",
@@ -730,9 +728,22 @@ const Explore: FC<ExploreProps> = ({
 									)
 								},
 								{
-									title: "product_resources.text",
-									description: "new_product_resources_desc.text",
-									onClickHandler: () => window.open(AWS_LOCATION_PRODUCT_RESOURCES_URL, "_self"),
+									title: "documentation.text",
+									description: "new_developer_resources_desc.text",
+									onClickHandler: () => window.open(AMAZON_LOCATION_DOCUMENTATION_URL, "_self"),
+									isEnabled: true,
+									iconComponent: (
+										<IconDeveloperResources
+											style={{ alignSelf: "flex-start", margin: "0.15rem 0rem 0rem 0.8rem" }}
+											width={18}
+											height={18}
+										/>
+									)
+								},
+								{
+									title: "demo.text",
+									description: "description_demo.text",
+									onClickHandler: () => navigate(DEMO),
 									isEnabled: true,
 									iconComponent: (
 										<IconProductResources
@@ -743,12 +754,12 @@ const Explore: FC<ExploreProps> = ({
 									)
 								},
 								{
-									title: "developer_resources.text",
-									description: "new_developer_resources_desc.text",
-									onClickHandler: () => window.open(AWS_LOCATION_DEVELOPER_RESOURCES_URL, "_self"),
+									title: "sample_applications.text",
+									description: "settings_modal_option__samples.text",
+									onClickHandler: () => navigate(SAMPLES),
 									isEnabled: true,
 									iconComponent: (
-										<IconDeveloperResources
+										<IconProductResources
 											style={{ alignSelf: "flex-start", margin: "0.15rem 0rem 0rem 0.8rem" }}
 											width={18}
 											height={18}
@@ -775,9 +786,7 @@ const Explore: FC<ExploreProps> = ({
 								title={t(title)}
 								titleColor={isMenuExpanded[title] ? "var(--primary-color)" : ""}
 								description={t(description)}
-								cardMargin={
-									idx === 0 && (!isUserAwsAccountConnected || !isAuthenticated) ? "2rem 0 0.923rem 0" : "0.923rem 0"
-								}
+								cardMargin={idx === 0 && (!userProvidedValues || !isAuthenticated) ? "2rem 0 0.923rem 0" : "0.923rem 0"}
 								direction="row-reverse"
 								cardAlignItems="center"
 								onClickHandler={onClickHandler}
@@ -795,9 +804,7 @@ const Explore: FC<ExploreProps> = ({
 													title={t(title)}
 													description={t(description)}
 													cardMargin={
-														idx === 0 && (!isUserAwsAccountConnected || !isAuthenticated)
-															? "2rem 0 0.923rem 0"
-															: "0.923rem 0"
+														idx === 0 && (!userProvidedValues || !isAuthenticated) ? "2rem 0 0.923rem 0" : "0.923rem 0"
 													}
 													cardAlignItems="center"
 													onClickHandler={onClickHandler}
@@ -818,9 +825,7 @@ const Explore: FC<ExploreProps> = ({
 							IconComponent={<IconArrow className="reverse-icon" width={20} height={20} />}
 							title={t(title)}
 							description={t(description)}
-							cardMargin={
-								idx === 0 && (!isUserAwsAccountConnected || !isAuthenticated) ? "2rem 0 0.923rem 0" : "0.923rem 0"
-							}
+							cardMargin={idx === 0 && (!userProvidedValues || !isAuthenticated) ? "2rem 0 0.923rem 0" : "0.923rem 0"}
 							direction="row-reverse"
 							cardAlignItems="center"
 							onClickHandler={onClickHandler}
@@ -830,61 +835,73 @@ const Explore: FC<ExploreProps> = ({
 				}
 			}
 		});
-	}, [exploreMoreOptions, isAuthenticated, isMenuExpanded, isUserAwsAccountConnected, t]);
+	}, [exploreMoreOptions, isAuthenticated, isMenuExpanded, userProvidedValues, t]);
 
-	const exploreButtons = [
-		{
-			text: t("routes.text"),
-			icon: <IconDirections width="1.53rem" height="1.53rem" fill="white" />,
-			onClick: () => {
-				updateUIInfo(ResponsiveUIEnum.routes);
-				if ((isAndroid || isIOS) && !isDesktopBrowser) {
-					setBottomSheetMinHeight(window.innerHeight - 10);
-					setBottomSheetHeight(window.innerHeight);
-					bottomSheetRef?.current?.snapTo(1000);
-					setTimeout(() => {
-						setBottomSheetMinHeight(BottomSheetHeights.explore.min);
-					}, 400);
-				} else {
+	const exploreButtons = useMemo(
+		() => [
+			{
+				text: t("routes.text"),
+				icon: <IconDirections width="1.53rem" height="1.53rem" fill="white" />,
+				onClick: () => {
+					updateUIInfo(ResponsiveUIEnum.routes);
+					if ((isAndroid || isIOS) && !isDesktopBrowser) {
+						setBottomSheetMinHeight(window.innerHeight - 10);
+						setBottomSheetHeight(window.innerHeight);
+						bottomSheetRef?.current?.snapTo(1000);
+						setTimeout(() => {
+							setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+						}, 400);
+					} else {
+						if (bottomSheetCurrentHeight < window.innerHeight * 0.4) {
+							setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+							setBottomSheetHeight(window.innerHeight * 0.4);
+
+							setTimeout(() => {
+								setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+								setBottomSheetHeight(window.innerHeight);
+							}, 200);
+						}
+					}
+				}
+			},
+			{
+				text: t("map_style.text"),
+				icon: <IconMapSolid width="1.53rem" height="1.53rem" fill="white" />,
+				onClick: () => {
+					updateUIInfo(ResponsiveUIEnum.map_styles);
 					if (bottomSheetCurrentHeight < window.innerHeight * 0.4) {
 						setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
 						setBottomSheetHeight(window.innerHeight * 0.4);
-
-						setTimeout(() => {
-							setBottomSheetMinHeight(BottomSheetHeights.explore.min);
-							setBottomSheetHeight(window.innerHeight);
-						}, 200);
 					}
-				}
-			}
-		},
-		{
-			text: t("map_style.text"),
-			icon: <IconMapSolid width="1.53rem" height="1.53rem" fill="white" />,
-			onClick: () => {
-				updateUIInfo(ResponsiveUIEnum.map_styles);
-				if (bottomSheetCurrentHeight < window.innerHeight * 0.4) {
-					setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
-					setBottomSheetHeight(window.innerHeight * 0.4);
-				}
 
-				setTimeout(() => {
-					setBottomSheetMinHeight(BottomSheetHeights.explore.min);
-					setBottomSheetHeight(window.innerHeight);
-				}, 500);
+					setTimeout(() => {
+						setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+						setBottomSheetHeight(window.innerHeight);
+					}, 500);
+				}
+			},
+			{
+				text: t("trackers.text"),
+				icon: <IconRadar width="1.53rem" height="1.53rem" />,
+				onClick: () => onClickMenuItem(MenuItemEnum.TRACKER)
+			},
+			{
+				text: t("geofences.text"),
+				icon: <IconGeofencePlusSolid width="1.53rem" height="1.53rem" fill="white" />,
+				onClick: () => onClickMenuItem(MenuItemEnum.GEOFENCE)
 			}
-		},
-		{
-			text: t("trackers.text"),
-			icon: <IconRadar width="1.53rem" height="1.53rem" />,
-			onClick: () => onClickMenuItem(MenuItemEnum.TRACKER)
-		},
-		{
-			text: t("geofences.text"),
-			icon: <IconGeofencePlusSolid width="1.53rem" height="1.53rem" fill="white" />,
-			onClick: () => onClickMenuItem(MenuItemEnum.GEOFENCE)
-		}
-	];
+		],
+		[
+			bottomSheetCurrentHeight,
+			bottomSheetRef,
+			isDesktopBrowser,
+			onClickMenuItem,
+			setBottomSheetHeight,
+			setBottomSheetMinHeight,
+			t,
+			updateUIInfo
+		]
+	);
 
 	return (
 		<Flex direction="column" className="explore-container" gap="0">
@@ -895,21 +912,21 @@ const Explore: FC<ExploreProps> = ({
 					<ExploreButton key={index} text={button.text} icon={button.icon} onClick={button.onClick} />
 				))}
 			</Flex>
-			{(!isUserAwsAccountConnected || !isAuthenticated) && (
+			{(!userProvidedValues || !isAuthenticated) && (
 				<Flex direction="column" className="aws-connect-container button-wrapper">
-					<ConnectAccount isAuthenticated={isUserAwsAccountConnected} />
+					<ConnectAccount isAuthenticated={!!userProvidedValues} />
 				</Flex>
 			)}
 			<Flex direction="column" gap="0" className="explore-more-options">
 				{renderExploreMoreOptions}
 			</Flex>
-			{isUserAwsAccountConnected && isAuthenticated && (
+			{!!userProvidedValues && isAuthenticated && (
 				<>
 					<Divider className="title-divider" />
 					<AwsAccountButton isFooter />
 				</>
 			)}
-			{isUserAwsAccountConnected && !isAuthenticated && (
+			{!!userProvidedValues && !isAuthenticated && (
 				<>
 					<Divider className="title-divider" />
 					<DisconnectButton isFooter />

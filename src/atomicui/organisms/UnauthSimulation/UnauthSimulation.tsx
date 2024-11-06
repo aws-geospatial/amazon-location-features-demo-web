@@ -100,7 +100,6 @@ export interface UnauthSimulationProps {
 	startSimulation: boolean;
 	setStartSimulation: (b: boolean) => void;
 	setShowUnauthSimulationBounds: (b: boolean) => void;
-	clearCredsAndClients?: () => void;
 	isNotifications: boolean;
 	setIsNotifications: Dispatch<SetStateAction<boolean>>;
 	confirmCloseSimulation: boolean;
@@ -119,7 +118,6 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 	startSimulation,
 	setStartSimulation,
 	setShowUnauthSimulationBounds,
-	clearCredsAndClients,
 	isNotifications,
 	setIsNotifications,
 	confirmCloseSimulation,
@@ -257,7 +255,6 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 	};
 
 	const onCloseHandler = () => {
-		clearCredsAndClients && clearCredsAndClients();
 		setShowStartUnauthSimulation(false);
 		handleClose();
 		setHideGeofenceTrackerShortcut(false);

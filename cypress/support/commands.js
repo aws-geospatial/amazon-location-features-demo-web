@@ -101,7 +101,7 @@ Cypress.Commands.add("connectAwsAccount", isResponsive => {
 				: cy.get('[data-testid="hamburger-menu"]').click();
 		}
 	});
-	cy.wait(15000);
+	cy.wait(5000);
 });
 
 Cypress.Commands.add("signOutAndDisconnectFromAwsAccount", isResponsive => {
@@ -126,9 +126,7 @@ Cypress.Commands.add("signOutAndDisconnectFromAwsAccount", isResponsive => {
 		? cy.openResponsiveMenu('[data-testid="bottomsheet"]')
 		: cy.get('[data-testid="hamburger-menu"]').click();
 	cy.get('[data-testid="disconnect-aws-account-button"]').click();
-	cy.get('[data-testid="welcome-modal-continue-button"]').click();
-	isResponsive
-		? cy.openResponsiveMenu('[data-testid="bottomsheet"]')
-		: cy.get('[data-testid="hamburger-menu"]').click();
+	cy.wait(2000);
 	cy.get('[data-testid="connect-aws-account-button"]').should("exist");
+	cy.wait(2000);
 });

@@ -2,53 +2,76 @@ import { useCallback, useEffect } from "react";
 
 import { appConfig } from "@demo/core/constants";
 
-import { EventTypeEnum, MapProviderEnum } from "@demo/types/Enums";
+import { EventTypeEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils";
 import { differenceInMilliseconds } from "date-fns";
 
 import useAuth from "./useAuth";
 import useClient from "./useClient";
 import useIot from "./useIot";
-import useMap from "./useMap";
 
 const {
+	API_KEYS,
 	PERSIST_STORAGE_KEYS: { SHOULD_CLEAR_CREDENTIALS },
 	ROUTES: { DEMO }
 } = appConfig;
 let timeout: NodeJS.Timer | undefined;
 
-const useCredsManager = () => {
+const useAuthManager = () => {
 	const {
 		credentials,
 		fetchCredentials,
 		clearCredentials,
-		region,
-		isUserAwsAccountConnected,
-		identityPoolId,
+		baseValues,
+		userProvidedValues,
 		fetchTokens,
 		refreshTokens,
-		userPoolId,
-		userPoolClientId,
 		authTokens,
 		setAuthTokens,
-		authOptions,
-		fetchAuthOptions
+		apiKey,
+		fetchLocationClientConfigWithApiKey
 	} = useAuth();
 	const {
+		placesClient,
+		createPlacesClient,
+		routesClient,
+		createRoutesClient,
 		locationClient,
 		createLocationClient,
 		iotClient,
 		createIotClient,
-		resetStore: resetClientStore
+		resetLocationAndIotClients
 	} = useClient();
 	const { attachPolicy } = useIot();
-	const { mapProvider: currentMapProvider } = useMap();
 	const shouldClearCredentials = localStorage.getItem(SHOULD_CLEAR_CREDENTIALS) === "true";
+
+	/* Instantiate Places and Routes clients whenever the apiKey changes */
+	useEffect(() => {
+		if (!!apiKey && baseValues) {
+			(async () => {
+				const apiKeyRegion = baseValues.region in API_KEYS ? baseValues.region : Object.keys(API_KEYS)[0];
+				const locationClientConfig = await fetchLocationClientConfigWithApiKey(apiKey, apiKeyRegion);
+
+				if (locationClientConfig) {
+					!placesClient && createPlacesClient(locationClientConfig);
+					!routesClient && createRoutesClient(locationClientConfig);
+				}
+			})();
+		}
+	}, [
+		apiKey,
+		baseValues,
+		fetchLocationClientConfigWithApiKey,
+		placesClient,
+		createPlacesClient,
+		routesClient,
+		createRoutesClient
+	]);
 
 	const clearCredsAndClients = useCallback(() => {
 		clearCredentials();
-		resetClientStore();
-	}, [clearCredentials, resetClientStore]);
+		resetLocationAndIotClients();
+	}, [clearCredentials, resetLocationAndIotClients]);
 
 	if (shouldClearCredentials || (!!credentials && !credentials?.identityId)) {
 		localStorage.removeItem(SHOULD_CLEAR_CREDENTIALS);
@@ -90,7 +113,6 @@ const useCredsManager = () => {
 	}, [
 		credentials,
 		fetchCredentials,
-		resetClientStore,
 		clearCredsAndClients,
 		refreshTokens,
 		authTokens,
@@ -98,13 +120,22 @@ const useCredsManager = () => {
 		refreshCredentials
 	]);
 
-	/* Instantiate location and iot clients whenever the credentials change */
+	/* Instantiate location client for Geofences and Trackers and iot client whenever the credentials change */
 	useEffect(() => {
-		if (credentials && region) {
-			!locationClient && createLocationClient(credentials, region);
-			!iotClient && createIotClient(credentials, region);
+		if (credentials) {
+			if (userProvidedValues) {
+				const { region } = userProvidedValues;
+				!locationClient &&
+					createLocationClient({ ...credentials, expiration: new Date(credentials!.expiration!) }, region);
+				!iotClient && createIotClient({ ...credentials, expiration: new Date(credentials!.expiration!) }, region);
+			} else if (baseValues) {
+				const { region } = baseValues;
+				!locationClient &&
+					createLocationClient({ ...credentials, expiration: new Date(credentials!.expiration!) }, region);
+				!iotClient && createIotClient({ ...credentials, expiration: new Date(credentials!.expiration!) }, region);
+			}
 		}
-	}, [createIotClient, createLocationClient, credentials, iotClient, locationClient, region]);
+	}, [credentials, userProvidedValues, iotClient, locationClient, createIotClient, createLocationClient, baseValues]);
 
 	/* Fired when user logs in or logs out */
 	useEffect(() => {
@@ -131,7 +162,7 @@ const useCredsManager = () => {
 			window.history.replaceState(undefined, "", DEMO);
 			clearCredsAndClients();
 		}
-	}, [clearCredsAndClients, credentials, identityPoolId, userPoolClientId, region, userPoolId, fetchTokens]);
+	}, [fetchTokens, clearCredsAndClients]);
 
 	const _attachPolicy = useCallback(async () => {
 		if (credentials && credentials?.expiration) {
@@ -144,28 +175,19 @@ const useCredsManager = () => {
 			} else {
 				if (credentials.authenticated) {
 					await attachPolicy(credentials.identityId);
-				} else if (!isUserAwsAccountConnected && currentMapProvider !== MapProviderEnum.GRAB) {
+				} else if (!userProvidedValues) {
 					await attachPolicy(credentials.identityId, true);
 				}
 			}
 		}
-	}, [credentials, refreshCredentials, isUserAwsAccountConnected, currentMapProvider, attachPolicy]);
+	}, [credentials, refreshCredentials, userProvidedValues, attachPolicy]);
 
-	/* Attach IoT policy to authenticated user to ensure successful websocket connection */
+	/* Attach IoT policy to unauth and auth user to ensure successful websocket connection */
 	useEffect(() => {
 		_attachPolicy();
 	}, [_attachPolicy]);
 
-	/* Fetch authOptions for map */
-	useEffect(() => {
-		if (!!!authOptions?.transformRequest) {
-			(async () => {
-				await fetchAuthOptions();
-			})();
-		}
-	}, [authOptions, fetchAuthOptions]);
-
 	return { clearCredsAndClients };
 };
 
-export default useCredsManager;
+export default useAuthManager;

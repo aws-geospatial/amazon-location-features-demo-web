@@ -7,12 +7,10 @@ export type ShowStateType = {
 	authTrackerBox: boolean;
 	settings: boolean;
 	stylesCard: boolean;
-	authTrackerDisclaimerModal: boolean;
 	about: boolean;
 	unauthGeofenceBox: boolean;
 	unauthTrackerBox: boolean;
 	unauthSimulationBounds: boolean;
-	unauthSimulationDisclaimerModal: boolean;
 	unauthSimulationExitModal: boolean;
 	startUnauthSimulation: boolean;
 	openFeedbackModal: boolean;

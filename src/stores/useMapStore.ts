@@ -4,13 +4,10 @@
 import { appConfig } from "@demo/core/constants";
 import {
 	CurrentLocationDataType,
-	EsriMapEnum,
-	GrabMapEnum,
-	HereMapEnum,
 	IStateProps,
-	MapProviderEnum,
+	MapColorSchemeEnum,
+	MapStyleEnum,
 	MapUnitEnum,
-	OpenDataMapEnum,
 	ViewPointType
 } from "@demo/types";
 
@@ -32,9 +29,9 @@ interface MapStoreProps {
 		system: MapUnitEnum;
 	};
 	mapUnit: MapUnitEnum;
-	mapProvider: MapProviderEnum;
-	mapStyle: EsriMapEnum | HereMapEnum | GrabMapEnum | OpenDataMapEnum;
-	isCurrentLocationDisabled: boolean;
+	mapStyle: MapStyleEnum;
+	mapColorScheme: MapColorSchemeEnum;
+	mapPoliticalView?: string;
 }
 
 const initialState: IStateProps<MapStoreProps> = {
@@ -44,9 +41,8 @@ const initialState: IStateProps<MapStoreProps> = {
 		system: MapUnitEnum.IMPERIAL
 	},
 	mapUnit: MapUnitEnum.IMPERIAL,
-	mapProvider: MapProviderEnum.ESRI,
-	mapStyle: EsriMapEnum.ESRI_LIGHT,
-	isCurrentLocationDisabled: false
+	mapStyle: MapStyleEnum.STANDARD,
+	mapColorScheme: MapColorSchemeEnum.LIGHT
 };
 
 export default createStore<MapStoreProps>(initialState, true, localStorageKey);

@@ -58,6 +58,8 @@ export default defineConfig(() => {
 					/* Core deps */
 					"@aws-amplify/ui-react",
 					"@aws-sdk/client-cognito-identity",
+					"@@aws-sdk/client-geo-places",
+					"@aws-sdk/client-geo-routes",
 					"@aws-sdk/client-iot",
 					"@aws-sdk/client-location",
 					"@aws-sdk/client-pinpoint",

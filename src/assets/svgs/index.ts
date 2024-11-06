@@ -121,3 +121,8 @@ export { ReactComponent as IconRealEstate } from "./icon-real-estate.svg";
 export { ReactComponent as IconProductResources } from "./icon-product-resources.svg";
 export { ReactComponent as IconDeveloperResources } from "./icon-developer-resources.svg";
 export { ReactComponent as IconCustomers } from "./icon-customers.svg";
+export { ReactComponent as IconLight } from "./icon-light.svg";
+export { ReactComponent as IconDark } from "./icon-dark.svg";
+export { ReactComponent as IconFaqsPrimary } from "./icon-faqs-primary.svg";
+export { ReactComponent as IconClock } from "./icon-clock.svg";
+export { ReactComponent as IconPhone } from "./icon-phone.svg";

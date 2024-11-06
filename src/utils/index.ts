@@ -11,3 +11,5 @@ export * from "./localstorageUtils";
 export * from "./debounce";
 export * from "./getDomainName";
 export * from "./regionUtils";
+export * from "./distanceUtil";
+export * from "./turfUtils";

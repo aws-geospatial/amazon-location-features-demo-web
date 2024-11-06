@@ -3311,13 +3311,13 @@
     "text": "以 “汽车” 作为出行模式计算路线"
   },
   "tooltip__calculate_route_walk": {
-    "text": "以 “步行” 作为出行模式计算路线"
+    "text": "使用 “行人” 作为出行模式计算路线"
   },
   "tooltip__calculate_route_bicycle": {
     "text": "以 “自行车” 作为出行模式计算路线"
   },
   "tooltip__calculate_route_motorcycle": {
-    "text": "以 “摩托车” 作为出行模式计算路线"
+    "text": "使用 “滑板车” 作为出行模式计算路线"
   },
   "tooltip__calculate_route_truck": {
     "text": "以 “卡车” 作为出行模式计算路线"
@@ -3792,5 +3792,23 @@
   },
   "new_developer_resources_desc": {
     "text": "指南和论坛"
+  },
+  "error_handler__failed_create_places_client": {
+    "text": "无法创建地点客户端"
+  },
+  "error_handler__failed_create_routes_client": {
+    "text": "无法创建路径客户端"
+  },
+  "multiple_region_disclaimer": {
+    "text": "免责声明：当用户的 AWS 账户连接时，更改区域只会影响地图、地点和路线。"
+  },
+  "documentation": {
+    "text": "文档"
+  },
+  "sample_applications": {
+    "text": "示例应用程序"
+  },
+  "description_demo": {
+    "text": "演示应用程序展示了亚马逊定位服务的功能"
   }
 }

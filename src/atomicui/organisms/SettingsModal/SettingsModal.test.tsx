@@ -51,9 +51,6 @@ describe("<SettingsModal />", () => {
 
 	const onClose = jest.fn();
 	const resetAppState = jest.fn();
-	const handleMapProviderChange = jest.fn();
-	const handleCurrentLocationAndViewpoint = jest.fn();
-	const resetSearchAndFilters = jest.fn();
 
 	const renderComponent = async (): Promise<RenderResult> => {
 		const renderedComponent = render(
@@ -62,10 +59,6 @@ describe("<SettingsModal />", () => {
 					open
 					onClose={onClose}
 					resetAppState={resetAppState}
-					isGrabVisible={false}
-					handleMapProviderChange={handleMapProviderChange}
-					handleCurrentLocationAndViewpoint={handleCurrentLocationAndViewpoint}
-					resetSearchAndFilters={resetSearchAndFilters}
 					mapButtons={<MapButtons {...mockProps} />}
 				/>
 			</I18nextProvider>
@@ -89,7 +82,6 @@ describe("<SettingsModal />", () => {
 
 		for (const optionId of [
 			SettingOptionEnum.UNITS,
-			SettingOptionEnum.DATA_PROVIDER,
 			SettingOptionEnum.MAP_STYLE,
 			SettingOptionEnum.ROUTE_OPTIONS,
 			SettingOptionEnum.AWS_CLOUD_FORMATION
@@ -121,18 +113,6 @@ describe("<SettingsModal />", () => {
 		const unitImperialRadio = screen.getByTestId("unit-imperial-radio");
 		fireEvent.click(unitImperialRadio);
 		expect(resetAppState).toBeCalledTimes(1);
-	});
-
-	it("should change map data provider successfully", async () => {
-		await renderComponent();
-
-		const optionItem = screen.getByTestId(`option-item-${SettingOptionEnum.DATA_PROVIDER}`);
-		act(() => optionItem.click());
-
-		const dataProviderHereRadio = screen.getByTestId("data-provider-here-radio");
-		fireEvent.click(dataProviderHereRadio);
-		// expect(resetAppState).toBeCalledTimes(1);
-		expect(handleMapProviderChange).toBeCalledTimes(1);
 	});
 
 	it("should select/unselect avoid-tolls and avoid-ferries", async () => {

@@ -3315,13 +3315,13 @@
     "text": "以「汽車」作為旅行模式計算路線"
   },
   "tooltip__calculate_route_walk": {
-    "text": "使用「步行」作為旅行模式計算路線"
+    "text": "使用「行人」作為旅行模式計算路線"
   },
   "tooltip__calculate_route_bicycle": {
     "text": "以「自行車」作為旅行模式計算路線"
   },
   "tooltip__calculate_route_motorcycle": {
-    "text": "以「摩托車」作為旅行模式計算路線"
+    "text": "使用「踏板車」作為旅行模式計算路線"
   },
   "tooltip__calculate_route_truck": {
     "text": "以「卡車」作為行駛模式計算路線"
@@ -3796,5 +3796,23 @@
   },
   "new_developer_resources_desc": {
     "text": "指南和論壇"
+  },
+  "error_handler__failed_create_places_client": {
+    "text": "無法建立地點用戶端"
+  },
+  "error_handler__failed_create_routes_client": {
+    "text": "建立路由用戶端失敗"
+  },
+  "multiple_region_disclaimer": {
+    "text": "免責聲明：當使用者的 AWS 帳戶連線時，變更區域只會影響地圖、地點和路線。"
+  },
+  "documentation": {
+    "text": "文件"
+  },
+  "sample_applications": {
+    "text": "範例應用"
+  },
+  "description_demo": {
+    "text": "展示亞馬遜定位服務功能的演示應用程序"
   }
 }

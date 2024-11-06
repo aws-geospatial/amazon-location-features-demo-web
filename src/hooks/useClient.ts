@@ -3,6 +3,7 @@
 
 import { useMemo } from "react";
 
+import { LocationClientConfig } from "@aws/amazon-location-utilities-auth-helper";
 import { useClientService } from "@demo/services";
 import { useClientStore } from "@demo/stores";
 import { CognitoIdentityCredentials } from "@demo/types";
@@ -18,6 +19,25 @@ const useClient = () => {
 
 	const methods = useMemo(
 		() => ({
+			createPlacesClient: (locationClientConfig: LocationClientConfig) => {
+				try {
+					const placesClient = clientService.createPlacesClient(locationClientConfig);
+					setState({ placesClient });
+				} catch (error) {
+					errorHandler(error, t("error_handler__failed_create_places_client.text") as string);
+				}
+			},
+			createRoutesClient: (locationClientConfig: LocationClientConfig) => {
+				try {
+					const routesClient = clientService.createRoutesClient(locationClientConfig);
+					setState({ routesClient });
+				} catch (error) {
+					errorHandler(error, t("error_handler__failed_create_routes_client.text") as string);
+				}
+			},
+			resetPlacesAndRoutesClients: () => {
+				setState({ placesClient: undefined, routesClient: undefined });
+			},
 			createLocationClient: (credentials: CognitoIdentityCredentials, region: string) => {
 				try {
 					const locationClient = clientService.createLocationClient(credentials, region);
@@ -34,8 +54,11 @@ const useClient = () => {
 					errorHandler(error, t("error_handler__failed_create_iot_client.text") as string);
 				}
 			},
-			resetStore: () => {
+			resetLocationAndIotClients: () => {
 				setState({ locationClient: undefined, iotClient: undefined });
+			},
+			resetStore: () => {
+				setState({ placesClient: undefined, routesClient: undefined, locationClient: undefined, iotClient: undefined });
 				setInitial();
 			}
 		}),

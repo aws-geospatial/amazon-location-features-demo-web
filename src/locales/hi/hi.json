@@ -3315,13 +3315,13 @@
     "text": "यात्रा मोड के रूप में 'कार' के साथ मार्ग की गणना करें"
   },
   "tooltip__calculate_route_walk": {
-    "text": "यात्रा मोड के रूप में 'वॉकिंग' के साथ मार्ग की गणना करें"
+    "text": "यात्रा मोड के रूप में 'पैदल यात्री' के साथ मार्ग की गणना करें"
   },
   "tooltip__calculate_route_bicycle": {
     "text": "यात्रा मोड के रूप में 'साइकिल' के साथ मार्ग की गणना करें"
   },
   "tooltip__calculate_route_motorcycle": {
-    "text": "यात्रा मोड के रूप में 'मोटरसाइकिल' के साथ मार्ग की गणना करें"
+    "text": "यात्रा मोड के रूप में 'स्कूटर' के साथ मार्ग की गणना करें"
   },
   "tooltip__calculate_route_truck": {
     "text": "यात्रा मोड के रूप में 'ट्रक' के साथ मार्ग की गणना करें"
@@ -3702,7 +3702,7 @@
     "text": "जियोफेंस और ट्रैकर्स"
   },
   "industry": {
-    "text": "इंडस्ट्री"
+    "text": "इंडस्ट्रीज"
   },
   "transportation_and_logistics": {
     "text": "परिवहन और लॉजिस्टिक्स"
@@ -3796,5 +3796,23 @@
   },
   "new_developer_resources_desc": {
     "text": "मार्गदर्शिकाएँ और फ़ोरम"
+  },
+  "error_handler__failed_create_places_client": {
+    "text": "स्थान क्लाइंट बनाने में विफल"
+  },
+  "error_handler__failed_create_routes_client": {
+    "text": "रूट क्लाइंट बनाने में विफल"
+  },
+  "multiple_region_disclaimer": {
+    "text": "अस्वीकरण: जब उपयोगकर्ता का AWS खाता कनेक्ट होता है, तो क्षेत्र बदलने से केवल मानचित्र, स्थान और मार्ग प्रभावित होंगे।"
+  },
+  "documentation": {
+    "text": "दस्तावेजीकरण"
+  },
+  "sample_applications": {
+    "text": "नमूना अनुप्रयोग"
+  },
+  "description_demo": {
+    "text": "Amazon Location Service की क्षमताओं को प्रदर्शित करने वाला डेमो ऐप"
   }
 }

@@ -4,9 +4,8 @@
 import { useMemo } from "react";
 
 import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
-import { withIdentityPoolId } from "@aws/amazon-location-utilities-auth-helper";
+import { withAPIKey } from "@aws/amazon-location-utilities-auth-helper";
 import { appConfig } from "@demo/core/constants";
-import { AuthTokensType } from "@demo/types";
 
 const {
 	ROUTES: { DEMO }
@@ -15,18 +14,14 @@ const {
 const useAuthService = () => {
 	return useMemo(
 		() => ({
-			fetchCredentials: async (
-				identityPoolId: string,
-				region: string,
-				authTokens?: AuthTokensType,
-				userPoolId?: string
-			) => {
+			withAPIKey: async (apiKey: string) => {
+				return await withAPIKey(apiKey);
+			},
+			fetchCredentials: async (identityPoolId: string, region: string, logins?: { [key: string]: string }) => {
 				const credentialsProvider = fromCognitoIdentityPool({
 					identityPoolId,
 					clientConfig: { region },
-					logins: !!authTokens
-						? { [`cognito-idp.${region}.amazonaws.com/${userPoolId}`]: authTokens.id_token }
-						: undefined
+					logins
 				});
 				return await credentialsProvider();
 			},
@@ -59,20 +54,6 @@ const useAuthService = () => {
 						"Content-Type": "application/x-www-form-urlencoded"
 					},
 					body: body.toString()
-				});
-			},
-			withIdentityPoolId: async (
-				identityPoolId: string,
-				region: string,
-				authTokens?: AuthTokensType,
-				userPoolId?: string
-			) => {
-				return await withIdentityPoolId(identityPoolId, {
-					identityPoolId,
-					clientConfig: { region },
-					logins: !!authTokens
-						? { [`cognito-idp.${region}.amazonaws.com/${userPoolId}`]: authTokens.id_token }
-						: undefined
 				});
 			}
 		}),

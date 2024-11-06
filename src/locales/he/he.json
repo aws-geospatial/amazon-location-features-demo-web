@@ -3315,13 +3315,13 @@
     "text": "חישוב מסלול עם 'רכב' כמצב נסיעה"
   },
   "tooltip__calculate_route_walk": {
-    "text": "חישוב מסלול עם 'הליכה' כמצב נסיעה"
+    "text": "חישוב מסלול עם 'הולך רגל' כמצב נסיעה"
   },
   "tooltip__calculate_route_bicycle": {
     "text": "חישוב מסלול עם 'אופניים' כמצב נסיעה"
   },
   "tooltip__calculate_route_motorcycle": {
-    "text": "חישוב מסלול עם 'אופנוע' כמצב נסיעה"
+    "text": "חשב מסלול עם 'קטנוע' כמצב נסיעה"
   },
   "tooltip__calculate_route_truck": {
     "text": "חישוב מסלול עם 'משאית' כמצב נסיעה"
@@ -3702,7 +3702,7 @@
     "text": "גיאופנסים ועוקבים"
   },
   "industry": {
-    "text": "תעשייה"
+    "text": "תעשיות"
   },
   "transportation_and_logistics": {
     "text": "תחבורה ולוגיסטיקה"
@@ -3796,5 +3796,23 @@
   },
   "new_developer_resources_desc": {
     "text": "מדריכים ופורומים"
+  },
+  "error_handler__failed_create_places_client": {
+    "text": "יצירת לקוח מקומות נכשלה"
+  },
+  "error_handler__failed_create_routes_client": {
+    "text": "יצירת לקוח נתיבים נכשלה"
+  },
+  "multiple_region_disclaimer": {
+    "text": "כתב ויתור: כאשר חשבון AWS של המשתמש מחובר, שינוי האזור ישפיע רק על מפות, מקומות ונתיבים."
+  },
+  "documentation": {
+    "text": "תיעוד"
+  },
+  "sample_applications": {
+    "text": "יישומים לדוגמה"
+  },
+  "description_demo": {
+    "text": "אפליקציית הדגמה המציגה את היכולות של שירות המיקום של אמזון"
   }
 }

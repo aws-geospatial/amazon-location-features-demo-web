@@ -1,9 +1,6 @@
 name: Security tests
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches: [main]
 
@@ -18,6 +15,8 @@ jobs:
 
       - name: Setup node
         uses: actions/setup-node@v3
+        with:
+          node-version: 20.17.0
 
       - name: Install dependencies
         run: cd security-tests/ && npm install

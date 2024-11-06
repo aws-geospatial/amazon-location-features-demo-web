@@ -1,8 +1,8 @@
 import { appConfig } from "@demo/core/constants";
 
-const { POOLS, PERSIST_STORAGE_KEYS } = appConfig;
+const { API_KEYS, PERSIST_STORAGE_KEYS } = appConfig;
 
-export const setClosestRegion = async (regions = Object.keys(POOLS)) => {
+export const setClosestRegion = async (regions = Object.keys(API_KEYS)) => {
 	let fastestRegion = localStorage.getItem(PERSIST_STORAGE_KEYS.FASTEST_REGION!);
 
 	if (!regions.includes(fastestRegion!)) {

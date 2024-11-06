@@ -4,96 +4,77 @@
 import { useMemo } from "react";
 
 import {
-	GetPlaceRequest,
-	SearchPlaceIndexForPositionRequest,
-	SearchPlaceIndexForSuggestionsRequest,
-	SearchPlaceIndexForTextRequest
-} from "@aws-sdk/client-location";
+	GetPlaceCommand,
+	GetPlaceCommandInput,
+	ReverseGeocodeCommand,
+	ReverseGeocodeCommandInput,
+	SearchTextCommand,
+	SearchTextCommandInput,
+	SuggestCommand,
+	SuggestCommandInput
+} from "@aws-sdk/client-geo-places";
 import { appConfig } from "@demo/core/constants";
 import { useClient, useMap } from "@demo/hooks";
-import { MapProviderEnum } from "@demo/types";
 import { useTranslation } from "react-i18next";
 
 const {
-	MAP_RESOURCES: {
-		PLACE_INDEXES: { ESRI, HERE, GRAB }
-	},
 	ENV: { NL_BASE_URL, NL_API_KEY }
 } = appConfig;
 
 const usePlaceService = () => {
-	const { locationClient } = useClient();
-	const { mapProvider: currentMapProvider, viewpoint } = useMap();
+	const { placesClient } = useClient();
+	const { viewpoint } = useMap();
 	const { i18n } = useTranslation();
-	const lang = i18n.language;
-
-	const config = useMemo(
-		() => ({
-			IndexName:
-				currentMapProvider === MapProviderEnum.ESRI || currentMapProvider === MapProviderEnum.OPEN_DATA
-					? ESRI
-					: currentMapProvider === MapProviderEnum.HERE
-					? HERE
-					: currentMapProvider === MapProviderEnum.GRAB
-					? GRAB
-					: "",
-			Language: lang
-		}),
-		[currentMapProvider, lang]
-	);
+	const Language = i18n.language;
 
 	return useMemo(
 		() => ({
-			getPlaceSuggestions: async (Text: string) => {
-				const params: SearchPlaceIndexForSuggestionsRequest = {
-					...config,
-					BiasPosition:
-						currentMapProvider !== MapProviderEnum.GRAB
-							? [viewpoint?.longitude as number, viewpoint?.latitude as number]
-							: undefined,
-					Text
+			getPlaceSuggestions: async (QueryText: string) => {
+				const input: SuggestCommandInput = {
+					QueryText,
+					BiasPosition: [viewpoint?.longitude as number, viewpoint?.latitude as number],
+					Language,
+					AdditionalFeatures: ["Core"]
 				};
-
-				return await locationClient?.searchPlaceIndexForSuggestions(params);
+				const command = new SuggestCommand(input);
+				return await placesClient?.send(command);
 			},
 			getPlaceById: async (PlaceId: string) => {
-				const params: GetPlaceRequest = {
-					...config,
-					PlaceId
+				const input: GetPlaceCommandInput = {
+					PlaceId,
+					Language,
+					AdditionalFeatures: ["Contact"]
 				};
-
-				return await locationClient?.getPlace(params);
+				const command = new GetPlaceCommand(input);
+				return await placesClient?.send(command);
 			},
-			getPlacesByText: async (Text: string) => {
-				const params: SearchPlaceIndexForTextRequest = {
-					...config,
-					BiasPosition:
-						currentMapProvider !== MapProviderEnum.GRAB
-							? [viewpoint?.longitude as number, viewpoint?.latitude as number]
-							: undefined,
-					Text
+			getPlacesByText: async (QueryTextOrId: string, isQueryId = false) => {
+				const input: SearchTextCommandInput = {
+					QueryText: isQueryId ? undefined : QueryTextOrId,
+					QueryId: isQueryId ? QueryTextOrId : undefined,
+					BiasPosition: isQueryId ? undefined : [viewpoint?.longitude as number, viewpoint?.latitude as number],
+					Language: isQueryId ? undefined : Language
 				};
-
-				return await locationClient?.searchPlaceIndexForText(params);
+				const command = new SearchTextCommand(input);
+				return await placesClient?.send(command);
 			},
-			getPlaceByCoordinates: async (Position: number[]) => {
-				const params: SearchPlaceIndexForPositionRequest = {
-					...config,
-					Position
+			getPlaceByCoordinates: async (QueryPosition: number[]) => {
+				const input: ReverseGeocodeCommandInput = {
+					QueryPosition,
+					Language
 				};
-
-				return await locationClient?.searchPlaceIndexForPosition(params);
+				const command = new ReverseGeocodeCommand(input);
+				return await placesClient?.send(command);
 			},
 			getNLPlacesByText: async (Text: string) => {
 				const BiasPosition = [viewpoint?.longitude as number, viewpoint?.latitude as number];
-				const mapProvider = currentMapProvider === MapProviderEnum.HERE ? "Here" : currentMapProvider;
 				const response = await fetch(
 					`${NL_BASE_URL}/places/ask?` +
 						new URLSearchParams([
 							["Text", Text],
 							["BiasPosition", BiasPosition[0].toString()],
 							["BiasPosition", BiasPosition[1].toString()],
-							["DataSource", mapProvider]
+							["DataSource", "Here"]
 						]),
 					{
 						method: "GET",
@@ -109,7 +90,7 @@ const usePlaceService = () => {
 				return responseBody;
 			}
 		}),
-		[config, locationClient, currentMapProvider, viewpoint]
+		[viewpoint, Language, placesClient]
 	);
 };
 

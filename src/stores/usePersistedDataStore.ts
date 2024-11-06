@@ -14,8 +14,6 @@ const localStorageKey = `${LOCAL_STORAGE_PREFIX}${PERSISTED_DATA}`;
 interface PersistedDataStoreProps {
 	showAppDownloadNotification: boolean;
 	showWelcomeModal: boolean;
-	doNotAskGrabDisclaimerModal: boolean;
-	doNotAskOpenDataDisclaimerModal: boolean;
 	defaultRouteOptions: RouteOptionsType;
 	settingsOptions: SettingOptionEnum;
 }
@@ -23,8 +21,6 @@ interface PersistedDataStoreProps {
 const initialState: IStateProps<PersistedDataStoreProps> = {
 	showAppDownloadNotification: true,
 	showWelcomeModal: true,
-	doNotAskGrabDisclaimerModal: true,
-	doNotAskOpenDataDisclaimerModal: true,
 	defaultRouteOptions: { avoidFerries: true, avoidTolls: true },
 	settingsOptions: SettingOptionEnum.UNITS
 };

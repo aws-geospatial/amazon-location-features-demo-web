@@ -3315,13 +3315,13 @@
     "text": "'Car'를 여행 모드로 사용하여 경로 계산"
   },
   "tooltip__calculate_route_walk": {
-    "text": "'걷기'를 여행 모드로 사용하여 경로 계산"
+    "text": "'보행자'를 이동 모드로 사용하여 경로 계산"
   },
   "tooltip__calculate_route_bicycle": {
     "text": "'자전거'를 여행 모드로 사용하여 경로 계산"
   },
   "tooltip__calculate_route_motorcycle": {
-    "text": "'모터사이클'을 여행 모드로 사용하여 경로 계산"
+    "text": "'스쿠터'를 여행 모드로 사용하여 경로 계산"
   },
   "tooltip__calculate_route_truck": {
     "text": "'트럭'을 이동 모드로 사용하여 경로 계산"
@@ -3796,5 +3796,23 @@
   },
   "new_developer_resources_desc": {
     "text": "가이드 및 포럼"
+  },
+  "error_handler__failed_create_places_client": {
+    "text": "장소 클라이언트를 만들지 못했습니다."
+  },
+  "error_handler__failed_create_routes_client": {
+    "text": "라우트 클라이언트를 만들지 못했습니다."
+  },
+  "multiple_region_disclaimer": {
+    "text": "고지 사항: 사용자의 AWS 계정이 연결된 경우 지역 변경은 지도, 장소 및 경로에만 영향을 미칩니다."
+  },
+  "documentation": {
+    "text": "문서화"
+  },
+  "sample_applications": {
+    "text": "샘플 애플리케이션"
+  },
+  "description_demo": {
+    "text": "Amazon 위치 서비스의 기능을 보여주는 데모 앱"
   }
 }

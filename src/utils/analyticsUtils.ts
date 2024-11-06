@@ -73,7 +73,10 @@ const validateAndSetAnalyticsCreds = async (forceRefreshCreds = false) => {
 	}
 
 	if (!pinClient || isExpired || forceRefreshCreds) {
-		pinClient = new PinpointClient({ credentials: analyticsCreds, region });
+		pinClient = new PinpointClient({
+			credentials: { ...analyticsCreds, expiration: new Date(analyticsCreds.expiration) },
+			region
+		});
 	}
 };
 

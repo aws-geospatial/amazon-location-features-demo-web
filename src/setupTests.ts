@@ -27,7 +27,10 @@ if (typeof window?.matchMedia === "undefined") {
 }
 
 jest.mock("@demo/core/constants/appConfig", () => ({
-	POOLS: {
+	API_KEYS: {
+		"XX-XXXX-X": "v1.public.XXXXXXXXXXXXXXX"
+	},
+	IDENTITY_POOL_IDS: {
 		"XX-XXXX-X": "XX-XXXX-X:XXXXXXXX-XXXX-1234-abcd-1234567890ab"
 	},
 	WEB_SOCKET_URLS: {
@@ -83,65 +86,79 @@ jest.mock("@demo/core/constants/appConfig", () => ({
 		PRICING: "/pricing"
 	},
 	GET_PARAMS: {
-		DATA_PROVIDER: "dp",
 		NL_TOGGLE: "nl"
 	},
 	MAP_RESOURCES: {
 		IMPERIAL_COUNTRIES: ["US", "GB", "LR", "MM"],
-		GRAB_SUPPORTED_AWS_REGIONS: ["ap-southeast-1"],
 		AMAZON_HQ: {
-			US: { longitude: -122.3408586, latitude: 47.6149975 },
-			SG: { longitude: 103.8461793, latitude: 1.2840177 }
+			US: { longitude: -122.3408586, latitude: 47.6149975 }
 		},
 		MAX_BOUNDS: {
 			DEFAULT: [-210, -80, 290, 85],
-			GRAB: [90.0, -21.943045533438166, 146.25, 31.952162238024968],
 			VANCOUVER: [
 				[-123.185777, 49.258543], // southwest corner
 				[-123.061047, 49.303531] // northeast corner
 			]
 		},
-		MAP_STYLES: {
-			ESRI_STYLES: [
-				{ id: "location.aws.com.demo.maps.Esri.Light", image: "", name: "Light" },
-				{ id: "location.aws.com.demo.maps.Esri.Streets", image: "", name: "Streets" },
-				{ id: "location.aws.com.demo.maps.Esri.Navigation", image: "", name: "Navigation" },
-				{ id: "location.aws.com.demo.maps.Esri.DarkGrayCanvas", image: "", name: "Dark Gray" },
-				{ id: "location.aws.com.demo.maps.Esri.LightGrayCanvas", image: "", name: "Light Gray" },
-				{ id: "location.aws.com.demo.maps.Esri.Imagery", image: "", name: "Imagery" }
-			],
-			HERE_STYLES: [
-				{ id: "location.aws.com.demo.maps.HERE.Explore", image: "", name: "Explore" },
-				{ id: "location.aws.com.demo.maps.HERE.Contrast", image: "", name: "Contrast" },
-				{ id: "location.aws.com.demo.maps.HERE.ExploreTruck", image: "", name: "Explore Truck" },
-				{ id: "location.aws.com.demo.maps.HERE.Hybrid", image: "", name: "Hybrid" },
-				{ id: "location.aws.com.demo.maps.HERE.Imagery", image: "", name: "Imagery" }
-			],
-			GRAB_STYLES: [
-				{ id: "location.aws.com.demo.maps.Grab.StandardLight", image: "", name: "Light" },
-				{ id: "location.aws.com.demo.maps.Grab.StandardDark", image: "", name: "Dark" }
-			],
-			OPEN_DATA_STYLES: [
-				{
-					id: "location.aws.com.demo.maps.OpenData.StandardLight",
-					image: "OpenDataStandardLight",
-					name: "Light"
-				}
-			]
-		},
-		PLACE_INDEXES: {
-			ESRI: "location.aws.com.demo.places.Esri.PlaceIndex",
-			HERE: "location.aws.com.demo.places.HERE.PlaceIndex",
-			GRAB: "location.aws.com.demo.places.Grab.PlaceIndex"
-		},
-		ROUTE_CALCULATORS: {
-			ESRI: "location.aws.com.demo.routes.Esri.RouteCalculator",
-			HERE: "location.aws.com.demo.routes.HERE.RouteCalculator",
-			GRAB: "location.aws.com.demo.routes.Grab.RouteCalculator"
+		MAP_STYLES: [
+			{ id: "Standard", name: "Standard" },
+			{ id: "monochrome", name: "Monochrome" }
+		],
+		MAP_COLOR_SCHEMES: [
+			{ id: "light", name: "Light" },
+			{ id: "dark", name: "Dark" }
+		],
+		MAP_POLITICAL_VIEWS: {
+			ARG: "Argentina's view on the Southern Patagonian Ice Field and Tierra Del Fuego, including the Falkland Islands, South Georgia, and South Sandwich Islands",
+			EGY: "Egypt's view on Bir Tawil",
+			IND: "India's view on Gilgit-Baltistan",
+			KEN: "Kenya's view on the Ilemi Triangle",
+			MAR: "Morocco's view on Western Sahara",
+			RUS: "Russia's view on Crimea",
+			SDN: "Sudan's view on the Halaib Triangle",
+			SRB: "Serbia's view on Kosovo, Vukovar, and Sarengrad Islands",
+			SUR: "Suriname's view on the Courantyne Headwaters and Lawa Headwaters",
+			SYR: "Syria's view on the Golan Heights",
+			TUR: "Turkey's view on Cyprus and Northern Cyprus",
+			TZA: "Tanzania's view on Lake Malawi",
+			URY: "Uruguay's view on Rincon de Artigas",
+			VNM: "Vietnam's view on the Paracel Islands and Spratly Islands"
 		},
 		GEOFENCE_COLLECTION: "location.aws.com.demo.geofences.GeofenceCollection",
 		DEVICE_ID_WEB: "web_browser_device",
-		TRACKER: "location.aws.com.demo.trackers.Tracker"
+		TRACKER: "location.aws.com.demo.trackers.Tracker",
+		SEARCH_ROUTE_BOUND_OPTIONS: {
+			DESKTOP: {
+				padding: {
+					top: 200,
+					bottom: 200,
+					left: 450,
+					right: 200
+				},
+				speed: 5,
+				linear: true
+			},
+			TABLET: {
+				padding: {
+					top: 100,
+					bottom: 100,
+					left: 400,
+					right: 100
+				},
+				speed: 5,
+				linear: true
+			},
+			MOBILE: {
+				padding: {
+					top: 100,
+					bottom: 400,
+					left: 100,
+					right: 100
+				},
+				speed: 5,
+				linear: true
+			}
+		}
 	},
 	LINKS: {
 		AMAZON_LOCATION_GIT: "https://github.com/aws-geospatial",
@@ -261,16 +278,19 @@ jest.mock("@demo/core/constants/appConfig", () => ({
 		AWS_LOCATION_ROUTES_URL: "https://aws.amazon.com/location/routes/",
 		AWS_LOCATION_GENFENCE_AND_TRACKERS_URL: "https://aws.amazon.com/location/geofences-and-trackers/",
 		AWS_LOCATION_INDUSTRY_URL: "https://aws.amazon.com/location/industry/",
-		AWS_LOCATION_TRANSPORTATION_AND_LOGISTICS_URL: "https://aws.amazon.com/location/transportation-and-logistics/",
-		AWS_LOCATION_FINANCIAL_SERVICE_URL: "https://aws.amazon.com/location/financial-service/",
-		AWS_LOCATION_HEALTHCARE_URL: "https://aws.amazon.com/location/healthcare/",
-		AWS_LOCATION_RETAILS_URL: "https://aws.amazon.com/location/retails/",
-		AWS_LOCATION_TRAVEL_AND_HOSPITALITY_URL: "https://aws.amazon.com/location/travel-and-hospitality/",
+		AWS_LOCATION_TRANSPORTATION_AND_LOGISTICS_URL:
+			"https://aws.amazon.com/location/industry/transportation-and-logistics/",
+		AWS_LOCATION_FINANCIAL_SERVICE_URL: "https://aws.amazon.com/location/industry/financial-service/",
+		AWS_LOCATION_HEALTHCARE_URL: "https://aws.amazon.com/location/industry/healthcare/",
+		AWS_LOCATION_RETAILS_URL: "https://aws.amazon.com/location/industry/retail/",
+		AWS_LOCATION_TRAVEL_AND_HOSPITALITY_URL: "https://aws.amazon.com/location/industry/travel-and-hospitality/",
 		AWS_LOCATION_REAL_ESTATE_URL: "https://aws.amazon.com/location/real-estate/",
 		AWS_LOCATION_RESOURCES_URL: "https://aws.amazon.com/location/resources/",
 		AWS_LOCATION_CUSTOMERS_URL: "https://aws.amazon.com/location/resources/customers/",
 		AWS_LOCATION_PRODUCT_RESOURCES_URL: "https://aws.amazon.com/location/resources/product-resources/",
-		AWS_LOCATION_DEVELOPER_RESOURCES_URL: "https://aws.amazon.com/location/resources/developer-resources/"
+		AWS_LOCATION_DEVELOPER_RESOURCES_URL: "https://aws.amazon.com/location/resources/developer-resources/",
+		AMAZON_LOCATION_AUTH_SDK_IOS_URL: "https://github.com/aws-geospatial/amazon-location-mobile-auth-sdk-ios",
+		AMAZON_LOCATION_DOCUMENTATION_URL: "https://docs.aws.amazon.com/location/"
 	}
 }));
 

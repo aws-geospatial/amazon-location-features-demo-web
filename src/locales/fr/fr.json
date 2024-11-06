@@ -3315,13 +3315,13 @@
     "text": "Calculer l'itinéraire avec « Voiture » comme mode de déplacement"
   },
   "tooltip__calculate_route_walk": {
-    "text": "Calculer l'itinéraire avec « Marche » comme mode de déplacement"
+    "text": "Calculez l'itinéraire avec « Pedestrian » comme mode de déplacement"
   },
   "tooltip__calculate_route_bicycle": {
     "text": "Calculer l'itinéraire avec « Vélo » comme mode de déplacement"
   },
   "tooltip__calculate_route_motorcycle": {
-    "text": "Calculer l'itinéraire avec « Moto » comme mode de déplacement"
+    "text": "Calculez l'itinéraire avec « Scooter » comme mode de voyage"
   },
   "tooltip__calculate_route_truck": {
     "text": "Calculer l'itinéraire avec « Camion » comme mode de déplacement"
@@ -3702,7 +3702,7 @@
     "text": "Géofences et traceurs"
   },
   "industry": {
-    "text": "L'industrie"
+    "text": "Secteurs"
   },
   "transportation_and_logistics": {
     "text": "Transport et logistique"
@@ -3796,5 +3796,23 @@
   },
   "new_developer_resources_desc": {
     "text": "Guides et forums"
+  },
+  "error_handler__failed_create_places_client": {
+    "text": "Impossible de créer le client Places"
+  },
+  "error_handler__failed_create_routes_client": {
+    "text": "Impossible de créer le client d'itinéraires"
+  },
+  "multiple_region_disclaimer": {
+    "text": "Avertissement : lorsque le compte AWS de l'utilisateur est connecté, le changement de région n'affectera que les cartes, les lieux et les itinéraires."
+  },
+  "documentation": {
+    "text": "Documentation"
+  },
+  "sample_applications": {
+    "text": "Exemples d'applications"
+  },
+  "description_demo": {
+    "text": "Application de démonstration présentant les fonctionnalités d'Amazon Location Service"
   }
 }

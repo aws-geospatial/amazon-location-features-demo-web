@@ -3318,13 +3318,13 @@
     "text": "Calculate route with 'Car' as travel mode"
   },
   "tooltip__calculate_route_walk": {
-    "text": "Calculate route with 'Walking' as travel mode"
+    "text": "Calculate route with 'Pedestrian' as travel mode"
   },
   "tooltip__calculate_route_bicycle": {
     "text": "Calculate route with 'Bicycle' as travel mode"
   },
   "tooltip__calculate_route_motorcycle": {
-    "text": "Calculate route with 'Motorcycle' as travel mode"
+    "text": "Calculate route with 'Scooter' as travel mode"
   },
   "tooltip__calculate_route_truck": {
     "text": "Calculate route with 'Truck' as travel mode"
@@ -3702,7 +3702,7 @@
     "text": "Geofences and Trackers"
   },
   "industry": {
-    "text": "Industry"
+    "text": "Industries"
   },
   "transportation_and_logistics": {
     "text": "Transportation and Logistics"
@@ -3796,5 +3796,23 @@
   },
   "new_developer_resources_desc": {
     "text": "Guides and forums"
+  },
+  "error_handler__failed_create_places_client": {
+    "text": "Failed to create places client"
+  },
+  "error_handler__failed_create_routes_client": {
+    "text": "Failed to create routes client"
+  },
+  "multiple_region_disclaimer": {
+    "text": "Disclaimer: when user's AWS account is connected, changing the region will only affect Maps, Places and Routes."
+  },
+  "documentation": {
+    "text": "Documentation"
+  },
+  "sample_applications": {
+    "text": "Sample Applications"
+  },
+  "description_demo": {
+    "text": "Demo app showcasing the capabilities of Amazon Location Service"
   }
 }

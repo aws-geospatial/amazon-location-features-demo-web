@@ -3315,13 +3315,13 @@
     "text": "احسب المسار باستخدام «السيارة» كوضع سفر"
   },
   "tooltip__calculate_route_walk": {
-    "text": "احسب المسار باستخدام «المشي» كوضع سفر"
+    "text": "احسب المسار باستخدام «المشاة» كوضع سفر"
   },
   "tooltip__calculate_route_bicycle": {
     "text": "احسب المسار باستخدام «الدراجة» كوضع سفر"
   },
   "tooltip__calculate_route_motorcycle": {
-    "text": "احسب المسار باستخدام «دراجة نارية» كوضع سفر"
+    "text": "احسب المسار باستخدام «Scooter» كوضع سفر"
   },
   "tooltip__calculate_route_truck": {
     "text": "احسب المسار باستخدام «الشاحنة» كوضع سفر"
@@ -3702,7 +3702,7 @@
     "text": "المواقع الجغرافية وأجهزة التتبع"
   },
   "industry": {
-    "text": "الصناعة"
+    "text": "الصناعات"
   },
   "transportation_and_logistics": {
     "text": "النقل والخدمات اللوجستية"
@@ -3796,5 +3796,23 @@
   },
   "new_developer_resources_desc": {
     "text": "أدلة ومنتديات"
+  },
+  "error_handler__failed_create_places_client": {
+    "text": "فشل إنشاء عميل الأماكن"
+  },
+  "error_handler__failed_create_routes_client": {
+    "text": "فشل إنشاء عميل المسارات"
+  },
+  "multiple_region_disclaimer": {
+    "text": "إخلاء المسؤولية: عندما يكون حساب AWS الخاص بالمستخدم متصلاً، فإن تغيير المنطقة سيؤثر فقط على الخرائط والأماكن والمسارات."
+  },
+  "documentation": {
+    "text": "التوثيق"
+  },
+  "sample_applications": {
+    "text": "تطبيقات العينة"
+  },
+  "description_demo": {
+    "text": "تطبيق تجريبي يعرض إمكانيات خدمة Amazon Location"
   }
 }
