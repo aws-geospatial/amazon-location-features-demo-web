@@ -42,7 +42,8 @@ const usePlaceService = () => {
 			getPlaceById: async (PlaceId: string) => {
 				const input: GetPlaceCommandInput = {
 					PlaceId,
-					Language
+					Language,
+					AdditionalFeatures: ["Contact"]
 				};
 				const command = new GetPlaceCommand(input);
 				return await placesClient?.send(command);
