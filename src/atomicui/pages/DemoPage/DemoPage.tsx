@@ -537,6 +537,7 @@ const DemoPage: FC = () => {
 							setSearchBoxValue={setSearchBoxValue}
 							onOpenFeedbackModal={() => setShow(s => ({ ...s, openFeedbackModal: true }))}
 							geolocateControlRef={geolocateControlRef}
+							setShowUnauthSimulationBounds={b => setShow(s => ({ ...s, unauthSimulationBounds: b }))}
 						/>
 					)}
 					{isDesktop && (
@@ -621,10 +622,6 @@ const DemoPage: FC = () => {
 						unauthGeofenceBox: false,
 						unauthTrackerBox: false
 					}));
-					// setTimeout(() => {
-					// 	handleGrabMapChange(tempMapStyle as GrabMapEnum);
-					// 	window.location.reload();
-					// }, 0);
 				}}
 				cancelationText={t("start_unauth_simulation__stay_in_simulation.text")}
 			/>
