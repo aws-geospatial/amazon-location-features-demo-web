@@ -84,6 +84,7 @@ interface IProps {
 	isExpandRouteOptionsMobile: boolean;
 	setExpandRouteOptionsMobile: (b: boolean) => void;
 	setSearchBoxValue: Dispatch<SetStateAction<string>>;
+	setShowUnauthSimulationBounds: (b: boolean) => void;
 }
 
 const ResponsiveBottomSheet: FC<IProps> = ({
@@ -124,7 +125,8 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	setShowRouteBox,
 	isExpandRouteOptionsMobile,
 	setExpandRouteOptionsMobile,
-	setSearchBoxValue
+	setSearchBoxValue,
+	setShowUnauthSimulationBounds
 }) => {
 	const { isDesktop, isMobile, isTablet, isMax556, isDesktopBrowser } = useDeviceMediaQuery();
 	const { unauthNotifications, isAddingGeofence } = useGeofence();
@@ -542,17 +544,21 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	const footerHeight = useCallback((maxHeight: number) => calculatePixelValue(maxHeight, 50), [calculatePixelValue]);
 
 	const onCloseHandler = useCallback(() => {
+		setShowUnauthSimulationBounds(false);
 		setShowStartUnauthSimulation(false);
 		from === MenuItemEnum.GEOFENCE ? setShowUnauthGeofenceBox(false) : setShowUnauthTrackerBox(false);
 		setConfirmCloseSimulation(false);
 		resetToExplore();
+		geolocateControlRef.current?.trigger();
 	}, [
-		from,
-		resetToExplore,
-		setConfirmCloseSimulation,
+		setShowUnauthSimulationBounds,
 		setShowStartUnauthSimulation,
+		from,
 		setShowUnauthGeofenceBox,
-		setShowUnauthTrackerBox
+		setShowUnauthTrackerBox,
+		setConfirmCloseSimulation,
+		resetToExplore,
+		geolocateControlRef
 	]);
 
 	const ExitSimulation = () => (
