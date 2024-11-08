@@ -129,18 +129,7 @@
 
 	.maps-container {
 		height: 35rem;
-		overflow-y: scroll;
-		overflow-x: hidden;
 		-webkit-overflow-scrolling: touch;
-
-		.clear-filters-button {
-			color: var(--primary-color);
-			font-weight: 600;
-
-			&:hover {
-				color: var(--primary-contrast-color);
-			}
-		}
 	}
 
 	.amplify-divider.amplify-divider--horizontal.mb-divider {
@@ -214,6 +203,6 @@
 	}
 
 	@media only screen and (max-width: 480px) {
-		right: 4.46rem;
+		height: 100vh;
 	}
 }

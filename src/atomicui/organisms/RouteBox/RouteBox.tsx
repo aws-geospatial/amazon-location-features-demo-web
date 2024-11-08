@@ -356,9 +356,8 @@ const RouteBox: FC<RouteBoxProps> = ({
 
 	const handleSearch = useCallback(
 		async (value: string, exact = false, type: InputType, action: string, isQueryId = false) => {
-			setIsSearching(true);
-
 			if (value.length >= 3) {
+				setIsSearching(true);
 				const { lng: longitude, lat: latitude } = mapRef.current?.getCenter() as LngLat;
 
 				if (timeoutIdRef.current) {
@@ -380,9 +379,9 @@ const RouteBox: FC<RouteBoxProps> = ({
 						false,
 						isQueryId
 					);
+					setIsSearching(false);
 				}, 200);
 			}
-			setIsSearching(false);
 		},
 		[mapRef, search, suggestions]
 	);
@@ -549,7 +548,11 @@ const RouteBox: FC<RouteBoxProps> = ({
 		() => (
 			<View
 				className={
-					inputFocused.from || inputFocused.to || !!routeData
+					((inputFocused.from || inputFocused.to) && !isCurrentLocationSelected) ||
+					!!suggestions.from?.length ||
+					!!suggestions.to?.length ||
+					isSearching ||
+					!!routeData
 						? "route-options-container"
 						: "route-options-container bottom-border-radius"
 				}
@@ -569,7 +572,18 @@ const RouteBox: FC<RouteBoxProps> = ({
 				{expandRouteOptions && <MoreOptionsUI />}
 			</View>
 		),
-		[inputFocused.from, inputFocused.to, routeData, expandRouteOptions, onClickRouteOptions, t, MoreOptionsUI]
+		[
+			inputFocused,
+			isCurrentLocationSelected,
+			suggestions.from?.length,
+			suggestions.to?.length,
+			isSearching,
+			routeData,
+			expandRouteOptions,
+			onClickRouteOptions,
+			t,
+			MoreOptionsUI
+		]
 	);
 
 	const onSelectCurrentLocation = (type: InputType) => {
@@ -1057,17 +1071,16 @@ const RouteBox: FC<RouteBoxProps> = ({
 									<Text>{t("route_box__current_location.text")}</Text>
 								</View>
 							)}
-
 						{!!suggestions.from?.length
 							? renderSuggestions(suggestions.from, InputType.FROM)
-							: !isSearching &&
+							: isSearching &&
 							  value.from?.length > 2 &&
 							  value.from !== t("route_box__my_location.text") &&
 							  !placeData.from &&
 							  inputFocused.from && <NotFoundCard />}
 						{!!suggestions.to?.length
 							? renderSuggestions(suggestions.to, InputType.TO)
-							: !isSearching &&
+							: isSearching &&
 							  value.to?.length > 2 &&
 							  value.to !== t("route_box__my_location.text") &&
 							  !placeData.to &&
