@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { EsriLightGray, HereExplore, HereHybrid, HereImagery } from "@demo/assets/pngs";
+import { Hybrid, Monochrome, Satellite, Standard } from "@demo/assets/pngs";
 import { MapColorSchemeEnum, MapStyleEnum } from "@demo/types/Enums";
 
 const getEnv = (key: string) => {
@@ -111,10 +111,10 @@ const appConfig = {
 			}
 		},
 		MAP_STYLES: [
-			{ id: MapStyleEnum.STANDARD.toLowerCase(), name: MapStyleEnum.STANDARD, image: HereExplore },
-			{ id: MapStyleEnum.MONOCHROME.toLowerCase(), name: MapStyleEnum.MONOCHROME, image: EsriLightGray },
-			{ id: MapStyleEnum.HYBRID.toLowerCase(), name: MapStyleEnum.HYBRID, image: HereHybrid },
-			{ id: MapStyleEnum.SATELLITE.toLowerCase(), name: MapStyleEnum.SATELLITE, image: HereImagery }
+			{ id: MapStyleEnum.STANDARD.toLowerCase(), name: MapStyleEnum.STANDARD, image: Standard },
+			{ id: MapStyleEnum.MONOCHROME.toLowerCase(), name: MapStyleEnum.MONOCHROME, image: Monochrome },
+			{ id: MapStyleEnum.HYBRID.toLowerCase(), name: MapStyleEnum.HYBRID, image: Hybrid },
+			{ id: MapStyleEnum.SATELLITE.toLowerCase(), name: MapStyleEnum.SATELLITE, image: Satellite }
 		],
 		MAP_COLOR_SCHEMES: [
 			{ id: MapColorSchemeEnum.LIGHT.toLowerCase(), name: MapColorSchemeEnum.LIGHT },
