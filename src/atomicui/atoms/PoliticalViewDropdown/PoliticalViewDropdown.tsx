@@ -3,6 +3,7 @@ import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { Flex, Text } from "@aws-amplify/ui-react";
 import { IconArrow } from "@demo/assets/svgs";
 import { SelectOption } from "@demo/types";
+import { getFlagEmoji } from "@demo/utils";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
 
@@ -88,9 +89,14 @@ const PoliticalViewDropdown: FC<PoliticalViewDropdownProps> = ({
 							onClick={() => handleClick(option)}
 						>
 							<Flex gap={0} direction="column" padding="0.46rem 1.23rem">
-								<Text className="bold small-text" color="var(--tertiary-color)">
-									{t(option.label).split("-")[0]}
-								</Text>
+								<Flex gap={0}>
+									<Flex gap={0} justifyContent="center" margin="0.07rem 0.3rem 0 0">
+										{getFlagEmoji(option.value)}
+									</Flex>
+									<Text className="bold small-text" color="var(--tertiary-color)">
+										{t(option.label).split("-")[0]}
+									</Text>
+								</Flex>
 								<Text className="regular small-text" color="var(--grey-color-9)">
 									{t(option.label).split("-")[1]}
 								</Text>
