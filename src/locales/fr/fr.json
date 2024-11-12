@@ -3814,5 +3814,53 @@
   },
   "description_demo": {
     "text": "Application de démonstration présentant les fonctionnalités d'Amazon Location Service"
+  },
+  "no_political_view": {
+    "text": "Aucune opinion politique"
+  },
+  "argentina_political_view_desc": {
+    "text": "Vue de l'Argentine sur le champ de glace du sud de la Patagonie et la Terre de Feu, y compris les îles Malouines, la Géorgie du Sud et les îles Sandwich du Sud"
+  },
+  "egypt_political_view_desc": {
+    "text": "Le point de vue de l'Égypte sur Bir Tawil"
+  },
+  "india_political_view_desc": {
+    "text": "Le point de vue de l'Inde sur le Gilgit-Baltistan"
+  },
+  "kenya_political_view_desc": {
+    "text": "Le point de vue du Kenya sur le triangle d'Ilemi"
+  },
+  "morocco_political_view_desc": {
+    "text": "Le point de vue du Maroc sur le Sahara occidental"
+  },
+  "russia_political_view_desc": {
+    "text": "Le point de vue de la Russie sur la Crimée"
+  },
+  "sudan_political_view_desc": {
+    "text": "Le point de vue du Soudan sur le triangle de Halaib"
+  },
+  "serbia_political_view_desc": {
+    "text": "Le point de vue de la Serbie sur les îles du Kosovo, de Vukovar et de Sarengrad"
+  },
+  "suriname_political_view_desc": {
+    "text": "Le point de vue du Suriname sur les sources de Courantyne et de Lawa"
+  },
+  "syria_political_view_desc": {
+    "text": "Le point de vue de la Syrie sur le plateau du Golan"
+  },
+  "turkey_political_view_desc": {
+    "text": "Le point de vue de la Turquie sur Chypre et le nord de Chypre"
+  },
+  "tanzania_political_view_desc": {
+    "text": "Le point de vue de la Tanzanie sur le lac Malawi"
+  },
+  "uruguay_political_view_desc": {
+    "text": "Le point de vue de l'Uruguay sur Rincon de Artigas"
+  },
+  "vietnam_political_view_desc": {
+    "text": "Vue du Vietnam sur les îles Paracel et les îles Spratly"
+  },
+  "political_view_satellite_disclaimer": {
+    "text": "Non disponible en vue satellite"
   }
 }

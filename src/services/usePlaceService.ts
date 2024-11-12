@@ -23,7 +23,7 @@ const {
 
 const usePlaceService = () => {
 	const { placesClient } = useClient();
-	const { viewpoint } = useMap();
+	const { viewpoint, mapPoliticalView } = useMap();
 	const { i18n } = useTranslation();
 	const Language = i18n.language;
 
@@ -34,7 +34,8 @@ const usePlaceService = () => {
 					QueryText,
 					BiasPosition: [viewpoint?.longitude as number, viewpoint?.latitude as number],
 					Language,
-					AdditionalFeatures: ["Core"]
+					AdditionalFeatures: ["Core"],
+					PoliticalView: mapPoliticalView.alpha3 || undefined
 				};
 				const command = new SuggestCommand(input);
 				return await placesClient?.send(command);
@@ -43,7 +44,8 @@ const usePlaceService = () => {
 				const input: GetPlaceCommandInput = {
 					PlaceId,
 					Language,
-					AdditionalFeatures: ["Contact"]
+					AdditionalFeatures: ["Contact"],
+					PoliticalView: mapPoliticalView.alpha3 || undefined
 				};
 				const command = new GetPlaceCommand(input);
 				return await placesClient?.send(command);
@@ -53,7 +55,8 @@ const usePlaceService = () => {
 					QueryText: isQueryId ? undefined : QueryTextOrId,
 					QueryId: isQueryId ? QueryTextOrId : undefined,
 					BiasPosition: isQueryId ? undefined : [viewpoint?.longitude as number, viewpoint?.latitude as number],
-					Language: isQueryId ? undefined : Language
+					Language: isQueryId ? undefined : Language,
+					PoliticalView: mapPoliticalView.alpha3 || undefined
 				};
 				const command = new SearchTextCommand(input);
 				return await placesClient?.send(command);
@@ -61,7 +64,8 @@ const usePlaceService = () => {
 			getPlaceByCoordinates: async (QueryPosition: number[]) => {
 				const input: ReverseGeocodeCommandInput = {
 					QueryPosition,
-					Language
+					Language,
+					PoliticalView: mapPoliticalView.alpha3 || undefined
 				};
 				const command = new ReverseGeocodeCommand(input);
 				return await placesClient?.send(command);
@@ -90,7 +94,7 @@ const usePlaceService = () => {
 				return responseBody;
 			}
 		}),
-		[viewpoint, Language, placesClient]
+		[viewpoint, Language, mapPoliticalView, placesClient]
 	);
 };
 

@@ -3814,5 +3814,53 @@
   },
   "description_demo": {
     "text": "Amazon Location Service की क्षमताओं को प्रदर्शित करने वाला डेमो ऐप"
+  },
+  "no_political_view": {
+    "text": "कोई राजनैतिक दृष्टिकोण नहीं"
+  },
+  "argentina_political_view_desc": {
+    "text": "दक्षिणी पैटागोनियन आइस फ़ील्ड और टिएरा डेल फ़्यूगो पर अर्जेंटीना का नज़रिया, जिसमें फ़ॉकलैंड द्वीप समूह, दक्षिण जॉर्जिया और दक्षिण सैंडविच द्वीप समूह शामिल हैं"
+  },
+  "egypt_political_view_desc": {
+    "text": "बीर तवील पर मिस्र का नज़रिया"
+  },
+  "india_political_view_desc": {
+    "text": "गिलगित-बाल्टिस्तान पर भारत का नज़रिया"
+  },
+  "kenya_political_view_desc": {
+    "text": "इलेमी ट्रायंगल पर केन्या का नजरिया"
+  },
+  "morocco_political_view_desc": {
+    "text": "पश्चिमी सहारा पर मोरक्को का नज़रिया"
+  },
+  "russia_political_view_desc": {
+    "text": "क्रीमिया पर रूस का नजरिया"
+  },
+  "sudan_political_view_desc": {
+    "text": "हलाइब ट्रायंगल पर सूडान का नज़रिया"
+  },
+  "serbia_political_view_desc": {
+    "text": "कोसोवो, वुकोवर और सारेन्ग्रैड द्वीप समूह पर सर्बिया का नज़रिया"
+  },
+  "suriname_political_view_desc": {
+    "text": "कूरंटाइन हेडवाटर्स और लावा हेडवाटर्स पर सूरीनाम का नजरिया"
+  },
+  "syria_political_view_desc": {
+    "text": "गोलान हाइट्स पर सीरिया का नज़रिया"
+  },
+  "turkey_political_view_desc": {
+    "text": "साइप्रस और उत्तरी साइप्रस पर तुर्की का नजरिया"
+  },
+  "tanzania_political_view_desc": {
+    "text": "मलावी झील पर तंजानिया का नज़ारा"
+  },
+  "uruguay_political_view_desc": {
+    "text": "रिनकॉन डी आर्टिगास पर उरुग्वे का नजरिया"
+  },
+  "vietnam_political_view_desc": {
+    "text": "पैरासेल द्वीप और स्प्रैटली द्वीप समूह पर वियतनाम का नजरिया"
+  },
+  "political_view_satellite_disclaimer": {
+    "text": "सैटेलाइट दृश्य में उपलब्ध नहीं"
   }
 }

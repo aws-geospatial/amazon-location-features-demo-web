@@ -49,13 +49,12 @@ const useMap = () => {
 			setMapColorScheme: (mapColorScheme: MapColorSchemeEnum) => {
 				setState({ mapColorScheme });
 			},
-			setMapPoliticalView: (mapPoliticalView?: string) => {
+			setMapPoliticalView: (mapPoliticalView: { alpha2: string; alpha3: string; desc: string }) => {
 				setState({ mapPoliticalView });
 			},
 			resetStore() {
 				setState({
-					currentLocationData: undefined,
-					mapPoliticalView: undefined
+					currentLocationData: undefined
 				});
 				setInitial();
 			}

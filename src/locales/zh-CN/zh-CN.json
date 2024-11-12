@@ -3810,5 +3810,53 @@
   },
   "description_demo": {
     "text": "演示应用程序展示了亚马逊定位服务的功能"
+  },
+  "no_political_view": {
+    "text": "没有政治观点"
+  },
+  "argentina_political_view_desc": {
+    "text": "阿根廷对南巴塔哥尼亚冰原和火地岛，包括福克兰群岛、南乔治亚岛和南桑威奇群岛的看法"
+  },
+  "egypt_political_view_desc": {
+    "text": "埃及对比尔塔维尔的看法"
+  },
+  "india_political_view_desc": {
+    "text": "印度对吉尔吉特-巴尔蒂斯坦的看法"
+  },
+  "kenya_political_view_desc": {
+    "text": "肯尼亚对伊莱米三角的看法"
+  },
+  "morocco_political_view_desc": {
+    "text": "摩洛哥对西撒哈拉的看法"
+  },
+  "russia_political_view_desc": {
+    "text": "俄罗斯对克里米亚的看法"
+  },
+  "sudan_political_view_desc": {
+    "text": "苏丹对哈莱布三角的看法"
+  },
+  "serbia_political_view_desc": {
+    "text": "塞尔维亚对科索沃、武科瓦尔和萨伦格勒岛的看法"
+  },
+  "suriname_political_view_desc": {
+    "text": "苏里南对库兰坦源头和拉瓦源头的看法"
+  },
+  "syria_political_view_desc": {
+    "text": "叙利亚对戈兰高地的看法"
+  },
+  "turkey_political_view_desc": {
+    "text": "土耳其对塞浦路斯和北塞浦路斯的看法"
+  },
+  "tanzania_political_view_desc": {
+    "text": "坦桑尼亚对马拉维湖的看法"
+  },
+  "uruguay_political_view_desc": {
+    "text": "乌拉圭对林孔·德·阿蒂加斯的看法"
+  },
+  "vietnam_political_view_desc": {
+    "text": "越南对西沙群岛和南沙群岛的看法"
+  },
+  "political_view_satellite_disclaimer": {
+    "text": "在卫星视图中不可用"
   }
 }

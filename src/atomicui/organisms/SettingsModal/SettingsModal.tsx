@@ -707,7 +707,8 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 	const modalCloseHandler = useCallback(() => {
 		!isMobile && setSettingsOptions(SettingOptionEnum.UNITS);
 		onClose();
-	}, [isMobile, setSettingsOptions, onClose]);
+		!isDesktop && window.location.reload();
+	}, [isMobile, setSettingsOptions, onClose, isDesktop]);
 
 	return (
 		<Modal

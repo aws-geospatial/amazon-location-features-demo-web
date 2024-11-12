@@ -3814,5 +3814,53 @@
   },
   "description_demo": {
     "text": "Amazon 위치 서비스의 기능을 보여주는 데모 앱"
+  },
+  "no_political_view": {
+    "text": "정치적 견해 없음"
+  },
+  "argentina_political_view_desc": {
+    "text": "포클랜드 제도, 사우스조지아, 사우스샌드위치 제도를 포함한 남부 파타고니아 빙원과 티에라 델 푸에고에 대한 아르헨티나의 견해"
+  },
+  "egypt_political_view_desc": {
+    "text": "비르 타윌에 대한 이집트의 견해"
+  },
+  "india_political_view_desc": {
+    "text": "길기트-발티스탄에 대한 인도의 견해"
+  },
+  "kenya_political_view_desc": {
+    "text": "일레미 삼각지대에 대한 케냐의 견해"
+  },
+  "morocco_political_view_desc": {
+    "text": "서사하라에 대한 모로코의 견해"
+  },
+  "russia_political_view_desc": {
+    "text": "크리미아에 대한 러시아의 견해"
+  },
+  "sudan_political_view_desc": {
+    "text": "할라비 삼각지대에 대한 수단의 견해"
+  },
+  "serbia_political_view_desc": {
+    "text": "코소보, 부코바르, 사렌그라드 제도에 대한 세르비아의 견해"
+  },
+  "suriname_political_view_desc": {
+    "text": "쿠란타인 상류와 라와 상류에 대한 수리남의 전망"
+  },
+  "syria_political_view_desc": {
+    "text": "골란 고원에 대한 시리아의 견해"
+  },
+  "turkey_political_view_desc": {
+    "text": "키프로스와 북키프로스에 대한 터키의 견해"
+  },
+  "tanzania_political_view_desc": {
+    "text": "말라위 호수에서 바라본 탄자니아의 전망"
+  },
+  "uruguay_political_view_desc": {
+    "text": "린콘 데 아르티가스에 대한 우루과이의 견해"
+  },
+  "vietnam_political_view_desc": {
+    "text": "파라셀 제도와 스프래틀리 제도에 대한 베트남의 견해"
+  },
+  "political_view_satellite_disclaimer": {
+    "text": "위성 보기에서는 사용할 수 없습니다."
   }
 }
