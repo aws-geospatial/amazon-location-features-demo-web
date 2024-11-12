@@ -3814,5 +3814,53 @@
   },
   "description_demo": {
     "text": "Aplicación de demostración que muestra las capacidades de Amazon Location Service"
+  },
+  "no_political_view": {
+    "text": "Sin visión política"
+  },
+  "argentina_political_view_desc": {
+    "text": "La opinión de Argentina sobre el campo de hielo patagónico sur y Tierra del Fuego, incluidas las Islas Malvinas, Georgias del Sur y Sandwich del Sur"
+  },
+  "egypt_political_view_desc": {
+    "text": "La opinión de Egipto sobre Bir Tawil"
+  },
+  "india_political_view_desc": {
+    "text": "La opinión de la India sobre Gilgit-Baltistán"
+  },
+  "kenya_political_view_desc": {
+    "text": "La visión de Kenia sobre el triángulo de Ilemi"
+  },
+  "morocco_political_view_desc": {
+    "text": "La opinión de Marruecos sobre el Sáhara Occidental"
+  },
+  "russia_political_view_desc": {
+    "text": "La opinión de Rusia sobre Crimea"
+  },
+  "sudan_political_view_desc": {
+    "text": "La opinión de Sudán sobre el triángulo de Halaib"
+  },
+  "serbia_political_view_desc": {
+    "text": "La opinión de Serbia sobre las islas de Kosovo, Vukovar y Sarengrad"
+  },
+  "suriname_political_view_desc": {
+    "text": "La opinión de Suriname sobre las cabeceras de Courantyne y Lawa"
+  },
+  "syria_political_view_desc": {
+    "text": "La visión de Siria sobre los Altos del Golán"
+  },
+  "turkey_political_view_desc": {
+    "text": "La opinión de Turquía sobre Chipre y el norte de Chipre"
+  },
+  "tanzania_political_view_desc": {
+    "text": "Vista de Tanzania sobre el lago Malawi"
+  },
+  "uruguay_political_view_desc": {
+    "text": "La opinión de Uruguay sobre Rincón de Artigas"
+  },
+  "vietnam_political_view_desc": {
+    "text": "La opinión de Vietnam sobre las islas Paracel y Spratly"
+  },
+  "political_view_satellite_disclaimer": {
+    "text": "No disponible en vista de satélite"
   }
 }

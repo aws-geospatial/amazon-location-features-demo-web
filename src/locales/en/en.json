@@ -3814,5 +3814,53 @@
   },
   "description_demo": {
     "text": "Demo app showcasing the capabilities of Amazon Location Service"
+  },
+  "no_political_view": {
+    "text": "No political view"
+  },
+  "argentina_political_view_desc": {
+    "text": "Argentina's view on the Southern Patagonian Ice Field and Tierra Del Fuego, including the Falkland Islands, South Georgia, and South Sandwich Islands"
+  },
+  "egypt_political_view_desc": {
+    "text": "Egypt's view on Bir Tawil"
+  },
+  "india_political_view_desc": {
+    "text": "India's view on Gilgit-Baltistan"
+  },
+  "kenya_political_view_desc": {
+    "text": "Kenya's view on the Ilemi Triangle"
+  },
+  "morocco_political_view_desc": {
+    "text": "Morocco's view on Western Sahara"
+  },
+  "russia_political_view_desc": {
+    "text": "Russia's view on Crimea"
+  },
+  "sudan_political_view_desc": {
+    "text": "Sudan's view on the Halaib Triangle"
+  },
+  "serbia_political_view_desc": {
+    "text": "Serbia's view on Kosovo, Vukovar, and Sarengrad Islands"
+  },
+  "suriname_political_view_desc": {
+    "text": "Suriname's view on the Courantyne Headwaters and Lawa Headwaters"
+  },
+  "syria_political_view_desc": {
+    "text": "Syria's view on the Golan Heights"
+  },
+  "turkey_political_view_desc": {
+    "text": "Turkey's view on Cyprus and Northern Cyprus"
+  },
+  "tanzania_political_view_desc": {
+    "text": "Tanzania's view on Lake Malawi"
+  },
+  "uruguay_political_view_desc": {
+    "text": "Uruguay's view on Rincon de Artigas"
+  },
+  "vietnam_political_view_desc": {
+    "text": "Vietnam's view on the Paracel Islands and Spratly Islands"
+  },
+  "political_view_satellite_disclaimer": {
+    "text": "Not available in Satellite view"
   }
 }

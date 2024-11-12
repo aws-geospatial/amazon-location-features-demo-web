@@ -461,16 +461,16 @@ const SearchBox: FC<SearchBoxProps> = ({
 		(e: FormEvent<HTMLFormElement>) => {
 			e.preventDefault();
 			handleSearch(value, true, AnalyticsEventActionsEnum.ENTER_BUTTON);
-			console.log({ options });
+
 			if (!!options?.length) {
-				// setTimeout(() => {
-				// 	setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
-				// 	setBottomSheetHeight(window.innerHeight * 0.4);
-				// }, 200);
-				// searchInputRef?.current?.blur();
+				setTimeout(() => {
+					setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+					setBottomSheetHeight(window.innerHeight * 0.4);
+				}, 200);
+				searchInputRef?.current?.blur();
 			}
 		},
-		[handleSearch, options, value]
+		[handleSearch, options, setBottomSheetHeight, setBottomSheetMinHeight, value]
 	);
 
 	return (

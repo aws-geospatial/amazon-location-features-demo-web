@@ -3814,5 +3814,53 @@
   },
   "description_demo": {
     "text": "Demo-App, die die Funktionen von Amazon Location Service präsentiert"
+  },
+  "no_political_view": {
+    "text": "Keine politische Sichtweise"
+  },
+  "argentina_political_view_desc": {
+    "text": "Argentiniens Blick auf das südpatagonische Eisfeld und Feuerland, einschließlich der Falklandinseln, Südgeorgien und der Südlichen Sandwichinseln"
+  },
+  "egypt_political_view_desc": {
+    "text": "Ägyptens Blick auf Bir Tawil"
+  },
+  "india_political_view_desc": {
+    "text": "Indiens Sicht auf Gilgit-Baltistan"
+  },
+  "kenya_political_view_desc": {
+    "text": "Kenias Blick auf das Ilemi-Dreieck"
+  },
+  "morocco_political_view_desc": {
+    "text": "Marokkos Sicht auf die Westsahara"
+  },
+  "russia_political_view_desc": {
+    "text": "Russlands Sicht auf die Krim"
+  },
+  "sudan_political_view_desc": {
+    "text": "Der Blick des Sudan auf das Halaib-Dreieck"
+  },
+  "serbia_political_view_desc": {
+    "text": "Serbiens Sicht auf die Inseln Kosovo, Vukovar und Sarengrad"
+  },
+  "suriname_political_view_desc": {
+    "text": "Surinames Blick auf die Courantyne Headwaters und Lawa Headwaters"
+  },
+  "syria_political_view_desc": {
+    "text": "Syriens Blick auf die Golanhöhen"
+  },
+  "turkey_political_view_desc": {
+    "text": "Die Sicht der Türkei auf Zypern und Nordzypern"
+  },
+  "tanzania_political_view_desc": {
+    "text": "Tansanias Blick auf den Malawisee"
+  },
+  "uruguay_political_view_desc": {
+    "text": "Uruguays Blick auf Rincon de Artigas"
+  },
+  "vietnam_political_view_desc": {
+    "text": "Vietnams Blick auf die Paracel- und Spratly-Inseln"
+  },
+  "political_view_satellite_disclaimer": {
+    "text": "In der Satellitenansicht nicht verfügbar"
   }
 }
