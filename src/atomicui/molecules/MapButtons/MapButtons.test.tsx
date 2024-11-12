@@ -46,7 +46,12 @@ const mockUseAuthData = {
 
 const mockUseMapData = {
 	mapStyle: MapStyleEnum.STANDARD,
-	setMapStyle: jest.fn()
+	setMapStyle: jest.fn(),
+	mapPoliticalView: {
+		alpha2: "",
+		alpha3: "",
+		desc: faker.random.word()
+	}
 };
 
 const mockUseGeofenceData = {

@@ -386,7 +386,7 @@ const DemoPage: FC = () => {
 				}
 				mapStyle={`https://maps.geo.${apiKeyRegion}.amazonaws.com/v2/styles/${mapStyle}/descriptor?key=${apiKey}${
 					!isColorSchemeDisabled ? `&color-scheme=${mapColorScheme}` : ""
-				}${!!mapPoliticalView ? `&political-view=${mapPoliticalView}` : ""}`}
+				}${!!mapPoliticalView?.alpha3 ? `&political-view=${mapPoliticalView.alpha3}` : ""}`}
 				minZoom={2}
 				maxBounds={
 					(show.unauthGeofenceBox || show.unauthTrackerBox) && show.unauthSimulationBounds

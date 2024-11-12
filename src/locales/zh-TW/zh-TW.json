@@ -3814,5 +3814,53 @@
   },
   "description_demo": {
     "text": "展示亞馬遜定位服務功能的演示應用程序"
+  },
+  "no_political_view": {
+    "text": "沒有政治觀點"
+  },
+  "argentina_political_view_desc": {
+    "text": "阿根廷對南巴塔哥尼亞冰場和火地的觀點，包括福克蘭群島、南喬治亞群島和南桑威奇群島"
+  },
+  "egypt_political_view_desc": {
+    "text": "埃及對比爾塔維爾的看法"
+  },
+  "india_political_view_desc": {
+    "text": "印度對吉爾吉特-巴爾蒂斯坦的看法"
+  },
+  "kenya_political_view_desc": {
+    "text": "肯尼亞對伊萊米三角形的觀點"
+  },
+  "morocco_political_view_desc": {
+    "text": "摩洛哥對西撒哈拉的看法"
+  },
+  "russia_political_view_desc": {
+    "text": "俄羅斯對克里米亞的看法"
+  },
+  "sudan_political_view_desc": {
+    "text": "蘇丹對哈萊布三角形的看法"
+  },
+  "serbia_political_view_desc": {
+    "text": "塞爾維亞對科索沃、武科瓦爾和薩倫格拉德群島的看法"
+  },
+  "suriname_political_view_desc": {
+    "text": "蘇利南對庫蘭蒂恩河源頭和拉瓦河源頭的看法"
+  },
+  "syria_political_view_desc": {
+    "text": "敘利亞對戈蘭高地的觀點"
+  },
+  "turkey_political_view_desc": {
+    "text": "土耳其對塞浦路斯和北塞浦路斯的看法"
+  },
+  "tanzania_political_view_desc": {
+    "text": "坦桑尼亞對馬拉維湖的視野"
+  },
+  "uruguay_political_view_desc": {
+    "text": "烏拉圭對林孔德阿蒂加斯的看法"
+  },
+  "vietnam_political_view_desc": {
+    "text": "越南對帕拉塞爾群島和普拉特利群島的看法"
+  },
+  "political_view_satellite_disclaimer": {
+    "text": "在衛星視圖中不可用"
   }
 }

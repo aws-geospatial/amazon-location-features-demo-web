@@ -3814,5 +3814,53 @@
   },
   "description_demo": {
     "text": "Amazon ロケーションサービスの機能を紹介するデモアプリ"
+  },
+  "no_political_view": {
+    "text": "政治的見解はない"
+  },
+  "argentina_political_view_desc": {
+    "text": "フォークランド諸島、サウスジョージア、サウスサンドイッチ諸島を含む南パタゴニア氷原とティエラデルフエゴに関するアルゼンチンの眺め"
+  },
+  "egypt_political_view_desc": {
+    "text": "ビル・タウィルに対するエジプトの見解"
+  },
+  "india_political_view_desc": {
+    "text": "ギルギット・バルティスタンに関するインドの見解"
+  },
+  "kenya_political_view_desc": {
+    "text": "イレミ・トライアングルに関するケニアの眺め"
+  },
+  "morocco_political_view_desc": {
+    "text": "西サハラに対するモロッコの眺め"
+  },
+  "russia_political_view_desc": {
+    "text": "クリミアに対するロシアの見解"
+  },
+  "sudan_political_view_desc": {
+    "text": "ハライブトライアングルに関するスーダンの眺め"
+  },
+  "serbia_political_view_desc": {
+    "text": "コソボ、ヴコヴァル、サレングラード諸島に関するセルビアの眺め"
+  },
+  "suriname_political_view_desc": {
+    "text": "クーランタイン源流とラワ源流からのスリナムの眺め"
+  },
+  "syria_political_view_desc": {
+    "text": "ゴラン高原のシリアの眺め"
+  },
+  "turkey_political_view_desc": {
+    "text": "キプロスと北キプロスに関するトルコの見解"
+  },
+  "tanzania_political_view_desc": {
+    "text": "タンザニアのマラウイ湖の眺め"
+  },
+  "uruguay_political_view_desc": {
+    "text": "リンコン・デ・アルティガスに関するウルグアイの見解"
+  },
+  "vietnam_political_view_desc": {
+    "text": "西沙諸島と南沙諸島に関するベトナムの眺め"
+  },
+  "political_view_satellite_disclaimer": {
+    "text": "サテライトビューでは使用できません"
   }
 }
