@@ -1,7 +1,7 @@
-// @ts-expect-error - ignore ts errors
-const recurseExpression = (exp, prevPropertyRegex, nextProperty) => {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+const recurseExpression = (exp: any, prevPropertyRegex: RegExp, nextProperty: string): any => {
 	if (!Array.isArray(exp)) return exp;
-	// @ts-expect-error - ignore ts errors
 	if (exp[0] !== "coalesce") return exp.map(v => recurseExpression(v, prevPropertyRegex, nextProperty));
 
 	const first = exp[1];
@@ -12,14 +12,12 @@ const recurseExpression = (exp, prevPropertyRegex, nextProperty) => {
 	isMatch = isMatch && Array.isArray(second) && second[0] === "get";
 	isMatch = isMatch && !exp?.[4];
 
-	// @ts-expect-error - ignore ts errors
 	if (!isMatch) return exp.map(v => recurseExpression(v, prevPropertyRegex, nextProperty));
 
 	return ["coalesce", ["get", nextProperty], ["get", "name:en"], ["get", "name"]];
 };
 
-// @ts-expect-error - ignore ts errors
-const updateLayer = (layer, prevPropertyRegex, nextProperty) => {
+const updateLayer = (layer: any, prevPropertyRegex: RegExp, nextProperty: string) => {
 	const nextLayer = {
 		...layer,
 		layout: {
@@ -30,12 +28,10 @@ const updateLayer = (layer, prevPropertyRegex, nextProperty) => {
 	return nextLayer;
 };
 
-// @ts-expect-error - ignore ts errors
-const setPreferredLanguage = (style, language) => {
+const setPreferredLanguage = (style: any, language: string) => {
 	const nextStyle = { ...style };
 
-	// @ts-expect-error - ignore ts errors
-	nextStyle.layers = nextStyle.layers.map(l => {
+	nextStyle.layers = nextStyle.layers.map((l: { type: string; layout: { [x: string]: any } }) => {
 		if (l.type !== "symbol" || !l?.layout?.["text-field"]) return l;
 		return updateLayer(l, /^name:([A-Za-z\-\_]+)$/g, `name:${language}`);
 	});
