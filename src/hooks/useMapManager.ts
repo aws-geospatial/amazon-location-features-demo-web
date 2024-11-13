@@ -1,13 +1,14 @@
-import { MutableRefObject, useCallback, useEffect, useState } from "react";
+import { MutableRefObject, useCallback, useEffect, useMemo, useState } from "react";
 
 import { showToast } from "@demo/core/Toast";
 import { appConfig, regionsData } from "@demo/core/constants";
-import { ToastType } from "@demo/types/Enums";
+import { MapStyleEnum, ToastType } from "@demo/types/Enums";
+import { getStyleWithPreferredLanguage } from "@demo/utils";
 import { getCurrentLocation } from "@demo/utils/getCurrentLocation";
 import type { GeolocateControl as GeolocateControlRef } from "maplibre-gl";
 import { omit } from "ramda";
 import { useTranslation } from "react-i18next";
-import { GeolocateErrorEvent, GeolocateResultEvent, MapLayerMouseEvent, MapRef } from "react-map-gl/maplibre";
+import { GeolocateErrorEvent, GeolocateResultEvent, MapLayerMouseEvent, MapRef, MapStyle } from "react-map-gl/maplibre";
 
 import useAuth from "./useAuth";
 import useGeofence from "./useGeofence";
@@ -46,16 +47,43 @@ const useMapManager = ({
 	closeRouteBox,
 	resetAppStateCb
 }: UseMapManagerProps) => {
+	const [mapStyleWithLanguageUrl, setMapStyleWithLanguageUrl] = useState<MapStyle>();
 	const [gridLoader, setGridLoader] = useState(true);
-	const { handleStackRegion, stackRegion } = useAuth();
-	const { currentLocationData, setCurrentLocation, setViewpoint } = useMap();
+	const { handleStackRegion, stackRegion, baseValues, apiKey } = useAuth();
+	const { currentLocationData, setCurrentLocation, setViewpoint, mapStyle, mapColorScheme, mapPoliticalView } =
+		useMap();
 	const { setMarker, marker, selectedMarker, clearPoiList, setZoom, setSelectedMarker } = usePlace();
 	const { routeData, setRouteData, resetStore: resetRouteStore } = useRoute();
 	const { resetStore: resetGeofenceStore } = useGeofence();
 	const { isEditingRoute, trackerPoints, setTrackerPoints, resetStore: resetTrackerStore } = useTracker();
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
+	const language = i18n.language;
 	const fastestRegion = localStorage.getItem(FASTEST_REGION) ?? fallbackRegion;
 	const defaultRegion = regionsData.find(option => option.value === fastestRegion) as { value: string; label: string };
+	const apiKeyRegion = useMemo(
+		() => (baseValues && baseValues.region in API_KEYS ? baseValues.region : Object.keys(API_KEYS)[0]),
+		[baseValues]
+	);
+
+	const isColorSchemeDisabled = useMemo(
+		() => [MapStyleEnum.HYBRID, MapStyleEnum.SATELLITE].includes(mapStyle),
+		[mapStyle]
+	);
+
+	const mapStyleUrl = useMemo(
+		() =>
+			`https://maps.geo.${apiKeyRegion}.amazonaws.com/v2/styles/${mapStyle}/descriptor?key=${apiKey}${
+				!isColorSchemeDisabled ? `&color-scheme=${mapColorScheme}` : ""
+			}${!!mapPoliticalView?.alpha3 ? `&political-view=${mapPoliticalView.alpha3}` : ""}`,
+		[apiKey, apiKeyRegion, isColorSchemeDisabled, mapColorScheme, mapPoliticalView, mapStyle]
+	);
+
+	useEffect(() => {
+		(async () => {
+			const styleWithLanguage = await getStyleWithPreferredLanguage(mapStyleUrl, language);
+			setMapStyleWithLanguageUrl(styleWithLanguage);
+		})();
+	}, [mapStyleUrl, language]);
 
 	const onLoad = useCallback(() => {
 		clearPoiList();
@@ -192,6 +220,7 @@ const useMapManager = ({
 	}, [defaultRegion, handleStackRegion, stackRegion?.value]);
 
 	return {
+		mapStyleWithLanguageUrl,
 		gridLoader,
 		setGridLoader,
 		onLoad,

@@ -14,3 +14,4 @@ export * from "./regionUtils";
 export * from "./distanceUtil";
 export * from "./turfUtils";
 export * from "./getFlagEmoji";
+export * from "./getStyleWithPreferredLanguage";
