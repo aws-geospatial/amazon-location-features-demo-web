@@ -3814,5 +3814,53 @@
   },
   "description_demo": {
     "text": "אפליקציית הדגמה המציגה את היכולות של שירות המיקום של אמזון"
+  },
+  "no_political_view": {
+    "text": "אין דעה פוליטית"
+  },
+  "argentina_political_view_desc": {
+    "text": "השקפת ארגנטינה על שדה הקרח הפטגוני הדרומי וטיירה דל פואגו, כולל איי פוקלנד, דרום ג'ורג'יה ואיי סנדוויץ הדרומיים"
+  },
+  "egypt_political_view_desc": {
+    "text": "השקפת מצרים על ביר טוויל"
+  },
+  "india_political_view_desc": {
+    "text": "השקפת הודו על גילגיט-בלטיסטן"
+  },
+  "kenya_political_view_desc": {
+    "text": "השקפתו של קניה על משולש אילמי"
+  },
+  "morocco_political_view_desc": {
+    "text": "השקפת מרוקו על סהרה המערבית"
+  },
+  "russia_political_view_desc": {
+    "text": "השקפת רוסיה על קרים"
+  },
+  "sudan_political_view_desc": {
+    "text": "השקפת סודן על משולש הלאיב"
+  },
+  "serbia_political_view_desc": {
+    "text": "השקפת סרביה על איי קוסובו, ווקובר וסרנגראד"
+  },
+  "suriname_political_view_desc": {
+    "text": "השקפתו של סורינאם על זרמי קורנטיין וממי לאווה"
+  },
+  "syria_political_view_desc": {
+    "text": "השקפת סוריה על רמת הגולן"
+  },
+  "turkey_political_view_desc": {
+    "text": "השקפת טורקיה על קפריסין וצפון קפריסין"
+  },
+  "tanzania_political_view_desc": {
+    "text": "הנוף של טנזניה על אגם מלאווי"
+  },
+  "uruguay_political_view_desc": {
+    "text": "השקפת אורוגוואי על רינקון דה ארטיגאס"
+  },
+  "vietnam_political_view_desc": {
+    "text": "השקפת וייטנאם על איי פאראסל ואיי ספראטלי"
+  },
+  "political_view_satellite_disclaimer": {
+    "text": "לא זמין בתצוגת לוויין"
   }
 }

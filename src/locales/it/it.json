@@ -3814,5 +3814,53 @@
   },
   "description_demo": {
     "text": "App dimostrativa che mostra le funzionalità di Amazon Location Service"
+  },
+  "no_political_view": {
+    "text": "Nessuna visione politica"
+  },
+  "argentina_political_view_desc": {
+    "text": "Vista dell'Argentina sul campo di ghiaccio della Patagonia meridionale e sulla Terra del Fuoco, comprese le Isole Falkland, la Georgia del Sud e le Isole Sandwich meridionali"
+  },
+  "egypt_political_view_desc": {
+    "text": "Il punto di vista dell'Egitto su Bir Tawil"
+  },
+  "india_political_view_desc": {
+    "text": "Il punto di vista dell'India sul Gilgit-Baltistan"
+  },
+  "kenya_political_view_desc": {
+    "text": "Vista del Kenya sul Triangolo di Ilemi"
+  },
+  "morocco_political_view_desc": {
+    "text": "Il punto di vista del Marocco sul Sahara occidentale"
+  },
+  "russia_political_view_desc": {
+    "text": "Il punto di vista della Russia sulla Crimea"
+  },
+  "sudan_political_view_desc": {
+    "text": "Il punto di vista del Sudan sul Triangolo di Halaib"
+  },
+  "serbia_political_view_desc": {
+    "text": "Il punto di vista della Serbia su Kosovo, Vukovar e Isole Sarengrad"
+  },
+  "suriname_political_view_desc": {
+    "text": "Vista del Suriname sulle sorgenti di Courantyne e Lawa"
+  },
+  "syria_political_view_desc": {
+    "text": "La vista della Siria sulle alture del Golan"
+  },
+  "turkey_political_view_desc": {
+    "text": "Il punto di vista della Turchia su Cipro e Cipro del Nord"
+  },
+  "tanzania_political_view_desc": {
+    "text": "Vista della Tanzania sul lago Malawi"
+  },
+  "uruguay_political_view_desc": {
+    "text": "Il punto di vista dell'Uruguay su Rincon de Artigas"
+  },
+  "vietnam_political_view_desc": {
+    "text": "Vista del Vietnam sulle isole Paracel e sulle isole Spratly"
+  },
+  "political_view_satellite_disclaimer": {
+    "text": "Non disponibile nella visualizzazione satellitare"
   }
 }

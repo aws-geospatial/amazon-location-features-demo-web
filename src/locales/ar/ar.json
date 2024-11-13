@@ -3814,5 +3814,53 @@
   },
   "description_demo": {
     "text": "تطبيق تجريبي يعرض إمكانيات خدمة Amazon Location"
+  },
+  "no_political_view": {
+    "text": "لا توجد وجهة نظر سياسية"
+  },
+  "argentina_political_view_desc": {
+    "text": "وجهة نظر الأرجنتين حول حقل الجليد في جنوب باتاغونيا وتيرا ديل فويغو، بما في ذلك جزر فوكلاند وجورجيا الجنوبية وجزر ساندويتش الجنوبية"
+  },
+  "egypt_political_view_desc": {
+    "text": "نظرة مصر على بير الطويل"
+  },
+  "india_political_view_desc": {
+    "text": "وجهة نظر الهند حول جيلجيت بالتستان"
+  },
+  "kenya_political_view_desc": {
+    "text": "نظرة كينيا على مثلث إيليمي"
+  },
+  "morocco_political_view_desc": {
+    "text": "نظرة المغرب إلى الصحراء الغربية"
+  },
+  "russia_political_view_desc": {
+    "text": "وجهة نظر روسيا في شبه جزيرة القرم"
+  },
+  "sudan_political_view_desc": {
+    "text": "رؤية السودان لمثلث حلايب"
+  },
+  "serbia_political_view_desc": {
+    "text": "وجهة نظر صربيا حول جزر كوسوفو وفوكوفار وسارينجراد"
+  },
+  "suriname_political_view_desc": {
+    "text": "وجهة نظر سورينام بشأن منابع كورانتين ومنابع لاوا"
+  },
+  "syria_political_view_desc": {
+    "text": "نظرة سوريا على مرتفعات الجولان"
+  },
+  "turkey_political_view_desc": {
+    "text": "وجهة نظر تركيا حول قبرص وشمال قبرص"
+  },
+  "tanzania_political_view_desc": {
+    "text": "منظر تنزانيا لبحيرة ملاوي"
+  },
+  "uruguay_political_view_desc": {
+    "text": "وجهة نظر أوروغواي بشأن رينكون دي أرتيجاس"
+  },
+  "vietnam_political_view_desc": {
+    "text": "نظرة فيتنام على جزر باراسيل وجزر سبراتلي"
+  },
+  "political_view_satellite_disclaimer": {
+    "text": "غير متوفر في عرض القمر الصناعي"
   }
 }
