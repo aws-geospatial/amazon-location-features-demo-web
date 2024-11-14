@@ -89,7 +89,8 @@ const {
 		AWS_LOCATION_RETAILS_URL,
 		AWS_LOCATION_TRAVEL_AND_HOSPITALITY_URL,
 		AWS_LOCATION_CUSTOMERS_URL,
-		AMAZON_LOCATION_DOCUMENTATION_URL
+		AMAZON_LOCATION_DOCUMENTATION_URL,
+		AWS_INDUSTRY_OVERVIEW_URL
 	}
 } = appConfig;
 
@@ -604,6 +605,23 @@ const Explore: FC<ExploreProps> = ({
 							onClickHandler: () => setIsMenuExpanded(s => ({ ...s, "industry.text": !s["industry.text"] })),
 							isEnabled: true,
 							subMenu: [
+								{
+									title: "industry_overview.text",
+									description: "new_industry_desc.text",
+									onClickHandler: () => window.open(AWS_INDUSTRY_OVERVIEW_URL, "_self"),
+									isEnabled: true,
+									iconComponent: (
+										<IconGlobe
+											style={{
+												alignSelf: "flex-start",
+												margin: "0.15rem 0rem 0rem 0.8rem",
+												fill: "var(--primary-color)"
+											}}
+											width={18}
+											height={18}
+										/>
+									)
+								},
 								{
 									title: "transportation_and_logistics.text",
 									description: "new_transportation_logistics_desc.text",

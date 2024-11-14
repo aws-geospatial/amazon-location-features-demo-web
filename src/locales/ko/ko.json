@@ -3862,5 +3862,8 @@
   },
   "political_view_satellite_disclaimer": {
     "text": "위성 보기에서는 사용할 수 없습니다."
+  },
+  "industry_overview": {
+    "text": "업계 개요"
   }
 }
