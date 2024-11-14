@@ -45,7 +45,8 @@ const {
 		AWS_LOCATION_TRAVEL_AND_HOSPITALITY_URL,
 		AWS_LOCATION_RESOURCES_URL,
 		AWS_LOCATION_CUSTOMERS_URL,
-		AMAZON_LOCATION_DOCUMENTATION_URL
+		AMAZON_LOCATION_DOCUMENTATION_URL,
+		AWS_INDUSTRY_OVERVIEW_URL
 	}
 } = appConfig;
 
@@ -199,6 +200,11 @@ if (!SHOW_NEW_NAVIGATION) {
 			iconContainerClass: "menu-item-icon",
 			isExternalLink: false,
 			subMenu: [
+				{
+					label: "industry_overview.text",
+					link: AWS_INDUSTRY_OVERVIEW_URL,
+					isExternalLink: false
+				},
 				{
 					label: "transportation_and_logistics.text",
 					link: AWS_LOCATION_TRANSPORTATION_AND_LOGISTICS_URL,

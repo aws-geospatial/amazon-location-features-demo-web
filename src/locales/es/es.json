@@ -3862,5 +3862,8 @@
   },
   "political_view_satellite_disclaimer": {
     "text": "No disponible en vista de satélite"
+  },
+  "industry_overview": {
+    "text": "Descripción general de la industria"
   }
 }

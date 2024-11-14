@@ -3862,5 +3862,8 @@
   },
   "political_view_satellite_disclaimer": {
     "text": "غير متوفر في عرض القمر الصناعي"
+  },
+  "industry_overview": {
+    "text": "نظرة عامة على الصناعة"
   }
 }
