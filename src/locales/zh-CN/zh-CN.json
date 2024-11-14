@@ -3858,5 +3858,8 @@
   },
   "political_view_satellite_disclaimer": {
     "text": "在卫星视图中不可用"
+  },
+  "industry_overview": {
+    "text": "行业概述"
   }
 }
