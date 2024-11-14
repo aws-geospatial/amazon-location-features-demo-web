@@ -21,7 +21,7 @@ import {
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { MenuItemEnum, ShowStateType } from "@demo/types";
-import { MapColorSchemeEnum, MapStyleEnum, ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
+import { MapColorSchemeEnum, ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { getBoundsFromLineString } from "@demo/utils";
 import { errorHandler } from "@demo/utils/errorHandler";
 import type { GeolocateControl as GeolocateControlRef } from "maplibre-gl";
@@ -115,7 +115,6 @@ const UnauthSimulationExitModal = lazy(() =>
 );
 
 const {
-	API_KEYS,
 	MAP_RESOURCES: { MAX_BOUNDS, SEARCH_ROUTE_BOUND_OPTIONS },
 	LINKS: { AWS_LOCATION },
 	ROUTES: { DEMO }
@@ -151,12 +150,8 @@ const DemoPage: FC = () => {
 	const [searchBoxValue, setSearchBoxValue] = useState("");
 	const mapRef = useRef<MapRef | null>(null);
 	const geolocateControlRef = useRef<GeolocateControlRef | null>(null);
-	const { apiKey, baseValues, userProvidedValues } = useAuth();
-	const apiKeyRegion = useMemo(
-		() => (baseValues && baseValues.region in API_KEYS ? baseValues.region : Object.keys(API_KEYS)[0]),
-		[baseValues]
-	);
-	const { currentLocationData, viewpoint, mapStyle, mapColorScheme, mapPoliticalView } = useMap();
+	const { userProvidedValues } = useAuth();
+	const { currentLocationData, viewpoint, mapColorScheme } = useMap();
 	const { zoom, setZoom } = usePlace();
 	const { routeData, directions } = useRoute();
 	const { isEditingRoute } = useTracker();
@@ -165,6 +160,7 @@ const DemoPage: FC = () => {
 	const { ui, bottomSheetCurrentHeight = 0 } = useBottomSheet();
 	const { clearCredsAndClients } = useAuthManager();
 	const {
+		mapStyleWithLanguageUrl,
 		gridLoader,
 		setGridLoader,
 		onLoad,
@@ -186,11 +182,6 @@ const DemoPage: FC = () => {
 	});
 	const { t } = useTranslation();
 	const geoLocateTopValue = `${bottomSheetCurrentHeight / 13 + 0.59}rem`;
-
-	const isColorSchemeDisabled = useMemo(
-		() => [MapStyleEnum.HYBRID, MapStyleEnum.SATELLITE].includes(mapStyle),
-		[mapStyle]
-	);
 
 	const handlePopState = () => {
 		if (isMax766 && window.location.pathname === DEMO) {
@@ -368,7 +359,7 @@ const DemoPage: FC = () => {
 			userProvidedValues ? "_blank" : "_self"
 		);
 
-	return !!apiKeyRegion && !!apiKey ? (
+	return !!mapStyleWithLanguageUrl ? (
 		<View
 			style={{ height: "100%" }}
 			className={`${mapColorScheme === MapColorSchemeEnum.DARK ? "dark-mode" : "light-mode"}`}
@@ -384,9 +375,7 @@ const DemoPage: FC = () => {
 						? { ...currentLocationData.currentLocation, zoom }
 						: { ...viewpoint, zoom }
 				}
-				mapStyle={`https://maps.geo.${apiKeyRegion}.amazonaws.com/v2/styles/${mapStyle}/descriptor?key=${apiKey}${
-					!isColorSchemeDisabled ? `&color-scheme=${mapColorScheme}` : ""
-				}${!!mapPoliticalView?.alpha3 ? `&political-view=${mapPoliticalView.alpha3}` : ""}`}
+				mapStyle={mapStyleWithLanguageUrl}
 				minZoom={2}
 				maxBounds={
 					(show.unauthGeofenceBox || show.unauthTrackerBox) && show.unauthSimulationBounds
