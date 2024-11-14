@@ -5,7 +5,7 @@ import { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from "rea
 
 import { Card, Divider, Flex, Placeholder, Text } from "@aws-amplify/ui-react";
 import { IconClose, IconDark, IconGeofencePlusSolid, IconLight, IconMapSolid, IconRadar } from "@demo/assets/svgs";
-import { PoliticalViewDropdown, ToggleSwitch } from "@demo/atomicui/atoms";
+import { PoliticalViewDropdown } from "@demo/atomicui/atoms";
 import { appConfig } from "@demo/core/constants";
 import { useAuth, useGeofence, useMap, useUnauthSimulation } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
@@ -25,12 +25,8 @@ import "./styles.scss";
 
 const { map_styles } = ResponsiveUIEnum;
 const {
-	MAP_RESOURCES: { MAP_STYLES, MAP_COLOR_SCHEMES, MAP_POLITICAL_VIEWS }
+	MAP_RESOURCES: { MAP_STYLES, MAP_COLOR_SCHEMES }
 } = appConfig;
-const mapPoliticalViewOptions = Object.entries(MAP_POLITICAL_VIEWS).map(([key, value]) => ({
-	value: key,
-	label: `${key}-${value}`
-}));
 
 export interface MapButtonsProps {
 	renderedUpon: string;
@@ -66,7 +62,6 @@ const MapButtons: FC<MapButtonsProps> = ({
 	isAuthGeofenceBoxOpen,
 	onSetShowAuthGeofenceBox,
 	isAuthTrackerBoxOpen,
-	isSettingsModal = false,
 	onSetShowAuthTrackerBox,
 	isUnauthGeofenceBoxOpen,
 	isUnauthTrackerBoxOpen,
@@ -77,13 +72,12 @@ const MapButtons: FC<MapButtonsProps> = ({
 	const stylesCardRef = useRef<HTMLDivElement | null>(null);
 	const stylesCardTogglerRef = useRef<HTMLDivElement | null>(null);
 	const { credentials, userProvidedValues } = useAuth();
-	const { mapStyle, setMapStyle, mapColorScheme, setMapColorScheme, mapPoliticalView, setMapPoliticalView } = useMap();
+	const { mapStyle, setMapStyle, mapColorScheme, setMapColorScheme, setMapPoliticalView } = useMap();
 	const { isAddingGeofence, setIsAddingGeofence } = useGeofence();
 	const isAuthenticated = !!credentials?.authenticated;
-	const { isTablet, isMobile, isDesktop } = useDeviceMediaQuery();
+	const { isMobile, isDesktop } = useDeviceMediaQuery();
 	const { t } = useTranslation();
 	const { ui } = useBottomSheet();
-	const settingsTablet = isTablet && isSettingsModal;
 	const { hideGeofenceTrackerShortcut } = useUnauthSimulation();
 
 	const isColorSchemeDisabled = useMemo(
@@ -159,7 +153,8 @@ const MapButtons: FC<MapButtonsProps> = ({
 		(id: string, style: MapStyleEnum) => {
 			if (mapStyle !== style) {
 				onShowGridLoader();
-				style === MapStyleEnum.SATELLITE && !!mapPoliticalView && setMapPoliticalView();
+				style === MapStyleEnum.SATELLITE &&
+					setMapPoliticalView({ alpha2: "", alpha3: "", desc: "no_political_view.text" });
 				setMapStyle(style);
 				record([
 					{
@@ -169,7 +164,7 @@ const MapButtons: FC<MapButtonsProps> = ({
 				]);
 			}
 		},
-		[mapPoliticalView, mapStyle, onShowGridLoader, renderedUpon, setMapPoliticalView, setMapStyle]
+		[mapStyle, onShowGridLoader, renderedUpon, setMapPoliticalView, setMapStyle]
 	);
 
 	const handleMapColorSchemeChange = useCallback(
@@ -193,14 +188,17 @@ const MapButtons: FC<MapButtonsProps> = ({
 			<Flex data-testid="map-styles-wrapper" className="map-styles-wrapper">
 				<Flex gap={0} width="100%" direction="column" marginBottom={isHandDevice ? "5rem" : "0"}>
 					<Flex data-testid="map-styles-container" gap={0} direction="column" className="maps-container">
-						<Flex gap={0} padding={onlyMapStyles ? "0 0 1.23rem" : "0 0.7rem 1.23rem 0.5rem"} wrap="wrap">
+						<Flex gap={0} padding="0 1rem 1.23rem 1rem" wrap="wrap" justifyContent="space-between">
 							{MAP_STYLES.map(({ id, name, image }) => (
 								<Flex
 									key={id}
-									width={settingsTablet ? "auto" : "33.33%"}
-									height="130px"
+									width="100%"
+									maxWidth="6.54rem"
+									height="100%"
+									maxHeight="8.08rem"
 									alignItems="center"
 									justifyContent="center"
+									marginTop="0.5rem"
 								>
 									<Flex
 										data-testid={`map-style-item-${name}`}
@@ -292,21 +290,8 @@ const MapButtons: FC<MapButtonsProps> = ({
 							</Flex>
 						</Flex>
 						<Flex gap={0} padding="2rem 1rem 0rem 1rem" direction="column">
-							<ToggleSwitch
-								isToggled={!!mapPoliticalView}
-								setIsToggled={isToggle => (isToggle ? setMapPoliticalView("ARG") : setMapPoliticalView())}
-								label="Political view"
-								disabled={mapStyle === MapStyleEnum.SATELLITE}
-							/>
 							<Flex gap={0} padding="1rem 0rem">
-								<PoliticalViewDropdown
-									label={!!mapPoliticalView ? mapPoliticalView : "Enable political view"}
-									options={mapPoliticalViewOptions}
-									onSelect={option => setMapPoliticalView(option.value)}
-									bordered
-									showSelected
-									disabled={!mapPoliticalView || mapStyle === MapStyleEnum.SATELLITE}
-								/>
+								<PoliticalViewDropdown bordered disabled={mapStyle === MapStyleEnum.SATELLITE} />
 							</Flex>
 						</Flex>
 					</Flex>
@@ -322,11 +307,8 @@ const MapButtons: FC<MapButtonsProps> = ({
 			isLoadingImg,
 			isMobile,
 			mapColorScheme,
-			mapPoliticalView,
 			mapStyle,
 			onlyMapStyles,
-			setMapPoliticalView,
-			settingsTablet,
 			t
 		]
 	);
