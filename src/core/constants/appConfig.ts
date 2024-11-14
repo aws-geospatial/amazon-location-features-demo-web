@@ -302,7 +302,8 @@ const appConfig = {
 		AWS_LOCATION_PRODUCT_RESOURCES_URL: "https://aws.amazon.com/location/resources/product-resources/",
 		AWS_LOCATION_DEVELOPER_RESOURCES_URL: "https://aws.amazon.com/location/resources/developer-resources/",
 		AMAZON_LOCATION_AUTH_SDK_IOS_URL: "https://github.com/aws-geospatial/amazon-location-mobile-auth-sdk-ios",
-		AMAZON_LOCATION_DOCUMENTATION_URL: "https://docs.aws.amazon.com/location/"
+		AMAZON_LOCATION_DOCUMENTATION_URL: "https://docs.aws.amazon.com/location/",
+		AWS_INDUSTRY_OVERVIEW_URL: "https://aws.amazon.com/location/industry/"
 	}
 };
 

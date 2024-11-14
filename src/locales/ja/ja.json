@@ -3862,5 +3862,8 @@
   },
   "political_view_satellite_disclaimer": {
     "text": "サテライトビューでは使用できません"
+  },
+  "industry_overview": {
+    "text": "業界概要"
   }
 }

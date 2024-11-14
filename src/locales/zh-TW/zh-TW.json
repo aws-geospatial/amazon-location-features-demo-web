@@ -3862,5 +3862,8 @@
   },
   "political_view_satellite_disclaimer": {
     "text": "在衛星視圖中不可用"
+  },
+  "industry_overview": {
+    "text": "產業概述"
   }
 }
