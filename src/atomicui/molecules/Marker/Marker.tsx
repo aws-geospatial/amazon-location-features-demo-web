@@ -24,7 +24,7 @@ const Marker: FC<Props> = ({ latitude, longitude, searchValue, setSearchValue })
 		if (!info) {
 			(async () => {
 				const place: ReverseGeocodeCommandOutput | undefined = await getPlaceDataByCoordinates([longitude, latitude]);
-				setInfo({ id: uuid.randomUUID(), place: place!.ResultItems![0] });
+				!!place?.ResultItems?.length && setInfo({ id: uuid.randomUUID(), place: place.ResultItems[0] });
 			})();
 		}
 	}, [info, getPlaceDataByCoordinates, longitude, latitude, marker, selectedMarker, setMarker]);
