@@ -230,7 +230,7 @@ const MapButtons: FC<MapButtonsProps> = ({
 								</Flex>
 							))}
 						</Flex>
-						<Flex gap={0} padding="0 1rem">
+						<Flex gap={0} padding="1rem">
 							<Flex
 								gap={0}
 								borderRadius="0.61rem"
@@ -289,10 +289,8 @@ const MapButtons: FC<MapButtonsProps> = ({
 								))}
 							</Flex>
 						</Flex>
-						<Flex gap={0} padding="2rem 1rem 0rem 1rem" direction="column">
-							<Flex gap={0} padding="1rem 0rem">
-								<PoliticalViewDropdown bordered disabled={mapStyle === MapStyleEnum.SATELLITE} />
-							</Flex>
+						<Flex gap={0} padding="1rem">
+							<PoliticalViewDropdown bordered disabled={mapStyle === MapStyleEnum.SATELLITE} />
 						</Flex>
 					</Flex>
 				</Flex>
