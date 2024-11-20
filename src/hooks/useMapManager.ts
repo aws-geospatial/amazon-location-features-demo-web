@@ -3,7 +3,7 @@ import { MutableRefObject, useCallback, useEffect, useMemo, useState } from "rea
 import { showToast } from "@demo/core/Toast";
 import { appConfig, regionsData } from "@demo/core/constants";
 import { MapStyleEnum, ToastType } from "@demo/types/Enums";
-import { getStyleWithPreferredLanguage } from "@demo/utils";
+import { getStyleWithPreferredLanguage, normalizeLng } from "@demo/utils";
 import { getCurrentLocation } from "@demo/utils/getCurrentLocation";
 import type { GeolocateControl as GeolocateControlRef } from "maplibre-gl";
 import { omit } from "ramda";
@@ -148,9 +148,10 @@ const useMapManager = ({
 
 	const handleMapClick = useCallback(
 		({ lngLat }: MapLayerMouseEvent) => {
-			if (lngLat && !isUnauthGeofenceBoxOpen && !isUnauthTrackerBoxOpen) {
-				const { lat: latitude, lng: longitude } = lngLat;
+			const { lng, lat: latitude } = lngLat;
+			const longitude = normalizeLng(lng);
 
+			if (!isUnauthGeofenceBoxOpen && !isUnauthTrackerBoxOpen) {
 				if (!isRouteBoxOpen && !isAuthGeofenceBoxOpen && !isSettingsOpen && !isEditingRoute) {
 					marker && setMarker(undefined);
 					selectedMarker && setSelectedMarker(undefined);
