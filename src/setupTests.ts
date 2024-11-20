@@ -122,7 +122,11 @@ jest.mock("@demo/core/constants/appConfig", () => ({
 			{ alpha2: "SY", alpha3: "SYR", desc: "syria_political_view_desc.text" },
 			{ alpha2: "TR", alpha3: "TUR", desc: "turkey_political_view_desc.text" },
 			{ alpha2: "TZ", alpha3: "TZA", desc: "tanzania_political_view_desc.text" },
-			{ alpha2: "UY", alpha3: "URY", desc: "uruguay_political_view_desc.text" }
+			{ alpha2: "UY", alpha3: "URY", desc: "uruguay_political_view_desc.text" },
+			{ alpha2: "GE", alpha3: "GEO", desc: "georgia_political_view_desc.text" },
+			{ alpha2: "CY", alpha3: "CYP", desc: "cyprus_political_view_desc.text" },
+			{ alpha2: "PS", alpha3: "PSE", desc: "palestine_political_view_desc.text" },
+			{ alpha2: "GR", alpha3: "GRC", desc: "greece_political_view_desc.text" }
 		],
 		GEOFENCE_COLLECTION: "location.aws.com.demo.geofences.GeofenceCollection",
 		DEVICE_ID_WEB: "web_browser_device",
