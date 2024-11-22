@@ -4,7 +4,7 @@ import { Flex, Text } from "@aws-amplify/ui-react";
 import { IconArrow } from "@demo/assets/svgs";
 import { appConfig } from "@demo/core/constants";
 import { useMap } from "@demo/hooks";
-import { getFlagEmoji } from "@demo/utils";
+import { getFlagEmoji, isUserDeviceIsWin } from "@demo/utils";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
 import { Tooltip } from "react-tooltip";
@@ -95,9 +95,11 @@ const PoliticalViewDropdown: FC<PoliticalViewDropdownProps> = ({
 									{!!alpha2 && !!alpha3 ? (
 										<>
 											<Flex gap={0}>
-												<Flex gap={0} justifyContent="center" margin="0.07rem 0.3rem 0 0">
-													{getFlagEmoji(alpha2)}
-												</Flex>
+												{!isUserDeviceIsWin() && (
+													<Flex gap={0} justifyContent="center" margin="0.07rem 0.3rem 0 0">
+														{getFlagEmoji(alpha2)}
+													</Flex>
+												)}
 												<Text className="bold small-text" color="var(--tertiary-color)">
 													{alpha3}
 												</Text>
