@@ -11,11 +11,22 @@ const iosCheck =
 	/* iPad on iOS 13 detection */
 	(navigator.userAgent.includes("Mac") && "ontouchend" in document);
 
-function isUserDeviceIsIOS() {
+const isUserDeviceIsIOS = () => {
 	return iosCheck && androidCheck === false ? IOS : undefined;
-}
-function isUserDeviceIsAndroid(): string | undefined {
-	return androidCheck && iosCheck === false ? ANDROID : undefined;
-}
+};
 
-export { isUserDeviceIsIOS, isUserDeviceIsAndroid };
+const isUserDeviceIsAndroid = () => {
+	return androidCheck && iosCheck === false ? ANDROID : undefined;
+};
+
+const isUserDeviceIsWin = (): boolean => {
+	const userAgentData = (navigator as Navigator & { userAgentData?: { platform: string } }).userAgentData;
+
+	if (userAgentData) {
+		return userAgentData.platform.includes("Win");
+	}
+
+	return /Windows/.test(navigator.userAgent);
+};
+
+export { isUserDeviceIsIOS, isUserDeviceIsAndroid, isUserDeviceIsWin };
