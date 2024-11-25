@@ -52,6 +52,9 @@ const useMap = () => {
 			setMapPoliticalView: (mapPoliticalView: { alpha2: string; alpha3: string; desc: string }) => {
 				setState({ mapPoliticalView });
 			},
+			setBiasPosition: (biasPosition: number[]) => {
+				setState({ biasPosition });
+			},
 			resetStore() {
 				setState({
 					currentLocationData: undefined
