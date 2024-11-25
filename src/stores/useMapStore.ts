@@ -32,6 +32,7 @@ interface MapStoreProps {
 	mapStyle: MapStyleEnum;
 	mapColorScheme: MapColorSchemeEnum;
 	mapPoliticalView: { alpha2: string; alpha3: string; desc: string };
+	biasPosition: number[];
 }
 
 const initialState: IStateProps<MapStoreProps> = {
@@ -47,7 +48,8 @@ const initialState: IStateProps<MapStoreProps> = {
 		alpha2: "",
 		alpha3: "",
 		desc: "no_political_view.text"
-	}
+	},
+	biasPosition: [US.longitude, US.latitude]
 };
 
 export default createStore<MapStoreProps>(initialState, true, localStorageKey);
