@@ -151,7 +151,7 @@ const DemoPage: FC = () => {
 	const mapRef = useRef<MapRef | null>(null);
 	const geolocateControlRef = useRef<GeolocateControlRef | null>(null);
 	const { userProvidedValues } = useAuth();
-	const { currentLocationData, viewpoint, mapColorScheme } = useMap();
+	const { currentLocationData, viewpoint, mapColorScheme, setBiasPosition } = useMap();
 	const { zoom, setZoom } = usePlace();
 	const { routeData, directions } = useRoute();
 	const { isEditingRoute } = useTracker();
@@ -389,6 +389,12 @@ const DemoPage: FC = () => {
 				onClick={handleMapClick}
 				onLoad={onLoad}
 				onZoom={({ viewState }) => setZoom(viewState.zoom)}
+				onZoomEnd={({ viewState }) => {
+					setBiasPosition([viewState.longitude, viewState.latitude]);
+				}}
+				onDragEnd={({ viewState }) => {
+					setBiasPosition([viewState.longitude, viewState.latitude]);
+				}}
 				onError={error => errorHandler(error.error)}
 				onIdle={() => gridLoader && setGridLoader(false)}
 				attributionControl={false}
