@@ -48,7 +48,7 @@ const PoliticalViewDropdown: FC<PoliticalViewDropdownProps> = ({
 	}, []);
 
 	const handleClick = useCallback(
-		(option: { alpha2: string; alpha3: string; desc: string }) => {
+		(option: { alpha2: string; alpha3: string; desc: string; isSupportedByPlaces: boolean }) => {
 			setMapPoliticalView(option);
 			setOpen(false);
 		},
@@ -83,13 +83,13 @@ const PoliticalViewDropdown: FC<PoliticalViewDropdownProps> = ({
 			{disabled && <Tooltip id="dropdown-trigger-political-view" />}
 			{open && (
 				<ul data-testid="dropdown-options" className={bordered ? "options bordered" : "options"}>
-					{MAP_POLITICAL_VIEWS.map(({ alpha2, alpha3, desc }) => {
+					{MAP_POLITICAL_VIEWS.map(({ alpha2, alpha3, desc, isSupportedByPlaces }) => {
 						return (
 							<li
 								data-testid={desc}
 								key={desc}
 								style={{ display: "flex", justifyContent: "start", direction: langDir }}
-								onClick={() => handleClick({ alpha2, alpha3, desc })}
+								onClick={() => handleClick({ alpha2, alpha3, desc, isSupportedByPlaces })}
 							>
 								<Flex gap={0} direction="column" padding="0.46rem 1.23rem">
 									{!!alpha2 && !!alpha3 ? (

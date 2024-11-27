@@ -49,7 +49,12 @@ const useMap = () => {
 			setMapColorScheme: (mapColorScheme: MapColorSchemeEnum) => {
 				setState({ mapColorScheme });
 			},
-			setMapPoliticalView: (mapPoliticalView: { alpha2: string; alpha3: string; desc: string }) => {
+			setMapPoliticalView: (mapPoliticalView: {
+				alpha2: string;
+				alpha3: string;
+				desc: string;
+				isSupportedByPlaces: boolean;
+			}) => {
 				setState({ mapPoliticalView });
 			},
 			setBiasPosition: (biasPosition: number[]) => {
