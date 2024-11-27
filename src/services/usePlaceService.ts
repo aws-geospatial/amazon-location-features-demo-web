@@ -23,7 +23,7 @@ const {
 
 const usePlaceService = () => {
 	const { placesClient } = useClient();
-	const { viewpoint, mapPoliticalView } = useMap();
+	const { mapPoliticalView, biasPosition: BiasPosition } = useMap();
 	const { i18n } = useTranslation();
 	const Language = i18n.language;
 
@@ -32,7 +32,7 @@ const usePlaceService = () => {
 			getPlaceSuggestions: async (QueryText: string) => {
 				const input: SuggestCommandInput = {
 					QueryText,
-					BiasPosition: [viewpoint?.longitude as number, viewpoint?.latitude as number],
+					BiasPosition,
 					Language,
 					AdditionalFeatures: ["Core"],
 					PoliticalView: mapPoliticalView.alpha3 || undefined
@@ -54,7 +54,7 @@ const usePlaceService = () => {
 				const input: SearchTextCommandInput = {
 					QueryText: isQueryId ? undefined : QueryTextOrId,
 					QueryId: isQueryId ? QueryTextOrId : undefined,
-					BiasPosition: isQueryId ? undefined : [viewpoint?.longitude as number, viewpoint?.latitude as number],
+					BiasPosition: isQueryId ? undefined : BiasPosition,
 					Language: isQueryId ? undefined : Language,
 					PoliticalView: mapPoliticalView.alpha3 || undefined
 				};
@@ -71,7 +71,6 @@ const usePlaceService = () => {
 				return await placesClient?.send(command);
 			},
 			getNLPlacesByText: async (Text: string) => {
-				const BiasPosition = [viewpoint?.longitude as number, viewpoint?.latitude as number];
 				const response = await fetch(
 					`${NL_BASE_URL}/places/ask?` +
 						new URLSearchParams([
@@ -94,7 +93,7 @@ const usePlaceService = () => {
 				return responseBody;
 			}
 		}),
-		[viewpoint, Language, mapPoliticalView, placesClient]
+		[BiasPosition, Language, mapPoliticalView.alpha3, placesClient]
 	);
 };
 
