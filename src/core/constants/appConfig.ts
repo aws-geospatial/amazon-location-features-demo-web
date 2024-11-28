@@ -121,24 +121,96 @@ const appConfig = {
 			{ id: MapColorSchemeEnum.DARK.toLowerCase(), name: MapColorSchemeEnum.DARK }
 		],
 		MAP_POLITICAL_VIEWS: [
-			{ alpha2: "", alpha3: "", desc: "no_political_view.text" },
-			{ alpha2: "AR", alpha3: "ARG", desc: "argentina_political_view_desc.text" },
-			{ alpha2: "EG", alpha3: "EGY", desc: "egypt_political_view_desc.text" },
-			{ alpha2: "IN", alpha3: "IND", desc: "india_political_view_desc.text" },
-			{ alpha2: "KE", alpha3: "KEN", desc: "kenya_political_view_desc.text" },
-			{ alpha2: "MA", alpha3: "MAR", desc: "morocco_political_view_desc.text" },
-			{ alpha2: "RU", alpha3: "RUS", desc: "russia_political_view_desc.text" },
-			{ alpha2: "SD", alpha3: "SDN", desc: "sudan_political_view_desc.text" },
-			{ alpha2: "RS", alpha3: "SRB", desc: "serbia_political_view_desc.text" },
-			{ alpha2: "SR", alpha3: "SUR", desc: "suriname_political_view_desc.text" },
-			{ alpha2: "SY", alpha3: "SYR", desc: "syria_political_view_desc.text" },
-			{ alpha2: "TR", alpha3: "TUR", desc: "turkey_political_view_desc.text" },
-			{ alpha2: "TZ", alpha3: "TZA", desc: "tanzania_political_view_desc.text" },
-			{ alpha2: "UY", alpha3: "URY", desc: "uruguay_political_view_desc.text" },
-			{ alpha2: "GE", alpha3: "GEO", desc: "georgia_political_view_desc.text" },
-			{ alpha2: "CY", alpha3: "CYP", desc: "cyprus_political_view_desc.text" },
-			{ alpha2: "PS", alpha3: "PSE", desc: "palestine_political_view_desc.text" },
-			{ alpha2: "GR", alpha3: "GRC", desc: "greece_political_view_desc.text" }
+			{ alpha2: "", alpha3: "", desc: "no_political_view.text", isSupportedByPlaces: false },
+			{ alpha2: "AR", alpha3: "ARG", desc: "argentina_political_view_desc.text", isSupportedByPlaces: true },
+			{ alpha2: "EG", alpha3: "EGY", desc: "egypt_political_view_desc.text", isSupportedByPlaces: true },
+			{ alpha2: "IN", alpha3: "IND", desc: "india_political_view_desc.text", isSupportedByPlaces: true },
+			{ alpha2: "KE", alpha3: "KEN", desc: "kenya_political_view_desc.text", isSupportedByPlaces: true },
+			{ alpha2: "MA", alpha3: "MAR", desc: "morocco_political_view_desc.text", isSupportedByPlaces: true },
+			{ alpha2: "RU", alpha3: "RUS", desc: "russia_political_view_desc.text", isSupportedByPlaces: true },
+			{ alpha2: "SD", alpha3: "SDN", desc: "sudan_political_view_desc.text", isSupportedByPlaces: true },
+			{ alpha2: "RS", alpha3: "SRB", desc: "serbia_political_view_desc.text", isSupportedByPlaces: true },
+			{ alpha2: "SR", alpha3: "SUR", desc: "suriname_political_view_desc.text", isSupportedByPlaces: true },
+			{ alpha2: "SY", alpha3: "SYR", desc: "syria_political_view_desc.text", isSupportedByPlaces: true },
+			{ alpha2: "TR", alpha3: "TUR", desc: "turkey_political_view_desc.text", isSupportedByPlaces: true },
+			{ alpha2: "TZ", alpha3: "TZA", desc: "tanzania_political_view_desc.text", isSupportedByPlaces: true },
+			{ alpha2: "UY", alpha3: "URY", desc: "uruguay_political_view_desc.text", isSupportedByPlaces: true },
+			{ alpha2: "GE", alpha3: "GEO", desc: "georgia_political_view_desc.text", isSupportedByPlaces: false },
+			{ alpha2: "CY", alpha3: "CYP", desc: "cyprus_political_view_desc.text", isSupportedByPlaces: false },
+			{ alpha2: "PS", alpha3: "PSE", desc: "palestine_political_view_desc.text", isSupportedByPlaces: false },
+			{ alpha2: "GR", alpha3: "GRC", desc: "greece_political_view_desc.text", isSupportedByPlaces: false }
+		],
+		MAP_LANGUAGES: [
+			{ value: "", label: "no_map_language.text" }, // Default
+			{ value: "ar", label: "العربية" }, // Arabic
+			{ value: "as", label: "অসমীয়া" }, // Assamese
+			{ value: "az", label: "Azərbaycan dili" }, // Azerbaijani
+			{ value: "be", label: "беларуская" }, // Belarusian
+			{ value: "bg", label: "български" }, // Bulgarian
+			{ value: "bn", label: "বাংলা" }, // Bengali
+			{ value: "bs", label: "Bosanski" }, // Bosnian
+			{ value: "ca", label: "Català" }, // Catalan
+			{ value: "cs", label: "Čeština" }, // Czech
+			{ value: "cy", label: "Cymraeg" }, // Welsh
+			{ value: "da", label: "Dansk" }, // Danish
+			{ value: "de", label: "Deutsch" }, // German
+			{ value: "el", label: "Ελληνικά" }, // Greek
+			{ value: "en", label: "English" }, // English
+			{ value: "es", label: "Español" }, // Spanish
+			{ value: "et", label: "Eesti" }, // Estonian
+			{ value: "eu", label: "Euskara" }, // Basque
+			{ value: "fi", label: "Suomi" }, // Finnish
+			{ value: "fo", label: "Føroyskt" }, // Faroese
+			{ value: "fr", label: "Français" }, // French
+			{ value: "ga", label: "Gaeilge" }, // Irish
+			{ value: "gl", label: "Galego" }, // Galician
+			{ value: "gn", label: "Avañe'ẽ" }, // Guarani
+			{ value: "gu", label: "ગુજરાતી" }, // Gujarati
+			{ value: "he", label: "עברית" }, // Hebrew
+			{ value: "hi", label: "हिन्दी" }, // Hindi
+			{ value: "hr", label: "Hrvatski" }, // Croatian
+			{ value: "hu", label: "Magyar" }, // Hungarian
+			{ value: "hy", label: "Հայերեն" }, // Armenian
+			{ value: "id", label: "Bahasa Indonesia" }, // Indonesian
+			{ value: "is", label: "Íslenska" }, // Icelandic
+			{ value: "it", label: "Italiano" }, // Italian
+			{ value: "ja", label: "日本語" }, // Japanese
+			{ value: "ka", label: "ქართული" }, // Georgian
+			{ value: "kk", label: "Қазақша" }, // Kazakh
+			{ value: "km", label: "ភាសាខ្មែរ" }, // Khmer
+			{ value: "kn", label: "ಕನ್ನಡ" }, // Kannada
+			{ value: "ko", label: "한국어" }, // Korean
+			{ value: "ky", label: "Кыргызча" }, // Kyrgyz
+			{ value: "lt", label: "Lietuvių" }, // Lithuanian
+			{ value: "lv", label: "Latviešu" }, // Latvian
+			{ value: "mk", label: "Македонски" }, // Macedonian
+			{ value: "ml", label: "മലയാളം" }, // Malayalam
+			{ value: "mr", label: "मराठी" }, // Marathi
+			{ value: "ms", label: "Bahasa Melayu" }, // Malay
+			{ value: "mt", label: "Malti" }, // Maltese
+			{ value: "my", label: "မြန်မာ" }, // Burmese
+			{ value: "nl", label: "Nederlands" }, // Dutch
+			{ value: "no", label: "Norsk" }, // Norwegian
+			{ value: "or", label: "ଓଡ଼ିଆ" }, // Odia
+			{ value: "pa", label: "ਪੰਜਾਬੀ" }, // Punjabi
+			{ value: "pl", label: "Polski" }, // Polish
+			{ value: "pt", label: "Português" }, // Portuguese
+			{ value: "ro", label: "Română" }, // Romanian
+			{ value: "ru", label: "Русский" }, // Russian
+			{ value: "sk", label: "Slovenčina" }, // Slovak
+			{ value: "sl", label: "Slovenščina" }, // Slovenian
+			{ value: "sq", label: "Shqip" }, // Albanian
+			{ value: "sr", label: "Српски" }, // Serbian
+			{ value: "sv", label: "Svenska" }, // Swedish
+			{ value: "ta", label: "தமிழ்" }, // Tamil
+			{ value: "te", label: "తెలుగు" }, // Telugu
+			{ value: "th", label: "ไทย" }, // Thai
+			{ value: "tr", label: "Türkçe" }, // Turkish
+			{ value: "uk", label: "Українська" }, // Ukrainian
+			{ value: "uz", label: "Oʻzbekcha" }, // Uzbek
+			{ value: "vi", label: "Tiếng Việt" }, // Vietnamese
+			{ value: "zh", label: "中文 (简体)" }, // Chinese (Simplified)
+			{ value: "zh-Hant", label: "中文 (繁體)" } // Chinese (Traditional)
 		],
 		GEOFENCE_COLLECTION: "location.aws.com.demo.geofences.GeofenceCollection",
 		DEVICE_ID_WEB: "web_browser_device",

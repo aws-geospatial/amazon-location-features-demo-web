@@ -3865,5 +3865,8 @@
   },
   "industry_overview": {
     "text": "Überblick über die Branche"
+  },
+  "no_map_language": {
+    "text": "Keine Kartensprache"
   }
 }

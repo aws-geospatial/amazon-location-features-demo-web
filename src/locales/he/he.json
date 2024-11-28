@@ -3865,5 +3865,8 @@
   },
   "industry_overview": {
     "text": "סקירה כללית של התעשייה"
+  },
+  "no_map_language": {
+    "text": "אין שפת מפה"
   }
 }

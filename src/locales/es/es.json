@@ -3865,5 +3865,8 @@
   },
   "industry_overview": {
     "text": "Descripción general de la industria"
+  },
+  "no_map_language": {
+    "text": "Sin idioma de mapa"
   }
 }
