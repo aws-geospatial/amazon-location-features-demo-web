@@ -3865,5 +3865,8 @@
   },
   "industry_overview": {
     "text": "產業概述"
+  },
+  "no_map_language": {
+    "text": "沒有地圖語言"
   }
 }

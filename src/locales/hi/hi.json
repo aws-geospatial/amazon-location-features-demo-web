@@ -3865,5 +3865,8 @@
   },
   "industry_overview": {
     "text": "उद्योग का अवलोकन"
+  },
+  "no_map_language": {
+    "text": "कोई मानचित्र भाषा नहीं"
   }
 }

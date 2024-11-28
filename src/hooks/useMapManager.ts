@@ -50,14 +50,20 @@ const useMapManager = ({
 	const [mapStyleWithLanguageUrl, setMapStyleWithLanguageUrl] = useState<MapStyle>();
 	const [gridLoader, setGridLoader] = useState(true);
 	const { handleStackRegion, stackRegion, baseValues, apiKey } = useAuth();
-	const { currentLocationData, setCurrentLocation, setViewpoint, mapStyle, mapColorScheme, mapPoliticalView } =
-		useMap();
+	const {
+		currentLocationData,
+		setCurrentLocation,
+		setViewpoint,
+		mapStyle,
+		mapColorScheme,
+		mapPoliticalView,
+		mapLanguage
+	} = useMap();
 	const { setMarker, marker, selectedMarker, clearPoiList, setZoom, setSelectedMarker } = usePlace();
 	const { routeData, setRouteData, resetStore: resetRouteStore } = useRoute();
 	const { resetStore: resetGeofenceStore } = useGeofence();
 	const { isEditingRoute, trackerPoints, setTrackerPoints, resetStore: resetTrackerStore } = useTracker();
-	const { t, i18n } = useTranslation();
-	const language = i18n.language;
+	const { t } = useTranslation();
 	const fastestRegion = localStorage.getItem(FASTEST_REGION) ?? fallbackRegion;
 	const defaultRegion = regionsData.find(option => option.value === fastestRegion) as { value: string; label: string };
 	const apiKeyRegion = useMemo(
@@ -80,10 +86,13 @@ const useMapManager = ({
 
 	useEffect(() => {
 		(async () => {
-			const styleWithLanguage = await getStyleWithPreferredLanguage(mapStyleUrl, language.slice(0, 2));
+			const styleWithLanguage = await getStyleWithPreferredLanguage(
+				mapStyleUrl,
+				!!mapLanguage.value ? mapLanguage.value : "en"
+			);
 			setMapStyleWithLanguageUrl(styleWithLanguage);
 		})();
-	}, [mapStyleUrl, language]);
+	}, [mapStyleUrl, mapLanguage]);
 
 	const onLoad = useCallback(() => {
 		clearPoiList();

@@ -3865,5 +3865,8 @@
   },
   "industry_overview": {
     "text": "نظرة عامة على الصناعة"
+  },
+  "no_map_language": {
+    "text": "لا توجد لغة خريطة"
   }
 }

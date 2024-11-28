@@ -5,7 +5,7 @@ import { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from "rea
 
 import { Card, Divider, Flex, Placeholder, Text } from "@aws-amplify/ui-react";
 import { IconClose, IconDark, IconGeofencePlusSolid, IconLight, IconMapSolid, IconRadar } from "@demo/assets/svgs";
-import { PoliticalViewDropdown } from "@demo/atomicui/atoms";
+import { MapLanguageDropdown, PoliticalViewDropdown } from "@demo/atomicui/atoms";
 import { appConfig } from "@demo/core/constants";
 import { useAuth, useGeofence, useMap, useUnauthSimulation } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
@@ -291,6 +291,9 @@ const MapButtons: FC<MapButtonsProps> = ({
 						</Flex>
 						<Flex gap={0} padding="1rem">
 							<PoliticalViewDropdown bordered disabled={mapStyle === MapStyleEnum.SATELLITE} />
+						</Flex>
+						<Flex gap={0} padding="1rem">
+							<MapLanguageDropdown bordered />
 						</Flex>
 					</Flex>
 				</Flex>
