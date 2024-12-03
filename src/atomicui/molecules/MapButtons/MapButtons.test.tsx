@@ -51,7 +51,8 @@ const mockUseMapData = {
 		alpha2: "",
 		alpha3: "",
 		desc: faker.random.word()
-	}
+	},
+	mapLanguage: { value: "en", label: "English" }
 };
 
 const mockUseGeofenceData = {
