@@ -3866,7 +3866,10 @@
   "industry_overview": {
     "text": "نظرة عامة على الصناعة"
   },
-  "no_map_language": {
-    "text": "لا توجد لغة خريطة"
+  "political_views": {
+    "text": "وجهات نظر سياسية"
+  },
+  "map_languages": {
+    "text": "لغات الخريطة"
   }
 }

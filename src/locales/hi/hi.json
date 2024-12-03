@@ -3866,7 +3866,10 @@
   "industry_overview": {
     "text": "उद्योग का अवलोकन"
   },
-  "no_map_language": {
-    "text": "कोई मानचित्र भाषा नहीं"
+  "political_views": {
+    "text": "राजनीतिक विचार"
+  },
+  "map_languages": {
+    "text": "मानचित्र भाषाएं"
   }
 }

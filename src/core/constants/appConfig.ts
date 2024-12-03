@@ -141,7 +141,7 @@ const appConfig = {
 			{ alpha2: "GR", alpha3: "GRC", desc: "greece_political_view_desc.text", isSupportedByPlaces: false }
 		],
 		MAP_LANGUAGES: [
-			{ value: "", label: "no_map_language.text" }, // Default
+			{ value: "en", label: "English" }, // English
 			{ value: "ar", label: "العربية" }, // Arabic
 			{ value: "as", label: "অসমীয়া" }, // Assamese
 			{ value: "az", label: "Azərbaycan dili" }, // Azerbaijani
@@ -155,7 +155,6 @@ const appConfig = {
 			{ value: "da", label: "Dansk" }, // Danish
 			{ value: "de", label: "Deutsch" }, // German
 			{ value: "el", label: "Ελληνικά" }, // Greek
-			{ value: "en", label: "English" }, // English
 			{ value: "es", label: "Español" }, // Spanish
 			{ value: "et", label: "Eesti" }, // Estonian
 			{ value: "eu", label: "Euskara" }, // Basque

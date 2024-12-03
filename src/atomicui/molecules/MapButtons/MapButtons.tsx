@@ -289,10 +289,16 @@ const MapButtons: FC<MapButtonsProps> = ({
 								))}
 							</Flex>
 						</Flex>
-						<Flex gap={0} padding="1rem">
+						<Flex gap={0} padding="1rem" direction="column">
+							<Text className="bold small-text" marginBottom="0.4rem">
+								{t("political_views.text")}
+							</Text>
 							<PoliticalViewDropdown bordered disabled={mapStyle === MapStyleEnum.SATELLITE} />
 						</Flex>
-						<Flex gap={0} padding="1rem">
+						<Flex gap={0} padding="1rem" direction="column">
+							<Text className="bold small-text" marginBottom="0.4rem">
+								{t("map_languages.text")}
+							</Text>
 							<MapLanguageDropdown bordered />
 						</Flex>
 					</Flex>

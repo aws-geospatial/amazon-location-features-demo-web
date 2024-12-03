@@ -52,7 +52,7 @@ const initialState: IStateProps<MapStoreProps> = {
 		isSupportedByPlaces: false
 	},
 	biasPosition: [US.longitude, US.latitude],
-	mapLanguage: { value: "", label: "no_map_language.text" }
+	mapLanguage: { value: "en", label: "English" }
 };
 
 export default createStore<MapStoreProps>(initialState, true, localStorageKey);

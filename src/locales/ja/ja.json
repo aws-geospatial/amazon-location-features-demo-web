@@ -3866,7 +3866,10 @@
   "industry_overview": {
     "text": "業界概要"
   },
-  "no_map_language": {
-    "text": "マップ言語なし"
+  "political_views": {
+    "text": "政治的見解"
+  },
+  "map_languages": {
+    "text": "マップ言語"
   }
 }
