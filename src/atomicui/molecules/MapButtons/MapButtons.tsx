@@ -5,7 +5,7 @@ import { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from "rea
 
 import { Card, Divider, Flex, Placeholder, Text } from "@aws-amplify/ui-react";
 import { IconClose, IconDark, IconGeofencePlusSolid, IconLight, IconMapSolid, IconRadar } from "@demo/assets/svgs";
-import { PoliticalViewDropdown } from "@demo/atomicui/atoms";
+import { MapLanguageDropdown, PoliticalViewDropdown } from "@demo/atomicui/atoms";
 import { appConfig } from "@demo/core/constants";
 import { useAuth, useGeofence, useMap, useUnauthSimulation } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
@@ -154,7 +154,7 @@ const MapButtons: FC<MapButtonsProps> = ({
 			if (mapStyle !== style) {
 				onShowGridLoader();
 				style === MapStyleEnum.SATELLITE &&
-					setMapPoliticalView({ alpha2: "", alpha3: "", desc: "no_political_view.text" });
+					setMapPoliticalView({ alpha2: "", alpha3: "", desc: "no_political_view.text", isSupportedByPlaces: false });
 				setMapStyle(style);
 				record([
 					{
@@ -230,7 +230,7 @@ const MapButtons: FC<MapButtonsProps> = ({
 								</Flex>
 							))}
 						</Flex>
-						<Flex gap={0} padding="0 1rem">
+						<Flex gap={0} padding="1rem">
 							<Flex
 								gap={0}
 								borderRadius="0.61rem"
@@ -289,10 +289,17 @@ const MapButtons: FC<MapButtonsProps> = ({
 								))}
 							</Flex>
 						</Flex>
-						<Flex gap={0} padding="2rem 1rem 0rem 1rem" direction="column">
-							<Flex gap={0} padding="1rem 0rem">
-								<PoliticalViewDropdown bordered disabled={mapStyle === MapStyleEnum.SATELLITE} />
-							</Flex>
+						<Flex gap={0} padding="1rem" direction="column">
+							<Text className="bold small-text" marginBottom="0.4rem">
+								{t("political_views.text")}
+							</Text>
+							<PoliticalViewDropdown bordered disabled={mapStyle === MapStyleEnum.SATELLITE} />
+						</Flex>
+						<Flex gap={0} padding="1rem" direction="column">
+							<Text className="bold small-text" marginBottom="0.4rem">
+								{t("map_languages.text")}
+							</Text>
+							<MapLanguageDropdown bordered />
 						</Flex>
 					</Flex>
 				</Flex>

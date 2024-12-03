@@ -3865,5 +3865,11 @@
   },
   "industry_overview": {
     "text": "Panoramica del settore"
+  },
+  "political_views": {
+    "text": "Opinioni politiche"
+  },
+  "map_languages": {
+    "text": "Lingue della mappa"
   }
 }

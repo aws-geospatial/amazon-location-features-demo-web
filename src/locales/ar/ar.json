@@ -3865,5 +3865,11 @@
   },
   "industry_overview": {
     "text": "نظرة عامة على الصناعة"
+  },
+  "political_views": {
+    "text": "وجهات نظر سياسية"
+  },
+  "map_languages": {
+    "text": "لغات الخريطة"
   }
 }
