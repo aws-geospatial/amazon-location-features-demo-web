@@ -86,10 +86,7 @@ const useMapManager = ({
 
 	useEffect(() => {
 		(async () => {
-			const styleWithLanguage = await getStyleWithPreferredLanguage(
-				mapStyleUrl,
-				!!mapLanguage.value ? mapLanguage.value : "en"
-			);
+			const styleWithLanguage = await getStyleWithPreferredLanguage(mapStyleUrl, mapLanguage.value);
 			setMapStyleWithLanguageUrl(styleWithLanguage);
 		})();
 	}, [mapStyleUrl, mapLanguage]);

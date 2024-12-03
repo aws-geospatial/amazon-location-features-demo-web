@@ -3866,7 +3866,10 @@
   "industry_overview": {
     "text": "Descripción general de la industria"
   },
-  "no_map_language": {
-    "text": "Sin idioma de mapa"
+  "political_views": {
+    "text": "Puntos de vista políticos"
+  },
+  "map_languages": {
+    "text": "Idiomas del mapa"
   }
 }

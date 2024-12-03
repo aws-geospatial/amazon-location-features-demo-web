@@ -3866,7 +3866,10 @@
   "industry_overview": {
     "text": "업계 개요"
   },
-  "no_map_language": {
-    "text": "맵 언어 없음"
+  "political_views": {
+    "text": "정치적 견해"
+  },
+  "map_languages": {
+    "text": "맵 언어"
   }
 }
