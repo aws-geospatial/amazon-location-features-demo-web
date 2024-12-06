@@ -3865,5 +3865,11 @@
   },
   "industry_overview": {
     "text": "Industry overview"
+  },
+  "political_views": {
+    "text": "Political Views"
+  },
+  "map_languages": {
+    "text": "Map Languages"
   }
 }

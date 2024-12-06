@@ -3865,5 +3865,11 @@
   },
   "industry_overview": {
     "text": "產業概述"
+  },
+  "political_views": {
+    "text": "政治觀點"
+  },
+  "map_languages": {
+    "text": "地圖語言"
   }
 }

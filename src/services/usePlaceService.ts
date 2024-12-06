@@ -23,7 +23,10 @@ const {
 
 const usePlaceService = () => {
 	const { placesClient } = useClient();
-	const { mapPoliticalView, biasPosition: BiasPosition } = useMap();
+	const {
+		mapPoliticalView: { alpha3, isSupportedByPlaces },
+		biasPosition: BiasPosition
+	} = useMap();
 	const { i18n } = useTranslation();
 	const Language = i18n.language;
 
@@ -35,7 +38,7 @@ const usePlaceService = () => {
 					BiasPosition,
 					Language,
 					AdditionalFeatures: ["Core"],
-					PoliticalView: mapPoliticalView.alpha3 || undefined
+					PoliticalView: isSupportedByPlaces ? alpha3 : undefined
 				};
 				const command = new SuggestCommand(input);
 				return await placesClient?.send(command);
@@ -45,7 +48,7 @@ const usePlaceService = () => {
 					PlaceId,
 					Language,
 					AdditionalFeatures: ["Contact"],
-					PoliticalView: mapPoliticalView.alpha3 || undefined
+					PoliticalView: isSupportedByPlaces ? alpha3 : undefined
 				};
 				const command = new GetPlaceCommand(input);
 				return await placesClient?.send(command);
@@ -56,7 +59,7 @@ const usePlaceService = () => {
 					QueryId: isQueryId ? QueryTextOrId : undefined,
 					BiasPosition: isQueryId ? undefined : BiasPosition,
 					Language: isQueryId ? undefined : Language,
-					PoliticalView: mapPoliticalView.alpha3 || undefined
+					PoliticalView: isSupportedByPlaces ? alpha3 : undefined
 				};
 				const command = new SearchTextCommand(input);
 				return await placesClient?.send(command);
@@ -65,7 +68,7 @@ const usePlaceService = () => {
 				const input: ReverseGeocodeCommandInput = {
 					QueryPosition,
 					Language,
-					PoliticalView: mapPoliticalView.alpha3 || undefined
+					PoliticalView: isSupportedByPlaces ? alpha3 : undefined
 				};
 				const command = new ReverseGeocodeCommand(input);
 				return await placesClient?.send(command);
@@ -93,7 +96,7 @@ const usePlaceService = () => {
 				return responseBody;
 			}
 		}),
-		[BiasPosition, Language, mapPoliticalView.alpha3, placesClient]
+		[BiasPosition, Language, alpha3, isSupportedByPlaces, placesClient]
 	);
 };
 

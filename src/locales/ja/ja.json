@@ -3865,5 +3865,11 @@
   },
   "industry_overview": {
     "text": "業界概要"
+  },
+  "political_views": {
+    "text": "政治的見解"
+  },
+  "map_languages": {
+    "text": "マップ言語"
   }
 }

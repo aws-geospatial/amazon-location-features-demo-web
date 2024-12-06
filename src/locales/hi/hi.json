@@ -3865,5 +3865,11 @@
   },
   "industry_overview": {
     "text": "उद्योग का अवलोकन"
+  },
+  "political_views": {
+    "text": "राजनीतिक विचार"
+  },
+  "map_languages": {
+    "text": "मानचित्र भाषाएं"
   }
 }

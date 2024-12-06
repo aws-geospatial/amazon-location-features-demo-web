@@ -3861,5 +3861,11 @@
   },
   "industry_overview": {
     "text": "行业概述"
+  },
+  "political_views": {
+    "text": "政治观点"
+  },
+  "map_languages": {
+    "text": "地图语言"
   }
 }

@@ -3865,5 +3865,11 @@
   },
   "industry_overview": {
     "text": "סקירה כללית של התעשייה"
+  },
+  "political_views": {
+    "text": "דעות פוליטיות"
+  },
+  "map_languages": {
+    "text": "שפות מפה"
   }
 }
