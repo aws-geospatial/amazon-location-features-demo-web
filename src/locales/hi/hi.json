@@ -3871,5 +3871,17 @@
   },
   "map_languages": {
     "text": "मानचित्र भाषाएं"
+  },
+  "georgia_political_view_desc": {
+    "text": "जॉर्जिया का राजनीतिक दृष्टिकोण"
+  },
+  "cyprus_political_view_desc": {
+    "text": "साइप्रस का राजनीतिक दृष्टिकोण"
+  },
+  "palestine_political_view_desc": {
+    "text": "फिलिस्तीन का राजनीतिक दृष्टिकोण"
+  },
+  "greece_political_view_desc": {
+    "text": "ग्रीस का राजनीतिक नज़रिया"
   }
 }

@@ -3871,5 +3871,17 @@
   },
   "map_languages": {
     "text": "地圖語言"
+  },
+  "georgia_political_view_desc": {
+    "text": "格鲁吉亚政治觀"
+  },
+  "cyprus_political_view_desc": {
+    "text": "塞浦路斯政治觀點"
+  },
+  "palestine_political_view_desc": {
+    "text": "巴勒斯坦政治觀"
+  },
+  "greece_political_view_desc": {
+    "text": "希臘政治觀"
   }
 }

@@ -3871,5 +3871,17 @@
   },
   "map_languages": {
     "text": "Lingue della mappa"
+  },
+  "georgia_political_view_desc": {
+    "text": "La visione politica della Georgia"
+  },
+  "cyprus_political_view_desc": {
+    "text": "La visione politica di Cipro"
+  },
+  "palestine_political_view_desc": {
+    "text": "La visione politica della Palestina"
+  },
+  "greece_political_view_desc": {
+    "text": "La visione politica della Grecia"
   }
 }
