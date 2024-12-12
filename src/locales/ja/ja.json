@@ -3871,5 +3871,17 @@
   },
   "map_languages": {
     "text": "マップ言語"
+  },
+  "georgia_political_view_desc": {
+    "text": "ジョージアの政治的見解"
+  },
+  "cyprus_political_view_desc": {
+    "text": "キプロスの政治的見解"
+  },
+  "palestine_political_view_desc": {
+    "text": "パレスチナの政治的見解"
+  },
+  "greece_political_view_desc": {
+    "text": "ギリシャの政治的見解"
   }
 }
