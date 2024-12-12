@@ -3861,5 +3861,23 @@
   },
   "industry_overview": {
     "text": "行业概述"
+  },
+  "political_views": {
+    "text": "政治观点"
+  },
+  "map_languages": {
+    "text": "地图语言"
+  },
+  "georgia_political_view_desc": {
+    "text": "格鲁吉亚的政治观点"
+  },
+  "cyprus_political_view_desc": {
+    "text": "塞浦路斯的政治观点"
+  },
+  "palestine_political_view_desc": {
+    "text": "巴勒斯坦的政治观点"
+  },
+  "greece_political_view_desc": {
+    "text": "希腊的政治观点"
   }
 }

@@ -3865,5 +3865,23 @@
   },
   "industry_overview": {
     "text": "סקירה כללית של התעשייה"
+  },
+  "political_views": {
+    "text": "דעות פוליטיות"
+  },
+  "map_languages": {
+    "text": "שפות מפה"
+  },
+  "georgia_political_view_desc": {
+    "text": "ההשקפה הפוליטית של ג'ורג'יה"
+  },
+  "cyprus_political_view_desc": {
+    "text": "ההשקפה הפוליטית של קפריסין"
+  },
+  "palestine_political_view_desc": {
+    "text": "השקפה הפוליטית של פלסטין"
+  },
+  "greece_political_view_desc": {
+    "text": "ההשקפה הפוליטית של יוון"
   }
 }

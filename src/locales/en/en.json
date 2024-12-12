@@ -3865,5 +3865,23 @@
   },
   "industry_overview": {
     "text": "Industry overview"
+  },
+  "political_views": {
+    "text": "Political Views"
+  },
+  "map_languages": {
+    "text": "Map Languages"
+  },
+  "georgia_political_view_desc": {
+    "text": "Georgia's political view"
+  },
+  "cyprus_political_view_desc": {
+    "text": "Cyprus's political view"
+  },
+  "palestine_political_view_desc": {
+    "text": "Palestine's political view"
+  },
+  "greece_political_view_desc": {
+    "text": "Greece's political view"
   }
 }

@@ -60,6 +60,9 @@ const useMap = () => {
 			setBiasPosition: (biasPosition: number[]) => {
 				setState({ biasPosition });
 			},
+			setMapLanguage: (mapLanguage: { value: string; label: string }) => {
+				setState({ mapLanguage });
+			},
 			resetStore() {
 				setState({
 					currentLocationData: undefined

@@ -3865,5 +3865,23 @@
   },
   "industry_overview": {
     "text": "نظرة عامة على الصناعة"
+  },
+  "political_views": {
+    "text": "وجهات نظر سياسية"
+  },
+  "map_languages": {
+    "text": "لغات الخريطة"
+  },
+  "georgia_political_view_desc": {
+    "text": "وجهة نظر جورجيا السياسية"
+  },
+  "cyprus_political_view_desc": {
+    "text": "وجهة النظر السياسية في قبرص"
+  },
+  "palestine_political_view_desc": {
+    "text": "نظرة فلسطين السياسية"
+  },
+  "greece_political_view_desc": {
+    "text": "وجهة نظر اليونان السياسية"
   }
 }

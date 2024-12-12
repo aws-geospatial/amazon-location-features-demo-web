@@ -3865,5 +3865,23 @@
   },
   "industry_overview": {
     "text": "Überblick über die Branche"
+  },
+  "political_views": {
+    "text": "Politische Ansichten"
+  },
+  "map_languages": {
+    "text": "Sprachen der Karte"
+  },
+  "georgia_political_view_desc": {
+    "text": "Georgiens politische Sichtweise"
+  },
+  "cyprus_political_view_desc": {
+    "text": "Zyperns politische Sichtweise"
+  },
+  "palestine_political_view_desc": {
+    "text": "Palästinas politische Sichtweise"
+  },
+  "greece_political_view_desc": {
+    "text": "Griechenlands politische Sichtweise"
   }
 }

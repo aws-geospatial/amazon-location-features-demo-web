@@ -3865,5 +3865,23 @@
   },
   "industry_overview": {
     "text": "업계 개요"
+  },
+  "political_views": {
+    "text": "정치적 견해"
+  },
+  "map_languages": {
+    "text": "맵 언어"
+  },
+  "georgia_political_view_desc": {
+    "text": "조지아의 정치적 견해"
+  },
+  "cyprus_political_view_desc": {
+    "text": "키프로스의 정치적 견해"
+  },
+  "palestine_political_view_desc": {
+    "text": "팔레스타인의 정치적 견해"
+  },
+  "greece_political_view_desc": {
+    "text": "그리스의 정치적 견해"
   }
 }
