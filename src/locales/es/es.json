@@ -3883,5 +3883,17 @@
   },
   "greece_political_view_desc": {
     "text": "La visión política de Grecia"
+  },
+  "avoid_dirtroads": {
+    "text": "Evite los caminos de tierra"
+  },
+  "avoid_uturns": {
+    "text": "Evite los cambios de sentido"
+  },
+  "avoid_tunnels": {
+    "text": "Evita los túneles"
+  },
+  "avoid": {
+    "text": "Evitar"
   }
 }

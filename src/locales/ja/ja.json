@@ -3883,5 +3883,17 @@
   },
   "greece_political_view_desc": {
     "text": "ギリシャの政治的見解"
+  },
+  "avoid_dirtroads": {
+    "text": "未舗装の道路は避けてください"
+  },
+  "avoid_uturns": {
+    "text": "ターンを避ける"
+  },
+  "avoid_tunnels": {
+    "text": "トンネルは避けてください"
+  },
+  "avoid": {
+    "text": "避ける"
   }
 }

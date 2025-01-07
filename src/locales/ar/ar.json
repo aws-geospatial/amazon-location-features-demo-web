@@ -3883,5 +3883,17 @@
   },
   "greece_political_view_desc": {
     "text": "وجهة نظر اليونان السياسية"
+  },
+  "avoid_dirtroads": {
+    "text": "تجنب الطرق الترابية"
+  },
+  "avoid_uturns": {
+    "text": "تجنب المنعطفات"
+  },
+  "avoid_tunnels": {
+    "text": "تجنب الأنفاق"
+  },
+  "avoid": {
+    "text": "تجنب"
   }
 }
