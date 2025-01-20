@@ -611,6 +611,8 @@ const RouteBox: FC<RouteBoxProps> = ({
 						: "route-options-container bottom-border-radius"
 				}
 			>
+				{/* Placeholder for another dropdown to be added later */}
+				<div style={{ width: "100%" }} />
 				<DropdownEl
 					label={t("avoid.text")}
 					defaultOption={Object.keys(routeOptions)
