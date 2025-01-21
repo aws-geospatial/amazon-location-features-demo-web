@@ -2,15 +2,11 @@
 /* SPDX-License-Identifier: MIT-0 */
 
 export type RouteOptionsType = {
-    avoidTolls: boolean;
-    avoidFerries: boolean;
-    avoidCarShuttleTrains: boolean;
-    avoidControlledAccessHighways: boolean;
-    avoidDirtRoads: boolean;
-    avoidSeasonalClosure: boolean;
-    avoidTollTransponders: boolean;
-    avoidTruckRoadTypes: string[];
-    avoidTunnels: boolean;
-    avoidUTurns: boolean;
-    [key: string]: any;  // Add index signature to allow string keys
+	avoidTolls: boolean;
+	avoidFerries: boolean;
+	avoidDirtRoads: boolean;
+	avoidUTurns: boolean;
+	avoidTunnels: boolean;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	[key: string]: any; // Add index signature to allow string keys
 };
