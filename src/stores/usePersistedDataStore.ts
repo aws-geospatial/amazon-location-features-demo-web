@@ -21,7 +21,18 @@ interface PersistedDataStoreProps {
 const initialState: IStateProps<PersistedDataStoreProps> = {
 	showAppDownloadNotification: true,
 	showWelcomeModal: true,
-	defaultRouteOptions: { avoidFerries: true, avoidTolls: true },
+	defaultRouteOptions: {
+		avoidFerries: true,
+		avoidTolls: true,
+		avoidCarShuttleTrains: true,
+		avoidControlledAccessHighways: true,
+		avoidDirtRoads: true,
+		avoidSeasonalClosure: true,
+		avoidTollTransponders: true,
+		avoidTruckRoadTypes: [""],
+		avoidTunnels: true,
+		avoidUTurns: true
+	},
 	settingsOptions: SettingOptionEnum.UNITS
 };
 
