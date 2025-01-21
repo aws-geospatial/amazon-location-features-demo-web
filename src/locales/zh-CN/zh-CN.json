@@ -3879,5 +3879,17 @@
   },
   "greece_political_view_desc": {
     "text": "希腊的政治观点"
+  },
+  "avoid_dirtroads": {
+    "text": "避开土路"
+  },
+  "avoid_uturns": {
+    "text": "避免 UTurns"
+  },
+  "avoid_tunnels": {
+    "text": "避开隧道"
+  },
+  "avoid": {
+    "text": "避免"
   }
 }

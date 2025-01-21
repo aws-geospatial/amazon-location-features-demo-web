@@ -3883,5 +3883,17 @@
   },
   "greece_political_view_desc": {
     "text": "그리스의 정치적 견해"
+  },
+  "avoid_dirtroads": {
+    "text": "비포장 도로를 피하십시오"
+  },
+  "avoid_uturns": {
+    "text": "유턴을 피하세요"
+  },
+  "avoid_tunnels": {
+    "text": "터널을 피하세요"
+  },
+  "avoid": {
+    "text": "피하십시오"
   }
 }
