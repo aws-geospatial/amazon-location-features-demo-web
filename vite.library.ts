@@ -53,7 +53,6 @@ export default defineConfig(() => {
 				fileName: (format, name) => `${name}.${format}.js`
 			},
 			rollupOptions: {
-				emptyOutDir: true,
 				external: [
 					/* Core deps */
 					"@aws-amplify/ui-react",
@@ -98,7 +97,9 @@ export default defineConfig(() => {
 					globals: {
 						react: "React",
 						"react-dom": "ReactDOM"
-					}
+					},
+					assetFileNames: chunkInfo =>
+						chunkInfo.names.includes("amazon-location-features-demo-web.css") ? "style.css" : chunkInfo.names.join("-")
 				}
 			}
 		},
