@@ -12,7 +12,6 @@ import { record } from "./utils/analyticsUtils";
 import { debounce } from "./utils/debounce";
 import { clearStorage } from "./utils/localstorageUtils";
 
-export * as theme from "./theme";
 export { default as DemoPage } from "./atomicui/pages/DemoPage/DemoPage";
 export {
 	useAuth,
