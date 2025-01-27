@@ -1130,9 +1130,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 							{renderTravelModes}
 						</Flex>
 					)}
-					{isDesktop &&
-						[TravelMode.CAR, TravelMode.TRUCK].includes(travelMode as TravelMode) &&
-						renderRouteOptionsContainer}
+					{isDesktop && renderRouteOptionsContainer}
 					<View
 						className={`search-results-container ${!isDesktop ? "search-results-container-mobile" : ""}`}
 						maxHeight={!isDesktop ? bottomSheetCurrentHeight - 230 : window.innerHeight - 260}
