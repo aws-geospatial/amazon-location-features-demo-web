@@ -29,6 +29,7 @@ import {
 	IconTruckSolid,
 	IconWalking
 } from "@demo/assets/svgs";
+import { DropdownEl } from "@demo/atomicui/atoms";
 import { NotFoundCard, StepCard } from "@demo/atomicui/molecules";
 import { appConfig } from "@demo/core/constants";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
@@ -129,7 +130,6 @@ const RouteBox: FC<RouteBoxProps> = ({
 		setDirections
 	} = useRoute();
 	const { defaultRouteOptions } = usePersistedData();
-	const [expandRouteOptions, setExpandRouteOptions] = useState(false);
 	const [routeOptions, setRouteOptions] = useState<RouteOptionsType>({ ...defaultRouteOptions });
 	const { isDesktop, isDesktopBrowser } = useDeviceMediaQuery();
 	const { t, i18n } = useTranslation();
@@ -257,20 +257,34 @@ const RouteBox: FC<RouteBoxProps> = ({
 			const obj = getDestDept();
 
 			if (obj?.DeparturePosition && obj?.DestinationPosition) {
+				const isModePedestrianOrScooter = mode === TravelMode.PEDESTRIAN || mode === TravelMode.SCOOTER;
+				const uturnAvoidanceOption = isModePedestrianOrScooter ? {} : { UTurns: routeOptions.avoidUTurns };
+
 				const params: CalculateRoutesCommandInput = {
 					Origin: obj.DeparturePosition,
 					Destination: obj.DestinationPosition,
 					TravelMode: mode,
 					Avoid: {
 						TollRoads: routeOptions.avoidTolls,
-						Ferries: routeOptions.avoidFerries
+						Ferries: routeOptions.avoidFerries,
+						DirtRoads: routeOptions.avoidDirtRoads,
+						Tunnels: routeOptions.avoidTunnels,
+						...uturnAvoidanceOption
 					},
 					InstructionsMeasurementSystem: mapUnit
 				};
 				return params;
 			}
 		},
-		[getDestDept, mapUnit, routeOptions.avoidFerries, routeOptions.avoidTolls]
+		[
+			getDestDept,
+			mapUnit,
+			routeOptions.avoidFerries,
+			routeOptions.avoidTolls,
+			routeOptions.avoidDirtRoads,
+			routeOptions.avoidTunnels,
+			routeOptions.avoidUTurns
+		]
 	);
 
 	const calculateRouteDataForAllTravelModes = useCallback(async () => {
@@ -508,9 +522,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 		value.to.length
 	]);
 
-	const onClickRouteOptions = useCallback(() => setExpandRouteOptions(!expandRouteOptions), [expandRouteOptions]);
-
-	const MoreOptionsUI = useCallback(
+	const MoreOptionsUIMobile = useCallback(
 		() => (
 			<View className="route-option-items">
 				<CheckboxField
@@ -539,6 +551,48 @@ const RouteBox: FC<RouteBoxProps> = ({
 					}}
 					crossOrigin={undefined}
 				/>
+
+				<CheckboxField
+					className="option-item"
+					label={t("avoid_dirtroads.text")}
+					name={t("avoid_dirtroads.text")}
+					value="Avoid Dirtroads"
+					checked={routeOptions.avoidDirtRoads}
+					onChange={e => {
+						setRouteOptions({ ...routeOptions, avoidDirtRoads: e.target.checked });
+						setRouteData(undefined);
+						setRouteDataForMobile(undefined);
+					}}
+					crossOrigin={undefined}
+				/>
+
+				<CheckboxField
+					className="option-item"
+					label={t("avoid_uturns.text")}
+					name={t("avoid_uturns.text")}
+					value="Avoid Uturns"
+					checked={routeOptions.avoidUTurns}
+					onChange={e => {
+						setRouteOptions({ ...routeOptions, avoidUTurns: e.target.checked });
+						setRouteData(undefined);
+						setRouteDataForMobile(undefined);
+					}}
+					crossOrigin={undefined}
+				/>
+
+				<CheckboxField
+					className="option-item"
+					label={t("avoid_tunnels.text")}
+					name={t("avoid_tunnels.text")}
+					value="Avoid Tunnels"
+					checked={routeOptions.avoidTunnels}
+					onChange={e => {
+						setRouteOptions({ ...routeOptions, avoidTunnels: e.target.checked });
+						setRouteData(undefined);
+						setRouteDataForMobile(undefined);
+					}}
+					crossOrigin={undefined}
+				/>
 			</View>
 		),
 		[routeOptions, setRouteData, t]
@@ -557,32 +611,58 @@ const RouteBox: FC<RouteBoxProps> = ({
 						: "route-options-container bottom-border-radius"
 				}
 			>
-				{!expandRouteOptions ? (
-					<Text className="collapsed-route-options-text" onClick={onClickRouteOptions}>
-						{t("route_box__route_options.text")}
-					</Text>
-				) : (
-					<View className="expanded-route-options">
-						<Text className="text-1">{t("route_box__route_options.text")}</Text>
-						<Text className="text-2" onClick={onClickRouteOptions}>
-							{t("route_box__close.text")}
-						</Text>
-					</View>
-				)}
-				{expandRouteOptions && <MoreOptionsUI />}
+				{/* Placeholder for another dropdown to be added later */}
+				<div style={{ width: "100%" }} />
+				<DropdownEl
+					label={t("avoid.text")}
+					defaultOption={Object.keys(routeOptions)
+						.filter(key => routeOptions[key])
+						.map(key => ({ value: key, label: t(key) }))}
+					options={[
+						{ value: "avoidTolls", label: t("avoid_tolls.text") },
+						{ value: "avoidFerries", label: t("avoid_ferries.text") },
+						{ value: "avoidDirtRoads", label: t("avoid_dirtroads.text") },
+						{ value: "avoidUTurns", label: t("avoid_uturns.text") },
+						{ value: "avoidTunnels", label: t("avoid_tunnels.text") }
+					]}
+					onSelect={option => {
+						switch (option.value) {
+							case "avoidTolls":
+								setRouteOptions({ ...routeOptions, avoidTolls: !routeOptions.avoidTolls });
+								break;
+							case "avoidFerries":
+								setRouteOptions({ ...routeOptions, avoidFerries: !routeOptions.avoidFerries });
+								break;
+							case "avoidDirtRoads":
+								setRouteOptions({ ...routeOptions, avoidDirtRoads: !routeOptions.avoidDirtRoads });
+								break;
+							case "avoidUTurns":
+								setRouteOptions({ ...routeOptions, avoidUTurns: !routeOptions.avoidUTurns });
+								break;
+							case "avoidTunnels":
+								setRouteOptions({ ...routeOptions, avoidTunnels: !routeOptions.avoidTunnels });
+								break;
+							default:
+								break;
+						}
+						setRouteData(undefined);
+						setRouteDataForMobile(undefined);
+					}}
+					showSelected={false}
+					isCheckbox={true}
+				/>
 			</View>
 		),
 		[
+			setRouteData,
+			routeOptions,
 			inputFocused,
 			isCurrentLocationSelected,
 			suggestions.from?.length,
 			suggestions.to?.length,
 			isSearching,
 			routeData,
-			expandRouteOptions,
-			onClickRouteOptions,
-			t,
-			MoreOptionsUI
+			t
 		]
 	);
 
@@ -899,7 +979,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 						<Text fontFamily="AmazonEmber-Bold" fontSize="1.23rem">
 							{t("route_box__route_options.text")}
 						</Text>
-						<MoreOptionsUI />
+						<MoreOptionsUIMobile />
 					</Flex>
 				</Flex>
 				{routeFromMarker}
@@ -1050,9 +1130,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 							{renderTravelModes}
 						</Flex>
 					)}
-					{isDesktop &&
-						[TravelMode.CAR, TravelMode.TRUCK].includes(travelMode as TravelMode) &&
-						renderRouteOptionsContainer}
+					{isDesktop && renderRouteOptionsContainer}
 					<View
 						className={`search-results-container ${!isDesktop ? "search-results-container-mobile" : ""}`}
 						maxHeight={!isDesktop ? bottomSheetCurrentHeight - 230 : window.innerHeight - 260}

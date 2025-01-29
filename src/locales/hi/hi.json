@@ -3883,5 +3883,17 @@
   },
   "greece_political_view_desc": {
     "text": "ग्रीस का राजनीतिक नज़रिया"
+  },
+  "avoid_dirtroads": {
+    "text": "गंदगी वाली सड़कों से बचें"
+  },
+  "avoid_uturns": {
+    "text": "uTurns से बचें"
+  },
+  "avoid_tunnels": {
+    "text": "सुरंगों से बचें"
+  },
+  "avoid": {
+    "text": "बचें"
   }
 }

@@ -3883,5 +3883,17 @@
   },
   "greece_political_view_desc": {
     "text": "ההשקפה הפוליטית של יוון"
+  },
+  "avoid_dirtroads": {
+    "text": "הימנע מכבישי עפר"
+  },
+  "avoid_uturns": {
+    "text": "הימנע מ- uTurns"
+  },
+  "avoid_tunnels": {
+    "text": "הימנע ממנהרות"
+  },
+  "avoid": {
+    "text": "הימנע"
   }
 }

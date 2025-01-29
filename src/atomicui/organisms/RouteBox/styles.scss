@@ -134,6 +134,7 @@
 			&.no-duration {
 				background-color: var(--light-color-2) !important;
 				border: 1px solid var(--grey-color-3) !important;
+
 				svg {
 					fill: #8e8e93 !important;
 				}
@@ -165,6 +166,7 @@
 		border-radius: 8px;
 		padding: 4px;
 		margin-right: 0.5rem;
+
 		&:hover {
 			background-color: var(--ghost-white);
 		}
@@ -182,6 +184,7 @@
 
 			.inputs-container {
 				width: 100%;
+
 				input {
 					background-color: var(--light-color-2);
 				}
@@ -196,6 +199,7 @@
 					width: 16px;
 					height: 16px;
 				}
+
 				.dashed-line {
 					height: 3px;
 				}
@@ -292,8 +296,13 @@
 	}
 
 	.route-options-container {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		gap: 10px;
 		background-color: var(--light-color-2);
-		padding: 11px 15px 11px 15px;
+		padding: 11px 15px;
+		cursor: pointer !important;
 
 		.collapsed-route-options-text {
 			opacity: 1 !important;
@@ -304,7 +313,6 @@
 			letter-spacing: 0px !important;
 			text-align: right !important;
 			line-height: 18px !important;
-			cursor: pointer !important;
 		}
 
 		.expanded-route-options {
@@ -532,6 +540,7 @@
 
 			&.steps-container-mobile {
 				padding: 0;
+
 				.step-card-icon-container {
 					margin-left: 0;
 				}
