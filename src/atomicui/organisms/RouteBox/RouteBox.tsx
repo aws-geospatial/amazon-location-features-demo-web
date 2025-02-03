@@ -614,10 +614,11 @@ const RouteBox: FC<RouteBoxProps> = ({
 				{/* Placeholder for another dropdown to be added later */}
 				<div style={{ width: "100%" }} />
 				<DropdownEl
+					dataTestId="route-avoidance-dropdown"
 					label={t("avoid.text")}
-					defaultOption={Object.keys(routeOptions)
-						.filter(key => routeOptions[key])
-						.map(key => ({ value: key, label: t(key) }))}
+					defaultOption={Object.entries(routeOptions)
+						.filter(([_, value]) => value)
+						.map(([key]) => ({ value: key, label: t(key) }))}
 					options={[
 						{ value: "avoidTolls", label: t("avoid_tolls.text") },
 						{ value: "avoidFerries", label: t("avoid_ferries.text") },
