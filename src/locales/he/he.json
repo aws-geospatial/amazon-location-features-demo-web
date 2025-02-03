@@ -3895,5 +3895,14 @@
   },
   "avoid": {
     "text": "הימנע"
+  },
+  "arrive_by": {
+    "text": "הגעה עד"
+  },
+  "depart_at": {
+    "text": "יציאה ב"
+  },
+  "leave_now": {
+    "text": "עזוב עכשיו"
   }
 }

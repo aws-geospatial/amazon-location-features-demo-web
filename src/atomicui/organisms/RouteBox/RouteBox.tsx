@@ -1,9 +1,19 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { ChangeEvent, FC, MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+	ChangeEvent,
+	FC,
+	MutableRefObject,
+	SetStateAction,
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+	useState
+} from "react";
 
-import { Button, Card, CheckboxField, Flex, Text, View } from "@aws-amplify/ui-react";
+import { Button, Card, CheckboxField, Flex, Text, TextField, View } from "@aws-amplify/ui-react";
 import {
 	CalculateRoutesCommandInput,
 	RouteFerryLegDetails,
@@ -77,6 +87,13 @@ interface RouteBoxProps {
 	bottomSheetRef?: MutableRefObject<RefHandles | null>;
 }
 
+// Add new enum for time selection mode
+enum TimeSelectionMode {
+	LEAVE_NOW = "leave_now.text",
+	DEPART_AT = "depart_at.text",
+	ARRIVE_BY = "arrive_by.text"
+}
+
 const RouteBox: FC<RouteBoxProps> = ({
 	mapRef,
 	setShowRouteBox,
@@ -141,6 +158,11 @@ const RouteBox: FC<RouteBoxProps> = ({
 	const toInputRef = useRef<HTMLInputElement>(null);
 	const isInputFocused = inputFocused.from || inputFocused.to;
 	const isBothInputFilled = value.from && value.to;
+	const [timeSelectionMode, setTimeSelectionMode] = useState<TimeSelectionMode>(TimeSelectionMode.LEAVE_NOW);
+	const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split("T")[0]);
+	const [selectedTime, setSelectedTime] = useState<string>(
+		new Date().toLocaleTimeString("en-US", { hour12: false, hour: "2-digit", minute: "2-digit" })
+	);
 
 	const clearRoutePosition = useCallback((type: InputType) => setRoutePositions(undefined, type), [setRoutePositions]);
 
@@ -260,10 +282,21 @@ const RouteBox: FC<RouteBoxProps> = ({
 				const isModePedestrianOrScooter = mode === TravelMode.PEDESTRIAN || mode === TravelMode.SCOOTER;
 				const uturnAvoidanceOption = isModePedestrianOrScooter ? {} : { UTurns: routeOptions.avoidUTurns };
 
+				const timeParams = (() => {
+					if (timeSelectionMode === TimeSelectionMode.LEAVE_NOW) {
+						return { DepartNow: true };
+					}
+					const dateTime = new Date(`${selectedDate}T${selectedTime}`);
+					return timeSelectionMode === TimeSelectionMode.DEPART_AT
+						? { DepartureTime: dateTime.toISOString() }
+						: { ArrivalTime: dateTime.toISOString() };
+				})();
+
 				const params: CalculateRoutesCommandInput = {
 					Origin: obj.DeparturePosition,
 					Destination: obj.DestinationPosition,
 					TravelMode: mode,
+					...timeParams,
 					Avoid: {
 						TollRoads: routeOptions.avoidTolls,
 						Ferries: routeOptions.avoidFerries,
@@ -283,7 +316,10 @@ const RouteBox: FC<RouteBoxProps> = ({
 			routeOptions.avoidTolls,
 			routeOptions.avoidDirtRoads,
 			routeOptions.avoidTunnels,
-			routeOptions.avoidUTurns
+			routeOptions.avoidUTurns,
+			timeSelectionMode,
+			selectedDate,
+			selectedTime
 		]
 	);
 
@@ -300,7 +336,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 				}
 			});
 		}
-	}, [getDestDept, travelModes, getRoute, handleParams]);
+	}, [getDestDept, travelModes, getRoute, handleParams, selectedDate, selectedTime]);
 
 	const calculateRouteData = useCallback(async () => {
 		const params = handleParams(travelMode);
@@ -598,9 +634,87 @@ const RouteBox: FC<RouteBoxProps> = ({
 		[routeOptions, setRouteData, t]
 	);
 
+	const travelTimeSelectors = useMemo(
+		() => (
+			<>
+				{timeSelectionMode !== TimeSelectionMode.LEAVE_NOW && (
+					<Flex direction="row" gap="0.5rem" data-testid="travel-time-selectors">
+						<TextField
+							label=""
+							type="date"
+							value={selectedDate}
+							onChange={(e: { target: { value: SetStateAction<string> } }) => {
+								setSelectedDate(e.target.value);
+								setRouteData(undefined);
+								setRouteDataForMobile(undefined);
+							}}
+							variation="quiet"
+							// min={new Date().toISOString().split("T")[0]}
+							width="100%"
+							style={{
+								display: "flex",
+								alignItems: "center",
+								padding: "8px",
+								borderRadius: "8px",
+								backgroundColor: "#f5f5fa",
+								boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.1)",
+								fontSize: "1rem",
+								width: "100%"
+							}}
+							// hasIcon
+						/>
+
+						<TextField
+							label=""
+							type="time"
+							value={selectedTime}
+							onChange={(e: { target: { value: SetStateAction<string> } }) => {
+								setSelectedTime(e.target.value);
+								setRouteData(undefined);
+								setRouteDataForMobile(undefined);
+							}}
+							variation="quiet"
+							width="100%"
+							style={{
+								display: "flex",
+								alignItems: "center",
+								padding: "8px",
+								borderRadius: "8px",
+								backgroundColor: "#f5f5fa",
+								boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.1)",
+								fontSize: "1rem",
+								width: "100%"
+							}}
+							// hasIcon
+						/>
+					</Flex>
+				)}
+			</>
+		),
+		[
+			setRouteData,
+			routeOptions,
+			inputFocused,
+			isCurrentLocationSelected,
+			suggestions.from?.length,
+			suggestions.to?.length,
+			isSearching,
+			routeData,
+			t,
+			timeSelectionMode,
+			selectedDate,
+			selectedTime
+		]
+	);
+
 	const renderRouteOptionsContainer = useMemo(
 		() => (
 			<View
+				style={{
+					display: "flex",
+					flexDirection: "column",
+					gap: "0.5rem"
+				}}
 				className={
 					((inputFocused.from || inputFocused.to) && !isCurrentLocationSelected) ||
 					!!suggestions.from?.length ||
@@ -611,46 +725,65 @@ const RouteBox: FC<RouteBoxProps> = ({
 						: "route-options-container bottom-border-radius"
 				}
 			>
-				{/* Placeholder for another dropdown to be added later */}
-				<div style={{ width: "100%" }} />
-				<DropdownEl
-					label={t("avoid.text")}
-					defaultOption={Object.keys(routeOptions)
-						.filter(key => routeOptions[key])
-						.map(key => ({ value: key, label: t(key) }))}
-					options={[
-						{ value: "avoidTolls", label: t("avoid_tolls.text") },
-						{ value: "avoidFerries", label: t("avoid_ferries.text") },
-						{ value: "avoidDirtRoads", label: t("avoid_dirtroads.text") },
-						{ value: "avoidUTurns", label: t("avoid_uturns.text") },
-						{ value: "avoidTunnels", label: t("avoid_tunnels.text") }
-					]}
-					onSelect={option => {
-						switch (option.value) {
-							case "avoidTolls":
-								setRouteOptions({ ...routeOptions, avoidTolls: !routeOptions.avoidTolls });
-								break;
-							case "avoidFerries":
-								setRouteOptions({ ...routeOptions, avoidFerries: !routeOptions.avoidFerries });
-								break;
-							case "avoidDirtRoads":
-								setRouteOptions({ ...routeOptions, avoidDirtRoads: !routeOptions.avoidDirtRoads });
-								break;
-							case "avoidUTurns":
-								setRouteOptions({ ...routeOptions, avoidUTurns: !routeOptions.avoidUTurns });
-								break;
-							case "avoidTunnels":
-								setRouteOptions({ ...routeOptions, avoidTunnels: !routeOptions.avoidTunnels });
-								break;
-							default:
-								break;
-						}
-						setRouteData(undefined);
-						setRouteDataForMobile(undefined);
-					}}
-					showSelected={false}
-					isCheckbox={true}
-				/>
+				<View style={{ display: "flex", flexDirection: "row", gap: "0.5rem" }}>
+					<DropdownEl
+						width="100%"
+						label={t(timeSelectionMode)}
+						defaultOption={[]}
+						dataTestId="travel-time-dropdown"
+						options={[
+							{ value: TimeSelectionMode.LEAVE_NOW, label: t("leave_now.text") },
+							{ value: TimeSelectionMode.DEPART_AT, label: t("depart_at.text") },
+							{ value: TimeSelectionMode.ARRIVE_BY, label: t("arrive_by.text") }
+						]}
+						onSelect={option => {
+							setTimeSelectionMode(option.value as TimeSelectionMode);
+							setRouteData(undefined);
+							setRouteDataForMobile(undefined);
+						}}
+					/>
+					<DropdownEl
+						width="100%"
+						label={t("avoid.text")}
+						defaultOption={Object.keys(routeOptions)
+							.filter(key => routeOptions[key])
+							.map(key => ({ value: key, label: t(key) }))}
+						options={[
+							{ value: "avoidTolls", label: t("avoid_tolls.text") },
+							{ value: "avoidFerries", label: t("avoid_ferries.text") },
+							{ value: "avoidDirtRoads", label: t("avoid_dirtroads.text") },
+							{ value: "avoidUTurns", label: t("avoid_uturns.text") },
+							{ value: "avoidTunnels", label: t("avoid_tunnels.text") }
+						]}
+						onSelect={option => {
+							switch (option.value) {
+								case "avoidTolls":
+									setRouteOptions({ ...routeOptions, avoidTolls: !routeOptions.avoidTolls });
+									break;
+								case "avoidFerries":
+									setRouteOptions({ ...routeOptions, avoidFerries: !routeOptions.avoidFerries });
+									break;
+								case "avoidDirtRoads":
+									setRouteOptions({ ...routeOptions, avoidDirtRoads: !routeOptions.avoidDirtRoads });
+									break;
+								case "avoidUTurns":
+									setRouteOptions({ ...routeOptions, avoidUTurns: !routeOptions.avoidUTurns });
+									break;
+								case "avoidTunnels":
+									setRouteOptions({ ...routeOptions, avoidTunnels: !routeOptions.avoidTunnels });
+									break;
+								default:
+									break;
+							}
+							setRouteData(undefined);
+							setRouteDataForMobile(undefined);
+						}}
+						showSelected={false}
+						isCheckbox={true}
+					/>
+				</View>
+
+				{travelTimeSelectors}
 			</View>
 		),
 		[
@@ -662,7 +795,10 @@ const RouteBox: FC<RouteBoxProps> = ({
 			suggestions.to?.length,
 			isSearching,
 			routeData,
-			t
+			t,
+			timeSelectionMode,
+			selectedDate,
+			selectedTime
 		]
 	);
 
@@ -976,6 +1112,25 @@ const RouteBox: FC<RouteBoxProps> = ({
 			<>
 				<Flex direction="column" gap="0" ref={expandRouteRef}>
 					<Flex direction="column" padding="0 1.23rem">
+						<DropdownEl
+							width="100%"
+							label={t(timeSelectionMode)}
+							defaultOption={[]}
+							dataTestId="travel-time-dropdown"
+							options={[
+								{ value: TimeSelectionMode.LEAVE_NOW, label: t("leave_now.text") },
+								{ value: TimeSelectionMode.DEPART_AT, label: t("depart_at.text") },
+								{ value: TimeSelectionMode.ARRIVE_BY, label: t("arrive_by.text") }
+							]}
+							onSelect={option => {
+								setTimeSelectionMode(option.value as TimeSelectionMode);
+								setRouteData(undefined);
+								setRouteDataForMobile(undefined);
+							}}
+						/>
+
+						{travelTimeSelectors}
+
 						<Text fontFamily="AmazonEmber-Bold" fontSize="1.23rem">
 							{t("route_box__route_options.text")}
 						</Text>

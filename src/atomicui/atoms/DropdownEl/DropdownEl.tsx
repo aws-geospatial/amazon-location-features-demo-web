@@ -19,6 +19,7 @@ export interface DropdownElProps {
 	arrowIconColor?: string;
 	label?: string;
 	width?: string;
+	dataTestId?: string;
 }
 
 const DropdownEl: FC<DropdownElProps> = ({
@@ -31,7 +32,8 @@ const DropdownEl: FC<DropdownElProps> = ({
 	isRadioBox = false,
 	arrowIconColor,
 	label,
-	width = "100%"
+	width = "100%",
+	dataTestId
 }) => {
 	const [open, setOpen] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
@@ -62,7 +64,7 @@ const DropdownEl: FC<DropdownElProps> = ({
 	);
 
 	return (
-		<div ref={dropdownRef} className="dropdown-container" style={{ width }}>
+		<div data-testid={dataTestId} ref={dropdownRef} className="dropdown-container" style={{ width }}>
 			<div
 				data-testid="dropdown-trigger"
 				className={
@@ -78,7 +80,7 @@ const DropdownEl: FC<DropdownElProps> = ({
 						transform: open ? "rotate(180deg)" : "rotate(0deg)",
 						width: bordered ? "1rem" : "1.23rem",
 						height: bordered ? "" : "1.23rem",
-						fill: arrowIconColor ? arrowIconColor : "var(--primary-color)"
+						fill: arrowIconColor ? arrowIconColor : "var(--black-color)"
 					}}
 				/>
 			</div>
@@ -86,6 +88,7 @@ const DropdownEl: FC<DropdownElProps> = ({
 				<ul
 					data-testid="dropdown-options"
 					className={bordered ? "options bordered" : `${isRadioBox ? "options radioBox" : "options"}`}
+					style={{ left: 0 }}
 				>
 					{isRadioBox ? (
 						<>
@@ -144,7 +147,9 @@ const DropdownEl: FC<DropdownElProps> = ({
 											onChange={() => handleClick(option)}
 										/>
 									) : (
-										<>{t(option.label)}</>
+										<span style={{ fontSize: 16 }} className="option-checkbox">
+											{t(option.label)}
+										</span>
 									)}
 								</li>
 							))}

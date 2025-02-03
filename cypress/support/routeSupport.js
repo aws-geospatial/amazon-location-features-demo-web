@@ -56,3 +56,26 @@ Cypress.Commands.add("searchRouteWithAvoidFerryOption", isResponsive => {
 		? cy.get('[data-testid="bottomsheet-header-close-icon"]').click()
 		: cy.get('[class="route-card-close"]').click();
 });
+
+Cypress.Commands.add("searchRouteWithArrivalAndDepartureTime", isResponsive => {
+	cy.get('[placeholder="From"]').click().type("auburn sydney", { delay: 200 });
+	cy.contains("Auburn").click({ force: true });
+	cy.wait(2000);
+	cy.get('[placeholder="To"]').click().type("manly beach sydney", { delay: 200 });
+	cy.contains("Beach").click({ force: true });
+	cy.wait(2000);
+
+	cy.get('[data-testid="travel-time-selectors"]').should("not.exist");
+
+	if (isResponsive) {
+		cy.get('[data-testid="more-action-icon-container"]').click();
+	}
+
+	cy.get('[data-testid="travel-time-dropdown"]').click();
+	cy.contains("Depart At").click();
+	cy.get('[data-testid="travel-time-selectors"]').should("exist");
+
+	isResponsive
+		? cy.get('[data-testid="bottomsheet-header-close-icon"]').click()
+		: cy.get('[class="route-card-close"]').click();
+});
