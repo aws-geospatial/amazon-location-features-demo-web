@@ -3895,5 +3895,14 @@
   },
   "avoid": {
     "text": "避ける"
+  },
+  "arrive_by": {
+    "text": "までに到着"
+  },
+  "depart_at": {
+    "text": "出発"
+  },
+  "leave_now": {
+    "text": "今すぐ出発"
   }
 }

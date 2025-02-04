@@ -3891,5 +3891,14 @@
   },
   "avoid": {
     "text": "避免"
+  },
+  "arrive_by": {
+    "text": "抵达时间"
+  },
+  "depart_at": {
+    "text": "出发地点"
+  },
+  "leave_now": {
+    "text": "立即离开"
   }
 }

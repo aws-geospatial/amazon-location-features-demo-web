@@ -80,7 +80,7 @@ const DropdownEl: FC<DropdownElProps> = ({
 						transform: open ? "rotate(180deg)" : "rotate(0deg)",
 						width: bordered ? "1rem" : "1.23rem",
 						height: bordered ? "" : "1.23rem",
-						fill: arrowIconColor ? arrowIconColor : "var(--primary-color)"
+						fill: arrowIconColor ? arrowIconColor : "var(--black-color)"
 					}}
 				/>
 			</div>
@@ -88,6 +88,7 @@ const DropdownEl: FC<DropdownElProps> = ({
 				<ul
 					data-testid="dropdown-options"
 					className={bordered ? "options bordered" : `${isRadioBox ? "options radioBox" : "options"}`}
+					style={{ left: 0 }}
 				>
 					{isRadioBox ? (
 						<>
@@ -146,7 +147,9 @@ const DropdownEl: FC<DropdownElProps> = ({
 											onChange={() => handleClick(option)}
 										/>
 									) : (
-										<>{t(option.label)}</>
+										<span style={{ fontSize: 16 }} className="option-checkbox">
+											{t(option.label)}
+										</span>
 									)}
 								</li>
 							))}

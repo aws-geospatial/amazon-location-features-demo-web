@@ -3895,5 +3895,14 @@
   },
   "avoid": {
     "text": "피하십시오"
+  },
+  "arrive_by": {
+    "text": "도착 시간"
+  },
+  "depart_at": {
+    "text": "출발 시간"
+  },
+  "leave_now": {
+    "text": "지금 떠나세요"
   }
 }

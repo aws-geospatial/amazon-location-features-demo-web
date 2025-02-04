@@ -177,7 +177,7 @@
 
 		&.from-to-container-mobile {
 			margin-top: 8px;
-			background-color: var(--light-color-2);
+			// background-color: var(--light-color-2);
 			border-radius: 8px;
 			padding: 10px !important;
 			width: 100%;
@@ -186,7 +186,7 @@
 				width: 100%;
 
 				input {
-					background-color: var(--light-color-2);
+					// background-color: var(--light-color-2);
 				}
 			}
 
@@ -300,7 +300,7 @@
 		flex-direction: row;
 		justify-content: space-between;
 		gap: 10px;
-		background-color: var(--light-color-2);
+		background-color: var(--light-color-1);
 		padding: 11px 15px;
 		cursor: pointer !important;
 

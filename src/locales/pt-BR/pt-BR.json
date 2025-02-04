@@ -3895,5 +3895,14 @@
   },
   "avoid": {
     "text": "Evite"
+  },
+  "arrive_by": {
+    "text": "Chegue por"
+  },
+  "depart_at": {
+    "text": "Parta às"
+  },
+  "leave_now": {
+    "text": "Saia agora"
   }
 }
