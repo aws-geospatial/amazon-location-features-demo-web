@@ -37,7 +37,7 @@ Cypress.Commands.add("searchRouteWithAvoidTollOption", isResponsive => {
 	cy.wait(2000);
 	cy.get('[placeholder="To"]').click().type("manly beach sydney", { delay: 200 });
 	cy.contains("Beach").click({ force: true });
-	isResponsive ? cy.get('[data-testid="more-action-icon-container"]').click() : cy.contains("Route Options").click();
+	isResponsive ? cy.get('[data-testid="more-action-icon-container"]').click() : cy.get('[data-testid="route-avoidance-dropdown"]').click();
 	cy.contains("Avoid tolls").click();
 	isResponsive
 		? cy.get('[data-testid="bottomsheet-header-close-icon"]').click()
@@ -50,7 +50,7 @@ Cypress.Commands.add("searchRouteWithAvoidFerryOption", isResponsive => {
 	cy.wait(2000);
 	cy.get('[placeholder="To"]').click().type("port said", { delay: 200 });
 	cy.contains("Port Said").click();
-	isResponsive ? cy.get('[data-testid="more-action-icon-container"]').click() : cy.contains("Route Options").click();
+	isResponsive ? cy.get('[data-testid="more-action-icon-container"]').click() : cy.get('[data-testid="route-avoidance-dropdown"]').click();
 	cy.contains("Avoid ferries").click();
 	isResponsive
 		? cy.get('[data-testid="bottomsheet-header-close-icon"]').click()
