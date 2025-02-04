@@ -3883,5 +3883,17 @@
   },
   "greece_political_view_desc": {
     "text": "Greece's political view"
+  },
+  "avoid_dirtroads": {
+    "text": "Avoid dirt roads"
+  },
+  "avoid_uturns": {
+    "text": "Avoid U-turn"
+  },
+  "avoid_tunnels": {
+    "text": "Avoid tunnels"
+  },
+  "avoid": {
+    "text": "Avoid"
   }
 }

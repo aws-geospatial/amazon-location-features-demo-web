@@ -326,6 +326,33 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 							onChange={e => handleRouteOptionChange(e, "avoidFerries")}
 							crossOrigin={undefined}
 						/>
+						<CheckboxField
+							className="sm-checkbox"
+							label={t("avoid_dirtroads.text")}
+							name={t("avoid_dirtroads.text")}
+							value="Avoid Dirtroads"
+							checked={defaultRouteOptions.avoidDirtRoads}
+							onChange={e => handleRouteOptionChange(e, "avoidDirtRoads")}
+							crossOrigin={undefined}
+						/>
+						<CheckboxField
+							className="sm-checkbox"
+							label={t("avoid_uturns.text")}
+							name={t("avoid_uturns.text")}
+							value="Avoid Uturns"
+							checked={defaultRouteOptions.avoidUTurns}
+							onChange={e => handleRouteOptionChange(e, "avoidUTurns")}
+							crossOrigin={undefined}
+						/>
+						<CheckboxField
+							className="sm-checkbox"
+							label={t("avoid_tunnels.text")}
+							name={t("avoid_tunnels.text")}
+							value="Avoid Tunnels"
+							checked={defaultRouteOptions.avoidTunnels}
+							onChange={e => handleRouteOptionChange(e, "avoidTunnels")}
+							crossOrigin={undefined}
+						/>
 					</Flex>
 				)
 			},
@@ -595,6 +622,9 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 			mapButtons,
 			defaultRouteOptions.avoidTolls,
 			defaultRouteOptions.avoidFerries,
+			defaultRouteOptions.avoidDirtRoads,
+			defaultRouteOptions.avoidUTurns,
+			defaultRouteOptions.avoidTunnels,
 			autoRegion,
 			baseValues?.region,
 			langDir,
