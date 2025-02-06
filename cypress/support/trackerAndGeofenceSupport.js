@@ -52,13 +52,14 @@ Cypress.Commands.add("addTrackerAndGeofenceEnterExit", (isResponsive, geofenceNa
 		: cy.get('[class="maplibregl-canvas"]').click("right", { force: true });
 	cy.wait(5000);
 	cy.get('[class="maplibregl-canvas"]').click("right", { force: true });
+	if (isResponsive) {
+		cy.wait(5000);
+		cy.get('[class="maplibregl-canvas"]').click(200, 200, { force: true });
+	}
 	cy.wait(5000);
 	cy.contains("Save").click();
 	cy.wait(5000);
 	cy.get('[class="amplify-button amplify-field-group__control amplify-button--primary play-pause-button"]').click();
-	if (isResponsive) {
-		cy.wait(5000);
-	}
 	cy.get(
 		'[class="Toastify__toast Toastify__toast-theme--dark Toastify__toast--info Toastify__toast--close-on-click enter-geofence"]',
 		{ timeout: 50000 }
