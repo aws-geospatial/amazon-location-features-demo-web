@@ -64,7 +64,7 @@ const DropdownEl: FC<DropdownElProps> = ({
 	);
 
 	return (
-		<div ref={dropdownRef} data-testid={dataTestId} className="dropdown-container" style={{ width }}>
+		<div data-testid={dataTestId} ref={dropdownRef} className="dropdown-container" style={{ width }}>
 			<div
 				data-testid="dropdown-trigger"
 				className={

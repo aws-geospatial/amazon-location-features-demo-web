@@ -646,49 +646,50 @@ const RouteBox: FC<RouteBoxProps> = ({
 							label=""
 							type="date"
 							value={selectedDate}
-							onChange={(e: { target: { value: SetStateAction<string> } }) => {
+							className="travel-time-selector"
+							onChange={(e: { target: any }) => {
+								const selectedDateTime = new Date(`${e.target.value}T${selectedTime}`);
+								const now = new Date();
+
+								if (selectedDateTime < now) {
+									// Show error if date is in past
+									e.target.setCustomValidity(t("date_in_past.error.text"));
+									e.target.reportValidity();
+									return;
+								}
+
+								e.target.setCustomValidity("");
 								setSelectedDate(e.target.value);
 								setRouteData(undefined);
 								setRouteDataForMobile(undefined);
 							}}
 							variation="quiet"
-							// min={new Date().toISOString().split("T")[0]}
 							width="100%"
-							style={{
-								display: "flex",
-								alignItems: "center",
-								padding: "8px",
-								borderRadius: "8px",
-								backgroundColor: "#f5f5fa",
-								boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.1)",
-								fontSize: "1rem",
-								width: "100%"
-							}}
-							// hasIcon
 						/>
 
 						<TextField
 							label=""
 							type="time"
 							value={selectedTime}
-							onChange={(e: { target: { value: SetStateAction<string> } }) => {
+							onChange={(e: { target: any }) => {
+								const selectedDateTime = new Date(`${selectedDate}T${e.target.value}`);
+								const now = new Date();
+
+								if (selectedDateTime < now) {
+									// Show error if time is in past
+									e.target.setCustomValidity(t("time_in_past.error.text"));
+									e.target.reportValidity();
+									return;
+								}
+
+								e.target.setCustomValidity("");
 								setSelectedTime(e.target.value);
 								setRouteData(undefined);
 								setRouteDataForMobile(undefined);
 							}}
 							variation="quiet"
 							width="100%"
-							style={{
-								display: "flex",
-								alignItems: "center",
-								padding: "8px",
-								borderRadius: "8px",
-								backgroundColor: "#f5f5fa",
-								boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.1)",
-								fontSize: "1rem",
-								width: "100%"
-							}}
-							// hasIcon
+							className="travel-time-selector"
 						/>
 					</Flex>
 				)}

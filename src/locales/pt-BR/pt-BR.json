@@ -3904,5 +3904,11 @@
   },
   "leave_now": {
     "text": "Saia agora"
+  },
+  "time_in_past.error": {
+    "text": "O horário selecionado não pode estar no passado"
+  },
+  "date_in_past.error": {
+    "text": "A data selecionada não pode estar no passado"
   }
 }
