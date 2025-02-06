@@ -51,6 +51,7 @@ import { InputType, MapUnitEnum, RouteDataType, RouteOptionsType, SuggestionType
 import { AnalyticsEventActionsEnum, ResponsiveUIEnum, TriggeredByEnum, UserAgentEnum } from "@demo/types/Enums";
 import { getConvertedDistance, isUserDeviceIsAndroid } from "@demo/utils";
 import { humanReadableTime } from "@demo/utils/dateTimeUtils";
+import { LineString } from "@turf/turf";
 import { isAndroid, isIOS } from "react-device-detect";
 import { useTranslation } from "react-i18next";
 import { Layer, LayerProps, LngLat, MapRef, Marker as ReactMapGlMarker, Source } from "react-map-gl/maplibre";
@@ -58,7 +59,6 @@ import { RefHandles } from "react-spring-bottom-sheet/dist/types";
 import { Tooltip } from "react-tooltip";
 
 import "./styles.scss";
-import { LineString } from "@turf/turf";
 
 const { METRIC } = MapUnitEnum;
 const { ANDROID } = UserAgentEnum;
@@ -339,7 +339,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 				}
 			});
 		}
-	}, [getDestDept, travelModes, getRoute, handleParams, selectedDate, selectedTime]);
+	}, [getDestDept, travelModes, getRoute, handleParams]);
 
 	const calculateRouteData = useCallback(async () => {
 		const params = handleParams(travelMode);
@@ -694,20 +694,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 				)}
 			</>
 		),
-		[
-			setRouteData,
-			routeOptions,
-			inputFocused,
-			isCurrentLocationSelected,
-			suggestions.from?.length,
-			suggestions.to?.length,
-			isSearching,
-			routeData,
-			t,
-			timeSelectionMode,
-			selectedDate,
-			selectedTime
-		]
+		[setRouteData, timeSelectionMode, selectedDate, selectedTime]
 	);
 
 	const renderRouteOptionsContainer = useMemo(
@@ -750,6 +737,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 						width="100%"
 						label={t("avoid.text")}
 						defaultOption={Object.entries(routeOptions)
+							// eslint-disable-next-line @typescript-eslint/no-unused-vars
 							.filter(([_, value]) => value)
 							.map(([key]) => ({ value: key, label: t(key) }))}
 						options={[
@@ -791,9 +779,8 @@ const RouteBox: FC<RouteBoxProps> = ({
 			</View>
 		),
 		[
-			setRouteData,
-			routeOptions,
-			inputFocused,
+			inputFocused.from,
+			inputFocused.to,
 			isCurrentLocationSelected,
 			suggestions.from?.length,
 			suggestions.to?.length,
@@ -801,8 +788,9 @@ const RouteBox: FC<RouteBoxProps> = ({
 			routeData,
 			t,
 			timeSelectionMode,
-			selectedDate,
-			selectedTime
+			routeOptions,
+			travelTimeSelectors,
+			setRouteData
 		]
 	);
 
