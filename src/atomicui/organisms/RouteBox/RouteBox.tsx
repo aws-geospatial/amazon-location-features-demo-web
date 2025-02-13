@@ -1109,6 +1109,10 @@ const RouteBox: FC<RouteBoxProps> = ({
 		);
 	}, [getDuration, routeDataForMobile, setRouteData, travelMode]);
 
+	const vehicleLegDetails = routeData?.Routes?.[0]?.Legs?.[0].VehicleLegDetails;
+	const arrivalTime = vehicleLegDetails?.Arrival?.Time;
+	const departureTime = vehicleLegDetails?.Departure?.Time;
+
 	if (expandRouteOptionsMobile) {
 		return (
 			<>
@@ -1362,6 +1366,47 @@ const RouteBox: FC<RouteBoxProps> = ({
 												{mapUnit === METRIC ? t("geofence_box__km__short.text") : t("geofence_box__mi__short.text")}
 											</Text>
 										</Flex>
+										{timeSelectionMode === TimeSelectionMode.DEPART_AT && (
+											<Flex
+												gap="0.3rem"
+												direction={isLanguageRTL ? "row-reverse" : "row"}
+												justifyContent={isLanguageRTL ? "flex-end" : "flex-start"}
+											>
+												<Text className="distance">Arrive at</Text>
+												<Text className="distance">
+													{arrivalTime &&
+														new Date(arrivalTime).toLocaleString("en-US", {
+															month: "2-digit",
+															day: "2-digit",
+															year: "numeric",
+															hour: "numeric",
+															minute: "2-digit",
+															hour12: true
+														})}
+												</Text>
+											</Flex>
+										)}
+
+										{timeSelectionMode === TimeSelectionMode.ARRIVE_BY && (
+											<Flex
+												gap="0.3rem"
+												direction={isLanguageRTL ? "row-reverse" : "row"}
+												justifyContent={isLanguageRTL ? "flex-end" : "flex-start"}
+											>
+												<Text className="distance">Depart at</Text>
+												<Text className="distance">
+													{departureTime &&
+														new Date(departureTime).toLocaleString("en-US", {
+															month: "2-digit",
+															day: "2-digit",
+															year: "numeric",
+															hour: "numeric",
+															minute: "2-digit",
+															hour12: true
+														})}
+												</Text>
+											</Flex>
+										)}
 									</View>
 									<View className="duration">
 										<Text className="regular-text">
@@ -1384,6 +1429,47 @@ const RouteBox: FC<RouteBoxProps> = ({
 												{mapUnit === METRIC ? t("geofence_box__km__short.text") : t("geofence_box__mi__short.text")}
 											</Text>
 										</Flex>
+										{timeSelectionMode === TimeSelectionMode.DEPART_AT && (
+											<Flex
+												gap="0.3rem"
+												direction={isLanguageRTL ? "row-reverse" : "row"}
+												justifyContent={isLanguageRTL ? "flex-end" : "flex-start"}
+											>
+												<Text className="distance">Arrive at</Text>
+												<Text className="distance">
+													{arrivalTime &&
+														new Date(arrivalTime).toLocaleString("en-US", {
+															month: "2-digit",
+															day: "2-digit",
+															year: "numeric",
+															hour: "numeric",
+															minute: "2-digit",
+															hour12: true
+														})}
+												</Text>
+											</Flex>
+										)}
+
+										{timeSelectionMode === TimeSelectionMode.ARRIVE_BY && (
+											<Flex
+												gap="0.3rem"
+												direction={isLanguageRTL ? "row-reverse" : "row"}
+												justifyContent={isLanguageRTL ? "flex-end" : "flex-start"}
+											>
+												<Text className="distance">Depart at</Text>
+												<Text className="distance">
+													{departureTime &&
+														new Date(departureTime).toLocaleString("en-US", {
+															month: "2-digit",
+															day: "2-digit",
+															year: "numeric",
+															hour: "numeric",
+															minute: "2-digit",
+															hour12: true
+														})}
+												</Text>
+											</Flex>
+										)}
 									</Flex>
 									<Flex grow={1} />
 									{isUserDeviceIsAndroid() === ANDROID && (
