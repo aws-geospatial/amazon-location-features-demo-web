@@ -94,6 +94,12 @@ enum TimeSelectionMode {
 	ARRIVE_BY = "arrive_by.text"
 }
 
+// Add this near the other dropdown options
+const moreActionOptions = [
+	{ value: "route_options", label: "Route Options" },
+	{ value: "time_selectors", label: "Set leave & arrival time" }
+];
+
 const RouteBox: FC<RouteBoxProps> = ({
 	mapRef,
 	setShowRouteBox,
@@ -1113,36 +1119,80 @@ const RouteBox: FC<RouteBoxProps> = ({
 	const arrivalTime = vehicleLegDetails?.Arrival?.Time;
 	const departureTime = vehicleLegDetails?.Departure?.Time;
 
+	const [expandTimeSelectionModeMobile, setExpandTimeSelectionModeMobile] = useState(false);
+
 	if (expandRouteOptionsMobile) {
 		return (
 			<>
-				<Flex direction="column" gap="0" ref={expandRouteRef}>
-					<Flex direction="column" padding="0 1.23rem">
-						<DropdownEl
-							width="100%"
-							label={t(timeSelectionMode)}
-							defaultOption={[]}
-							dataTestId="travel-time-dropdown"
-							options={[
-								{ value: TimeSelectionMode.LEAVE_NOW, label: t("leave_now.text") },
-								{ value: TimeSelectionMode.DEPART_AT, label: t("depart_at.text") },
-								{ value: TimeSelectionMode.ARRIVE_BY, label: t("arrive_by.text") }
-							]}
-							onSelect={option => {
-								setTimeSelectionMode(option.value as TimeSelectionMode);
-								setRouteData(undefined);
-								setRouteDataForMobile(undefined);
-							}}
-						/>
+				{expandTimeSelectionModeMobile ? (
+					<>
+						<Flex direction="column" gap="0" ref={expandRouteRef}>
+							<Flex direction="column" padding="0 1.23rem">
+								<Text fontFamily="AmazonEmber-Bold" fontSize="1.23rem">
+									{t("route_box__route_options.text")}
+								</Text>
 
-						{travelTimeSelectors}
+								<View className="route-option-items">
+									<CheckboxField
+										className="option-item"
+										label={t("leave_now.text")}
+										name={t("leave_now.text")}
+										value="Leave now"
+										checked={timeSelectionMode === TimeSelectionMode.LEAVE_NOW}
+										onChange={e => {
+											setTimeSelectionMode(TimeSelectionMode.LEAVE_NOW);
+											setRouteData(undefined);
+											setRouteDataForMobile(undefined);
+										}}
+										crossOrigin={undefined}
+									/>
 
-						<Text fontFamily="AmazonEmber-Bold" fontSize="1.23rem">
-							{t("route_box__route_options.text")}
-						</Text>
-						<MoreOptionsUIMobile />
-					</Flex>
-				</Flex>
+									<CheckboxField
+										className="option-item"
+										label={t("leave_at.text")}
+										name={t("leave_at.text")}
+										value="Leave at"
+										checked={timeSelectionMode === TimeSelectionMode.DEPART_AT}
+										onChange={e => {
+											setTimeSelectionMode(TimeSelectionMode.DEPART_AT);
+											setRouteData(undefined);
+											setRouteDataForMobile(undefined);
+										}}
+										crossOrigin={undefined}
+									/>
+
+									<CheckboxField
+										className="option-item"
+										label={t("arrive_by.text")}
+										name={t("arrive_by.text")}
+										value="Arrive by"
+										checked={timeSelectionMode === TimeSelectionMode.ARRIVE_BY}
+										onChange={e => {
+											setTimeSelectionMode(TimeSelectionMode.ARRIVE_BY);
+											setRouteData(undefined);
+											setRouteDataForMobile(undefined);
+										}}
+										crossOrigin={undefined}
+									/>
+								</View>
+
+								{travelTimeSelectors}
+							</Flex>
+						</Flex>
+					</>
+				) : (
+					<>
+						<Flex direction="column" gap="0" ref={expandRouteRef}>
+							<Flex direction="column" padding="0 1.23rem">
+								<Text fontFamily="AmazonEmber-Bold" fontSize="1.23rem">
+									{t("route_box__route_options.text")}
+								</Text>
+								<MoreOptionsUIMobile />
+							</Flex>
+						</Flex>
+					</>
+				)}
+
 				{routeFromMarker}
 				{routeToMarker}
 				{routeLayer}
@@ -1276,19 +1326,33 @@ const RouteBox: FC<RouteBoxProps> = ({
 						</Flex>
 					</Flex>
 					{!isDesktop && (
-						<Flex className="travel-mode-button-container">
+						<Flex style={{ justifyContent: "center", alignItems: "center" }}>
 							{!isInputFocused && isBothInputFilled && (
-								<Flex
-									data-testid="more-action-icon-container"
-									className="swap-icon-container more-action-icon-container"
-									onClick={() => {
-										setExpandRouteOptionsMobile && setExpandRouteOptionsMobile(true);
+								<DropdownEl
+									width="50px"
+									dataTestId="more-actions-dropdown"
+									label=""
+									triggerButton={
+										<Flex
+											data-testid="more-action-icon-container"
+											className="swap-icon-container more-action-icon-container"
+										>
+											<IconMoreVertical className="icon-more-vertical" />
+										</Flex>
+									}
+									options={moreActionOptions}
+									onSelect={option => {
+										if (option.value === "route_options") {
+											setExpandRouteOptionsMobile && setExpandRouteOptionsMobile(true);
+											setExpandTimeSelectionModeMobile(false);
+										} else if (option.value === "time_selectors") {
+											setExpandRouteOptionsMobile && setExpandRouteOptionsMobile(true);
+											setExpandTimeSelectionModeMobile(true);
+										}
 									}}
-								>
-									<IconMoreVertical className="icon-more-vertical" />
-								</Flex>
+								/>
 							)}
-							{renderTravelModes}
+							<Flex className="travel-mode-button-container">{renderTravelModes}</Flex>
 						</Flex>
 					)}
 					{isDesktop && renderRouteOptionsContainer}
