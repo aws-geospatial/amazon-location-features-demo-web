@@ -3897,13 +3897,13 @@
     "text": "Avoid"
   },
   "arrive_by": {
-    "text": "Arrive By"
+    "text": "Arrive by"
   },
   "depart_at": {
-    "text": "Depart At"
+    "text": "Leave at"
   },
   "leave_now": {
-    "text": "Leave Now"
+    "text": "Leave now"
   },
   "time_in_past.error": {
     "text": "Selected time cannot be in the past"
