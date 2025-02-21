@@ -32,9 +32,9 @@ import {
 	IconClose,
 	IconDestination,
 	IconMoreVertical,
-	IconMotorcycleSolid,
 	IconMyLocation,
 	IconPin,
+	IconScooter,
 	IconSearch,
 	IconSegment,
 	IconTruckSolid,
@@ -69,7 +69,7 @@ const {
 const iconsByTravelMode = [
 	{ mode: TravelMode.CAR, IconComponent: IconCar },
 	{ mode: TravelMode.PEDESTRIAN, IconComponent: IconWalking },
-	{ mode: TravelMode.SCOOTER, IconComponent: IconMotorcycleSolid },
+	{ mode: TravelMode.SCOOTER, IconComponent: IconScooter },
 	{ mode: TravelMode.TRUCK, IconComponent: IconTruckSolid }
 ];
 
@@ -650,31 +650,6 @@ const RouteBox: FC<RouteBoxProps> = ({
 					<Flex direction="row" gap="0.5rem" data-testid="travel-time-selectors">
 						<TextField
 							label=""
-							type="date"
-							value={selectedDate}
-							className="travel-time-selector"
-							onChange={(e: { target: any }) => {
-								const selectedDateTime = new Date(`${e.target.value}T${selectedTime}`);
-								const now = new Date();
-
-								if (selectedDateTime < now) {
-									// Show error if date is in past
-									e.target.setCustomValidity(t("date_in_past.error.text"));
-									e.target.reportValidity();
-									return;
-								}
-
-								e.target.setCustomValidity("");
-								setSelectedDate(e.target.value);
-								setRouteData(undefined);
-								setRouteDataForMobile(undefined);
-							}}
-							variation="quiet"
-							width="100%"
-						/>
-
-						<TextField
-							label=""
 							type="time"
 							value={selectedTime}
 							onChange={(e: { target: any }) => {
@@ -696,6 +671,31 @@ const RouteBox: FC<RouteBoxProps> = ({
 							variation="quiet"
 							width="100%"
 							className="travel-time-selector"
+						/>
+
+						<TextField
+							label=""
+							type="date"
+							value={selectedDate}
+							className="travel-time-selector"
+							onChange={(e: { target: any }) => {
+								const selectedDateTime = new Date(`${e.target.value}T${selectedTime}`);
+								const now = new Date();
+
+								if (selectedDateTime < now) {
+									// Show error if date is in past
+									e.target.setCustomValidity(t("date_in_past.error.text"));
+									e.target.reportValidity();
+									return;
+								}
+
+								e.target.setCustomValidity("");
+								setSelectedDate(e.target.value);
+								setRouteData(undefined);
+								setRouteDataForMobile(undefined);
+							}}
+							variation="quiet"
+							width="100%"
 						/>
 					</Flex>
 				)}
@@ -1229,6 +1229,18 @@ const RouteBox: FC<RouteBoxProps> = ({
 								<Tooltip id="icon-car-tooltip" />
 							</View>
 							<View
+								data-testid="travel-mode-motorcycle-icon-container"
+								className={travelMode === TravelMode.SCOOTER ? "travel-mode selected" : "travel-mode"}
+								onClick={() => handleTravelModeChange(TravelMode.SCOOTER)}
+							>
+								<IconScooter
+									data-tooltip-id="icon-motorcycle-tooltip"
+									data-tooltip-place="top"
+									data-tooltip-content={t("tooltip__calculate_route_motorcycle.text")}
+								/>
+								<Tooltip id="icon-motorcycle-tooltip" />
+							</View>
+							<View
 								data-testid="travel-mode-walking-icon-container"
 								className={travelMode === TravelMode.PEDESTRIAN ? "travel-mode selected" : "travel-mode"}
 								onClick={() => handleTravelModeChange(TravelMode.PEDESTRIAN)}
@@ -1240,18 +1252,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 								/>
 								<Tooltip id="icon-walking-tooltip" />
 							</View>
-							<View
-								data-testid="travel-mode-motorcycle-icon-container"
-								className={travelMode === TravelMode.SCOOTER ? "travel-mode selected" : "travel-mode"}
-								onClick={() => handleTravelModeChange(TravelMode.SCOOTER)}
-							>
-								<IconMotorcycleSolid
-									data-tooltip-id="icon-motorcycle-tooltip"
-									data-tooltip-place="top"
-									data-tooltip-content={t("tooltip__calculate_route_motorcycle.text")}
-								/>
-								<Tooltip id="icon-motorcycle-tooltip" />
-							</View>
+
 							<View
 								data-testid="travel-mode-truck-icon-container"
 								className={travelMode === TravelMode.TRUCK ? "travel-mode selected" : "travel-mode"}
@@ -1401,16 +1402,12 @@ const RouteBox: FC<RouteBoxProps> = ({
 									) : travelMode === TravelMode.PEDESTRIAN ? (
 										<IconWalking />
 									) : (
-										<IconMotorcycleSolid />
+										<IconScooter />
 									)}
 									<View className="travel-and-distance">
 										<View className="selected-travel-mode">
 											<Text className="dark-text">
-												{travelMode === TravelMode.CAR ||
-												travelMode === TravelMode.TRUCK ||
-												travelMode === TravelMode.SCOOTER
-													? t("route_box__drive.text")
-													: t("route_box__walk.text")}
+												{humanReadableTime(routeData.Routes![0].Summary!.Duration! * 1000, currentLang, t, !isDesktop)}
 											</Text>
 											<View className="separator" />
 											<Text className="grey-text">{t("route_box__selected.text")}</Text>
@@ -1427,26 +1424,6 @@ const RouteBox: FC<RouteBoxProps> = ({
 												{mapUnit === METRIC ? t("geofence_box__km__short.text") : t("geofence_box__mi__short.text")}
 											</Text>
 										</Flex>
-										{timeSelectionMode === TimeSelectionMode.DEPART_AT && (
-											<Flex
-												gap="0.3rem"
-												direction={isLanguageRTL ? "row-reverse" : "row"}
-												justifyContent={isLanguageRTL ? "flex-end" : "flex-start"}
-											>
-												<Text className="distance">Arrive at</Text>
-												<Text className="distance">
-													{arrivalTime &&
-														new Date(arrivalTime).toLocaleString("en-US", {
-															month: "2-digit",
-															day: "2-digit",
-															year: "numeric",
-															hour: "numeric",
-															minute: "2-digit",
-															hour12: true
-														})}
-												</Text>
-											</Flex>
-										)}
 
 										{timeSelectionMode === TimeSelectionMode.ARRIVE_BY && (
 											<Flex
@@ -1454,13 +1431,10 @@ const RouteBox: FC<RouteBoxProps> = ({
 												direction={isLanguageRTL ? "row-reverse" : "row"}
 												justifyContent={isLanguageRTL ? "flex-end" : "flex-start"}
 											>
-												<Text className="distance">Depart at</Text>
+												<Text className="distance">Leave at</Text>
 												<Text className="distance">
 													{departureTime &&
 														new Date(departureTime).toLocaleString("en-US", {
-															month: "2-digit",
-															day: "2-digit",
-															year: "numeric",
 															hour: "numeric",
 															minute: "2-digit",
 															hour12: true
@@ -1470,9 +1444,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 										)}
 									</View>
 									<View className="duration">
-										<Text className="regular-text">
-											{humanReadableTime(routeData.Routes![0].Summary!.Duration! * 1000, currentLang, t, !isDesktop)}
-										</Text>
+										<Text className="regular-text"></Text>
 									</View>
 								</View>
 							) : (
