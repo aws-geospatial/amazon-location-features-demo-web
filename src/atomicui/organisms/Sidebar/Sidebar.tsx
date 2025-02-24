@@ -134,7 +134,7 @@ const Sidebar: FC<SidebarProps> = ({
 					}}
 				>
 					<IconCompass className="menu-icon" />
-					<Text>{t("demo.text")}</Text>
+					<Text>{t("places_routes_maps.text")}</Text>
 				</Flex>
 				<Flex className="link-item" onClick={() => onClickMenuItem(MenuItemEnum.GEOFENCE)}>
 					<IconGeofence className="menu-icon" />
