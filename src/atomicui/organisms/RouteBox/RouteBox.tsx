@@ -1201,7 +1201,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 				<Card
 					data-testid="route-card"
 					className={`route-card ${!isDesktop ? "route-card-mobile" : ""}`}
-					left={!isDesktop ? 0 : isSideMenuExpanded ? 245 : 21}
+					left={!isDesktop ? 0 : isSideMenuExpanded ? 252 : 20}
 					ref={routesCardRef}
 				>
 					{isDesktop && (
