@@ -3895,5 +3895,8 @@
   },
   "avoid": {
     "text": "피하십시오"
+  },
+  "places_routes_maps": {
+    "text": "장소, 경로, 지도"
   }
 }
