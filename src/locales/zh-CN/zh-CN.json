@@ -3891,5 +3891,8 @@
   },
   "avoid": {
     "text": "避免"
+  },
+  "places_routes_maps": {
+    "text": "地点、路线、地图"
   }
 }
