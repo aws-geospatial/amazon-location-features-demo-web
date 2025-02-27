@@ -3910,5 +3910,8 @@
   },
   "date_in_past.error": {
     "text": "所選日期不能在過去"
+  },
+  "leave_at": {
+    "text": "離開地點"
   }
 }

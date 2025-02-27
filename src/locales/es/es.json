@@ -3910,5 +3910,8 @@
   },
   "date_in_past.error": {
     "text": "La fecha seleccionada no puede estar en el pasado"
+  },
+  "leave_at": {
+    "text": "Salir en"
   }
 }

@@ -3910,5 +3910,8 @@
   },
   "date_in_past.error": {
     "text": "Das gewählte Datum darf nicht in der Vergangenheit liegen"
+  },
+  "leave_at": {
+    "text": "Verlassen Sie am"
   }
 }

@@ -458,7 +458,7 @@
 
 		.route-info {
 			display: flex;
-			align-items: center;
+			align-items: flex-start;
 			width: 100%;
 			padding: 18px 16px;
 			border-bottom: 1px solid rgba(242, 242, 247, 1);
@@ -467,7 +467,7 @@
 			svg {
 				width: 20px;
 				height: 20px;
-				fill: #8e8e93;
+				fill: var(--primary-color) !important;
 			}
 
 			.travel-and-distance {
@@ -482,7 +482,7 @@
 
 					.dark-text {
 						opacity: 1 !important;
-						color: rgba(35, 47, 62, 1) !important;
+						color: var(--primary-color) !important;
 						font-family: "AmazonEmber-Bold" !important;
 						font-size: 13px !important;
 						font-style: normal !important;
@@ -502,9 +502,9 @@
 
 				.grey-text {
 					opacity: 1 !important;
-					color: rgba(142, 142, 147, 1) !important;
+					color: var(--primary-color) !important;
 					font-size: 13px !important;
-					font-family: "AmazonEmber-Regular";
+					font-family: "AmazonEmber-Bold";
 					font-style: normal !important;
 					letter-spacing: 0px !important;
 					text-align: left !important;
@@ -553,7 +553,7 @@
 		.steps-container {
 			overflow-y: scroll;
 			padding: 0 1rem;
-			max-height: 40vh;
+			max-height: 60vh;
 
 			&.steps-container-mobile {
 				padding: 0;
