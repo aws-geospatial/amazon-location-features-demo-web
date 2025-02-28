@@ -3913,5 +3913,8 @@
   },
   "date_in_past.error": {
     "text": "La data selezionata non può essere passata"
+  },
+  "leave_at": {
+    "text": "Partire alle"
   }
 }

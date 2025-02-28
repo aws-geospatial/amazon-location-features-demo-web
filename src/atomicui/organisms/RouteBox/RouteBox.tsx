@@ -1,17 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import {
-	ChangeEvent,
-	FC,
-	MutableRefObject,
-	SetStateAction,
-	useCallback,
-	useEffect,
-	useMemo,
-	useRef,
-	useState
-} from "react";
+import { ChangeEvent, FC, MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button, Card, CheckboxField, Flex, Text, TextField, View } from "@aws-amplify/ui-react";
 import {
@@ -428,7 +418,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 						value,
 						{ longitude, latitude },
 						exact,
-						sg => {
+						(sg: any) => {
 							type === InputType.FROM
 								? setSuggestions({ ...suggestions, from: sg })
 								: setSuggestions({ ...suggestions, to: sg });
@@ -673,30 +663,52 @@ const RouteBox: FC<RouteBoxProps> = ({
 							className="travel-time-selector"
 						/>
 
-						<TextField
-							label=""
-							type="date"
-							value={selectedDate}
-							className="travel-time-selector"
-							onChange={(e: { target: any }) => {
-								const selectedDateTime = new Date(`${e.target.value}T${selectedTime}`);
-								const now = new Date();
-
-								if (selectedDateTime < now) {
-									// Show error if date is in past
-									e.target.setCustomValidity(t("date_in_past.error.text"));
-									e.target.reportValidity();
-									return;
-								}
-
-								e.target.setCustomValidity("");
-								setSelectedDate(e.target.value);
-								setRouteData(undefined);
-								setRouteDataForMobile(undefined);
+						<div
+							style={{
+								boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.1)",
+								width: "100%",
+								display: "flex",
+								background: "#f5f5fa",
+								borderRadius: 8
 							}}
-							variation="quiet"
-							width="100%"
-						/>
+						>
+							<TextField
+								style={{ height: "120%", boxShadow: "none !important" }}
+								label=""
+								variation="quiet"
+								width="100%"
+								value={new Date(`${selectedDate}T${selectedTime}`).toLocaleDateString("en-US", {
+									weekday: "short",
+									month: "short",
+									day: "2-digit"
+								})}
+							/>
+
+							<TextField
+								label=""
+								width={43}
+								style={{ height: "100%", boxShadow: "none !important" }}
+								type="date"
+								value={selectedDate}
+								onChange={(e: { target: any }) => {
+									const selectedDateTime = new Date(`${e.target.value}T${selectedTime}`);
+									const now = new Date();
+
+									if (selectedDateTime < now) {
+										// Show error if date is in past
+										e.target.setCustomValidity(t("date_in_past.error.text"));
+										e.target.reportValidity();
+										return;
+									}
+
+									e.target.setCustomValidity("");
+									setSelectedDate(e.target.value);
+									setRouteData(undefined);
+									setRouteDataForMobile(undefined);
+								}}
+								variation="quiet"
+							/>
+						</div>
 					</Flex>
 				)}
 			</>
@@ -1112,8 +1124,12 @@ const RouteBox: FC<RouteBoxProps> = ({
 		);
 	}, [getDuration, routeDataForMobile, setRouteData, travelMode]);
 
-	const vehicleLegDetails = routeData?.Routes?.[0]?.Legs?.[0].VehicleLegDetails;
-	const arrivalTime = vehicleLegDetails?.Arrival?.Time;
+	let vehicleLegDetails: any = routeData?.Routes?.[0]?.Legs?.[0].VehicleLegDetails;
+
+	if (routeData?.Routes?.[0]?.Legs?.[0].Type === "Pedestrian") {
+		vehicleLegDetails = routeData?.Routes?.[0]?.Legs?.[0].PedestrianLegDetails;
+	}
+
 	const departureTime = vehicleLegDetails?.Departure?.Time;
 
 	const [expandTimeSelectionModeMobile, setExpandTimeSelectionModeMobile] = useState(false);
@@ -1393,129 +1409,77 @@ const RouteBox: FC<RouteBoxProps> = ({
 							className={`route-data-container ${isDesktop ? "bottom-border-radius" : ""}`}
 							maxHeight={!isDesktop ? bottomSheetCurrentHeight - 230 : "100%"}
 						>
-							{isDesktop ? (
-								<View className="route-info">
-									{travelMode === TravelMode.CAR ? (
-										<IconCar />
-									) : travelMode === TravelMode.TRUCK ? (
-										<IconTruckSolid />
-									) : travelMode === TravelMode.PEDESTRIAN ? (
-										<IconWalking />
-									) : (
-										<IconScooter />
-									)}
-									<View className="travel-and-distance">
-										<View className="selected-travel-mode">
-											<Text className="dark-text">
-												{humanReadableTime(routeData.Routes![0].Summary!.Duration! * 1000, currentLang, t, !isDesktop)}
-											</Text>
-											<View className="separator" />
-											<Text className="grey-text">{t("route_box__selected.text")}</Text>
-										</View>
+							<View className={`route-info ${isDesktop ? "" : "route-info-mobile"}`}>
+								{isDesktop && (
+									<>
+										{travelMode === TravelMode.CAR ? (
+											<IconCar />
+										) : travelMode === TravelMode.TRUCK ? (
+											<IconTruckSolid />
+										) : travelMode === TravelMode.PEDESTRIAN ? (
+											<IconWalking />
+										) : (
+											<IconScooter />
+										)}
+									</>
+								)}
+
+								<View className={`travel-and-distance ${isDesktop ? "" : "travel-and-distance-mobile"}`}>
+									<View className="selected-travel-mode dark-text">
+										<Text className="dark-text">
+											{humanReadableTime(routeData.Routes![0].Summary!.Duration! * 1000, currentLang, t, true)}
+										</Text>
+										<View className="separator" />
+										<Text className="grey-text">{t("route_box__selected.text")}</Text>
+									</View>
+									<Flex
+										gap="0.3rem"
+										direction={isLanguageRTL ? "row-reverse" : "row"}
+										justifyContent={isLanguageRTL ? "flex-end" : "flex-start"}
+									>
+										<Text className="distance">
+											{getConvertedDistance(mapUnit, routeData.Routes![0].Summary!.Distance!)}
+										</Text>
+										<Text className="distance">
+											{mapUnit === METRIC ? t("geofence_box__km__short.text") : t("geofence_box__mi__short.text")}
+										</Text>
+									</Flex>
+
+									{timeSelectionMode === TimeSelectionMode.ARRIVE_BY && (
 										<Flex
 											gap="0.3rem"
 											direction={isLanguageRTL ? "row-reverse" : "row"}
 											justifyContent={isLanguageRTL ? "flex-end" : "flex-start"}
 										>
+											<Text className="distance">Leave at</Text>
 											<Text className="distance">
-												{getConvertedDistance(mapUnit, routeData.Routes![0].Summary!.Distance!)}
-											</Text>
-											<Text className="distance">
-												{mapUnit === METRIC ? t("geofence_box__km__short.text") : t("geofence_box__mi__short.text")}
+												{departureTime &&
+													new Date(departureTime).toLocaleString("en-US", {
+														hour: "numeric",
+														minute: "2-digit",
+														hour12: true
+													})}
 											</Text>
 										</Flex>
-
-										{timeSelectionMode === TimeSelectionMode.ARRIVE_BY && (
-											<Flex
-												gap="0.3rem"
-												direction={isLanguageRTL ? "row-reverse" : "row"}
-												justifyContent={isLanguageRTL ? "flex-end" : "flex-start"}
-											>
-												<Text className="distance">Leave at</Text>
-												<Text className="distance">
-													{departureTime &&
-														new Date(departureTime).toLocaleString("en-US", {
-															hour: "numeric",
-															minute: "2-digit",
-															hour12: true
-														})}
-												</Text>
-											</Flex>
-										)}
-									</View>
-									<View className="duration">
-										<Text className="regular-text"></Text>
-									</View>
-								</View>
-							) : (
-								<Flex className={"route-info-mobile  border-bottom"}>
-									<Flex className="time-and-distance">
-										<Text className="bold small-text">
-											{humanReadableTime(routeData.Routes![0].Summary!.Duration! * 1000, currentLang, t, !isDesktop)}
-										</Text>
-										<Flex gap={0}>
-											<Text className="regular small-text">
-												{getConvertedDistance(mapUnit, routeData.Routes![0].Summary!.Distance!)}
-											</Text>
-											<Text className="regular small-text">
-												&nbsp;
-												{mapUnit === METRIC ? t("geofence_box__km__short.text") : t("geofence_box__mi__short.text")}
-											</Text>
-										</Flex>
-										{timeSelectionMode === TimeSelectionMode.DEPART_AT && (
-											<Flex
-												gap="0.3rem"
-												direction={isLanguageRTL ? "row-reverse" : "row"}
-												justifyContent={isLanguageRTL ? "flex-end" : "flex-start"}
-											>
-												<Text className="distance">Arrive at</Text>
-												<Text className="distance">
-													{arrivalTime &&
-														new Date(arrivalTime).toLocaleString("en-US", {
-															month: "2-digit",
-															day: "2-digit",
-															year: "numeric",
-															hour: "numeric",
-															minute: "2-digit",
-															hour12: true
-														})}
-												</Text>
-											</Flex>
-										)}
-
-										{timeSelectionMode === TimeSelectionMode.ARRIVE_BY && (
-											<Flex
-												gap="0.3rem"
-												direction={isLanguageRTL ? "row-reverse" : "row"}
-												justifyContent={isLanguageRTL ? "flex-end" : "flex-start"}
-											>
-												<Text className="distance">Depart at</Text>
-												<Text className="distance">
-													{departureTime &&
-														new Date(departureTime).toLocaleString("en-US", {
-															month: "2-digit",
-															day: "2-digit",
-															year: "numeric",
-															hour: "numeric",
-															minute: "2-digit",
-															hour12: true
-														})}
-												</Text>
-											</Flex>
-										)}
-									</Flex>
-									<Flex grow={1} />
-									{isUserDeviceIsAndroid() === ANDROID && (
-										<Button
-											variation="primary"
-											className="go-button bold"
-											onClick={() => window.open(GOOGLE_PLAY_STORE_LINK, "_blank")}
-										>
-											{t("go.text")}
-										</Button>
 									)}
-								</Flex>
-							)}
+								</View>
+
+								<View className="duration">
+									<Text className="regular-text"></Text>
+								</View>
+
+								<Flex grow={1} />
+
+								{isUserDeviceIsAndroid() === ANDROID && (
+									<Button
+										variation="primary"
+										className="go-button bold"
+										onClick={() => window.open(GOOGLE_PLAY_STORE_LINK, "_blank")}
+									>
+										{t("go.text")}
+									</Button>
+								)}
+							</View>
 							{renderSteps}
 						</View>
 					)}

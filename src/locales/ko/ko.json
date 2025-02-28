@@ -3913,5 +3913,8 @@
   },
   "date_in_past.error": {
     "text": "선택한 날짜는 과거일 수 없습니다."
+  },
+  "leave_at": {
+    "text": "에서 출발"
   }
 }

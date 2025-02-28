@@ -3909,5 +3909,8 @@
   },
   "date_in_past.error": {
     "text": "所选日期不能是过去的日期"
+  },
+  "leave_at": {
+    "text": "离开这里"
   }
 }
