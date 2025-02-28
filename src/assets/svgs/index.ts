@@ -56,6 +56,7 @@ export { ReactComponent as IconMinusFilled } from "./icon-minus-filled.svg";
 export { ReactComponent as IconMinus } from "./icon-minus.svg";
 export { ReactComponent as IconMobileSolid } from "./icon-mobile-solid.svg";
 export { ReactComponent as IconMotorcycleSolid } from "./icon-motorcycle-solid.svg";
+export { ReactComponent as IconScooter } from "./icon-scooter.svg";
 export { ReactComponent as IconMyLocation } from "./icon-my-location.svg";
 export { ReactComponent as IconPaintroller } from "./icon-paintroller.svg";
 export { ReactComponent as IconPause } from "./icon-pause.svg";

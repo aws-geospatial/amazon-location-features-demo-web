@@ -170,6 +170,23 @@
 		&:hover {
 			background-color: var(--ghost-white);
 		}
+
+		.amplify-dropdown {
+			button {
+				padding: 0;
+				background: none;
+				border: none;
+				
+				&:hover {
+					background: none;
+				}
+			}
+		}
+
+		.amplify-menu {
+			min-width: 150px;
+			margin-top: 0.5rem;
+		}
 	}
 
 	.from-to-container {
@@ -177,7 +194,7 @@
 
 		&.from-to-container-mobile {
 			margin-top: 8px;
-			background-color: var(--light-color-2);
+			// background-color: var(--light-color-2);
 			border-radius: 8px;
 			padding: 10px !important;
 			width: 100%;
@@ -186,7 +203,7 @@
 				width: 100%;
 
 				input {
-					background-color: var(--light-color-2);
+					// background-color: var(--light-color-2);
 				}
 			}
 
@@ -300,7 +317,7 @@
 		flex-direction: row;
 		justify-content: space-between;
 		gap: 10px;
-		background-color: var(--light-color-2);
+		background-color: var(--light-color-1);
 		padding: 11px 15px;
 		cursor: pointer !important;
 
@@ -441,23 +458,27 @@
 
 		.route-info {
 			display: flex;
-			align-items: center;
+			align-items: flex-start;
 			width: 100%;
-			padding: 18px 16px;
+			padding: 12px 16px;
 			border-bottom: 1px solid rgba(242, 242, 247, 1);
 			position: relative;
 
 			svg {
 				width: 20px;
 				height: 20px;
-				fill: #8e8e93;
+				fill: var(--primary-color) !important;
 			}
 
 			.travel-and-distance {
 				display: flex;
 				flex-direction: column;
 				justify-content: center;
-				margin-left: 15px;
+				margin-left: 32px;
+
+				.travel-and-distance-mobile {
+					margin-left: 15px !important;
+				}
 
 				.selected-travel-mode {
 					display: flex;
@@ -465,7 +486,7 @@
 
 					.dark-text {
 						opacity: 1 !important;
-						color: rgba(35, 47, 62, 1) !important;
+						color: var(--primary-color) !important;
 						font-family: "AmazonEmber-Bold" !important;
 						font-size: 13px !important;
 						font-style: normal !important;
@@ -485,9 +506,9 @@
 
 				.grey-text {
 					opacity: 1 !important;
-					color: rgba(142, 142, 147, 1) !important;
+					color: var(--primary-color) !important;
 					font-size: 13px !important;
-					font-family: "AmazonEmber-Regular";
+					font-family: "AmazonEmber-Bold";
 					font-style: normal !important;
 					letter-spacing: 0px !important;
 					text-align: left !important;
@@ -540,6 +561,7 @@
 
 			&.steps-container-mobile {
 				padding: 0;
+				max-height: 60vh;
 
 				.step-card-icon-container {
 					margin-left: 0;
@@ -585,6 +607,12 @@
 			}
 		}
 	}
+}
+
+.travel-time-selector {
+	border-radius: 8px;
+	background-color: #f5f5fa;
+	box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .route-option-items {

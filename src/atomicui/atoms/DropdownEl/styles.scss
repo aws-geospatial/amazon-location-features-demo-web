@@ -7,7 +7,7 @@
 
 	.trigger {
 		display: flex;
-		justify-content: center;
+		justify-content: space-between;
 		align-items: center;
 		max-width: 18.15rem;
 		height: 2.46rem;
@@ -57,7 +57,7 @@
 		p {
 			font-family: "AmazonEmber-Bold";
 			font-size: 1.08rem;
-			color: var(--primary-color);
+			color: var(--black-color);
 			margin-right: 0.5rem;
 			white-space: nowrap;
 			overflow: hidden;
@@ -79,7 +79,7 @@
 		border-radius: 0.62rem;
 		margin-top: 0.62rem;
 		padding: 0;
-		z-index: 1;
+		z-index: 10;
 
 		@media only screen and (max-width: 562px) {
 			width: 12rem;
