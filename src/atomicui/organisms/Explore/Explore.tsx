@@ -759,7 +759,7 @@ const Explore: FC<ExploreProps> = ({
 									)
 								},
 								{
-									title: "demo.text",
+									title: "places_routes_maps.text",
 									description: "description_demo.text",
 									onClickHandler: () => navigate(DEMO),
 									isEnabled: true,

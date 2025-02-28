@@ -3896,6 +3896,9 @@
   "avoid": {
     "text": "Vermeiden"
   },
+  "places_routes_maps": {
+    "text": "Orte, Routen, Karten"
+  },
   "arrive_by": {
     "text": "Ankunft am"
   },
