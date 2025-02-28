@@ -1127,8 +1127,12 @@ const RouteBox: FC<RouteBoxProps> = ({
 		);
 	}, [getDuration, routeDataForMobile, setRouteData, travelMode]);
 
-	const vehicleLegDetails = routeData?.Routes?.[0]?.Legs?.[0].VehicleLegDetails;
-	const arrivalTime = vehicleLegDetails?.Arrival?.Time;
+	let vehicleLegDetails: any = routeData?.Routes?.[0]?.Legs?.[0].VehicleLegDetails;
+
+	if (routeData?.Routes?.[0]?.Legs?.[0].Type === "Pedestrian") {
+		vehicleLegDetails = routeData?.Routes?.[0]?.Legs?.[0].PedestrianLegDetails;
+	}
+
 	const departureTime = vehicleLegDetails?.Departure?.Time;
 
 	const [expandTimeSelectionModeMobile, setExpandTimeSelectionModeMobile] = useState(false);
@@ -1408,7 +1412,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 							className={`route-data-container ${isDesktop ? "bottom-border-radius" : ""}`}
 							maxHeight={!isDesktop ? bottomSheetCurrentHeight - 230 : "100%"}
 						>
-							<View className="route-info route-info-mobile">
+							<View className={`route-info ${isDesktop ? "" : "route-info-mobile"}`}>
 								{isDesktop && (
 									<>
 										{travelMode === TravelMode.CAR ? (
@@ -1423,7 +1427,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 									</>
 								)}
 
-								<View className="travel-and-distance">
+								<View className={`travel-and-distance ${isDesktop ? "" : "travel-and-distance-mobile"}`}>
 									<View className="selected-travel-mode dark-text">
 										<Text className="dark-text">
 											{humanReadableTime(routeData.Routes![0].Summary!.Duration! * 1000, currentLang, t, true)}
@@ -1462,11 +1466,13 @@ const RouteBox: FC<RouteBoxProps> = ({
 										</Flex>
 									)}
 								</View>
+
 								<View className="duration">
 									<Text className="regular-text"></Text>
 								</View>
 
 								<Flex grow={1} />
+
 								{isUserDeviceIsAndroid() === ANDROID && (
 									<Button
 										variation="primary"
