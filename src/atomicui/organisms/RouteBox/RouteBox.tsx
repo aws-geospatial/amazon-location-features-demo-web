@@ -673,7 +673,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 							}}
 						>
 							<TextField
-								style={{ height: "120%", boxShadow: "none !important" }}
+								style={{ height: "120%", minWidth: 122, boxShadow: "none !important" }}
 								label=""
 								variation="quiet"
 								width="100%"
