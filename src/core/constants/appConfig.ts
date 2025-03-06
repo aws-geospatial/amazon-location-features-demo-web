@@ -39,7 +39,6 @@ const appConfig = {
 	ENV: {
 		PINPOINT_IDENTITY_POOL_ID: getEnv("VITE_PINPOINT_IDENTITY_POOL_ID"),
 		PINPOINT_APPLICATION_ID: getEnv("VITE_PINPOINT_APPLICATION_ID"),
-		CF_TEMPLATE: getEnv("VITE_AWS_CF_TEMPLATE"),
 		APPLE_APP_STORE_LINK: getEnv("VITE_APPLE_APP_STORE_LINK"),
 		GOOGLE_PLAY_STORE_LINK: getEnv("VITE_GOOGLE_PLAY_STORE_LINK"),
 		COUNTRY_EVALUATION_URL: "/doNotDelete.txt",
@@ -75,7 +74,6 @@ const appConfig = {
 		ERROR_BOUNDARY: "/error",
 		SAMPLES: "/samples",
 		SAMPLE_DETAILS: "/sample/:sampleId",
-		HELP: "/demo/help",
 		TERMS: "/demo/terms",
 		SOFTWARE_ATTRIBUTIONS: "/demo/software-attributions",
 		MIGRATE_FROM_GOOGLE_MAPS: "/migrate-from-google-maps",

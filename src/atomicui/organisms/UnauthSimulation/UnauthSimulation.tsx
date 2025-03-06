@@ -94,7 +94,6 @@ export interface UnauthSimulationProps {
 	from: MenuItemEnum;
 	setShowUnauthGeofenceBox: (b: boolean) => void;
 	setShowUnauthTrackerBox: (b: boolean) => void;
-	setShowConnectAwsAccountModal: (b: boolean) => void;
 	showStartUnauthSimulation: boolean;
 	setShowStartUnauthSimulation: (b: boolean) => void;
 	startSimulation: boolean;
@@ -112,7 +111,6 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 	from,
 	setShowUnauthGeofenceBox,
 	setShowUnauthTrackerBox,
-	setShowConnectAwsAccountModal,
 	showStartUnauthSimulation,
 	setShowStartUnauthSimulation,
 	startSimulation,
@@ -249,10 +247,7 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 		setHideGeofenceTrackerShortcut(true);
 	};
 
-	const handleEnableLive = () => {
-		isDesktop && handleClose();
-		setShowConnectAwsAccountModal(true);
-	};
+	const handleEnableLive = () => isDesktop && handleClose();
 
 	const onCloseHandler = () => {
 		setShowStartUnauthSimulation(false);

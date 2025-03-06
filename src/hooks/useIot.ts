@@ -11,16 +11,16 @@ const useIot = () => {
 
 	const methods = useMemo(
 		() => ({
-			attachPolicy: async (identityId: string, unauthUser = false) => {
+			attachPolicy: async (identityId: string) => {
 				try {
-					await iotService.attachPolicy(identityId, unauthUser);
+					await iotService.attachPolicy(identityId);
 				} catch (error) {
 					errorHandler(error);
 				}
 			},
-			detachPolicy: async (identityId: string, unauthUser = false) => {
+			detachPolicy: async (identityId: string) => {
 				try {
-					await iotService.detachPolicy(identityId, unauthUser);
+					await iotService.detachPolicy(identityId);
 				} catch (error) {
 					errorHandler(error);
 				}

@@ -3,13 +3,7 @@
 
 import { useMemo } from "react";
 
-import {
-	BatchDeleteGeofenceRequest,
-	BatchEvaluateGeofencesRequest,
-	GeofenceGeometry,
-	ListGeofencesRequest,
-	PutGeofenceRequest
-} from "@aws-sdk/client-location";
+import { BatchEvaluateGeofencesRequest, ListGeofencesRequest } from "@aws-sdk/client-location";
 import { appConfig } from "@demo/core/constants";
 import { useClient } from "@demo/hooks";
 
@@ -28,23 +22,6 @@ const useGeofenceService = () => {
 				};
 
 				return await locationClient?.listGeofences(params);
-			},
-			putGeofence: async (GeofenceId: string, Geometry: GeofenceGeometry) => {
-				const params: PutGeofenceRequest = {
-					CollectionName: GEOFENCE_COLLECTION,
-					GeofenceId,
-					Geometry
-				};
-
-				return await locationClient?.putGeofence(params);
-			},
-			deleteGeofence: async (GeofenceId: string) => {
-				const params: BatchDeleteGeofenceRequest = {
-					CollectionName: GEOFENCE_COLLECTION,
-					GeofenceIds: [GeofenceId]
-				};
-
-				return await locationClient?.batchDeleteGeofence(params);
 			},
 			evaluateGeofence: async (Position: number[], IdentityId: string, geofenceCollection?: string) => {
 				const params: BatchEvaluateGeofencesRequest = {

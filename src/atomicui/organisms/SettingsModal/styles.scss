@@ -76,6 +76,7 @@
 
 				&.option-item-mobile {
 					justify-content: space-between;
+
 					.option-arrow {
 						svg {
 							transform: rotate(270deg);
@@ -197,62 +198,6 @@
 					stroke: var(--white-color);
 					width: 8px;
 					height: 8px;
-				}
-			}
-
-			.sm-aws-cloudformation-container {
-				gap: 0;
-				flex-direction: column;
-				overflow-x: hidden;
-				overflow-y: scroll;
-
-				.sm-aws-cloudformation-form {
-					gap: 0;
-					flex-direction: column;
-					align-items: center;
-					padding: 1.23rem;
-
-					.step-number {
-						min-width: 24px;
-						width: 100%;
-						max-width: 24px;
-						height: 24px;
-						border-radius: 4px;
-						background-color: var(--border-separator-color);
-						display: flex;
-						justify-content: center;
-						align-items: center;
-					}
-
-					.step-heading-rtl {
-						justify-content: flex-end;
-					}
-
-					.hyperlink {
-						cursor: pointer !important;
-						color: var(--primary-color) !important;
-					}
-
-					.amplify-text.step-two-description {
-						font-family: "AmazonEmber-Regular";
-						font-size: 1rem;
-						line-height: 1.38rem;
-						color: var(--grey-color);
-						margin-top: 0.31rem;
-
-						a {
-							font-family: "AmazonEmber-Bold";
-							color: var(--primary-color);
-							cursor: pointer;
-							text-decoration: none;
-						}
-					}
-
-					.icon-check-mark-circle {
-						fill: var(--success);
-						width: 88px;
-						height: 88px;
-					}
 				}
 			}
 		}

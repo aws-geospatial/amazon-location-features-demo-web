@@ -3,10 +3,9 @@
 
 import { FC, Fragment, MutableRefObject, lazy, useCallback, useMemo, useState } from "react";
 
-import { Button, Divider, Flex, Text } from "@aws-amplify/ui-react";
+import { Flex } from "@aws-amplify/ui-react";
 import {
 	IconArrow,
-	IconAwsCloudFormation,
 	IconBrandAndroid,
 	IconBrandApple,
 	IconBrowser,
@@ -30,17 +29,9 @@ import {
 } from "@demo/assets/svgs";
 import { appConfig } from "@demo/core/constants";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
-import { useAuth, useIot } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
-import {
-	AnalyticsEventActionsEnum,
-	EventTypeEnum,
-	MenuItemEnum,
-	ResponsiveUIEnum,
-	TriggeredByEnum
-} from "@demo/types/Enums";
-import { record } from "@demo/utils";
+import { MenuItemEnum, ResponsiveUIEnum } from "@demo/types/Enums";
 import { isAndroid, isIOS } from "react-device-detect";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -97,11 +88,7 @@ const {
 interface ExploreProps {
 	updateUIInfo: (ui: ResponsiveUIEnum) => void;
 	onCloseSidebar: () => void;
-	onOpenConnectAwsAccountModal: () => void;
 	onOpenFeedbackModal: () => void;
-	onOpenSignInModal: () => void;
-	onShowAuthGeofenceBox: () => void;
-	onShowAuthTrackerBox: () => void;
 	onShowSettings: () => void;
 	onShowAboutModal: () => void;
 	onShowUnauthGeofenceBox: () => void;
@@ -112,11 +99,7 @@ interface ExploreProps {
 const Explore: FC<ExploreProps> = ({
 	updateUIInfo,
 	onCloseSidebar,
-	onOpenConnectAwsAccountModal,
 	onOpenFeedbackModal,
-	onOpenSignInModal,
-	onShowAuthGeofenceBox,
-	onShowAuthTrackerBox,
 	onShowSettings,
 	onShowAboutModal,
 	onShowUnauthGeofenceBox,
@@ -131,89 +114,23 @@ const Explore: FC<ExploreProps> = ({
 	});
 	const { t, i18n } = useTranslation();
 	const currentLanguage = i18n.language;
-	const langDir = i18n.dir();
-	const isLtr = langDir === "ltr";
 	const { setBottomSheetMinHeight, setBottomSheetHeight, bottomSheetCurrentHeight = 0 } = useBottomSheet();
-	const { isDesktop, isDesktopBrowser } = useDeviceMediaQuery();
-	const { userProvidedValues, credentials, onLogin, onLogout, onDisconnectAwsAccount } = useAuth();
-	const { detachPolicy } = useIot();
-	const isAuthenticated = !!credentials?.authenticated;
-	const disconnectButtonText = t("disconnect_aws_account.text");
+	const { isDesktopBrowser } = useDeviceMediaQuery();
 	const navigate = useNavigate();
-
-	const onConnectAwsAccount = (action: AnalyticsEventActionsEnum) => {
-		onCloseSidebar();
-		onOpenConnectAwsAccountModal();
-
-		record(
-			[
-				{
-					EventType: EventTypeEnum.AWS_ACCOUNT_CONNECTION_STARTED,
-					Attributes: { triggeredBy: TriggeredByEnum.SIDEBAR, action }
-				}
-			],
-			["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
-		);
-	};
 
 	const onClickMenuItem = useCallback(
 		(menuItem: MenuItemEnum) => {
 			onCloseSidebar();
-			const isAuthenticated = !!credentials?.authenticated;
 
-			if (!!userProvidedValues) {
-				if (isAuthenticated) {
-					if (menuItem === MenuItemEnum.GEOFENCE) {
-						onShowAuthGeofenceBox();
-						updateUIInfo(ResponsiveUIEnum.auth_geofence);
-						if (!isDesktop) {
-							setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
-							setBottomSheetHeight(window.innerHeight * 0.4);
-							setTimeout(() => {
-								setBottomSheetMinHeight(BottomSheetHeights.explore.min);
-								setBottomSheetHeight(window.innerHeight);
-							}, 300);
-						}
-					} else {
-						onShowAuthTrackerBox();
-						updateUIInfo(ResponsiveUIEnum.auth_tracker);
-
-						if (!isDesktop) {
-							setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
-							setBottomSheetHeight(window.innerHeight * 0.4);
-							setTimeout(() => {
-								setBottomSheetMinHeight(BottomSheetHeights.explore.min);
-								setBottomSheetHeight(window.innerHeight);
-							}, 300);
-						}
-					}
-				} else {
-					onOpenSignInModal();
-				}
+			if (menuItem === MenuItemEnum.GEOFENCE) {
+				onShowUnauthGeofenceBox();
+				updateUIInfo(ResponsiveUIEnum.non_start_unauthorized_geofence);
 			} else {
-				if (menuItem === MenuItemEnum.GEOFENCE) {
-					onShowUnauthGeofenceBox();
-					updateUIInfo(ResponsiveUIEnum.non_start_unauthorized_geofence);
-				} else {
-					updateUIInfo(ResponsiveUIEnum.non_start_unauthorized_tracker);
-					onShowUnauthTrackerBox();
-				}
+				updateUIInfo(ResponsiveUIEnum.non_start_unauthorized_tracker);
+				onShowUnauthTrackerBox();
 			}
 		},
-		[
-			credentials?.authenticated,
-			isDesktop,
-			onCloseSidebar,
-			onOpenSignInModal,
-			onShowAuthGeofenceBox,
-			onShowAuthTrackerBox,
-			onShowUnauthGeofenceBox,
-			onShowUnauthTrackerBox,
-			setBottomSheetHeight,
-			setBottomSheetMinHeight,
-			updateUIInfo,
-			userProvidedValues
-		]
+		[onCloseSidebar, onShowUnauthGeofenceBox, onShowUnauthTrackerBox, updateUIInfo]
 	);
 
 	const onClickSettings = useCallback(() => {
@@ -230,78 +147,6 @@ const Explore: FC<ExploreProps> = ({
 		onCloseSidebar();
 		onOpenFeedbackModal();
 	}, [onCloseSidebar, onOpenFeedbackModal]);
-
-	const ConnectAccount = ({ isAuthenticated = false }) => (
-		<>
-			<Flex alignItems="center">
-				<IconAwsCloudFormation width="1.2rem" height="1.38rem" />
-				<Text fontFamily="AmazonEmber-Bold" fontSize="1.23rem" dir={isLtr ? "ltr" : "rtl"}>
-					{t("explore__connect_aws_account.text")}
-				</Text>
-			</Flex>
-			<Text fontFamily="AmazonEmber-Regular" fontSize="1rem" color="var(--grey-color)" dir={isLtr ? "ltr" : "rtl"}>
-				{t("explore__connect_description.text")}
-			</Text>
-			{isAuthenticated ? (
-				<AwsAccountButton />
-			) : (
-				<Button
-					data-testid="connect-aws-account-button"
-					variation="primary"
-					width="100%"
-					height="3.07rem"
-					fontFamily={"AmazonEmber-Bold"}
-					fontSize="1.07rem"
-					onClick={() => onConnectAwsAccount(AnalyticsEventActionsEnum.CONNECT_AWS_ACCOUNT_BUTTON_CLICKED)}
-				>
-					{t("caam__connect.text")}
-				</Button>
-			)}
-		</>
-	);
-
-	const AwsAccountButton = ({ isFooter = false }) => (
-		<Button
-			data-testid={isAuthenticated ? "sign-out-button" : "sign-in-button"}
-			variation={isFooter ? "link" : "primary"}
-			fontFamily="AmazonEmber-Bold"
-			textAlign="center"
-			onClick={async () => {
-				if (isAuthenticated) {
-					record(
-						[{ EventType: EventTypeEnum.SIGN_OUT_STARTED, Attributes: { triggeredBy: TriggeredByEnum.SIDEBAR } }],
-						["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
-					);
-					await detachPolicy(credentials!.identityId);
-					onLogout();
-				} else {
-					record(
-						[{ EventType: EventTypeEnum.SIGN_IN_STARTED, Attributes: { triggeredBy: TriggeredByEnum.SIDEBAR } }],
-						["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
-					);
-					onLogin();
-				}
-			}}
-			className={isFooter ? "auth-footer-button" : ""}
-		>
-			{isAuthenticated ? t("sign_out.text") : t("sign_in.text")}
-		</Button>
-	);
-
-	const DisconnectButton = ({ isFooter = false }) => (
-		<Button
-			data-testid="disconnect-aws-account-button"
-			variation={isFooter ? "link" : "primary"}
-			fontFamily="AmazonEmber-Bold"
-			className={`disconnect-button ${isFooter ? "auth-footer-button" : ""}`}
-			marginTop={"1.84rem"}
-			textAlign="center"
-			onClick={onDisconnectAwsAccount}
-			fontSize={disconnectButtonText.length > 22 ? "0.92rem" : "1rem"}
-		>
-			{disconnectButtonText}
-		</Button>
-	);
 
 	const exploreMoreOptions = useMemo(
 		() =>
@@ -804,7 +649,7 @@ const Explore: FC<ExploreProps> = ({
 								title={t(title)}
 								titleColor={isMenuExpanded[title] ? "var(--primary-color)" : ""}
 								description={t(description)}
-								cardMargin={idx === 0 && (!userProvidedValues || !isAuthenticated) ? "2rem 0 0.923rem 0" : "0.923rem 0"}
+								cardMargin={idx === 0 ? "2rem 0 0.923rem 0" : "0.923rem 0"}
 								direction="row-reverse"
 								cardAlignItems="center"
 								onClickHandler={onClickHandler}
@@ -821,9 +666,7 @@ const Explore: FC<ExploreProps> = ({
 													IconComponent={iconComponent}
 													title={t(title)}
 													description={t(description)}
-													cardMargin={
-														idx === 0 && (!userProvidedValues || !isAuthenticated) ? "2rem 0 0.923rem 0" : "0.923rem 0"
-													}
+													cardMargin={idx === 0 ? "2rem 0 0.923rem 0" : "0.923rem 0"}
 													cardAlignItems="center"
 													onClickHandler={onClickHandler}
 													isTitleBold
@@ -843,7 +686,7 @@ const Explore: FC<ExploreProps> = ({
 							IconComponent={<IconArrow className="reverse-icon" width={20} height={20} />}
 							title={t(title)}
 							description={t(description)}
-							cardMargin={idx === 0 && (!userProvidedValues || !isAuthenticated) ? "2rem 0 0.923rem 0" : "0.923rem 0"}
+							cardMargin={idx === 0 ? "2rem 0 0.923rem 0" : "0.923rem 0"}
 							direction="row-reverse"
 							cardAlignItems="center"
 							onClickHandler={onClickHandler}
@@ -853,7 +696,7 @@ const Explore: FC<ExploreProps> = ({
 				}
 			}
 		});
-	}, [exploreMoreOptions, isAuthenticated, isMenuExpanded, userProvidedValues, t]);
+	}, [exploreMoreOptions, isMenuExpanded, t]);
 
 	const exploreButtons = useMemo(
 		() => [
@@ -930,26 +773,9 @@ const Explore: FC<ExploreProps> = ({
 					<ExploreButton key={index} text={button.text} icon={button.icon} onClick={button.onClick} />
 				))}
 			</Flex>
-			{(!userProvidedValues || !isAuthenticated) && (
-				<Flex direction="column" className="aws-connect-container button-wrapper">
-					<ConnectAccount isAuthenticated={!!userProvidedValues} />
-				</Flex>
-			)}
 			<Flex direction="column" gap="0" className="explore-more-options">
 				{renderExploreMoreOptions}
 			</Flex>
-			{!!userProvidedValues && isAuthenticated && (
-				<>
-					<Divider className="title-divider" />
-					<AwsAccountButton isFooter />
-				</>
-			)}
-			{!!userProvidedValues && !isAuthenticated && (
-				<>
-					<Divider className="title-divider" />
-					<DisconnectButton isFooter />
-				</>
-			)}
 		</Flex>
 	);
 };
