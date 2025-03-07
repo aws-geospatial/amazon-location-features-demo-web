@@ -247,8 +247,6 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 		setHideGeofenceTrackerShortcut(true);
 	};
 
-	const handleEnableLive = () => isDesktop && handleClose();
-
 	const onCloseHandler = () => {
 		setShowStartUnauthSimulation(false);
 		handleClose();
@@ -477,7 +475,6 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 					);
 					handleCta();
 				}}
-				handleEnableLive={handleEnableLive}
 				unauthSimulationCtaText={unauthSimulationCtaText}
 				startRef={nonStartRef}
 			/>
