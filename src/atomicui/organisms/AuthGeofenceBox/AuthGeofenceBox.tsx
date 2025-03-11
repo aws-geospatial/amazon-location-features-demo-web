@@ -229,7 +229,7 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 							}}
 						>
 							{s.placeId ? <IconPin /> : <IconSearch />}
-							<Flex gap={0} direction="column" justifyContent="center" marginLeft="19px">
+							<Flex gap="0" direction="column" justifyContent="center" marginLeft="19px">
 								<Text>{title}</Text>
 								{address && (
 									<Text variation="tertiary" textAlign={isLtr ? "start" : "end"}>
@@ -317,13 +317,13 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 		return (
 			<Flex
 				data-testid="auth-geofence-add-container"
-				gap={0}
+				gap="0"
 				direction="column"
 				padding={"0px 16px"}
 				style={isDesktop ? {} : { overflowY: "scroll", height: (bottomSheetCurrentHeight || 0) - 64 }}
 			>
 				{!geofenceCenter && (
-					<Flex gap={0} justifyContent="center" alignItems="center" marginTop="14px">
+					<Flex gap="0" justifyContent="center" alignItems="center" marginTop="14px">
 						{isDesktop && (
 							<Flex className="icon-plus-rounded">
 								<IconPlus />
@@ -377,7 +377,7 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 								{errorMsg}
 							</Text>
 						)}
-						<Flex gap={0} direction="column" marginBottom="1.85rem">
+						<Flex gap="0" direction="column" marginBottom="1.85rem">
 							<SliderField
 								data-testid="geofence-radius-slider"
 								className="geofence-radius-slider"
@@ -394,7 +394,7 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 								value={radiusInM}
 								onChange={radiusInM => setRadiusInM(radiusInM)}
 							/>
-							<Flex gap={0}>
+							<Flex gap="0">
 								<View className="radius-input-container">
 									<InputField
 										label=""
@@ -552,13 +552,13 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 						<Flex
 							data-testid={GeofenceId}
 							className={`geofence-item${idx !== geofences!.length - 1 ? " border-bottom" : ""}`}
-							gap={0}
+							gap="0"
 							padding="10px 0px 10px 10px"
 							alignItems="center"
 							onClick={() => onClickGeofenceItem(GeofenceId!, Center!, Radius!)}
 						>
 							<Flex className={"icon-geofence-marker"} />
-							<Flex gap={0} direction="column">
+							<Flex gap="0" direction="column">
 								<Text>{GeofenceId}</Text>
 							</Flex>
 							<div
@@ -604,7 +604,7 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 			return (
 				<Flex
 					data-testid="auth-geofence-box-loader"
-					gap={0}
+					gap="0"
 					padding="24px 0px"
 					direction="column"
 					justifyContent="center"
@@ -623,7 +623,7 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 				return (
 					<Flex
 						data-testid="auth-geofence-box-empty-list"
-						gap={0}
+						gap="0"
 						direction="column"
 						justifyContent="center"
 						alignItems="center"
@@ -714,7 +714,7 @@ const AuthGeofenceBox: FC<AuthGeofenceBoxProps> = ({
 								: t("geofence.text")}
 						</Text>
 					</Flex>
-					<Flex gap={0} alignItems="center">
+					<Flex gap="0" alignItems="center">
 						{isDesktop && !isAddingGeofence && (
 							<>
 								<Flex data-testid="auth-geofence-box-add-button" className="geofence-action" onClick={onAddGeofence}>

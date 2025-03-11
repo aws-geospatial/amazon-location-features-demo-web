@@ -186,9 +186,9 @@ const MapButtons: FC<MapButtonsProps> = ({
 	const renderMapStyles = useMemo(
 		() => (
 			<Flex data-testid="map-styles-wrapper" className="map-styles-wrapper">
-				<Flex gap={0} width="100%" direction="column" marginBottom={isHandDevice ? "5rem" : "0"}>
-					<Flex data-testid="map-styles-container" gap={0} direction="column" className="maps-container">
-						<Flex gap={0} padding="0 1rem 1.23rem 1rem" wrap="wrap" justifyContent="space-between">
+				<Flex gap="0" width="100%" direction="column" marginBottom={isHandDevice ? "5rem" : "0"}>
+					<Flex data-testid="map-styles-container" gap="0" direction="column" className="maps-container">
+						<Flex gap="0" padding="0 1rem 1.23rem 1rem" wrap="wrap" justifyContent="space-between">
 							{MAP_STYLES.map(({ id, name, image }) => (
 								<Flex
 									key={id}
@@ -210,7 +210,7 @@ const MapButtons: FC<MapButtonsProps> = ({
 											handleMapStyleChange(id, name);
 										}}
 									>
-										<Flex gap={0} position="relative">
+										<Flex gap="0" position="relative">
 											{(isLoading || isLoadingImg) && <Placeholder position="absolute" width="100%" height="100%" />}
 											<img
 												className={`${isHandDevice ? "hand-device-img" : ""} ${
@@ -230,9 +230,9 @@ const MapButtons: FC<MapButtonsProps> = ({
 								</Flex>
 							))}
 						</Flex>
-						<Flex gap={0} padding="1rem">
+						<Flex gap="0" padding="1rem">
 							<Flex
-								gap={0}
+								gap="0"
 								borderRadius="0.61rem"
 								backgroundColor="var(--light-color-2)"
 								height="3.23rem"
@@ -289,13 +289,13 @@ const MapButtons: FC<MapButtonsProps> = ({
 								))}
 							</Flex>
 						</Flex>
-						<Flex gap={0} padding="1rem" direction="column">
+						<Flex gap="0" padding="1rem" direction="column">
 							<Text className="bold small-text" marginBottom="0.4rem">
 								{t("political_views.text")}
 							</Text>
 							<PoliticalViewDropdown bordered disabled={mapStyle === MapStyleEnum.SATELLITE} />
 						</Flex>
-						<Flex gap={0} padding="1rem" direction="column">
+						<Flex gap="0" padding="1rem" direction="column">
 							<Text className="bold small-text" marginBottom="0.4rem">
 								{t("map_languages.text")}
 							</Text>

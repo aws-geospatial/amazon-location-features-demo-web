@@ -1218,7 +1218,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 						</View>
 					)}
 					{isDesktop && (
-						<Flex className="travel-mode-button-container" gap={0}>
+						<Flex className="travel-mode-button-container" gap="0">
 							<View
 								data-testid="travel-mode-car-icon-container"
 								className={travelMode === TravelMode.CAR ? "travel-mode selected" : "travel-mode"}
@@ -1281,7 +1281,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 							className={`from-to-container ${
 								!isDesktop && isBothInputFilled && !isInputFocused ? "from-to-container-mobile" : ""
 							}`}
-							gap={0}
+							gap="0"
 						>
 							<Flex className="marker-container" order={isLtr ? 1 : 3}>
 								<Flex className="icon-my-location" />
@@ -1456,7 +1456,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 										<Text className="bold small-text">
 											{humanReadableTime(routeData.Routes![0].Summary!.Duration! * 1000, currentLang, t, !isDesktop)}
 										</Text>
-										<Flex gap={0}>
+										<Flex gap="0">
 											<Text className="regular small-text">
 												{getConvertedDistance(mapUnit, routeData.Routes![0].Summary!.Distance!)}
 											</Text>

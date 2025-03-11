@@ -192,7 +192,7 @@ const ConnectAwsAccountModal: FC<ConnectAwsAccountModalProps> = ({ open, onClose
 							{t("caam__desc.text")}
 						</Text>
 						<View className="body">
-							<Flex gap={0} justifyContent="flex-start" alignItems="center" marginTop="1rem">
+							<Flex gap="0" justifyContent="flex-start" alignItems="center" marginTop="1rem">
 								<Text className="bold" fontSize="1.08rem" order={isLtr ? 1 : 2} whiteSpace="nowrap">
 									{t("caam__htct.text")}
 								</Text>
@@ -207,7 +207,7 @@ const ConnectAwsAccountModal: FC<ConnectAwsAccountModalProps> = ({ open, onClose
 								</Flex>
 							</Flex>
 							<View marginTop="1.23rem">
-								<Flex gap={0} marginBottom="1.85rem">
+								<Flex gap="0" marginBottom="1.85rem">
 									<View
 										className="step-number"
 										margin={isLtr ? "0rem 1.23rem 0rem 0rem" : "0rem 0rem 0rem 1.23rem"}
@@ -229,7 +229,7 @@ const ConnectAwsAccountModal: FC<ConnectAwsAccountModalProps> = ({ open, onClose
 										</Text>
 									</View>
 								</Flex>
-								<Flex gap={0} marginBottom="1.85rem">
+								<Flex gap="0" marginBottom="1.85rem">
 									<View
 										className="step-number"
 										margin={isLtr ? "0rem 1.23rem 0rem 0rem" : "0rem 0rem 0rem 1.23rem"}
@@ -247,7 +247,7 @@ const ConnectAwsAccountModal: FC<ConnectAwsAccountModalProps> = ({ open, onClose
 										</Text>
 									</View>
 								</Flex>
-								<Flex gap={0}>
+								<Flex gap="0">
 									<View
 										className="step-number"
 										margin={isLtr ? "0rem 1.23rem 0rem 0rem" : "0rem 0rem 0rem 1.23rem"}

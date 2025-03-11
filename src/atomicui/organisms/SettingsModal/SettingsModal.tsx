@@ -196,7 +196,7 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 				detailsComponent: (
 					<Flex
 						data-testid={`${SettingOptionEnum.UNITS}-details-component`}
-						gap={0}
+						gap="0"
 						direction="column"
 						padding="0rem 1.15rem"
 					>
@@ -255,7 +255,7 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 				detailsComponent: (
 					<Flex
 						data-testid={`${SettingOptionEnum.MAP_STYLE}-details-component`}
-						gap={0}
+						gap="0"
 						direction="column"
 						padding="1.08rem 0 0 0"
 						overflow="hidden scroll"
@@ -273,7 +273,7 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 				detailsComponent: (
 					<Flex
 						data-testid={`${SettingOptionEnum.UNITS}-details-component`}
-						gap={0}
+						gap="0"
 						direction="column"
 						padding="0rem 1.15rem"
 						overflow="hidden scroll"
@@ -302,7 +302,7 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 				detailsComponent: (
 					<Flex
 						data-testid={`${SettingOptionEnum.ROUTE_OPTIONS}-details-component`}
-						gap={0}
+						gap="0"
 						direction="column"
 						padding="0rem 1.15rem"
 					>
@@ -370,7 +370,7 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 				detailsComponent: (
 					<Flex
 						data-testid={`${SettingOptionEnum.REGION}-details-component`}
-						gap={0}
+						gap="0"
 						direction="column"
 						padding="0rem 1.15rem"
 						dir={langDir}
@@ -423,7 +423,7 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 						data-testid={`${SettingOptionEnum.AWS_CLOUD_FORMATION}-details-component`}
 						className="sm-aws-cloudformation-container"
 					>
-						<Flex gap={0} padding="0rem 1.23rem 0rem 1.62rem" backgroundColor="var(--light-color-2)">
+						<Flex gap="0" padding="0rem 1.23rem 0rem 1.62rem" backgroundColor="var(--light-color-2)">
 							<IconAwsCloudFormation
 								style={{
 									width: "2.46rem",
@@ -433,7 +433,7 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 									margin: "1.85rem 1.62rem 2rem 0rem"
 								}}
 							/>
-							<Flex gap={0} direction="column" marginTop="1.23rem">
+							<Flex gap="0" direction="column" marginTop="1.23rem">
 								<Text marginTop="0.31rem" variation="tertiary" whiteSpace="pre-line" className={isLtr ? "ltr" : "rtl"}>
 									{t("caam__desc.text")}
 								</Text>
@@ -441,7 +441,7 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 						</Flex>
 						<Flex className="sm-aws-cloudformation-form">
 							<Flex
-								gap={0}
+								gap="0"
 								justifyContent={isLtr ? "flex-start" : "flex-end"}
 								alignItems="center"
 								margin="1.85rem 0rem 1.85rem 0rem"
@@ -459,7 +459,7 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 									<DropdownEl defaultOption={stackRegion} options={regionsData} onSelect={_onSelect} showSelected />
 								</View>
 							</Flex>
-							<Flex gap={0} marginBottom="1.85rem" alignSelf="flex-start">
+							<Flex gap="0" marginBottom="1.85rem" alignSelf="flex-start">
 								<View
 									className="step-number"
 									margin={isLtr ? "0rem 1.23rem 0rem 0rem" : "0rem 0rem 0rem 1.23rem"}
@@ -481,7 +481,7 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 									</Text>
 								</View>
 							</Flex>
-							<Flex gap={0} marginBottom="1.85rem" alignSelf="flex-start">
+							<Flex gap="0" marginBottom="1.85rem" alignSelf="flex-start">
 								<View
 									className="step-number"
 									margin={isLtr ? "0rem 1.23rem 0rem 0rem" : "0rem 0rem 0rem 1.23rem"}
@@ -501,7 +501,7 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 									</Text>
 								</View>
 							</Flex>
-							<Flex gap={0} marginBottom="1.85rem" alignSelf="flex-start">
+							<Flex gap="0" marginBottom="1.85rem" alignSelf="flex-start">
 								<View
 									className="step-number"
 									margin={isLtr ? "0rem 1.23rem 0rem 0rem" : "0rem 0rem 0rem 1.23rem"}
@@ -698,7 +698,7 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 			>
 				<Flex gap="0" alignItems="center">
 					{icon}
-					<Flex gap={0} direction="column">
+					<Flex gap="0" direction="column">
 						<Text fontSize="1rem" lineHeight="1.38rem">
 							{title}
 						</Text>

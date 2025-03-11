@@ -21,7 +21,7 @@ const Logo: FC<LogoProps> = ({ onClick, ...props }) => {
 			className="site-logo__container"
 			as={Flex}
 			// alignItems="center"
-			// gap={0}
+			// gap="0"
 			onClick={onClick}
 			{...props}
 		>

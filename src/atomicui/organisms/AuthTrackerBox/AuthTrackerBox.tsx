@@ -193,7 +193,7 @@ const AuthTrackerBox: FC<AuthTrackerBoxProps> = ({ mapRef, setShowAuthTrackerBox
 		if (trackerPoints?.length) {
 			return (
 				<Flex
-					gap={0}
+					gap="0"
 					direction="column"
 					maxHeight={!isDesktop ? `${bottomSheetCurrentHeight - 220}px` : window.innerHeight - 250}
 					overflow="scroll"
@@ -303,7 +303,7 @@ const AuthTrackerBox: FC<AuthTrackerBoxProps> = ({ mapRef, setShowAuthTrackerBox
 					)}
 				</Flex>
 				{Connection}
-				<Flex gap={0} alignItems="center" padding={isDesktop ? "1.23rem" : "0.5rem 1.23rem"}>
+				<Flex gap="0" alignItems="center" padding={isDesktop ? "1.23rem" : "0.5rem 1.23rem"}>
 					<Flex className="icon-info-solid-primary" />
 					<Text marginLeft="1.23rem" variation="tertiary" textAlign={isLtr ? "start" : "end"}>
 						{t("tracker_box__click_any_point.text")}

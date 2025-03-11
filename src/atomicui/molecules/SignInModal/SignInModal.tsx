@@ -32,7 +32,7 @@ const SignInModal: FC<SignInModalProps> = ({ open, onClose }) => {
 			className={`sign-in-modal ${isMobile ? "sign-in-modal-mobile" : ""}`}
 			content={
 				<Flex className="sign-in-modal-content">
-					<Flex gap={0} justifyContent="space-between" alignSelf="center" width="152px">
+					<Flex gap="0" justifyContent="space-between" alignSelf="center" width="152px">
 						<Flex className="sign-in-modal-icon-container">
 							<IconRoute />
 						</Flex>
