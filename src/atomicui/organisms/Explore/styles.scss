@@ -21,12 +21,6 @@
 			align-items: baseline;
 		}
 	}
-	.aws-connect-container {
-		border-radius: 1.07rem;
-		background-color: var(--primary-light-color-2);
-		padding: 1.23rem;
-		margin: 0 1.23rem;
-	}
 
 	.explore-more-options {
 		.reverse-icon {
@@ -37,16 +31,6 @@
 		.up-icon {
 			transform: rotate(180deg);
 			fill: var(--primary-color);
-		}
-	}
-
-	.auth-footer-button {
-		justify-content: flex-start;
-		color: var(--tertiary-color);
-		margin: 1.84rem 0.7rem;
-
-		&.disconnect-button {
-			color: var(--red-color);
 		}
 	}
 }

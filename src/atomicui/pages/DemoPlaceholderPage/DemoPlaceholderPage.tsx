@@ -21,12 +21,6 @@ const RouteBox = lazy(() => import("@demo/atomicui/organisms/RouteBox").then(mod
 const UnauthSimulation = lazy(() =>
 	import("@demo/atomicui/organisms/UnauthSimulation").then(module => ({ default: module.UnauthSimulation }))
 );
-const AuthGeofenceBox = lazy(() =>
-	import("@demo/atomicui/organisms/AuthGeofenceBox").then(module => ({ default: module.AuthGeofenceBox }))
-);
-const AuthTrackerBox = lazy(() =>
-	import("@demo/atomicui/organisms/AuthTrackerBox").then(module => ({ default: module.AuthTrackerBox }))
-);
 
 interface DemoPlaceholderPageProps {
 	show: ShowStateType;
@@ -36,6 +30,7 @@ interface DemoPlaceholderPageProps {
 
 const DemoPlaceholderPage: FC<DemoPlaceholderPageProps> = ({ show, value, setValue }) => {
 	const { isDesktop } = useDeviceMediaQuery();
+
 	return (
 		<View style={{ height: "100%" }}>
 			<View className={"loader-container"}>
@@ -44,12 +39,8 @@ const DemoPlaceholderPage: FC<DemoPlaceholderPageProps> = ({ show, value, setVal
 						{show.sidebar && (
 							<Sidebar
 								onCloseSidebar={() => {}}
-								onOpenConnectAwsAccountModal={() => {}}
-								onOpenSignInModal={() => {}}
 								onShowSettings={() => {}}
 								onShowAboutModal={() => {}}
-								onShowAuthGeofenceBox={() => {}}
-								onShowAuthTrackerBox={() => {}}
 								onShowUnauthGeofenceBox={() => {}}
 								onShowUnauthTrackerBox={() => {}}
 								onOpenFeedbackModal={() => {}}
@@ -63,22 +54,6 @@ const DemoPlaceholderPage: FC<DemoPlaceholderPageProps> = ({ show, value, setVal
 								setShowRouteBox={() => {}}
 								isSideMenuExpanded={show.sidebar}
 							/>
-						) : show.authGeofenceBox ? (
-							<AuthGeofenceBox
-								mapRef={{
-									current: {} as MapRef
-								}}
-								setShowAuthGeofenceBox={() => {}}
-								isEditingAuthRoute={false}
-								setIsEditingAuthRoute={() => {}}
-							/>
-						) : show.authTrackerBox ? (
-							<AuthTrackerBox
-								mapRef={{
-									current: {} as MapRef
-								}}
-								setShowAuthTrackerBox={() => {}}
-							/>
 						) : show.unauthGeofenceBox || show.unauthTrackerBox ? (
 							<UnauthSimulation
 								mapRef={{
@@ -88,7 +63,6 @@ const DemoPlaceholderPage: FC<DemoPlaceholderPageProps> = ({ show, value, setVal
 								from={show.unauthGeofenceBox ? MenuItemEnum.GEOFENCE : MenuItemEnum.TRACKER}
 								setShowUnauthGeofenceBox={() => {}}
 								setShowUnauthTrackerBox={() => {}}
-								setShowConnectAwsAccountModal={() => {}}
 								setShowUnauthSimulationBounds={() => {}}
 								showStartUnauthSimulation={false}
 								setShowStartUnauthSimulation={() => {}}
@@ -110,8 +84,6 @@ const DemoPlaceholderPage: FC<DemoPlaceholderPageProps> = ({ show, value, setVal
 								onToggleSideMenu={() => {}}
 								setShowRouteBox={() => {}}
 								isRouteBoxOpen={show.routeBox}
-								isAuthGeofenceBoxOpen={show.authGeofenceBox}
-								isAuthTrackerBoxOpen={show.authTrackerBox}
 								isSettingsOpen={show.settings}
 								isStylesCardOpen={show.stylesCard}
 							/>
@@ -124,13 +96,8 @@ const DemoPlaceholderPage: FC<DemoPlaceholderPageProps> = ({ show, value, setVal
 					openStylesCard={show.stylesCard}
 					setOpenStylesCard={() => {}}
 					onCloseSidebar={() => {}}
-					onOpenSignInModal={() => {}}
 					onShowGridLoader={() => {}}
 					isLoading={true}
-					isAuthGeofenceBoxOpen={show.authGeofenceBox}
-					onSetShowAuthGeofenceBox={() => {}}
-					isAuthTrackerBoxOpen={show.authTrackerBox}
-					onSetShowAuthTrackerBox={() => {}}
 					isUnauthGeofenceBoxOpen={show.unauthGeofenceBox}
 					isUnauthTrackerBoxOpen={show.unauthTrackerBox}
 					onSetShowUnauthGeofenceBox={() => {}}
@@ -158,13 +125,8 @@ const DemoPlaceholderPage: FC<DemoPlaceholderPageProps> = ({ show, value, setVal
 						openStylesCard={show.stylesCard}
 						setOpenStylesCard={() => {}}
 						onCloseSidebar={() => {}}
-						onOpenSignInModal={() => {}}
 						onShowGridLoader={() => {}}
 						isLoading={true}
-						isAuthGeofenceBoxOpen={show.authGeofenceBox}
-						onSetShowAuthGeofenceBox={() => {}}
-						isAuthTrackerBoxOpen={show.authTrackerBox}
-						onSetShowAuthTrackerBox={() => {}}
 						isUnauthGeofenceBoxOpen={show.unauthGeofenceBox}
 						isUnauthTrackerBoxOpen={show.unauthTrackerBox}
 						onSetShowUnauthGeofenceBox={() => {}}

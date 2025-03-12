@@ -64,15 +64,6 @@
 		}
 	}
 
-	.unauth-simulation-card-footer {
-		gap: 0;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		padding: 1.38rem 1.85rem;
-		background-color: var(--light-color-2);
-	}
-
 	&.unauth-simulation-card-mobile {
 		position: absolute;
 		margin: 0 auto;

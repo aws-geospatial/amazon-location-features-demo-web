@@ -91,11 +91,4 @@ describe("<Sidebar />", () => {
 		expect(mockProps.onShowAboutModal).toHaveBeenCalledTimes(1);
 		expect(mockProps.onCloseSidebar).toHaveBeenCalledTimes(1);
 	});
-
-	it("opens the Connect AWS Account Modal when it is clicked", () => {
-		const { getByText } = renderComponent();
-		fireEvent.click(getByText("Connect AWS Account"));
-		expect(mockProps.onOpenConnectAwsAccountModal).toHaveBeenCalledTimes(1);
-		expect(mockProps.onCloseSidebar).toHaveBeenCalledTimes(1);
-	});
 });

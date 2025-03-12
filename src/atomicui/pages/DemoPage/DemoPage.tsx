@@ -8,15 +8,13 @@ import { IconLocateMe, LogoDark, LogoLight } from "@demo/assets/svgs";
 import { SearchBox } from "@demo/atomicui/organisms/SearchBox";
 import { appConfig } from "@demo/core/constants";
 import {
-	useAuth,
 	useAuthManager,
 	useMap,
 	useMapManager,
 	usePersistedData,
 	usePlace,
 	useRecordViewPage,
-	useRoute,
-	useTracker
+	useRoute
 } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
@@ -68,16 +66,6 @@ const UnauthSimulation = lazy(() =>
 		default: module.UnauthSimulation
 	}))
 );
-const AuthGeofenceBox = lazy(() =>
-	import("@demo/atomicui/organisms/AuthGeofenceBox").then(module => ({
-		default: module.AuthGeofenceBox
-	}))
-);
-const AuthTrackerBox = lazy(() =>
-	import("@demo/atomicui/organisms/AuthTrackerBox").then(module => ({
-		default: module.AuthTrackerBox
-	}))
-);
 const ResponsiveBottomSheet = lazy(() =>
 	import("@demo/atomicui/organisms/ResponsiveBottomSheet").then(module => ({
 		default: module.ResponsiveBottomSheet
@@ -98,16 +86,6 @@ const FeedbackModal = lazy(() =>
 		default: module.FeedbackModal
 	}))
 );
-const SignInModal = lazy(() =>
-	import("@demo/atomicui/molecules/SignInModal").then(module => ({
-		default: module.SignInModal
-	}))
-);
-const ConnectAwsAccountModal = lazy(() =>
-	import("@demo/atomicui/molecules/ConnectAwsAccountModal").then(module => ({
-		default: module.ConnectAwsAccountModal
-	}))
-);
 const UnauthSimulationExitModal = lazy(() =>
 	import("@demo/atomicui/molecules/ConfirmationModal").then(module => ({
 		default: module.ConfirmationModal
@@ -122,10 +100,6 @@ const {
 const initShow: ShowStateType = {
 	sidebar: false,
 	routeBox: false,
-	signInModal: false,
-	connectAwsAccount: false,
-	authGeofenceBox: false,
-	authTrackerBox: false,
 	settings: false,
 	stylesCard: false,
 	about: false,
@@ -142,23 +116,18 @@ const DemoPage: FC = () => {
 	const [show, setShow] = useState<ShowStateType>(initShow);
 	const [isUnauthNotifications, setUnauthIsNotifications] = useState(false);
 	const [confirmCloseUnauthSimulation, setConfirmCloseUnauthSimulation] = useState(false);
-	const [triggerOnClose, setTriggerOnClose] = useState(false);
-	const [triggerOnReset, setTriggerOnReset] = useState(false);
 	const [expandRouteOptionsMobile, setExpandRouteOptionsMobile] = useState(false);
-	const [isEditingAuthRoute, setIsEditingAuthRoute] = useState(false);
 	const [startSimulation, setStartSimulation] = useState(false);
 	const [searchBoxValue, setSearchBoxValue] = useState("");
 	const mapRef = useRef<MapRef | null>(null);
 	const geolocateControlRef = useRef<GeolocateControlRef | null>(null);
-	const { userProvidedValues } = useAuth();
 	const { currentLocationData, viewpoint, mapColorScheme, setBiasPosition } = useMap();
 	const { zoom, setZoom } = usePlace();
 	const { routeData, directions } = useRoute();
-	const { isEditingRoute } = useTracker();
 	const { showWelcomeModal, setShowWelcomeModal, setSettingsOptions } = usePersistedData();
 	const { isDesktop, isMobile, isTablet, isMax766 } = useDeviceMediaQuery();
 	const { ui, bottomSheetCurrentHeight = 0 } = useBottomSheet();
-	const { clearCredsAndClients } = useAuthManager();
+	const {} = useAuthManager();
 	const {
 		mapStyleWithLanguageUrl,
 		gridLoader,
@@ -174,7 +143,6 @@ const DemoPage: FC = () => {
 		geolocateControlRef,
 		isUnauthGeofenceBoxOpen: show.unauthGeofenceBox,
 		isUnauthTrackerBoxOpen: show.unauthTrackerBox,
-		isAuthGeofenceBoxOpen: show.authGeofenceBox,
 		isSettingsOpen: show.settings,
 		isRouteBoxOpen: show.routeBox,
 		closeRouteBox: () => setShow(s => ({ ...s, routeBox: false })),
@@ -259,24 +227,13 @@ const DemoPage: FC = () => {
 				onToggleSideMenu={() => setShow(s => ({ ...s, sidebar: !s.sidebar }))}
 				setShowRouteBox={b => setShow(s => ({ ...s, routeBox: b }))}
 				isRouteBoxOpen={show.routeBox}
-				isAuthGeofenceBoxOpen={show.authGeofenceBox}
-				isAuthTrackerBoxOpen={show.authTrackerBox}
 				isSettingsOpen={show.settings}
 				isStylesCardOpen={show.stylesCard}
 				isSimpleSearch={isSimpleSearch}
 				bottomSheetRef={bottomSheetRef}
 			/>
 		),
-		[
-			searchBoxValue,
-			setSearchBoxValue,
-			show.authGeofenceBox,
-			show.authTrackerBox,
-			show.routeBox,
-			show.settings,
-			show.sidebar,
-			show.stylesCard
-		]
+		[searchBoxValue, setSearchBoxValue, show.routeBox, show.settings, show.sidebar, show.stylesCard]
 	);
 
 	const _GeolocateControl = useMemo(
@@ -329,7 +286,6 @@ const DemoPage: FC = () => {
 				from={show.unauthGeofenceBox ? MenuItemEnum.GEOFENCE : MenuItemEnum.TRACKER}
 				setShowUnauthGeofenceBox={b => setShow(s => ({ ...s, unauthGeofenceBox: b }))}
 				setShowUnauthTrackerBox={b => setShow(s => ({ ...s, unauthTrackerBox: b }))}
-				setShowConnectAwsAccountModal={b => setShow(s => ({ ...s, connectAwsAccount: b }))}
 				showStartUnauthSimulation={show.startUnauthSimulation}
 				setShowStartUnauthSimulation={b => setShow(s => ({ ...s, startUnauthSimulation: b }))}
 				startSimulation={startSimulation}
@@ -351,13 +307,7 @@ const DemoPage: FC = () => {
 		]
 	);
 
-	const handleLogoClick = () =>
-		window.open(
-			userProvidedValues
-				? `https://${userProvidedValues.region}.console.aws.amazon.com/location/home?region=${userProvidedValues.region}#/`
-				: AWS_LOCATION,
-			userProvidedValues ? "_blank" : "_self"
-		);
+	const handleLogoClick = () => window.open(AWS_LOCATION, "_self");
 
 	return !!mapStyleWithLanguageUrl ? (
 		<View
@@ -367,7 +317,6 @@ const DemoPage: FC = () => {
 			<Map
 				ref={mapRef}
 				style={{ width: "100%", height: "100%" }}
-				cursor={isEditingRoute ? "crosshair" : ""}
 				maxTileCacheSize={100}
 				zoom={zoom}
 				initialViewState={
@@ -405,12 +354,8 @@ const DemoPage: FC = () => {
 							{show.sidebar && (
 								<Sidebar
 									onCloseSidebar={() => setShow(s => ({ ...s, sidebar: false }))}
-									onOpenConnectAwsAccountModal={() => setShow(s => ({ ...s, connectAwsAccount: true }))}
-									onOpenSignInModal={() => setShow(s => ({ ...s, signInModal: true }))}
 									onShowSettings={() => setShow(s => ({ ...s, settings: true }))}
 									onShowAboutModal={() => setShow(s => ({ ...s, about: true }))}
-									onShowAuthGeofenceBox={() => setShow(s => ({ ...s, authGeofenceBox: true }))}
-									onShowAuthTrackerBox={() => setShow(s => ({ ...s, authTrackerBox: true }))}
 									onShowUnauthGeofenceBox={() => setShow(s => ({ ...s, unauthGeofenceBox: true }))}
 									onShowUnauthTrackerBox={() => setShow(s => ({ ...s, unauthTrackerBox: true }))}
 									onOpenFeedbackModal={() => setShow(s => ({ ...s, openFeedbackModal: true }))}
@@ -421,19 +366,6 @@ const DemoPage: FC = () => {
 									mapRef={mapRef}
 									setShowRouteBox={b => setShow(s => ({ ...s, routeBox: b }))}
 									isSideMenuExpanded={show.sidebar}
-								/>
-							) : show.authGeofenceBox ? (
-								<AuthGeofenceBox
-									mapRef={mapRef}
-									setShowAuthGeofenceBox={b => setShow(s => ({ ...s, authGeofenceBox: b }))}
-									isEditingAuthRoute={isEditingAuthRoute}
-									setIsEditingAuthRoute={setIsEditingAuthRoute}
-								/>
-							) : show.authTrackerBox ? (
-								<AuthTrackerBox
-									mapRef={mapRef}
-									setShowAuthTrackerBox={b => setShow(s => ({ ...s, authTrackerBox: b }))}
-									clearCredsAndClients={clearCredsAndClients}
 								/>
 							) : show.unauthGeofenceBox || show.unauthTrackerBox ? (
 								UnauthSimulationUI
@@ -451,12 +383,7 @@ const DemoPage: FC = () => {
 									openStylesCard={show.stylesCard}
 									setOpenStylesCard={b => setShow(s => ({ ...s, stylesCard: b }))}
 									onCloseSidebar={() => setShow(s => ({ ...s, sidebar: false }))}
-									onOpenSignInModal={() => setShow(s => ({ ...s, signInModal: true }))}
 									onShowGridLoader={() => setShow(s => ({ ...s, gridLoader: true }))}
-									isAuthTrackerBoxOpen={show.authTrackerBox}
-									isAuthGeofenceBoxOpen={show.authGeofenceBox}
-									onSetShowAuthGeofenceBox={(b: boolean) => setShow(s => ({ ...s, authGeofenceBox: b }))}
-									onSetShowAuthTrackerBox={(b: boolean) => setShow(s => ({ ...s, authTrackerBox: b }))}
 									isUnauthGeofenceBoxOpen={show.unauthGeofenceBox}
 									isUnauthTrackerBoxOpen={show.unauthTrackerBox}
 									onSetShowUnauthGeofenceBox={(b: boolean) => setShow(s => ({ ...s, unauthGeofenceBox: b }))}
@@ -477,10 +404,7 @@ const DemoPage: FC = () => {
 									bottomSheetRef={ref}
 								/>
 							)}
-							isEditingAuthRoute={isEditingAuthRoute}
 							onCloseSidebar={() => setShow(s => ({ ...s, sidebar: false }))}
-							onOpenConnectAwsAccountModal={() => setShow(s => ({ ...s, connectAwsAccount: true }))}
-							onOpenSignInModal={() => setShow(s => ({ ...s, signInModal: true }))}
 							onShowSettings={() => {
 								setShow(s => ({ ...s, settings: true }));
 								isMobile && setSettingsOptions(undefined);
@@ -488,8 +412,6 @@ const DemoPage: FC = () => {
 							onShowAboutModal={() => setShow(s => ({ ...s, about: true }))}
 							onShowUnauthGeofenceBox={() => setShow(s => ({ ...s, unauthGeofenceBox: true }))}
 							onShowUnauthTrackerBox={() => setShow(s => ({ ...s, unauthTrackerBox: true }))}
-							onShowAuthGeofenceBox={() => setShow(s => ({ ...s, authGeofenceBox: true }))}
-							onShowAuthTrackerBox={() => setShow(s => ({ ...s, authTrackerBox: true }))}
 							setShowUnauthGeofenceBox={b => setShow(s => ({ ...s, unauthGeofenceBox: b }))}
 							setShowUnauthTrackerBox={b => setShow(s => ({ ...s, unauthTrackerBox: b }))}
 							showStartUnauthSimulation={show.startUnauthSimulation}
@@ -497,26 +419,6 @@ const DemoPage: FC = () => {
 							from={show.unauthGeofenceBox ? MenuItemEnum.GEOFENCE : MenuItemEnum.TRACKER}
 							show={show}
 							setShow={setShow}
-							AuthGeofenceBox={
-								<AuthGeofenceBox
-									mapRef={mapRef}
-									setShowAuthGeofenceBox={b => setShow(s => ({ ...s, authGeofenceBox: b }))}
-									triggerOnClose={triggerOnClose}
-									setTriggerOnClose={setTriggerOnClose}
-									triggerOnReset={triggerOnReset}
-									setTriggerOnReset={setTriggerOnReset}
-									isEditingAuthRoute={isEditingAuthRoute}
-									setIsEditingAuthRoute={setIsEditingAuthRoute}
-								/>
-							}
-							AuthTrackerBox={
-								<AuthTrackerBox
-									mapRef={mapRef}
-									setShowAuthTrackerBox={b => setShow(s => ({ ...s, authTrackerBox: b }))}
-								/>
-							}
-							setTriggerOnReset={setTriggerOnReset}
-							setTriggerOnClose={setTriggerOnClose}
 							handleLogoClick={handleLogoClick}
 							startSimulation={startSimulation}
 							setStartSimulation={setStartSimulation}
@@ -524,8 +426,6 @@ const DemoPage: FC = () => {
 							setIsNotifications={setUnauthIsNotifications}
 							confirmCloseSimulation={confirmCloseUnauthSimulation}
 							setConfirmCloseSimulation={setConfirmCloseUnauthSimulation}
-							setShowAuthTrackerBox={b => setShow(s => ({ ...s, authTrackerBox: b }))}
-							setShowAuthGeofenceBox={b => setShow(s => ({ ...s, authGeofenceBox: b }))}
 							setShowRouteBox={b => setShow(s => ({ ...s, routeBox: b }))}
 							isExpandRouteOptionsMobile={expandRouteOptionsMobile}
 							setExpandRouteOptionsMobile={setExpandRouteOptionsMobile}
@@ -541,12 +441,7 @@ const DemoPage: FC = () => {
 							openStylesCard={show.stylesCard}
 							setOpenStylesCard={b => setShow(s => ({ ...s, stylesCard: b }))}
 							onCloseSidebar={() => setShow(s => ({ ...s, sidebar: false }))}
-							onOpenSignInModal={() => setShow(s => ({ ...s, signInModal: true }))}
 							onShowGridLoader={() => setShow(s => ({ ...s, gridLoader: true }))}
-							isAuthGeofenceBoxOpen={show.authGeofenceBox}
-							onSetShowAuthGeofenceBox={(b: boolean) => setShow(s => ({ ...s, authGeofenceBox: b }))}
-							isAuthTrackerBoxOpen={show.authTrackerBox}
-							onSetShowAuthTrackerBox={(b: boolean) => setShow(s => ({ ...s, authTrackerBox: b }))}
 							isUnauthGeofenceBoxOpen={show.unauthGeofenceBox}
 							isUnauthTrackerBoxOpen={show.unauthTrackerBox}
 							onSetShowUnauthGeofenceBox={(b: boolean) => setShow(s => ({ ...s, unauthGeofenceBox: b }))}
@@ -570,11 +465,6 @@ const DemoPage: FC = () => {
 				/>
 			</Map>
 			<WelcomeModal open={showWelcomeModal} onClose={() => setShowWelcomeModal(false)} />
-			<SignInModal open={show.signInModal} onClose={() => setShow(s => ({ ...s, signInModal: false }))} />
-			<ConnectAwsAccountModal
-				open={show.connectAwsAccount}
-				onClose={() => setShow(s => ({ ...s, connectAwsAccount: false }))}
-			/>
 			<FeedbackModal open={show.openFeedbackModal} onClose={() => setShow(s => ({ ...s, openFeedbackModal: false }))} />
 			<SettingsModal
 				open={show.settings}
@@ -588,14 +478,9 @@ const DemoPage: FC = () => {
 						openStylesCard={show.stylesCard}
 						setOpenStylesCard={b => setShow(s => ({ ...s, stylesCard: b }))}
 						onCloseSidebar={() => setShow(s => ({ ...s, sidebar: false }))}
-						onOpenSignInModal={() => setShow(s => ({ ...s, signInModal: true }))}
 						onShowGridLoader={() => setGridLoader(true)}
 						onlyMapStyles
-						isAuthGeofenceBoxOpen={show.authGeofenceBox}
-						onSetShowAuthGeofenceBox={(b: boolean) => setShow(s => ({ ...s, authGeofenceBox: b }))}
-						isAuthTrackerBoxOpen={show.authTrackerBox}
 						isSettingsModal
-						onSetShowAuthTrackerBox={(b: boolean) => setShow(s => ({ ...s, authTrackerBox: b }))}
 						isUnauthGeofenceBoxOpen={show.unauthGeofenceBox}
 						isUnauthTrackerBoxOpen={show.unauthTrackerBox}
 						onSetShowUnauthGeofenceBox={(b: boolean) => setShow(s => ({ ...s, unauthGeofenceBox: b }))}

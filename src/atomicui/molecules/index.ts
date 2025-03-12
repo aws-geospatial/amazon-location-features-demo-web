@@ -9,8 +9,6 @@ export * from "./Popup";
 export * from "./SuggestionMarker";
 export * from "./Marker";
 export * from "./StepCard";
-export * from "./ConnectAwsAccountModal";
-export * from "./SignInModal";
 export * from "./ConfirmationModal";
 export * from "./WelcomeModal";
 export * from "./GrabConfirmationModal";

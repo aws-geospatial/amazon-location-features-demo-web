@@ -1,7 +1,7 @@
 import { MutableRefObject, useCallback, useEffect, useMemo, useState } from "react";
 
 import { showToast } from "@demo/core/Toast";
-import { appConfig, regionsData } from "@demo/core/constants";
+import { appConfig } from "@demo/core/constants";
 import { MapStyleEnum, ToastType } from "@demo/types/Enums";
 import { getStyleWithPreferredLanguage, normalizeLng } from "@demo/utils";
 import { getCurrentLocation } from "@demo/utils/getCurrentLocation";
@@ -15,21 +15,18 @@ import useGeofence from "./useGeofence";
 import useMap from "./useMap";
 import usePlace from "./usePlace";
 import useRoute from "./useRoute";
-import useTracker from "./useTracker";
 
 const {
 	API_KEYS,
-	PERSIST_STORAGE_KEYS: { FASTEST_REGION, GEO_LOCATION_ALLOWED },
+	PERSIST_STORAGE_KEYS: { GEO_LOCATION_ALLOWED },
 	MAP_RESOURCES: { AMAZON_HQ }
 } = appConfig;
-const fallbackRegion = Object.keys(API_KEYS)[0];
 
 interface UseMapManagerProps {
 	mapRef: MutableRefObject<MapRef | null>;
 	geolocateControlRef: MutableRefObject<GeolocateControlRef | null>;
 	isUnauthGeofenceBoxOpen: boolean;
 	isUnauthTrackerBoxOpen: boolean;
-	isAuthGeofenceBoxOpen: boolean;
 	isSettingsOpen: boolean;
 	isRouteBoxOpen: boolean;
 	closeRouteBox: () => void;
@@ -41,7 +38,6 @@ const useMapManager = ({
 	geolocateControlRef,
 	isUnauthGeofenceBoxOpen,
 	isUnauthTrackerBoxOpen,
-	isAuthGeofenceBoxOpen,
 	isSettingsOpen,
 	isRouteBoxOpen,
 	closeRouteBox,
@@ -49,7 +45,7 @@ const useMapManager = ({
 }: UseMapManagerProps) => {
 	const [mapStyleWithLanguageUrl, setMapStyleWithLanguageUrl] = useState<MapStyle>();
 	const [gridLoader, setGridLoader] = useState(true);
-	const { handleStackRegion, stackRegion, baseValues, apiKey } = useAuth();
+	const { baseValues, apiKey } = useAuth();
 	const {
 		currentLocationData,
 		setCurrentLocation,
@@ -62,10 +58,7 @@ const useMapManager = ({
 	const { setMarker, marker, selectedMarker, clearPoiList, setZoom, setSelectedMarker } = usePlace();
 	const { routeData, setRouteData, resetStore: resetRouteStore } = useRoute();
 	const { resetStore: resetGeofenceStore } = useGeofence();
-	const { isEditingRoute, trackerPoints, setTrackerPoints, resetStore: resetTrackerStore } = useTracker();
 	const { t } = useTranslation();
-	const fastestRegion = localStorage.getItem(FASTEST_REGION) ?? fallbackRegion;
-	const defaultRegion = regionsData.find(option => option.value === fastestRegion) as { value: string; label: string };
 	const apiKeyRegion = useMemo(
 		() => (baseValues && baseValues.region in API_KEYS ? baseValues.region : Object.keys(API_KEYS)[0]),
 		[baseValues]
@@ -158,28 +151,16 @@ const useMapManager = ({
 			const longitude = normalizeLng(lng);
 
 			if (!isUnauthGeofenceBoxOpen && !isUnauthTrackerBoxOpen) {
-				if (!isRouteBoxOpen && !isAuthGeofenceBoxOpen && !isSettingsOpen && !isEditingRoute) {
+				if (!isRouteBoxOpen && !isSettingsOpen) {
 					marker && setMarker(undefined);
 					selectedMarker && setSelectedMarker(undefined);
 					setTimeout(() => setMarker({ latitude, longitude }), 0);
-				}
-
-				if (isEditingRoute) {
-					if (trackerPoints) {
-						trackerPoints.length < 25
-							? setTrackerPoints([longitude, latitude])
-							: showToast({ content: t("show_toast__route_waypoint_restriction.text"), type: ToastType.WARNING });
-					} else {
-						setTrackerPoints([longitude, latitude]);
-					}
 				}
 
 				mapRef?.current?.flyTo({ center: lngLat });
 			}
 		},
 		[
-			isAuthGeofenceBoxOpen,
-			isEditingRoute,
 			isRouteBoxOpen,
 			isSettingsOpen,
 			isUnauthGeofenceBoxOpen,
@@ -188,10 +169,7 @@ const useMapManager = ({
 			marker,
 			selectedMarker,
 			setMarker,
-			setSelectedMarker,
-			setTrackerPoints,
-			t,
-			trackerPoints
+			setSelectedMarker
 		]
 	);
 
@@ -217,14 +195,8 @@ const useMapManager = ({
 		clearPoiList();
 		resetRouteStore();
 		resetGeofenceStore();
-		resetTrackerStore();
 		resetAppStateCb();
-	}, [clearPoiList, resetRouteStore, resetGeofenceStore, resetTrackerStore, resetAppStateCb]);
-
-	/* Handled stack region and cloudformation link */
-	useEffect(() => {
-		defaultRegion.value !== stackRegion?.value && handleStackRegion(defaultRegion);
-	}, [defaultRegion, handleStackRegion, stackRegion?.value]);
+	}, [clearPoiList, resetRouteStore, resetGeofenceStore, resetAppStateCb]);
 
 	return {
 		mapStyleWithLanguageUrl,

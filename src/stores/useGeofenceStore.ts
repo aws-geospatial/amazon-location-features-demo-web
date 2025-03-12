@@ -8,18 +8,12 @@ import createStore from "./createStore";
 
 export interface GeofenceStoreProps {
 	isFetchingGeofences: boolean;
-	isCreatingGeofence: boolean;
-	isDeletingGeofence: boolean;
 	geofences?: Array<ListGeofenceResponseEntry>;
-	isAddingGeofence: boolean;
 	unauthNotifications: Array<NotificationHistoryItemtype>;
 }
 
 export const initialState: IStateProps<GeofenceStoreProps> = {
 	isFetchingGeofences: false,
-	isCreatingGeofence: false,
-	isDeletingGeofence: false,
-	isAddingGeofence: false,
 	unauthNotifications: []
 };
 
