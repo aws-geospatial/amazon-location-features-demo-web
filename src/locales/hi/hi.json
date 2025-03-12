@@ -3896,6 +3896,9 @@
   "avoid": {
     "text": "बचें"
   },
+  "places_routes_maps": {
+    "text": "स्थान, मार्ग, मानचित्र"
+  },
   "arrive_by": {
     "text": "यहां पहुंचें"
   },

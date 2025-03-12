@@ -3896,6 +3896,9 @@
   "avoid": {
     "text": "避免"
   },
+  "places_routes_maps": {
+    "text": "地點，路線，地圖"
+  },
   "arrive_by": {
     "text": "到達"
   },
