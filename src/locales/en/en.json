@@ -3898,5 +3898,14 @@
   },
   "places_routes_maps": {
     "text": "Places, Routes, Maps"
+  },
+  "arrive_by": {
+    "text": "Arrive By"
+  },
+  "depart_at": {
+    "text": "Depart At"
+  },
+  "leave_now": {
+    "text": "Leave Now"
   }
 }

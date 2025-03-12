@@ -3898,5 +3898,14 @@
   },
   "places_routes_maps": {
     "text": "場所、ルート、地図"
+  },
+  "arrive_by": {
+    "text": "までに到着"
+  },
+  "depart_at": {
+    "text": "出発"
+  },
+  "leave_now": {
+    "text": "今すぐ出発"
   }
 }
