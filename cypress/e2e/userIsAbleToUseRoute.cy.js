@@ -36,6 +36,10 @@ describe("Route", () => {
 		it("R-005 - should allow user to search for route with avoid ferry option", () => {
 			cy.searchRouteWithAvoidFerryOption(Viewport.DESKTOP);
 		});
+
+		it("R-006 - should allow user to search for route with arrival and departure time", () => {
+			cy.searchRouteWithArrivalAndDepartureTime(Viewport.DESKTOP);
+		});
 	});
 
 	context("Responsive view", () => {
@@ -48,27 +52,31 @@ describe("Route", () => {
 		});
 
 		it(
-			"R-006 - should allow user to perform a route search and is able to select current location if enabled",
+			"R-007 - should allow user to perform a route search and is able to select current location if enabled",
 			{ scrollBehavior: false },
 			() => {
 				cy.searchRouteAndSelectCurrentLocation();
 			}
 		);
 
-		it("R-007 - should allow user to swap the departure and destination addresses", { scrollBehavior: false }, () => {
+		it("R-008 - should allow user to swap the departure and destination addresses", { scrollBehavior: false }, () => {
 			cy.swapDepartureAndDestinationAddresses();
 		});
 
-		it("R-008 - should allow user to select any of the route modes from car, walk and truck", () => {
+		it("R-009 - should allow user to select any of the route modes from car, walk and truck", () => {
 			cy.canSelectAnyRouteMode();
 		});
 
-		it("R-009 - should allow user to search for route with avoid toll route option", () => {
+		it("R-010 - should allow user to search for route with avoid toll route option", () => {
 			cy.searchRouteWithAvoidTollOption(Viewport.RESPONSIVE);
 		});
 
-		it("R-010 - should allow user to search for route with avoid ferry option", () => {
+		it("R-011 - should allow user to search for route with avoid ferry option", () => {
 			cy.searchRouteWithAvoidFerryOption(Viewport.RESPONSIVE);
+		});
+
+		it("R-012 - should allow user to search for route with arrival and departure time", () => {
+			cy.searchRouteWithArrivalAndDepartureTime(Viewport.RESPONSIVE);
 		});
 	});
 });
