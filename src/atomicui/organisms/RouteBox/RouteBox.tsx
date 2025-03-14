@@ -652,7 +652,6 @@ const RouteBox: FC<RouteBoxProps> = ({
 								setRouteDataForMobile(undefined);
 							}}
 							variation="quiet"
-							// min={new Date().toISOString().split("T")[0]}
 							width="100%"
 							style={{
 								display: "flex",
@@ -664,7 +663,6 @@ const RouteBox: FC<RouteBoxProps> = ({
 								fontSize: "1rem",
 								width: "100%"
 							}}
-							// hasIcon
 						/>
 
 						<TextField
@@ -688,7 +686,6 @@ const RouteBox: FC<RouteBoxProps> = ({
 								fontSize: "1rem",
 								width: "100%"
 							}}
-							// hasIcon
 						/>
 					</Flex>
 				)}
