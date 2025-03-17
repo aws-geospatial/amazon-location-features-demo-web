@@ -282,13 +282,15 @@ const RouteBox: FC<RouteBoxProps> = ({
 				const uturnAvoidanceOption = isModePedestrianOrScooter ? {} : { UTurns: routeOptions.avoidUTurns };
 
 				const timeParams = (() => {
-					if (timeSelectionMode === TimeSelectionMode.LEAVE_NOW) {
-						return { DepartNow: true };
-					}
 					const dateTime = new Date(`${selectedDate}T${selectedTime}`);
-					return timeSelectionMode === TimeSelectionMode.DEPART_AT
-						? { DepartureTime: dateTime.toISOString() }
-						: { ArrivalTime: dateTime.toISOString() };
+					switch (timeSelectionMode) {
+						case TimeSelectionMode.LEAVE_NOW:
+							return { DepartNow: true };
+						case TimeSelectionMode.DEPART_AT:
+							return { DepartureTime: dateTime.toISOString() };
+						case TimeSelectionMode.ARRIVE_BY:
+							return { ArrivalTime: dateTime.toISOString() };
+					}
 				})();
 
 				const params: CalculateRoutesCommandInput = {
@@ -663,15 +665,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 							className="travel-time-selector"
 						/>
 
-						<div
-							style={{
-								boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.1)",
-								width: "100%",
-								display: "flex",
-								background: "#f5f5fa",
-								borderRadius: 8
-							}}
-						>
+						<div className="travel-date-selector">
 							<TextField
 								style={{ height: "120%", minWidth: 122, boxShadow: "none !important" }}
 								label=""
