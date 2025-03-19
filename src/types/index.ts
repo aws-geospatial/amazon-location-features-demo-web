@@ -1,13 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-export type {
-	BaseValues,
-	UserProvidedValues,
-	CognitoIdentityCredentials,
-	AuthTokensType,
-	ConnectFormValuesType
-} from "./AuthModel";
+export type { BaseValues, CognitoIdentityCredentials } from "./AuthModel";
 export type { BaseStateProps } from "./BaseStateProps";
 export type { IContextProps } from "./IContextProps";
 export type { default as IActions } from "./IActions";
@@ -26,7 +20,6 @@ export {
 	RadiusInM,
 	SettingOptionEnum,
 	ToastType,
-	TrackerType,
 	TravelMode,
 	UserAgentEnum,
 	MenuItemEnum,

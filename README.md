@@ -20,11 +20,10 @@
       * The `Region`, `ApiKey`, `IdentityPoolId`, `WebSocketUrl` values from stack output's tab can be added to `.env` file against the respective keys.
       * The `VITE_AWS_API_KEY_REGIONS`, `VITE_AWS_API_KEYS`, `VITE_AWS_COGNITO_IDENTITY_POOL_IDS`, `VITE_AWS_WEB_SOCKET_URLS` keys in `.env` file should be comma separated for multiple values and must be in same order for all variables.
       ---
-2. Upload the CF template from `/extra/cloudformation/auth-resources.yaml` to S3 bucket and add the link with the following prefix `https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create?stackName=amazon-location-resources-setup&templateURL=<LINK_TO_UPLOADED_CF_TEMPLATE>` to the key `VITE_AWS_CF_TEMPLATE` in `.env` file.
-3. Value for `VITE_APPLE_APP_STORE_LINK`, `VITE_GOOGLE_PLAY_STORE_LINK` can be added as it is to `.env` file from `.env.examples`.
-4. Value for `VITE_APP_VERSION` needs to be populated with the correct version at the time of deployment in the following format `2.1.0`.
-5. Values for `VITE_MIGRATE_FROM_GOOGLE_MAPS_PAGE`, `VITE_MIGRATE_A_WEB_APP_PAGE`, `VITE_MIGRATE_AN_ANDROID_APP_PAGE`, `VITE_MIGRATE_AN_IOS_APP_PAGE`, `VITE_MIGRATE_A_WEB_SERVICE_PAGE` and `VITE_PRICING_PAGE` can either be `1` or `0` to either enable or disable the respective pages.
-6. Values for `VITE_SHOW_NEW_NAVIGATION` can either be `1` or `0` to either enable or disable the new navigation, turning it off would show the current navigation instead.
+2. Value for `VITE_APPLE_APP_STORE_LINK`, `VITE_GOOGLE_PLAY_STORE_LINK` can be added as it is to `.env` file from `.env.examples`.
+3. Value for `VITE_APP_VERSION` needs to be populated with the correct version at the time of deployment in the following format `2.1.0`.
+4. Values for `VITE_MIGRATE_FROM_GOOGLE_MAPS_PAGE`, `VITE_MIGRATE_A_WEB_APP_PAGE`, `VITE_MIGRATE_AN_ANDROID_APP_PAGE`, `VITE_MIGRATE_AN_IOS_APP_PAGE`, `VITE_MIGRATE_A_WEB_SERVICE_PAGE` and `VITE_PRICING_PAGE` can either be `1` or `0` to either enable or disable the respective pages.
+5. Values for `VITE_SHOW_NEW_NAVIGATION` can either be `1` or `0` to either enable or disable the new navigation, turning it off would show the current navigation instead.
 
 #### Env keys required in `.env` file, see `.env.example` for reference
 
@@ -34,7 +33,6 @@
 > VITE_AWS_WEB_SOCKET_URLS<br />
 > VITE_PINPOINT_IDENTITY_POOL_ID<br />
 > VITE_PINPOINT_APPLICATION_ID<br />
-> VITE_AWS_CF_TEMPLATE<br />
 > VITE_APPLE_APP_STORE_LINK<br />
 > VITE_GOOGLE_PLAY_STORE_LINK<br />
 > VITE_APP_VERSION<br />
@@ -71,45 +69,23 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 #### Env keys required in `cypress.env.json` file, see `cypress.env.json.example` for reference.
 
 > WEB_DOMAIN<br />
-> IDENTITY_POOL_ID<br />
-> USER_DOMAIN<br />
-> USER_POOL_CLIENT_ID<br />
-> USER_POOL_ID<br />
-> WEB_SOCKET_URL<br />
-> COGNITO_EMAIL<br />
-> COGNITO_PASSWORD<br />
 > PINPOINT_IDENTITY_POOL_ID<br />
 > PINPOINT_APPLICATION_ID<br />
 
 #### If you are configuring Github actions for the E2E tests, make sure to add the below env keys to the secrets section of the repo.
 
-1. The `/extra/cloudformation/auth-resources.yaml` needs to be deployed on one of the production accounts in the `us-east-1` region.
-2. Download this `/extra/cloudformation/auth-resources.yaml` on local machine.
-3. Login to AWS console.
-4. Go to CloudFormation service.
-5. Click on Create Stack → Upload a Template file → Select the template file downloaded above.
-6. Click Next → Enter your email → Next → Create the stack.
-7. Once, the stack is created → Go to outputs of the stack & Copy them all.
-8. Now, Browse to Github [amazon-location-features-demo-web](https://github.com/aws-geospatial/amazon-location-features-demo-web) repo.
-9. Under the repo settings → Go to Secrets & Variables → Click on Actions.
-10. Now, Add/Update the values in secrets as per the output values gathered from the cloudformation.
-11. Add all keys from `.env` file to the secrets section of the repo as well from the above Requirements section.
+1. Browse to Github [amazon-location-features-demo-web](https://github.com/aws-geospatial/amazon-location-features-demo-web) repo.
+2. Under the repo settings → Go to Secrets & Variables → Click on Actions.
+3. Now, Add/Update the values in secrets as per the output values gathered from the cloudformation.
+4. Add all keys from `.env` file to the secrets section of the repo as well from the above Requirements section.
 ```
 > WEB_DOMAIN: "http://localhost:3000"
-> IDENTITY_POOL_ID: "XX-XXXX-X:XXXXXXXX-XXXX-1234-abcd-1234567890ab" // Stack output as IdentityPoolId
-> USER_DOMAIN: "https://XXXXXXXXXXXX.XXXX.XX-XXXX-X.amazoncognito.com/" // Stack output as UserDomain
-> USER_POOL_CLIENT_ID: "XXXXXXXXXXXX" // Stack output as UserPoolClientId
-> USER_POOL_ID: "XX-XXXX-X_XXXXXXXXXX" // Stack output as UserPoolId
-> WEB_SOCKET_URL: "XXXXXXXXXXX-ats.iot.us-east-1.amazonaws.com" // Stack output as WebSocketUrl
-> COGNITO_EMAIL: "abc@xyz.com" // Stack output as UserEmail
-> COGNITO_PASSWORD: "XXXXXX" // This is the password for the cognito user (received on registered email)
 > VITE_AWS_API_KEY_REGIONS
 > VITE_AWS_API_KEYS
 > VITE_AWS_COGNITO_IDENTITY_POOL_IDS
 > VITE_AWS_WEB_SOCKET_URLS
 > VITE_PINPOINT_IDENTITY_POOL_ID
 > VITE_PINPOINT_APPLICATION_ID
-> VITE_AWS_CF_TEMPLATE
 > VITE_APPLE_APP_STORE_LINK
 > VITE_GOOGLE_PLAY_STORE_LINK
 > VITE_APP_VERSION
@@ -125,34 +101,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 #### `npm run cypress`
 
 Runs Cypress tests to completion in a headed chrome browser.
-
-## Security Tests
-
-#### Env keys required in `security-tests/.env` file, see `security-tests/.env.example` for reference.
-
-> IDENTITY_POOL_ID</br>
-> USER_POOL_CLIENT_ID</br>
-> USER_POOL_ID</br>
-> COGNITO_EMAIL</br>
-> COGNITO_PASSWORD</br>
-> IAM_AUTH_ROLE_NAME</br>
-> IAM_UNAUTH_ROLE_NAME</br>
-
-#### If you are configuring Github actions for the Security tests, make sure to add the below env keys to the secrets section of the repo. You will need to use the values from the stack that was created when setting up the E2E tests.
-
-```
-> IDENTITY_POOL_ID: "XX-XXXX-X:XXXXXXXX-XXXX-1234-abcd-1234567890ab" // Stack output as IdentityPoolId
-> USER_POOL_ID: "XX-XXXX-X_XXXXXXXXXX" // Stack output as UserPoolId
-> USER_POOL_CLIENT_ID: "XXXXXXXXXXXX" // Stack output as UserPoolClientId
-> COGNITO_EMAIL: "abc@xyz.com" // Stack output as UserEmail
-> COGNITO_PASSWORD: "XXXXXX" // This is the password for the cognito user (received on registered email)
-> IAM_AUTH_ROLE_NAME: "amazon-location-resources-AmazonLocationDemoCognit-XXXXXXXX" // Stack output as IAMAuthRoleName
-> IAM_UNAUTH_ROLE_NAME: "amazon-location-resources-AmazonLocationDemoCognit-XXXXXXXX" // Stack output as IAMUnAuthRoleName
-```
-
-#### `npm run security-tests`
-
-Runs Security tests insuring policies match the expected values.
 
 ## Unit Tests
 

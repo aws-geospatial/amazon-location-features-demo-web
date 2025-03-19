@@ -7,12 +7,6 @@ export interface BaseValues {
 	webSocketUrl: string;
 }
 
-export interface UserProvidedValues extends BaseValues {
-	userDomain: string;
-	userPoolClientId: string;
-	userPoolId: string;
-}
-
 export type CognitoIdentityCredentials = {
 	accessKeyId: string;
 	expiration?: Date;
@@ -20,20 +14,4 @@ export type CognitoIdentityCredentials = {
 	secretAccessKey: string;
 	sessionToken?: string;
 	authenticated?: boolean;
-};
-
-export type AuthTokensType = {
-	access_token: string;
-	expires_in: number;
-	id_token: string;
-	refresh_token: string;
-	token_type: string;
-};
-
-export type ConnectFormValuesType = {
-	IdentityPoolId: string;
-	UserDomain: string;
-	UserPoolClientId: string;
-	UserPoolId: string;
-	WebSocketUrl: string;
 };

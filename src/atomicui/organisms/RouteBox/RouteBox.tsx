@@ -617,6 +617,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 					dataTestId="route-avoidance-dropdown"
 					label={t("avoid.text")}
 					defaultOption={Object.entries(routeOptions)
+						// eslint-disable-next-line @typescript-eslint/no-unused-vars
 						.filter(([_, value]) => value)
 						.map(([key]) => ({ value: key, label: t(key) }))}
 					options={[

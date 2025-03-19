@@ -8,7 +8,6 @@ export { default as useGeofence } from "./useGeofence";
 export { default as useIot } from "./useIot";
 export { default as usePlace } from "./usePlace";
 export { default as useRoute } from "./useRoute";
-export { default as useTracker } from "./useTracker";
 export { default as useMediaQuery } from "./useMediaQuery";
 export { default as usePersistedData } from "./usePersistedData";
 export { default as useRecordViewPage } from "./useRecordViewPage";

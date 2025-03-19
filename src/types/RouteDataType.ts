@@ -3,8 +3,8 @@
 
 import { CalculateRoutesCommandOutput } from "@aws-sdk/client-geo-routes";
 
-import { TrackerType, TravelMode } from "./Enums";
+import { TravelMode } from "./Enums";
 
 export interface RouteDataType extends CalculateRoutesCommandOutput {
-	travelMode: TravelMode | TrackerType;
+	travelMode: TravelMode;
 }

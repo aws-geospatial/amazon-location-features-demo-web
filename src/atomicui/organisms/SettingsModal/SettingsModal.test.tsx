@@ -80,12 +80,7 @@ describe("<SettingsModal />", () => {
 	it("should render the detail component according to the clicked/selected option item", async () => {
 		const { getByTestId } = await renderComponent();
 
-		for (const optionId of [
-			SettingOptionEnum.UNITS,
-			SettingOptionEnum.MAP_STYLE,
-			SettingOptionEnum.ROUTE_OPTIONS,
-			SettingOptionEnum.AWS_CLOUD_FORMATION
-		]) {
+		for (const optionId of [SettingOptionEnum.UNITS, SettingOptionEnum.MAP_STYLE, SettingOptionEnum.ROUTE_OPTIONS]) {
 			waitFor(
 				() => {
 					fireEvent.click(getByTestId(`option-item-${optionId}`));

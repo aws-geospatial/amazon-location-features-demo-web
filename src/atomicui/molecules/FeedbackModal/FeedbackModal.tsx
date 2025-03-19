@@ -8,7 +8,7 @@ import { IconStar, IconStarFilled } from "@demo/assets/svgs";
 import { Modal } from "@demo/atomicui/atoms";
 import { useFeedback } from "@demo/hooks";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
-import { ConnectFormValuesType, FeedbackValueType } from "@demo/types";
+import { FeedbackValueType } from "@demo/types";
 import { isAndroid, isIOS } from "react-device-detect";
 import { useTranslation } from "react-i18next";
 
@@ -98,7 +98,7 @@ const FeedbackModal: FC<FeedbackModalProps> = ({ open, onClose }) => {
 	);
 
 	const onChangeFormValues = (key: string, value?: string) => {
-		setFormValues({ ...formValues, [key as keyof ConnectFormValuesType]: value });
+		setFormValues({ ...formValues, [key]: value });
 	};
 
 	const onChangeFormCategory = (value: string) => {

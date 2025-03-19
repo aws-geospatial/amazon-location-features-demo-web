@@ -16,16 +16,11 @@ const mockProps: MapButtonsProps = {
 	openStylesCard: false,
 	setOpenStylesCard: jest.fn(),
 	onCloseSidebar: jest.fn(),
-	onOpenSignInModal: jest.fn(),
 	onShowGridLoader: jest.fn(),
 	isLoading: false,
 	onlyMapStyles: false,
 	isHandDevice: false,
-	isAuthGeofenceBoxOpen: false,
-	onSetShowAuthGeofenceBox: jest.fn(),
-	isAuthTrackerBoxOpen: false,
 	isSettingsModal: false,
-	onSetShowAuthTrackerBox: jest.fn(),
 	isUnauthGeofenceBoxOpen: false,
 	isUnauthTrackerBoxOpen: false,
 	onSetShowUnauthGeofenceBox: jest.fn(),
@@ -40,8 +35,7 @@ const mockUseAuthData = {
 		identityId: faker.random.word(),
 		authenticated: false,
 		expiration: new Date()
-	},
-	isUserAwsAccountConnected: false
+	}
 };
 
 const mockUseMapData = {
@@ -55,11 +49,6 @@ const mockUseMapData = {
 	mapLanguage: { value: "en", label: "English" }
 };
 
-const mockUseGeofenceData = {
-	isAddingGeofence: false,
-	setIsAddingGeofence: jest.fn()
-};
-
 const mockUseUnauthSimulationData = {
 	hideGeofenceTrackerShortcut: false
 };
@@ -67,7 +56,6 @@ const mockUseUnauthSimulationData = {
 jest.mock("@demo/hooks", () => ({
 	useAuth: () => mockUseAuthData,
 	useMap: () => mockUseMapData,
-	useGeofence: () => mockUseGeofenceData,
 	useUnauthSimulation: () => mockUseUnauthSimulationData
 }));
 
@@ -82,7 +70,6 @@ describe("<MapButtons/>", () => {
 
 	beforeEach(() => {
 		mockProps.onlyMapStyles = false;
-		mockUseAuthData.isUserAwsAccountConnected = false;
 		mockUseAuthData.credentials.authenticated = false;
 	});
 
@@ -126,35 +113,7 @@ describe("<MapButtons/>", () => {
 		});
 	});
 
-	it("renders geofence button and executes correctly when user AWS account connected and authenticated", () => {
-		mockUseAuthData.isUserAwsAccountConnected = true;
-		mockUseAuthData.credentials.authenticated = true;
-		const { getByTestId } = renderComponent();
-		expect(getByTestId("geofence-control-button")).toBeInTheDocument();
-		act(() => {
-			fireEvent.click(getByTestId("geofence-control-button"));
-		});
-		waitFor(() => {
-			expect(mockProps.onCloseSidebar).toHaveBeenCalled();
-			expect(mockProps.onSetShowAuthTrackerBox).toHaveBeenCalled();
-			expect(mockProps.onSetShowAuthGeofenceBox).toHaveBeenCalled();
-			expect(mockUseGeofenceData.setIsAddingGeofence).toHaveBeenCalled();
-		});
-	});
-
-	it("renders geofence button and executes correctly when user AWS account connected and not authenticated", () => {
-		const { getByTestId } = renderComponent();
-		expect(getByTestId("geofence-control-button")).toBeInTheDocument();
-		act(() => {
-			fireEvent.click(getByTestId("geofence-control-button"));
-		});
-		waitFor(() => {
-			expect(mockProps.onCloseSidebar).toHaveBeenCalled();
-			expect(mockProps.onOpenSignInModal).toHaveBeenCalled();
-		});
-	});
-
-	it("renders geofence button and executes correctly when user AWS account not connected and map is not Grab", () => {
+	it("renders geofence button and executes correctly", () => {
 		const { getByTestId } = renderComponent();
 		expect(getByTestId("geofence-control-button")).toBeInTheDocument();
 		act(() => {
@@ -167,24 +126,7 @@ describe("<MapButtons/>", () => {
 		});
 	});
 
-	it("renders tracker button and executes correctly when user AWS account connected and authenticated", () => {
-		mockUseAuthData.isUserAwsAccountConnected = true;
-		mockUseAuthData.credentials.authenticated = true;
-		const { getByTestId } = renderComponent();
-		expect(getByTestId("tracker-control-button")).toBeInTheDocument();
-		act(() => {
-			fireEvent.click(getByTestId("tracker-control-button"));
-		});
-		waitFor(() => {
-			expect(mockProps.onCloseSidebar).toHaveBeenCalled();
-			expect(mockUseGeofenceData.setIsAddingGeofence).toHaveBeenCalled();
-			expect(mockProps.onSetShowAuthGeofenceBox).toHaveBeenCalled();
-		});
-	});
-
 	it("renders tracker button and executes correctly when user AWS account not connected", () => {
-		mockUseAuthData.isUserAwsAccountConnected = true;
-		mockUseAuthData.credentials.authenticated = true;
 		const { getByTestId } = renderComponent();
 		expect(getByTestId("tracker-control-button")).toBeInTheDocument();
 		act(() => {
