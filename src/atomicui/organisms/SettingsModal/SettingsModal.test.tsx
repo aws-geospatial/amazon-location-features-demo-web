@@ -1,4 +1,5 @@
 import { MapButtons } from "@demo/atomicui/molecules";
+import { MapButtonsProps } from "@demo/atomicui/molecules/MapButtons/MapButtons";
 import i18n from "@demo/locales/i18n";
 import { SettingOptionEnum } from "@demo/types";
 import { RenderResult, act, fireEvent, render, screen, waitFor } from "@testing-library/react";
@@ -11,39 +12,16 @@ Object.defineProperty(window, "location", {
 	value: { reload: jest.fn() }
 });
 
-const mockProps = {
+const mockProps: MapButtonsProps = {
 	renderedUpon: "",
 	openStylesCard: false,
 	setOpenStylesCard: jest.fn(),
 	onCloseSidebar: jest.fn(),
-	onOpenSignInModal: jest.fn(),
-	isGrabVisible: true,
-	showGrabDisclaimerModal: false,
 	onShowGridLoader: jest.fn(),
-	handleMapStyleChange: jest.fn(),
-	searchValue: "",
-	setSearchValue: jest.fn(),
-	selectedFilters: {
-		Providers: [],
-		Attribute: [],
-		Type: []
-	},
-	setSelectedFilters: jest.fn(),
 	isLoading: false,
 	onlyMapStyles: true,
-	resetSearchAndFilters: jest.fn(),
-	showOpenDataDisclaimerModal: false,
-	isAuthGeofenceBoxOpen: false,
-	onSetShowAuthGeofenceBox: jest.fn(),
-	isAuthTrackerDisclaimerModalOpen: false,
-	isAuthTrackerBoxOpen: false,
-	onShowAuthTrackerDisclaimerModal: jest.fn(),
-	onSetShowAuthTrackerBox: jest.fn(),
-	onShowUnauthSimulationDisclaimerModal: jest.fn(),
-	isUnauthGeofenceBoxOpen: false,
-	isUnauthTrackerBoxOpen: false,
-	onSetShowUnauthGeofenceBox: jest.fn(),
-	onSetShowUnauthTrackerBox: jest.fn()
+	isUnauthSimulationOpen: false,
+	onSetShowUnauthSimulation: jest.fn()
 };
 
 describe("<SettingsModal />", () => {

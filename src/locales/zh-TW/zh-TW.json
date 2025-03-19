@@ -3896,7 +3896,7 @@
   "avoid": {
     "text": "避免"
   },
-  "places_routes_maps": {
-    "text": "地點，路線，地圖"
+  "navigate": {
+    "text": "導航"
   }
 }

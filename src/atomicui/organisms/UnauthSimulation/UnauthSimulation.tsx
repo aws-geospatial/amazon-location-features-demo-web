@@ -36,7 +36,6 @@ import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import {
 	IdxType,
-	MenuItemEnum,
 	NotificationHistoryItemtype,
 	SelectOption,
 	TrackerPosType,
@@ -91,9 +90,7 @@ const {
 export interface UnauthSimulationProps {
 	mapRef: MutableRefObject<MapRef | null>;
 	geolocateControlRef: MutableRefObject<GeolocateControlRef | null>;
-	from: MenuItemEnum;
-	setShowUnauthGeofenceBox: (b: boolean) => void;
-	setShowUnauthTrackerBox: (b: boolean) => void;
+	setShowUnauthSimulation: (b: boolean) => void;
 	showStartUnauthSimulation: boolean;
 	setShowStartUnauthSimulation: (b: boolean) => void;
 	startSimulation: boolean;
@@ -108,9 +105,7 @@ export interface UnauthSimulationProps {
 const UnauthSimulation: FC<UnauthSimulationProps> = ({
 	mapRef,
 	geolocateControlRef,
-	from,
-	setShowUnauthGeofenceBox,
-	setShowUnauthTrackerBox,
+	setShowUnauthSimulation,
 	showStartUnauthSimulation,
 	setShowStartUnauthSimulation,
 	startSimulation,
@@ -173,17 +168,9 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 	const { setHideGeofenceTrackerShortcut } = useUnauthSimulation();
 
 	const isNonStartUnauthSimulation =
-		(isNotDesktop &&
-			[ResponsiveUIEnum.non_start_unauthorized_geofence, ResponsiveUIEnum.non_start_unauthorized_tracker].includes(
-				ui
-			)) ||
-		!showStartUnauthSimulation;
+		(isNotDesktop && [ResponsiveUIEnum.non_start_unauth_simulation].includes(ui)) || !showStartUnauthSimulation;
 
-	const isBeforeStartSimulation =
-		isNotDesktop &&
-		[ResponsiveUIEnum.before_start_unauthorized_geofence, ResponsiveUIEnum.before_start_unauthorized_tracker].includes(
-			ui
-		);
+	const isBeforeStartSimulation = isNotDesktop && [ResponsiveUIEnum.before_start_unauth_simulation].includes(ui);
 
 	useEffect(() => {
 		startSimulation &&
@@ -237,10 +224,7 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 		[selectedRoutes]
 	);
 
-	const handleClose = useCallback(
-		() => (from === MenuItemEnum.GEOFENCE ? setShowUnauthGeofenceBox(false) : setShowUnauthTrackerBox(false)),
-		[from, setShowUnauthGeofenceBox, setShowUnauthTrackerBox]
-	);
+	const handleClose = useCallback(() => setShowUnauthSimulation(false), [setShowUnauthSimulation]);
 
 	const handleCta = () => {
 		setShowStartUnauthSimulation(true);
@@ -343,9 +327,7 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 										setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
 										setBottomSheetHeight(window.innerHeight * 0.4);
 									}
-									from === MenuItemEnum.TRACKER
-										? setUI(ResponsiveUIEnum.unauth_tracker)
-										: setUI(ResponsiveUIEnum.unauth_geofence);
+									setUI(ResponsiveUIEnum.unauth_simulation);
 									setShowUnauthSimulationBounds(true);
 								}
 							}}
@@ -368,7 +350,6 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 		setShowUnauthSimulationBounds,
 		setBottomSheetMinHeight,
 		bottomSheetCurrentHeight,
-		from,
 		setUI,
 		setBottomSheetHeight
 	]);
@@ -465,14 +446,9 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 	if (isNonStartUnauthSimulation) {
 		return (
 			<NonStartUnauthSimulation
-				from={from}
 				handleClose={handleClose}
 				handleCta={() => {
-					setUI(
-						from === MenuItemEnum.GEOFENCE
-							? ResponsiveUIEnum.before_start_unauthorized_geofence
-							: ResponsiveUIEnum.before_start_unauthorized_tracker
-					);
+					setUI(ResponsiveUIEnum.before_start_unauth_simulation);
 					handleCta();
 				}}
 				unauthSimulationCtaText={unauthSimulationCtaText}
@@ -499,9 +475,7 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 						left={isDesktop ? "1.62rem" : "0"}
 						overflow={startSimulation ? "initial" : "hidden"}
 					>
-						{!startSimulation &&
-						ui &&
-						![ResponsiveUIEnum.unauth_geofence, ResponsiveUIEnum.unauth_tracker].includes(ui) ? (
+						{!startSimulation && ui && ![ResponsiveUIEnum.unauth_simulation].includes(ui) ? (
 							<BeforeStartSimulation />
 						) : (
 							<Flex data-testid="simulation-container" className="simulation-container" direction="column" gap="0">

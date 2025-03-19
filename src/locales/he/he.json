@@ -3896,7 +3896,7 @@
   "avoid": {
     "text": "הימנע"
   },
-  "places_routes_maps": {
-    "text": "מקומות, מסלולים, מפות"
+  "navigate": {
+    "text": "לנווט"
   }
 }

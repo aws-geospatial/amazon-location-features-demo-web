@@ -4,8 +4,7 @@ export type ShowStateType = {
 	settings: boolean;
 	stylesCard: boolean;
 	about: boolean;
-	unauthGeofenceBox: boolean;
-	unauthTrackerBox: boolean;
+	unauthSimulation: boolean;
 	unauthSimulationBounds: boolean;
 	unauthSimulationExitModal: boolean;
 	startUnauthSimulation: boolean;

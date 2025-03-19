@@ -1,7 +1,6 @@
 import { RefObject } from "react";
 
 import i18n from "@demo/locales/i18n";
-import { MenuItemEnum } from "@demo/types";
 import { faker } from "@faker-js/faker";
 import { act, fireEvent, render, waitFor } from "@testing-library/react";
 import { I18nextProvider } from "react-i18next";
@@ -12,7 +11,6 @@ const mockProps: NonStartUnauthSimulationProps = {
 	unauthSimulationCtaText: faker.random.word(),
 	handleClose: jest.fn(),
 	handleCta: jest.fn(),
-	from: MenuItemEnum.GEOFENCE,
 	startRef: { current: document.createElement("div") } as RefObject<HTMLDivElement>
 };
 

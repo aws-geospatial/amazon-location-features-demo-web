@@ -1,5 +1,4 @@
 import i18n from "@demo/locales/i18n";
-import { MenuItemEnum } from "@demo/types";
 import { fireEvent, render, waitFor } from "@testing-library/react";
 import type { GeolocateControl as GeolocateControlRef } from "maplibre-gl";
 import { I18nextProvider } from "react-i18next";
@@ -14,9 +13,7 @@ const mockProps: UnauthSimulationProps = {
 		} as unknown as MapRef
 	},
 	geolocateControlRef: { current: { trigger: jest.fn() } as unknown as GeolocateControlRef },
-	from: MenuItemEnum.TRACKER,
-	setShowUnauthGeofenceBox: jest.fn(),
-	setShowUnauthTrackerBox: jest.fn(),
+	setShowUnauthSimulation: jest.fn(),
 	showStartUnauthSimulation: true,
 	setShowStartUnauthSimulation: jest.fn(),
 	startSimulation: false,

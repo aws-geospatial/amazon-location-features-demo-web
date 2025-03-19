@@ -3896,7 +3896,7 @@
   "avoid": {
     "text": "避ける"
   },
-  "places_routes_maps": {
-    "text": "場所、ルート、地図"
+  "navigate": {
+    "text": "ナビゲート"
   }
 }

@@ -24,7 +24,7 @@ import { useGeofence, useMap, usePersistedData, useRoute } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { ShowStateType } from "@demo/types";
-import { MapColorSchemeEnum, MenuItemEnum, ResponsiveUIEnum, SettingOptionEnum } from "@demo/types/Enums";
+import { MapColorSchemeEnum, ResponsiveUIEnum, SettingOptionEnum } from "@demo/types/Enums";
 import type { GeolocateControl as GeolocateControlRef } from "maplibre-gl";
 import { useTranslation } from "react-i18next";
 import { MapRef } from "react-map-gl/maplibre";
@@ -53,13 +53,10 @@ interface IProps {
 	onOpenFeedbackModal: () => void;
 	onShowSettings: () => void;
 	onShowAboutModal: () => void;
-	onShowUnauthGeofenceBox: () => void;
-	onShowUnauthTrackerBox: () => void;
-	setShowUnauthGeofenceBox: (b: boolean) => void;
-	setShowUnauthTrackerBox: (b: boolean) => void;
+	onShowUnauthSimulation: () => void;
+	setShowUnauthSimulation: (b: boolean) => void;
 	setShowStartUnauthSimulation: (b: boolean) => void;
 	showStartUnauthSimulation: boolean;
-	from: MenuItemEnum;
 	handleLogoClick: () => Window | null;
 	show: ShowStateType;
 	setShow: Dispatch<SetStateAction<ShowStateType>>;
@@ -86,11 +83,8 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	onOpenFeedbackModal,
 	onShowSettings,
 	onShowAboutModal,
-	onShowUnauthGeofenceBox,
-	onShowUnauthTrackerBox,
-	setShowUnauthGeofenceBox,
-	setShowUnauthTrackerBox,
-	from,
+	onShowUnauthSimulation,
+	setShowUnauthSimulation,
 	setShowStartUnauthSimulation,
 	handleLogoClick,
 	show,
@@ -174,17 +168,9 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 		}, 1000);
 	}, []);
 
-	const isNonStartedSimulation =
-		!isDesktop &&
-		ui &&
-		[ResponsiveUIEnum.before_start_unauthorized_tracker, ResponsiveUIEnum.before_start_unauthorized_geofence].includes(
-			ui
-		);
+	const isNonStartedSimulation = !isDesktop && ui && [ResponsiveUIEnum.before_start_unauth_simulation].includes(ui);
 
-	const isExitSimulation =
-		!isDesktop &&
-		ui &&
-		[ResponsiveUIEnum.exit_unauthorized_tracker, ResponsiveUIEnum.exit_unauthorized_geofence].includes(ui);
+	const isExitSimulation = !isDesktop && ui && [ResponsiveUIEnum.exit_unauth_simulation].includes(ui);
 
 	useEffect(() => {
 		const resizeObserver = new ResizeObserver(entries => {
@@ -242,9 +228,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 		() => (
 			<UnauthSimulation
 				mapRef={mapRef}
-				from={show.unauthGeofenceBox ? MenuItemEnum.GEOFENCE : MenuItemEnum.TRACKER}
-				setShowUnauthGeofenceBox={b => setShow(s => ({ ...s, unauthGeofenceBox: b }))}
-				setShowUnauthTrackerBox={b => setShow(s => ({ ...s, unauthTrackerBox: b }))}
+				setShowUnauthSimulation={b => setShow(s => ({ ...s, unauthSimulation: b }))}
 				showStartUnauthSimulation={show.startUnauthSimulation}
 				setShowStartUnauthSimulation={b => setShow(s => ({ ...s, startUnauthSimulation: b }))}
 				startSimulation={startSimulation}
@@ -266,7 +250,6 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 			setShow,
 			setStartSimulation,
 			show.startUnauthSimulation,
-			show.unauthGeofenceBox,
 			startSimulation,
 			geolocateControlRef
 		]
@@ -280,29 +263,23 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	}, [setUI, resetRouteStore, setShowRouteBox, setSearchBoxValue]);
 
 	const handleClose = useCallback(() => {
-		from === MenuItemEnum.GEOFENCE
-			? setShow(s => ({ ...s, unauthGeofenceBox: false }))
-			: setShow(s => ({ ...s, unauthTrackerBox: false }));
+		setShow(s => ({ ...s, unauthSimulation: false }));
 		resetToExplore();
-	}, [from, resetToExplore, setShow]);
+	}, [resetToExplore, setShow]);
 
 	const onBackUnauthHandler = useCallback(() => {
 		if (isNotifications) {
 			setIsNotifications(false);
 		} else {
 			setConfirmCloseSimulation(true);
-			from === MenuItemEnum.GEOFENCE
-				? setUI(ResponsiveUIEnum.exit_unauthorized_geofence)
-				: setUI(ResponsiveUIEnum.exit_unauthorized_tracker);
+			setUI(ResponsiveUIEnum.exit_unauth_simulation);
 		}
-	}, [from, isNotifications, setConfirmCloseSimulation, setIsNotifications, setUI]);
+	}, [isNotifications, setConfirmCloseSimulation, setIsNotifications, setUI]);
 
 	const handleUIAction = useCallback(() => {
-		if (
-			[ResponsiveUIEnum.non_start_unauthorized_tracker, ResponsiveUIEnum.non_start_unauthorized_geofence].includes(ui)
-		) {
+		if ([ResponsiveUIEnum.non_start_unauth_simulation].includes(ui)) {
 			handleClose();
-		} else if ([ResponsiveUIEnum.unauth_geofence, ResponsiveUIEnum.unauth_tracker].includes(ui)) {
+		} else if ([ResponsiveUIEnum.unauth_simulation].includes(ui)) {
 			onBackUnauthHandler();
 		} else if ([ResponsiveUIEnum.routes, ResponsiveUIEnum.direction_to_routes].includes(ui)) {
 			if (!isExpandRouteOptionsMobile) {
@@ -346,28 +323,20 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 					);
 				case ResponsiveUIEnum.search:
 				case ResponsiveUIEnum.explore:
-				case ResponsiveUIEnum.before_start_unauthorized_geofence:
-				case ResponsiveUIEnum.before_start_unauthorized_tracker:
+				case ResponsiveUIEnum.before_start_unauth_simulation:
 					return <Flex width="100%">{SearchBoxEl(bottomSheetRef)}</Flex>;
-				case ResponsiveUIEnum.non_start_unauthorized_tracker:
-				case ResponsiveUIEnum.non_start_unauthorized_geofence:
-				case ResponsiveUIEnum.unauth_tracker:
-				case ResponsiveUIEnum.unauth_geofence:
+				case ResponsiveUIEnum.non_start_unauth_simulation:
+				case ResponsiveUIEnum.unauth_simulation:
 				case ResponsiveUIEnum.routes:
-				case ResponsiveUIEnum.exit_unauthorized_tracker:
-				case ResponsiveUIEnum.exit_unauthorized_geofence:
+				case ResponsiveUIEnum.exit_unauth_simulation:
 				case ResponsiveUIEnum.direction_to_routes:
 					return (
 						<Flex
 							className="map-header-mobile"
-							justifyContent={
-								[ResponsiveUIEnum.unauth_geofence, ResponsiveUIEnum.unauth_tracker].includes(ui)
-									? "space-between"
-									: "flex-end"
-							}
+							justifyContent={[ResponsiveUIEnum.unauth_simulation].includes(ui) ? "space-between" : "flex-end"}
 							direction="row"
 						>
-							{[ResponsiveUIEnum.unauth_geofence, ResponsiveUIEnum.unauth_tracker].includes(ui) && (
+							{[ResponsiveUIEnum.unauth_simulation].includes(ui) && (
 								<Flex
 									data-testid="bottomsheet-header-notification-icon"
 									className={isNotifications ? "bell-icon-container bell-active" : "bell-icon-container"}
@@ -404,39 +373,29 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				case ResponsiveUIEnum.routes:
 				case ResponsiveUIEnum.direction_to_routes:
 					return RouteBox(bottomSheetRef);
-				case ResponsiveUIEnum.unauth_tracker:
-				case ResponsiveUIEnum.unauth_geofence:
-				case ResponsiveUIEnum.exit_unauthorized_tracker:
-				case ResponsiveUIEnum.exit_unauthorized_geofence:
-				case ResponsiveUIEnum.non_start_unauthorized_tracker:
-				case ResponsiveUIEnum.non_start_unauthorized_geofence:
+				case ResponsiveUIEnum.unauth_simulation:
+				case ResponsiveUIEnum.exit_unauth_simulation:
+				case ResponsiveUIEnum.non_start_unauth_simulation:
 					return UnauthSimulationUI;
 				case ResponsiveUIEnum.poi_card:
 					return <Flex width="100%">{SearchBoxEl()}</Flex>;
 				case ResponsiveUIEnum.explore:
 				case ResponsiveUIEnum.search:
-				case ResponsiveUIEnum.before_start_unauthorized_tracker:
-				case ResponsiveUIEnum.before_start_unauthorized_geofence:
+				case ResponsiveUIEnum.before_start_unauth_simulation:
 				default:
 					return (
 						<>
-							{ui &&
-								[
-									ResponsiveUIEnum.explore,
-									ResponsiveUIEnum.before_start_unauthorized_tracker,
-									ResponsiveUIEnum.before_start_unauthorized_geofence
-								].includes(ui) && (
-									<Explore
-										updateUIInfo={setUI}
-										onCloseSidebar={onCloseSidebar}
-										onOpenFeedbackModal={onOpenFeedbackModal}
-										onShowSettings={onShowSettings}
-										onShowAboutModal={onShowAboutModal}
-										onShowUnauthGeofenceBox={onShowUnauthGeofenceBox}
-										onShowUnauthTrackerBox={onShowUnauthTrackerBox}
-										bottomSheetRef={bottomSheetRef}
-									/>
-								)}
+							{ui && [ResponsiveUIEnum.explore, ResponsiveUIEnum.before_start_unauth_simulation].includes(ui) && (
+								<Explore
+									updateUIInfo={setUI}
+									onCloseSidebar={onCloseSidebar}
+									onOpenFeedbackModal={onOpenFeedbackModal}
+									onShowSettings={onShowSettings}
+									onShowAboutModal={onShowAboutModal}
+									onShowUnauthSimulation={onShowUnauthSimulation}
+									bottomSheetRef={bottomSheetRef}
+								/>
+							)}
 						</>
 					);
 			}
@@ -450,8 +409,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 			onOpenFeedbackModal,
 			onShowAboutModal,
 			onShowSettings,
-			onShowUnauthGeofenceBox,
-			onShowUnauthTrackerBox,
+			onShowUnauthSimulation,
 			setUI
 		]
 	);
@@ -476,16 +434,14 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	const onCloseHandler = useCallback(() => {
 		setShowUnauthSimulationBounds(false);
 		setShowStartUnauthSimulation(false);
-		from === MenuItemEnum.GEOFENCE ? setShowUnauthGeofenceBox(false) : setShowUnauthTrackerBox(false);
+		setShowUnauthSimulation(false);
 		setConfirmCloseSimulation(false);
 		resetToExplore();
 		geolocateControlRef.current?.trigger();
 	}, [
 		setShowUnauthSimulationBounds,
 		setShowStartUnauthSimulation,
-		from,
-		setShowUnauthGeofenceBox,
-		setShowUnauthTrackerBox,
+		setShowUnauthSimulation,
 		setConfirmCloseSimulation,
 		resetToExplore,
 		geolocateControlRef
@@ -496,7 +452,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 			<ConfirmationModal
 				open={confirmCloseSimulation}
 				onClose={() => {
-					setUI(from === MenuItemEnum.GEOFENCE ? ResponsiveUIEnum.unauth_geofence : ResponsiveUIEnum.unauth_tracker);
+					setUI(ResponsiveUIEnum.unauth_simulation);
 					setConfirmCloseSimulation(false);
 				}}
 				onCancel={onCloseHandler}
@@ -513,7 +469,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 					</Text>
 				}
 				onConfirm={() => {
-					setUI(from === MenuItemEnum.GEOFENCE ? ResponsiveUIEnum.unauth_geofence : ResponsiveUIEnum.unauth_tracker);
+					setUI(ResponsiveUIEnum.unauth_simulation);
 					setConfirmCloseSimulation(false);
 				}}
 				confirmationText={t("start_unauth_simulation__stay_in_simulation.text") as string}
@@ -534,19 +490,12 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				blocking={false}
 				snapPoints={({ maxHeight }) => [
 					bottomSheetMinHeight,
-					[
-						ResponsiveUIEnum.map_styles,
-						ResponsiveUIEnum.unauth_geofence,
-						ResponsiveUIEnum.unauth_tracker,
-						ResponsiveUIEnum.explore
-					].includes(ui) ||
+					[ResponsiveUIEnum.map_styles, ResponsiveUIEnum.unauth_simulation, ResponsiveUIEnum.explore].includes(ui) ||
 					(isDesktopBrowser &&
 						[ResponsiveUIEnum.search, ResponsiveUIEnum.routes, ResponsiveUIEnum.direction_to_routes].includes(ui))
 						? bottomSheetHeight * 0.4 - 10
 						: footerHeight(maxHeight),
-					[ResponsiveUIEnum.unauth_geofence, ResponsiveUIEnum.unauth_tracker].includes(ui)
-						? bottomSheetHeight - 60
-						: bottomSheetHeight - 10,
+					[ResponsiveUIEnum.unauth_simulation].includes(ui) ? bottomSheetHeight - 60 : bottomSheetHeight - 10,
 					bottomSheetMinHeight
 				]}
 				maxHeight={bottomSheetHeight}
@@ -566,12 +515,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				className={`bottom-sheet ${isDesktop ? "desktop" : isTablet ? "tablet" : "mobile"} ${
 					(bottomSheetCurrentHeight || 0) + 30 < window.innerHeight ? "add-overlay" : ""
 				} ${!isDesktop && isDemoUrl ? "disable-body-scroll" : ""} ${
-					ui &&
-					[
-						ResponsiveUIEnum.poi_card,
-						ResponsiveUIEnum.before_start_unauthorized_tracker,
-						ResponsiveUIEnum.before_start_unauthorized_geofence
-					].includes(ui)
+					ui && [ResponsiveUIEnum.poi_card, ResponsiveUIEnum.before_start_unauth_simulation].includes(ui)
 						? "margin-top-from-header"
 						: ""
 				} ${arrowDirection} ${

@@ -3,7 +3,7 @@ import { FC, lazy } from "react";
 import { Divider, Flex, View } from "@aws-amplify/ui-react";
 import { IconLocateMe, IconMinus, IconZoomPlus, LogoLight } from "@demo/assets/svgs";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
-import { MenuItemEnum, ShowStateType } from "@demo/types";
+import { ShowStateType } from "@demo/types";
 import { MapRef } from "react-map-gl/maplibre";
 import "./styles.scss";
 
@@ -41,8 +41,7 @@ const DemoPlaceholderPage: FC<DemoPlaceholderPageProps> = ({ show, value, setVal
 								onCloseSidebar={() => {}}
 								onShowSettings={() => {}}
 								onShowAboutModal={() => {}}
-								onShowUnauthGeofenceBox={() => {}}
-								onShowUnauthTrackerBox={() => {}}
+								onShowUnauthSimulation={() => {}}
 								onOpenFeedbackModal={() => {}}
 							/>
 						)}
@@ -54,15 +53,13 @@ const DemoPlaceholderPage: FC<DemoPlaceholderPageProps> = ({ show, value, setVal
 								setShowRouteBox={() => {}}
 								isSideMenuExpanded={show.sidebar}
 							/>
-						) : show.unauthGeofenceBox || show.unauthTrackerBox ? (
+						) : show.unauthSimulation ? (
 							<UnauthSimulation
 								mapRef={{
 									current: {} as MapRef
 								}}
 								geolocateControlRef={{ current: null }}
-								from={show.unauthGeofenceBox ? MenuItemEnum.GEOFENCE : MenuItemEnum.TRACKER}
-								setShowUnauthGeofenceBox={() => {}}
-								setShowUnauthTrackerBox={() => {}}
+								setShowUnauthSimulation={() => {}}
 								setShowUnauthSimulationBounds={() => {}}
 								showStartUnauthSimulation={false}
 								setShowStartUnauthSimulation={() => {}}
@@ -98,10 +95,8 @@ const DemoPlaceholderPage: FC<DemoPlaceholderPageProps> = ({ show, value, setVal
 					onCloseSidebar={() => {}}
 					onShowGridLoader={() => {}}
 					isLoading={true}
-					isUnauthGeofenceBoxOpen={show.unauthGeofenceBox}
-					isUnauthTrackerBoxOpen={show.unauthTrackerBox}
-					onSetShowUnauthGeofenceBox={() => {}}
-					onSetShowUnauthTrackerBox={() => {}}
+					isUnauthSimulationOpen={show.unauthSimulation}
+					onSetShowUnauthSimulation={() => {}}
 				/>
 
 				<Flex className={`location-disabled ${!isDesktop ? "location-disabled-mobile" : ""}`}>
@@ -127,10 +122,8 @@ const DemoPlaceholderPage: FC<DemoPlaceholderPageProps> = ({ show, value, setVal
 						onCloseSidebar={() => {}}
 						onShowGridLoader={() => {}}
 						isLoading={true}
-						isUnauthGeofenceBoxOpen={show.unauthGeofenceBox}
-						isUnauthTrackerBoxOpen={show.unauthTrackerBox}
-						onSetShowUnauthGeofenceBox={() => {}}
-						onSetShowUnauthTrackerBox={() => {}}
+						isUnauthSimulationOpen={show.unauthSimulation}
+						onSetShowUnauthSimulation={() => {}}
 					/>
 				}
 			/>

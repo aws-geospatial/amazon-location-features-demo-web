@@ -1,10 +1,9 @@
 import { FC, RefObject } from "react";
 
 import { Button, Card, Flex, Text } from "@aws-amplify/ui-react";
-import { IconClose, IconGeofenceColor, IconTrackers } from "@demo/assets/svgs";
+import { IconClose, IconTrackers } from "@demo/assets/svgs";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
-import { MenuItemEnum } from "@demo/types";
 import { ResponsiveUIEnum } from "@demo/types/Enums";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
@@ -13,14 +12,12 @@ export interface NonStartUnauthSimulationProps {
 	unauthSimulationCtaText: string;
 	handleClose: () => void;
 	handleCta: () => void;
-	from: MenuItemEnum;
 	startRef: RefObject<HTMLDivElement>;
 }
 
 const NonStartUnauthSimulation: FC<NonStartUnauthSimulationProps> = ({
 	unauthSimulationCtaText,
 	handleClose,
-	from,
 	handleCta,
 	startRef
 }) => {
@@ -58,11 +55,11 @@ const NonStartUnauthSimulation: FC<NonStartUnauthSimulationProps> = ({
 			<Flex className="unauth-simulation-card-body" marginTop={!isDesktop ? "2.5rem" : 0}>
 				<Flex direction={isDesktop ? "column" : "row"} alignItems={"center"} marginBottom={!isDesktop ? "1.5rem" : ""}>
 					<Flex className="icon-container">
-						{from === MenuItemEnum.GEOFENCE ? <IconGeofenceColor /> : <IconTrackers />}
+						<IconTrackers />
 					</Flex>
 					<Flex direction="column" alignItems={isDesktop ? "center" : "flex-start"}>
 						<Text className={`bold ${isDesktop ? "medium-text" : "regular-text"}`} marginTop="1.5rem">
-							{from === MenuItemEnum.GEOFENCE ? t("geofences.text") : t("trackers.text")}
+							{t("trackers.text")}
 						</Text>
 						<Text
 							className="small-text"
@@ -70,9 +67,7 @@ const NonStartUnauthSimulation: FC<NonStartUnauthSimulationProps> = ({
 							textAlign={isDesktop ? "center" : "left"}
 							marginTop={isDesktop ? "0.8rem" : "0"}
 						>
-							{from === MenuItemEnum.GEOFENCE
-								? t("unauth_simulation__geofence_box_info.text")
-								: t("unauth_simulation__tracker_box_info.text")}
+							{t("unauth_simulation__tracker_box_info.text")}
 						</Text>
 					</Flex>
 				</Flex>

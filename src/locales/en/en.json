@@ -3896,7 +3896,7 @@
   "avoid": {
     "text": "Avoid"
   },
-  "places_routes_maps": {
-    "text": "Places, Routes, Maps"
+  "navigate": {
+    "text": "Navigate"
   }
 }

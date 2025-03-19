@@ -3896,7 +3896,7 @@
   "avoid": {
     "text": "Éviter"
   },
-  "places_routes_maps": {
-    "text": "Lieux, itinéraires, cartes"
+  "navigate": {
+    "text": "Naviguez"
   }
 }

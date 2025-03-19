@@ -3896,7 +3896,7 @@
   "avoid": {
     "text": "تجنب"
   },
-  "places_routes_maps": {
-    "text": "الأماكن والطرق والخرائط"
+  "navigate": {
+    "text": "انتقل"
   }
 }
