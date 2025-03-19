@@ -181,10 +181,10 @@ export enum ResponsiveUIEnum {
 	map_styles = "map_styles",
 	poi_card = "poi_card",
 	routes = "routes",
-	before_start_unauth_simulation = "before_start_unauth_simulation",
 	non_start_unauth_simulation = "non_start_unauth_simulation",
-	exit_unauth_simulation = "exit_unauth_simulation",
+	before_start_unauth_simulation = "before_start_unauth_simulation",
 	unauth_simulation = "unauth_simulation",
+	exit_unauth_simulation = "exit_unauth_simulation",
 	direction_to_routes = "direction_to_routes"
 }
 
