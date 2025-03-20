@@ -13,7 +13,6 @@ export interface NonStartUnauthSimulationProps {
 	unauthSimulationCtaText: string;
 	handleClose: () => void;
 	handleCta: () => void;
-	handleEnableLive: () => void;
 	from: MenuItemEnum;
 	startRef: RefObject<HTMLDivElement>;
 }
@@ -23,7 +22,6 @@ const NonStartUnauthSimulation: FC<NonStartUnauthSimulationProps> = ({
 	handleClose,
 	from,
 	handleCta,
-	handleEnableLive,
 	startRef
 }) => {
 	const { setUI } = useBottomSheet();
@@ -91,22 +89,6 @@ const NonStartUnauthSimulation: FC<NonStartUnauthSimulationProps> = ({
 				>
 					{unauthSimulationCtaText}
 				</Button>
-			</Flex>
-			<Flex className="unauth-simulation-card-footer">
-				<Text
-					data-testid="unauth-simulation-enable-live"
-					className="small-text"
-					color="var(--primary-color)"
-					style={{ cursor: "pointer" }}
-					onClick={handleEnableLive}
-					fontFamily="AmazonEmber-Bold"
-					fontSize="1rem"
-				>{`${t("unauth_simulation__enable_live.text")} ${
-					from === MenuItemEnum.GEOFENCE ? t("geofences.text") : t("trackers.text")
-				}`}</Text>
-				<Text fontSize="0.77rem" marginTop="0.08rem" color="var(--grey-color)">
-					{t("unauth_simulation__disclaimer.text")}
-				</Text>
 			</Flex>
 		</Card>
 	);

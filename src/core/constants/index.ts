@@ -3,7 +3,6 @@
 
 export { default as aboutModalData } from "./aboutModalData";
 export { default as appConfig } from "./appConfig";
-export { default as regionsData } from "./regionsData";
 export { default as marketingMenuOptionsData } from "./marketingMenuOptionsData";
 export { default as languageSwitcherData } from "./languageSwitcherData";
 export { default as busRoutesData } from "./busRoutesData";

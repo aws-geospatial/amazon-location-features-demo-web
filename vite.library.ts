@@ -71,7 +71,6 @@ export default defineConfig(() => {
 					"date-fns",
 					"i18next",
 					"i18next-browser-languagedetector",
-					"maplibre-gl-draw-circle",
 					"maplibre-gl",
 					"ngeohash",
 					"ramda",

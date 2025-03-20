@@ -12,7 +12,6 @@ const mockProps: NonStartUnauthSimulationProps = {
 	unauthSimulationCtaText: faker.random.word(),
 	handleClose: jest.fn(),
 	handleCta: jest.fn(),
-	handleEnableLive: jest.fn(),
 	from: MenuItemEnum.GEOFENCE,
 	startRef: { current: document.createElement("div") } as RefObject<HTMLDivElement>
 };
@@ -31,7 +30,6 @@ describe("<NonStartUnauthSimulation />", () => {
 		expect(getByTestId("unauth-simulation-card")).toBeInTheDocument();
 		expect(getByTestId("unauth-simulation-card-header-close")).toBeInTheDocument();
 		expect(getByTestId("unauth-simulation-cta")).toBeInTheDocument();
-		expect(getByTestId("unauth-simulation-enable-live")).toBeInTheDocument();
 	});
 
 	it("should call exact functions when clicked", () => {
@@ -47,12 +45,6 @@ describe("<NonStartUnauthSimulation />", () => {
 		});
 		waitFor(() => {
 			expect(mockProps.handleCta).toBeCalled();
-		});
-		act(() => {
-			fireEvent.click(getByTestId("unauth-simulation-enable-live"));
-		});
-		waitFor(() => {
-			expect(mockProps.handleEnableLive).toBeCalled();
 		});
 	});
 });

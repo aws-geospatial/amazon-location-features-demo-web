@@ -7,17 +7,10 @@ import { Card, Divider, Flex, Placeholder, Text } from "@aws-amplify/ui-react";
 import { IconClose, IconDark, IconGeofencePlusSolid, IconLight, IconMapSolid, IconRadar } from "@demo/assets/svgs";
 import { MapLanguageDropdown, PoliticalViewDropdown } from "@demo/atomicui/atoms";
 import { appConfig } from "@demo/core/constants";
-import { useAuth, useGeofence, useMap, useUnauthSimulation } from "@demo/hooks";
+import { useMap, useUnauthSimulation } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
-import {
-	EventTypeEnum,
-	MapColorSchemeEnum,
-	MapStyleEnum,
-	MenuItemEnum,
-	ResponsiveUIEnum,
-	TriggeredByEnum
-} from "@demo/types/Enums";
+import { EventTypeEnum, MapColorSchemeEnum, MapStyleEnum, MenuItemEnum, ResponsiveUIEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
 import { useTranslation } from "react-i18next";
 import { Tooltip } from "react-tooltip";
@@ -33,16 +26,11 @@ export interface MapButtonsProps {
 	openStylesCard: boolean;
 	setOpenStylesCard: (b: boolean) => void;
 	onCloseSidebar: () => void;
-	onOpenSignInModal: () => void;
 	onShowGridLoader: () => void;
 	isLoading?: boolean;
 	onlyMapStyles?: boolean;
 	isHandDevice?: boolean;
-	isAuthGeofenceBoxOpen: boolean;
-	onSetShowAuthGeofenceBox: (b: boolean) => void;
-	isAuthTrackerBoxOpen: boolean;
 	isSettingsModal?: boolean;
-	onSetShowAuthTrackerBox: (b: boolean) => void;
 	isUnauthGeofenceBoxOpen: boolean;
 	isUnauthTrackerBoxOpen: boolean;
 	onSetShowUnauthGeofenceBox: (b: boolean) => void;
@@ -54,15 +42,10 @@ const MapButtons: FC<MapButtonsProps> = ({
 	openStylesCard,
 	setOpenStylesCard,
 	onCloseSidebar,
-	onOpenSignInModal,
 	onShowGridLoader,
 	isLoading = false,
 	onlyMapStyles = false,
 	isHandDevice,
-	isAuthGeofenceBoxOpen,
-	onSetShowAuthGeofenceBox,
-	isAuthTrackerBoxOpen,
-	onSetShowAuthTrackerBox,
 	isUnauthGeofenceBoxOpen,
 	isUnauthTrackerBoxOpen,
 	onSetShowUnauthGeofenceBox,
@@ -71,10 +54,7 @@ const MapButtons: FC<MapButtonsProps> = ({
 	const [isLoadingImg, setIsLoadingImg] = useState(true);
 	const stylesCardRef = useRef<HTMLDivElement | null>(null);
 	const stylesCardTogglerRef = useRef<HTMLDivElement | null>(null);
-	const { credentials, userProvidedValues } = useAuth();
 	const { mapStyle, setMapStyle, mapColorScheme, setMapColorScheme, setMapPoliticalView } = useMap();
-	const { isAddingGeofence, setIsAddingGeofence } = useGeofence();
-	const isAuthenticated = !!credentials?.authenticated;
 	const { isMobile, isDesktop } = useDeviceMediaQuery();
 	const { t } = useTranslation();
 	const { ui } = useBottomSheet();
@@ -115,37 +95,12 @@ const MapButtons: FC<MapButtonsProps> = ({
 	const onClickGeofenceTracker = (menuItem: MenuItemEnum) => {
 		onCloseSidebar();
 
-		if (userProvidedValues) {
-			if (isAuthenticated) {
-				if (menuItem === MenuItemEnum.GEOFENCE) {
-					isAuthTrackerBoxOpen && onSetShowAuthTrackerBox(!isAuthTrackerBoxOpen);
-					onSetShowAuthGeofenceBox(!isAuthGeofenceBoxOpen);
-					setIsAddingGeofence(!isAddingGeofence);
-					record(
-						[
-							{
-								EventType: EventTypeEnum.GEOFENCE_CREATION_STARTED,
-								Attributes: { triggeredBy: TriggeredByEnum.MAP_BUTTONS }
-							}
-						],
-						["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
-					);
-				} else {
-					isAddingGeofence && setIsAddingGeofence(!isAddingGeofence);
-					isAuthGeofenceBoxOpen && onSetShowAuthGeofenceBox(!isAuthGeofenceBoxOpen);
-					onSetShowAuthTrackerBox(!isAuthTrackerBoxOpen);
-				}
-			} else {
-				onOpenSignInModal();
-			}
+		if (menuItem === MenuItemEnum.GEOFENCE) {
+			isUnauthTrackerBoxOpen && onSetShowUnauthTrackerBox(!isUnauthTrackerBoxOpen);
+			onSetShowUnauthGeofenceBox(!isUnauthGeofenceBoxOpen);
 		} else {
-			if (menuItem === MenuItemEnum.GEOFENCE) {
-				isUnauthTrackerBoxOpen && onSetShowUnauthTrackerBox(!isUnauthTrackerBoxOpen);
-				onSetShowUnauthGeofenceBox(!isUnauthGeofenceBoxOpen);
-			} else {
-				isUnauthGeofenceBoxOpen && onSetShowUnauthGeofenceBox(!isUnauthGeofenceBoxOpen);
-				onSetShowUnauthTrackerBox(!isUnauthTrackerBoxOpen);
-			}
+			isUnauthGeofenceBoxOpen && onSetShowUnauthGeofenceBox(!isUnauthGeofenceBoxOpen);
+			onSetShowUnauthTrackerBox(!isUnauthTrackerBoxOpen);
 		}
 	};
 
@@ -346,7 +301,7 @@ const MapButtons: FC<MapButtonsProps> = ({
 						<Divider className="button-divider" />
 						<Flex
 							data-testid="geofence-control-button"
-							className={isAddingGeofence ? "geofence-button active" : "geofence-button"}
+							className="geofence-button"
 							onClick={() => onClickGeofenceTracker(MenuItemEnum.GEOFENCE)}
 							data-tooltip-id="geofence-control-button"
 							data-tooltip-place="left"
@@ -358,7 +313,7 @@ const MapButtons: FC<MapButtonsProps> = ({
 						<Divider className="button-divider" />
 						<Flex
 							data-testid="tracker-control-button"
-							className={isAuthTrackerBoxOpen ? "tracker-button active" : "tracker-button"}
+							className="tracker-button"
 							onClick={() => onClickGeofenceTracker(MenuItemEnum.TRACKER)}
 							data-tooltip-id="tracker-control-button"
 							data-tooltip-place="left"

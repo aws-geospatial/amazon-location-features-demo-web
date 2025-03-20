@@ -20,7 +20,7 @@ import { IconClose, IconNotificationBell } from "@demo/assets/svgs";
 import { ConfirmationModal } from "@demo/atomicui/molecules";
 import appConfig from "@demo/core/constants/appConfig";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
-import { useGeofence, useMap, usePersistedData, useRoute, useTracker } from "@demo/hooks";
+import { useGeofence, useMap, usePersistedData, useRoute } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { ShowStateType } from "@demo/types";
@@ -50,11 +50,7 @@ interface IProps {
 	MapButtons: (ref?: MutableRefObject<RefHandles | null>) => JSX.Element;
 	RouteBox: (ref?: MutableRefObject<RefHandles | null>) => JSX.Element;
 	onCloseSidebar: () => void;
-	onOpenConnectAwsAccountModal: () => void;
 	onOpenFeedbackModal: () => void;
-	onOpenSignInModal: () => void;
-	onShowAuthGeofenceBox: () => void;
-	onShowAuthTrackerBox: () => void;
 	onShowSettings: () => void;
 	onShowAboutModal: () => void;
 	onShowUnauthGeofenceBox: () => void;
@@ -64,8 +60,6 @@ interface IProps {
 	setShowStartUnauthSimulation: (b: boolean) => void;
 	showStartUnauthSimulation: boolean;
 	from: MenuItemEnum;
-	AuthGeofenceBox: JSX.Element;
-	AuthTrackerBox: JSX.Element;
 	handleLogoClick: () => Window | null;
 	show: ShowStateType;
 	setShow: Dispatch<SetStateAction<ShowStateType>>;
@@ -75,11 +69,6 @@ interface IProps {
 	setIsNotifications: Dispatch<SetStateAction<boolean>>;
 	confirmCloseSimulation: boolean;
 	setConfirmCloseSimulation: Dispatch<SetStateAction<boolean>>;
-	setShowAuthTrackerBox: (b: boolean) => void;
-	setShowAuthGeofenceBox: (b: boolean) => void;
-	setTriggerOnClose: Dispatch<SetStateAction<boolean>>;
-	setTriggerOnReset: Dispatch<SetStateAction<boolean>>;
-	isEditingAuthRoute: boolean;
 	setShowRouteBox: (b: boolean) => void;
 	isExpandRouteOptionsMobile: boolean;
 	setExpandRouteOptionsMobile: (b: boolean) => void;
@@ -94,11 +83,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	MapButtons,
 	RouteBox,
 	onCloseSidebar,
-	onOpenConnectAwsAccountModal,
 	onOpenFeedbackModal,
-	onOpenSignInModal,
-	onShowAuthGeofenceBox,
-	onShowAuthTrackerBox,
 	onShowSettings,
 	onShowAboutModal,
 	onShowUnauthGeofenceBox,
@@ -106,8 +91,6 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	setShowUnauthGeofenceBox,
 	setShowUnauthTrackerBox,
 	from,
-	AuthGeofenceBox,
-	AuthTrackerBox,
 	setShowStartUnauthSimulation,
 	handleLogoClick,
 	show,
@@ -118,10 +101,6 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	setIsNotifications,
 	confirmCloseSimulation,
 	setConfirmCloseSimulation,
-	setShowAuthTrackerBox,
-	setTriggerOnClose,
-	setTriggerOnReset,
-	isEditingAuthRoute,
 	setShowRouteBox,
 	isExpandRouteOptionsMobile,
 	setExpandRouteOptionsMobile,
@@ -129,7 +108,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	setShowUnauthSimulationBounds
 }) => {
 	const { isDesktop, isMobile, isTablet, isMax556, isDesktopBrowser } = useDeviceMediaQuery();
-	const { unauthNotifications, isAddingGeofence } = useGeofence();
+	const { unauthNotifications } = useGeofence();
 	const { t } = useTranslation();
 	const location = useLocation();
 	const isDemoUrl = location.pathname === DEMO;
@@ -145,7 +124,6 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	} = useBottomSheet();
 	const { setSettingsOptions } = usePersistedData();
 	const { resetStore: resetRouteStore } = useRoute();
-	const { setIsEditingRoute, setTrackerPoints } = useTracker();
 	const { mapColorScheme } = useMap();
 	const [arrowDirection, setArrowDirection] = useState("no-dragging");
 	const prevBottomSheetHeightRef = useRef(bottomSheetCurrentHeight);
@@ -161,11 +139,6 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 			setBottomSheetHeight(window.innerHeight);
 		}, 500);
 	}, [setBottomSheetHeight, setBottomSheetMinHeight, setUI]);
-
-	const isAddingOrEditing = useMemo(
-		() => isAddingGeofence || isEditingAuthRoute,
-		[isAddingGeofence, isEditingAuthRoute]
-	);
 
 	useEffect(() => {
 		if (bottomSheetCurrentHeight > prevBottomSheetHeightRef.current) {
@@ -272,7 +245,6 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				from={show.unauthGeofenceBox ? MenuItemEnum.GEOFENCE : MenuItemEnum.TRACKER}
 				setShowUnauthGeofenceBox={b => setShow(s => ({ ...s, unauthGeofenceBox: b }))}
 				setShowUnauthTrackerBox={b => setShow(s => ({ ...s, unauthTrackerBox: b }))}
-				setShowConnectAwsAccountModal={b => setShow(s => ({ ...s, connectAwsAccount: b }))}
 				showStartUnauthSimulation={show.startUnauthSimulation}
 				setShowStartUnauthSimulation={b => setShow(s => ({ ...s, startUnauthSimulation: b }))}
 				startSimulation={startSimulation}
@@ -314,13 +286,6 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 		resetToExplore();
 	}, [from, resetToExplore, setShow]);
 
-	const onCloseAuthTracker = useCallback(() => {
-		setIsEditingRoute(false);
-		setTrackerPoints(undefined);
-		setShowAuthTrackerBox(false);
-		setUI(ResponsiveUIEnum.explore);
-	}, [setIsEditingRoute, setShowAuthTrackerBox, setTrackerPoints, setUI]);
-
 	const onBackUnauthHandler = useCallback(() => {
 		if (isNotifications) {
 			setIsNotifications(false);
@@ -339,14 +304,6 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 			handleClose();
 		} else if ([ResponsiveUIEnum.unauth_geofence, ResponsiveUIEnum.unauth_tracker].includes(ui)) {
 			onBackUnauthHandler();
-		} else if (ResponsiveUIEnum.auth_tracker === ui) {
-			onCloseAuthTracker();
-		} else if (ResponsiveUIEnum.auth_geofence === ui) {
-			if (isAddingOrEditing) {
-				setTriggerOnReset(true);
-			} else {
-				setTriggerOnClose(true);
-			}
 		} else if ([ResponsiveUIEnum.routes, ResponsiveUIEnum.direction_to_routes].includes(ui)) {
 			if (!isExpandRouteOptionsMobile) {
 				onCloseRouteBox();
@@ -361,18 +318,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 		}
 		document.querySelector("[data-rsbs-scroll='true']")!.scrollTop = 0;
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [
-		ui,
-		handleClose,
-		onBackUnauthHandler,
-		onCloseAuthTracker,
-		isAddingOrEditing,
-		setTriggerOnReset,
-		setTriggerOnClose,
-		onCloseRouteBox,
-		setExpandRouteOptionsMobile,
-		setUI
-	]);
+	}, [ui, handleClose, onBackUnauthHandler, onCloseRouteBox, setExpandRouteOptionsMobile, setUI]);
 
 	const bottomSheetHeader = useCallback(
 		(ui?: ResponsiveUIEnum) => {
@@ -405,8 +351,6 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 					return <Flex width="100%">{SearchBoxEl(bottomSheetRef)}</Flex>;
 				case ResponsiveUIEnum.non_start_unauthorized_tracker:
 				case ResponsiveUIEnum.non_start_unauthorized_geofence:
-				case ResponsiveUIEnum.auth_tracker:
-				case ResponsiveUIEnum.auth_geofence:
 				case ResponsiveUIEnum.unauth_tracker:
 				case ResponsiveUIEnum.unauth_geofence:
 				case ResponsiveUIEnum.routes:
@@ -467,10 +411,6 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				case ResponsiveUIEnum.non_start_unauthorized_tracker:
 				case ResponsiveUIEnum.non_start_unauthorized_geofence:
 					return UnauthSimulationUI;
-				case ResponsiveUIEnum.auth_tracker:
-					return AuthTrackerBox;
-				case ResponsiveUIEnum.auth_geofence:
-					return AuthGeofenceBox;
 				case ResponsiveUIEnum.poi_card:
 					return <Flex width="100%">{SearchBoxEl()}</Flex>;
 				case ResponsiveUIEnum.explore:
@@ -489,11 +429,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 									<Explore
 										updateUIInfo={setUI}
 										onCloseSidebar={onCloseSidebar}
-										onOpenConnectAwsAccountModal={onOpenConnectAwsAccountModal}
 										onOpenFeedbackModal={onOpenFeedbackModal}
-										onOpenSignInModal={onOpenSignInModal}
-										onShowAuthGeofenceBox={onShowAuthGeofenceBox}
-										onShowAuthTrackerBox={onShowAuthTrackerBox}
 										onShowSettings={onShowSettings}
 										onShowAboutModal={onShowAboutModal}
 										onShowUnauthGeofenceBox={onShowUnauthGeofenceBox}
@@ -506,19 +442,13 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 			}
 		},
 		[
-			AuthGeofenceBox,
-			AuthTrackerBox,
 			MapButtons,
 			RouteBox,
 			SearchBoxEl,
 			UnauthSimulationUI,
 			onCloseSidebar,
-			onOpenConnectAwsAccountModal,
 			onOpenFeedbackModal,
-			onOpenSignInModal,
 			onShowAboutModal,
-			onShowAuthGeofenceBox,
-			onShowAuthTrackerBox,
 			onShowSettings,
 			onShowUnauthGeofenceBox,
 			onShowUnauthTrackerBox,
@@ -611,13 +541,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 						ResponsiveUIEnum.explore
 					].includes(ui) ||
 					(isDesktopBrowser &&
-						[
-							ResponsiveUIEnum.search,
-							ResponsiveUIEnum.routes,
-							ResponsiveUIEnum.direction_to_routes,
-							ResponsiveUIEnum.auth_geofence,
-							ResponsiveUIEnum.auth_tracker
-						].includes(ui))
+						[ResponsiveUIEnum.search, ResponsiveUIEnum.routes, ResponsiveUIEnum.direction_to_routes].includes(ui))
 						? bottomSheetHeight * 0.4 - 10
 						: footerHeight(maxHeight),
 					[ResponsiveUIEnum.unauth_geofence, ResponsiveUIEnum.unauth_tracker].includes(ui)
@@ -651,14 +575,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 						? "margin-top-from-header"
 						: ""
 				} ${arrowDirection} ${
-					[
-						ResponsiveUIEnum.auth_tracker,
-						ResponsiveUIEnum.auth_geofence,
-						ResponsiveUIEnum.direction_to_routes,
-						ResponsiveUIEnum.routes
-					].includes(ui)
-						? "no-scroll-on-content"
-						: ""
+					[ResponsiveUIEnum.direction_to_routes, ResponsiveUIEnum.routes].includes(ui) ? "no-scroll-on-content" : ""
 				}`}
 				scrollLocking={false}
 				onSpringEnd={() => setArrowDirection("no-dragging")}
