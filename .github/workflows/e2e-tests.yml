@@ -26,7 +26,6 @@ jobs:
           echo "VITE_AWS_WEB_SOCKET_URLS=${{ secrets.VITE_AWS_WEB_SOCKET_URLS }}" >> .env
           echo "VITE_PINPOINT_IDENTITY_POOL_ID=${{ secrets.VITE_PINPOINT_IDENTITY_POOL_ID }}" >> .env
           echo "VITE_PINPOINT_APPLICATION_ID=${{ secrets.VITE_PINPOINT_APPLICATION_ID }}" >> .env
-          echo "VITE_AWS_CF_TEMPLATE=${{ secrets.VITE_AWS_CF_TEMPLATE }}" >> .env
           echo "VITE_APPLE_APP_STORE_LINK=${{ secrets.VITE_APPLE_APP_STORE_LINK }}" >> .env
           echo "VITE_GOOGLE_PLAY_STORE_LINK=${{ secrets.VITE_GOOGLE_PLAY_STORE_LINK }}" >> .env
           echo "VITE_APP_VERSION=${{ secrets.VITE_APP_VERSION }}" >> .env
@@ -50,13 +49,6 @@ jobs:
       - name: Run cypress tests
         env:
           CYPRESS_WEB_DOMAIN: ${{ secrets.WEB_DOMAIN }}
-          CYPRESS_IDENTITY_POOL_ID: ${{ secrets.IDENTITY_POOL_ID }}
-          CYPRESS_USER_DOMAIN: ${{ secrets.USER_DOMAIN }}
-          CYPRESS_USER_POOL_CLIENT_ID: ${{ secrets.USER_POOL_CLIENT_ID }}
-          CYPRESS_USER_POOL_ID: ${{ secrets.USER_POOL_ID }}
-          CYPRESS_WEB_SOCKET_URL: ${{ secrets.WEB_SOCKET_URL }}
-          CYPRESS_COGNITO_EMAIL: ${{ secrets.COGNITO_EMAIL }}
-          CYPRESS_COGNITO_PASSWORD: ${{ secrets.COGNITO_PASSWORD }}
           PINPOINT_IDENTITY_POOL_ID: ${{ secrets.VITE_PINPOINT_IDENTITY_POOL_ID }}
           PINPOINT_APPLICATION_ID: ${{ secrets.VITE_PINPOINT_APPLICATION_ID }}
         run: npm run cypress

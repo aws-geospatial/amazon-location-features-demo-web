@@ -17,7 +17,6 @@ const mockProps: UnauthSimulationProps = {
 	from: MenuItemEnum.TRACKER,
 	setShowUnauthGeofenceBox: jest.fn(),
 	setShowUnauthTrackerBox: jest.fn(),
-	setShowConnectAwsAccountModal: jest.fn(),
 	showStartUnauthSimulation: true,
 	setShowStartUnauthSimulation: jest.fn(),
 	startSimulation: false,

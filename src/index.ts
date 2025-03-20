@@ -6,7 +6,6 @@ import usePersistedData from "./hooks/usePersistedData";
 import usePlace from "./hooks/usePlace";
 import useRecordViewPage from "./hooks/useRecordViewPage";
 import useRoute from "./hooks/useRoute";
-import useTracker from "./hooks/useTracker";
 import { EventTypeEnum, TriggeredByEnum } from "./types/Enums";
 import { record } from "./utils/analyticsUtils";
 import { debounce } from "./utils/debounce";
@@ -20,7 +19,6 @@ export {
 	useGeofence,
 	usePlace,
 	useRoute,
-	useTracker,
 	usePersistedData,
 	useRecordViewPage,
 	EventTypeEnum,

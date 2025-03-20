@@ -39,7 +39,6 @@ jest.mock("@demo/core/constants/appConfig", () => ({
 	ENV: {
 		PINPOINT_IDENTITY_POOL_ID: process.env["VITE_PINPOINT_IDENTITY_POOL_ID"],
 		PINPOINT_APPLICATION_ID: process.env["VITE_PINPOINT_APPLICATION_ID"],
-		CF_TEMPLATE: "https://www.example.com?region=us-east-1",
 		APPLE_APP_STORE_LINK: "",
 		GOOGLE_PLAY_STORE_LINK: "",
 		COUNTRY_EVALUATION_URL: "",
@@ -75,7 +74,6 @@ jest.mock("@demo/core/constants/appConfig", () => ({
 		ERROR_BOUNDARY: "/error",
 		SAMPLES: "/samples",
 		SAMPLE_DETAILS: "/sample/:sampleId",
-		HELP: "/demo/help",
 		TERMS: "/demo/terms",
 		SOFTWARE_ATTRIBUTIONS: "/demo/software-attributions",
 		MIGRATE_FROM_GOOGLE_MAPS: "/migrate-from-google-maps",
@@ -377,13 +375,6 @@ jest.mock("@demo/utils/analyticsUtils", () => ({
 
 jest.mock("@demo/utils/countryUtil", () => ({
 	getCountryCode: () => "PK"
-}));
-
-jest.mock("maplibre-gl-draw-circle", () => ({
-	CircleMode: {},
-	DirectMode: {},
-	DragCircleMode: {},
-	SimpleSelectMode: {}
 }));
 
 jest.mock("react-map-gl/maplibre", () => ({
