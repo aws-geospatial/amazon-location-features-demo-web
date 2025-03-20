@@ -106,7 +106,6 @@ const initShow: ShowStateType = {
 	unauthSimulation: false,
 	unauthSimulationBounds: false,
 	unauthSimulationExitModal: false,
-	startUnauthSimulation: false,
 	openFeedbackModal: false
 };
 
@@ -282,8 +281,6 @@ const DemoPage: FC = () => {
 			<UnauthSimulation
 				mapRef={mapRef}
 				setShowUnauthSimulation={b => setShow(s => ({ ...s, unauthSimulation: b }))}
-				showStartUnauthSimulation={show.startUnauthSimulation}
-				setShowStartUnauthSimulation={b => setShow(s => ({ ...s, startUnauthSimulation: b }))}
 				startSimulation={startSimulation}
 				setStartSimulation={setStartSimulation}
 				setShowUnauthSimulationBounds={b => setShow(s => ({ ...s, unauthSimulationBounds: b }))}
@@ -294,7 +291,7 @@ const DemoPage: FC = () => {
 				geolocateControlRef={geolocateControlRef}
 			/>
 		),
-		[confirmCloseUnauthSimulation, isUnauthNotifications, show.startUnauthSimulation, startSimulation]
+		[confirmCloseUnauthSimulation, isUnauthNotifications, startSimulation]
 	);
 
 	const handleLogoClick = () => window.open(AWS_LOCATION, "_self");
@@ -399,9 +396,6 @@ const DemoPage: FC = () => {
 							onShowAboutModal={() => setShow(s => ({ ...s, about: true }))}
 							onShowUnauthSimulation={() => setShow(s => ({ ...s, unauthSimulation: true }))}
 							setShowUnauthSimulation={b => setShow(s => ({ ...s, unauthSimulation: b }))}
-							showStartUnauthSimulation={show.startUnauthSimulation}
-							setShowStartUnauthSimulation={b => setShow(s => ({ ...s, startUnauthSimulation: b }))}
-							show={show}
 							setShow={setShow}
 							handleLogoClick={handleLogoClick}
 							startSimulation={startSimulation}

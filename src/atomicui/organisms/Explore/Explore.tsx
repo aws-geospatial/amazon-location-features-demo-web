@@ -28,6 +28,7 @@ import {
 } from "@demo/assets/svgs";
 import { appConfig } from "@demo/core/constants";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
+import { useUnauthSimulation } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { ResponsiveUIEnum } from "@demo/types/Enums";
@@ -114,12 +115,15 @@ const Explore: FC<ExploreProps> = ({
 	const { setBottomSheetMinHeight, setBottomSheetHeight, bottomSheetCurrentHeight = 0 } = useBottomSheet();
 	const { isDesktopBrowser } = useDeviceMediaQuery();
 	const navigate = useNavigate();
+	const { setHideGeofenceTrackerShortcut } = useUnauthSimulation();
 
 	const onClickUnauthSimulation = useCallback(() => {
 		onCloseSidebar();
 		onShowUnauthSimulation();
 		updateUIInfo(ResponsiveUIEnum.non_start_unauth_simulation);
-	}, [onCloseSidebar, onShowUnauthSimulation, updateUIInfo]);
+		setTimeout(() => updateUIInfo(ResponsiveUIEnum.before_start_unauth_simulation), 20);
+		setHideGeofenceTrackerShortcut(true);
+	}, [onCloseSidebar, onShowUnauthSimulation, setHideGeofenceTrackerShortcut, updateUIInfo]);
 
 	const onClickSettings = useCallback(() => {
 		onCloseSidebar();

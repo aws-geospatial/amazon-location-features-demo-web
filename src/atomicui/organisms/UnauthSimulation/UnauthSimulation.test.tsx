@@ -14,8 +14,6 @@ const mockProps: UnauthSimulationProps = {
 	},
 	geolocateControlRef: { current: { trigger: jest.fn() } as unknown as GeolocateControlRef },
 	setShowUnauthSimulation: jest.fn(),
-	showStartUnauthSimulation: true,
-	setShowStartUnauthSimulation: jest.fn(),
 	startSimulation: false,
 	setStartSimulation: jest.fn(),
 	setShowUnauthSimulationBounds: jest.fn(),

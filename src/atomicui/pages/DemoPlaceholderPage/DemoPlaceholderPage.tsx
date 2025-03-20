@@ -61,8 +61,6 @@ const DemoPlaceholderPage: FC<DemoPlaceholderPageProps> = ({ show, value, setVal
 								geolocateControlRef={{ current: null }}
 								setShowUnauthSimulation={() => {}}
 								setShowUnauthSimulationBounds={() => {}}
-								showStartUnauthSimulation={false}
-								setShowStartUnauthSimulation={() => {}}
 								startSimulation={false}
 								setStartSimulation={() => {}}
 								isNotifications={false}

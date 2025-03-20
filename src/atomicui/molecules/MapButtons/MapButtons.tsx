@@ -54,7 +54,7 @@ const MapButtons: FC<MapButtonsProps> = ({
 	const { isMobile, isDesktop } = useDeviceMediaQuery();
 	const { t } = useTranslation();
 	const { ui } = useBottomSheet();
-	const { hideGeofenceTrackerShortcut } = useUnauthSimulation();
+	const { hideGeofenceTrackerShortcut, setHideGeofenceTrackerShortcut } = useUnauthSimulation();
 
 	const isColorSchemeDisabled = useMemo(
 		() => [MapStyleEnum.HYBRID, MapStyleEnum.SATELLITE].includes(mapStyle),
@@ -91,6 +91,7 @@ const MapButtons: FC<MapButtonsProps> = ({
 	const onClickUnauthSimulation = () => {
 		onCloseSidebar();
 		onSetShowUnauthSimulation(!isUnauthSimulationOpen);
+		setHideGeofenceTrackerShortcut(true);
 	};
 
 	const handleMapStyleChange = useCallback(

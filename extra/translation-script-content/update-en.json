@@ -1,1 +1,8 @@
-{}
+{
+	"navigate": {
+		"text": "Navigate"
+	},
+	"start_unauth_simulation__desc": {
+		"text": "Enter the trackers simulation to view the path across Vancouver streets that crosses geofence"
+	}
+}

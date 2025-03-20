@@ -20,7 +20,7 @@ import { IconClose, IconNotificationBell } from "@demo/assets/svgs";
 import { ConfirmationModal } from "@demo/atomicui/molecules";
 import appConfig from "@demo/core/constants/appConfig";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
-import { useGeofence, useMap, usePersistedData, useRoute } from "@demo/hooks";
+import { useGeofence, useMap, usePersistedData, useRoute, useUnauthSimulation } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { ShowStateType } from "@demo/types";
@@ -55,10 +55,7 @@ interface IProps {
 	onShowAboutModal: () => void;
 	onShowUnauthSimulation: () => void;
 	setShowUnauthSimulation: (b: boolean) => void;
-	setShowStartUnauthSimulation: (b: boolean) => void;
-	showStartUnauthSimulation: boolean;
 	handleLogoClick: () => Window | null;
-	show: ShowStateType;
 	setShow: Dispatch<SetStateAction<ShowStateType>>;
 	startSimulation: boolean;
 	setStartSimulation: Dispatch<SetStateAction<boolean>>;
@@ -85,9 +82,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	onShowAboutModal,
 	onShowUnauthSimulation,
 	setShowUnauthSimulation,
-	setShowStartUnauthSimulation,
 	handleLogoClick,
-	show,
 	setShow,
 	startSimulation,
 	setStartSimulation,
@@ -122,6 +117,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	const [arrowDirection, setArrowDirection] = useState("no-dragging");
 	const prevBottomSheetHeightRef = useRef(bottomSheetCurrentHeight);
 	const bottomSheetRef = useRef<RefHandles | null>(null);
+	const { setHideGeofenceTrackerShortcut } = useUnauthSimulation();
 
 	const resetToExplore = useCallback(() => {
 		setUI(ResponsiveUIEnum.explore);
@@ -229,8 +225,6 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 			<UnauthSimulation
 				mapRef={mapRef}
 				setShowUnauthSimulation={b => setShow(s => ({ ...s, unauthSimulation: b }))}
-				showStartUnauthSimulation={show.startUnauthSimulation}
-				setShowStartUnauthSimulation={b => setShow(s => ({ ...s, startUnauthSimulation: b }))}
 				startSimulation={startSimulation}
 				setStartSimulation={setStartSimulation}
 				setShowUnauthSimulationBounds={b => setShow(s => ({ ...s, unauthSimulationBounds: b }))}
@@ -249,7 +243,6 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 			setIsNotifications,
 			setShow,
 			setStartSimulation,
-			show.startUnauthSimulation,
 			startSimulation,
 			geolocateControlRef
 		]
@@ -432,17 +425,19 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 	const footerHeight = useCallback((maxHeight: number) => calculatePixelValue(maxHeight, 50), [calculatePixelValue]);
 
 	const onCloseHandler = useCallback(() => {
-		setShowUnauthSimulationBounds(false);
-		setShowStartUnauthSimulation(false);
 		setShowUnauthSimulation(false);
+		setHideGeofenceTrackerShortcut(false);
 		setConfirmCloseSimulation(false);
+		setStartSimulation(false);
+		setShowUnauthSimulationBounds(false);
 		resetToExplore();
 		geolocateControlRef.current?.trigger();
 	}, [
-		setShowUnauthSimulationBounds,
-		setShowStartUnauthSimulation,
 		setShowUnauthSimulation,
+		setHideGeofenceTrackerShortcut,
 		setConfirmCloseSimulation,
+		setStartSimulation,
+		setShowUnauthSimulationBounds,
 		resetToExplore,
 		geolocateControlRef
 	]);

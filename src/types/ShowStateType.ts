@@ -7,6 +7,5 @@ export type ShowStateType = {
 	unauthSimulation: boolean;
 	unauthSimulationBounds: boolean;
 	unauthSimulationExitModal: boolean;
-	startUnauthSimulation: boolean;
 	openFeedbackModal: boolean;
 };

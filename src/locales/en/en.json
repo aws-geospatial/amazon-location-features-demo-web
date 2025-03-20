@@ -2811,7 +2811,7 @@
     "text": "Trackers and Geofences"
   },
   "start_unauth_simulation__desc": {
-    "text": "Enter the tracking simulation to view the path across Vancouver streets that crosses geofence"
+    "text": "Enter the trackers simulation to view the path across Vancouver streets that crosses geofence"
   },
   "start_unauth_simulation__info1_desc": {
     "text": "Visualize your history on the map"

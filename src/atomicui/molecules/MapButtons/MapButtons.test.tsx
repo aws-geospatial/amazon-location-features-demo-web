@@ -48,7 +48,8 @@ const mockUseMapData = {
 };
 
 const mockUseUnauthSimulationData = {
-	hideGeofenceTrackerShortcut: false
+	hideGeofenceTrackerShortcut: false,
+	setHideGeofenceTrackerShortcut: jest.fn()
 };
 
 jest.mock("@demo/hooks", () => ({
