@@ -15,6 +15,7 @@ import {
 	RouteVehicleLegDetails,
 	RouteVehicleTravelStep
 } from "@aws-sdk/client-geo-routes";
+import { decodeToLineStringFeature } from "@aws/polyline";
 import {
 	IconArrowDownUp,
 	IconCar,
@@ -40,6 +41,7 @@ import { InputType, MapUnitEnum, RouteDataType, RouteOptionsType, SuggestionType
 import { AnalyticsEventActionsEnum, ResponsiveUIEnum, TriggeredByEnum, UserAgentEnum } from "@demo/types/Enums";
 import { getConvertedDistance, isUserDeviceIsAndroid } from "@demo/utils";
 import { humanReadableTime } from "@demo/utils/dateTimeUtils";
+import { LineString } from "@turf/turf";
 import { isAndroid, isIOS } from "react-device-detect";
 import { useTranslation } from "react-i18next";
 import { Layer, LayerProps, LngLat, MapRef, Marker as ReactMapGlMarker, Source } from "react-map-gl/maplibre";
@@ -960,6 +962,11 @@ const RouteBox: FC<RouteBoxProps> = ({
 
 			Legs.forEach(({ Geometry, Type, VehicleLegDetails, PedestrianLegDetails, FerryLegDetails }, idx) => {
 				// Accumulate main line coordinates
+				if (Geometry?.Polyline) {
+					const decodedGeoJSON = decodeToLineStringFeature(Geometry?.Polyline);
+					const coordinates = decodedGeoJSON.geometry as LineString;
+					data.mainLineCoords.push(...coordinates.coordinates);
+				}
 
 				if (Geometry?.LineString) {
 					data.mainLineCoords.push(...Geometry.LineString);
