@@ -64,6 +64,7 @@ export default defineConfig(() => {
 					"@aws-sdk/client-pinpoint",
 					"@aws-sdk/credential-providers",
 					"@aws/amazon-location-utilities-auth-helper",
+					"@aws/polyline",
 					"@turf/turf",
 					"aws-amplify",
 					"aws-iot-device-sdk-v2",

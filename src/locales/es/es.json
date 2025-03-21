@@ -3898,5 +3898,23 @@
   },
   "places_routes_maps": {
     "text": "Lugares, rutas, mapas"
+  },
+  "arrive_by": {
+    "text": "Llegue por"
+  },
+  "depart_at": {
+    "text": "Salida en"
+  },
+  "leave_now": {
+    "text": "Váyase ahora"
+  },
+  "time_in_past.error": {
+    "text": "La hora seleccionada no puede estar en el pasado"
+  },
+  "date_in_past.error": {
+    "text": "La fecha seleccionada no puede estar en el pasado"
+  },
+  "leave_at": {
+    "text": "Salir en"
   }
 }

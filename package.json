@@ -44,6 +44,7 @@
 		"@aws-sdk/client-pinpoint": "^3.682.0",
 		"@aws-sdk/credential-providers": "^3.682.0",
 		"@aws/amazon-location-utilities-auth-helper": "^1.1.0",
+		"@aws/polyline": "^0.1.0",
 		"@turf/turf": "6.5.0",
 		"aws-amplify": "5.3.19",
 		"aws-iot-device-sdk-v2": "^1.20.0",
