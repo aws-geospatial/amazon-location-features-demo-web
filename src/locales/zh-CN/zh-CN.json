@@ -2807,7 +2807,7 @@
     "text": "追踪器和地理围栏"
   },
   "start_unauth_simulation__desc": {
-    "text": "进入追踪模拟，查看穿过温哥华街道的路径，穿过地理围栏"
+    "text": "进入追踪器模拟，查看穿过温哥华街道的穿越地理围栏的路径"
   },
   "start_unauth_simulation__info1_desc": {
     "text": "在地图上可视化您的历史"
@@ -3892,8 +3892,8 @@
   "avoid": {
     "text": "避免"
   },
-  "places_routes_maps": {
-    "text": "地点、路线、地图"
+  "navigate": {
+    "text": "导航"
   },
   "arrive_by": {
     "text": "抵达时间"

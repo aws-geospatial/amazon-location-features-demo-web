@@ -19,11 +19,11 @@
 
 		.maplibregl-ctrl-geolocate {
 			.maplibregl-ctrl-icon {
-				background-image: url("@demo/assets/svgs/icon-locate-me.svg") !important; // TODO: move to custom assets dir
+				background-image: url("@demo/assets/svgs/icon-locate-me.svg") !important;
 
 				@media only screen and (min-width: 1024px) {
 					&:hover {
-						background-image: url("@demo/assets/svgs/icon-locate-me-filled.svg") !important; // TODO: move to custom assets dir
+						background-image: url("@demo/assets/svgs/icon-locate-me-filled.svg") !important;
 					}
 				}
 			}
@@ -47,11 +47,11 @@
 			width: 100% !important;
 
 			.maplibregl-ctrl-icon {
-				background-image: url("@demo/assets/svgs/icon-zoom-plus.svg") !important; // TODO: move to custom assets dir
+				background-image: url("@demo/assets/svgs/icon-zoom-plus.svg") !important;
 
 				@media only screen and (min-width: 1024px) {
 					&:hover {
-						background-image: url("@demo/assets/svgs/icon-zoom-plus-filled.svg") !important; // TODO: move to custom assets dir
+						background-image: url("@demo/assets/svgs/icon-zoom-plus-filled.svg") !important;
 					}
 				}
 			}
@@ -65,11 +65,11 @@
 			}
 
 			.maplibregl-ctrl-icon {
-				background-image: url("@demo/assets/svgs/icon-minus.svg") !important; // TODO: move to custom assets dir
+				background-image: url("@demo/assets/svgs/icon-minus.svg") !important;
 
 				@media only screen and (min-width: 1024px) {
 					&:hover {
-						background-image: url("@demo/assets/svgs/icon-minus-filled.svg") !important; // TODO: move to custom assets dir
+						background-image: url("@demo/assets/svgs/icon-minus-filled.svg") !important;
 					}
 				}
 			}
