@@ -20,6 +20,7 @@ export interface DropdownElProps {
 	label?: string;
 	width?: string;
 	dataTestId?: string;
+	triggerButton?: any;
 }
 
 const DropdownEl: FC<DropdownElProps> = ({
@@ -33,7 +34,8 @@ const DropdownEl: FC<DropdownElProps> = ({
 	arrowIconColor,
 	label,
 	width = "100%",
-	dataTestId
+	dataTestId,
+	triggerButton
 }) => {
 	const [open, setOpen] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
@@ -64,7 +66,7 @@ const DropdownEl: FC<DropdownElProps> = ({
 	);
 
 	return (
-		<div ref={dropdownRef} data-testid={dataTestId} className="dropdown-container" style={{ width }}>
+		<div data-testid={dataTestId} ref={dropdownRef} className="dropdown-container" style={{ width }}>
 			<div
 				data-testid="dropdown-trigger"
 				className={
@@ -72,17 +74,23 @@ const DropdownEl: FC<DropdownElProps> = ({
 				}
 				onClick={() => setOpen(!open)}
 			>
-				<p data-testid="dropdown-label" className="dropdown-label">
-					{label || t((defaultOption as SelectOption)?.label as string) || t("dropdown__placeholder.text")}
-				</p>
-				<IconArrow
-					style={{
-						transform: open ? "rotate(180deg)" : "rotate(0deg)",
-						width: bordered ? "1rem" : "1.23rem",
-						height: bordered ? "" : "1.23rem",
-						fill: arrowIconColor ? arrowIconColor : "var(--black-color)"
-					}}
-				/>
+				{triggerButton ? (
+					<>{triggerButton}</>
+				) : (
+					<>
+						<p data-testid="dropdown-label" className="dropdown-label">
+							{label || t((defaultOption as SelectOption)?.label as string) || t("dropdown__placeholder.text")}
+						</p>
+						<IconArrow
+							style={{
+								transform: open ? "rotate(180deg)" : "rotate(0deg)",
+								width: bordered ? "1rem" : "1.23rem",
+								height: bordered ? "" : "1.23rem",
+								fill: arrowIconColor ? arrowIconColor : "var(--black-color)"
+							}}
+						/>
+					</>
+				)}
 			</div>
 			{open && (
 				<ul

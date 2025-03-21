@@ -3907,5 +3907,14 @@
   },
   "leave_now": {
     "text": "Parti adesso"
+  },
+  "time_in_past.error": {
+    "text": "L'ora selezionata non può essere passata"
+  },
+  "date_in_past.error": {
+    "text": "La data selezionata non può essere passata"
+  },
+  "leave_at": {
+    "text": "Partire alle"
   }
 }

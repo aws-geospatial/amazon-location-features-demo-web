@@ -3907,5 +3907,14 @@
   },
   "leave_now": {
     "text": "Geh jetzt"
+  },
+  "time_in_past.error": {
+    "text": "Die gewählte Zeit darf nicht in der Vergangenheit liegen"
+  },
+  "date_in_past.error": {
+    "text": "Das gewählte Datum darf nicht in der Vergangenheit liegen"
+  },
+  "leave_at": {
+    "text": "Verlassen Sie am"
   }
 }

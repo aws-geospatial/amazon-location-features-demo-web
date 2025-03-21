@@ -1,17 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import {
-	ChangeEvent,
-	FC,
-	MutableRefObject,
-	SetStateAction,
-	useCallback,
-	useEffect,
-	useMemo,
-	useRef,
-	useState
-} from "react";
+import { ChangeEvent, FC, MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button, Card, CheckboxField, Flex, Text, TextField, View } from "@aws-amplify/ui-react";
 import {
@@ -25,16 +15,15 @@ import {
 	RouteVehicleLegDetails,
 	RouteVehicleTravelStep
 } from "@aws-sdk/client-geo-routes";
-import { decodeToLineStringFeature } from "@aws/polyline";
 import {
 	IconArrowDownUp,
 	IconCar,
 	IconClose,
 	IconDestination,
 	IconMoreVertical,
-	IconMotorcycleSolid,
 	IconMyLocation,
 	IconPin,
+	IconScooter,
 	IconSearch,
 	IconSegment,
 	IconTruckSolid,
@@ -51,7 +40,6 @@ import { InputType, MapUnitEnum, RouteDataType, RouteOptionsType, SuggestionType
 import { AnalyticsEventActionsEnum, ResponsiveUIEnum, TriggeredByEnum, UserAgentEnum } from "@demo/types/Enums";
 import { getConvertedDistance, isUserDeviceIsAndroid } from "@demo/utils";
 import { humanReadableTime } from "@demo/utils/dateTimeUtils";
-import { LineString } from "@turf/turf";
 import { isAndroid, isIOS } from "react-device-detect";
 import { useTranslation } from "react-i18next";
 import { Layer, LayerProps, LngLat, MapRef, Marker as ReactMapGlMarker, Source } from "react-map-gl/maplibre";
@@ -69,7 +57,7 @@ const {
 const iconsByTravelMode = [
 	{ mode: TravelMode.CAR, IconComponent: IconCar },
 	{ mode: TravelMode.PEDESTRIAN, IconComponent: IconWalking },
-	{ mode: TravelMode.SCOOTER, IconComponent: IconMotorcycleSolid },
+	{ mode: TravelMode.SCOOTER, IconComponent: IconScooter },
 	{ mode: TravelMode.TRUCK, IconComponent: IconTruckSolid }
 ];
 
@@ -96,6 +84,12 @@ enum TimeSelectionMode {
 	DEPART_AT = "depart_at.text",
 	ARRIVE_BY = "arrive_by.text"
 }
+
+// Add this near the other dropdown options
+const moreActionOptions = [
+	{ value: "route_options", label: "Route Options" },
+	{ value: "time_selectors", label: "Set leave & arrival time" }
+];
 
 const RouteBox: FC<RouteBoxProps> = ({
 	mapRef,
@@ -286,13 +280,15 @@ const RouteBox: FC<RouteBoxProps> = ({
 				const uturnAvoidanceOption = isModePedestrianOrScooter ? {} : { UTurns: routeOptions.avoidUTurns };
 
 				const timeParams = (() => {
-					if (timeSelectionMode === TimeSelectionMode.LEAVE_NOW) {
-						return { DepartNow: true };
-					}
 					const dateTime = new Date(`${selectedDate}T${selectedTime}`);
-					return timeSelectionMode === TimeSelectionMode.DEPART_AT
-						? { DepartureTime: dateTime.toISOString() }
-						: { ArrivalTime: dateTime.toISOString() };
+					switch (timeSelectionMode) {
+						case TimeSelectionMode.LEAVE_NOW:
+							return { DepartNow: true };
+						case TimeSelectionMode.DEPART_AT:
+							return { DepartureTime: dateTime.toISOString() };
+						case TimeSelectionMode.ARRIVE_BY:
+							return { ArrivalTime: dateTime.toISOString() };
+					}
 				})();
 
 				const params: CalculateRoutesCommandInput = {
@@ -422,7 +418,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 						value,
 						{ longitude, latitude },
 						exact,
-						sg => {
+						(sg: any) => {
 							type === InputType.FROM
 								? setSuggestions({ ...suggestions, from: sg })
 								: setSuggestions({ ...suggestions, to: sg });
@@ -644,49 +640,67 @@ const RouteBox: FC<RouteBoxProps> = ({
 					<Flex direction="row" gap="0.5rem" data-testid="travel-time-selectors">
 						<TextField
 							label=""
-							type="date"
-							value={selectedDate}
-							onChange={(e: { target: { value: SetStateAction<string> } }) => {
-								setSelectedDate(e.target.value);
-								setRouteData(undefined);
-								setRouteDataForMobile(undefined);
-							}}
-							variation="quiet"
-							width="100%"
-							style={{
-								display: "flex",
-								alignItems: "center",
-								padding: "8px",
-								borderRadius: "8px",
-								backgroundColor: "#f5f5fa",
-								boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.1)",
-								fontSize: "1rem",
-								width: "100%"
-							}}
-						/>
-
-						<TextField
-							label=""
 							type="time"
 							value={selectedTime}
-							onChange={(e: { target: { value: SetStateAction<string> } }) => {
+							onChange={(e: { target: any }) => {
+								const selectedDateTime = new Date(`${selectedDate}T${e.target.value}`);
+								const now = new Date();
+
+								if (selectedDateTime < now) {
+									// Show error if time is in past
+									e.target.setCustomValidity(t("time_in_past.error.text"));
+									e.target.reportValidity();
+									return;
+								}
+
+								e.target.setCustomValidity("");
 								setSelectedTime(e.target.value);
 								setRouteData(undefined);
 								setRouteDataForMobile(undefined);
 							}}
 							variation="quiet"
 							width="100%"
-							style={{
-								display: "flex",
-								alignItems: "center",
-								padding: "8px",
-								borderRadius: "8px",
-								backgroundColor: "#f5f5fa",
-								boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.1)",
-								fontSize: "1rem",
-								width: "100%"
-							}}
+							className="travel-time-selector"
 						/>
+
+						<div className="travel-date-selector">
+							<TextField
+								style={{ height: "120%", minWidth: 122, boxShadow: "none !important" }}
+								label=""
+								variation="quiet"
+								width="100%"
+								value={new Date(`${selectedDate}T${selectedTime}`).toLocaleDateString("en-US", {
+									weekday: "short",
+									month: "short",
+									day: "2-digit"
+								})}
+							/>
+
+							<TextField
+								label=""
+								width={43}
+								style={{ height: "100%", boxShadow: "none !important" }}
+								type="date"
+								value={selectedDate}
+								onChange={(e: { target: any }) => {
+									const selectedDateTime = new Date(`${e.target.value}T${selectedTime}`);
+									const now = new Date();
+
+									if (selectedDateTime < now) {
+										// Show error if date is in past
+										e.target.setCustomValidity(t("date_in_past.error.text"));
+										e.target.reportValidity();
+										return;
+									}
+
+									e.target.setCustomValidity("");
+									setSelectedDate(e.target.value);
+									setRouteData(undefined);
+									setRouteDataForMobile(undefined);
+								}}
+								variation="quiet"
+							/>
+						</div>
 					</Flex>
 				)}
 			</>
@@ -946,11 +960,6 @@ const RouteBox: FC<RouteBoxProps> = ({
 
 			Legs.forEach(({ Geometry, Type, VehicleLegDetails, PedestrianLegDetails, FerryLegDetails }, idx) => {
 				// Accumulate main line coordinates
-				if (Geometry?.Polyline) {
-					const decodedGeoJSON = decodeToLineStringFeature(Geometry?.Polyline);
-					const coordinates = decodedGeoJSON.geometry as LineString;
-					data.mainLineCoords.push(...coordinates.coordinates);
-				}
 
 				if (Geometry?.LineString) {
 					data.mainLineCoords.push(...Geometry.LineString);
@@ -1102,36 +1111,88 @@ const RouteBox: FC<RouteBoxProps> = ({
 		);
 	}, [getDuration, routeDataForMobile, setRouteData, travelMode]);
 
+	let vehicleLegDetails: any = routeData?.Routes?.[0]?.Legs?.[0].VehicleLegDetails;
+
+	if (routeData?.Routes?.[0]?.Legs?.[0].Type === "Pedestrian") {
+		vehicleLegDetails = routeData?.Routes?.[0]?.Legs?.[0].PedestrianLegDetails;
+	}
+
+	const departureTime = vehicleLegDetails?.Departure?.Time;
+
+	const [expandTimeSelectionModeMobile, setExpandTimeSelectionModeMobile] = useState(false);
+
 	if (expandRouteOptionsMobile) {
 		return (
 			<>
-				<Flex direction="column" gap="0" ref={expandRouteRef}>
-					<Flex direction="column" padding="0 1.23rem">
-						<DropdownEl
-							width="100%"
-							label={t(timeSelectionMode)}
-							defaultOption={[]}
-							dataTestId="travel-time-dropdown"
-							options={[
-								{ value: TimeSelectionMode.LEAVE_NOW, label: t("leave_now.text") },
-								{ value: TimeSelectionMode.DEPART_AT, label: t("depart_at.text") },
-								{ value: TimeSelectionMode.ARRIVE_BY, label: t("arrive_by.text") }
-							]}
-							onSelect={option => {
-								setTimeSelectionMode(option.value as TimeSelectionMode);
-								setRouteData(undefined);
-								setRouteDataForMobile(undefined);
-							}}
-						/>
+				{expandTimeSelectionModeMobile ? (
+					<>
+						<Flex direction="column" gap="0" ref={expandRouteRef}>
+							<Flex direction="column" padding="0 1.23rem">
+								<Text fontFamily="AmazonEmber-Bold" fontSize="1.23rem">
+									{t("route_box__route_options.text")}
+								</Text>
 
-						{travelTimeSelectors}
+								<View className="route-option-items">
+									<CheckboxField
+										className="option-item"
+										label={t("leave_now.text")}
+										name={t("leave_now.text")}
+										value="Leave now"
+										checked={timeSelectionMode === TimeSelectionMode.LEAVE_NOW}
+										onChange={e => {
+											setTimeSelectionMode(TimeSelectionMode.LEAVE_NOW);
+											setRouteData(undefined);
+											setRouteDataForMobile(undefined);
+										}}
+										crossOrigin={undefined}
+									/>
 
-						<Text fontFamily="AmazonEmber-Bold" fontSize="1.23rem">
-							{t("route_box__route_options.text")}
-						</Text>
-						<MoreOptionsUIMobile />
-					</Flex>
-				</Flex>
+									<CheckboxField
+										className="option-item"
+										label={t("leave_at.text")}
+										name={t("leave_at.text")}
+										value="Leave at"
+										checked={timeSelectionMode === TimeSelectionMode.DEPART_AT}
+										onChange={e => {
+											setTimeSelectionMode(TimeSelectionMode.DEPART_AT);
+											setRouteData(undefined);
+											setRouteDataForMobile(undefined);
+										}}
+										crossOrigin={undefined}
+									/>
+
+									<CheckboxField
+										className="option-item"
+										label={t("arrive_by.text")}
+										name={t("arrive_by.text")}
+										value="Arrive by"
+										checked={timeSelectionMode === TimeSelectionMode.ARRIVE_BY}
+										onChange={e => {
+											setTimeSelectionMode(TimeSelectionMode.ARRIVE_BY);
+											setRouteData(undefined);
+											setRouteDataForMobile(undefined);
+										}}
+										crossOrigin={undefined}
+									/>
+								</View>
+
+								{travelTimeSelectors}
+							</Flex>
+						</Flex>
+					</>
+				) : (
+					<>
+						<Flex direction="column" gap="0" ref={expandRouteRef}>
+							<Flex direction="column" padding="0 1.23rem">
+								<Text fontFamily="AmazonEmber-Bold" fontSize="1.23rem">
+									{t("route_box__route_options.text")}
+								</Text>
+								<MoreOptionsUIMobile />
+							</Flex>
+						</Flex>
+					</>
+				)}
+
 				{routeFromMarker}
 				{routeToMarker}
 				{routeLayer}
@@ -1171,6 +1232,18 @@ const RouteBox: FC<RouteBoxProps> = ({
 								<Tooltip id="icon-car-tooltip" />
 							</View>
 							<View
+								data-testid="travel-mode-motorcycle-icon-container"
+								className={travelMode === TravelMode.SCOOTER ? "travel-mode selected" : "travel-mode"}
+								onClick={() => handleTravelModeChange(TravelMode.SCOOTER)}
+							>
+								<IconScooter
+									data-tooltip-id="icon-motorcycle-tooltip"
+									data-tooltip-place="top"
+									data-tooltip-content={t("tooltip__calculate_route_motorcycle.text")}
+								/>
+								<Tooltip id="icon-motorcycle-tooltip" />
+							</View>
+							<View
 								data-testid="travel-mode-walking-icon-container"
 								className={travelMode === TravelMode.PEDESTRIAN ? "travel-mode selected" : "travel-mode"}
 								onClick={() => handleTravelModeChange(TravelMode.PEDESTRIAN)}
@@ -1182,18 +1255,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 								/>
 								<Tooltip id="icon-walking-tooltip" />
 							</View>
-							<View
-								data-testid="travel-mode-motorcycle-icon-container"
-								className={travelMode === TravelMode.SCOOTER ? "travel-mode selected" : "travel-mode"}
-								onClick={() => handleTravelModeChange(TravelMode.SCOOTER)}
-							>
-								<IconMotorcycleSolid
-									data-tooltip-id="icon-motorcycle-tooltip"
-									data-tooltip-place="top"
-									data-tooltip-content={t("tooltip__calculate_route_motorcycle.text")}
-								/>
-								<Tooltip id="icon-motorcycle-tooltip" />
-							</View>
+
 							<View
 								data-testid="travel-mode-truck-icon-container"
 								className={travelMode === TravelMode.TRUCK ? "travel-mode selected" : "travel-mode"}
@@ -1265,19 +1327,33 @@ const RouteBox: FC<RouteBoxProps> = ({
 						</Flex>
 					</Flex>
 					{!isDesktop && (
-						<Flex className="travel-mode-button-container">
+						<Flex style={{ justifyContent: "center", alignItems: "center" }}>
 							{!isInputFocused && isBothInputFilled && (
-								<Flex
-									data-testid="more-action-icon-container"
-									className="swap-icon-container more-action-icon-container"
-									onClick={() => {
-										setExpandRouteOptionsMobile && setExpandRouteOptionsMobile(true);
+								<DropdownEl
+									width="50px"
+									dataTestId="more-actions-dropdown"
+									label=""
+									triggerButton={
+										<Flex
+											data-testid="more-action-icon-container"
+											className="swap-icon-container more-action-icon-container"
+										>
+											<IconMoreVertical className="icon-more-vertical" />
+										</Flex>
+									}
+									options={moreActionOptions}
+									onSelect={option => {
+										if (option.value === "route_options") {
+											setExpandRouteOptionsMobile && setExpandRouteOptionsMobile(true);
+											setExpandTimeSelectionModeMobile(false);
+										} else if (option.value === "time_selectors") {
+											setExpandRouteOptionsMobile && setExpandRouteOptionsMobile(true);
+											setExpandTimeSelectionModeMobile(true);
+										}
 									}}
-								>
-									<IconMoreVertical className="icon-more-vertical" />
-								</Flex>
+								/>
 							)}
-							{renderTravelModes}
+							<Flex className="travel-mode-button-container">{renderTravelModes}</Flex>
 						</Flex>
 					)}
 					{isDesktop && renderRouteOptionsContainer}
@@ -1320,76 +1396,77 @@ const RouteBox: FC<RouteBoxProps> = ({
 							className={`route-data-container ${isDesktop ? "bottom-border-radius" : ""}`}
 							maxHeight={!isDesktop ? bottomSheetCurrentHeight - 230 : "100%"}
 						>
-							{isDesktop ? (
-								<View className="route-info">
-									{travelMode === TravelMode.CAR ? (
-										<IconCar />
-									) : travelMode === TravelMode.TRUCK ? (
-										<IconTruckSolid />
-									) : travelMode === TravelMode.PEDESTRIAN ? (
-										<IconWalking />
-									) : (
-										<IconMotorcycleSolid />
-									)}
-									<View className="travel-and-distance">
-										<View className="selected-travel-mode">
-											<Text className="dark-text">
-												{travelMode === TravelMode.CAR ||
-												travelMode === TravelMode.TRUCK ||
-												travelMode === TravelMode.SCOOTER
-													? t("route_box__drive.text")
-													: t("route_box__walk.text")}
-											</Text>
-											<View className="separator" />
-											<Text className="grey-text">{t("route_box__selected.text")}</Text>
-										</View>
+							<View className={`route-info ${isDesktop ? "" : "route-info-mobile"}`}>
+								{isDesktop && (
+									<>
+										{travelMode === TravelMode.CAR ? (
+											<IconCar />
+										) : travelMode === TravelMode.TRUCK ? (
+											<IconTruckSolid />
+										) : travelMode === TravelMode.PEDESTRIAN ? (
+											<IconWalking />
+										) : (
+											<IconScooter />
+										)}
+									</>
+								)}
+
+								<View className={`travel-and-distance ${isDesktop ? "" : "travel-and-distance-mobile"}`}>
+									<View className="selected-travel-mode dark-text">
+										<Text className="dark-text">
+											{humanReadableTime(routeData.Routes![0].Summary!.Duration! * 1000, currentLang, t, true)}
+										</Text>
+										<View className="separator" />
+										<Text className="grey-text">{t("route_box__selected.text")}</Text>
+									</View>
+									<Flex
+										gap="0.3rem"
+										direction={isLanguageRTL ? "row-reverse" : "row"}
+										justifyContent={isLanguageRTL ? "flex-end" : "flex-start"}
+									>
+										<Text className="distance">
+											{getConvertedDistance(mapUnit, routeData.Routes![0].Summary!.Distance!)}
+										</Text>
+										<Text className="distance">
+											{mapUnit === METRIC ? t("geofence_box__km__short.text") : t("geofence_box__mi__short.text")}
+										</Text>
+									</Flex>
+
+									{timeSelectionMode === TimeSelectionMode.ARRIVE_BY && (
 										<Flex
 											gap="0.3rem"
 											direction={isLanguageRTL ? "row-reverse" : "row"}
 											justifyContent={isLanguageRTL ? "flex-end" : "flex-start"}
 										>
+											<Text className="distance">Leave at</Text>
 											<Text className="distance">
-												{getConvertedDistance(mapUnit, routeData.Routes![0].Summary!.Distance!)}
-											</Text>
-											<Text className="distance">
-												{mapUnit === METRIC ? t("geofence_box__km__short.text") : t("geofence_box__mi__short.text")}
+												{departureTime &&
+													new Date(departureTime).toLocaleString("en-US", {
+														hour: "numeric",
+														minute: "2-digit",
+														hour12: true
+													})}
 											</Text>
 										</Flex>
-									</View>
-									<View className="duration">
-										<Text className="regular-text">
-											{humanReadableTime(routeData.Routes![0].Summary!.Duration! * 1000, currentLang, t, !isDesktop)}
-										</Text>
-									</View>
-								</View>
-							) : (
-								<Flex className={"route-info-mobile  border-bottom"}>
-									<Flex className="time-and-distance">
-										<Text className="bold small-text">
-											{humanReadableTime(routeData.Routes![0].Summary!.Duration! * 1000, currentLang, t, !isDesktop)}
-										</Text>
-										<Flex gap={0}>
-											<Text className="regular small-text">
-												{getConvertedDistance(mapUnit, routeData.Routes![0].Summary!.Distance!)}
-											</Text>
-											<Text className="regular small-text">
-												&nbsp;
-												{mapUnit === METRIC ? t("geofence_box__km__short.text") : t("geofence_box__mi__short.text")}
-											</Text>
-										</Flex>
-									</Flex>
-									<Flex grow={1} />
-									{isUserDeviceIsAndroid() === ANDROID && (
-										<Button
-											variation="primary"
-											className="go-button bold"
-											onClick={() => window.open(GOOGLE_PLAY_STORE_LINK, "_blank")}
-										>
-											{t("go.text")}
-										</Button>
 									)}
-								</Flex>
-							)}
+								</View>
+
+								<View className="duration">
+									<Text className="regular-text"></Text>
+								</View>
+
+								<Flex grow={1} />
+
+								{isUserDeviceIsAndroid() === ANDROID && (
+									<Button
+										variation="primary"
+										className="go-button bold"
+										onClick={() => window.open(GOOGLE_PLAY_STORE_LINK, "_blank")}
+									>
+										{t("go.text")}
+									</Button>
+								)}
+							</View>
 							{renderSteps}
 						</View>
 					)}
