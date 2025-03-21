@@ -14,7 +14,7 @@ const useRouteService = () => {
 			calculateRoutes: async (params: CalculateRoutesCommandInput) => {
 				const input: CalculateRoutesCommandInput = {
 					...params,
-					LegGeometryFormat: "FlexiblePolyline",
+					LegGeometryFormat: "Simple",
 					TravelStepType: "Default",
 					LegAdditionalFeatures: ["TravelStepInstructions", "Summary"],
 					MaxAlternatives: 0
