@@ -121,7 +121,6 @@ const Explore: FC<ExploreProps> = ({
 		onCloseSidebar();
 		onShowUnauthSimulation();
 		updateUIInfo(ResponsiveUIEnum.non_start_unauth_simulation);
-		setTimeout(() => updateUIInfo(ResponsiveUIEnum.before_start_unauth_simulation), 50);
 		setHideGeofenceTrackerShortcut(true);
 	}, [onCloseSidebar, onShowUnauthSimulation, setHideGeofenceTrackerShortcut, updateUIInfo]);
 
@@ -736,7 +735,21 @@ const Explore: FC<ExploreProps> = ({
 			{
 				text: t("trackers.text"),
 				icon: <IconRadar width="1.53rem" height="1.53rem" />,
-				onClick: () => onClickUnauthSimulation()
+				onClick: () => {
+					if ((isAndroid || isIOS) && !isDesktopBrowser) {
+						if (bottomSheetCurrentHeight < window.innerHeight * 0.9) {
+							setBottomSheetHeight(window.innerHeight);
+							setTimeout(() => {
+								bottomSheetRef?.current?.snapTo(window.innerHeight);
+							}, 0);
+							setTimeout(() => {
+								setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+							}, 200);
+						}
+					}
+
+					onClickUnauthSimulation();
+				}
 			}
 		],
 		[
