@@ -96,7 +96,6 @@ const DropdownEl: FC<DropdownElProps> = ({
 				<ul
 					data-testid="dropdown-options"
 					className={bordered ? "options bordered" : `${isRadioBox ? "options radioBox" : "options"}`}
-					style={{ left: 0 }}
 				>
 					{isRadioBox ? (
 						<>
@@ -155,9 +154,7 @@ const DropdownEl: FC<DropdownElProps> = ({
 											onChange={() => handleClick(option)}
 										/>
 									) : (
-										<span style={{ fontSize: 16 }} className="option-checkbox">
-											{t(option.label)}
-										</span>
+										<span className="option-checkbox">{t(option.label)}</span>
 									)}
 								</li>
 							))}
