@@ -121,7 +121,7 @@ const Explore: FC<ExploreProps> = ({
 		onCloseSidebar();
 		onShowUnauthSimulation();
 		updateUIInfo(ResponsiveUIEnum.non_start_unauth_simulation);
-		setTimeout(() => updateUIInfo(ResponsiveUIEnum.before_start_unauth_simulation), 20);
+		setTimeout(() => updateUIInfo(ResponsiveUIEnum.before_start_unauth_simulation), 50);
 		setHideGeofenceTrackerShortcut(true);
 	}, [onCloseSidebar, onShowUnauthSimulation, setHideGeofenceTrackerShortcut, updateUIInfo]);
 
