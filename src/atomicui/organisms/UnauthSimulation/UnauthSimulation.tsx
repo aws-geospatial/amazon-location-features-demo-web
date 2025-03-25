@@ -287,18 +287,22 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 							variation="primary"
 							padding="0.923rem 0"
 							onClick={() => {
+								console.log("CLICKED");
 								if (isDesktop) {
 									setStartSimulation(true);
 									setShowUnauthSimulationBounds(true);
 								} else {
 									setStartSimulation(true);
-									setBottomSheetMinHeight(BottomSheetHeights.routes.max);
-									if (bottomSheetCurrentHeight < window.innerHeight * 0.4) {
-										setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
-										setBottomSheetHeight(window.innerHeight * 0.4);
-									}
-									setUI(ResponsiveUIEnum.unauth_simulation);
 									setShowUnauthSimulationBounds(true);
+									setUI(ResponsiveUIEnum.unauth_simulation);
+
+									setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
+									setBottomSheetHeight(window.innerHeight * 0.4);
+
+									setTimeout(() => {
+										setBottomSheetMinHeight(BottomSheetHeights.search.min);
+										setBottomSheetHeight(window.innerHeight);
+									}, 500);
 								}
 							}}
 							fontFamily="AmazonEmber-Medium"
@@ -379,11 +383,13 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 
 	const BeforeStartSimulation = () => (
 		<>
-			<Flex data-testid="before-start-simulation" justifyContent="flex-end" padding="0.77rem">
-				<Flex className="card-close">
-					<IconClose className="grey-icon" width={20} height={20} onClick={onCloseHandler} />
+			{isDesktop && (
+				<Flex data-testid="before-start-simulation" justifyContent="flex-end" padding="0.77rem">
+					<Flex className="card-close">
+						<IconClose className="grey-icon" width={20} height={20} onClick={onCloseHandler} />
+					</Flex>
 				</Flex>
-			</Flex>
+			)}
 			<StartSimulation />
 		</>
 	);
