@@ -668,7 +668,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 
 						<div className="travel-date-selector">
 							<TextField
-								style={{ height: "120%", minWidth: 122, boxShadow: "none !important" }}
+								className="date-formatted-view"
 								label=""
 								variation="quiet"
 								width="100%"
@@ -682,7 +682,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 							<TextField
 								label=""
 								width={43}
-								style={{ height: "100%", boxShadow: "none !important" }}
+								className="date-input"
 								type="date"
 								value={selectedDate}
 								onChange={(e: { target: any }) => {
