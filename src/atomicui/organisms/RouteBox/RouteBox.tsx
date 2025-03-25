@@ -1,5 +1,6 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { ChangeEvent, FC, MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -707,7 +708,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 				)}
 			</>
 		),
-		[setRouteData, timeSelectionMode, selectedDate, selectedTime]
+		[timeSelectionMode, selectedTime, selectedDate, setRouteData, t]
 	);
 
 	const renderRouteOptionsContainer = useMemo(
@@ -1118,7 +1119,8 @@ const RouteBox: FC<RouteBoxProps> = ({
 		);
 	}, [getDuration, routeDataForMobile, setRouteData, travelMode]);
 
-	let vehicleLegDetails: any = routeData?.Routes?.[0]?.Legs?.[0].VehicleLegDetails;
+	let vehicleLegDetails: RouteVehicleLegDetails | RoutePedestrianLegDetails | undefined =
+		routeData?.Routes?.[0]?.Legs?.[0].VehicleLegDetails;
 
 	if (routeData?.Routes?.[0]?.Legs?.[0].Type === "Pedestrian") {
 		vehicleLegDetails = routeData?.Routes?.[0]?.Legs?.[0].PedestrianLegDetails;
@@ -1146,7 +1148,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 										name={t("leave_now.text")}
 										value="Leave now"
 										checked={timeSelectionMode === TimeSelectionMode.LEAVE_NOW}
-										onChange={e => {
+										onChange={() => {
 											setTimeSelectionMode(TimeSelectionMode.LEAVE_NOW);
 											setRouteData(undefined);
 											setRouteDataForMobile(undefined);
@@ -1160,7 +1162,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 										name={t("leave_at.text")}
 										value="Leave at"
 										checked={timeSelectionMode === TimeSelectionMode.DEPART_AT}
-										onChange={e => {
+										onChange={() => {
 											setTimeSelectionMode(TimeSelectionMode.DEPART_AT);
 											setRouteData(undefined);
 											setRouteDataForMobile(undefined);
@@ -1174,7 +1176,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 										name={t("arrive_by.text")}
 										value="Arrive by"
 										checked={timeSelectionMode === TimeSelectionMode.ARRIVE_BY}
-										onChange={e => {
+										onChange={() => {
 											setTimeSelectionMode(TimeSelectionMode.ARRIVE_BY);
 											setRouteData(undefined);
 											setRouteDataForMobile(undefined);

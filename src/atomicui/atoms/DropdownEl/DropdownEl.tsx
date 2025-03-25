@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { FC, useCallback, useEffect, useRef, useState } from "react";
+import { FC, ReactNode, useCallback, useEffect, useRef, useState } from "react";
 
 import { CheckboxField, Radio, RadioGroupField } from "@aws-amplify/ui-react";
 import { IconArrow } from "@demo/assets/svgs";
@@ -20,7 +20,7 @@ export interface DropdownElProps {
 	label?: string;
 	width?: string;
 	dataTestId?: string;
-	triggerButton?: any;
+	triggerButton?: ReactNode;
 }
 
 const DropdownEl: FC<DropdownElProps> = ({
