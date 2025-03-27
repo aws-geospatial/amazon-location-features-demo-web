@@ -1463,16 +1463,6 @@ const RouteBox: FC<RouteBoxProps> = ({
 								</View>
 
 								<Flex grow={1} />
-
-								{isUserDeviceIsAndroid() === ANDROID && (
-									<Button
-										variation="primary"
-										className="go-button bold"
-										onClick={() => window.open(GOOGLE_PLAY_STORE_LINK, "_blank")}
-									>
-										{t("go.text")}
-									</Button>
-								)}
 							</View>
 							{renderSteps}
 						</View>
