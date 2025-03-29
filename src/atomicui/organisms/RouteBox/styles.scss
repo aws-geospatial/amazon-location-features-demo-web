@@ -616,6 +616,17 @@
 	display: flex;
 	background: #f5f5fa;
 	border-radius: 8px;
+
+	.date-formatted-view {
+		height: 120%; 
+		min-width: 122;
+		box-shadow: none !important;
+	}
+
+	.date-input {
+		height: 100%;
+		box-shadow: none !important;
+	}
 }
 
 .route-option-items {

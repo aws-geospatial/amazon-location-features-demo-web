@@ -6,16 +6,16 @@ export default defineConfig({
 	defaultCommandTimeout: 20000,
 	viewportWidth: 1440,
 	viewportHeight: 733,
-	retries: 3,
+	retries: 0,
 	video: false,
 	experimentalMemoryManagement: true,
 	env: {
 		browserPermissions: {
 			notifications: "allow",
-			geolocation: "allow"
+			geolocation: "allow",
+			popups: "allow"
 		}
 	},
-	chromeWebSecurity: false,
 	e2e: {
 		setupNodeEvents(on, config) {
 			on("task", {
@@ -50,21 +50,6 @@ export default defineConfig({
 			reportPageTitle: "ALS E2E Report",
 			embeddedScreenshots: true,
 			inlineAssets: true
-		},
-		chromeWebSecurity: false,
-		env: {
-			browserPermissions: {
-				notifications: "allow",
-				geolocation: "allow",
-				camera: "block",
-				microphone: "block",
-				images: "allow",
-				javascript: "allow",
-				popups: "allow",
-				plugins: "allow",
-				cookies: "allow",
-				chromeWebSecurity: false
-			}
 		}
 	}
 });
