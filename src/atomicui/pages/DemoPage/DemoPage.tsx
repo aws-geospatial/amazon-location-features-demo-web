@@ -4,6 +4,7 @@
 import { FC, MutableRefObject, lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Flex, View } from "@aws-amplify/ui-react";
+import { decodeToLineStringFeature } from "@aws/polyline";
 import { IconLocateMe, LogoDark, LogoLight } from "@demo/assets/svgs";
 import { SearchBox } from "@demo/atomicui/organisms/SearchBox";
 import { appConfig } from "@demo/core/constants";
@@ -22,6 +23,7 @@ import { ShowStateType } from "@demo/types";
 import { MapColorSchemeEnum, ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { getBoundsFromLineString } from "@demo/utils";
 import { errorHandler } from "@demo/utils/errorHandler";
+import { LineString } from "@turf/turf";
 import type { GeolocateControl as GeolocateControlRef } from "maplibre-gl";
 import { useTranslation } from "react-i18next";
 import {
@@ -199,7 +201,15 @@ const DemoPage: FC = () => {
 			const ls: number[][] = [];
 
 			routeData.Routes[0].Legs.forEach(({ Geometry }) => {
-				Geometry?.LineString && Geometry.LineString.length > 0 && ls.push(...Geometry.LineString);
+				if (Geometry?.Polyline) {
+					const decodedGeoJSON = decodeToLineStringFeature(Geometry?.Polyline);
+					const g = decodedGeoJSON.geometry as LineString;
+					ls.push(...g.coordinates);
+				}
+
+				if (Geometry?.LineString) {
+					Geometry.LineString.length > 0 && ls.push(...Geometry.LineString);
+				}
 			});
 
 			const bounds = getBoundsFromLineString(ls);

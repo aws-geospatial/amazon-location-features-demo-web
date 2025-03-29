@@ -3894,5 +3894,23 @@
   },
   "navigate": {
     "text": "导航"
+  },
+  "arrive_by": {
+    "text": "抵达时间"
+  },
+  "depart_at": {
+    "text": "出发地点"
+  },
+  "leave_now": {
+    "text": "立即离开"
+  },
+  "time_in_past.error": {
+    "text": "所选时间不能在过去"
+  },
+  "date_in_past.error": {
+    "text": "所选日期不能是过去的日期"
+  },
+  "leave_at": {
+    "text": "离开这里"
   }
 }

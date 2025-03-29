@@ -3898,5 +3898,23 @@
   },
   "navigate": {
     "text": "Navigate"
+  },
+  "arrive_by": {
+    "text": "Arrive by"
+  },
+  "depart_at": {
+    "text": "Leave at"
+  },
+  "leave_now": {
+    "text": "Leave now"
+  },
+  "time_in_past.error": {
+    "text": "Selected time cannot be in the past"
+  },
+  "date_in_past.error": {
+    "text": "Selected date cannot be in the past"
+  },
+  "leave_at": {
+    "text": "Leave at"
   }
 }

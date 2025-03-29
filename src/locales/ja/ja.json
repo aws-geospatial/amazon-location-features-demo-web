@@ -3898,5 +3898,23 @@
   },
   "navigate": {
     "text": "ナビゲート"
+  },
+  "arrive_by": {
+    "text": "までに到着"
+  },
+  "depart_at": {
+    "text": "出発"
+  },
+  "leave_now": {
+    "text": "今すぐ出発"
+  },
+  "time_in_past.error": {
+    "text": "選択した時間が過去のものであってはなりません"
+  },
+  "date_in_past.error": {
+    "text": "選択した日付は過去の日付であってはなりません"
+  },
+  "leave_at": {
+    "text": "で出発"
   }
 }

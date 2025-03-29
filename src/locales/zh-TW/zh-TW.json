@@ -3898,5 +3898,23 @@
   },
   "navigate": {
     "text": "導航"
+  },
+  "arrive_by": {
+    "text": "到達"
+  },
+  "depart_at": {
+    "text": "出發地點"
+  },
+  "leave_now": {
+    "text": "立即離開"
+  },
+  "time_in_past.error": {
+    "text": "所選時間不能在過去"
+  },
+  "date_in_past.error": {
+    "text": "所選日期不能在過去"
+  },
+  "leave_at": {
+    "text": "離開地點"
   }
 }

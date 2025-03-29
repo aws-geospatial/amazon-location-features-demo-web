@@ -3898,5 +3898,23 @@
   },
   "navigate": {
     "text": "לנווט"
+  },
+  "arrive_by": {
+    "text": "הגעה עד"
+  },
+  "depart_at": {
+    "text": "יציאה ב"
+  },
+  "leave_now": {
+    "text": "עזוב עכשיו"
+  },
+  "time_in_past.error": {
+    "text": "הזמן שנבחר לא יכול להיות בעבר"
+  },
+  "date_in_past.error": {
+    "text": "התאריך הנבחר לא יכול להיות בעבר"
+  },
+  "leave_at": {
+    "text": "עזוב ב"
   }
 }
