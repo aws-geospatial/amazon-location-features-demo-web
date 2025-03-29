@@ -14,7 +14,6 @@ import {
 	IconDirections,
 	IconFaqsPrimary,
 	IconFinancialService,
-	IconGeofencePlusSolid,
 	IconGeofencesTrackers,
 	IconGlobe,
 	IconHealthcare,
@@ -29,9 +28,10 @@ import {
 } from "@demo/assets/svgs";
 import { appConfig } from "@demo/core/constants";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
+import { useUnauthSimulation } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
-import { MenuItemEnum, ResponsiveUIEnum } from "@demo/types/Enums";
+import { ResponsiveUIEnum } from "@demo/types/Enums";
 import { isAndroid, isIOS } from "react-device-detect";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -91,8 +91,7 @@ interface ExploreProps {
 	onOpenFeedbackModal: () => void;
 	onShowSettings: () => void;
 	onShowAboutModal: () => void;
-	onShowUnauthGeofenceBox: () => void;
-	onShowUnauthTrackerBox: () => void;
+	onShowUnauthSimulation: () => void;
 	bottomSheetRef?: MutableRefObject<RefHandles | null>;
 }
 
@@ -102,8 +101,7 @@ const Explore: FC<ExploreProps> = ({
 	onOpenFeedbackModal,
 	onShowSettings,
 	onShowAboutModal,
-	onShowUnauthGeofenceBox,
-	onShowUnauthTrackerBox,
+	onShowUnauthSimulation,
 	bottomSheetRef
 }) => {
 	const [isMenuExpanded, setIsMenuExpanded] = useState<{ [key: string]: boolean }>({
@@ -117,21 +115,14 @@ const Explore: FC<ExploreProps> = ({
 	const { setBottomSheetMinHeight, setBottomSheetHeight, bottomSheetCurrentHeight = 0 } = useBottomSheet();
 	const { isDesktopBrowser } = useDeviceMediaQuery();
 	const navigate = useNavigate();
+	const { setHideGeofenceTrackerShortcut } = useUnauthSimulation();
 
-	const onClickMenuItem = useCallback(
-		(menuItem: MenuItemEnum) => {
-			onCloseSidebar();
-
-			if (menuItem === MenuItemEnum.GEOFENCE) {
-				onShowUnauthGeofenceBox();
-				updateUIInfo(ResponsiveUIEnum.non_start_unauthorized_geofence);
-			} else {
-				updateUIInfo(ResponsiveUIEnum.non_start_unauthorized_tracker);
-				onShowUnauthTrackerBox();
-			}
-		},
-		[onCloseSidebar, onShowUnauthGeofenceBox, onShowUnauthTrackerBox, updateUIInfo]
-	);
+	const onClickUnauthSimulation = useCallback(() => {
+		onCloseSidebar();
+		onShowUnauthSimulation();
+		updateUIInfo(ResponsiveUIEnum.non_start_unauth_simulation);
+		setHideGeofenceTrackerShortcut(true);
+	}, [onCloseSidebar, onShowUnauthSimulation, setHideGeofenceTrackerShortcut, updateUIInfo]);
 
 	const onClickSettings = useCallback(() => {
 		onCloseSidebar();
@@ -604,7 +595,7 @@ const Explore: FC<ExploreProps> = ({
 									)
 								},
 								{
-									title: "places_routes_maps.text",
+									title: "navigate.text",
 									description: "description_demo.text",
 									onClickHandler: () => navigate(DEMO),
 									isEnabled: true,
@@ -744,19 +735,28 @@ const Explore: FC<ExploreProps> = ({
 			{
 				text: t("trackers.text"),
 				icon: <IconRadar width="1.53rem" height="1.53rem" />,
-				onClick: () => onClickMenuItem(MenuItemEnum.TRACKER)
-			},
-			{
-				text: t("geofences.text"),
-				icon: <IconGeofencePlusSolid width="1.53rem" height="1.53rem" fill="white" />,
-				onClick: () => onClickMenuItem(MenuItemEnum.GEOFENCE)
+				onClick: () => {
+					if ((isAndroid || isIOS) && !isDesktopBrowser) {
+						if (bottomSheetCurrentHeight < window.innerHeight * 0.9) {
+							setBottomSheetHeight(window.innerHeight);
+							setTimeout(() => {
+								bottomSheetRef?.current?.snapTo(window.innerHeight);
+							}, 0);
+							setTimeout(() => {
+								setBottomSheetMinHeight(BottomSheetHeights.explore.min);
+							}, 200);
+						}
+					}
+
+					onClickUnauthSimulation();
+				}
 			}
 		],
 		[
 			bottomSheetCurrentHeight,
 			bottomSheetRef,
 			isDesktopBrowser,
-			onClickMenuItem,
+			onClickUnauthSimulation,
 			setBottomSheetHeight,
 			setBottomSheetMinHeight,
 			t,

@@ -269,7 +269,7 @@ if (!SHOW_NEW_NAVIGATION) {
 					isExternalLink: false
 				},
 				{
-					label: "places_routes_maps.text",
+					label: "navigate.text",
 					link: DEMO,
 					isExternalLink: false
 				},
