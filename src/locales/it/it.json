@@ -2811,7 +2811,7 @@
     "text": "Localizzatori e geofence"
   },
   "start_unauth_simulation__desc": {
-    "text": "Entra nella simulazione di tracciamento per visualizzare il percorso che attraversa le strade di Vancouver che attraversa il geofence"
+    "text": "Entra nella simulazione dei tracker per visualizzare il percorso attraverso le strade di Vancouver che attraversa il geofence"
   },
   "start_unauth_simulation__info1_desc": {
     "text": "Visualizza la tua cronologia sulla mappa"
@@ -3896,8 +3896,8 @@
   "avoid": {
     "text": "Evitare"
   },
-  "places_routes_maps": {
-    "text": "Luoghi, percorsi, mappe"
+  "navigate": {
+    "text": "Naviga"
   },
   "arrive_by": {
     "text": "Arrivare entro"

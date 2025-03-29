@@ -2811,7 +2811,7 @@
     "text": "トラッカーとジオフェンス"
   },
   "start_unauth_simulation__desc": {
-    "text": "追跡シミュレーションを開始すると、ジオフェンスを横切るバンクーバーの道路を横切る経路が表示されます"
+    "text": "トラッカーのシミュレーションに入ると、ジオフェンスを横切るバンクーバーの道路を横切る経路が表示されます"
   },
   "start_unauth_simulation__info1_desc": {
     "text": "地図上で履歴を視覚化"
@@ -3896,8 +3896,8 @@
   "avoid": {
     "text": "避ける"
   },
-  "places_routes_maps": {
-    "text": "場所、ルート、地図"
+  "navigate": {
+    "text": "ナビゲート"
   },
   "arrive_by": {
     "text": "までに到着"

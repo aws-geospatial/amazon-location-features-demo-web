@@ -3,25 +3,18 @@ import { fireEvent, render, waitFor } from "@testing-library/react";
 import { I18nextProvider } from "react-i18next";
 import { BrowserRouter } from "react-router-dom";
 
-import Sidebar from "./Sidebar";
+import Sidebar, { SidebarProps } from "./Sidebar";
 
 Object.defineProperty(window, "location", {
 	writable: true,
 	value: { reload: jest.fn() }
 });
 
-const mockProps = {
+const mockProps: SidebarProps = {
 	onCloseSidebar: jest.fn(),
-	onOpenConnectAwsAccountModal: jest.fn(),
-	onOpenSignInModal: jest.fn(),
 	onShowSettings: jest.fn(),
 	onShowAboutModal: jest.fn(),
-	onShowAuthGeofenceBox: jest.fn(),
-	onShowAuthTrackerDisclaimerModal: jest.fn(),
-	onShowAuthTrackerBox: jest.fn(),
-	onShowUnauthSimulationDisclaimerModal: jest.fn(),
-	onShowUnauthGeofenceBox: jest.fn(),
-	onShowUnauthTrackerBox: jest.fn(),
+	onShowUnauthSimulation: jest.fn(),
 	onOpenFeedbackModal: jest.fn()
 };
 
@@ -64,17 +57,10 @@ describe("<Sidebar />", () => {
 		expect(mockProps.onCloseSidebar).toHaveBeenCalled();
 	});
 
-	it("opens the Geofence box when Geofence is clicked", () => {
+	it("opens the unauth simulation when Trackers is clicked", () => {
 		const { getByText } = renderComponent();
-		fireEvent.click(getByText("Geofence"));
-		expect(mockProps.onShowAuthGeofenceBox).toHaveBeenCalledTimes(0);
-		expect(mockProps.onCloseSidebar).toHaveBeenCalledTimes(1);
-	});
-
-	it("opens the Tracker box when Tracker is clicked", () => {
-		const { getByText } = renderComponent();
-		fireEvent.click(getByText("Tracker"));
-		expect(mockProps.onShowAuthTrackerBox).toHaveBeenCalledTimes(0);
+		fireEvent.click(getByText("Trackers"));
+		expect(mockProps.onShowUnauthSimulation).toHaveBeenCalledTimes(1);
 		expect(mockProps.onCloseSidebar).toHaveBeenCalledTimes(1);
 	});
 

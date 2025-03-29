@@ -25,8 +25,7 @@ const {
 interface UseMapManagerProps {
 	mapRef: MutableRefObject<MapRef | null>;
 	geolocateControlRef: MutableRefObject<GeolocateControlRef | null>;
-	isUnauthGeofenceBoxOpen: boolean;
-	isUnauthTrackerBoxOpen: boolean;
+	isUnauthSimulationOpen: boolean;
 	isSettingsOpen: boolean;
 	isRouteBoxOpen: boolean;
 	closeRouteBox: () => void;
@@ -36,8 +35,7 @@ interface UseMapManagerProps {
 const useMapManager = ({
 	mapRef,
 	geolocateControlRef,
-	isUnauthGeofenceBoxOpen,
-	isUnauthTrackerBoxOpen,
+	isUnauthSimulationOpen,
 	isSettingsOpen,
 	isRouteBoxOpen,
 	closeRouteBox,
@@ -150,7 +148,7 @@ const useMapManager = ({
 			const { lng, lat: latitude } = lngLat;
 			const longitude = normalizeLng(lng);
 
-			if (!isUnauthGeofenceBoxOpen && !isUnauthTrackerBoxOpen) {
+			if (!isUnauthSimulationOpen) {
 				if (!isRouteBoxOpen && !isSettingsOpen) {
 					marker && setMarker(undefined);
 					selectedMarker && setSelectedMarker(undefined);
@@ -163,8 +161,7 @@ const useMapManager = ({
 		[
 			isRouteBoxOpen,
 			isSettingsOpen,
-			isUnauthGeofenceBoxOpen,
-			isUnauthTrackerBoxOpen,
+			isUnauthSimulationOpen,
 			mapRef,
 			marker,
 			selectedMarker,
