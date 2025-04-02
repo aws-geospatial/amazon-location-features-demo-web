@@ -287,7 +287,6 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 							variation="primary"
 							padding="0.923rem 0"
 							onClick={() => {
-								console.log("CLICKED");
 								if (isDesktop) {
 									setStartSimulation(true);
 									setShowUnauthSimulationBounds(true);
@@ -323,7 +322,6 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 		setStartSimulation,
 		setShowUnauthSimulationBounds,
 		setBottomSheetMinHeight,
-		bottomSheetCurrentHeight,
 		setUI,
 		setBottomSheetHeight
 	]);
