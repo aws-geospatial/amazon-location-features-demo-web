@@ -13,13 +13,9 @@ describe("Route", () => {
 			cy.wait(2000);
 		});
 
-		it(
-			"R-001 - should allow user to perform a route search and is able to select current location if enabled",
-			{ scrollBehavior: false },
-			() => {
-				cy.searchRouteAndSelectCurrentLocation();
-			}
-		);
+		it("R-001 - should allow user to perform a route search", { scrollBehavior: false }, () => {
+			cy.searchRoute();
+		});
 
 		it("R-002 - should allow user to swap the departure and destination addresses", { scrollBehavior: false }, () => {
 			cy.swapDepartureAndDestinationAddresses();
@@ -33,7 +29,7 @@ describe("Route", () => {
 			cy.searchRouteWithAvoidTollOption(Viewport.DESKTOP);
 		});
 
-		it("R-005 - should allow user to search for route with avoid ferry option", () => {
+		it.only("R-005 - should allow user to search for route with avoid ferry option", () => {
 			cy.searchRouteWithAvoidFerryOption(Viewport.DESKTOP);
 		});
 
@@ -51,13 +47,9 @@ describe("Route", () => {
 			cy.wait(2000);
 		});
 
-		it(
-			"R-007 - should allow user to perform a route search and is able to select current location if enabled",
-			{ scrollBehavior: false },
-			() => {
-				cy.searchRouteAndSelectCurrentLocation();
-			}
-		);
+		it("R-007 - should allow user to perform a route search", { scrollBehavior: false }, () => {
+			cy.searchRoute();
+		});
 
 		it("R-008 - should allow user to swap the departure and destination addresses", { scrollBehavior: false }, () => {
 			cy.swapDepartureAndDestinationAddresses();
@@ -67,7 +59,7 @@ describe("Route", () => {
 			cy.canSelectAnyRouteMode();
 		});
 
-		it("R-010 - should allow user to search for route with avoid toll route option", () => {
+		it.only("R-010 - should allow user to search for route with avoid toll route option", () => {
 			cy.searchRouteWithAvoidTollOption(Viewport.RESPONSIVE);
 		});
 

@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { FC, useCallback, useEffect, useRef, useState } from "react";
+import { FC, ReactNode, useCallback, useEffect, useRef, useState } from "react";
 
 import { CheckboxField, Radio, RadioGroupField } from "@aws-amplify/ui-react";
 import { IconArrow } from "@demo/assets/svgs";
@@ -20,7 +20,7 @@ export interface DropdownElProps {
 	label?: string;
 	width?: string;
 	dataTestId?: string;
-	triggerButton?: any;
+	triggerButton?: ReactNode;
 }
 
 const DropdownEl: FC<DropdownElProps> = ({
@@ -96,7 +96,6 @@ const DropdownEl: FC<DropdownElProps> = ({
 				<ul
 					data-testid="dropdown-options"
 					className={bordered ? "options bordered" : `${isRadioBox ? "options radioBox" : "options"}`}
-					style={{ left: 0 }}
 				>
 					{isRadioBox ? (
 						<>
@@ -155,9 +154,7 @@ const DropdownEl: FC<DropdownElProps> = ({
 											onChange={() => handleClick(option)}
 										/>
 									) : (
-										<span style={{ fontSize: 16 }} className="option-checkbox">
-											{t(option.label)}
-										</span>
+										<span className="option-checkbox">{t(option.label)}</span>
 									)}
 								</li>
 							))}
