@@ -194,17 +194,12 @@
 
 		&.from-to-container-mobile {
 			margin-top: 8px;
-			// background-color: var(--light-color-2);
 			border-radius: 8px;
 			padding: 10px !important;
 			width: 100%;
 
 			.inputs-container {
 				width: 100%;
-
-				input {
-					// background-color: var(--light-color-2);
-				}
 			}
 
 			.marker-container {
@@ -458,23 +453,27 @@
 
 		.route-info {
 			display: flex;
-			align-items: center;
+			align-items: flex-start;
 			width: 100%;
-			padding: 18px 16px;
+			padding: 12px 16px;
 			border-bottom: 1px solid rgba(242, 242, 247, 1);
 			position: relative;
 
 			svg {
 				width: 20px;
 				height: 20px;
-				fill: #8e8e93;
+				fill: var(--primary-color) !important;
 			}
 
 			.travel-and-distance {
 				display: flex;
 				flex-direction: column;
 				justify-content: center;
-				margin-left: 15px;
+				margin-left: 32px;
+
+				.travel-and-distance-mobile {
+					margin-left: 15px !important;
+				}
 
 				.selected-travel-mode {
 					display: flex;
@@ -482,7 +481,7 @@
 
 					.dark-text {
 						opacity: 1 !important;
-						color: rgba(35, 47, 62, 1) !important;
+						color: var(--primary-color) !important;
 						font-family: "AmazonEmber-Bold" !important;
 						font-size: 13px !important;
 						font-style: normal !important;
@@ -502,9 +501,9 @@
 
 				.grey-text {
 					opacity: 1 !important;
-					color: rgba(142, 142, 147, 1) !important;
+					color: var(--primary-color) !important;
 					font-size: 13px !important;
-					font-family: "AmazonEmber-Regular";
+					font-family: "AmazonEmber-Bold";
 					font-style: normal !important;
 					letter-spacing: 0px !important;
 					text-align: left !important;
@@ -557,6 +556,7 @@
 
 			&.steps-container-mobile {
 				padding: 0;
+				max-height: 60vh;
 
 				.step-card-icon-container {
 					margin-left: 0;
@@ -608,6 +608,25 @@
 	border-radius: 8px;
 	background-color: #f5f5fa;
 	box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.travel-date-selector {
+	box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+	width: 100%;
+	display: flex;
+	background: #f5f5fa;
+	border-radius: 8px;
+
+	.date-formatted-view {
+		height: 120%; 
+		min-width: 122;
+		box-shadow: none !important;
+	}
+
+	.date-input {
+		height: 100%;
+		box-shadow: none !important;
+	}
 }
 
 .route-option-items {

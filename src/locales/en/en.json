@@ -3896,6 +3896,9 @@
   "avoid": {
     "text": "Avoid"
   },
+  "places_routes_maps": {
+    "text": "Places, Routes, Maps"
+  },
   "arrive_by": {
     "text": "Arrive by"
   },
@@ -3910,5 +3913,8 @@
   },
   "date_in_past.error": {
     "text": "Selected date cannot be in the past"
+  },
+  "leave_at": {
+    "text": "Leave at"
   }
 }

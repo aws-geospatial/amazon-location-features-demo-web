@@ -59,8 +59,6 @@ interface SearchBoxProps {
 	onToggleSideMenu: () => void;
 	setShowRouteBox: (b: boolean) => void;
 	isRouteBoxOpen: boolean;
-	isAuthGeofenceBoxOpen: boolean;
-	isAuthTrackerBoxOpen: boolean;
 	isSettingsOpen: boolean;
 	isStylesCardOpen: boolean;
 	isSimpleSearch?: boolean;
@@ -75,8 +73,6 @@ const SearchBox: FC<SearchBoxProps> = ({
 	onToggleSideMenu,
 	setShowRouteBox,
 	isRouteBoxOpen,
-	isAuthGeofenceBoxOpen,
-	isAuthTrackerBoxOpen,
 	isSettingsOpen,
 	isStylesCardOpen,
 	isSimpleSearch = false,
@@ -128,20 +124,11 @@ const SearchBox: FC<SearchBoxProps> = ({
 	}, [setUI, isFocused, value, isDesktop, ui]);
 
 	useEffect(() => {
-		if (isRouteBoxOpen || isAuthGeofenceBoxOpen || isAuthTrackerBoxOpen || isSettingsOpen || isStylesCardOpen) {
+		if (isRouteBoxOpen || isSettingsOpen || isStylesCardOpen) {
 			setValue("");
 			clearPoiList();
 		}
-	}, [
-		value,
-		setValue,
-		clearPoiList,
-		isRouteBoxOpen,
-		isAuthGeofenceBoxOpen,
-		isAuthTrackerBoxOpen,
-		isSettingsOpen,
-		isStylesCardOpen
-	]);
+	}, [value, setValue, clearPoiList, isRouteBoxOpen, isSettingsOpen, isStylesCardOpen]);
 
 	useEffect(() => {
 		if (!isDesktop) {

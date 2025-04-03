@@ -3896,6 +3896,9 @@
   "avoid": {
     "text": "避免"
   },
+  "places_routes_maps": {
+    "text": "地點，路線，地圖"
+  },
   "arrive_by": {
     "text": "到達"
   },
@@ -3910,5 +3913,8 @@
   },
   "date_in_past.error": {
     "text": "所選日期不能在過去"
+  },
+  "leave_at": {
+    "text": "離開地點"
   }
 }

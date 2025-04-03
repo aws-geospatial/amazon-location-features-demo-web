@@ -3,7 +3,7 @@
 
 import { useMemo } from "react";
 
-import { GeofenceGeometry, ListGeofenceResponseEntry } from "@aws-sdk/client-location";
+import { ListGeofenceResponseEntry } from "@aws-sdk/client-location";
 import { useGeofenceService } from "@demo/services";
 import { useAuthStore, useGeofenceStore } from "@demo/stores";
 import { EventTypeEnum, NotificationHistoryItemtype } from "@demo/types";
@@ -43,53 +43,12 @@ const useGeofence = () => {
 					setState({ isFetchingGeofences: false });
 				}
 			},
-			createGeofence: async (GeofenceId: string, Geometry: GeofenceGeometry) => {
-				try {
-					setState({ isCreatingGeofence: true });
-					const res = await geofenceService.putGeofence(GeofenceId, Geometry);
-					res && methods.getGeofencesList();
-					record(
-						[{ EventType: EventTypeEnum.GEOFENCE_CREATION_SUCCESSFUL, Attributes: {} }],
-						["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
-					);
-				} catch (error) {
-					record(
-						[{ EventType: EventTypeEnum.GEOFENCE_CREATION_FAILED, Attributes: {} }],
-						["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
-					);
-					errorHandler(error, t("error_handler__failed_create_geofences.text") as string);
-				} finally {
-					setState({ isCreatingGeofence: false });
-				}
-			},
-			deleteGeofence: async (GeofenceId: string) => {
-				try {
-					setState({ isDeletingGeofence: true });
-					const res = await geofenceService.deleteGeofence(GeofenceId);
-					res && methods.getGeofencesList();
-					record(
-						[{ EventType: EventTypeEnum.GEOFENCE_DELETION_SUCCESSFUL, Attributes: {} }],
-						["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
-					);
-				} catch (error) {
-					record(
-						[{ EventType: EventTypeEnum.GEOFENCE_DELETION_FAILED, Attributes: {} }],
-						["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
-					);
-					errorHandler(error, t("error_handler__failed_delete_geofences.text") as string);
-				} finally {
-					setState({ isDeletingGeofence: false });
-				}
-			},
 			evaluateGeofence: async (Position: number[], geofenceCollection?: string) => {
 				try {
 					await geofenceService.evaluateGeofence(Position, authStore.credentials!.identityId, geofenceCollection);
 				} catch (error) {
 					errorHandler(error, t("error_handler__failed_evaluate_geofences.text") as string);
 				}
-			},
-			setIsAddingGeofence: (isAddingGeofence: boolean) => {
-				setState({ isAddingGeofence });
 			},
 			setUnauthNotifications: (n: NotificationHistoryItemtype | undefined) => {
 				setState(prevState => {

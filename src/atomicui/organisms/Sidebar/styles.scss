@@ -95,20 +95,6 @@
 			fill: var(--grey-color);
 		}
 
-		.locked-item {
-			gap: 0;
-			justify-content: center;
-			align-items: center;
-			position: absolute;
-			right: 16px;
-
-			.lock-icon {
-				width: 14px;
-				height: 14px;
-				fill: var(--grey-light-color);
-			}
-		}
-
 		&:hover {
 			background: var(--hovered-menu-backround-color);
 		}
@@ -134,22 +120,6 @@
 	flex-direction: column;
 	margin-top: auto;
 	padding: 16px;
-}
-
-.button-wrapper > .disconnect-button {
-	background-color: var(--red-color);
-}
-
-.button-wrapper > .disconnect-button:hover {
-	background-color: var(--red-color);
-}
-
-.button-wrapper > .disconnect-button:active {
-	background-color: var(--red-color);
-}
-
-.button-wrapper > .disconnect-button:focus {
-	background-color: var(--red-color);
 }
 
 .list-item,
@@ -249,7 +219,6 @@
 	}
 
 	&:hover {
-		// color: red;
 		color: var(--active-menu);
 	}
 }

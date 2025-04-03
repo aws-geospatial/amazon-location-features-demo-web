@@ -3896,6 +3896,9 @@
   "avoid": {
     "text": "避ける"
   },
+  "places_routes_maps": {
+    "text": "場所、ルート、地図"
+  },
   "arrive_by": {
     "text": "までに到着"
   },
@@ -3910,5 +3913,8 @@
   },
   "date_in_past.error": {
     "text": "選択した日付は過去の日付であってはなりません"
+  },
+  "leave_at": {
+    "text": "で出発"
   }
 }

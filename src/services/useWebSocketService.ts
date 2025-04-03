@@ -12,7 +12,6 @@ import { getDomainName } from "@demo/utils/getDomainName";
 import { iot, mqtt } from "aws-iot-device-sdk-v2";
 import { equals } from "ramda";
 
-const authEvents: unknown[] = [];
 const unauthEvents: unknown[] = [];
 const { CLOSED, CONNECT, CONNECTION_FAILURE, CONNECTION_SUCCESS, DISCONNECT, ERROR, INTERRUPT, RESUME } =
 	MqttConnectionState;
@@ -25,7 +24,7 @@ const useWebSocketService = (
 	const [connectionState, setConnectionState] = useState<MqttConnectionState>(CLOSED);
 	const timeoutId = useRef<NodeJS.Timeout | null>(null);
 	const areEventListenersSet = useRef(false);
-	const { baseValues, userProvidedValues, credentials } = useAuth();
+	const { baseValues, credentials } = useAuth();
 	const { setUnauthNotifications } = useGeofence();
 
 	/* Terminate connection and subscription on unmount */
@@ -101,18 +100,18 @@ const useWebSocketService = (
 			iot.AwsIotMqttConnectionConfigBuilder.new_with_websockets()
 				.with_clean_session(false)
 				.with_client_id(credentials!.identityId)
-				.with_endpoint(getDomainName(userProvidedValues ? userProvidedValues.webSocketUrl : baseValues!.webSocketUrl))
+				.with_endpoint(getDomainName(baseValues!.webSocketUrl))
 				.with_credentials(
-					userProvidedValues ? userProvidedValues.region : baseValues!.region,
+					baseValues!.region,
 					credentials!.accessKeyId,
 					credentials!.secretAccessKey,
 					credentials!.sessionToken
 				),
-		[baseValues, credentials, userProvidedValues]
+		[baseValues, credentials]
 	);
 
 	const connectAndSubscribe = useCallback(async () => {
-		if (!mqttClient && ((baseValues && !userProvidedValues) || (userProvidedValues && credentials?.authenticated))) {
+		if (!mqttClient && baseValues) {
 			const client = new mqtt.MqttClient().new_connection(config.build());
 			setMqttClient(client);
 			try {
@@ -174,30 +173,6 @@ const useWebSocketService = (
 								type: ToastType.INFO,
 								className: `${String(trackerEventType).toLowerCase()}-geofence`
 							});
-						} else {
-							/* Auth simulation events */
-							const authEvent = { ...data };
-
-							if (authEvents.length === 0 || !authEvents.some(equals(authEvent))) {
-								showToast({
-									content:
-										i18n.dir() === "ltr"
-											? `${
-													trackerEventType === "ENTER"
-														? i18n.t("show_toast__entered.text")
-														: i18n.t("show_toast__exited.text")
-											  } ${geofenceId} ${i18n.t("geofence.text")}`
-											: `${i18n.t("geofence.text")} ${geofenceId} ${
-													trackerEventType === "ENTER"
-														? i18n.t("show_toast__entered.text")
-														: i18n.t("show_toast__exited.text")
-											  }`,
-									type: ToastType.INFO,
-									containerId: "toast-container",
-									className: `${String(trackerEventType).toLowerCase()}-geofence`
-								});
-								authEvents.push(authEvent);
-							}
 						}
 
 						record(
@@ -219,7 +194,7 @@ const useWebSocketService = (
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [mqttClient, config, credentials, baseValues, userProvidedValues]);
+	}, [mqttClient, config, credentials, baseValues]);
 
 	/* Initiate connection and subscription accordingly */
 	useEffect(() => {

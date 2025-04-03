@@ -3896,6 +3896,9 @@
   "avoid": {
     "text": "피하십시오"
   },
+  "places_routes_maps": {
+    "text": "장소, 경로, 지도"
+  },
   "arrive_by": {
     "text": "도착 시간"
   },
@@ -3910,5 +3913,8 @@
   },
   "date_in_past.error": {
     "text": "선택한 날짜는 과거일 수 없습니다."
+  },
+  "leave_at": {
+    "text": "에서 출발"
   }
 }
