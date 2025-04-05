@@ -37,6 +37,10 @@
 	.menu-icon {
 		width: 20px;
 		height: 20px;
+
+		path {
+			fill: var(--tertiary-color);
+		}
 	}
 }
 
@@ -91,8 +95,8 @@
 		height: 40px;
 		cursor: pointer;
 
-		svg:nth-child(1) {
-			fill: var(--grey-color);
+		p {
+			color: var(--tertiary-color);
 		}
 
 		&:hover {

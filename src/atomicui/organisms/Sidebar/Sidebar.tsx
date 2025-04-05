@@ -4,11 +4,9 @@
 import { FC, lazy } from "react";
 
 import { Button, Card, Flex, Text, View } from "@aws-amplify/ui-react";
-import { IconClose, IconCompass, IconGear, IconGeofence, IconInfo, IconRadar } from "@demo/assets/svgs";
+import { IconClose, IconCompass, IconGear, IconInfo, IconRadar } from "@demo/assets/svgs";
 import { appConfig, marketingMenuOptionsData } from "@demo/core/constants";
-import useBottomSheet from "@demo/hooks/useBottomSheet";
-import { MenuItemEnum } from "@demo/types";
-import { ResponsiveUIEnum } from "@demo/types/Enums";
+import { useUnauthSimulation } from "@demo/hooks";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import "./styles.scss";
@@ -20,12 +18,11 @@ const {
 	ROUTES: { DEFAULT, DEMO }
 } = appConfig;
 
-interface SidebarProps {
+export interface SidebarProps {
 	onCloseSidebar: () => void;
 	onShowSettings: () => void;
 	onShowAboutModal: () => void;
-	onShowUnauthGeofenceBox: () => void;
-	onShowUnauthTrackerBox: () => void;
+	onShowUnauthSimulation: () => void;
 	onOpenFeedbackModal: () => void;
 }
 
@@ -33,28 +30,22 @@ const Sidebar: FC<SidebarProps> = ({
 	onCloseSidebar,
 	onShowSettings,
 	onShowAboutModal,
-	onShowUnauthGeofenceBox,
-	onShowUnauthTrackerBox,
+	onShowUnauthSimulation,
 	onOpenFeedbackModal
 }) => {
 	const navigate = useNavigate();
 	const { t } = useTranslation();
-	const { setUI } = useBottomSheet();
+	const { setHideGeofenceTrackerShortcut } = useUnauthSimulation();
 
 	const onClickFeedbackButton = () => {
 		onCloseSidebar();
 		onOpenFeedbackModal();
 	};
 
-	const onClickMenuItem = (menuItem: MenuItemEnum) => {
+	const onClickUnauthSimulation = () => {
 		onCloseSidebar();
-
-		if (menuItem === MenuItemEnum.GEOFENCE) {
-			onShowUnauthGeofenceBox();
-		} else {
-			onShowUnauthTrackerBox();
-			setUI(ResponsiveUIEnum.non_start_unauthorized_tracker);
-		}
+		onShowUnauthSimulation();
+		setHideGeofenceTrackerShortcut(true);
 	};
 
 	const onClickSettings = () => {
@@ -92,15 +83,11 @@ const Sidebar: FC<SidebarProps> = ({
 					}}
 				>
 					<IconCompass className="menu-icon" />
-					<Text>{t("places_routes_maps.text")}</Text>
+					<Text>{t("navigate.text")}</Text>
 				</Flex>
-				<Flex className="link-item" onClick={() => onClickMenuItem(MenuItemEnum.GEOFENCE)}>
-					<IconGeofence className="menu-icon" />
-					<Text>{t("geofence.text")}</Text>
-				</Flex>
-				<Flex className="link-item" onClick={() => onClickMenuItem(MenuItemEnum.TRACKER)}>
+				<Flex className="link-item" onClick={() => onClickUnauthSimulation()}>
 					<IconRadar className="menu-icon" />
-					<Text>{t("tracker.text")}</Text>
+					<Text>{t("trackers.text")}</Text>
 				</Flex>
 				<Flex className="link-item" onClick={onClickSettings}>
 					<IconGear className="menu-icon" />

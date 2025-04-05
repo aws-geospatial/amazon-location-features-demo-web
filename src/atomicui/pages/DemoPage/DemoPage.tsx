@@ -19,7 +19,7 @@ import {
 } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
-import { MenuItemEnum, ShowStateType } from "@demo/types";
+import { ShowStateType } from "@demo/types";
 import { MapColorSchemeEnum, ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { getBoundsFromLineString } from "@demo/utils";
 import { errorHandler } from "@demo/utils/errorHandler";
@@ -105,11 +105,9 @@ const initShow: ShowStateType = {
 	settings: false,
 	stylesCard: false,
 	about: false,
-	unauthGeofenceBox: false,
-	unauthTrackerBox: false,
+	unauthSimulation: false,
 	unauthSimulationBounds: false,
 	unauthSimulationExitModal: false,
-	startUnauthSimulation: false,
 	openFeedbackModal: false
 };
 
@@ -143,8 +141,7 @@ const DemoPage: FC = () => {
 	} = useMapManager({
 		mapRef,
 		geolocateControlRef,
-		isUnauthGeofenceBoxOpen: show.unauthGeofenceBox,
-		isUnauthTrackerBoxOpen: show.unauthTrackerBox,
+		isUnauthSimulationOpen: show.unauthSimulation,
 		isSettingsOpen: show.settings,
 		isRouteBoxOpen: show.routeBox,
 		closeRouteBox: () => setShow(s => ({ ...s, routeBox: false })),
@@ -293,11 +290,7 @@ const DemoPage: FC = () => {
 		() => (
 			<UnauthSimulation
 				mapRef={mapRef}
-				from={show.unauthGeofenceBox ? MenuItemEnum.GEOFENCE : MenuItemEnum.TRACKER}
-				setShowUnauthGeofenceBox={b => setShow(s => ({ ...s, unauthGeofenceBox: b }))}
-				setShowUnauthTrackerBox={b => setShow(s => ({ ...s, unauthTrackerBox: b }))}
-				showStartUnauthSimulation={show.startUnauthSimulation}
-				setShowStartUnauthSimulation={b => setShow(s => ({ ...s, startUnauthSimulation: b }))}
+				setShowUnauthSimulation={b => setShow(s => ({ ...s, unauthSimulation: b }))}
 				startSimulation={startSimulation}
 				setStartSimulation={setStartSimulation}
 				setShowUnauthSimulationBounds={b => setShow(s => ({ ...s, unauthSimulationBounds: b }))}
@@ -308,13 +301,7 @@ const DemoPage: FC = () => {
 				geolocateControlRef={geolocateControlRef}
 			/>
 		),
-		[
-			confirmCloseUnauthSimulation,
-			isUnauthNotifications,
-			show.startUnauthSimulation,
-			show.unauthGeofenceBox,
-			startSimulation
-		]
+		[confirmCloseUnauthSimulation, isUnauthNotifications, startSimulation]
 	);
 
 	const handleLogoClick = () => window.open(AWS_LOCATION, "_self");
@@ -337,7 +324,7 @@ const DemoPage: FC = () => {
 				mapStyle={mapStyleWithLanguageUrl}
 				minZoom={2}
 				maxBounds={
-					(show.unauthGeofenceBox || show.unauthTrackerBox) && show.unauthSimulationBounds
+					show.unauthSimulation && show.unauthSimulationBounds
 						? isDesktop
 							? (MAX_BOUNDS.VANCOUVER.DESKTOP as LngLatBoundsLike)
 							: isTablet
@@ -366,8 +353,7 @@ const DemoPage: FC = () => {
 									onCloseSidebar={() => setShow(s => ({ ...s, sidebar: false }))}
 									onShowSettings={() => setShow(s => ({ ...s, settings: true }))}
 									onShowAboutModal={() => setShow(s => ({ ...s, about: true }))}
-									onShowUnauthGeofenceBox={() => setShow(s => ({ ...s, unauthGeofenceBox: true }))}
-									onShowUnauthTrackerBox={() => setShow(s => ({ ...s, unauthTrackerBox: true }))}
+									onShowUnauthSimulation={() => setShow(s => ({ ...s, unauthSimulation: true }))}
 									onOpenFeedbackModal={() => setShow(s => ({ ...s, openFeedbackModal: true }))}
 								/>
 							)}
@@ -377,7 +363,7 @@ const DemoPage: FC = () => {
 									setShowRouteBox={b => setShow(s => ({ ...s, routeBox: b }))}
 									isSideMenuExpanded={show.sidebar}
 								/>
-							) : show.unauthGeofenceBox || show.unauthTrackerBox ? (
+							) : show.unauthSimulation ? (
 								UnauthSimulationUI
 							) : (
 								searchBoxEl()
@@ -394,10 +380,8 @@ const DemoPage: FC = () => {
 									setOpenStylesCard={b => setShow(s => ({ ...s, stylesCard: b }))}
 									onCloseSidebar={() => setShow(s => ({ ...s, sidebar: false }))}
 									onShowGridLoader={() => setShow(s => ({ ...s, gridLoader: true }))}
-									isUnauthGeofenceBoxOpen={show.unauthGeofenceBox}
-									isUnauthTrackerBoxOpen={show.unauthTrackerBox}
-									onSetShowUnauthGeofenceBox={(b: boolean) => setShow(s => ({ ...s, unauthGeofenceBox: b }))}
-									onSetShowUnauthTrackerBox={(b: boolean) => setShow(s => ({ ...s, unauthTrackerBox: b }))}
+									isUnauthSimulationOpen={show.unauthSimulation}
+									onSetShowUnauthSimulation={(b: boolean) => setShow(s => ({ ...s, unauthSimulation: b }))}
 									onlyMapStyles
 									isHandDevice
 								/>
@@ -420,14 +404,8 @@ const DemoPage: FC = () => {
 								isMobile && setSettingsOptions(undefined);
 							}}
 							onShowAboutModal={() => setShow(s => ({ ...s, about: true }))}
-							onShowUnauthGeofenceBox={() => setShow(s => ({ ...s, unauthGeofenceBox: true }))}
-							onShowUnauthTrackerBox={() => setShow(s => ({ ...s, unauthTrackerBox: true }))}
-							setShowUnauthGeofenceBox={b => setShow(s => ({ ...s, unauthGeofenceBox: b }))}
-							setShowUnauthTrackerBox={b => setShow(s => ({ ...s, unauthTrackerBox: b }))}
-							showStartUnauthSimulation={show.startUnauthSimulation}
-							setShowStartUnauthSimulation={b => setShow(s => ({ ...s, startUnauthSimulation: b }))}
-							from={show.unauthGeofenceBox ? MenuItemEnum.GEOFENCE : MenuItemEnum.TRACKER}
-							show={show}
+							onShowUnauthSimulation={() => setShow(s => ({ ...s, unauthSimulation: true }))}
+							setShowUnauthSimulation={b => setShow(s => ({ ...s, unauthSimulation: b }))}
 							setShow={setShow}
 							handleLogoClick={handleLogoClick}
 							startSimulation={startSimulation}
@@ -452,10 +430,8 @@ const DemoPage: FC = () => {
 							setOpenStylesCard={b => setShow(s => ({ ...s, stylesCard: b }))}
 							onCloseSidebar={() => setShow(s => ({ ...s, sidebar: false }))}
 							onShowGridLoader={() => setShow(s => ({ ...s, gridLoader: true }))}
-							isUnauthGeofenceBoxOpen={show.unauthGeofenceBox}
-							isUnauthTrackerBoxOpen={show.unauthTrackerBox}
-							onSetShowUnauthGeofenceBox={(b: boolean) => setShow(s => ({ ...s, unauthGeofenceBox: b }))}
-							onSetShowUnauthTrackerBox={(b: boolean) => setShow(s => ({ ...s, unauthTrackerBox: b }))}
+							isUnauthSimulationOpen={show.unauthSimulation}
+							onSetShowUnauthSimulation={(b: boolean) => setShow(s => ({ ...s, unauthSimulation: b }))}
 						/>
 					)}
 					{isDesktop && <NavigationControl position="bottom-right" showZoom showCompass={false} />}
@@ -491,10 +467,8 @@ const DemoPage: FC = () => {
 						onShowGridLoader={() => setGridLoader(true)}
 						onlyMapStyles
 						isSettingsModal
-						isUnauthGeofenceBoxOpen={show.unauthGeofenceBox}
-						isUnauthTrackerBoxOpen={show.unauthTrackerBox}
-						onSetShowUnauthGeofenceBox={(b: boolean) => setShow(s => ({ ...s, unauthGeofenceBox: b }))}
-						onSetShowUnauthTrackerBox={(b: boolean) => setShow(s => ({ ...s, unauthTrackerBox: b }))}
+						isUnauthSimulationOpen={show.unauthSimulation}
+						onSetShowUnauthSimulation={(b: boolean) => setShow(s => ({ ...s, unauthSimulation: b }))}
 					/>
 				}
 			/>

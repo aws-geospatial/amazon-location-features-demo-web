@@ -10,7 +10,7 @@ import { appConfig } from "@demo/core/constants";
 import { useMap, useUnauthSimulation } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
-import { EventTypeEnum, MapColorSchemeEnum, MapStyleEnum, MenuItemEnum, ResponsiveUIEnum } from "@demo/types/Enums";
+import { EventTypeEnum, MapColorSchemeEnum, MapStyleEnum, ResponsiveUIEnum } from "@demo/types/Enums";
 import { record } from "@demo/utils/analyticsUtils";
 import { useTranslation } from "react-i18next";
 import { Tooltip } from "react-tooltip";
@@ -31,10 +31,8 @@ export interface MapButtonsProps {
 	onlyMapStyles?: boolean;
 	isHandDevice?: boolean;
 	isSettingsModal?: boolean;
-	isUnauthGeofenceBoxOpen: boolean;
-	isUnauthTrackerBoxOpen: boolean;
-	onSetShowUnauthGeofenceBox: (b: boolean) => void;
-	onSetShowUnauthTrackerBox: (b: boolean) => void;
+	isUnauthSimulationOpen: boolean;
+	onSetShowUnauthSimulation: (b: boolean) => void;
 }
 
 const MapButtons: FC<MapButtonsProps> = ({
@@ -46,10 +44,8 @@ const MapButtons: FC<MapButtonsProps> = ({
 	isLoading = false,
 	onlyMapStyles = false,
 	isHandDevice,
-	isUnauthGeofenceBoxOpen,
-	isUnauthTrackerBoxOpen,
-	onSetShowUnauthGeofenceBox,
-	onSetShowUnauthTrackerBox
+	isUnauthSimulationOpen,
+	onSetShowUnauthSimulation
 }) => {
 	const [isLoadingImg, setIsLoadingImg] = useState(true);
 	const stylesCardRef = useRef<HTMLDivElement | null>(null);
@@ -58,7 +54,7 @@ const MapButtons: FC<MapButtonsProps> = ({
 	const { isMobile, isDesktop } = useDeviceMediaQuery();
 	const { t } = useTranslation();
 	const { ui } = useBottomSheet();
-	const { hideGeofenceTrackerShortcut } = useUnauthSimulation();
+	const { hideGeofenceTrackerShortcut, setHideGeofenceTrackerShortcut } = useUnauthSimulation();
 
 	const isColorSchemeDisabled = useMemo(
 		() => [MapStyleEnum.HYBRID, MapStyleEnum.SATELLITE].includes(mapStyle),
@@ -92,16 +88,10 @@ const MapButtons: FC<MapButtonsProps> = ({
 		setOpenStylesCard(!openStylesCard);
 	};
 
-	const onClickGeofenceTracker = (menuItem: MenuItemEnum) => {
+	const onClickUnauthSimulation = () => {
 		onCloseSidebar();
-
-		if (menuItem === MenuItemEnum.GEOFENCE) {
-			isUnauthTrackerBoxOpen && onSetShowUnauthTrackerBox(!isUnauthTrackerBoxOpen);
-			onSetShowUnauthGeofenceBox(!isUnauthGeofenceBoxOpen);
-		} else {
-			isUnauthGeofenceBoxOpen && onSetShowUnauthGeofenceBox(!isUnauthGeofenceBoxOpen);
-			onSetShowUnauthTrackerBox(!isUnauthTrackerBoxOpen);
-		}
+		onSetShowUnauthSimulation(!isUnauthSimulationOpen);
+		setHideGeofenceTrackerShortcut(true);
 	};
 
 	const handleMapStyleChange = useCallback(
@@ -302,7 +292,7 @@ const MapButtons: FC<MapButtonsProps> = ({
 						<Flex
 							data-testid="geofence-control-button"
 							className="geofence-button"
-							onClick={() => onClickGeofenceTracker(MenuItemEnum.GEOFENCE)}
+							onClick={() => onClickUnauthSimulation()}
 							data-tooltip-id="geofence-control-button"
 							data-tooltip-place="left"
 							data-tooltip-content={t("geofence.text")}
@@ -314,7 +304,7 @@ const MapButtons: FC<MapButtonsProps> = ({
 						<Flex
 							data-testid="tracker-control-button"
 							className="tracker-button"
-							onClick={() => onClickGeofenceTracker(MenuItemEnum.TRACKER)}
+							onClick={() => onClickUnauthSimulation()}
 							data-tooltip-id="tracker-control-button"
 							data-tooltip-place="left"
 							data-tooltip-content={t("tracker.text")}

@@ -22,7 +22,6 @@ export {
 	ToastType,
 	TravelMode,
 	UserAgentEnum,
-	MenuItemEnum,
 	TrackingHistoryTypeEnum,
 	EventTypeEnum,
 	AnalyticsSessionStatus,
