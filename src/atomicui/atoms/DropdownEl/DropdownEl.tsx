@@ -115,6 +115,7 @@ const DropdownEl: FC<DropdownElProps> = ({
 										onChange={() => handleClick(option)}
 									>
 										<Radio
+											data-testid={`radio-${option.value}`}
 											className={`${isLtr ? "radio-option-end" : "radio-option"} ${
 												(defaultOption as SelectOption)?.value === option.value ? "radio-option-selected" : ""
 											}`}
