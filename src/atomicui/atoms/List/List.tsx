@@ -99,7 +99,7 @@ const List: FC<ListProps> = ({
 		import("./styles.scss");
 	}
 
-	const test: any = omit(["className"], props);
+	const test = omit(["className"], props);
 
 	return (
 		<View data-testid="list-container" as="ul" className={ulClass} {...test}>
