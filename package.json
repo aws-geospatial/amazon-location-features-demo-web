@@ -115,7 +115,7 @@
 	},
 	"overrides": {
 		"ava": "^3.0.0",
-		"axios": "^0.28.0",
+		"axios": "^0.30.0",
 		"braces": "^3.0.3",
 		"cookie": "^0.7.2",
 		"@cypress/request": "^3.0.0",
