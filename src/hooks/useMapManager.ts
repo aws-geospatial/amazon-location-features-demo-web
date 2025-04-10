@@ -107,18 +107,8 @@ const useMapManager = ({
 
 	const onGeoLocate = useCallback(
 		({ coords: { latitude, longitude } }: GeolocateResultEvent) => {
-			if (routeData) {
-				resetRouteStore();
-				closeRouteBox();
-
-				setTimeout(() => {
-					setViewpoint({ latitude, longitude });
-					setCurrentLocation({ currentLocation: { latitude, longitude }, error: undefined });
-				}, 0);
-			} else {
-				setViewpoint({ latitude, longitude });
-				setCurrentLocation({ currentLocation: { latitude, longitude }, error: undefined });
-			}
+			setViewpoint({ latitude, longitude });
+			setCurrentLocation({ currentLocation: { latitude, longitude }, error: undefined });
 		},
 		[closeRouteBox, resetRouteStore, routeData, setCurrentLocation, setViewpoint]
 	);
