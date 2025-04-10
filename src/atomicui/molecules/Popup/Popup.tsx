@@ -189,7 +189,7 @@ const Popup: FC<PopupProps> = ({ placeId, position, label, active, select, onClo
 			);
 		} else if (!isFetchingRoute && !routeData) {
 			return (
-				<Flex data-testid="here-message-container" gap={0} direction={"column"}>
+				<Flex data-testid="here-message-container" gap="0" direction={"column"}>
 					<Flex className="localize-geofence-distance" gap="0.3rem" direction={isLanguageRTL ? "row-reverse" : "row"}>
 						<Text className="bold" variation="secondary" marginRight="0.3rem">
 							{localizeGeodesicDistance}

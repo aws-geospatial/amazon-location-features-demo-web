@@ -256,7 +256,7 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 								{t("start_unauth_simulation__desc.text")}
 							</Text>
 						</Flex>
-						<Flex direction="column" gap={0}>
+						<Flex direction="column" gap="0">
 							<IconicInfoCard
 								gap="0"
 								textContainerMarginLeft="2rem"
@@ -287,7 +287,6 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 							variation="primary"
 							padding="0.923rem 0"
 							onClick={() => {
-								console.log("CLICKED");
 								if (isDesktop) {
 									setStartSimulation(true);
 									setShowUnauthSimulationBounds(true);
@@ -323,7 +322,6 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 		setStartSimulation,
 		setShowUnauthSimulationBounds,
 		setBottomSheetMinHeight,
-		bottomSheetCurrentHeight,
 		setUI,
 		setBottomSheetHeight
 	]);

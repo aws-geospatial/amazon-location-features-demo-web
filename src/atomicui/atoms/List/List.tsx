@@ -99,8 +99,10 @@ const List: FC<ListProps> = ({
 		import("./styles.scss");
 	}
 
+	const test = omit(["className"], props);
+
 	return (
-		<View data-testid="list-container" as="ul" className={ulClass} {...omit(["className"], props)}>
+		<View data-testid="list-container" as="ul" className={ulClass} {...test}>
 			{listArray.map(({ link, subMenu, label, iconContainerClass, iconBeforeLink, isExternalLink }) => {
 				const hasSubMenuItems = !!subMenu?.length;
 
