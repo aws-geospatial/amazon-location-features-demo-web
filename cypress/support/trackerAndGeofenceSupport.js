@@ -1,9 +1,12 @@
 Cypress.Commands.add("useUnauthSimulation", isResponsive => {
-	isResponsive
-		? cy.openResponsiveMenu('[data-testid="bottomsheet"]')
-		: cy.get('[data-testid="hamburger-menu"]').click();
-	cy.contains("Geofence").click();
-	cy.get('[data-testid="unauth-simulation-cta"]').click();
+	if (isResponsive) {
+		cy.contains("Trackers").click();
+		cy.wait(5000);
+		cy.openResponsiveMenu('[data-testid="bottomsheet"]');
+	} else {
+		cy.get('[data-testid="hamburger-menu"]').click();
+		cy.contains("Trackers").click();
+	}
 	cy.get('[data-testid="start-simulation-btn"]').click();
 	cy.get(
 		'[class="Toastify__toast Toastify__toast-theme--dark Toastify__toast--info Toastify__toast--close-on-click enter-geofence"]',
