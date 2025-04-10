@@ -387,6 +387,24 @@ jest.mock("react-map-gl/maplibre", () => ({
 	useControl: jest.fn()
 }));
 
+jest.mock("@mapbox/mapbox-gl-draw", () => {
+	return jest.fn().mockImplementation(() => {
+		return {
+			deleteAll: jest.fn(),
+			set: jest.fn(),
+			getAll: jest.fn().mockImplementation(() => ({
+				features: [
+					{
+						geometry: {
+							coordinates: [[], []]
+						}
+					}
+				]
+			}))
+		};
+	});
+});
+
 jest.mock("@demo/hooks/useDeviceMediaQuery", () => {
 	return {
 		__esModule: true,

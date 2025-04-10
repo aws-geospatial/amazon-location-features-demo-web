@@ -82,7 +82,7 @@ const MapLanguageDropdown: FC<MapLanguageDropdownProps> = ({
 								style={{ display: "flex", justifyContent: "start" }}
 								onClick={() => handleClick({ value, label })}
 							>
-								<Flex gap="0" direction="column" padding="0.46rem 1.23rem">
+								<Flex gap={0} direction="column" padding="0.46rem 1.23rem">
 									<Text className="bold small-text" color="var(--tertiary-color)">
 										{t(label)}
 									</Text>

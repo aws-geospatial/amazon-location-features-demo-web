@@ -650,7 +650,7 @@ const Explore: FC<ExploreProps> = ({
 								subMenu.map(({ isEnabled, iconComponent, title, description, onClickHandler }, subIdx) => {
 									if (isEnabled) {
 										return (
-											<Flex key={`${subIdx}-${title}`} gap="0" direction="column" backgroundColor="var(--ghost-white)">
+											<Flex key={`${subIdx}-${title}`} gap={0} direction="column" backgroundColor="var(--ghost-white)">
 												<IconicInfoCard
 													key={subIdx}
 													gap="0"

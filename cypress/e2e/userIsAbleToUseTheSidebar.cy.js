@@ -27,7 +27,8 @@ describe("Sidebar", () => {
 				cy.openResponsiveMenu('[data-testid="bottomsheet"]');
 				cy.get('[data-testid="explore-button-container-Map style"]').should("contain", "Map style");
 				cy.get('[data-testid="explore-button-container-Routes"]').should("contain", "Routes");
-				cy.get('[data-testid="explore-button-container-Trackers"]').should("contain", "Trackers");
+				cy.get('[data-testid="explore-button-container-Geofences"]').should("contain", "Geofences");
+				cy.get('[data-testid="explore-button-container-Trackers"]').should("contain", "Tracker");
 				cy.get('[data-testid="iconic-info-card-title"]')
 					.should("contain", "Samples")
 					.and("contain", "Migration")

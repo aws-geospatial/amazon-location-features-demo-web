@@ -311,7 +311,7 @@ const SearchBox: FC<SearchBoxProps> = ({
 				<Flex className={`icon ${!!queryid ? "icon-search-gray" : "icon-pin-gray"}`} />
 				<View className="option-details">
 					<Text>{title}</Text>
-					<Flex gap="0" alignItems="center">
+					<Flex gap={0} alignItems="center">
 						{geodesicDistanceUnit && (
 							<>
 								<Flex gap="0.3rem" direction={isLanguageRTL ? "row-reverse" : "row"}>
@@ -510,7 +510,7 @@ const SearchBox: FC<SearchBoxProps> = ({
 								NL_API_KEY &&
 								currentMapProvider !== MapProviderEnum.GRAB &&
 								currentMapProvider !== MapProviderEnum.HERE ? (
-									<Flex gap="0" padding="0 0.61rem 0.61rem" alignItems="center">
+									<Flex gap={0} padding="0 0.61rem 0.61rem" alignItems="center">
 										<SwitchField
 											label={t("nl_search_label.text") as string}
 											labelPosition="end"
@@ -530,7 +530,7 @@ const SearchBox: FC<SearchBoxProps> = ({
 								)} */}
 								{/* {isNLChecked && !value ? (
 									<Flex
-										gap="0"
+										gap={0}
 										width="100%"
 										alignItems="start"
 										paddingLeft="10px"
@@ -570,7 +570,7 @@ const SearchBox: FC<SearchBoxProps> = ({
 										</Flex>
 									) : (
 										<Flex
-											gap="0"
+											gap={0}
 											padding="0 0.61rem 0.61rem"
 											alignItems="center"
 											style={{
@@ -587,7 +587,7 @@ const SearchBox: FC<SearchBoxProps> = ({
 										</Flex>
 									) : (
 										<Flex
-											gap="0"
+											gap={0}
 											width="100%"
 											alignItems="start"
 											paddingLeft="10px"
@@ -649,7 +649,7 @@ const SearchBox: FC<SearchBoxProps> = ({
 								borderBottomRightRadius: hideBorderRadius ? "0px" : "8px"
 							}}
 						>
-							<Flex gap="0" width="100%" height="100%" alignItems="center">
+							<Flex gap={0} width="100%" height="100%" alignItems="center">
 								<Autocomplete
 									data-testid="search-box-input"
 									className={!value && !suggestions?.list.length ? "search-complete noEmpty" : "search-complete"}
@@ -695,7 +695,7 @@ const SearchBox: FC<SearchBoxProps> = ({
 											) : null
 										) : (
 											<Flex
-												gap="0"
+												gap={0}
 												className="inner-search-component"
 												style={{
 													flexDirection: "column",
@@ -788,7 +788,7 @@ const SearchBox: FC<SearchBoxProps> = ({
 									>
 										{isSearching && isNLChecked ? (
 											<Flex
-												gap="0"
+												gap={0}
 												width="100%"
 												height="100%"
 												alignItems="center"
@@ -800,7 +800,7 @@ const SearchBox: FC<SearchBoxProps> = ({
 											</Flex>
 										) : (
 											<Flex
-												gap="0"
+												gap={0}
 												width="100%"
 												height="100%"
 												alignItems="center"
@@ -825,7 +825,7 @@ const SearchBox: FC<SearchBoxProps> = ({
 										)}
 										{isNLChecked && !value ? (
 											<Flex
-												gap="0"
+												gap={0}
 												width="100%"
 												height="100%"
 												alignItems="start"

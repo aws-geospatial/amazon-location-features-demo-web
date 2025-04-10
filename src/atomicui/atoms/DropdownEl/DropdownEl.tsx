@@ -108,14 +108,13 @@ const DropdownEl: FC<DropdownElProps> = ({
 								>
 									<RadioGroupField
 										data-testid={`radiobox-${option.value}`}
-										legend=""
+										label=""
 										name="radioBox"
 										defaultValue={(defaultOption as SelectOption)?.value}
 										style={{ width: "100%", gap: 0 }}
 										onChange={() => handleClick(option)}
 									>
 										<Radio
-											data-testid={`radio-${option.value}`}
 											className={`${isLtr ? "radio-option-end" : "radio-option"} ${
 												(defaultOption as SelectOption)?.value === option.value ? "radio-option-selected" : ""
 											}`}

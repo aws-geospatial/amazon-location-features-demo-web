@@ -73,7 +73,7 @@ describe("<DropdownEl />", () => {
 		const { getByTestId } = renderComponent();
 		fireEvent.click(getByTestId("dropdown-trigger"));
 		fireEvent.click(getByTestId("option2"));
-		expect(props.onSelect).toHaveBeenCalledWith(props.options[1]);
+		expect(props.onSelect).toBeCalledWith(props.options[1]);
 	});
 
 	it("should show radio button in dropdown if isRadioBox prop is set to true", () => {
@@ -83,8 +83,8 @@ describe("<DropdownEl />", () => {
 		expect(getByTestId(`radiobox-${props.options[0].value}`)).toBeInTheDocument();
 		expect(getByTestId(`radiobox-${props.options[1].value}`)).toBeInTheDocument();
 		expect(getByTestId(`radiobox-${props.options[2].value}`)).toBeInTheDocument();
-		fireEvent.click(getByTestId(`radio-${props.options[2].value}`));
-		expect(props.onSelect).toHaveBeenCalledWith(props.options[2]);
+		fireEvent.click(getByTestId(`radiobox-${props.options[2].value}`).children[1].children[0].children[1]);
+		expect(props.onSelect).toBeCalledWith(props.options[2]);
 	});
 
 	it("should show checkbox in dropdown if isCheckbox prop is set to true", () => {
@@ -98,6 +98,6 @@ describe("<DropdownEl />", () => {
 		expect(getByTestId(`checkbox-${props.options[1].value}`)).toBeInTheDocument();
 		expect(getByTestId(`checkbox-${props.options[2].value}`)).toBeInTheDocument();
 		fireEvent.click(getByTestId(`checkbox-${props.options[2].value}`));
-		expect(props.onSelect).toHaveBeenCalledWith(props.options[2]);
+		expect(props.onSelect).toBeCalledWith(props.options[2]);
 	});
 });

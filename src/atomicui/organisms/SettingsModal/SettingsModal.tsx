@@ -127,7 +127,7 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 				detailsComponent: (
 					<Flex
 						data-testid={`${SettingOptionEnum.UNITS}-details-component`}
-						gap="0"
+						gap={0}
 						direction="column"
 						padding="0rem 1.15rem"
 					>
@@ -186,7 +186,7 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 				detailsComponent: (
 					<Flex
 						data-testid={`${SettingOptionEnum.MAP_STYLE}-details-component`}
-						gap="0"
+						gap={0}
 						direction="column"
 						padding="1.08rem 0 0 0"
 						overflow="hidden scroll"
@@ -204,7 +204,7 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 				detailsComponent: (
 					<Flex
 						data-testid={`${SettingOptionEnum.UNITS}-details-component`}
-						gap="0"
+						gap={0}
 						direction="column"
 						padding="0rem 1.15rem"
 						overflow="hidden scroll"
@@ -233,7 +233,7 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 				detailsComponent: (
 					<Flex
 						data-testid={`${SettingOptionEnum.ROUTE_OPTIONS}-details-component`}
-						gap="0"
+						gap={0}
 						direction="column"
 						padding="0rem 1.15rem"
 					>
@@ -301,7 +301,7 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 				detailsComponent: (
 					<Flex
 						data-testid={`${SettingOptionEnum.REGION}-details-component`}
-						gap="0"
+						gap={0}
 						direction="column"
 						padding="0rem 1.15rem"
 						dir={langDir}
@@ -383,7 +383,7 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 			>
 				<Flex gap="0" alignItems="center">
 					{icon}
-					<Flex gap="0" direction="column">
+					<Flex gap={0} direction="column">
 						<Text fontSize="1rem" lineHeight="1.38rem">
 							{title}
 						</Text>

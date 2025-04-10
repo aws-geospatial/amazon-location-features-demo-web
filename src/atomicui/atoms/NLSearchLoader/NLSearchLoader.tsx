@@ -26,7 +26,7 @@ const NLSearchLoader: FC<NLSearchLoaderProps> = ({ nlLoadText }) => {
 
 	return (
 		<Flex
-			gap="0"
+			gap={0}
 			width="100%"
 			height="100%"
 			data-testid="nl-loader-container"

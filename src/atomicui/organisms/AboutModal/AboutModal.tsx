@@ -79,7 +79,7 @@ const AboutModal: FC<AboutModalProps> = ({ open, onClose }) => {
 				id: AboutOptionEnum.ATTRIBUTION,
 				title: t("about_modal__attribution.text"),
 				detailsComponent: (
-					<Flex gap="0" direction="column" padding="0rem 1.23rem" alignItems="center">
+					<Flex gap={0} direction="column" padding="0rem 1.23rem" alignItems="center">
 						<Text className="small-text" fontFamily="AmazonEmber-Bold" marginTop="1.15rem" alignSelf="flex-start">
 							{t(PARTNER_ATTRIBUTION_TITLE)}
 						</Text>
@@ -120,14 +120,14 @@ const AboutModal: FC<AboutModalProps> = ({ open, onClose }) => {
 				id: AboutOptionEnum.VERSION,
 				title: t("about_modal__version.text"),
 				detailsComponent: (
-					<Flex gap="0" direction="column" padding="1.15rem 0rem 1.15rem 1.15rem">
+					<Flex gap={0} direction="column" padding="1.15rem 0rem 1.15rem 1.15rem">
 						<Text className={`more-secondary-text ${isLtr ? "ltr" : "rtl"}`}>
 							{t(VERSION)}: {APP_VERSION} {BUILD}
 						</Text>
 						<Text className={`more-secondary-text ${isLtr ? "ltr" : "rtl"}`}>{`© ${new Date().getFullYear()}${
 							isLtr ? "," : "،"
 						} ${t(COPYRIGHT)}`}</Text>
-						<Flex gap="0" direction="column" padding="0rem 3.15rem">
+						<Flex gap={0} direction="column" padding="0rem 3.15rem">
 							<IconPoweredByAws1 className="powered-by-aws-1-icon" />
 						</Flex>
 					</Flex>
@@ -152,7 +152,7 @@ const AboutModal: FC<AboutModalProps> = ({ open, onClose }) => {
 				onClick={() => setSelectedOption(id)}
 			>
 				<Flex gap="0" alignItems="center">
-					<Flex gap="0" direction="column">
+					<Flex gap={0} direction="column">
 						<Text className="small-text">{title}</Text>
 					</Flex>
 				</Flex>
