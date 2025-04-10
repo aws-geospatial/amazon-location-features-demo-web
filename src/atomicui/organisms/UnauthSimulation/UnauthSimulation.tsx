@@ -256,7 +256,7 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 								{t("start_unauth_simulation__desc.text")}
 							</Text>
 						</Flex>
-						<Flex direction="column" gap={0}>
+						<Flex direction="column" gap="0">
 							<IconicInfoCard
 								gap="0"
 								textContainerMarginLeft="2rem"

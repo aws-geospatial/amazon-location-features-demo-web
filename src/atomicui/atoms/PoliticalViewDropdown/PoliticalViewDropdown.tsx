@@ -91,12 +91,12 @@ const PoliticalViewDropdown: FC<PoliticalViewDropdownProps> = ({
 								style={{ display: "flex", justifyContent: "start", direction: langDir }}
 								onClick={() => handleClick({ alpha2, alpha3, desc, isSupportedByPlaces })}
 							>
-								<Flex gap={0} direction="column" padding="0.46rem 1.23rem">
+								<Flex gap="0" direction="column" padding="0.46rem 1.23rem">
 									{!!alpha2 && !!alpha3 ? (
 										<>
-											<Flex gap={0}>
+											<Flex gap="0">
 												{!isUserDeviceIsWin() && (
-													<Flex gap={0} justifyContent="center" margin="0.07rem 0.3rem 0 0">
+													<Flex gap="0" justifyContent="center" margin="0.07rem 0.3rem 0 0">
 														{getFlagEmoji(alpha2)}
 													</Flex>
 												)}
