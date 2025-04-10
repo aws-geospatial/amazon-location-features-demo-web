@@ -2811,7 +2811,7 @@
     "text": "Tracker und Geofences"
   },
   "start_unauth_simulation__desc": {
-    "text": "Rufen Sie die Tracking-Simulation auf, um den Pfad über die Straßen von Vancouver zu sehen, der den Geofence überquert"
+    "text": "Nehmen Sie an der Tracker-Simulation teil, um den Pfad durch die Straßen von Vancouver zu sehen, der den Geofence überquert."
   },
   "start_unauth_simulation__info1_desc": {
     "text": "Visualisiere deine Geschichte auf der Karte"
@@ -3896,8 +3896,8 @@
   "avoid": {
     "text": "Vermeiden"
   },
-  "places_routes_maps": {
-    "text": "Orte, Routen, Karten"
+  "navigate": {
+    "text": "Navigieren"
   },
   "arrive_by": {
     "text": "Ankunft am"

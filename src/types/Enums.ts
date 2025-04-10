@@ -92,10 +92,7 @@ export enum AnalyticsEventActionsEnum {
 	ENTER_BUTTON = "Enter button",
 
 	MODAL_CLOSED = "MODAL_CLOSED",
-	TAB_CHANGED = "TAB_CHANGED",
-	LOCKED_ITEM_CLICKED = "LOCKED_ITEM_CLICKED",
-	CONNECT_AWS_ACCOUNT_BUTTON_CLICKED = "CONNECT_AWS_ACCOUNT_BUTTON_CLICKED",
-	CONNECT_AWS_FEEDBACK_BUTTON_CLICKED = "CONNECT_AWS_FEEDBACK_BUTTON_CLICKED"
+	TAB_CHANGED = "TAB_CHANGED"
 }
 
 export enum LocationErrorMessage {
@@ -164,11 +161,6 @@ export enum UserAgentEnum {
 	ANDROID = "Android"
 }
 
-export enum MenuItemEnum {
-	GEOFENCE = "Geofence",
-	TRACKER = "Tracker"
-}
-
 export enum TrackingHistoryTypeEnum {
 	TRACKER = "tracker",
 	BUS_STOP = "bus_stop"
@@ -186,14 +178,10 @@ export enum ResponsiveUIEnum {
 	map_styles = "map_styles",
 	poi_card = "poi_card",
 	routes = "routes",
-	before_start_unauthorized_tracker = "before_start_unauthorized_tracker",
-	before_start_unauthorized_geofence = "before_start_unauthorized_geofence",
-	non_start_unauthorized_tracker = "non_start_unauthorized_tracker",
-	non_start_unauthorized_geofence = "non_start_unauthorized_geofence",
-	exit_unauthorized_tracker = "exit_unauthorized_tracker",
-	exit_unauthorized_geofence = "exit_unauthorized_geofence",
-	unauth_tracker = "unauth_tracker",
-	unauth_geofence = "unauth_geofence",
+	non_start_unauth_simulation = "non_start_unauth_simulation",
+	before_start_unauth_simulation = "before_start_unauth_simulation",
+	unauth_simulation = "unauth_simulation",
+	exit_unauth_simulation = "exit_unauth_simulation",
 	direction_to_routes = "direction_to_routes"
 }
 

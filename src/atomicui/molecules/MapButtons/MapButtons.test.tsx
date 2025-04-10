@@ -21,10 +21,8 @@ const mockProps: MapButtonsProps = {
 	onlyMapStyles: false,
 	isHandDevice: false,
 	isSettingsModal: false,
-	isUnauthGeofenceBoxOpen: false,
-	isUnauthTrackerBoxOpen: false,
-	onSetShowUnauthGeofenceBox: jest.fn(),
-	onSetShowUnauthTrackerBox: jest.fn()
+	isUnauthSimulationOpen: false,
+	onSetShowUnauthSimulation: jest.fn()
 };
 
 const mockUseAuthData = {
@@ -50,7 +48,8 @@ const mockUseMapData = {
 };
 
 const mockUseUnauthSimulationData = {
-	hideGeofenceTrackerShortcut: false
+	hideGeofenceTrackerShortcut: false,
+	setHideGeofenceTrackerShortcut: jest.fn()
 };
 
 jest.mock("@demo/hooks", () => ({
@@ -121,8 +120,7 @@ describe("<MapButtons/>", () => {
 		});
 		waitFor(() => {
 			expect(mockProps.onCloseSidebar).toHaveBeenCalled();
-			expect(mockProps.onSetShowUnauthTrackerBox).toHaveBeenCalled();
-			expect(mockProps.onSetShowUnauthGeofenceBox).toHaveBeenCalled();
+			expect(mockProps.onSetShowUnauthSimulation).toHaveBeenCalled();
 		});
 	});
 
@@ -134,8 +132,7 @@ describe("<MapButtons/>", () => {
 		});
 		waitFor(() => {
 			expect(mockProps.onCloseSidebar).toHaveBeenCalled();
-			expect(mockProps.onSetShowUnauthGeofenceBox).toHaveBeenCalled();
-			expect(mockProps.onSetShowUnauthTrackerBox).toHaveBeenCalled();
+			expect(mockProps.onSetShowUnauthSimulation).toHaveBeenCalled();
 		});
 	});
 });

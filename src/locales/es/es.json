@@ -2811,7 +2811,7 @@
     "text": "Rastreadores y geofences"
   },
   "start_unauth_simulation__desc": {
-    "text": "Ingrese a la simulación de rastreo para ver el camino a través de las calles de Vancouver que cruza la geofence"
+    "text": "Participa en la simulación del rastreador para ver el camino que cruza las calles de Vancouver que cruza la geofence"
   },
   "start_unauth_simulation__info1_desc": {
     "text": "Visualiza tu historial en el mapa"
@@ -3896,8 +3896,8 @@
   "avoid": {
     "text": "Evitar"
   },
-  "places_routes_maps": {
-    "text": "Lugares, rutas, mapas"
+  "navigate": {
+    "text": "Navega"
   },
   "arrive_by": {
     "text": "Llegue por"
