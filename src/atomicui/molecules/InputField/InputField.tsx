@@ -56,13 +56,13 @@ const InputField: FC<InputFieldProps> = ({
 	autocomplete
 }) => {
 	return (
-		<Flex gap={0} direction="column" width="100%" margin={containerMargin}>
+		<Flex gap="0" direction="column" width="100%" margin={containerMargin}>
 			{label && (
 				<Text className="bold" margin={labelMargin} textAlign={dir === "ltr" ? "start" : "end"}>
 					{label}
 				</Text>
 			)}
-			<Flex className={disabled ? "input-container disabled" : "input-container"} gap={0} alignContent="center">
+			<Flex className={disabled ? "input-container disabled" : "input-container"} gap="0" alignContent="center">
 				{innerStartComponent}
 				<input
 					ref={searchInputRef}

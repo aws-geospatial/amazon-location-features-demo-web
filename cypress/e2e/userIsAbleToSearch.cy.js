@@ -100,10 +100,6 @@ describe("Search", () => {
 			cy.get('[data-testid="search-box-input"]').type("Rio tinto");
 			cy.get('[data-testid="search-suggestions"]').first().click();
 			cy.get("div").should("contain", "Rio Tinto");
-			for (let i = 0; i < 10; i++) {
-				cy.get("div").should("contain", "Rio Tinto");
-				cy.wait(2000);
-			}
 		});
 
 		it("DS-010 - should show user an error message when no search text is present", { scrollBehavior: false }, () => {

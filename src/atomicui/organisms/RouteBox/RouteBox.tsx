@@ -1227,7 +1227,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 						</View>
 					)}
 					{isDesktop && (
-						<Flex className="travel-mode-button-container" gap={0}>
+						<Flex className="travel-mode-button-container" gap="0">
 							<View
 								data-testid="travel-mode-car-icon-container"
 								className={travelMode === TravelMode.CAR ? "travel-mode selected" : "travel-mode"}
@@ -1290,7 +1290,7 @@ const RouteBox: FC<RouteBoxProps> = ({
 							className={`from-to-container ${
 								!isDesktop && isBothInputFilled && !isInputFocused ? "from-to-container-mobile" : ""
 							}`}
-							gap={0}
+							gap="0"
 						>
 							<Flex className="marker-container" order={isLtr ? 1 : 3}>
 								<Flex className="icon-my-location" />
