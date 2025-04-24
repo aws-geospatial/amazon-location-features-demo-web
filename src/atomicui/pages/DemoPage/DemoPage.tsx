@@ -267,7 +267,7 @@ const DemoPage: FC = () => {
 					position="bottom-right"
 					positionOptions={{ enableHighAccuracy: true }}
 					showUserLocation
-					showAccuracyCircle={false}
+					showAccuracyCircle={true}
 					onGeolocate={onGeoLocate}
 					onError={onGeoLocateError}
 				/>
