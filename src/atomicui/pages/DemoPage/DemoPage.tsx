@@ -144,7 +144,6 @@ const DemoPage: FC = () => {
 		isUnauthSimulationOpen: show.unauthSimulation,
 		isSettingsOpen: show.settings,
 		isRouteBoxOpen: show.routeBox,
-		closeRouteBox: () => setShow(s => ({ ...s, routeBox: false })),
 		resetAppStateCb: () => setShow(s => ({ ...initShow, stylesCard: s.stylesCard, settings: s.settings }))
 	});
 	const { t } = useTranslation();
