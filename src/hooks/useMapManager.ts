@@ -28,7 +28,6 @@ interface UseMapManagerProps {
 	isUnauthSimulationOpen: boolean;
 	isSettingsOpen: boolean;
 	isRouteBoxOpen: boolean;
-	closeRouteBox: () => void;
 	resetAppStateCb: () => void;
 }
 
@@ -38,7 +37,6 @@ const useMapManager = ({
 	isUnauthSimulationOpen,
 	isSettingsOpen,
 	isRouteBoxOpen,
-	closeRouteBox,
 	resetAppStateCb
 }: UseMapManagerProps) => {
 	const [mapStyleWithLanguageUrl, setMapStyleWithLanguageUrl] = useState<MapStyle>();
@@ -110,7 +108,7 @@ const useMapManager = ({
 			setViewpoint({ latitude, longitude });
 			setCurrentLocation({ currentLocation: { latitude, longitude }, error: undefined });
 		},
-		[closeRouteBox, resetRouteStore, routeData, setCurrentLocation, setViewpoint]
+		[setCurrentLocation, setViewpoint]
 	);
 
 	const onGeoLocateError = useCallback(
