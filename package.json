@@ -24,7 +24,7 @@
 		"lib": "tsc && vite build --config vite.library.ts",
 		"local-lib": "tsc && vite build --config vite.library.ts && node extra/prepare-local-lib/index.js",
 		"simple-build": "tsc && vite build && cp -r ./public/.well-known/ ./build/",
-		"build": "node --max-old-space-size=12000 node_modules/vite/bin/vite.js build && cp -r ./public/.well-known/ ./build/",
+		"build": "tsc && node --max-old-space-size=12000 node_modules/vite/bin/vite.js build && cp -r ./public/.well-known/ ./build/",
 		"start-build": "npx serve -s build -l 3000",
 		"cypress": "cypress run --browser chrome --headed",
 		"test": "react-scripts test  --transformIgnorePatterns \"node_modules/(?!axios)/\"",
