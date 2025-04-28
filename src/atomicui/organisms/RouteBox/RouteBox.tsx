@@ -4,7 +4,7 @@
 
 import { ChangeEvent, FC, MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { Button, Card, CheckboxField, Flex, Text, TextField, View } from "@aws-amplify/ui-react";
+import { Card, CheckboxField, Flex, Text, TextField, View } from "@aws-amplify/ui-react";
 import {
 	CalculateRoutesCommandInput,
 	RouteFerryLegDetails,
@@ -33,14 +33,13 @@ import {
 } from "@demo/assets/svgs";
 import { DropdownEl } from "@demo/atomicui/atoms";
 import { NotFoundCard, StepCard } from "@demo/atomicui/molecules";
-import { appConfig } from "@demo/core/constants";
 import BottomSheetHeights from "@demo/core/constants/bottomSheetHeights";
 import { useMap, usePersistedData, usePlace, useRoute } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { InputType, MapUnitEnum, RouteDataType, RouteOptionsType, SuggestionType, TravelMode } from "@demo/types";
-import { AnalyticsEventActionsEnum, ResponsiveUIEnum, TriggeredByEnum, UserAgentEnum } from "@demo/types/Enums";
-import { getConvertedDistance, isUserDeviceIsAndroid } from "@demo/utils";
+import { AnalyticsEventActionsEnum, ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
+import { getConvertedDistance } from "@demo/utils";
 import { humanReadableTime } from "@demo/utils/dateTimeUtils";
 import { LineString } from "@turf/turf";
 import { isAndroid, isIOS } from "react-device-detect";
@@ -52,11 +51,6 @@ import { Tooltip } from "react-tooltip";
 import "./styles.scss";
 
 const { METRIC } = MapUnitEnum;
-const { ANDROID } = UserAgentEnum;
-
-const {
-	ENV: { GOOGLE_PLAY_STORE_LINK }
-} = appConfig;
 const iconsByTravelMode = [
 	{ mode: TravelMode.CAR, IconComponent: IconCar },
 	{ mode: TravelMode.PEDESTRIAN, IconComponent: IconWalking },
