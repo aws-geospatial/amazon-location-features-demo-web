@@ -11,7 +11,7 @@ const {
 	API_KEYS,
 	PERSIST_STORAGE_KEYS: { SHOULD_CLEAR_CREDENTIALS }
 } = appConfig;
-let timeout: NodeJS.Timer | undefined;
+let timeout: NodeJS.Timeout | undefined;
 
 const useAuthManager = () => {
 	const { credentials, fetchCredentials, clearCredentials, baseValues, apiKey, fetchLocationClientConfigWithApiKey } =

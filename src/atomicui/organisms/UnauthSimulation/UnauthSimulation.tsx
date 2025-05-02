@@ -427,8 +427,9 @@ const UnauthSimulation: FC<UnauthSimulationProps> = ({
 					className={`unauthSimulation-card ${
 						isTablet ? "unauth-non-start-simulation-card-tablet" : "unauth-non-start-simulation-card-mobile"
 					}`}
-					content={<BeforeStartSimulation />}
-				/>
+				>
+					<BeforeStartSimulation />
+				</Modal>
 			) : (
 				<Card
 					data-testid="unauthSimulation-card"

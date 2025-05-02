@@ -121,7 +121,6 @@ const DropdownEl: FC<DropdownElProps> = ({
 											}`}
 											size="large"
 											value={option.value}
-											crossOrigin={undefined}
 										>
 											{option.label}
 										</Radio>
@@ -151,7 +150,6 @@ const DropdownEl: FC<DropdownElProps> = ({
 											checked={(defaultOption as SelectOption[]).some(
 												(item: SelectOption) => item.value === option.value
 											)}
-											crossOrigin={undefined}
 											onChange={() => handleClick(option)}
 										/>
 									) : (
