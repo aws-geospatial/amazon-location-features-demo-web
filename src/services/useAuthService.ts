@@ -3,8 +3,8 @@
 
 import { useMemo } from "react";
 
-import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
 import { withAPIKey } from "@aws/amazon-location-utilities-auth-helper";
+import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
 
 const useAuthService = () => {
 	return useMemo(

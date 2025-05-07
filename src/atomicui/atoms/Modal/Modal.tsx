@@ -1,7 +1,7 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { FC, ReactNode } from "react";
+import { FC } from "react";
 
 import { Card, CardProps, Flex } from "@aws-amplify/ui-react";
 import { IconClose } from "@demo/assets/svgs";
@@ -12,7 +12,6 @@ interface ModalProps extends CardProps {
 	onClose: () => void;
 	modalContainerPosition?: string;
 	modalContainerClass?: string;
-	content: ReactNode;
 	hideCloseIcon?: boolean;
 	disableBodyScrollWhenModalIsOpen?: boolean;
 }
@@ -23,7 +22,7 @@ const Modal: FC<ModalProps> = ({
 	modalContainerClass = "",
 	modalContainerPosition = "absolute",
 	className = "",
-	content,
+	children,
 	hideCloseIcon = false,
 	disableBodyScrollWhenModalIsOpen = false,
 	...rest
@@ -49,7 +48,7 @@ const Modal: FC<ModalProps> = ({
 				>
 					<IconClose />
 				</Flex>
-				{content}
+				{children}
 			</Card>
 		</Flex>
 	) : null;

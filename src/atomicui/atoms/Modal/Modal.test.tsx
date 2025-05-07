@@ -20,7 +20,9 @@ describe("<Modal/>", () => {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const renderComponent = (props?: any): RenderResult => {
 		const renderedComponent = render(
-			<Modal content={<div data-testid="modal-content" />} open={isOpen} onClose={onClose} {...props} />
+			<Modal open={isOpen} onClose={onClose} {...props}>
+				<div data-testid="modal-content" />
+			</Modal>
 		);
 		modalContainer = screen.queryByTestId("modal-container");
 		modalContent = screen.queryByTestId("modal-content");

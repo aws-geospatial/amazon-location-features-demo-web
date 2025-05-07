@@ -764,7 +764,6 @@ const SearchBox: FC<SearchBoxProps> = ({
 											</>
 										</Flex>
 									}
-									crossOrigin={undefined}
 								/>
 								{/* TODO: NL Search disabled for the time being */}
 								{/* {NL_BASE_URL &&

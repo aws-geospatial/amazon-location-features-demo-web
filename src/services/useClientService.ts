@@ -3,11 +3,11 @@
 
 import { useMemo } from "react";
 
+import { LocationClientConfig } from "@aws/amazon-location-utilities-auth-helper";
 import { GeoPlacesClient } from "@aws-sdk/client-geo-places";
 import { GeoRoutesClient } from "@aws-sdk/client-geo-routes";
 import { IoT } from "@aws-sdk/client-iot";
 import { Location } from "@aws-sdk/client-location";
-import { LocationClientConfig } from "@aws/amazon-location-utilities-auth-helper";
 import { CognitoIdentityCredentials } from "@demo/types";
 
 const useClientService = () => {

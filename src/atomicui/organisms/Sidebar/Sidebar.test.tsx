@@ -5,11 +5,6 @@ import { BrowserRouter } from "react-router-dom";
 
 import Sidebar, { SidebarProps } from "./Sidebar";
 
-Object.defineProperty(window, "location", {
-	writable: true,
-	value: { reload: jest.fn() }
-});
-
 const mockProps: SidebarProps = {
 	onCloseSidebar: jest.fn(),
 	onShowSettings: jest.fn(),
@@ -30,7 +25,14 @@ describe("<Sidebar />", () => {
 	};
 
 	beforeEach(() => {
-		(window.location as Location) = { href: "http://example.com/some/path" } as Location;
+		Object.defineProperty(window, "location", {
+			writable: true,
+			value: {
+				...window.location,
+				href: "http://localhost/",
+				origin: "http://localhost"
+			}
+		});
 	});
 
 	it("renders the logo", () => {

@@ -137,7 +137,6 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 								value={"Automatic"}
 								checked={autoMapUnit.selected}
 								onChange={handleAutoMapUnitChange}
-								crossOrigin={undefined}
 							>
 								<Text marginLeft="1.23rem">{t("settings_modal__automatic.text")}</Text>
 								<Text variation="tertiary" marginLeft="1.23rem">
@@ -153,7 +152,6 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 								value={IMPERIAL}
 								checked={!autoMapUnit.selected && currentMapUnit === IMPERIAL}
 								onChange={() => onMapUnitChange(IMPERIAL)}
-								crossOrigin={undefined}
 							>
 								<Text marginLeft="1.23rem">{t("settings_modal__imperial.text")}</Text>
 								<Text variation="tertiary" marginLeft="1.23rem">
@@ -167,7 +165,6 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 								value={METRIC}
 								checked={!autoMapUnit.selected && currentMapUnit === METRIC}
 								onChange={() => onMapUnitChange(METRIC)}
-								crossOrigin={undefined}
 							>
 								<Text marginLeft="1.23rem">{t("settings_modal__metric.text")}</Text>
 								<Text variation="tertiary" marginLeft="1.23rem">
@@ -217,7 +214,6 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 									value={value}
 									checked={i18n.language === value}
 									onChange={handleLanguageChange}
-									crossOrigin={undefined}
 								>
 									<Text marginLeft="1.23rem">{label}</Text>
 								</Radio>
@@ -245,7 +241,6 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 							value="Avoid tolls"
 							checked={defaultRouteOptions.avoidTolls}
 							onChange={e => handleRouteOptionChange(e, "avoidTolls")}
-							crossOrigin={undefined}
 						/>
 						<CheckboxField
 							data-testid="avoid-ferries"
@@ -255,7 +250,6 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 							value="Avoid ferries"
 							checked={defaultRouteOptions.avoidFerries}
 							onChange={e => handleRouteOptionChange(e, "avoidFerries")}
-							crossOrigin={undefined}
 						/>
 						<CheckboxField
 							className="sm-checkbox"
@@ -264,7 +258,6 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 							value="Avoid Dirtroads"
 							checked={defaultRouteOptions.avoidDirtRoads}
 							onChange={e => handleRouteOptionChange(e, "avoidDirtRoads")}
-							crossOrigin={undefined}
 						/>
 						<CheckboxField
 							className="sm-checkbox"
@@ -273,7 +266,6 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 							value="Avoid Uturns"
 							checked={defaultRouteOptions.avoidUTurns}
 							onChange={e => handleRouteOptionChange(e, "avoidUTurns")}
-							crossOrigin={undefined}
 						/>
 						<CheckboxField
 							className="sm-checkbox"
@@ -282,7 +274,6 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 							value="Avoid Tunnels"
 							checked={defaultRouteOptions.avoidTunnels}
 							onChange={e => handleRouteOptionChange(e, "avoidTunnels")}
-							crossOrigin={undefined}
 						/>
 					</Flex>
 				)
@@ -312,7 +303,6 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 								value={"Automatic"}
 								checked={autoRegion}
 								onChange={() => handleRegionChange("Automatic")}
-								crossOrigin={undefined}
 							>
 								<Text marginLeft="1.23rem">{`${t("settings_modal__automatic.text")} - ${fastestRegion}`}</Text>
 							</Radio>
@@ -323,7 +313,6 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 								value={RegionEnum.US_EAST_1}
 								checked={!autoRegion && baseValues?.region === RegionEnum.US_EAST_1}
 								onChange={() => handleRegionChange(RegionEnum.US_EAST_1)}
-								crossOrigin={undefined}
 							>
 								<Text marginLeft="1.23rem">{t("regions__us_east_1.text")}</Text>
 							</Radio>
@@ -334,7 +323,6 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 								value={RegionEnum.EU_WEST_1}
 								checked={!autoRegion && baseValues?.region === RegionEnum.EU_WEST_1}
 								onChange={() => handleRegionChange(RegionEnum.EU_WEST_1)}
-								crossOrigin={undefined}
 							>
 								<Text marginLeft="1.23rem">{t("regions__eu_west_1.text")}</Text>
 							</Radio>
@@ -433,48 +421,42 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 			className={`settings-modal ${isMobile ? "settings-modal-mobile" : ""} ${
 				!isDesktop ? "settings-modal-tablet" : ""
 			} `}
-			content={
-				<>
-					{isMobile && !settingsOptions && (
-						<Flex direction="column" className="setting-title-container-mobile">
-							<Text className="option-title">
-								{isMobile && <IconBackArrow className="grey-icon back-arrow" onClick={modalCloseHandler} />}
-								{t("settings.text")}
-							</Text>
-							<Divider className="title-divider" />
+		>
+			<>
+				{isMobile && !settingsOptions && (
+					<Flex direction="column" className="setting-title-container-mobile">
+						<Text className="option-title">
+							{isMobile && <IconBackArrow className="grey-icon back-arrow" onClick={modalCloseHandler} />}
+							{t("settings.text")}
+						</Text>
+						<Divider className="title-divider" />
+					</Flex>
+				)}
+				<Flex
+					className={`settings-modal-content ${!isDesktop ? "settings-modal-content-tablet" : ""} ${
+						isMobile ? "settings-modal-content-mobile" : ""
+					}`}
+				>
+					{(!settingsOptions || !isMobile) && (
+						<Flex className="options-container" style={{ overflowY: "auto" }}>
+							{!isMobile && (
+								<Text className="bold" fontSize="1.23rem" lineHeight="1.85rem" padding={"1.23rem 0rem 1.23rem 1.23rem"}>
+									{t("settings.text")}
+								</Text>
+							)}
+							{renderOptionItems}
 						</Flex>
 					)}
-					<Flex
-						className={`settings-modal-content ${!isDesktop ? "settings-modal-content-tablet" : ""} ${
-							isMobile ? "settings-modal-content-mobile" : ""
-						}`}
-					>
-						{(!settingsOptions || !isMobile) && (
-							<Flex className="options-container" style={{ overflowY: "auto" }}>
-								{!isMobile && (
-									<Text
-										className="bold"
-										fontSize="1.23rem"
-										lineHeight="1.85rem"
-										padding={"1.23rem 0rem 1.23rem 1.23rem"}
-									>
-										{t("settings.text")}
-									</Text>
-								)}
-								{renderOptionItems}
-							</Flex>
-						)}
-						{!isMobile && <Divider orientation="vertical" className="col-divider" />}
-						{!!settingsOptions && (
-							<Flex data-testid="option-details-container" className="option-details-container">
-								{renderOptionDetails}
-							</Flex>
-						)}
-					</Flex>
-					<Divider orientation="vertical" className="col-divider" />
-				</>
-			}
-		/>
+					{!isMobile && <Divider orientation="vertical" className="col-divider" />}
+					{!!settingsOptions && (
+						<Flex data-testid="option-details-container" className="option-details-container">
+							{renderOptionDetails}
+						</Flex>
+					)}
+				</Flex>
+				<Divider orientation="vertical" className="col-divider" />
+			</>
+		</Modal>
 	);
 };
 

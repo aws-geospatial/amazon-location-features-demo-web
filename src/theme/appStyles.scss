@@ -2,9 +2,9 @@
 /* SPDX-License-Identifier: MIT-0 */
 
 /* SCSS imports */
-@import "./styles/amplifyOverride.scss";
-@import "./styles/global.scss";
-@import "./styles/rootVars.scss";
+@use "./styles/amplifyOverride.scss";
+@use "./styles/global.scss";
+@use "./styles/rootVars.scss";
 
 html {
 	/* Default font-size set to 13px */

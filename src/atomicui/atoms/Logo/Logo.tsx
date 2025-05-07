@@ -16,15 +16,7 @@ const Logo: FC<LogoProps> = ({ onClick, ...props }) => {
 	const { t } = useTranslation();
 
 	return (
-		<View
-			data-testid="logo-container"
-			className="site-logo__container"
-			as={Flex}
-			// alignItems="center"
-			// gap="0"
-			onClick={onClick}
-			{...props}
-		>
+		<View data-testid="logo-container" className="site-logo__container" as={Flex} onClick={onClick} {...props}>
 			<LogoSmall className="is__logo" width="32pt" height="24pt" />
 			<span className="heading">{t("al.text")}</span>
 		</View>

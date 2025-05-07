@@ -22,7 +22,7 @@ const feedbackCategories = [
 	{ id: "Routes", label: "Routes" },
 	{ id: "TrackingGeofencing", label: "Tracking & Geofencing" }
 ];
-let scrollTimeout: NodeJS.Timer | undefined;
+let scrollTimeout: NodeJS.Timeout | undefined;
 
 export interface FeedbackModalProps {
 	open: boolean;
@@ -143,142 +143,141 @@ const FeedbackModal: FC<FeedbackModalProps> = ({ open, onClose }) => {
 			style={{
 				maxHeight: isDesktop ? (showAlert ? "56.62rem" : "54.62rem") : "100%"
 			}}
-			content={
-				<Flex className="content-container" direction={"column"} alignContent={"center"} ref={contentRef}>
-					<Flex direction={"column"} justifyContent={"center"} textAlign={"left"}>
-						<View className="title-container">
-							{showAlert ? (
-								<Alert
-									variation="success"
-									isDismissible={true}
-									onDismiss={() => dismissAlert()}
-									style={{ borderRadius: "8px" }}
-								>
-									{t("fm__submit_feedback_alert.text")}
-								</Alert>
-							) : (
-								<></>
-							)}
-							<Text
-								className="bold"
-								fontSize="1.54rem"
-								marginTop="0.46rem"
-								style={{ textAlign: "center", fontFamily: "" }}
+		>
+			<Flex className="content-container" direction={"column"} alignContent={"center"} ref={contentRef}>
+				<Flex direction={"column"} justifyContent={"center"} textAlign={"left"}>
+					<View className="title-container">
+						{showAlert ? (
+							<Alert
+								variation="success"
+								isDismissible={true}
+								onDismiss={() => dismissAlert()}
+								style={{ borderRadius: "8px" }}
 							>
-								{t("fm__header.text")}
-							</Text>
-						</View>
-						<>
-							<Text className="bold" margin={"0px 0px 0px 0px"} textAlign={"start"}>
-								{t("fm__category.text")}
-							</Text>
-							<SelectField
-								label="Category"
-								labelHidden
-								style={{
-									background: "#F2F2F7",
-									border: "1px solid var(--border-color-textfield)",
-									borderRadius: "8px"
-								}}
-								value={formValues.category}
-								onChange={e => onChangeFormCategory(e.target.value)}
-							>
-								{feedbackCategories.map(category => {
-									return (
-										<option key={category.id} value={category.id}>
-											{category.label}
-										</option>
-									);
-								})}
-							</SelectField>
+								{t("fm__submit_feedback_alert.text")}
+							</Alert>
+						) : (
+							<></>
+						)}
+						<Text
+							className="bold"
+							fontSize="1.54rem"
+							marginTop="0.46rem"
+							style={{ textAlign: "center", fontFamily: "" }}
+						>
+							{t("fm__header.text")}
+						</Text>
+					</View>
+					<>
+						<Text className="bold" margin={"0px 0px 0px 0px"} textAlign={"start"}>
+							{t("fm__category.text")}
+						</Text>
+						<SelectField
+							label="Category"
+							labelHidden
+							style={{
+								background: "#F2F2F7",
+								border: "1px solid var(--border-color-textfield)",
+								borderRadius: "8px"
+							}}
+							value={formValues.category}
+							onChange={e => onChangeFormCategory(e.target.value)}
+						>
+							{feedbackCategories.map(category => {
+								return (
+									<option key={category.id} value={category.id}>
+										{category.label}
+									</option>
+								);
+							})}
+						</SelectField>
 
-							<Text className="bold" margin={"0px 0px 0px 0px"} textAlign={"start"}>
-								{t("fm__rating.text")}
-							</Text>
-							<Flex
-								justifyContent="flex-start"
-								alignItems="flex-start"
-								alignContent="flex-start"
-								direction="row"
-								gap="1rem"
-							>
-								{[1, 2, 3, 4, 5].map(star => {
-									return (
-										<Flex
-											key={star}
-											onClick={() => handleStarClick(star)}
-											style={{
-												cursor: "pointer"
-											}}
-										>
-											{star <= formValues.rating ? <IconStarFilled /> : <IconStar />}
-										</Flex>
-									);
-								})}
-							</Flex>
+						<Text className="bold" margin={"0px 0px 0px 0px"} textAlign={"start"}>
+							{t("fm__rating.text")}
+						</Text>
+						<Flex
+							justifyContent="flex-start"
+							alignItems="flex-start"
+							alignContent="flex-start"
+							direction="row"
+							gap="1rem"
+						>
+							{[1, 2, 3, 4, 5].map(star => {
+								return (
+									<Flex
+										key={star}
+										onClick={() => handleStarClick(star)}
+										style={{
+											cursor: "pointer"
+										}}
+									>
+										{star <= formValues.rating ? <IconStarFilled /> : <IconStar />}
+									</Flex>
+								);
+							})}
+						</Flex>
 
-							<Text className="bold" margin={"0px 0px 0px 0px"} textAlign={"start"}>
-								{t("fm__feedback_header.text")}
-							</Text>
-							<TextAreaField
-								data-testid={"input-field-feedback-text"}
-								label={""}
-								placeholder={`${t("caam__enter.text")} ${t("fm__feedback_header.text")}`}
-								rows={8}
-								onChange={e => onChangeFormValues("text", e.target.value)}
-								value={formValues.text}
-								margin={"0rem 0rem 0.5rem 0rem"}
-								labelHidden
-								style={{
-									background: "#F2F2F7",
-									border: "1px solid var(--border-color-textfield)",
-									borderRadius: "8px"
-								}}
-							/>
-							<InputField
-								dataTestId={"input-field-feedback-email"}
-								containerMargin="0rem 0rem 1.85rem 0rem"
-								label={`${t("fm__email_header.text")} (${t("fm__opt_header.text")})`}
-								placeholder={`${t("caam__enter.text")} ${t("fm__email_header.text")}`}
-								value={formValues.email}
-								type="email"
-								onChange={e => onChangeFormValues("email", e.target.value.trim())}
-								name={"email"}
-								autocomplete={"off"}
-							/>
-							<Button
-								data-testid="connect-button"
-								className="aws-connect-button"
-								variation="primary"
-								width="100%"
-								height="3.08rem"
-								isDisabled={isSubmitting ? true : !isBtnEnabled}
-								onClick={() => handleSubmit()}
-							>
-								{isSubmitting ? <Loader /> : t("fm__submit_feedback_btn.text")}
-							</Button>
-							<Button
-								data-testid="connect-button"
-								className="aws-connect-button"
-								variation="primary"
-								width="100%"
-								height="3.08rem"
-								onClick={() => _onClose()}
-								style={{
-									backgroundColor: "white",
-									color: "var(--amplify-components-text-color)",
-									borderColor: "white",
-									fontFamily: "AmazonEmber-Bold",
-									fontSize: "14.0486px"
-								}}
-							>
-								{isSubmitting ? <></> : t("confirmation_modal__cancel.text")}
-							</Button>
-						</>
-					</Flex>
+						<Text className="bold" margin={"0px 0px 0px 0px"} textAlign={"start"}>
+							{t("fm__feedback_header.text")}
+						</Text>
+						<TextAreaField
+							data-testid={"input-field-feedback-text"}
+							label={""}
+							placeholder={`${t("caam__enter.text")} ${t("fm__feedback_header.text")}`}
+							rows={8}
+							onChange={e => onChangeFormValues("text", e.target.value)}
+							value={formValues.text}
+							margin={"0rem 0rem 0.5rem 0rem"}
+							labelHidden
+							style={{
+								background: "#F2F2F7",
+								border: "1px solid var(--border-color-textfield)",
+								borderRadius: "8px"
+							}}
+						/>
+						<InputField
+							dataTestId={"input-field-feedback-email"}
+							containerMargin="0rem 0rem 1.85rem 0rem"
+							label={`${t("fm__email_header.text")} (${t("fm__opt_header.text")})`}
+							placeholder={`${t("caam__enter.text")} ${t("fm__email_header.text")}`}
+							value={formValues.email}
+							type="email"
+							onChange={e => onChangeFormValues("email", e.target.value.trim())}
+							name={"email"}
+							autocomplete={"off"}
+						/>
+						<Button
+							data-testid="connect-button"
+							className="aws-connect-button"
+							variation="primary"
+							width="100%"
+							height="3.08rem"
+							isDisabled={isSubmitting ? true : !isBtnEnabled}
+							onClick={() => handleSubmit()}
+						>
+							{isSubmitting ? <Loader /> : t("fm__submit_feedback_btn.text")}
+						</Button>
+						<Button
+							data-testid="connect-button"
+							className="aws-connect-button"
+							variation="primary"
+							width="100%"
+							height="3.08rem"
+							onClick={() => _onClose()}
+							style={{
+								backgroundColor: "white",
+								color: "var(--amplify-components-text-color)",
+								borderColor: "white",
+								fontFamily: "AmazonEmber-Bold",
+								fontSize: "14.0486px"
+							}}
+						>
+							{isSubmitting ? <></> : t("confirmation_modal__cancel.text")}
+						</Button>
+					</>
 				</Flex>
-			}
-		/>
+			</Flex>
+		</Modal>
 	);
 };
 

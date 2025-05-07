@@ -66,76 +66,74 @@ const ConfirmationModal: FC<ConfirmationModalProps> = ({
 			open={open}
 			onClose={onClose}
 			hideCloseIcon
-			content={
-				<Flex data-testid="confirmation-content" className="confirmation-content">
-					<Text className="bold medium-text" textAlign="center">
-						{heading || t("confirmation_modal__heading.text")}
-					</Text>
-					{typeof description === "string" ? (
-						<Text
-							className="regular-text"
-							variation="tertiary"
-							marginTop="1.23rem"
-							textAlign="center"
-							whiteSpace="pre-line"
-						>
-							{description || t("confirmation_modal__desc.text")}
-						</Text>
-					) : (
-						description
-					)}
-					{showConfirmationCheckbox && (
-						<CheckboxField
-							data-testid="confirmation-checkbox"
-							className="custom-checkbox confirmation-checkbox"
-							size="large"
-							label={confirmationCheckboxLabel || ""}
-							name={confirmationCheckboxName || ""}
-							value={confirmationCheckboxValue || ""}
-							checked={isConfirmationChecked}
-							onChange={e => {
-								setIsConfirmationChecked(e.target.checked);
-								confirmationCheckboxOnChange(e.target.checked);
-							}}
-							marginTop="2rem"
-							crossOrigin={undefined}
-						/>
-					)}
-					<Button
-						data-testid="confirmation-button"
-						variation="primary"
-						fontFamily="AmazonEmber-Bold"
-						marginTop={showConfirmationCheckbox ? "2rem" : "2.46rem"}
-						onClick={onConfirm}
-						height="3.08rem"
+		>
+			<Flex data-testid="confirmation-content" className="confirmation-content">
+				<Text className="bold medium-text" textAlign="center">
+					{heading || t("confirmation_modal__heading.text")}
+				</Text>
+				{typeof description === "string" ? (
+					<Text
+						className="regular-text"
+						variation="tertiary"
+						marginTop="1.23rem"
+						textAlign="center"
+						whiteSpace="pre-line"
 					>
-						{confirmationText || t("continue.text")}
-					</Button>
-					{showLearnMore && (
-						<Flex
-							data-testid="confirmation-learn-more-button"
-							className="confirmation-learn-more-button"
-							onClick={handleLearnMore}
-						>
-							<Text className="bold" fontSize="1.08rem" textAlign="center">
-								{t("learn_more.text")}
-							</Text>
-						</Flex>
-					)}
-					{!hideCancelButton && (
-						<Flex
-							data-testid="confirmation-cancel-button"
-							className="confirmation-cancel-button"
-							onClick={onCancel ? onCancel : onClose}
-						>
-							<Text className="bold" fontSize="1.08rem" textAlign="center">
-								{cancelationText || t("confirmation_modal__cancel.text")}
-							</Text>
-						</Flex>
-					)}
-				</Flex>
-			}
-		/>
+						{description || t("confirmation_modal__desc.text")}
+					</Text>
+				) : (
+					description
+				)}
+				{showConfirmationCheckbox && (
+					<CheckboxField
+						data-testid="confirmation-checkbox"
+						className="custom-checkbox confirmation-checkbox"
+						size="large"
+						label={confirmationCheckboxLabel || ""}
+						name={confirmationCheckboxName || ""}
+						value={confirmationCheckboxValue || ""}
+						checked={isConfirmationChecked}
+						onChange={e => {
+							setIsConfirmationChecked(e.target.checked);
+							confirmationCheckboxOnChange(e.target.checked);
+						}}
+						marginTop="2rem"
+					/>
+				)}
+				<Button
+					data-testid="confirmation-button"
+					variation="primary"
+					fontFamily="AmazonEmber-Bold"
+					marginTop={showConfirmationCheckbox ? "2rem" : "2.46rem"}
+					onClick={onConfirm}
+					height="3.08rem"
+				>
+					{confirmationText || t("continue.text")}
+				</Button>
+				{showLearnMore && (
+					<Flex
+						data-testid="confirmation-learn-more-button"
+						className="confirmation-learn-more-button"
+						onClick={handleLearnMore}
+					>
+						<Text className="bold" fontSize="1.08rem" textAlign="center">
+							{t("learn_more.text")}
+						</Text>
+					</Flex>
+				)}
+				{!hideCancelButton && (
+					<Flex
+						data-testid="confirmation-cancel-button"
+						className="confirmation-cancel-button"
+						onClick={onCancel ? onCancel : onClose}
+					>
+						<Text className="bold" fontSize="1.08rem" textAlign="center">
+							{cancelationText || t("confirmation_modal__cancel.text")}
+						</Text>
+					</Flex>
+				)}
+			</Flex>
+		</Modal>
 	);
 };
 

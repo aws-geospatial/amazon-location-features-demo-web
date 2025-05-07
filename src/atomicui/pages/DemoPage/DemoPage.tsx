@@ -3,8 +3,8 @@
 
 import { FC, MutableRefObject, lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { Flex, View } from "@aws-amplify/ui-react";
 import { decodeToLineStringFeature } from "@aws/polyline";
+import { Flex, View } from "@aws-amplify/ui-react";
 import { IconLocateMe, LogoDark, LogoLight } from "@demo/assets/svgs";
 import { SearchBox } from "@demo/atomicui/organisms/SearchBox";
 import { appConfig } from "@demo/core/constants";

@@ -145,7 +145,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 			const targetElement = document.querySelector('[data-rsbs-scroll="true"]') as HTMLElement;
 			targetElement?.classList.add("hideScroll");
 
-			let scrollTimeout: NodeJS.Timer | undefined;
+			let scrollTimeout: NodeJS.Timeout | undefined;
 
 			const handleWheel = () => {
 				clearTimeout(scrollTimeout);
@@ -483,7 +483,7 @@ const ResponsiveBottomSheet: FC<IProps> = ({
 				open
 				ref={bottomSheetRef}
 				blocking={false}
-				snapPoints={({ maxHeight }) => [
+				snapPoints={({ maxHeight }: { maxHeight: number }) => [
 					bottomSheetMinHeight,
 					[ResponsiveUIEnum.map_styles, ResponsiveUIEnum.unauth_simulation, ResponsiveUIEnum.explore].includes(ui) ||
 					(isDesktopBrowser &&

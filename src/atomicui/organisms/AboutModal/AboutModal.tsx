@@ -188,50 +188,49 @@ const AboutModal: FC<AboutModalProps> = ({ open, onClose }) => {
 			onClose={onClose}
 			hideCloseIcon={isMobile}
 			className="more-modal"
-			content={
-				<>
-					{isMobile && !selectedOption && (
-						<Flex className="more-title-container-mobile">
-							<Text className="option-title">
-								<IconBackArrow
-									className="grey-icon back-arrow"
-									onClick={() => {
-										setSelectedOption(undefined);
-										onClose();
-									}}
-								/>
-								{t("about.text")}
-							</Text>
-							<Divider className="title-divider" />
+		>
+			<>
+				{isMobile && !selectedOption && (
+					<Flex className="more-title-container-mobile">
+						<Text className="option-title">
+							<IconBackArrow
+								className="grey-icon back-arrow"
+								onClick={() => {
+									setSelectedOption(undefined);
+									onClose();
+								}}
+							/>
+							{t("about.text")}
+						</Text>
+						<Divider className="title-divider" />
+					</Flex>
+				)}
+				<Flex className="more-modal-content">
+					{(!selectedOption || !isMobile) && (
+						<Flex className="options-container">
+							{!isMobile && (
+								<Text className="bold regular-text" padding={"1.23rem 0rem 1.23rem 1.23rem"}>
+									{t("about.text")}
+								</Text>
+							)}
+							{renderOptionItems}
+							{isMobile && (
+								<>
+									<Flex grow={1} />
+									{renderTermsAndConditions()}
+								</>
+							)}
 						</Flex>
 					)}
-					<Flex className="more-modal-content">
-						{(!selectedOption || !isMobile) && (
-							<Flex className="options-container">
-								{!isMobile && (
-									<Text className="bold regular-text" padding={"1.23rem 0rem 1.23rem 1.23rem"}>
-										{t("about.text")}
-									</Text>
-								)}
-								{renderOptionItems}
-								{isMobile && (
-									<>
-										<Flex grow={1} />
-										{renderTermsAndConditions()}
-									</>
-								)}
-							</Flex>
-						)}
-						{!isMobile && <Divider orientation="vertical" className="col-divider" />}
-						{!!selectedOption && (
-							<Flex className="option-details-container" style={{ overflowY: "auto" }}>
-								{renderOptionDetails}
-							</Flex>
-						)}
-					</Flex>
-				</>
-			}
-		/>
+					{!isMobile && <Divider orientation="vertical" className="col-divider" />}
+					{!!selectedOption && (
+						<Flex className="option-details-container" style={{ overflowY: "auto" }}>
+							{renderOptionDetails}
+						</Flex>
+					)}
+				</Flex>
+			</>
+		</Modal>
 	);
 };
 
