@@ -4,6 +4,7 @@
 
 import { ChangeEvent, FC, MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+import { decodeToLineStringFeature } from "@aws/polyline";
 import { Card, CheckboxField, Flex, Text, TextField, View } from "@aws-amplify/ui-react";
 import {
 	CalculateRoutesCommandInput,
@@ -16,7 +17,6 @@ import {
 	RouteVehicleLegDetails,
 	RouteVehicleTravelStep
 } from "@aws-sdk/client-geo-routes";
-import { decodeToLineStringFeature } from "@aws/polyline";
 import {
 	IconArrowDownUp,
 	IconCar,
@@ -568,7 +568,6 @@ const RouteBox: FC<RouteBoxProps> = ({
 						setRouteData(undefined);
 						setRouteDataForMobile(undefined);
 					}}
-					crossOrigin={undefined}
 				/>
 				<CheckboxField
 					className="option-item"
@@ -581,7 +580,6 @@ const RouteBox: FC<RouteBoxProps> = ({
 						setRouteData(undefined);
 						setRouteDataForMobile(undefined);
 					}}
-					crossOrigin={undefined}
 				/>
 
 				<CheckboxField
@@ -595,7 +593,6 @@ const RouteBox: FC<RouteBoxProps> = ({
 						setRouteData(undefined);
 						setRouteDataForMobile(undefined);
 					}}
-					crossOrigin={undefined}
 				/>
 
 				<CheckboxField
@@ -609,7 +606,6 @@ const RouteBox: FC<RouteBoxProps> = ({
 						setRouteData(undefined);
 						setRouteDataForMobile(undefined);
 					}}
-					crossOrigin={undefined}
 				/>
 
 				<CheckboxField
@@ -623,7 +619,6 @@ const RouteBox: FC<RouteBoxProps> = ({
 						setRouteData(undefined);
 						setRouteDataForMobile(undefined);
 					}}
-					crossOrigin={undefined}
 				/>
 			</View>
 		),
@@ -1147,7 +1142,6 @@ const RouteBox: FC<RouteBoxProps> = ({
 											setRouteData(undefined);
 											setRouteDataForMobile(undefined);
 										}}
-										crossOrigin={undefined}
 									/>
 
 									<CheckboxField
@@ -1161,7 +1155,6 @@ const RouteBox: FC<RouteBoxProps> = ({
 											setRouteData(undefined);
 											setRouteDataForMobile(undefined);
 										}}
-										crossOrigin={undefined}
 									/>
 
 									<CheckboxField
@@ -1175,7 +1168,6 @@ const RouteBox: FC<RouteBoxProps> = ({
 											setRouteData(undefined);
 											setRouteDataForMobile(undefined);
 										}}
-										crossOrigin={undefined}
 									/>
 								</View>
 
