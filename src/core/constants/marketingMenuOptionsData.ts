@@ -26,7 +26,8 @@ const {
 		MIGRATE_AN_ANDROID_APP,
 		MIGRATE_AN_IOS_APP,
 		MIGRATE_A_WEB_SERVICE,
-		PRICING
+		PRICING,
+		API_PLAYGROUND
 	},
 	LINKS: {
 		LEARN_MORE_URL,
@@ -276,6 +277,11 @@ if (!SHOW_NEW_NAVIGATION) {
 				{
 					label: "sample_applications.text",
 					link: SAMPLES,
+					isExternalLink: false
+				},
+				{
+					label: "api_playground.text",
+					link: API_PLAYGROUND,
 					isExternalLink: false
 				}
 			]
