@@ -22,8 +22,9 @@
       ---
 2. Value for `VITE_APPLE_APP_STORE_LINK`, `VITE_GOOGLE_PLAY_STORE_LINK` can be added as it is to `.env` file from `.env.examples`.
 3. Value for `VITE_APP_VERSION` needs to be populated with the correct version at the time of deployment in the following format `2.1.0`.
-4. Values for `VITE_MIGRATE_FROM_GOOGLE_MAPS_PAGE`, `VITE_MIGRATE_A_WEB_APP_PAGE`, `VITE_MIGRATE_AN_ANDROID_APP_PAGE`, `VITE_MIGRATE_AN_IOS_APP_PAGE`, `VITE_MIGRATE_A_WEB_SERVICE_PAGE`, `VITE_PRICING_PAGE` and `VITE_API_PLAYGROUND_PAGE` can either be `1` or `0` to either enable or disable the respective pages.
+4. Values for `VITE_MIGRATE_FROM_GOOGLE_MAPS_PAGE`, `VITE_MIGRATE_A_WEB_APP_PAGE`, `VITE_MIGRATE_AN_ANDROID_APP_PAGE`, `VITE_MIGRATE_AN_IOS_APP_PAGE`, `VITE_MIGRATE_A_WEB_SERVICE_PAGE` and `VITE_PRICING_PAGE` can either be `1` or `0` to either enable or disable the respective pages.
 5. Values for `VITE_SHOW_NEW_NAVIGATION` can either be `1` or `0` to either enable or disable the new navigation, turning it off would show the current navigation instead.
+6. Values for `VITE_API_PLAYGROUND_PAGE` can either be `1` or `0` to either enable or disable the API playground page, turning it off would remove the API playground page.
 
 #### Env keys required in `.env` file, see `.env.example` for reference
 
@@ -43,6 +44,7 @@
 > VITE_MIGRATE_A_WEB_SERVICE_PAGE<br />
 > VITE_PRICING_PAGE<br />
 > VITE_SHOW_NEW_NAVIGATION<br />
+> VITE_API_PLAYGROUND_PAGE<br />
 
 #### Env keys optional in `.env` file, see `.env.example` for reference
 > VITE_NL_BASE_URL<br />
@@ -96,6 +98,7 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 > VITE_MIGRATE_A_WEB_SERVICE_PAGE
 > VITE_PRICING_PAGE
 > VITE_SHOW_NEW_NAVIGATION
+> VITE_API_PLAYGROUND_PAGE
 ```
 
 #### `npm run cypress`
