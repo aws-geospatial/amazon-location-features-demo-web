@@ -3916,5 +3916,8 @@
   },
   "leave_at": {
     "text": "で出発"
+  },
+  "api_playground": {
+    "text": "API プレイグラウンド"
   }
 }
