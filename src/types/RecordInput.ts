@@ -1,5 +1,3 @@
-import { Session } from "@aws-sdk/client-pinpoint";
-
 import { EventTypeEnum } from "./Enums";
 
 type RecordInput = {
@@ -16,7 +14,6 @@ type RecordInput = {
 	// 	[key: string]: number;
 	// };
 	// SdkName?: string;
-	Session?: Session;
 	Timestamp?: string | undefined;
 };
 
