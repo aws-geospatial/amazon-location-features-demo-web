@@ -51,7 +51,8 @@ const appConfig = {
 		MIGRATE_AN_IOS_APP_PAGE: !!parseInt(String(getEnv("VITE_MIGRATE_AN_IOS_APP_PAGE"))),
 		MIGRATE_A_WEB_SERVICE_PAGE: !!parseInt(String(getEnv("VITE_MIGRATE_A_WEB_SERVICE_PAGE"))),
 		PRICING_PAGE: !!parseInt(String(getEnv("VITE_PRICING_PAGE"))),
-		SHOW_NEW_NAVIGATION: !!parseInt(String(getEnv("VITE_SHOW_NEW_NAVIGATION")))
+		SHOW_NEW_NAVIGATION: !!parseInt(String(getEnv("VITE_SHOW_NEW_NAVIGATION"))),
+		API_PLAYGROUND_PAGE: !!parseInt(String(getEnv("VITE_API_PLAYGROUND_PAGE")))
 	},
 	PERSIST_STORAGE_KEYS: {
 		LOCAL_STORAGE_PREFIX: "amazon-location_",
@@ -81,7 +82,9 @@ const appConfig = {
 		MIGRATE_AN_ANDROID_APP: "/migrate-an-android-app",
 		MIGRATE_AN_IOS_APP: "/migrate-an-ios-app",
 		MIGRATE_A_WEB_SERVICE: "/migrate-a-web-service",
-		PRICING: "/pricing"
+		PRICING: "/pricing",
+		API_PLAYGROUND: "/api-playground",
+		API_PLAYGROUND_DETAILS: "/api-playground/:apiPlaygroundId"
 	},
 	GET_PARAMS: {
 		NL_TOGGLE: "nl"
