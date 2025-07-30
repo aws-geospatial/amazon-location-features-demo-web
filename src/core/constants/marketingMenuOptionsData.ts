@@ -16,8 +16,7 @@ const {
 		MIGRATE_AN_IOS_APP_PAGE,
 		MIGRATE_A_WEB_SERVICE_PAGE,
 		PRICING_PAGE,
-		SHOW_NEW_NAVIGATION,
-		API_PLAYGROUND_PAGE
+		SHOW_NEW_NAVIGATION
 	},
 	ROUTES: {
 		DEMO,
@@ -27,9 +26,7 @@ const {
 		MIGRATE_AN_ANDROID_APP,
 		MIGRATE_AN_IOS_APP,
 		MIGRATE_A_WEB_SERVICE,
-		PRICING,
-		API_PLAYGROUND,
-		API_PLAYGROUND_DETAILS
+		PRICING
 	},
 	LINKS: {
 		LEARN_MORE_URL,
@@ -61,9 +58,7 @@ const routeToEnvMapping = {
 	[MIGRATE_AN_ANDROID_APP]: MIGRATE_AN_ANDROID_APP_PAGE,
 	[MIGRATE_AN_IOS_APP]: MIGRATE_AN_IOS_APP_PAGE,
 	[MIGRATE_A_WEB_SERVICE]: MIGRATE_A_WEB_SERVICE_PAGE,
-	[PRICING]: PRICING_PAGE,
-	[API_PLAYGROUND]: API_PLAYGROUND_PAGE,
-	[API_PLAYGROUND_DETAILS]: API_PLAYGROUND_PAGE
+	[PRICING]: PRICING_PAGE
 };
 
 const shouldIncludeMenuItem = ({ link }: MenuItem) => (link in routeToEnvMapping ? routeToEnvMapping[link] : true);
@@ -281,11 +276,6 @@ if (!SHOW_NEW_NAVIGATION) {
 				{
 					label: "sample_applications.text",
 					link: SAMPLES,
-					isExternalLink: false
-				},
-				{
-					label: "api_playground.text",
-					link: API_PLAYGROUND,
 					isExternalLink: false
 				}
 			]

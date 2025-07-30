@@ -36,7 +36,6 @@ jobs:
           echo "VITE_MIGRATE_A_WEB_SERVICE_PAGE=${{ secrets.VITE_MIGRATE_A_WEB_SERVICE_PAGE }}" >> .env
           echo "VITE_PRICING_PAGE=${{ secrets.VITE_PRICING_PAGE }}" >> .env
           echo "VITE_SHOW_NEW_NAVIGATION=${{ secrets.VITE_SHOW_NEW_NAVIGATION }}" >> .env
-          echo "VITE_API_PLAYGROUND_PAGE=${{ secrets.VITE_API_PLAYGROUND_PAGE }}" >> .env
 
       - name: Install dependencies
         run: npm install

@@ -111,7 +111,7 @@ const List: FC<ListProps> = ({
 						data-testid={label}
 						key={uuid.randomUUID()}
 						className={SHOW_NEW_NAVIGATION ? "new-list-item" : "list-item"}
-						onMouseEnter={e => hasSubMenuItems && setPos(subMenu.length >= 5 ? e.clientY - 200 : e.clientY - 50)}
+						onMouseEnter={e => hasSubMenuItems && setPos(subMenu.length >= 5 ? e.clientY - 120 : e.clientY - 50)}
 						onMouseLeave={() => hasSubMenuItems && setPos(null)}
 					>
 						{hideIcons ? null : (
