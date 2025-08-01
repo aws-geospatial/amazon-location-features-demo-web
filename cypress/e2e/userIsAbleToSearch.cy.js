@@ -44,7 +44,7 @@ describe("Search", () => {
 			cy.get("div").should("contain", "Rio Tinto");
 			for (let i = 0; i < 10; i++) {
 				cy.get("div").should("contain", "Rio Tinto");
-				cy.wait(10000);
+				cy.wait(2000);
 			}
 		});
 
