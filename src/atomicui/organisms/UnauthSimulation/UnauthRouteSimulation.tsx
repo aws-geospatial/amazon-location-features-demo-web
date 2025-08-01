@@ -49,6 +49,7 @@ const UnauthRouteSimulation: FC<UnauthRouteSimulationProps> = ({
 				setTrackerPos(coordinates[idx]);
 				// Evaluate geofences to check if tracker is inside any of them
 				evaluateGeofence(coordinates[idx], `location.aws.com.demo.geofences.${geofenceCollection}`);
+				console.log(`zee dateTime: ${new Date()}`);
 				// Update tracking history with tracker positions
 				updateTrackingHistory(id, {
 					type: TrackingHistoryTypeEnum.TRACKER,
