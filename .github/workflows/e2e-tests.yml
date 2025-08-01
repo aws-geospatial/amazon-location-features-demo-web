@@ -45,8 +45,8 @@ jobs:
           npm run dev &
           echo "Server started"
           sleep 10
-          - name: Check date validity
-          run: |
+      - name: Check date validity
+        run: |
             node -e '
               const d = new Date();
               if (isNaN(d)) {
@@ -55,7 +55,7 @@ jobs:
               } else {
                 console.log("Valid Date:", d.toISOString());
               }
-            '        
+            '
       - name: Run cypress tests
         env:
           CYPRESS_WEB_DOMAIN: ${{ secrets.WEB_DOMAIN }}
