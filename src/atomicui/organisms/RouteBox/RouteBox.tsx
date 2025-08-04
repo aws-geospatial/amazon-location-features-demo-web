@@ -153,7 +153,6 @@ const RouteBox: FC<RouteBoxProps> = ({
 	const isInputFocused = inputFocused.from || inputFocused.to;
 	const isBothInputFilled = value.from && value.to;
 	const [timeSelectionMode, setTimeSelectionMode] = useState<TimeSelectionMode>(TimeSelectionMode.LEAVE_NOW);
-	console.log(`zee dateTime: ${new Date()}`);
 	const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split("T")[0]);
 	const [selectedTime, setSelectedTime] = useState<string>(
 		new Date().toLocaleTimeString("en-US", { hour12: false, hour: "2-digit", minute: "2-digit" })
@@ -279,7 +278,6 @@ const RouteBox: FC<RouteBoxProps> = ({
 
 				const timeParams = (() => {
 					const dateTime = new Date(`${selectedDate}T${selectedTime}`);
-					console.log(`Selected DateTime: ${dateTime}`);
 					switch (timeSelectionMode) {
 						case TimeSelectionMode.LEAVE_NOW:
 							return { DepartNow: true };
