@@ -278,7 +278,6 @@ const RouteBox: FC<RouteBoxProps> = ({
 
 				const timeParams = (() => {
 					const dateTime = new Date(`${selectedDate}T${selectedTime}`);
-					console.log(`zee dateTime: ${dateTime}`);
 					switch (timeSelectionMode) {
 						case TimeSelectionMode.LEAVE_NOW:
 							return { DepartNow: true };

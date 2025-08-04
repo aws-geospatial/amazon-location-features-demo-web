@@ -7,7 +7,6 @@ import "@testing-library/jest-dom/extend-expect";
 import NotificationsBox from "./NotificationsBox";
 
 describe("NotificationsBox", () => {
-	console.log(`zee1 dateTime: ${new Date()}`);
 	const unauthNotifications: NotificationHistoryItemtype[] = [
 		{
 			busRouteId: "route_1",
