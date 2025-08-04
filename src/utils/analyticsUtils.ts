@@ -96,7 +96,6 @@ const handleClick = () => {
 const startSession = async () => {
 	session.creationStatus = AnalyticsSessionStatus.IN_PROGRESS;
 	session.id = uuid.randomUUID();
-	session.startTimestamp = new Date().toISOString();
 	await record([{ EventType: EventTypeEnum.SESSION_START, Attributes: {} }], ["pageViewIdentifier"]);
 	stopSessionIn30Minutes();
 	removeEventListener("mousedown", handleClick);
