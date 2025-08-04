@@ -45,8 +45,7 @@ jobs:
           npm run dev &
           echo "Server started"
           sleep 10
-      - name: Print ISO date using Node.js
-        run: node -e "console.log(new Date().toISOString())"
+
       - name: Run cypress tests
         env:
           CYPRESS_WEB_DOMAIN: ${{ secrets.WEB_DOMAIN }}
