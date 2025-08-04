@@ -45,17 +45,8 @@ jobs:
           npm run dev &
           echo "Server started"
           sleep 10
-          - name: Check date validity
-          run: |
-            node -e '
-              const d = new Date();
-              if (isNaN(d)) {
-                console.error("Invalid Date");
-                process.exit(1);
-              } else {
-                console.log("Valid Date:", d.toISOString());
-              }
-            '        
+      - name: Print ISO date using Node.js
+        run: node -e "console.log(new Date().toISOString())"
       - name: Run cypress tests
         env:
           CYPRESS_WEB_DOMAIN: ${{ secrets.WEB_DOMAIN }}
