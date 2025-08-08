@@ -18,6 +18,8 @@ const {
 	ROUTES: { DEFAULT, DEMO }
 } = appConfig;
 
+console.log("sidebar executed 1")
+
 export interface SidebarProps {
 	onCloseSidebar: () => void;
 	onShowSettings: () => void;
@@ -26,6 +28,8 @@ export interface SidebarProps {
 	onOpenFeedbackModal: () => void;
 }
 
+console.log("sidebar executed 2")
+
 const Sidebar: FC<SidebarProps> = ({
 	onCloseSidebar,
 	onShowSettings,
@@ -33,10 +37,11 @@ const Sidebar: FC<SidebarProps> = ({
 	onShowUnauthSimulation,
 	onOpenFeedbackModal
 }) => {
+	console.log("sidebar executed 3")
 	const navigate = useNavigate();
 	const { t } = useTranslation();
 	const { setHideGeofenceTrackerShortcut } = useUnauthSimulation();
-
+	console.log("sidebar executed 4")
 	const onClickFeedbackButton = () => {
 		onCloseSidebar();
 		onOpenFeedbackModal();
@@ -57,6 +62,20 @@ const Sidebar: FC<SidebarProps> = ({
 		onCloseSidebar();
 		onShowAboutModal();
 	};
+
+	console.log("Sidebar components are:", Sidebar);
+	console.log({
+		Button,
+		Card,
+		Flex,
+		Text,
+		View,
+		IconClose,
+		IconCompass,
+		IconGear,
+		IconInfo,
+		IconRadar
+	  });
 
 	return (
 		<Card data-testid="side-bar" className="side-bar">

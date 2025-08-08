@@ -7,10 +7,10 @@ import { I18nextProvider } from "react-i18next";
 
 import SettingsModal from "./SettingsModal";
 
-Object.defineProperty(window, "location", {
-	writable: true,
-	value: { reload: jest.fn() }
-});
+// Object.defineProperty(window, "location", {
+// 	writable: true,
+// 	value: { reload: jest.fn() }
+// });
 
 const mockProps: MapButtonsProps = {
 	renderedUpon: "",
@@ -23,6 +23,33 @@ const mockProps: MapButtonsProps = {
 	isUnauthSimulationOpen: false,
 	onSetShowUnauthSimulation: jest.fn()
 };
+
+jest.mock("@demo/hooks", () => ({
+	useAuth: () => ({
+	  autoRegion: "mock-region",
+	  setRegion: jest.fn(),
+	  baseValues: {}
+	}),
+	useSettings: () => ({
+	  avoidTolls: false,
+	  avoidFerries: false,
+	  setAvoidTolls: jest.fn(),
+	  setAvoidFerries: jest.fn()
+	}),
+	useMap: () => ({
+		mapRef: { current: null },
+		setMapRef: jest.fn(),
+		mapLoaded: true
+	  }),
+	  usePersistedData: () => ({
+		getPersistedData: jest.fn(),
+		setPersistedData: jest.fn()
+	  }),
+	  useClient: () => ({
+		getClient: jest.fn()
+	  })
+	  
+  }));
 
 describe("<SettingsModal />", () => {
 	let settingsModal: HTMLElement;

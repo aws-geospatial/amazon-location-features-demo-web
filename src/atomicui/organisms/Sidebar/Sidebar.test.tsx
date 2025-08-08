@@ -2,9 +2,17 @@ import i18n from "@demo/locales/i18n";
 import { fireEvent, render, waitFor } from "@testing-library/react";
 import { I18nextProvider } from "react-i18next";
 import { BrowserRouter } from "react-router-dom";
-
+import { Suspense } from "react";
 import Sidebar, { SidebarProps } from "./Sidebar";
 
+jest.mock("@demo/atomicui/atoms/Logo", () => ({
+    Logo: () => <div data-testid="mock-logo">Mock Logo</div>
+  }));
+  
+  jest.mock("@demo/atomicui/atoms/List", () => ({
+    List: () => <div data-testid="mock-list">Mock List</div>
+  }));
+  
 const mockProps: SidebarProps = {
 	onCloseSidebar: jest.fn(),
 	onShowSettings: jest.fn(),
@@ -15,6 +23,7 @@ const mockProps: SidebarProps = {
 
 describe("<Sidebar />", () => {
 	const renderComponent = () => {
+		console.log("Sidebar is:", Sidebar);
 		return render(
 			<I18nextProvider i18n={i18n}>
 				<BrowserRouter>
@@ -25,14 +34,14 @@ describe("<Sidebar />", () => {
 	};
 
 	beforeEach(() => {
-		Object.defineProperty(window, "location", {
-			writable: true,
-			value: {
-				...window.location,
-				href: "http://localhost/",
-				origin: "http://localhost"
-			}
-		});
+		// Object.defineProperty(window, "location", {
+		// 	writable: true,
+		// 	value: {
+		// 		...window.location,
+		// 		href: "http://localhost/",
+		// 		origin: "http://localhost"
+		// 	}
+		// });
 	});
 
 	it("renders the logo", () => {

@@ -380,4 +380,5 @@ const appConfig = {
 	}
 };
 
+export { getEnv };
 export default appConfig;
