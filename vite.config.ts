@@ -75,6 +75,16 @@ export default defineConfig(() => {
 		},
 		server: {
 			port: 3000
-		}
+		},
+		test: {
+			// This is the key part to make it work like Jest
+			globals: true,
+			environment: 'jsdom',
+			setupFiles: './src/setupTests.ts', // or './src/setupTests.ts'
+			// You don't need to import `expect, test, it, describe` in every file
+			
+			// Optional: for CSS support
+			css: true, 
+		  },
 	};
 });
