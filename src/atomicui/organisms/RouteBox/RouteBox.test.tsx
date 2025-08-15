@@ -150,6 +150,10 @@ describe("<RouteBox />", () => {
 		return renderedComponent;
 	};
 
+	beforeEach(() => {
+		vi.clearAllMocks();
+	});
+
 	afterEach(() => {
 		vi.clearAllTimers();
 	});

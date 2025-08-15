@@ -26,7 +26,7 @@ const {
 
 const region = PINPOINT_IDENTITY_POOL_ID.split(":")[0];
 
-const { createOrUpdateEndpoint, getEndpoint, record } = jest.requireActual("@demo/utils/analyticsUtils");
+const { createOrUpdateEndpoint, getEndpoint, record } = vi.importActual("@demo/utils/analyticsUtils");
 
 describe("PinpointAnalytics", () => {
 	let pinClient: PinpointClient;
