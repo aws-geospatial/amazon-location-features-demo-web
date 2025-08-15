@@ -1,4 +1,6 @@
-import { ThemeProvider } from "@aws-amplify/ui-react";
+import { forwardRef } from "react";
+
+import { AutocompleteProps, ThemeProvider } from "@aws-amplify/ui-react";
 import i18n from "@demo/locales/i18n";
 import { faker } from "@faker-js/faker";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
@@ -61,20 +63,22 @@ const mockUsePlaceData = {
 // test the SearchBox's logic without being blocked by the library's incompatibility.
 vi.mock("@aws-amplify/ui-react", async () => {
 	const actual = await vi.importActual<typeof import("@aws-amplify/ui-react")>("@aws-amplify/ui-react");
+	const MockAutocomplete = forwardRef<HTMLInputElement, AutocompleteProps>((props, ref) => (
+		// The mock needs to render the innerStartComponent prop, which contains the hamburger menu.
+		<div className="mock-autocomplete-container">
+			{props.innerStartComponent}
+			<input
+				ref={ref}
+				data-testid="search-box-input"
+				value={props.value || ""}
+				onChange={e => props.onChange?.({ target: { value: e.target.value } })}
+			/>
+			{props.innerEndComponent}
+		</div>
+	));
 	return {
 		...actual,
-		Autocomplete: (props: any) => (
-			// The mock needs to render the innerStartComponent prop, which contains the hamburger menu.
-			<div className="mock-autocomplete-container">
-				{props.innerStartComponent}
-				<input
-					data-testid="search-box-input"
-					value={props.value || ""}
-					onChange={e => props.onChange({ target: { value: e.target.value } })}
-				/>
-				{props.innerEndComponent}
-			</div>
-		)
+		Autocomplete: MockAutocomplete
 	};
 });
 
