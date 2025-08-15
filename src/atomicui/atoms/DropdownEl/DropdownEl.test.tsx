@@ -11,7 +11,7 @@ const defaultDropdownElProps: DropdownElProps = {
 		{ value: "option2", label: "Option 2" },
 		{ value: "option3", label: "Option 3" }
 	],
-	onSelect: jest.fn(),
+	onSelect: vi.fn(),
 	showSelected: false,
 	bordered: false,
 	isCheckbox: false,

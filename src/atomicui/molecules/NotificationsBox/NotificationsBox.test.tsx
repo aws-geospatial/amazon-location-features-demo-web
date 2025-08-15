@@ -25,7 +25,7 @@ describe("NotificationsBox", () => {
 	];
 
 	it("renders NotificationsBox component with notifications", () => {
-		const mockSetUnauthNotifications = jest.fn();
+		const mockSetUnauthNotifications = vi.fn();
 
 		render(
 			<NotificationsBox
@@ -54,7 +54,7 @@ describe("NotificationsBox", () => {
 	});
 
 	it("renders NotificationsBox component without notifications", () => {
-		const mockSetUnauthNotifications = jest.fn();
+		const mockSetUnauthNotifications = vi.fn();
 
 		render(
 			<NotificationsBox
@@ -82,7 +82,7 @@ describe("NotificationsBox", () => {
 	});
 
 	it("clears notifications when clear notifications text is clicked", () => {
-		const mockSetUnauthNotifications = jest.fn();
+		const mockSetUnauthNotifications = vi.fn();
 
 		render(
 			<NotificationsBox

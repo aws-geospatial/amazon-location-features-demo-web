@@ -7,20 +7,20 @@ import ConfirmationModal, { ConfirmationModalProps } from "./ConfirmationModal";
 const defaultConfirmationModalProps = {
 	className: "",
 	open: true,
-	onClose: jest.fn(),
+	onClose: vi.fn(),
 	heading: "heading",
 	description: "description",
-	onConfirm: jest.fn(),
+	onConfirm: vi.fn(),
 	confirmationText: "confirmationText",
 	showLearnMore: false,
-	handleLearnMore: jest.fn(),
+	handleLearnMore: vi.fn(),
 	hideCancelButton: false,
 	cancelationText: "cancelationText",
 	showConfirmationCheckbox: false,
 	confirmationCheckboxLabel: "confirmationCheckboxLabel",
 	confirmationCheckboxValue: "confirmationCheckboxValue",
 	confirmationCheckboxName: "confirmationCheckboxName",
-	confirmationCheckboxOnChange: jest.fn()
+	confirmationCheckboxOnChange: vi.fn()
 };
 
 describe("<ConfirmationModal />", () => {

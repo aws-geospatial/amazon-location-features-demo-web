@@ -4,7 +4,7 @@ import { I18nextProvider } from "react-i18next";
 
 import WelcomeModal from "./WelcomeModal";
 
-const onClose = jest.fn();
+const onClose = vi.fn();
 
 describe("<WelcomeModal />", () => {
 	it("should render successfully", () => {

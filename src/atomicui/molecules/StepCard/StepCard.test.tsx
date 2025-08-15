@@ -19,7 +19,7 @@ const usePlace = () => ({
 	})
 });
 
-jest.mock("hooks", () => ({ usePlace, useMap: () => ({ mapUnit: "Metric" }) }));
+vi.mock("hooks", () => ({ usePlace, useMap: () => ({ mapUnit: "Metric" }) }));
 
 describe("<StepCard/>", () => {
 	let stepCardContainer: HTMLElement;
@@ -51,7 +51,7 @@ describe("<StepCard/>", () => {
 	};
 
 	afterAll(() => {
-		jest.resetAllMocks();
+		vi.resetAllMocks();
 	});
 
 	it("should render successfully (stepCardContainer and icon)", async () => {
