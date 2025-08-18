@@ -94,7 +94,6 @@ const useRouteServiceReturnValue = {
 	})
 };
 const servicesObj = { useRouteService: () => useRouteServiceReturnValue };
-const MarkerMock = ({ ...props }) => <View {...props} />;
 
 vi.mock("hooks/useMap", () => () => ({}));
 vi.mock("hooks/usePlace", () => usePlace);

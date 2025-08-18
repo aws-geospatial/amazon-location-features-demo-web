@@ -71,7 +71,7 @@ vi.mock("@aws-amplify/ui-react", async () => {
 				ref={ref}
 				data-testid="search-box-input"
 				value={props.value || ""}
-				onChange={e => props.onChange?.({ target: { value: e.target.value } })}
+				onChange={e => props.onChange?.(e as React.ChangeEvent<HTMLInputElement>)}
 			/>
 			{props.innerEndComponent}
 		</div>
