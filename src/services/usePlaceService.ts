@@ -59,7 +59,7 @@ const usePlaceService = () => {
 					QueryId: isQueryId ? QueryTextOrId : undefined,
 					BiasPosition: isQueryId ? undefined : BiasPosition,
 					Language: isQueryId ? undefined : Language,
-					PoliticalView: isSupportedByPlaces ? alpha3 : undefined
+					PoliticalView: !isQueryId && isSupportedByPlaces ? alpha3 : undefined
 				};
 				const command = new SearchTextCommand(input);
 				return await placesClient?.send(command);
