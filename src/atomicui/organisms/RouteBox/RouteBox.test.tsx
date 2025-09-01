@@ -94,17 +94,20 @@ const useRouteServiceReturnValue = {
 	})
 };
 const servicesObj = { useRouteService: () => useRouteServiceReturnValue };
-const MarkerMock = ({ ...props }) => <View {...props} />;
 
-jest.mock("hooks/useMap", () => () => ({}));
-jest.mock("hooks/usePlace", () => usePlace);
-jest.mock("services", () => servicesObj);
-jest.mock("react-map-gl/maplibre", () => ({
-	...jest.requireActual("react-map-gl/maplibre"),
-	Marker: MarkerMock,
-	Source: MarkerMock,
-	Layer: MarkerMock
-}));
+vi.mock("hooks/useMap", () => () => ({}));
+vi.mock("hooks/usePlace", () => usePlace);
+vi.mock("services", () => servicesObj);
+vi.mock("react-map-gl/maplibre", async () => {
+	const actual: any = await vi.importActual("react-map-gl/maplibre");
+	const MarkerMock = ({ ...props }: any) => <View {...props} />;
+	return {
+		...actual,
+		Marker: MarkerMock,
+		Source: MarkerMock,
+		Layer: MarkerMock
+	};
+});
 
 describe("<RouteBox />", () => {
 	let routeCard: HTMLElement;
@@ -128,7 +131,7 @@ describe("<RouteBox />", () => {
 							getStyle: () => ({ layers: [] } as any)
 						} as MapRef
 					}}
-					setShowRouteBox={jest.fn()}
+					setShowRouteBox={vi.fn()}
 					isSideMenuExpanded={false}
 					{...props}
 				/>
@@ -146,12 +149,16 @@ describe("<RouteBox />", () => {
 		return renderedComponent;
 	};
 
+	beforeEach(() => {
+		vi.clearAllMocks();
+	});
+
 	afterEach(() => {
-		jest.clearAllTimers();
+		vi.clearAllTimers();
 	});
 
 	afterAll(() => {
-		jest.resetAllMocks();
+		vi.resetAllMocks();
 	});
 
 	it("should render successfully", async () => {

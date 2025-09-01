@@ -6,8 +6,8 @@ import GrabConfirmationModal from "./GrabConfirmationModal";
 
 const mockProps = {
 	open: true,
-	onClose: jest.fn(),
-	onConfirm: jest.fn()
+	onClose: vi.fn(),
+	onConfirm: vi.fn()
 };
 
 describe("GrabConfirmationModal", () => {

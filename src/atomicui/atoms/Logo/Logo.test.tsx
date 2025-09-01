@@ -5,7 +5,7 @@ import { I18nextProvider } from "react-i18next";
 import Logo from "./Logo";
 
 describe("<Logo/>", () => {
-	const onClick = jest.fn();
+	const onClick = vi.fn();
 	const renderComponent = () => {
 		render(
 			<I18nextProvider i18n={i18n}>

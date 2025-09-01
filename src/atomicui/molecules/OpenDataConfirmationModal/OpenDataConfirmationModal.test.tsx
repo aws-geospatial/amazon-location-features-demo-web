@@ -7,8 +7,8 @@ import OpenDataConfirmationModal from "./OpenDataConfirmationModal";
 describe("OpenDataConfirmationModal", () => {
 	const props = {
 		open: true,
-		onClose: jest.fn(),
-		onConfirm: jest.fn(),
+		onClose: vi.fn(),
+		onConfirm: vi.fn(),
 		isUnauthSimulationOpen: false
 	};
 
