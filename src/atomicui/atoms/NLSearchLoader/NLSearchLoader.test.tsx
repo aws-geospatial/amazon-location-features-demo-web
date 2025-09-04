@@ -2,8 +2,6 @@ import { render, screen } from "@testing-library/react";
 
 import NLSearchLoader from "./NLSearchLoader";
 
-jest.setTimeout(10000);
-
 const nlLoadText = [
 	"nl_loader_sample_text_1",
 	"nl_loader_sample_text_2",
@@ -14,7 +12,12 @@ const nlLoadText = [
 
 describe("<NLLoader/>", () => {
 	beforeEach(() => {
+		vi.useFakeTimers();
 		render(<NLSearchLoader nlLoadText={nlLoadText} />);
+	});
+
+	afterEach(() => {
+		vi.useRealTimers();
 	});
 
 	it("should render successfully", () => {
@@ -28,11 +31,10 @@ describe("<NLLoader/>", () => {
 	});
 
 	it("should render a message from the nlLoadText array every 3.5 seconds", async () => {
-		await new Promise(resolve => setTimeout(resolve, 3500));
 		const message = screen.getByTestId("nl-loader-message");
 		expect(message).toHaveTextContent("nl_loader_sample_text_1");
 
-		await new Promise(resolve => setTimeout(resolve, 3500));
+		await vi.advanceTimersByTimeAsync(3500);
 		expect(message).toHaveTextContent("nl_loader_sample_text_2");
 	});
 });

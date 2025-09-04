@@ -6,16 +6,16 @@ import FeedbackModal, { FeedbackModalProps } from "./FeedbackModal";
 
 const mockProps: FeedbackModalProps = {
 	open: true,
-	onClose: jest.fn()
+	onClose: vi.fn()
 };
 
 Object.defineProperty(window, "location", {
 	writable: true,
-	value: { reload: jest.fn() }
+	value: { reload: vi.fn() }
 });
 
 describe("<FeedbackModal />", () => {
-	const windowOpen = jest.fn();
+	const windowOpen = vi.fn();
 	window.open = windowOpen;
 
 	const renderComponent = () =>
@@ -30,7 +30,7 @@ describe("<FeedbackModal />", () => {
 	});
 
 	afterEach(() => {
-		jest.clearAllMocks();
+		vi.clearAllMocks();
 		windowOpen.mockClear();
 	});
 
