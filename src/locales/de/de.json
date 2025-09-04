@@ -3916,5 +3916,8 @@
   },
   "leave_at": {
     "text": "Verlassen Sie am"
+  },
+  "api_playground": {
+    "text": "API-Spielplatz"
   }
 }

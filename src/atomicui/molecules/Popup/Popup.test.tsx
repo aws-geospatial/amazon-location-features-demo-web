@@ -1,20 +1,25 @@
 import { View } from "@aws-amplify/ui-react";
 import i18n from "@demo/locales/i18n";
 import { faker } from "@faker-js/faker";
-import { act, fireEvent, render } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { I18nextProvider } from "react-i18next";
 
 import Popup from "./Popup";
 
-/* @ts-expect-error: error */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const PopupMock = ({ closeButton: _, ...props }) => <View {...props} />;
-
-jest.mock("react-map-gl/maplibre", () => ({
-	...jest.requireActual("react-map-gl/maplibre"),
-	Popup: PopupMock
-}));
-
+vi.mock("react-map-gl/maplibre", async () => {
+	const actual = await vi.importActual("react-map-gl/maplibre");
+	// Mock Popup to prevent map-gl from trying to render in a JSDOM env
+	// and to fix the explicit-any lint error.
+	const PopupMock = (props: import("react-map-gl/maplibre").PopupProps) => {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { longitude, latitude, closeButton, ...rest } = props;
+		return <View {...rest} />;
+	};
+	return {
+		...actual,
+		Popup: PopupMock
+	};
+});
 const useMapReturnValue: {
 	currentLocationData: {
 		error: null | string;
@@ -33,23 +38,30 @@ const useMapReturnValue: {
 	isCurrentLocationDisabled: false
 };
 
-jest.mock("hooks", () => ({
+vi.mock("@demo/hooks", () => ({
 	useMap: () => useMapReturnValue,
 	usePlace: () => ({
-		getPlaceData: jest.fn(),
+		getPlaceData: vi.fn(),
 		isFetchingPlaceData: false,
-		clearPoiList: jest.fn()
+		clearPoiList: vi.fn()
 	}),
 	useRoute: () => ({
-		getRoute: () => {}
+		getRoute: vi.fn(),
+		setDirections: vi.fn(),
+		isFetchingRoute: false
 	}),
-	useMediaQuery: () => true
+	useBottomSheet: () => ({
+		setPOICard: vi.fn(),
+		setBottomSheetMinHeight: vi.fn(),
+		setBottomSheetHeight: vi.fn(),
+		setUI: vi.fn()
+	}),
+	useDeviceMediaQuery: () => ({ isDesktop: true })
 }));
 
 describe("<Popup/>", () => {
-	let popupContainer: HTMLElement;
-	let directionsButton: HTMLElement | null;
-	let copyIcon: HTMLElement | null;
+	// Mock for navigator.clipboard.writeText
+	Object.assign(navigator, { clipboard: { writeText: vi.fn() } });
 
 	const renderComponent = () => {
 		const renderedComponent = render(
@@ -59,35 +71,32 @@ describe("<Popup/>", () => {
 					position={[parseFloat(faker.address.longitude()), parseFloat(faker.address.latitude())]}
 					label={`${faker.address.street()}, ${faker.address.city()}, ${faker.address.state()}, ${faker.address.zipCode()}`}
 					active
-					select={jest.fn()}
+					select={vi.fn()}
 				/>
 			</I18nextProvider>
 		);
-		const { queryByTestId } = renderedComponent;
-
-		popupContainer = queryByTestId("popup-container") as HTMLElement;
-		copyIcon = queryByTestId("copy-icon");
-		directionsButton = queryByTestId("directions-button");
 
 		return renderedComponent;
 	};
 
-	afterAll(() => {
-		jest.resetAllMocks();
+	beforeEach(() => {
+		vi.clearAllMocks();
 	});
 
-	it("should render successfully (popupContainer and copyIcon)", () => {
+	afterAll(() => {
+		vi.resetAllMocks();
+	});
+
+	it("should render successfully", async () => {
 		renderComponent();
-		expect(popupContainer).toBeInTheDocument();
-		expect(copyIcon).toBeInTheDocument();
-		expect(directionsButton).toBeInTheDocument();
+		expect(await screen.findByTestId("popup-container")).toBeInTheDocument();
+		expect(await screen.findByTestId("copy-icon")).toBeInTheDocument();
+		expect(await screen.findByTestId("directions-button")).toBeInTheDocument();
 	});
 
 	it("should call copy icon onClick function when copy icon is clicked", async () => {
 		renderComponent();
-		await act(async () => {
-			fireEvent.click(copyIcon!);
-		});
+		fireEvent.click(await screen.findByTestId("copy-icon"));
 		expect(navigator.clipboard.writeText).toBeCalled();
 	});
 });

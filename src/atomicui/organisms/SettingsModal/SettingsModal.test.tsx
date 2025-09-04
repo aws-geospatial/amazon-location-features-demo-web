@@ -9,26 +9,26 @@ import SettingsModal from "./SettingsModal";
 
 Object.defineProperty(window, "location", {
 	writable: true,
-	value: { reload: jest.fn() }
+	value: { reload: vi.fn() }
 });
 
 const mockProps: MapButtonsProps = {
 	renderedUpon: "",
 	openStylesCard: false,
-	setOpenStylesCard: jest.fn(),
-	onCloseSidebar: jest.fn(),
-	onShowGridLoader: jest.fn(),
+	setOpenStylesCard: vi.fn(),
+	onCloseSidebar: vi.fn(),
+	onShowGridLoader: vi.fn(),
 	isLoading: false,
 	onlyMapStyles: true,
 	isUnauthSimulationOpen: false,
-	onSetShowUnauthSimulation: jest.fn()
+	onSetShowUnauthSimulation: vi.fn()
 };
 
 describe("<SettingsModal />", () => {
 	let settingsModal: HTMLElement;
 
-	const onClose = jest.fn();
-	const resetAppState = jest.fn();
+	const onClose = vi.fn();
+	const resetAppState = vi.fn();
 
 	const renderComponent = async (): Promise<RenderResult> => {
 		const renderedComponent = render(

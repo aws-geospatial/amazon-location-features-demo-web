@@ -1,25 +1,15 @@
 import i18n from "@demo/locales/i18n";
 import { TravelMode } from "@demo/types";
 import { faker } from "@faker-js/faker";
-import { render, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { I18nextProvider } from "react-i18next";
 
 import StepCard from "./StepCard";
 
-const usePlace = () => ({
-	getPlaceDataByCoordinates: () => ({
-		Results: [
-			{
-				Place: {
-					Label: faker.random.words(3),
-					Geometry: { Point: [Number(faker.address.longitude()), Number(faker.address.latitude())] }
-				}
-			}
-		]
-	})
-});
-
-jest.mock("hooks", () => ({ usePlace, useMap: () => ({ mapUnit: "Metric" }) }));
+// Mock the hooks used by the component
+vi.mock("@demo/hooks", () => ({
+	useMap: () => ({ mapUnit: "Metric" })
+}));
 
 describe("<StepCard/>", () => {
 	let stepCardContainer: HTMLElement;
@@ -51,7 +41,7 @@ describe("<StepCard/>", () => {
 	};
 
 	afterAll(() => {
-		jest.resetAllMocks();
+		vi.resetAllMocks();
 	});
 
 	it("should render successfully (stepCardContainer and icon)", async () => {
@@ -71,7 +61,7 @@ describe("<StepCard/>", () => {
 		}
 	});
 
-	it.only("should render successfully when different isFirst and isLast prop is passed", async () => {
+	it("should render successfully when different isFirst and isLast prop is passed", async () => {
 		let renderedComponent;
 
 		// 0-0

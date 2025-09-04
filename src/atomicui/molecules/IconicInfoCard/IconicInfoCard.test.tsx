@@ -6,7 +6,7 @@ const mockProps: IconicInfoCardProps = {
 	IconComponent: <div></div>,
 	title: "Title",
 	description: "Description",
-	onClickHandler: jest.fn()
+	onClickHandler: vi.fn()
 };
 
 describe("IconicInfoCard", () => {

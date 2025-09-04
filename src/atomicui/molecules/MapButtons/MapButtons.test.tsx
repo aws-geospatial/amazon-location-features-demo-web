@@ -8,21 +8,21 @@ import MapButtons, { MapButtonsProps } from "./MapButtons";
 
 Object.defineProperty(window, "location", {
 	writable: true,
-	value: { reload: jest.fn() }
+	value: { reload: vi.fn() }
 });
 
 const mockProps: MapButtonsProps = {
 	renderedUpon: "",
 	openStylesCard: false,
-	setOpenStylesCard: jest.fn(),
-	onCloseSidebar: jest.fn(),
-	onShowGridLoader: jest.fn(),
+	setOpenStylesCard: vi.fn(),
+	onCloseSidebar: vi.fn(),
+	onShowGridLoader: vi.fn(),
 	isLoading: false,
 	onlyMapStyles: false,
 	isHandDevice: false,
 	isSettingsModal: false,
 	isUnauthSimulationOpen: false,
-	onSetShowUnauthSimulation: jest.fn()
+	onSetShowUnauthSimulation: vi.fn()
 };
 
 const mockUseAuthData = {
@@ -38,7 +38,7 @@ const mockUseAuthData = {
 
 const mockUseMapData = {
 	mapStyle: MapStyleEnum.STANDARD,
-	setMapStyle: jest.fn(),
+	setMapStyle: vi.fn(),
 	mapPoliticalView: {
 		alpha2: "",
 		alpha3: "",
@@ -49,10 +49,10 @@ const mockUseMapData = {
 
 const mockUseUnauthSimulationData = {
 	hideGeofenceTrackerShortcut: false,
-	setHideGeofenceTrackerShortcut: jest.fn()
+	setHideGeofenceTrackerShortcut: vi.fn()
 };
 
-jest.mock("@demo/hooks", () => ({
+vi.mock("@demo/hooks", () => ({
 	useAuth: () => mockUseAuthData,
 	useMap: () => mockUseMapData,
 	useUnauthSimulation: () => mockUseUnauthSimulationData
