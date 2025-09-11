@@ -287,6 +287,11 @@ if (!SHOW_NEW_NAVIGATION) {
 					label: "api_playground.text",
 					link: API_PLAYGROUND,
 					isExternalLink: false
+				},
+				{
+					label: "migrate_from_google_maps.text",
+					link: MIGRATE_FROM_GOOGLE_MAPS,
+					isExternalLink: false
 				}
 			]
 		}
