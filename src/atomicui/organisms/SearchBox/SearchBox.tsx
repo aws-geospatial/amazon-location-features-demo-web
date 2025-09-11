@@ -280,8 +280,6 @@ const SearchBox: FC<SearchBoxProps> = ({
 
 	const renderOption = (option: OptionType) => {
 		const { id, queryid, position, label, country, region } = option;
-		const separateIndex = label ? label.indexOf(",") : -1;
-		const title = separateIndex > -1 ? label.substring(0, separateIndex) : label;
 		const destCoords = position ? (JSON.parse(position) as number[]) : undefined;
 		const geodesicDistance = destCoords
 			? calculateGeodesicDistance(
@@ -310,7 +308,7 @@ const SearchBox: FC<SearchBoxProps> = ({
 			<Flex key={id} data-testid={`suggestion-${id}`} className="option-container" onMouseOver={() => setHover(option)}>
 				<Flex className={`icon ${!!queryid ? "icon-search-gray" : "icon-pin-gray"}`} />
 				<View className="option-details">
-					<Text>{title}</Text>
+					<Text>{label}</Text>
 					<Flex gap="0" alignItems="center">
 						{geodesicDistanceUnit && (
 							<>
