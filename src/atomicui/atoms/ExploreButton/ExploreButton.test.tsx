@@ -7,7 +7,7 @@ import ExploreButton from "./ExploreButton";
 const mockProps = {
 	text: "text",
 	icon: <div />,
-	onClick: jest.fn()
+	onClick: vi.fn()
 };
 
 describe("<ExploreButton />", () => {

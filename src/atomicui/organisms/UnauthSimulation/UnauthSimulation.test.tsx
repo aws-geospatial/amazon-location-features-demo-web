@@ -12,18 +12,18 @@ const mockProps: UnauthSimulationProps = {
 			fitBounds: () => {}
 		} as unknown as MapRef
 	},
-	geolocateControlRef: { current: { trigger: jest.fn() } as unknown as GeolocateControlRef },
-	setShowUnauthSimulation: jest.fn(),
+	geolocateControlRef: { current: { trigger: vi.fn() } as unknown as GeolocateControlRef },
+	setShowUnauthSimulation: vi.fn(),
 	startSimulation: false,
-	setStartSimulation: jest.fn(),
-	setShowUnauthSimulationBounds: jest.fn(),
+	setStartSimulation: vi.fn(),
+	setShowUnauthSimulationBounds: vi.fn(),
 	isNotifications: false,
-	setIsNotifications: jest.fn(),
+	setIsNotifications: vi.fn(),
 	confirmCloseSimulation: false,
-	setConfirmCloseSimulation: jest.fn()
+	setConfirmCloseSimulation: vi.fn()
 };
 
-jest.mock("@demo/hooks", () => ({
+vi.mock("@demo/hooks", () => ({
 	useGeofence: () => ({
 		unauthNotifications: [
 			{
@@ -41,12 +41,12 @@ jest.mock("@demo/hooks", () => ({
 				createdAt: "2021-08-11T18:00:01.000Z"
 			}
 		],
-		setUnauthNotifications: jest.fn(),
-		getGeofencesList: jest.fn(),
-		evaluateGeofence: jest.fn()
+		setUnauthNotifications: vi.fn(),
+		getGeofencesList: vi.fn(),
+		evaluateGeofence: vi.fn()
 	}),
 	useUnauthSimulation: () => ({
-		setHideGeofenceTrackerShortcut: jest.fn()
+		setHideGeofenceTrackerShortcut: vi.fn()
 	}),
 	useWebSocketBanner: () => ({
 		Connection: <div data-testid="websocket-banner"></div>,
@@ -54,7 +54,7 @@ jest.mock("@demo/hooks", () => ({
 	})
 }));
 
-jest.mock("@demo/atomicui/molecules", () => ({
+vi.mock("@demo/atomicui/molecules", () => ({
 	ConfirmationModal: () => null,
 	IconicInfoCard: () => null,
 	NonStartUnauthSimulation: () => null,

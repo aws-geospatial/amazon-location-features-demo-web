@@ -14,11 +14,11 @@ describe("<CopyText/>", () => {
 		copyTextContainer = screen.getByTestId("copy-text-container");
 		copyIcon = screen.getByTestId("copy-icon");
 
-		jest.useFakeTimers();
+		vi.useFakeTimers();
 	});
 
 	afterEach(() => {
-		jest.useRealTimers();
+		vi.useRealTimers();
 	});
 
 	it("should render successfully", () => {
@@ -49,7 +49,7 @@ describe("<CopyText/>", () => {
 		// icon changed after click
 		const copiedIcon = screen.getByTestId("copied-icon");
 		expect(copiedIcon).toBeInTheDocument();
-		act(jest.runAllTimers);
+		act(vi.runAllTimers);
 
 		// icon restored to default after 2.5 seconds
 		copyIcon = screen.getByTestId("copy-icon");

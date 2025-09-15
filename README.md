@@ -1,5 +1,9 @@
 # Amazon Location Features Demo Web
 
+This package contains a reusable module that is an interactive demo showcasing Amazon Location functionality. The demo is hosted publicly [here](https://location.aws.com/demo).
+
+Instructions for building/running this demo locally can be found below.
+
 ## Requirements
 
 1. Run the template from `/extra/cloudformation/unauth-resources.yaml` to create AWS CloudFormation stack in `us-east-1` region and get `Region`, `ApiKey`, `IdentityPoolId`, `PinPointAppId`, `WebSocketUrl` from stack output's tab.
