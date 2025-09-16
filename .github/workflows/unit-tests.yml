@@ -8,6 +8,8 @@ jobs:
   unit-tests:
     name: Unit tests
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout
