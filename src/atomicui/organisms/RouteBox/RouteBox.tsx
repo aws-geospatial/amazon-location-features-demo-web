@@ -117,6 +117,9 @@ const RouteBox: FC<RouteBoxProps> = ({
 	const [isCurrentLocationSelected, setIsCurrentLocationSelected] = useState(false);
 	const [isSearching, setIsSearching] = useState(false);
 	const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+	const bottomSheetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+	const onFocusTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+	const handleBlurTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const arrowRef = useRef<HTMLDivElement | null>(null);
 	const routesCardRef = useRef<HTMLDivElement | null>(null);
 	const expandRouteRef = useRef<HTMLDivElement | null>(null);
@@ -186,7 +189,10 @@ const RouteBox: FC<RouteBoxProps> = ({
 				setBottomSheetMinHeight((expandRouteRef?.current?.clientHeight || 230) + 90);
 				setBottomSheetHeight((expandRouteRef?.current?.clientHeight || 230) + 100);
 			} else {
-				setTimeout(() => setBottomSheetMinHeight(BottomSheetHeights.routes.min), 200);
+				if (bottomSheetTimeoutRef.current) {
+					clearTimeout(bottomSheetTimeoutRef.current);
+				}
+				bottomSheetTimeoutRef.current = setTimeout(() => setBottomSheetMinHeight(BottomSheetHeights.routes.min), 200);
 			}
 		}
 	}, [
@@ -437,6 +443,15 @@ const RouteBox: FC<RouteBoxProps> = ({
 			if (timeoutIdRef.current) {
 				clearTimeout(timeoutIdRef.current);
 			}
+			if (bottomSheetTimeoutRef.current) {
+				clearTimeout(bottomSheetTimeoutRef.current);
+			}
+			if (onFocusTimeoutRef.current) {
+				clearTimeout(onFocusTimeoutRef.current);
+			}
+			if (handleBlurTimeoutRef.current) {
+				clearTimeout(handleBlurTimeoutRef.current);
+			}
 		};
 	}, []);
 
@@ -479,7 +494,10 @@ const RouteBox: FC<RouteBoxProps> = ({
 			if ((isAndroid || isIOS) && !isDesktopBrowser) {
 				if (bottomSheetCurrentHeight < window.innerHeight * 0.9) {
 					setBottomSheetHeight(window.innerHeight);
-					setTimeout(() => {
+					if (onFocusTimeoutRef.current) {
+						clearTimeout(onFocusTimeoutRef.current);
+					}
+					onFocusTimeoutRef.current = setTimeout(() => {
 						bottomSheetRef?.current?.snapTo(window.innerHeight);
 					}, 0);
 				}
@@ -488,7 +506,10 @@ const RouteBox: FC<RouteBoxProps> = ({
 					setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
 					setBottomSheetHeight(window.innerHeight * 0.4);
 
-					setTimeout(() => {
+					if (onFocusTimeoutRef.current) {
+						clearTimeout(onFocusTimeoutRef.current);
+					}
+					onFocusTimeoutRef.current = setTimeout(() => {
 						setBottomSheetMinHeight(BottomSheetHeights.explore.min);
 						setBottomSheetHeight(window.innerHeight);
 					}, 200);
@@ -526,7 +547,10 @@ const RouteBox: FC<RouteBoxProps> = ({
 
 	const handleBlur = useCallback(() => {
 		if ((isAndroid || isIOS) && !isDesktopBrowser && !isDesktop) {
-			setTimeout(() => {
+			if (handleBlurTimeoutRef.current) {
+				clearTimeout(handleBlurTimeoutRef.current);
+			}
+			handleBlurTimeoutRef.current = setTimeout(() => {
 				if (
 					!fromInputRef.current?.contains(document.activeElement) &&
 					!toInputRef.current?.contains(document.activeElement) &&
