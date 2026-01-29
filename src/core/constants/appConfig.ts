@@ -1,8 +1,8 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { Contour, Hillshade, Hybrid, Monochrome, Satellite, Standard } from "@demo/assets/pngs";
-import { MapColorSchemeEnum, MapStyleEnum, TopographyDetailsEnum } from "@demo/types/Enums";
+import { Hybrid, Monochrome, Satellite, Standard } from "@demo/assets/pngs";
+import { MapColorSchemeEnum, MapStyleEnum } from "@demo/types/Enums";
 
 const getEnv = (key: string) => {
 	return import.meta.env[key];
@@ -138,10 +138,6 @@ const appConfig = {
 			{ alpha2: "CY", alpha3: "CYP", desc: "cyprus_political_view_desc.text", isSupportedByPlaces: false },
 			{ alpha2: "PS", alpha3: "PSE", desc: "palestine_political_view_desc.text", isSupportedByPlaces: false },
 			{ alpha2: "GR", alpha3: "GRC", desc: "greece_political_view_desc.text", isSupportedByPlaces: false }
-		],
-		TOPOGRAPHY_STYLES: [
-			{ id: TopographyDetailsEnum.HILLSHADE.toLowerCase(), name: TopographyDetailsEnum.HILLSHADE, image: Hillshade },
-			{ id: TopographyDetailsEnum.CONTOUR.toLowerCase(), name: TopographyDetailsEnum.CONTOUR, image: Contour }
 		],
 		MAP_LANGUAGES: [
 			{ value: "en", label: "English" }, // English

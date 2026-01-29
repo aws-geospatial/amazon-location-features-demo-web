@@ -3,5 +3,3 @@ export { default as Standard } from "./Standard.png";
 export { default as Monochrome } from "./Monochrome.png";
 export { default as Hybrid } from "./Hybrid.png";
 export { default as Satellite } from "./Satellite.png";
-export { default as Contour } from "./Contour.png";
-export { default as Hillshade } from "./Hillshade.png";

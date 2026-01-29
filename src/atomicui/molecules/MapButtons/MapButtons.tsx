@@ -100,12 +100,6 @@ const MapButtons: FC<MapButtonsProps> = ({
 				style === MapStyleEnum.SATELLITE &&
 					setMapPoliticalView({ alpha2: "", alpha3: "", desc: "no_political_view.text", isSupportedByPlaces: false });
 				setMapStyle(style);
-				record([
-					{
-						EventType: EventTypeEnum.MAP_STYLE_CHANGE,
-						Attributes: { id, style, triggeredBy: renderedUpon }
-					}
-				]);
 			}
 		},
 		[mapStyle, onShowGridLoader, renderedUpon, setMapPoliticalView, setMapStyle]
