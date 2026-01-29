@@ -1,8 +1,8 @@
 /* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. */
 /* SPDX-License-Identifier: MIT-0 */
 
-import { Hybrid, Monochrome, Satellite, Standard } from "@demo/assets/pngs";
-import { MapColorSchemeEnum, MapStyleEnum } from "@demo/types/Enums";
+import { Contour, Hillshade, Hybrid, Monochrome, Satellite, Standard } from "@demo/assets/pngs";
+import { MapColorSchemeEnum, MapStyleEnum, TopographyDetailsEnum } from "@demo/types/Enums";
 
 const getEnv = (key: string) => {
 	return import.meta.env[key];
@@ -37,8 +37,6 @@ const appConfig = {
 			return result;
 		}, {}) as { [key: string]: string },
 	ENV: {
-		PINPOINT_IDENTITY_POOL_ID: getEnv("VITE_PINPOINT_IDENTITY_POOL_ID"),
-		PINPOINT_APPLICATION_ID: getEnv("VITE_PINPOINT_APPLICATION_ID"),
 		APPLE_APP_STORE_LINK: getEnv("VITE_APPLE_APP_STORE_LINK"),
 		GOOGLE_PLAY_STORE_LINK: getEnv("VITE_GOOGLE_PLAY_STORE_LINK"),
 		COUNTRY_EVALUATION_URL: "/doNotDelete.txt",
@@ -140,6 +138,10 @@ const appConfig = {
 			{ alpha2: "CY", alpha3: "CYP", desc: "cyprus_political_view_desc.text", isSupportedByPlaces: false },
 			{ alpha2: "PS", alpha3: "PSE", desc: "palestine_political_view_desc.text", isSupportedByPlaces: false },
 			{ alpha2: "GR", alpha3: "GRC", desc: "greece_political_view_desc.text", isSupportedByPlaces: false }
+		],
+		TOPOGRAPHY_STYLES: [
+			{ id: TopographyDetailsEnum.HILLSHADE.toLowerCase(), name: TopographyDetailsEnum.HILLSHADE, image: Hillshade },
+			{ id: TopographyDetailsEnum.CONTOUR.toLowerCase(), name: TopographyDetailsEnum.CONTOUR, image: Contour }
 		],
 		MAP_LANGUAGES: [
 			{ value: "en", label: "English" }, // English

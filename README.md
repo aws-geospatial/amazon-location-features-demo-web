@@ -6,7 +6,7 @@ Instructions for building/running this demo locally can be found below.
 
 ## Requirements
 
-1. Run the template from `/extra/cloudformation/unauth-resources.yaml` to create AWS CloudFormation stack in `us-east-1` region and get `Region`, `ApiKey`, `IdentityPoolId`, `PinPointAppId`, `WebSocketUrl` from stack output's tab.
+1. Run the template from `/extra/cloudformation/unauth-resources.yaml` to create AWS CloudFormation stack in `us-east-1` region and get `Region`, `ApiKey`, `IdentityPoolId`, `WebSocketUrl` from stack output's tab.
    - `Region` value will be added to `.env` file against `VITE_AWS_API_KEY_REGIONS`.
    - `ApiKey` value will be added to `.env` file against `VITE_AWS_API_KEYS`.
       - In stack output's tab only the ApiKey name is visible, in order to get the ApiKey value
@@ -14,12 +14,9 @@ Instructions for building/running this demo locally can be found below.
       - Click on "API keys" from the left navigation pane
       - Click on the ApiKey name
       - Copy the ApiKey value
-   - `IdentityPoolId` value will be added to `.env` file against `VITE_AWS_COGNITO_IDENTITY_POOL_IDS` and `VITE_PINPOINT_IDENTITY_POOL_ID`.
-   - `PinPointAppId` value will be added to `.env` file against `VITE_PINPOINT_APPLICATION_ID`.
    - `WebSocketUrl` value will be added to `.env` file against `VITE_AWS_WEB_SOCKET_URLS`.
    -  ---
       ***Note***
-      * Pinpoint and Translate resosurces are only created in `us-east-1` which are required for the analytics feature and running translation scripts.
       * Make sure to run the above stack in `eu-west-1` as well to support multiple regions.
       * The `Region`, `ApiKey`, `IdentityPoolId`, `WebSocketUrl` values from stack output's tab can be added to `.env` file against the respective keys.
       * The `VITE_AWS_API_KEY_REGIONS`, `VITE_AWS_API_KEYS`, `VITE_AWS_COGNITO_IDENTITY_POOL_IDS`, `VITE_AWS_WEB_SOCKET_URLS` keys in `.env` file should be comma separated for multiple values and must be in same order for all variables.
@@ -36,8 +33,6 @@ Instructions for building/running this demo locally can be found below.
 > VITE_AWS_API_KEYS<br />
 > VITE_AWS_COGNITO_IDENTITY_POOL_IDS<br />
 > VITE_AWS_WEB_SOCKET_URLS<br />
-> VITE_PINPOINT_IDENTITY_POOL_ID<br />
-> VITE_PINPOINT_APPLICATION_ID<br />
 > VITE_APPLE_APP_STORE_LINK<br />
 > VITE_GOOGLE_PLAY_STORE_LINK<br />
 > VITE_APP_VERSION<br />
@@ -75,8 +70,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 #### Env keys required in `cypress.env.json` file, see `cypress.env.json.example` for reference.
 
 > WEB_DOMAIN<br />
-> PINPOINT_IDENTITY_POOL_ID<br />
-> PINPOINT_APPLICATION_ID<br />
 
 #### If you are configuring Github actions for the E2E tests, make sure to add the below env keys to the secrets section of the repo.
 
@@ -90,8 +83,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 > VITE_AWS_API_KEYS
 > VITE_AWS_COGNITO_IDENTITY_POOL_IDS
 > VITE_AWS_WEB_SOCKET_URLS
-> VITE_PINPOINT_IDENTITY_POOL_ID
-> VITE_PINPOINT_APPLICATION_ID
 > VITE_APPLE_APP_STORE_LINK
 > VITE_GOOGLE_PLAY_STORE_LINK
 > VITE_APP_VERSION
@@ -110,18 +101,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 Runs Cypress tests to completion in a headed chrome browser.
 
 ## Unit Tests
-
-#### Env keys required in `.env`.
-
-> VITE_PINPOINT_IDENTITY_POOL_ID<br />
-> VITE_PINPOINT_APPLICATION_ID<br />
-
-#### If you are configuring Github actions for the Unit tests, make sure to add the below env keys to the secrets section of the repo. You will need to use the values from the stack that was created when setting up the app env in the very first step (These should already exist if you have setup secrets for E2E tests).
-
-```
-> VITE_PINPOINT_IDENTITY_POOL_ID: "XX-XXXX-X:XXXXXXXX-XXXX-1234-abcd-1234567890ab" // Same as VITE_PINPOINT_IDENTITY_POOL_ID
-> VITE_PINPOINT_APPLICATION_ID: "XXXXXXXX" // Same as VITE_PINPOINT_APPLICATION_ID
-```
 
 #### `npm run test`
 
