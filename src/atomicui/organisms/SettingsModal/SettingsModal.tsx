@@ -17,8 +17,6 @@ import { appConfig, languageSwitcherData } from "@demo/core/constants";
 import { useAuth, useClient, useMap, usePersistedData } from "@demo/hooks";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { MapUnitEnum, RegionEnum, SettingOptionEnum, SettingOptionItemType } from "@demo/types";
-import { EventTypeEnum, TriggeredByEnum } from "@demo/types/Enums";
-import { record } from "@demo/utils/analyticsUtils";
 import { useTranslation } from "react-i18next";
 import "./styles.scss";
 
@@ -58,7 +56,6 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 	const handleAutoMapUnitChange = useCallback(() => {
 		setIsAutomaticMapUnit(true);
 		resetAppState();
-		record([{ EventType: EventTypeEnum.MAP_UNIT_CHANGE, Attributes: { type: "Automatic" } }]);
 	}, [setIsAutomaticMapUnit, resetAppState]);
 
 	const onMapUnitChange = useCallback(
@@ -66,20 +63,12 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 			setIsAutomaticMapUnit(false);
 			setMapUnit(mapUnit);
 			resetAppState();
-
-			record([{ EventType: EventTypeEnum.MAP_UNIT_CHANGE, Attributes: { type: String(mapUnit) } }]);
 		},
 		[setIsAutomaticMapUnit, setMapUnit, resetAppState]
 	);
 
 	const handleLanguageChange = useCallback(
 		(e: { target: { value: string } }) => {
-			record([
-				{
-					EventType: EventTypeEnum.LANGUAGE_CHANGED,
-					Attributes: { language: e.target.value, triggeredBy: TriggeredByEnum.SETTINGS_MODAL }
-				}
-			]);
 			i18n.changeLanguage(e.target.value);
 		},
 		[i18n]
@@ -88,17 +77,6 @@ const SettingsModal: FC<SettingsModalProps> = ({ open, onClose, resetAppState, m
 	const handleRouteOptionChange = useCallback(
 		(e: { target: { checked: boolean } }, routeOption: string) => {
 			setDefaultRouteOptions({ ...defaultRouteOptions, [routeOption]: e.target.checked });
-
-			record([
-				{
-					EventType: EventTypeEnum.ROUTE_OPTION_CHANGED,
-					Attributes: {
-						option: routeOption,
-						status: e.target.checked ? "on" : "off",
-						triggeredBy: TriggeredByEnum.SETTINGS_MODAL
-					}
-				}
-			]);
 		},
 		[defaultRouteOptions, setDefaultRouteOptions]
 	);

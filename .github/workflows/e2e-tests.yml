@@ -26,8 +26,6 @@ jobs:
           echo "VITE_AWS_API_KEYS=${{ secrets.VITE_AWS_API_KEYS }}" >> .env
           echo "VITE_AWS_COGNITO_IDENTITY_POOL_IDS=${{ secrets.VITE_AWS_COGNITO_IDENTITY_POOL_IDS }}" >> .env
           echo "VITE_AWS_WEB_SOCKET_URLS=${{ secrets.VITE_AWS_WEB_SOCKET_URLS }}" >> .env
-          echo "VITE_PINPOINT_IDENTITY_POOL_ID=${{ secrets.VITE_PINPOINT_IDENTITY_POOL_ID }}" >> .env
-          echo "VITE_PINPOINT_APPLICATION_ID=${{ secrets.VITE_PINPOINT_APPLICATION_ID }}" >> .env
           echo "VITE_APPLE_APP_STORE_LINK=${{ secrets.VITE_APPLE_APP_STORE_LINK }}" >> .env
           echo "VITE_GOOGLE_PLAY_STORE_LINK=${{ secrets.VITE_GOOGLE_PLAY_STORE_LINK }}" >> .env
           echo "VITE_APP_VERSION=${{ secrets.VITE_APP_VERSION }}" >> .env
@@ -41,19 +39,21 @@ jobs:
           echo "VITE_API_PLAYGROUND_PAGE=${{ secrets.VITE_API_PLAYGROUND_PAGE }}" >> .env
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          npm install
+          npm install -g wait-on
 
       - name: Run local server
         run: |
           npm run dev &
           echo "Server started"
-          sleep 10
+          # Wait for server to be ready
+          npx wait-on http://localhost:3000 --timeout 60000
+          sleep 5
 
       - name: Run cypress tests
         env:
           CYPRESS_WEB_DOMAIN: ${{ secrets.WEB_DOMAIN }}
-          PINPOINT_IDENTITY_POOL_ID: ${{ secrets.VITE_PINPOINT_IDENTITY_POOL_ID }}
-          PINPOINT_APPLICATION_ID: ${{ secrets.VITE_PINPOINT_APPLICATION_ID }}
         run: npm run cypress
 
       - name: Upload cypress report

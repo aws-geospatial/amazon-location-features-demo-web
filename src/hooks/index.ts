@@ -10,7 +10,6 @@ export { default as usePlace } from "./usePlace";
 export { default as useRoute } from "./useRoute";
 export { default as useMediaQuery } from "./useMediaQuery";
 export { default as usePersistedData } from "./usePersistedData";
-export { default as useRecordViewPage } from "./useRecordViewPage";
 export { default as useUnauthSimulation } from "./useUnauthSimulation";
 export { default as useWebSocketBanner } from "./useWebsocketBanner";
 export { default as useFeedback } from "./useFeedback";

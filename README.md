@@ -6,29 +6,35 @@ Instructions for building/running this demo locally can be found below.
 
 ## Requirements
 
-1. Run the template from `/extra/cloudformation/unauth-resources.yaml` to create AWS CloudFormation stack in `us-east-1` region and get `Region`, `ApiKey`, `IdentityPoolId`, `PinPointAppId`, `WebSocketUrl` from stack output's tab.
-   - `Region` value will be added to `.env` file against `VITE_AWS_API_KEY_REGIONS`.
-   - `ApiKey` value will be added to `.env` file against `VITE_AWS_API_KEYS`.
-      - In stack output's tab only the ApiKey name is visible, in order to get the ApiKey value
-      - Navigate to Amazon Location Service
-      - Click on "API keys" from the left navigation pane
-      - Click on the ApiKey name
-      - Copy the ApiKey value
-   - `IdentityPoolId` value will be added to `.env` file against `VITE_AWS_COGNITO_IDENTITY_POOL_IDS` and `VITE_PINPOINT_IDENTITY_POOL_ID`.
-   - `PinPointAppId` value will be added to `.env` file against `VITE_PINPOINT_APPLICATION_ID`.
-   - `WebSocketUrl` value will be added to `.env` file against `VITE_AWS_WEB_SOCKET_URLS`.
+1. Create the CloudFormation stack in `us-east-1` region by running the template at `/extra/cloudformation/unauth-resources.yaml`:
+   ```
+   aws cloudformation create-stack \
+     --stack-name aws-location-demo-stack \
+     --template-body file://extra/cloudformation/unauth-resources.yaml \
+     --region us-east-1 \
+     --capabilities CAPABILITY_IAM
+   ```
+   After the stack completes, copy the following values from the stack Output's tab:
+   - `Region`
+   - `ApiKey`
+      > Note: The Outputs tab shows only the API key name.
+To get the API key value, go to Amazon Location Service → API keys, select the key by name, and copy the API key value.
+   - `WebSocketUrl`
+2. Set up your `.env` file:  
+   Copy the contents of `.env.example` from the project root into a new `.env` file, then fill in the values retrieved from the stack outputs from step 1:
+   - `VITE_AWS_API_KEY_REGIONS` → `Region`
+   - `VITE_AWS_API_KEYS` → `ApiKey`
+   - `VITE_AWS_WEB_SOCKET_URLS` → `WebSocketUrl`
    -  ---
       ***Note***
-      * Pinpoint and Translate resosurces are only created in `us-east-1` which are required for the analytics feature and running translation scripts.
-      * Make sure to run the above stack in `eu-west-1` as well to support multiple regions.
-      * The `Region`, `ApiKey`, `IdentityPoolId`, `WebSocketUrl` values from stack output's tab can be added to `.env` file against the respective keys.
-      * The `VITE_AWS_API_KEY_REGIONS`, `VITE_AWS_API_KEYS`, `VITE_AWS_COGNITO_IDENTITY_POOL_IDS`, `VITE_AWS_WEB_SOCKET_URLS` keys in `.env` file should be comma separated for multiple values and must be in same order for all variables.
+      * Optionally run the above stack in `eu-west-1` as well to support multiple regions.
+      * For multiple regions, the values in `VITE_AWS_API_KEY_REGIONS`, `VITE_AWS_API_KEYS`, `VITE_AWS_COGNITO_IDENTITY_POOL_IDS`, `VITE_AWS_WEB_SOCKET_URLS` should be comma-separated and in the same order.
       ---
-2. Value for `VITE_APPLE_APP_STORE_LINK`, `VITE_GOOGLE_PLAY_STORE_LINK` can be added as it is to `.env` file from `.env.examples`.
+3. Value for `VITE_APPLE_APP_STORE_LINK`, `VITE_GOOGLE_PLAY_STORE_LINK` can be added as it is to `.env` file from `.env.example`.
 3. Value for `VITE_APP_VERSION` needs to be populated with the correct version at the time of deployment in the following format `2.1.0`.
-4. Values for `VITE_MIGRATE_FROM_GOOGLE_MAPS_PAGE`, `VITE_MIGRATE_A_WEB_APP_PAGE`, `VITE_MIGRATE_AN_ANDROID_APP_PAGE`, `VITE_MIGRATE_AN_IOS_APP_PAGE`, `VITE_MIGRATE_A_WEB_SERVICE_PAGE` and `VITE_PRICING_PAGE` can either be `1` or `0` to either enable or disable the respective pages.
-5. Values for `VITE_SHOW_NEW_NAVIGATION` can either be `1` or `0` to either enable or disable the new navigation, turning it off would show the current navigation instead.
-6. Values for `VITE_API_PLAYGROUND_PAGE` can either be `1` or `0` to either enable or disable the API playground page, turning it off would remove the API playground page.
+4. Values for `VITE_MIGRATE_FROM_GOOGLE_MAPS_PAGE`, `VITE_MIGRATE_A_WEB_APP_PAGE`, `VITE_MIGRATE_AN_ANDROID_APP_PAGE`, `VITE_MIGRATE_AN_IOS_APP_PAGE`, `VITE_MIGRATE_A_WEB_SERVICE_PAGE` and `VITE_PRICING_PAGE` can be set to be `1` or `0` to either enable or disable the respective pages.
+5. Values for `VITE_SHOW_NEW_NAVIGATION` can be set to be `1` or `0` to either enable or disable the new navigation, turning it off would show the current navigation instead.
+6. Values for `VITE_API_PLAYGROUND_PAGE` can be set to be `1` or `0` to either enable or disable the API playground page, turning it off would remove the API playground page.
 
 #### Env keys required in `.env` file, see `.env.example` for reference
 
@@ -36,8 +42,6 @@ Instructions for building/running this demo locally can be found below.
 > VITE_AWS_API_KEYS<br />
 > VITE_AWS_COGNITO_IDENTITY_POOL_IDS<br />
 > VITE_AWS_WEB_SOCKET_URLS<br />
-> VITE_PINPOINT_IDENTITY_POOL_ID<br />
-> VITE_PINPOINT_APPLICATION_ID<br />
 > VITE_APPLE_APP_STORE_LINK<br />
 > VITE_GOOGLE_PLAY_STORE_LINK<br />
 > VITE_APP_VERSION<br />
@@ -75,8 +79,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 #### Env keys required in `cypress.env.json` file, see `cypress.env.json.example` for reference.
 
 > WEB_DOMAIN<br />
-> PINPOINT_IDENTITY_POOL_ID<br />
-> PINPOINT_APPLICATION_ID<br />
 
 #### If you are configuring Github actions for the E2E tests, make sure to add the below env keys to the secrets section of the repo.
 
@@ -90,8 +92,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 > VITE_AWS_API_KEYS
 > VITE_AWS_COGNITO_IDENTITY_POOL_IDS
 > VITE_AWS_WEB_SOCKET_URLS
-> VITE_PINPOINT_IDENTITY_POOL_ID
-> VITE_PINPOINT_APPLICATION_ID
 > VITE_APPLE_APP_STORE_LINK
 > VITE_GOOGLE_PLAY_STORE_LINK
 > VITE_APP_VERSION
@@ -110,18 +110,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 Runs Cypress tests to completion in a headed chrome browser.
 
 ## Unit Tests
-
-#### Env keys required in `.env`.
-
-> VITE_PINPOINT_IDENTITY_POOL_ID<br />
-> VITE_PINPOINT_APPLICATION_ID<br />
-
-#### If you are configuring Github actions for the Unit tests, make sure to add the below env keys to the secrets section of the repo. You will need to use the values from the stack that was created when setting up the app env in the very first step (These should already exist if you have setup secrets for E2E tests).
-
-```
-> VITE_PINPOINT_IDENTITY_POOL_ID: "XX-XXXX-X:XXXXXXXX-XXXX-1234-abcd-1234567890ab" // Same as VITE_PINPOINT_IDENTITY_POOL_ID
-> VITE_PINPOINT_APPLICATION_ID: "XXXXXXXX" // Same as VITE_PINPOINT_APPLICATION_ID
-```
 
 #### `npm run test`
 
