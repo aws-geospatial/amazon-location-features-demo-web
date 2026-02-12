@@ -1,5 +1,5 @@
 import { defineConfig } from "cypress";
-import { cypressBrowserPermissionsPlugin } from "cypress-browser-permissions";
+import { onBeforeBrowserLaunch, modifyAndTransformPluginEnv } from "cypress-browser-permissions/plugin";
 import { afterRunHook, beforeRunHook } from "cypress-mochawesome-reporter/lib";
 
 export default defineConfig({
@@ -37,8 +37,17 @@ export default defineConfig({
 				await afterRunHook();
 			});
 
-			// eslint-disable-next-line no-param-reassign
-			config = cypressBrowserPermissionsPlugin(on, config);
+			modifyAndTransformPluginEnv(config);
+
+			on("before:browser:launch", (browser, launchOptions) => {
+				onBeforeBrowserLaunch(config)(browser, launchOptions);
+				if (browser.name === "chrome") {
+					launchOptions.args.push("--enable-unsafe-swiftshader");
+					console.log("Chrome args:", launchOptions.args.join(" "));
+				}
+				return launchOptions;
+			});
+
 			return config;
 		},
 		specPattern: "./cypress/e2e/**/*.cy.{js,jsx,ts,tsx}",

@@ -39,7 +39,6 @@ export default defineConfig(() => {
 				"@demo/theme": resolve(__dirname, "./src/theme"),
 				"@demo/utils": resolve(__dirname, "./src/utils"),
 				"@demo/locales": resolve(__dirname, "./src/locales"),
-				axios: "axios/dist/axios.js",
 				"./runtimeConfig": "./runtimeConfig.browser",
 			},
 		},
