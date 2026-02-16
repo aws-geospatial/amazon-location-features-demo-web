@@ -82,7 +82,7 @@
 		"cypress": "^15.9.0",
 		"cypress-browser-permissions": "^1.1.0",
 		"cypress-mochawesome-reporter": "^3.8.2",
-		"eslint": "^8.22.0",
+		"eslint": "^9.26.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-flowtype": "^8.0.3",
 		"eslint-plugin-import": "^2.26.0",
