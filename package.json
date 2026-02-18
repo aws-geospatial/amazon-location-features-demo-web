@@ -78,7 +78,7 @@
 		"@typescript-eslint/parser": "^5.33.1",
 		"@vitejs/plugin-react": "^4.3.4",
 		"@vitest/ui": "^3.2.4",
-		"ajv": "^8.17.1",
+		"ajv": "^8.18.0",
 		"cypress": "^15.9.0",
 		"cypress-browser-permissions": "^1.1.0",
 		"cypress-mochawesome-reporter": "^3.8.2",
