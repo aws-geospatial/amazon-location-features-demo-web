@@ -15,7 +15,7 @@ export default defineConfig(() => {
 			svgr(),
 			eslint({
 				fix: true,
-				failOnError: false,
+				emitErrorAsWarning: true,
 			}),
 			dts({ insertTypesEntry: true }),
 			Inspect({
