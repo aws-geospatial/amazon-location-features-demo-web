@@ -118,7 +118,7 @@
 		"braces": "^3.0.3",
 		"cookie": "^0.7.2",
 		"@cypress/request": "^3.0.0",
-		"fast-xml-parser": "^4.1.2",
+		"fast-xml-parser": "^5.3.5",
 		"got": "^11.8.5",
 		"json5": "^1.0.2",
 		"lodash": "^4.17.21",
