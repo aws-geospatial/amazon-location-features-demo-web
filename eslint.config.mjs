@@ -9,7 +9,7 @@ import globals from "globals";
 
 export default [
 	{
-		ignores: ["dist/**", "lib/**", "coverage/**", "node_modules/**", "extra/**", "cypress/**"],
+		ignores: ["dist/**", "lib/**", "dist-ssr/**", "build/**", "coverage/**", "node_modules/**", "extra/**", "cypress/**", "sample-projects/**", "**/*.svg", "**/*.png", "**/*.jpg", "**/*.ttf"],
 	},
 	eslint.configs.recommended,
 	{
@@ -43,18 +43,14 @@ export default [
 		rules: {
 			...tseslint.configs.recommended.rules,
 			...react.configs.recommended.rules,
-			"@typescript-eslint/ban-types": [
-				"error",
-				{
-					extendDefaults: true,
-					types: { "{}": false },
-				},
-			],
+			"no-unused-expressions": "off",
+			"@typescript-eslint/no-unused-expressions": "off",
 			"@typescript-eslint/explicit-module-boundary-types": "warn",
 			"@typescript-eslint/no-empty-function": "off",
-			"@typescript-eslint/no-empty-interface": "off",
+			"@typescript-eslint/no-empty-object-type": "off",
 			"@typescript-eslint/no-explicit-any": "warn",
 			"@typescript-eslint/no-non-null-assertion": "off",
+			"no-extra-boolean-cast": "off",
 			"class-methods-use-this": "off",
 			"comma-dangle": "off",
 			"import/no-unresolved": 0,
@@ -123,15 +119,24 @@ export default [
 		},
 	},
 	{
+		files: ["**/*.test.{ts,tsx}", "**/*.spec.{ts,tsx}", "**/setupTests.ts"],
+		languageOptions: {
+			globals: {
+				...globals.jest,
+				vi: "readonly",
+				vitest: "readonly",
+			},
+		},
+	},
+	{
 		files: ["**/*.{js,mjs}"],
 		rules: {
-			"@typescript-eslint/ban-types": "off",
 			"@typescript-eslint/explicit-module-boundary-types": "off",
 			"@typescript-eslint/no-empty-function": "off",
-			"@typescript-eslint/no-empty-interface": "off",
+			"@typescript-eslint/no-empty-object-type": "off",
 			"@typescript-eslint/no-explicit-any": "error",
 			"@typescript-eslint/no-non-null-assertion": "off",
-			"@typescript-eslint/no-var-requires": "off",
+			"@typescript-eslint/no-require-imports": "off",
 		},
 	},
 	{
