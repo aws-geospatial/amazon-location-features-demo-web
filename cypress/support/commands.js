@@ -8,7 +8,17 @@ Cypress.Commands.add("visitDomain", domain => {
 
 	if (typeof domain === "string") {
 		cy.visit(domain);
-		cy.get('[data-testid="welcome-modal-continue-button"]', { timeout: 60000 }).click();
+		cy.wait(5000);
+
+		// Retry if the app redirected to the error page on cold start
+		cy.url().then(url => {
+			if (url.includes("/error")) {
+				cy.visit(domain);
+				cy.wait(5000);
+			}
+		});
+
+		cy.get('[data-testid="welcome-modal-continue-button"]', { timeout: 30000 }).click();
 	}
 });
 
