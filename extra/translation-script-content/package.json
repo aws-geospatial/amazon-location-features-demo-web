@@ -9,8 +9,8 @@
 		"update-translate": "node update-translation.js"
 	},
 	"dependencies": {
-		"@aws-sdk/client-translate": "3.631.0",
-		"@aws-sdk/credential-providers": "3.631.0",
+		"@aws-sdk/client-translate": "3.995.0",
+		"@aws-sdk/credential-providers": "3.995.0",
 		"dotenv": "16.3.1"
 	}
 }

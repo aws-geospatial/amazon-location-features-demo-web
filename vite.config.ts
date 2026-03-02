@@ -3,7 +3,7 @@ import { resolve } from "path";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
-import eslint from "vite-plugin-eslint";
+import eslint from "vite-plugin-eslint2";
 import Inspect from "vite-plugin-inspect";
 import svgr from "vite-plugin-svgr";
 
@@ -15,7 +15,7 @@ export default defineConfig(() => {
 			svgr(),
 			eslint({
 				fix: true,
-				failOnError: false,
+				emitErrorAsWarning: true,
 			}),
 			dts({ insertTypesEntry: true }),
 			Inspect({
@@ -39,7 +39,6 @@ export default defineConfig(() => {
 				"@demo/theme": resolve(__dirname, "./src/theme"),
 				"@demo/utils": resolve(__dirname, "./src/utils"),
 				"@demo/locales": resolve(__dirname, "./src/locales"),
-				axios: "axios/dist/axios.js",
 				"./runtimeConfig": "./runtimeConfig.browser",
 			},
 		},

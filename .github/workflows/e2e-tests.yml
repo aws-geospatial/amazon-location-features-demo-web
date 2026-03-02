@@ -39,9 +39,7 @@ jobs:
           echo "VITE_API_PLAYGROUND_PAGE=${{ secrets.VITE_API_PLAYGROUND_PAGE }}" >> .env
 
       - name: Install dependencies
-        run: |
-          npm install
-          npm install -g wait-on
+        run: npm ci
 
       - name: Run local server
         run: |
