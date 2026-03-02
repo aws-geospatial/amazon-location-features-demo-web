@@ -8,15 +8,7 @@ import { Flex, View } from "@aws-amplify/ui-react";
 import { IconLocateMe, LogoDark, LogoLight } from "@demo/assets/svgs";
 import { SearchBox } from "@demo/atomicui/organisms/SearchBox";
 import { appConfig } from "@demo/core/constants";
-import {
-	useAuthManager,
-	useMap,
-	useMapManager,
-	usePersistedData,
-	usePlace,
-	useRecordViewPage,
-	useRoute
-} from "@demo/hooks";
+import { useAuthManager, useMap, useMapManager, usePersistedData, usePlace, useRoute } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { ShowStateType } from "@demo/types";
@@ -112,7 +104,6 @@ const initShow: ShowStateType = {
 };
 
 const DemoPage: FC = () => {
-	const {} = useRecordViewPage("DemoPage");
 	const [show, setShow] = useState<ShowStateType>(initShow);
 	const [isUnauthNotifications, setUnauthIsNotifications] = useState(false);
 	const [confirmCloseUnauthSimulation, setConfirmCloseUnauthSimulation] = useState(false);
