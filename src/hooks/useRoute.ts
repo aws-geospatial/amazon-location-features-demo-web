@@ -8,7 +8,6 @@ import { useRouteService } from "@demo/services";
 import { useRouteStore } from "@demo/stores";
 import { InputType, RouteDataType, SuggestionType } from "@demo/types";
 import { EventTypeEnum, TriggeredByEnum } from "@demo/types/Enums";
-import { record } from "@demo/utils/analyticsUtils";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { useTranslation } from "react-i18next";
 
@@ -35,8 +34,6 @@ const useRoute = () => {
 						travelMode: params.TravelMode || "N/A",
 						triggeredBy: String(triggeredBy)
 					};
-
-					record([{ EventType: EventTypeEnum.ROUTE_SEARCH, Attributes: recordAttributes }]);
 				}
 			},
 			setRoutePositions: (p: number[] | undefined, type: InputType) => {
