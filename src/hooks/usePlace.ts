@@ -9,7 +9,6 @@ import { usePlaceService } from "@demo/services";
 import { usePlaceStore } from "@demo/stores";
 import { ClustersType, SuggestionType, ViewPointType } from "@demo/types";
 import { AnalyticsPlaceSearchTypeEnum, EventTypeEnum, TriggeredByEnum } from "@demo/types/Enums";
-import { record } from "@demo/utils/analyticsUtils";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { calculateClusters, getHash, getPrecision, isGeoString } from "@demo/utils/geoCalculation";
 import { uuid } from "@demo/utils/uuid";
@@ -211,18 +210,6 @@ const usePlace = () => {
 				} else if (value?.length) {
 					await methods.searchPlaceSuggestions(value, viewpoint, cb);
 				}
-
-				record([
-					{
-						EventType: EventTypeEnum.PLACE_SEARCH,
-						Attributes: {
-							exact: String(exact),
-							type: placeSearchType,
-							triggeredBy,
-							action
-						}
-					}
-				]);
 			},
 			setZoom: (zoom: number) => {
 				setState(s => {
