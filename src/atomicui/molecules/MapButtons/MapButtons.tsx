@@ -11,7 +11,6 @@ import { useMap, useUnauthSimulation } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { EventTypeEnum, MapColorSchemeEnum, MapStyleEnum, ResponsiveUIEnum } from "@demo/types/Enums";
-import { record } from "@demo/utils/analyticsUtils";
 import { useTranslation } from "react-i18next";
 import { Tooltip } from "react-tooltip";
 import "./styles.scss";
@@ -101,12 +100,6 @@ const MapButtons: FC<MapButtonsProps> = ({
 				style === MapStyleEnum.SATELLITE &&
 					setMapPoliticalView({ alpha2: "", alpha3: "", desc: "no_political_view.text", isSupportedByPlaces: false });
 				setMapStyle(style);
-				record([
-					{
-						EventType: EventTypeEnum.MAP_STYLE_CHANGE,
-						Attributes: { id, style, triggeredBy: renderedUpon }
-					}
-				]);
 			}
 		},
 		[mapStyle, onShowGridLoader, renderedUpon, setMapPoliticalView, setMapStyle]
@@ -117,12 +110,6 @@ const MapButtons: FC<MapButtonsProps> = ({
 			if (mapColorScheme !== colorScheme) {
 				onShowGridLoader();
 				setMapColorScheme(colorScheme);
-				record([
-					{
-						EventType: EventTypeEnum.MAP_STYLE_CHANGE,
-						Attributes: { id, colorScheme, triggeredBy: renderedUpon }
-					}
-				]);
 			}
 		},
 		[mapColorScheme, onShowGridLoader, renderedUpon, setMapColorScheme]
