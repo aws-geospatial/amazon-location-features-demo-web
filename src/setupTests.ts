@@ -404,3 +404,22 @@ vi.mock("@demo/hooks/useDeviceMediaQuery", () => {
 		})
 	};
 });
+
+// Mock SVG imports from the barrel file
+vi.mock("@demo/assets/svgs", async () => {
+	const React = require("react");
+	const MockSvgComponent = React.forwardRef((props: any, ref: any) =>
+		React.createElement("svg", { ref, "data-testid": "mock-svg", ...props })
+	);
+
+	// Get the original module to know what to export
+	const originalModule = await vi.importActual<typeof import("@demo/assets/svgs")>("@demo/assets/svgs");
+	const mocks: Record<string, any> = {};
+
+	// Create mocks for all exports
+	for (const key in originalModule) {
+		mocks[key] = MockSvgComponent;
+	}
+
+	return mocks;
+});
