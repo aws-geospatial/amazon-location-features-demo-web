@@ -2,3 +2,4 @@
 /* SPDX-License-Identifier: MIT-0 */
 
 /// <reference types="vite/client" />
+/// <reference types="vite-plugin-svgr/client" />
