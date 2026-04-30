@@ -38,8 +38,6 @@ vi.mock("@demo/core/constants/appConfig", () => ({
 			"XX-XXXX-X": "XXXXXXXXXXXXXX-ats.iot.XX-XXXX-X.amazonaws.com"
 		},
 		ENV: {
-			PINPOINT_IDENTITY_POOL_ID: process.env["VITE_PINPOINT_IDENTITY_POOL_ID"],
-			PINPOINT_APPLICATION_ID: process.env["VITE_PINPOINT_APPLICATION_ID"],
 			APPLE_APP_STORE_LINK: "",
 			GOOGLE_PLAY_STORE_LINK: "",
 			COUNTRY_EVALUATION_URL: "",
@@ -371,11 +369,6 @@ vi.mock("@demo/core/constants/appConfig", () => ({
 			AWS_INDUSTRY_OVERVIEW_URL: "https://aws.amazon.com/location/industry/"
 		}
 	}
-}));
-
-vi.mock("@demo/utils/analyticsUtils", () => ({
-	record: () => {},
-	initiateAnalytics: () => {}
 }));
 
 vi.mock("@demo/utils/countryUtil", () => ({

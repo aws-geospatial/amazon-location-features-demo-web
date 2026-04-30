@@ -7,7 +7,6 @@ import { ListGeofenceResponseEntry } from "@aws-sdk/client-location";
 import { useGeofenceService } from "@demo/services";
 import { useAuthStore, useGeofenceStore } from "@demo/stores";
 import { EventTypeEnum, NotificationHistoryItemtype } from "@demo/types";
-import { record } from "@demo/utils/analyticsUtils";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { useTranslation } from "react-i18next";
 
@@ -29,15 +28,7 @@ const useGeofence = () => {
 					setState({ isFetchingGeofences: true });
 					const res = await geofenceService.listGeofences(geofenceCollection);
 					cb ? cb(res?.Entries) : setState({ geofences: res?.Entries });
-					record(
-						[{ EventType: EventTypeEnum.GET_GEOFENCES_LIST_SUCCESSFUL, Attributes: {} }],
-						["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
-					);
 				} catch (error) {
-					record(
-						[{ EventType: EventTypeEnum.GET_GEOFENCES_LIST_FAILED, Attributes: {} }],
-						["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
-					);
 					errorHandler(error, t("error_handler__failed_fetch_geofences.text") as string);
 				} finally {
 					setState({ isFetchingGeofences: false });
