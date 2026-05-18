@@ -1,0 +1,17 @@
+name: Dependabot Auto Retry
+permissions:
+  security-events: write
+  pull-requests: read
+on:
+  schedule:
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+jobs:
+  run:
+    permissions:
+      security-events: write
+      pull-requests: read
+    uses: aws-geospatial/github-workflows-for-amazon-location/.github/workflows/dependabot-retry.yml@main
+    secrets:
+      APP_ID: ${{ secrets.AUTO_RELEASE_BOT_APP_ID }}
+      APP_PRIVATE_KEY: ${{ secrets.AUTO_RELEASE_BOT_PRIVATE_KEY }}
