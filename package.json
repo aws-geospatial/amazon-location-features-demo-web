@@ -78,7 +78,7 @@
 		"@typescript-eslint/eslint-plugin": "^8.56.1",
 		"@typescript-eslint/parser": "^8.56.1",
 		"@vitejs/plugin-react": "^4.3.4",
-		"@vitest/ui": "^3.2.4",
+		"@vitest/ui": "^4.1.8",
 		"ajv": "^8.18.0",
 		"cypress": "^15.9.0",
 		"cypress-browser-permissions": "^1.1.0",
@@ -108,7 +108,7 @@
 		"vite-plugin-inspect": "^0.8.1",
 		"vite-plugin-node-polyfills": "^0.25.0",
 		"vite-plugin-svgr": "^5.2.0",
-		"vitest": "^3.2.4"
+		"vitest": "^4.1.8"
 	},
 	"engines": {
 		"node": ">=14.x.x"
