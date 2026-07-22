@@ -51,7 +51,7 @@ jobs:
 
       - name: Run cypress tests
         env:
-          CYPRESS_WEB_DOMAIN: ${{ secrets.WEB_DOMAIN }}
+          CYPRESS_WEB_DOMAIN: http://localhost:3000
           PINPOINT_IDENTITY_POOL_ID: ${{ secrets.VITE_PINPOINT_IDENTITY_POOL_ID }}
           PINPOINT_APPLICATION_ID: ${{ secrets.VITE_PINPOINT_APPLICATION_ID }}
         run: npm run cypress
