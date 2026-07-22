@@ -5,6 +5,7 @@ import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
 import eslint from "vite-plugin-eslint2";
 import Inspect from "vite-plugin-inspect";
+import { nodePolyfills } from "vite-plugin-node-polyfills";
 import svgr from "vite-plugin-svgr";
 
 
@@ -12,6 +13,7 @@ export default defineConfig(() => {
 	return {
 		plugins: [
 			react(),
+			nodePolyfills(),
 			svgr(),
 			eslint({
 				fix: true,
