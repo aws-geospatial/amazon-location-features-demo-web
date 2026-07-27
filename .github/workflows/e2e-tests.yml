@@ -46,8 +46,7 @@ jobs:
       - name: Run local server
         run: |
           npm run dev &
-          echo "Server started"
-          sleep 10
+          npx wait-on http://localhost:3000 --timeout 60000
 
       - name: Run cypress tests
         env:

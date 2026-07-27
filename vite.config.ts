@@ -7,6 +7,8 @@ import eslint from "vite-plugin-eslint2";
 import Inspect from "vite-plugin-inspect";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 import svgr from "vite-plugin-svgr";
+import stdLibBrowser from "node-stdlib-browser";
+import esbuildPlugin from "node-stdlib-browser/helpers/esbuild/plugin";
 
 
 export default defineConfig(() => {
@@ -78,6 +80,11 @@ export default defineConfig(() => {
 							? "style.css"
 							: chunkInfo.names.join("-"),
 				},
+			},
+		},
+		optimizeDeps: {
+			esbuildOptions: {
+				plugins: [esbuildPlugin(stdLibBrowser)],
 			},
 		},
 		server: {
