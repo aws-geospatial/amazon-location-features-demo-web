@@ -7,8 +7,7 @@ import { CalculateRoutesCommandInput } from "@aws-sdk/client-geo-routes";
 import { useRouteService } from "@demo/services";
 import { useRouteStore } from "@demo/stores";
 import { InputType, RouteDataType, SuggestionType } from "@demo/types";
-import { EventTypeEnum, TriggeredByEnum } from "@demo/types/Enums";
-import { record } from "@demo/utils/analyticsUtils";
+import { TriggeredByEnum } from "@demo/types/Enums";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { useTranslation } from "react-i18next";
 
@@ -30,13 +29,6 @@ const useRoute = () => {
 					errorHandler(error, `${t("error_handler__failed_calculate_route.text") as string} (${params.TravelMode})`);
 				} finally {
 					setState({ isFetchingRoute: false });
-
-					const recordAttributes: { [key: string]: string } = {
-						travelMode: params.TravelMode || "N/A",
-						triggeredBy: String(triggeredBy)
-					};
-
-					record([{ EventType: EventTypeEnum.ROUTE_SEARCH, Attributes: recordAttributes }]);
 				}
 			},
 			setRoutePositions: (p: number[] | undefined, type: InputType) => {

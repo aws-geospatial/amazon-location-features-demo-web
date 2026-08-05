@@ -6,7 +6,6 @@ export * from "./getUserAgent";
 export * from "./routeUtils";
 export * from "./uuid";
 export * from "./validationUtils";
-export * from "./analyticsUtils";
 export * from "./localstorageUtils";
 export * from "./debounce";
 export * from "./getDomainName";

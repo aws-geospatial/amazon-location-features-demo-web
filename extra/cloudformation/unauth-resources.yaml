@@ -31,14 +31,6 @@ Resources:
       PolicyDocument:
         Statement:
           - Action:
-              - "mobiletargeting:PutEvents"
-              - "mobiletargeting:UpdateEndpoint"
-              - "mobiletargeting:GetEndpoint"
-            Effect: Allow
-            Resource:
-              - !Sub "arn:aws:mobiletargeting:${AWS::Region}:${AWS::AccountId}:apps/${AmazonLocationDemoPinpointApp}/*"
-          - Action:
-              - "mobileanalytics:PutEvents"
               - "translate:TranslateText"
             Effect: Allow
             Resource:
@@ -175,56 +167,6 @@ Resources:
                   - ":"
                   - !Ref "AWS::AccountId"
                   - "log-group:/aws/kinesisfirehose/KDF-"
-
-  AmazonLocationDemoPinpointStreamRole:
-    Condition: EnablePinTranslate
-    DependsOn:
-      - AmazonLocationDemoKinesisStream
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Sid: "pinpoint"
-            Effect: Allow
-            Principal:
-              Service: pinpoint.amazonaws.com
-            Action: "sts:AssumeRole"
-      Path: "/"
-
-  AmazonLocationDemoPinpointStreamPolicy:
-    Condition: EnablePinTranslate
-    Type: AWS::IAM::Policy
-    Properties:
-      PolicyName: StreamAccessPolicy
-      PolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Action:
-              - kinesis:PutRecords
-              - kinesis:DescribeStream
-            Resource:
-              - !GetAtt AmazonLocationDemoKinesisStream.Arn
-      Roles:
-        - !Ref AmazonLocationDemoPinpointStreamRole
-
-  AmazonLocationDemoPinpointStreamKMSAccessPolicy:
-    Condition: EnablePinTranslate
-    Type: AWS::IAM::Policy
-    Properties:
-      PolicyName: KMSAccessPolicy
-      PolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Action:
-              - kms:Decrypt
-              - kms:GenerateDataKey
-            Resource:
-              - !GetAtt AmazonLocationDemoKMS.Arn
-      Roles:
-        - !Ref AmazonLocationDemoPinpointStreamRole
 
   CognitoIdentityPool:
     Type: "AWS::Cognito::IdentityPool"
@@ -396,23 +338,6 @@ Resources:
       S3DestinationConfiguration:
         BucketARN: !GetAtt AmazonLocationDemoKinesisBucket.Arn
         RoleARN: !GetAtt AmazonLocationKinesisDeliveryRole.Arn
-
-  AmazonLocationDemoPinpointApp:
-    Condition: EnablePinTranslate
-    Type: AWS::Pinpoint::App
-    Properties:
-      Name: location.aws.com.demo.app
-
-  AmazonLocationDemoPinpointAppStream:
-    DependsOn:
-      - AmazonLocationDemoPinpointStreamKMSAccessPolicy
-      - AmazonLocationDemoPinpointStreamPolicy
-    Condition: EnablePinTranslate
-    Type: AWS::Pinpoint::EventStream
-    Properties:
-      ApplicationId: !Ref AmazonLocationDemoPinpointApp
-      DestinationStreamArn: !GetAtt AmazonLocationDemoKinesisStream.Arn
-      RoleArn: !GetAtt AmazonLocationDemoPinpointStreamRole.Arn
 
   AmazonLocationDemoMapsOpenDataLight:
     Type: AWS::Location::Map
@@ -1088,7 +1013,3 @@ Outputs:
 
   WebSocketUrl:
     Value: !GetAtt AmazonLocationDemoIotEndpoint.IotEndpointAddress
-
-  PinPointAppId:
-    Condition: EnablePinTranslate
-    Value: !Ref AmazonLocationDemoPinpointApp

@@ -3,7 +3,12 @@
 
 const uuid = {
 	randomUUID: function () {
-		const cryptoObj = (typeof self !== "undefined" && self.crypto) ? self.crypto : (typeof window !== "undefined" && window.crypto) ? window.crypto : undefined;
+		const cryptoObj =
+			typeof self !== "undefined" && self.crypto
+				? self.crypto
+				: typeof window !== "undefined" && window.crypto
+				? window.crypto
+				: undefined;
 
 		if (cryptoObj && typeof cryptoObj.randomUUID === "function") {
 			return cryptoObj.randomUUID();
@@ -16,10 +21,14 @@ const uuid = {
 			bytes[8] = (bytes[8] & 0x3f) | 0x80;
 			const hex = Array.from(bytes, b => b.toString(16).padStart(2, "0"));
 			return (
-				hex.slice(0, 4).join("") + "-" +
-				hex.slice(4, 6).join("") + "-" +
-				hex.slice(6, 8).join("") + "-" +
-				hex.slice(8, 10).join("") + "-" +
+				hex.slice(0, 4).join("") +
+				"-" +
+				hex.slice(4, 6).join("") +
+				"-" +
+				hex.slice(6, 8).join("") +
+				"-" +
+				hex.slice(8, 10).join("") +
+				"-" +
 				hex.slice(10, 16).join("")
 			);
 		} else {

@@ -38,7 +38,7 @@ import { useMap, usePersistedData, usePlace, useRoute } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { InputType, MapUnitEnum, RouteDataType, RouteOptionsType, SuggestionType, TravelMode } from "@demo/types";
-import { AnalyticsEventActionsEnum, ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
+import { ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { getConvertedDistance } from "@demo/utils";
 import { humanReadableTime } from "@demo/utils/dateTimeUtils";
 import { LineString } from "@turf/turf";
@@ -508,10 +508,10 @@ const RouteBox: FC<RouteBoxProps> = ({
 	const onChangeValue = (e: ChangeEvent<HTMLInputElement>, type: InputType) => {
 		if (type === InputType.FROM) {
 			setValue({ ...value, from: e.target.value });
-			handleSearch(e.target.value, false, InputType.FROM, AnalyticsEventActionsEnum.FROM_SEARCH_AUTOCOMPLETE);
+			handleSearch(e.target.value, false, InputType.FROM, "From search autocomplete");
 		} else {
 			setValue({ ...value, to: e.target.value });
-			handleSearch(e.target.value, false, InputType.TO, AnalyticsEventActionsEnum.TO_SEARCH_AUTOCOMPLETE);
+			handleSearch(e.target.value, false, InputType.TO, "To search autocomplete");
 		}
 	};
 
@@ -809,10 +809,10 @@ const RouteBox: FC<RouteBoxProps> = ({
 		if (s.queryId) {
 			if (type === InputType.FROM) {
 				setValue({ ...value, from: s.label || "" });
-				await handleSearch(s.queryId, true, InputType.FROM, AnalyticsEventActionsEnum.FROM_SUGGESTION_SELECT, true);
+				await handleSearch(s.queryId, true, InputType.FROM, "From suggestion select", true);
 			} else {
 				setValue({ ...value, to: s.label || "" });
-				await handleSearch(s.queryId, true, InputType.TO, AnalyticsEventActionsEnum.TO_SUGGESTION_SELECT, true);
+				await handleSearch(s.queryId, true, InputType.TO, "To suggestion select", true);
 			}
 		} else if (s.placeId) {
 			if (type === InputType.FROM) {

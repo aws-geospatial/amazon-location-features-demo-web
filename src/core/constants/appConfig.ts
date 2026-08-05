@@ -37,8 +37,6 @@ const appConfig = {
 			return result;
 		}, {}) as { [key: string]: string },
 	ENV: {
-		PINPOINT_IDENTITY_POOL_ID: getEnv("VITE_PINPOINT_IDENTITY_POOL_ID"),
-		PINPOINT_APPLICATION_ID: getEnv("VITE_PINPOINT_APPLICATION_ID"),
 		APPLE_APP_STORE_LINK: getEnv("VITE_APPLE_APP_STORE_LINK"),
 		GOOGLE_PLAY_STORE_LINK: getEnv("VITE_GOOGLE_PLAY_STORE_LINK"),
 		COUNTRY_EVALUATION_URL: "/doNotDelete.txt",
@@ -61,9 +59,6 @@ const appConfig = {
 		PERSISTED_DATA: "persistedData",
 		GEO_LOCATION_ALLOWED: "geoLocationAllowed",
 		SHOULD_CLEAR_CREDENTIALS: "shouldClearCredentials",
-		ANALYTICS_ENDPOINT_ID: "analyticsEndpointId",
-		ANALYTICS_CREDS: "analyticsCreds",
-		PAGE_VIEW_IDENTIFIERS: "pageViewIdentifiers",
 		FASTEST_REGION: "fastestRegion",
 		LOCAL_APP_VERSION: "localAppVersion"
 	},

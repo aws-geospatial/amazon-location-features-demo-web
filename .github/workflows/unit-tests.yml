@@ -24,7 +24,4 @@ jobs:
         run: npm install
 
       - name: Run unit tests
-        env:
-          VITE_PINPOINT_IDENTITY_POOL_ID: ${{ secrets.VITE_PINPOINT_IDENTITY_POOL_ID }}
-          VITE_PINPOINT_APPLICATION_ID: ${{ secrets.VITE_PINPOINT_APPLICATION_ID }}
         run: npm run ci-test
