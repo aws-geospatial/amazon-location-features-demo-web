@@ -6,7 +6,6 @@ import { BaseStateProps } from "@demo/types";
 import { SetState, create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
-/* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
 const createStore = <T>(
 	initialState: T,
 	persistant = false,
