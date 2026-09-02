@@ -13,8 +13,8 @@ const usePlaceReturnValue = {
 		Results: [
 			{
 				Place: {
-					Label: faker.random.words(3),
-					Geometry: { Point: [Number(faker.address.longitude()), Number(faker.address.latitude())] }
+					Label: faker.lorem.words(3),
+					Geometry: { Point: [Number(faker.location.longitude()), Number(faker.location.latitude())] }
 				}
 			}
 		]
@@ -24,37 +24,37 @@ const usePlaceReturnValue = {
 
 		cb([
 			{
-				PlaceId: faker.random.word(),
-				Text: faker.random.word(),
-				Distance: faker.datatype.number({ min: 1, max: 39 }),
-				Relevance: faker.datatype.number(),
-				Hash: faker.random.word(),
+				PlaceId: faker.lorem.word(),
+				Text: faker.lorem.word(),
+				Distance: faker.number.int({ min: 1, max: 39 }),
+				Relevance: faker.number.int(),
+				Hash: faker.lorem.word(),
 				Place: {
-					Label: faker.random.words(3),
-					Geometry: { Point: [Number(faker.address.longitude()), Number(faker.address.latitude())] }
+					Label: faker.lorem.words(3),
+					Geometry: { Point: [Number(faker.location.longitude()), Number(faker.location.latitude())] }
 				}
 			}
 		]);
 	},
 	getPlaceData: () => ({
 		Place: {
-			Geometry: { Point: [Number(faker.address.longitude()), Number(faker.address.latitude())] },
-			AddressNumber: faker.random.word(),
-			Country: faker.random.word(),
+			Geometry: { Point: [Number(faker.location.longitude()), Number(faker.location.latitude())] },
+			AddressNumber: faker.lorem.word(),
+			Country: faker.lorem.word(),
 			Interpolated: faker.datatype.boolean(),
-			Label: faker.random.word(),
-			Municipality: faker.random.word(),
-			Neighborhood: faker.random.word(),
-			PostalCode: faker.random.word(),
-			Region: faker.random.word(),
-			Street: faker.random.word(),
-			SubRegion: faker.random.word(),
+			Label: faker.lorem.word(),
+			Municipality: faker.lorem.word(),
+			Neighborhood: faker.lorem.word(),
+			PostalCode: faker.lorem.word(),
+			Region: faker.lorem.word(),
+			Street: faker.lorem.word(),
+			SubRegion: faker.lorem.word(),
 			TimeZone: {
-				Name: faker.random.word(),
-				Offset: faker.datatype.number()
+				Name: faker.lorem.word(),
+				Offset: faker.number.int()
 			},
-			UnitNumber: faker.random.word(),
-			UnitType: faker.random.word()
+			UnitNumber: faker.lorem.word(),
+			UnitType: faker.lorem.word()
 		}
 	})
 };
@@ -63,33 +63,33 @@ const useRouteServiceReturnValue = {
 	calculateRoute: () => ({
 		Legs: [
 			{
-				Distance: faker.datatype.number({ min: 1, max: 39 }),
-				DurationSeconds: faker.datatype.number(),
-				EndPosition: [Number(faker.address.longitude()), Number(faker.address.latitude())],
-				StartPosition: [Number(faker.address.longitude()), Number(faker.address.latitude())],
+				Distance: faker.number.int({ min: 1, max: 39 }),
+				DurationSeconds: faker.number.int(),
+				EndPosition: [Number(faker.location.longitude()), Number(faker.location.latitude())],
+				StartPosition: [Number(faker.location.longitude()), Number(faker.location.latitude())],
 				Steps: [
 					{
-						Distance: faker.datatype.number({ min: 1, max: 39 }),
-						DurationSeconds: faker.datatype.number(),
-						GeometryOffset: faker.datatype.number(),
-						EndPosition: [Number(faker.address.longitude()), Number(faker.address.latitude())],
-						StartPosition: [Number(faker.address.longitude()), Number(faker.address.latitude())]
+						Distance: faker.number.int({ min: 1, max: 39 }),
+						DurationSeconds: faker.number.int(),
+						GeometryOffset: faker.number.int(),
+						EndPosition: [Number(faker.location.longitude()), Number(faker.location.latitude())],
+						StartPosition: [Number(faker.location.longitude()), Number(faker.location.latitude())]
 					}
 				],
 				Geometry: {
-					LineString: [...Array(faker.datatype.number({ min: 3, max: 12 }))].map(() => [
-						Number(faker.address.longitude()),
-						Number(faker.address.latitude())
+					LineString: [...Array(faker.number.int({ min: 3, max: 12 }))].map(() => [
+						Number(faker.location.longitude()),
+						Number(faker.location.latitude())
 					])
 				}
 			}
 		],
 		Summary: {
-			DataSource: faker.datatype.string(),
-			Distance: faker.datatype.number({ min: 1, max: 39 }),
-			DurationSeconds: faker.datatype.number(),
+			DataSource: faker.string.alphanumeric(),
+			Distance: faker.number.int({ min: 1, max: 39 }),
+			DurationSeconds: faker.number.int(),
 			DistanceUnit: "Kilometers",
-			RouteBBox: [...Array(4)].map(() => faker.datatype.number())
+			RouteBBox: [...Array(4)].map(() => faker.number.int())
 		}
 	})
 };
@@ -125,8 +125,8 @@ describe("<RouteBox />", () => {
 					mapRef={{
 						current: {
 							getCenter: () => ({
-								lng: Number(faker.address.longitude()),
-								lat: Number(faker.address.latitude())
+								lng: Number(faker.location.longitude()),
+								lat: Number(faker.location.latitude())
 							}),
 							getStyle: () => ({ layers: [] } as any)
 						} as MapRef
@@ -184,7 +184,7 @@ describe("<RouteBox />", () => {
 
 		waitFor(
 			() => {
-				fireEvent.change(fromInput, { target: { value: faker.random.word() } });
+				fireEvent.change(fromInput, { target: { value: faker.lorem.word() } });
 				fireEvent.focus(fromInput);
 				expect(getByTestId("from-suggestions")).toBeInTheDocument();
 			},
@@ -199,7 +199,7 @@ describe("<RouteBox />", () => {
 		);
 
 		act(() => {
-			fireEvent.change(toInput, { target: { value: faker.random.word() } });
+			fireEvent.change(toInput, { target: { value: faker.lorem.word() } });
 			fireEvent.focus(toInput);
 		});
 
