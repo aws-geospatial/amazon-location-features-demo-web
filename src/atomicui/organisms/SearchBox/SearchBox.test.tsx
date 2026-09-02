@@ -13,8 +13,8 @@ const mockProps = {
 	mapRef: {
 		current: {
 			getCenter: () => ({
-				lng: Number(faker.address.longitude()),
-				lat: Number(faker.address.latitude())
+				lng: Number(faker.location.longitude()),
+				lat: Number(faker.location.latitude())
 			})
 		} as MapRef
 	},

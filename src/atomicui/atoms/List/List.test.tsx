@@ -11,17 +11,17 @@ describe("<List/>", () => {
 	let latestRenderedListComponent: RenderResult;
 	const listArray = [
 		...[...Array(2)].map(() => ({
-			label: faker.random.word(),
+			label: faker.lorem.word(),
 			link: faker.internet.url(),
 			isExternalLink: true
 		})),
 		{
-			label: faker.random.word(),
+			label: faker.lorem.word(),
 			link: "/somewhere",
 			isExternalLink: false,
 			subMenu: [
 				{
-					label: faker.random.word(),
+					label: faker.lorem.word(),
 					link: "/somewhere",
 					isExternalLink: false
 				}

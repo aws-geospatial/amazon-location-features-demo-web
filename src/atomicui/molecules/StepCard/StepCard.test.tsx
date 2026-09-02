@@ -21,9 +21,9 @@ describe("<StepCard/>", () => {
 			<I18nextProvider i18n={i18n}>
 				<StepCard
 					step={{
-						Instruction: faker.random.words(3),
-						Distance: faker.datatype.number({ min: 100, max: 1000 }),
-						Duration: faker.datatype.number({ min: 100, max: 1000 }),
+						Instruction: faker.lorem.words(3),
+						Distance: faker.number.int({ min: 100, max: 1000 }),
+						Duration: faker.number.int({ min: 100, max: 1000 }),
 						Type: "Arrive"
 					}}
 					travelMode={TravelMode.CAR}

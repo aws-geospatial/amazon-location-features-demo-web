@@ -67,9 +67,9 @@ describe("<Popup/>", () => {
 		const renderedComponent = render(
 			<I18nextProvider i18n={i18n}>
 				<Popup
-					placeId={faker.random.word()}
-					position={[parseFloat(faker.address.longitude()), parseFloat(faker.address.latitude())]}
-					label={`${faker.address.street()}, ${faker.address.city()}, ${faker.address.state()}, ${faker.address.zipCode()}`}
+					placeId={faker.lorem.word()}
+					position={[parseFloat(faker.location.longitude()), parseFloat(faker.location.latitude())]}
+					label={`${faker.location.street()}, ${faker.location.city()}, ${faker.location.state()}, ${faker.location.zipCode()}`}
 					active
 					select={vi.fn()}
 				/>
