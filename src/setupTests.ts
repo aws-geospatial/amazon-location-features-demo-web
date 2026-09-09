@@ -13,7 +13,7 @@ if (typeof window.URL.createObjectURL === "undefined") {
 }
 
 if (typeof window?.crypto?.randomUUID === "undefined") {
-	Object.assign(window, { crypto: { randomUUID: faker.datatype.uuid } });
+	Object.assign(window, { crypto: { randomUUID: () => faker.string.uuid() } });
 }
 
 if (typeof window?.matchMedia === "undefined") {
