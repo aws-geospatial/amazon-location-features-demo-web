@@ -68,7 +68,7 @@ describe("<Popup/>", () => {
 			<I18nextProvider i18n={i18n}>
 				<Popup
 					placeId={faker.lorem.word()}
-					position={[parseFloat(faker.location.longitude()), parseFloat(faker.location.latitude())]}
+					position={[faker.location.longitude(), faker.location.latitude()]}
 					label={`${faker.location.street()}, ${faker.location.city()}, ${faker.location.state()}, ${faker.location.zipCode()}`}
 					active
 					select={vi.fn()}
