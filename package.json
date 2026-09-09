@@ -48,7 +48,7 @@
 		"date-fns": "^2.29.3",
 		"i18next": "^23.2.8",
 		"i18next-browser-languagedetector": "^7.1.0",
-		"maplibre-gl": "^4.5.2",
+		"maplibre-gl": "^6.9.0",
 		"ngeohash": "^0.6.3",
 		"ramda": "^0.28.0",
 		"react": "^18.2.0",
