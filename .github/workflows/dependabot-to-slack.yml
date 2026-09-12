@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+name: Dependabot PR to Slack
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review, synchronize]
+
+jobs:
+  notify:
+    name: Notify Slack
+    runs-on: ubuntu-latest
+
+    # Only run for Dependabot PRs
+    if: github.actor == 'dependabot[bot]'
+
+    steps:
+      - name: Post Dependabot PR to Slack
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            blocks:
+              - type: header
+                text:
+                  type: plain_text
+                  text: Dependabot Pull Request
+              - type: section
+                text:
+                  type: mrkdwn
+                  text: A new automated dependency update is ready for review.
+              - type: section
+                fields:
+                  - type: mrkdwn
+                    text: "*Repository:*\n`${{ github.repository }}`"
+                  - type: mrkdwn
+                    text: "*Author:*\n`${{ github.actor }}`"
+                  - type: mrkdwn
+                    text: "*Pull Request:*\n<${{ github.event.pull_request.html_url }}|${{ github.event.pull_request.title }}>"
+                  - type: mrkdwn
+                    text: "*Branch:*\n`${{ github.event.pull_request.head.ref }}`"
+              - type: actions
+                elements:
+                  - type: button
+                    text:
+                      type: plain_text
+                      text: Open Pull Request
+                    url: ${{ github.event.pull_request.html_url }}
+                    style: primary
+              - type: context
+                elements:
+                  - type: mrkdwn
+                    text: Automated notification from GitHub Actions
