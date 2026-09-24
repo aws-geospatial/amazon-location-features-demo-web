@@ -7,16 +7,19 @@ import { I18nextProvider } from "react-i18next";
 import Popup from "./Popup";
 
 vi.mock("react-map-gl/maplibre", async () => {
-	const actual = await vi.importActual("react-map-gl/maplibre");
+	// NOTE: Do NOT vi.importActual("react-map-gl/maplibre") here. maplibre-gl v6+ is
+	// ESM-only (its package.json "exports" map has no CommonJS entry), so importing the
+	// real react-map-gl/maplibre transitively resolves maplibre-gl through Node's CJS
+	// loader and throws ERR_PACKAGE_PATH_NOT_EXPORTED. Popup.tsx only consumes the
+	// `Popup` export at runtime, so a self-contained mock is sufficient.
 	// Mock Popup to prevent map-gl from trying to render in a JSDOM env
 	// and to fix the explicit-any lint error.
 	const PopupMock = (props: import("react-map-gl/maplibre").PopupProps) => {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { longitude, latitude, closeButton, ...rest } = props;
+		const { longitude, latitude, closeButton, padding, ...rest } = props;
 		return <View {...rest} />;
 	};
 	return {
-		...actual,
 		Popup: PopupMock
 	};
 });
