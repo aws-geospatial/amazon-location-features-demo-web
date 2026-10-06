@@ -86,11 +86,21 @@ const useMapManager = ({
 		})();
 	}, [mapStyleUrl, mapLanguage]);
 
+	// The map can fire load before GeolocateControl has mounted and finished its async setup,
+	// so retry until trigger() reports the control accepted it.
+	const triggerGeolocate = useCallback(() => {
+		let attempts = 0;
+		const tryTrigger = () => {
+			if (!geolocateControlRef.current?.trigger() && ++attempts < 20) setTimeout(tryTrigger, 250);
+		};
+		tryTrigger();
+	}, [geolocateControlRef]);
+
 	const onLoad = useCallback(() => {
 		clearPoiList();
-		geolocateControlRef.current?.trigger();
+		triggerGeolocate();
 		routeData && setRouteData(routeData);
-	}, [clearPoiList, geolocateControlRef, routeData, setRouteData]);
+	}, [clearPoiList, triggerGeolocate, routeData, setRouteData]);
 
 	const getCurrentGeoLocation = useCallback(() => {
 		getCurrentLocation(setCurrentLocation, setViewpoint);
