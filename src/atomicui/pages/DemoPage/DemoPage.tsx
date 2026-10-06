@@ -18,14 +18,7 @@ import { errorHandler } from "@demo/utils/errorHandler";
 import { LineString } from "@turf/turf";
 import type { GeolocateControl as GeolocateControlRef } from "maplibre-gl";
 import { useTranslation } from "react-i18next";
-import {
-	AttributionControl,
-	GeolocateControl,
-	LngLatBoundsLike,
-	Map,
-	MapRef,
-	NavigationControl
-} from "react-map-gl/maplibre";
+import { AttributionControl, GeolocateControl, Map, MapRef, NavigationControl } from "react-map-gl/maplibre";
 import { RefHandles } from "react-spring-bottom-sheet/dist/types";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./styles.scss";
@@ -316,10 +309,10 @@ const DemoPage: FC = () => {
 				maxBounds={
 					show.unauthSimulation && show.unauthSimulationBounds
 						? isDesktop
-							? (MAX_BOUNDS.VANCOUVER.DESKTOP as LngLatBoundsLike)
+							? (MAX_BOUNDS.VANCOUVER.DESKTOP as [number, number, number, number])
 							: isTablet
-							? (MAX_BOUNDS.VANCOUVER.TABLET as LngLatBoundsLike)
-							: (MAX_BOUNDS.VANCOUVER.MOBILE as LngLatBoundsLike)
+							? (MAX_BOUNDS.VANCOUVER.TABLET as [number, number, number, number])
+							: (MAX_BOUNDS.VANCOUVER.MOBILE as [number, number, number, number])
 						: undefined
 				}
 				onClick={handleMapClick}

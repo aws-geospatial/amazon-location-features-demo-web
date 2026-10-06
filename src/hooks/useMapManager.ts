@@ -8,7 +8,13 @@ import { getCurrentLocation } from "@demo/utils/getCurrentLocation";
 import type { GeolocateControl as GeolocateControlRef } from "maplibre-gl";
 import { omit } from "ramda";
 import { useTranslation } from "react-i18next";
-import { GeolocateErrorEvent, GeolocateResultEvent, MapLayerMouseEvent, MapRef, MapStyle } from "react-map-gl/maplibre";
+import {
+	GeolocateErrorEvent,
+	GeolocateResultEvent,
+	MapLayerMouseEvent,
+	MapRef,
+	StyleSpecification
+} from "react-map-gl/maplibre";
 
 import useAuth from "./useAuth";
 import useGeofence from "./useGeofence";
@@ -39,7 +45,7 @@ const useMapManager = ({
 	isRouteBoxOpen,
 	resetAppStateCb
 }: UseMapManagerProps) => {
-	const [mapStyleWithLanguageUrl, setMapStyleWithLanguageUrl] = useState<MapStyle>();
+	const [mapStyleWithLanguageUrl, setMapStyleWithLanguageUrl] = useState<StyleSpecification>();
 	const [gridLoader, setGridLoader] = useState(true);
 	const { baseValues, apiKey } = useAuth();
 	const {
