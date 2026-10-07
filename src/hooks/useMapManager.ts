@@ -91,9 +91,7 @@ const useMapManager = ({
 	const triggerGeolocate = useCallback(() => {
 		let attempts = 0;
 		const tryTrigger = () => {
-			const __ok = geolocateControlRef.current?.trigger();
-			console.warn("[CL001] attempt " + (attempts + 1) + " ref=" + !!geolocateControlRef.current + " trigger=" + __ok);
-			if (!__ok && ++attempts < 20) setTimeout(tryTrigger, 250);
+			if (!geolocateControlRef.current?.trigger() && ++attempts < 20) setTimeout(tryTrigger, 250);
 		};
 		tryTrigger();
 	}, [geolocateControlRef]);
