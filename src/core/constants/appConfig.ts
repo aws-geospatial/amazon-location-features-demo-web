@@ -91,19 +91,11 @@ const appConfig = {
 		},
 		MAX_BOUNDS: {
 			DEFAULT: [-210, -80, 290, 85],
+			// [west, south, east, north]: react-map-gl v8 types the maxBounds prop as this flat tuple only.
 			VANCOUVER: {
-				DESKTOP: [
-					[-123.185777, 49.258543], // southwest corner
-					[-123.061047, 49.303531] // northeast corner
-				],
-				TABLET: [
-					[-123.196983, 49.234978], // southwest corner
-					[-123.040067, 49.317798] // northeast corner
-				],
-				MOBILE: [
-					[-123.209922, 49.192026], // southwest corner
-					[-123.037722, 49.347977] // northeast corner
-				]
+				DESKTOP: [-123.185777, 49.258543, -123.061047, 49.303531],
+				TABLET: [-123.196983, 49.234978, -123.040067, 49.317798],
+				MOBILE: [-123.209922, 49.192026, -123.037722, 49.347977]
 			}
 		},
 		MAP_STYLES: [

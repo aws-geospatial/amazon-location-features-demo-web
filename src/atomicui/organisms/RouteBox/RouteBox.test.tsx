@@ -99,10 +99,14 @@ vi.mock("hooks/useMap", () => () => ({}));
 vi.mock("hooks/usePlace", () => usePlace);
 vi.mock("services", () => servicesObj);
 vi.mock("react-map-gl/maplibre", async () => {
-	const actual: any = await vi.importActual("react-map-gl/maplibre");
+	// NOTE: Do NOT vi.importActual("react-map-gl/maplibre") here. maplibre-gl v6+ is
+	// ESM-only (its package.json "exports" map has no CommonJS entry), so importing the
+	// real react-map-gl/maplibre transitively resolves maplibre-gl through Node's CJS
+	// loader and throws ERR_PACKAGE_PATH_NOT_EXPORTED. RouteBox.tsx only consumes the
+	// `Marker`, `Source` and `Layer` exports at runtime (the rest are type-only imports),
+	// so a self-contained mock is sufficient.
 	const MarkerMock = ({ ...props }: any) => <View {...props} />;
 	return {
-		...actual,
 		Marker: MarkerMock,
 		Source: MarkerMock,
 		Layer: MarkerMock
