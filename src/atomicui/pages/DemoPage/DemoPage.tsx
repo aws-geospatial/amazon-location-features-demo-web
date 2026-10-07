@@ -17,6 +17,8 @@ import { getBoundsFromLineString } from "@demo/utils";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { LineString } from "@turf/turf";
 import type { GeolocateControl as GeolocateControlRef } from "maplibre-gl";
+// maplibre-gl 6 cannot locate its worker inside Vite's module graph, so it needs a bundled worker URL.
+import maplibreWorkerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
 import { useTranslation } from "react-i18next";
 import { AttributionControl, GeolocateControl, Map, MapRef, NavigationControl } from "react-map-gl/maplibre";
 import { RefHandles } from "react-spring-bottom-sheet/dist/types";
@@ -296,6 +298,7 @@ const DemoPage: FC = () => {
 		>
 			<Map
 				ref={mapRef}
+				workerUrl={maplibreWorkerUrl}
 				style={{ width: "100%", height: "100%" }}
 				maxTileCacheSize={100}
 				zoom={zoom}

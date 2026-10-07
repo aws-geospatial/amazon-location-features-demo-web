@@ -28,7 +28,8 @@ export default defineConfig(() => {
 			})
 		],
 		define: {
-			global: "window",
+			// Not "window": Vite injects these defines into dev web workers too, which have no window.
+			global: "globalThis",
 			__vite_process_env_NODE_ENV: JSON.stringify(process.env.NODE_ENV),
 		},
 		resolve: {
