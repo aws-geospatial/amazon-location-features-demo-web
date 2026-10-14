@@ -28,7 +28,6 @@
 		"ci-test": "vitest run",
 		"coverage": "vitest run --coverage",
 		"prepare": "husky install",
-		"stylelint-check": "stylelint-config-prettier-check",
 		"translate-content": "cd extra/translation-script-content && npm install && node index.js && cd ../../",
 		"translate-content-update": "cd extra/translation-script-content && npm install && node update-translation.js && cd ../../"
 	},
@@ -95,12 +94,6 @@
 		"jsdom": "^26.1.0",
 		"prettier": "^2.7.1",
 		"sass": "^1.57.1",
-		"stylelint": "^14.15.0",
-		"stylelint-config-airbnb": "^0.0.0",
-		"stylelint-config-prettier": "^9.0.4",
-		"stylelint-config-standard": "^29.0.0",
-		"stylelint-order": "^5.0.0",
-		"stylelint-prettier": "^2.0.0",
 		"typescript": "^5.9.3",
 		"vite": "^6.4.2",
 		"vite-plugin-dts": "^4.5.4",
@@ -114,8 +107,6 @@
 		"node": ">=14.x.x"
 	},
 	"overrides": {
-		"ava": "^6.4.1",
-		"braces": "^3.0.3",
 		"cookie": "^0.7.2",
 		"fast-xml-parser": "^5.3.5",
 		"got": "^11.8.5",
@@ -124,10 +115,7 @@
 		"minimist": "^1.2.8",
 		"nth-check": "^2.0.1",
 		"postcss": "^8.4.31",
-		"semver": "^5.7.2",
-		"trim-newlines": "^3.0.1",
-		"underscore": "^1.12.1",
-		"underscore.string": "^3.3.5"
+		"semver": "^5.7.2"
 	},
 	"jest": {
 		"moduleNameMapper": {
