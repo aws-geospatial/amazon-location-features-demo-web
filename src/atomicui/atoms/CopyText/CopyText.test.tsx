@@ -9,7 +9,7 @@ describe("<CopyText/>", () => {
 	let copyIcon: HTMLElement;
 
 	beforeEach(() => {
-		render(<CopyText text={faker.random.words()} />);
+		render(<CopyText text={faker.lorem.words()} />);
 
 		copyTextContainer = screen.getByTestId("copy-text-container");
 		copyIcon = screen.getByTestId("copy-icon");

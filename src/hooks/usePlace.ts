@@ -8,8 +8,7 @@ import { useMap } from "@demo/hooks";
 import { usePlaceService } from "@demo/services";
 import { usePlaceStore } from "@demo/stores";
 import { ClustersType, SuggestionType, ViewPointType } from "@demo/types";
-import { AnalyticsPlaceSearchTypeEnum, EventTypeEnum, TriggeredByEnum } from "@demo/types/Enums";
-import { record } from "@demo/utils/analyticsUtils";
+import { TriggeredByEnum } from "@demo/types/Enums";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { calculateClusters, getHash, getPrecision, isGeoString } from "@demo/utils/geoCalculation";
 import { uuid } from "@demo/utils/uuid";
@@ -198,31 +197,15 @@ const usePlace = () => {
 				isNLSearchEnabled = false,
 				isQueryId = false
 			) => {
-				let placeSearchType = AnalyticsPlaceSearchTypeEnum.TEXT;
-
 				if (isGeoString(value)) {
 					await methods.searchPlacesByCoordinates(value, viewpoint, cb);
-					placeSearchType = AnalyticsPlaceSearchTypeEnum.COORDINATES;
 				} else if (exact && isNLSearchEnabled) {
 					await methods.searchNLPlacesByText(value, viewpoint, cb);
-					placeSearchType = AnalyticsPlaceSearchTypeEnum.NATURAL_LANGUAGE_TEXT;
 				} else if (exact && !isNLSearchEnabled) {
 					await methods.searchPlacesByText(value, viewpoint, cb, isQueryId);
 				} else if (value?.length) {
 					await methods.searchPlaceSuggestions(value, viewpoint, cb);
 				}
-
-				record([
-					{
-						EventType: EventTypeEnum.PLACE_SEARCH,
-						Attributes: {
-							exact: String(exact),
-							type: placeSearchType,
-							triggeredBy,
-							action
-						}
-					}
-				]);
 			},
 			setZoom: (zoom: number) => {
 				setState(s => {

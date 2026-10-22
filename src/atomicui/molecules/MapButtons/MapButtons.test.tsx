@@ -27,10 +27,10 @@ const mockProps: MapButtonsProps = {
 
 const mockUseAuthData = {
 	credentials: {
-		accessKeyId: faker.random.word(),
-		sessionToken: faker.random.word(),
-		secretAccessKey: faker.random.word(),
-		identityId: faker.random.word(),
+		accessKeyId: faker.lorem.word(),
+		sessionToken: faker.lorem.word(),
+		secretAccessKey: faker.lorem.word(),
+		identityId: faker.lorem.word(),
 		authenticated: false,
 		expiration: new Date()
 	}
@@ -42,7 +42,7 @@ const mockUseMapData = {
 	mapPoliticalView: {
 		alpha2: "",
 		alpha3: "",
-		desc: faker.random.word()
+		desc: faker.lorem.word()
 	},
 	mapLanguage: { value: "en", label: "English" }
 };

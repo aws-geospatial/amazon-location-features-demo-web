@@ -6,8 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { showToast } from "@demo/core/Toast";
 import { useAuth, useGeofence } from "@demo/hooks";
 import i18n from "@demo/locales/i18n";
-import { EventTypeEnum, MqttConnectionState, NotificationHistoryItemtype, ToastType } from "@demo/types";
-import { record } from "@demo/utils/analyticsUtils";
+import { MqttConnectionState, NotificationHistoryItemtype, ToastType } from "@demo/types";
 import { getDomainName } from "@demo/utils/getDomainName";
 import { iot, mqtt } from "aws-iot-device-sdk-v2";
 import { equals } from "ramda";
@@ -174,19 +173,6 @@ const useWebSocketService = (
 								className: `${String(trackerEventType).toLowerCase()}-geofence`
 							});
 						}
-
-						record(
-							[
-								{
-									EventType: EventTypeEnum.GEO_EVENT_TRIGGERED,
-									Attributes: {
-										eventType: trackerEventType,
-										geofenceId
-									}
-								}
-							],
-							["userAWSAccountConnectionStatus", "userAuthenticationStatus"]
-						);
 					}
 				});
 			} catch (error) {

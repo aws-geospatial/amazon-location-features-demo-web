@@ -8,15 +8,7 @@ import { Flex, View } from "@aws-amplify/ui-react";
 import { IconLocateMe, LogoDark, LogoLight } from "@demo/assets/svgs";
 import { SearchBox } from "@demo/atomicui/organisms/SearchBox";
 import { appConfig } from "@demo/core/constants";
-import {
-	useAuthManager,
-	useMap,
-	useMapManager,
-	usePersistedData,
-	usePlace,
-	useRecordViewPage,
-	useRoute
-} from "@demo/hooks";
+import { useAuthManager, useMap, useMapManager, usePersistedData, usePlace, useRoute } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { ShowStateType } from "@demo/types";
@@ -25,15 +17,10 @@ import { getBoundsFromLineString } from "@demo/utils";
 import { errorHandler } from "@demo/utils/errorHandler";
 import { LineString } from "@turf/turf";
 import type { GeolocateControl as GeolocateControlRef } from "maplibre-gl";
+// maplibre-gl 6 cannot locate its worker inside Vite's module graph, so it needs a bundled worker URL.
+import maplibreWorkerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
 import { useTranslation } from "react-i18next";
-import {
-	AttributionControl,
-	GeolocateControl,
-	LngLatBoundsLike,
-	Map,
-	MapRef,
-	NavigationControl
-} from "react-map-gl/maplibre";
+import { AttributionControl, GeolocateControl, Map, MapRef, NavigationControl } from "react-map-gl/maplibre";
 import { RefHandles } from "react-spring-bottom-sheet/dist/types";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./styles.scss";
@@ -112,7 +99,6 @@ const initShow: ShowStateType = {
 };
 
 const DemoPage: FC = () => {
-	const {} = useRecordViewPage("DemoPage");
 	const [show, setShow] = useState<ShowStateType>(initShow);
 	const [isUnauthNotifications, setUnauthIsNotifications] = useState(false);
 	const [confirmCloseUnauthSimulation, setConfirmCloseUnauthSimulation] = useState(false);
@@ -312,6 +298,7 @@ const DemoPage: FC = () => {
 		>
 			<Map
 				ref={mapRef}
+				workerUrl={maplibreWorkerUrl}
 				style={{ width: "100%", height: "100%" }}
 				maxTileCacheSize={100}
 				zoom={zoom}
@@ -325,10 +312,10 @@ const DemoPage: FC = () => {
 				maxBounds={
 					show.unauthSimulation && show.unauthSimulationBounds
 						? isDesktop
-							? (MAX_BOUNDS.VANCOUVER.DESKTOP as LngLatBoundsLike)
+							? (MAX_BOUNDS.VANCOUVER.DESKTOP as [number, number, number, number])
 							: isTablet
-							? (MAX_BOUNDS.VANCOUVER.TABLET as LngLatBoundsLike)
-							: (MAX_BOUNDS.VANCOUVER.MOBILE as LngLatBoundsLike)
+							? (MAX_BOUNDS.VANCOUVER.TABLET as [number, number, number, number])
+							: (MAX_BOUNDS.VANCOUVER.MOBILE as [number, number, number, number])
 						: undefined
 				}
 				onClick={handleMapClick}

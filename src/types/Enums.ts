@@ -2,11 +2,6 @@
 /* SPDX-License-Identifier: MIT-0 */
 
 export enum EventTypeEnum {
-	// Session
-	SESSION_START = "_session.start",
-	SESSION_END = "SESSION_END",
-	SESSION_STOP = "_session.stop",
-
 	// Page
 	VIEW_PAGE = "VIEW_PAGE",
 	LEAVE_PAGE = "LEAVE_PAGE",
@@ -45,18 +40,6 @@ export enum EventTypeEnum {
 	HELP_SEARCH = "HELP_SEARCH"
 }
 
-export enum AnalyticsPlaceSearchTypeEnum {
-	COORDINATES = "Coordinates",
-	NATURAL_LANGUAGE_TEXT = "NaturalLanguageText",
-	TEXT = "Text"
-}
-
-export enum AnalyticsSessionStatus {
-	CREATED = "CREATED",
-	NOT_CREATED = "NOT_CREATED",
-	IN_PROGRESS = "IN_PROGRESS"
-}
-
 export enum TriggeredByEnum {
 	ROUTE_MODULE = "ROUTE_MODULE",
 	PLACES_POPUP = "PLACES_POPUP",
@@ -79,20 +62,6 @@ export enum TravelMode {
 export enum InputType {
 	FROM = "from",
 	TO = "to"
-}
-
-export enum AnalyticsEventActionsEnum {
-	AUTOCOMPLETE = "Autocomplete",
-	FROM_SEARCH_AUTOCOMPLETE = "From search autocomplete",
-	TO_SEARCH_AUTOCOMPLETE = "To search autocomplete",
-	FROM_SUGGESTION_SELECT = "From suggestion select",
-	TO_SUGGESTION_SELECT = "To suggestion select",
-	SEARCH_ICON_CLICK = "Search icon click",
-	SUGGESTION_SELECTED = "Suggestion selected",
-	ENTER_BUTTON = "Enter button",
-
-	MODAL_CLOSED = "MODAL_CLOSED",
-	TAB_CHANGED = "TAB_CHANGED"
 }
 
 export enum LocationErrorMessage {

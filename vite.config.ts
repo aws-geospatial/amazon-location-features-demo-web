@@ -5,13 +5,17 @@ import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
 import eslint from "vite-plugin-eslint2";
 import Inspect from "vite-plugin-inspect";
+import { nodePolyfills } from "vite-plugin-node-polyfills";
 import svgr from "vite-plugin-svgr";
+import stdLibBrowser from "node-stdlib-browser";
+import esbuildPlugin from "node-stdlib-browser/helpers/esbuild/plugin";
 
 
 export default defineConfig(() => {
 	return {
 		plugins: [
 			react(),
+			nodePolyfills(),
 			svgr(),
 			eslint({
 				fix: true,
@@ -24,7 +28,8 @@ export default defineConfig(() => {
 			})
 		],
 		define: {
-			global: "window",
+			// Not "window": Vite injects these defines into dev web workers too, which have no window.
+			global: "globalThis",
 			__vite_process_env_NODE_ENV: JSON.stringify(process.env.NODE_ENV),
 		},
 		resolve: {
@@ -76,6 +81,11 @@ export default defineConfig(() => {
 							? "style.css"
 							: chunkInfo.names.join("-"),
 				},
+			},
+		},
+		optimizeDeps: {
+			esbuildOptions: {
+				plugins: [esbuildPlugin(stdLibBrowser)],
 			},
 		},
 		server: {

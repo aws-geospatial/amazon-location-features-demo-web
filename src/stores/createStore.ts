@@ -6,7 +6,6 @@ import { BaseStateProps } from "@demo/types";
 import { SetState, create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
-/* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types */
 const createStore = <T>(
 	initialState: T,
 	persistant = false,
@@ -22,7 +21,6 @@ const createStore = <T>(
 		return init;
 	};
 
-	/* @ts-expect-error: valid params */
 	const createDataStore = persistant ? persist(createState, { name: localStorageKey }) : createState;
 	/* @ts-expect-error: valid params */
 	return create<T & BaseStateProps>(devtools(createDataStore));

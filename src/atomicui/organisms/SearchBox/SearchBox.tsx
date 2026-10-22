@@ -13,7 +13,7 @@ import { useMap, usePlace } from "@demo/hooks";
 import useBottomSheet from "@demo/hooks/useBottomSheet";
 import useDeviceMediaQuery from "@demo/hooks/useDeviceMediaQuery";
 import { DistanceUnitEnum, MapUnitEnum, SuggestionType } from "@demo/types";
-import { AnalyticsEventActionsEnum, ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
+import { ResponsiveUIEnum, TriggeredByEnum } from "@demo/types/Enums";
 import { getBoundsFromLineString } from "@demo/utils";
 import { calculateGeodesicDistance } from "@demo/utils/geoCalculation";
 import { Position, Units } from "@turf/turf";
@@ -224,7 +224,7 @@ const SearchBox: FC<SearchBoxProps> = ({
 		async ({ queryid, placeid, label }: OptionType) => {
 			if (!!queryid) {
 				setValue(label);
-				await handleSearch(queryid, true, AnalyticsEventActionsEnum.SUGGESTION_SELECTED, true);
+				await handleSearch(queryid, true, "Suggestion selected", true);
 				setBottomSheetMinHeight(window.innerHeight * 0.4 - 10);
 				setBottomSheetHeight(window.innerHeight * 0.4);
 				setTimeout(() => {
@@ -261,13 +261,13 @@ const SearchBox: FC<SearchBoxProps> = ({
 	const onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
 		clearPoiList();
 		setValue(value);
-		handleSearch(value, false, AnalyticsEventActionsEnum.AUTOCOMPLETE);
+		handleSearch(value, false, "Autocomplete");
 	};
 
 	const onSearch = () => {
 		if (!!value) {
 			clearPoiList();
-			handleSearch(value, false, AnalyticsEventActionsEnum.SEARCH_ICON_CLICK);
+			handleSearch(value, false, "Search icon click");
 			autocompleteRef?.current?.focus();
 		}
 		autocompleteRef?.current?.focus();
@@ -445,7 +445,7 @@ const SearchBox: FC<SearchBoxProps> = ({
 	const onFormSubmit = useCallback(
 		(e: FormEvent<HTMLFormElement>) => {
 			e.preventDefault();
-			handleSearch(value, true, AnalyticsEventActionsEnum.ENTER_BUTTON);
+			handleSearch(value, true, "Enter button");
 
 			if (!!options?.length) {
 				setTimeout(() => {
@@ -664,7 +664,7 @@ const SearchBox: FC<SearchBoxProps> = ({
 									size="large"
 									onFocus={() => setIsFocused(true)}
 									onBlur={() => setIsFocused(false)}
-									onSubmit={e => handleSearch(e, true, AnalyticsEventActionsEnum.ENTER_BUTTON)}
+									onSubmit={e => handleSearch(e, true, "Enter button")}
 									value={value}
 									onChange={!isNLChecked ? onChange : onNLPChange}
 									onClear={clearPoiList}
