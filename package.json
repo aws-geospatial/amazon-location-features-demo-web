@@ -95,7 +95,7 @@
 		"prettier": "^2.7.1",
 		"sass": "^1.57.1",
 		"typescript": "^5.9.3",
-		"vite": "^6.4.2",
+		"vite": "^6.4.5",
 		"vite-plugin-dts": "^5.1.2",
 		"vite-plugin-eslint2": "^5.0.5",
 		"vite-plugin-inspect": "^0.8.1",
