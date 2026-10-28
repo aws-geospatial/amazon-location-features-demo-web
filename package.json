@@ -108,6 +108,7 @@
 	},
 	"overrides": {
 		"cookie": "^0.7.2",
+		"crypto-browserify": "npm:empty-npm-package@1.0.0",
 		"fast-xml-parser": "^5.3.5",
 		"got": "^11.8.5",
 		"json5": "^1.0.2",
