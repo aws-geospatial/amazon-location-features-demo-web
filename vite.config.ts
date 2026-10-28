@@ -15,7 +15,7 @@ export default defineConfig(() => {
 	return {
 		plugins: [
 			react(),
-			nodePolyfills(),
+			nodePolyfills({ exclude: ["crypto"] }),
 			svgr(),
 			eslint({
 				fix: true,
